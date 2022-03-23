@@ -16,4 +16,9 @@ namespace Service.Catalog.Domain.Catalog
         public string UsuarioModificoId { get; set; }
         public DateTime FechaModifico { get; set; }
     }
+
+    public class GenericCatalogDescription : GenericCatalog
+    {
+        public string Descripcion { get; set; }
+    }
 }
