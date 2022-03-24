@@ -13,11 +13,11 @@ using System.Threading.Tasks;
 
 namespace Service.Catalog.Application
 {
-    public class CatalogDescApliccation<T> : ICatalogDescApplication<T> where T : GenericCatalogDescription, new()
+    public class CatalogDescApplication<T> : ICatalogDescApplication<T> where T : GenericCatalogDescription, new()
     {
         private readonly ICatalogDescRepository<T> _repository;
 
-        public CatalogDescApliccation(ICatalogDescRepository<T> repository)
+        public CatalogDescApplication(ICatalogDescRepository<T> repository)
         {
             _repository = repository;
         }
