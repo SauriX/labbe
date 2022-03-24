@@ -16,7 +16,6 @@ namespace Service.Catalog.Application
     public class ReagentApplication : IReagentApplication
     {
         private readonly IReagentRepository _repository;
-        private readonly ITransactionProvider _transaction;
 
         public ReagentApplication(IReagentRepository repository)
         {
