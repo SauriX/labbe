@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Service.Catalog.Controllers
 {
-    public partial class CatalogController : ControllerBase
+    public partial class CatalogDescController : ControllerBase
     {
 
         [HttpGet("useOfCFDI/all/{search?}")]
@@ -21,14 +21,14 @@ namespace Service.Catalog.Controllers
         }
 
         [HttpPost("useOfCFDI")]
-        public async Task CreateUseOfCFDI(CatalogFormDto catalog)
+        public async Task CreateUseOfCFDI(CatalogDescFormDto catalog)
         {
             catalog.UsuarioId = "userId";
             await _useOfCFDIService.Create(catalog);
         }
 
         [HttpPut("useOfCFDI")]
-        public async Task UpdateUseOfCFDI(CatalogFormDto catalog)
+        public async Task UpdateUseOfCFDI(CatalogDescFormDto catalog)
         {
             catalog.UsuarioId = "userId";
             await _useOfCFDIService.Update(catalog);

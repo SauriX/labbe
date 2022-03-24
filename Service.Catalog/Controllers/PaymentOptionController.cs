@@ -5,30 +5,30 @@ using System.Threading.Tasks;
 
 namespace Service.Catalog.Controllers
 {
-    public partial class CatalogController : ControllerBase
+    public partial class CatalogDescController : ControllerBase
     {
 
         [HttpGet("paymentOption/all/{search?}")]
-        public async Task<IEnumerable<CatalogListDto>> GetAllPaymentOption(string search = null)
+        public async Task<IEnumerable<CatalogDescListDto>> GetAllPaymentOption(string search = null)
         {
             return await _paymentOptionService.GetAll(search);
         }
 
         [HttpGet("paymentOption/{id}")]
-        public async Task<CatalogFormDto> GetPaymentOptionById(int id)
+        public async Task<CatalogDescFormDto> GetPaymentOptionById(int id)
         {
             return await _paymentOptionService.GetById(id);
         }
 
         [HttpPost("paymentOption")]
-        public async Task CreatePaymentOption(CatalogFormDto catalog)
+        public async Task CreatePaymentOption(CatalogDescFormDto catalog)
         {
             catalog.UsuarioId = "userId";
             await _paymentOptionService.Create(catalog);
         }
 
         [HttpPut("paymentOption")]
-        public async Task UpdatePaymentOption(CatalogFormDto catalog)
+        public async Task UpdatePaymentOption(CatalogDescFormDto catalog)
         {
             catalog.UsuarioId = "userId";
             await _paymentOptionService.Update(catalog);

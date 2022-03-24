@@ -17,7 +17,7 @@ namespace Service.Catalog.Application
     {
         private readonly ICatalogDescRepository<T> _repository;
 
-        public CatalogDescApplication(ICatalogDescRepository<T> repository)
+        public CatalogDescApliccation(ICatalogDescRepository<T> repository)
         {
             _repository = repository;
         }

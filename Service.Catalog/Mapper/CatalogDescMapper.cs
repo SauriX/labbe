@@ -37,7 +37,7 @@ namespace Service.Catalog.Mapper
             });
         }
 
-        public static CatalogDescFormDto ToCatalogFormDto<T>(this T model) where T : GenericCatalogDescription
+        public static CatalogDescFormDto ToCatalogDescFormDto<T>(this T model) where T : GenericCatalogDescription
         {
             if (model == null) return null;
 
