@@ -1,12 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-namespace Service.Identity.Domain.Users
+﻿using System;
+
+namespace Service.Identity.Dtos
 {
-    public class UsersModel : IdentityUser<Guid>
+    public class RegisterUserDTO
     {
-        [Key]
         public Guid IdUsuario { get; set; }
         public string Clave { get; set; }
         public string Nombre { get; set; }
