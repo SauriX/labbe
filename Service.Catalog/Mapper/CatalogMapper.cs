@@ -55,8 +55,8 @@ namespace Service.Catalog.Mapper
             return new T
             {
                 Id = 0,
-                Clave = dto.Clave,
-                Nombre = dto.Nombre,
+                Clave = dto.Clave.Trim(),
+                Nombre = dto.Nombre.Trim(),
                 Activo = dto.Activo,
                 UsuarioCreoId = dto.UsuarioId,
                 FechaCreo = DateTime.Now,
@@ -70,8 +70,8 @@ namespace Service.Catalog.Mapper
             return new T
             {
                 Id = model.Id,
-                Clave = dto.Clave,
-                Nombre = dto.Nombre,
+                Clave = dto.Clave.Trim(),
+                Nombre = dto.Nombre.Trim(),
                 Activo = dto.Activo,
                 UsuarioCreoId = model.UsuarioCreoId,
                 FechaCreo = model.FechaCreo,
