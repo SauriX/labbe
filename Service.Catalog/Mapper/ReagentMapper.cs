@@ -15,7 +15,7 @@ namespace Service.Catalog.Mapper
 
             return new ReagentListDto
             {
-                ReactivoId = model.Id,
+                Id = model.Id,
                 Clave = model.Clave,
                 Nombre = model.Nombre,
                 ClaveSistema = model.ClaveSistema,
@@ -30,7 +30,7 @@ namespace Service.Catalog.Mapper
 
             return model.Select(x => new ReagentListDto
             {
-                ReactivoId = x.Id,
+                Id = x.Id,
                 Clave = x.Clave,
                 Nombre = x.Nombre,
                 ClaveSistema = x.ClaveSistema,
@@ -45,7 +45,7 @@ namespace Service.Catalog.Mapper
 
             return new ReagentFormDto
             {
-                ReactivoId = model.Id,
+                Id = model.Id,
                 Clave = model.Clave,
                 Nombre = model.Nombre,
                 ClaveSistema = model.ClaveSistema,
@@ -61,10 +61,10 @@ namespace Service.Catalog.Mapper
             return new Reagent
             {
                 Id = 0,
-                Clave = dto.Clave,
-                Nombre = dto.Nombre,
-                ClaveSistema = dto.ClaveSistema,
-                NombreSistema = dto.NombreSistema,
+                Clave = dto.Clave.Trim(),
+                Nombre = dto.Nombre.Trim(),
+                ClaveSistema = dto.ClaveSistema.Trim(),
+                NombreSistema = dto.NombreSistema.Trim(),
                 Activo = dto.Activo,
                 UsuarioCreoId = dto.UsuarioId,
                 FechaCreo = DateTime.Now,
@@ -78,10 +78,10 @@ namespace Service.Catalog.Mapper
             return new Reagent
             {
                 Id = model.Id,
-                Clave = dto.Clave,
-                Nombre = dto.Nombre,
-                ClaveSistema = dto.ClaveSistema,
-                NombreSistema = dto.NombreSistema,
+                Clave = dto.Clave.Trim(),
+                Nombre = dto.Nombre.Trim(),
+                ClaveSistema = dto.ClaveSistema.Trim(),
+                NombreSistema = dto.NombreSistema.Trim(),
                 Activo = dto.Activo,
                 UsuarioCreoId = model.UsuarioCreoId,
                 FechaCreo = model.FechaCreo,
