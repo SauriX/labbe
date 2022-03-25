@@ -7,5 +7,6 @@ namespace Service.Catalog.Domain.Catalog
 {
     public class Indicators : GenericCatalogDescription
     {
+
     }
 }
