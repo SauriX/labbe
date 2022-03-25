@@ -70,10 +70,40 @@ namespace Service.Catalog
                 });
 
             services.AddScoped<ICatalogApplication<Delivery>, CatalogApplication<Delivery>>();
+            services.AddScoped<ICatalogApplication<Area>, CatalogApplication<Area>>();
+            services.AddScoped<ICatalogApplication<Bank>, CatalogApplication<Bank>>();
+            services.AddScoped<ICatalogApplication<Clinic>, CatalogApplication<Clinic>>();
+            services.AddScoped<ICatalogApplication<Departments>, CatalogApplication<Departments>>();
+            services.AddScoped<ICatalogApplication<Dimensions>, CatalogApplication<Dimensions>>();
+            services.AddScoped<ICatalogApplication<Methods>, CatalogApplication<Methods>>();
+            services.AddScoped<ICatalogApplication<Packages>, CatalogApplication<Packages>>();
+            services.AddScoped<ICatalogApplication<PaymentMethod>, CatalogApplication<PaymentMethod>>();
+            services.AddScoped<ICatalogApplication<SampleType>, CatalogApplication<SampleType>>();
+            services.AddScoped<ICatalogApplication<Specialty>, CatalogApplication<Specialty>>();
+            services.AddScoped<ICatalogApplication<WorkLists>, CatalogApplication<WorkLists>>();
+            services.AddScoped<ICatalogDescApplication<UseOfCFDI>, CatalogDescApplication<UseOfCFDI>>();
+            services.AddScoped<ICatalogDescApplication<PaymentOption>, CatalogDescApplication<PaymentOption>>();
+            services.AddScoped<ICatalogDescApplication<Indicators>, CatalogDescApplication<Indicators>>();
+            services.AddScoped<ICatalogDescApplication<Domain.Catalog.Service>, CatalogDescApplication<Domain.Catalog.Service>>();
             services.AddScoped<ICatalogApplication<Domain.Catalog.Service>, CatalogApplication<Domain.Catalog.Service>>();
             services.AddScoped<IReagentApplication, ReagentApplication>();
 
             services.AddScoped<ICatalogRepository<Delivery>, CatalogRepository<Delivery>>();
+            services.AddScoped<ICatalogRepository<Area>, CatalogRepository<Area>>();
+            services.AddScoped<ICatalogRepository<Bank>, CatalogRepository<Bank>>();
+            services.AddScoped<ICatalogRepository<Clinic>, CatalogRepository<Clinic>>();
+            services.AddScoped<ICatalogRepository<Departments>, CatalogRepository<Departments>>();
+            services.AddScoped<ICatalogRepository<Dimensions>, CatalogRepository<Dimensions>>();
+            services.AddScoped<ICatalogRepository<Methods>, CatalogRepository<Methods>>();
+            services.AddScoped<ICatalogRepository<Packages>, CatalogRepository<Packages>>();
+            services.AddScoped<ICatalogRepository<PaymentMethod>, CatalogRepository<PaymentMethod>>();
+            services.AddScoped<ICatalogRepository<SampleType>, CatalogRepository<SampleType>>();
+            services.AddScoped<ICatalogRepository<Specialty>, CatalogRepository<Specialty>>();
+            services.AddScoped<ICatalogRepository<WorkLists>, CatalogRepository<WorkLists>>();
+            services.AddScoped<ICatalogDescRepository<UseOfCFDI>, CatalogDescRepository<UseOfCFDI>>();
+            services.AddScoped<ICatalogDescRepository<PaymentOption>, CatalogDescRepository<PaymentOption>>();
+            services.AddScoped<ICatalogDescRepository<Indicators>, CatalogDescRepository<Indicators>>();
+            services.AddScoped<ICatalogDescRepository<Domain.Catalog.Service>, CatalogDescRepository<Domain.Catalog.Service>>();
             services.AddScoped<ICatalogRepository<Domain.Catalog.Service>, CatalogRepository<Domain.Catalog.Service>>();
             services.AddScoped<IReagentRepository, ReagentRepository>();
         }
