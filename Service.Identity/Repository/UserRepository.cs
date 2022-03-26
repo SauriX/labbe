@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Service.Identity.Context;
 using Service.Identity.Domain.Users;
+using Service.Identity.Dtos;
 using Service.Identity.Repository.IRepository;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Service.Identity.Repository
 {
-    public class UserRepository<T>:IUserRepository<T> where T : UsersModel
+    public class UserRepository:IUserRepository
     {
         private readonly UserManager<UsersModel> _userManager;
         private readonly SignInManager<UsersModel> _signInManager;
@@ -25,11 +26,11 @@ namespace Service.Identity.Repository
             _userManager = userManager;
             _signInManager = signInManager;
         }
-        public async Task NewUser(T user) {
+        public async Task NewUser(UsersModel user) {
             await _userManager.CreateAsync(user,user.Clave);
 
         }
-        public async Task DeleteUser(T user)
+        public async Task DeleteUser(UsersModel user)
         {
             var logins = await _userManager.GetLoginsAsync(user);
             var rolesForUser = await _userManager.GetRolesAsync(user);
@@ -71,6 +72,5 @@ namespace Service.Identity.Repository
             }
             return false;
         }
-        public async Task LogIn() { }
     }
 }
