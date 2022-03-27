@@ -25,17 +25,26 @@ namespace Service.Identity.Controllers
         {
             return (IEnumerable<UserList>)await _service.GetAll(search);
         }
+        [HttpGet("user/{id}")]
+        public async Task<UsersModel> GetById(string id) {
+            return await _service.GetById(id);
+        }
 
         [HttpPost]
-        public async Task Create(UsersModel user)
+        public async Task<UsersModel> Create(UsersModel user)
         {
-            await _service.NewUser(user);
+             return await _service.NewUser(user);
         }
 
         [HttpPut]
-        public async Task Update(UsersModel user)
+        public async Task<UsersModel> Update(UsersModel user)
         {
-            await _service.UpdateUser(user);
+            return await _service.UpdateUser(user);
+        }
+
+        [HttpPut("assingrole")]
+        public async Task<UsersModel> UpdateRol(string IdRol, string IdUSer) {
+            return await _service.AssingRol(IdRol, IdUSer);
         }
     }
 }

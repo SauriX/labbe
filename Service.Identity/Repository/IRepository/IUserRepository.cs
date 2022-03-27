@@ -8,9 +8,10 @@ namespace Service.Identity.Repository.IRepository
     public interface IUserRepository
     {
         Task<List<UsersModel>> GetAll(string search);
-        Task<string> NewUser(UsersModel user);
+        Task<UsersModel> GetById(string id);
+        Task<UsersModel> NewUser(UsersModel user);
         Task DeleteUser(UsersModel user);
-        Task<bool> UpdateUser(UsersModel user);
-
+        Task<UsersModel> UpdateUser(UsersModel user);
+        Task<UsersModel> AssingRol(string rolId, string userId);
     }
 }

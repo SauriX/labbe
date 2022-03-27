@@ -43,11 +43,22 @@ namespace Service.Identity.Repository
 
             return await users.ToListAsync();
         }
-        public async Task<string> NewUser(UsersModel user) {
+        public async Task<UsersModel> NewUser(UsersModel user) {
 
             string password = GenerarPassword(8);
             await _userManager.CreateAsync(user,password);
-            return password;
+            ApUsers = _userManager.Users.ToList();
+            ApUser = await _userManager.Users.LastAsync();
+            if (ApUser != null)
+            {
+                IdentityResult result = await _userManager.UpdateAsync(ApUser);
+                if (result.Succeeded)
+                {
+                    ApUser.Contraseña = password;
+                    return ApUser;
+                }
+            }
+            return null;
         }
         public async Task DeleteUser(UsersModel user)
         {
@@ -79,7 +90,20 @@ namespace Service.Identity.Repository
                 }
             }
         }
-        public async Task<bool> UpdateUser(UsersModel user) {
+        public async Task<UsersModel> GetById(string id) {
+            ApUsers = _userManager.Users.ToList();
+            ApUser = await _userManager.FindByIdAsync(id);
+            if (ApUser != null)
+            {
+                IdentityResult result = await _userManager.UpdateAsync(ApUser);
+                if (result.Succeeded)
+                {
+                    return ApUser;
+                }
+            }
+            return null;
+        }
+        public async Task<UsersModel> UpdateUser(UsersModel user) {
             string id = user.IdUsuario.ToString();
             ApUsers = _userManager.Users.ToList();
             ApUser = await _userManager.FindByIdAsync(id);
@@ -88,12 +112,25 @@ namespace Service.Identity.Repository
                 ApUser = user;
                 IdentityResult result = await _userManager.UpdateAsync(ApUser);
                 if (result.Succeeded) {
-                    return true;
+                    return ApUser;
                 }
             }
-            return false;
+            return null;
         }
-
+        public async Task<UsersModel> AssingRol(string rolId,string userId) {
+            ApUsers = _userManager.Users.ToList();
+            ApUser = await _userManager.FindByIdAsync(userId);
+            if (ApUser != null)
+            {
+                ApUser.IdRol = Guid.Parse(rolId);
+                IdentityResult result = await _userManager.UpdateAsync(ApUser);
+                if (result.Succeeded)
+                {
+                    return ApUser;
+                }
+            }
+            return null;
+        }
         public static string GenerarPassword(int longitud)
         {
             string contraseña = string.Empty;
