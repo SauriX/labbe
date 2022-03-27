@@ -1,83 +1,41 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Service.Identity.Domain.Users;
+using Service.Identity.Dtos;
+using Service.Identity.Repository.IRepository;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Service.Identity.Controllers
 {
-    public class AccountController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AccountController : ControllerBase
     {
-        // GET: AccountController
-        public ActionResult Index()
+        private readonly IUserRepository _service;
+
+        public AccountController(IUserRepository service)
         {
-            return View();
+            _service = service;
         }
 
-        // GET: AccountController/Details/5
-        public ActionResult Details(int id)
+
+        [HttpGet("all/{search?}")]
+        public async Task<IEnumerable<UserList>> GetAll(string search = null)
         {
-            return View();
+            return (IEnumerable<UserList>)await _service.GetAll(search);
         }
 
-        // GET: AccountController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: AccountController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task Create(UsersModel user)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            await _service.NewUser(user);
         }
 
-        // GET: AccountController/Edit/5
-        public ActionResult Edit(int id)
+        [HttpPut]
+        public async Task Update(UsersModel user)
         {
-            return View();
-        }
-
-        // POST: AccountController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: AccountController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: AccountController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            await _service.UpdateUser(user);
         }
     }
 }

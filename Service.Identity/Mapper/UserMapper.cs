@@ -6,11 +6,26 @@ namespace  Service.Identity.Mapper
 {
     public static class UserMapper
     {
-        public static RegisterUserDTO ToCatalogFormDto<T>(this T model) where T : UsersModel
+        public static UserList ToReagentListDto(this UsersModel model)
         {
             if (model == null) return null;
 
-            return new RegisterUserDTO
+            return new UserList
+            {
+                IdUsuario = model.IdUsuario,
+                IdSucursal = model.IdSucursal,
+                Nombre = model.Nombre,
+                PrimerApellido = model.PrimerApellido,
+                SegundoApellido = model.SegundoApellido,
+                IdRol=model.IdRol,
+                Activo = model.Activo,
+            };
+        }
+        public static UserModel ToCatalogFormDto<T>(this T model) where T : UsersModel
+        {
+            if (model == null) return null;
+
+            return new UserModel
             {
                 IdUsuario = model.Id,
                 Clave = model.Clave,
@@ -19,7 +34,7 @@ namespace  Service.Identity.Mapper
             };
         }
 
-        public static T ToModel<T>(this RegisterUserDTO dto) where T : UsersModel, new()
+        public static T ToModel<T>(this UserModel dto) where T : UsersModel, new()
         {
             if (dto == null) return null;
 
@@ -34,7 +49,7 @@ namespace  Service.Identity.Mapper
             };
         }
 
-        public static T ToModel<T>(this RegisterUserDTO dto, T model) where T : UsersModel, new()
+        public static T ToModel<T>(this UserModel dto, T model) where T : UsersModel, new()
         {
             if (dto == null || model == null) return null;
 
