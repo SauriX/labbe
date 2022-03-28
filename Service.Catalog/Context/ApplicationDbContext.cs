@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Identidad.Api.ViewModels.Menu;
+using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Domain.Reagent;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ namespace Service.Catalog.Context
         public ApplicationDbContext(DbContextOptions options) : base(options) { }
 
         public DbSet<Reagent> CAT_Reactivo_Contpaq { get; set; }
+        public DbSet<Medics> CAT_Medicos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
