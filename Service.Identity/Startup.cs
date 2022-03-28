@@ -16,6 +16,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Service.Identity.Repository;
+using Service.Identity.Repository.IRepository;
+using Service.Identity.Controllers;
 
 namespace Service.Identity
 {
@@ -31,7 +34,7 @@ namespace Service.Identity
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options =>
+            services.AddCors(options => 
             {
                 options.AddPolicy("CorsPolicy", policy =>
                 {
@@ -43,9 +46,9 @@ namespace Service.Identity
             services.AddIdentity<UsersModel, UserRol>(options => options.SignIn.RequireConfirmedAccount = true)
                             .AddEntityFrameworkStores<IndentityContext>();
 
-
+            
             services.AddControllers();
-
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Service.Identity", Version = "v1" });

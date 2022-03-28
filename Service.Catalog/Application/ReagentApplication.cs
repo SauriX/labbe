@@ -43,7 +43,7 @@ namespace Service.Catalog.Application
 
         public async Task Create(ReagentFormDto reagent)
         {
-            if (reagent.ReactivoId != 0)
+            if (reagent.Id != 0)
             {
                 throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
             }
@@ -55,7 +55,7 @@ namespace Service.Catalog.Application
 
         public async Task Update(ReagentFormDto reagent)
         {
-            var existing = await _repository.GetById(reagent.ReactivoId);
+            var existing = await _repository.GetById(reagent.Id);
 
             if (existing == null)
             {
