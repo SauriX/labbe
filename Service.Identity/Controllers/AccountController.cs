@@ -46,5 +46,17 @@ namespace Service.Identity.Controllers
         public async Task<UsersModel> UpdateRol(string IdRol, string IdUSer) {
             return await _service.AssingRol(IdRol, IdUSer);
         }
+
+        [HttpPut("updatepassword")]
+        public async Task<UsersModel> UpdatePassword(string IdRol, string password)
+        {
+            if (password.Length >= 8)
+            {
+                return await _service.AssingRol(IdRol, password);
+            }
+            else {
+                return null;
+            }
+        }
     }
 }
