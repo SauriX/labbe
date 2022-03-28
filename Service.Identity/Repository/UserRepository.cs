@@ -15,7 +15,7 @@ namespace Service.Identity.Repository
     {
         private readonly UserManager<UsersModel> _userManager;
         private readonly SignInManager<UsersModel> _signInManager;
-        IndentityContext _context;
+        private readonly IndentityContext _context;
 
         public List<UsersModel> ApUsers { get; private set; }
         public UsersModel ApUser { get; private set; }
@@ -130,6 +130,13 @@ namespace Service.Identity.Repository
                 }
             }
             return null;
+        }
+        public async Task ChangePassword(string id,string pass) {
+            var user = await _userManager.FindByIdAsync(id);
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var result = await _userManager.ResetPasswordAsync(user, token, pass);
         }
         public static string GenerarPassword(int longitud)
         {
