@@ -7,6 +7,7 @@ using Service.Identity.Repository.IRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Service.Identity.Repository
@@ -132,11 +133,14 @@ namespace Service.Identity.Repository
             return null;
         }
         public async Task ChangePassword(string id,string pass) {
-            var user = await _userManager.FindByIdAsync(id);
+            if (PasswordValidator(pass))
+            {
+                var user = await _userManager.FindByIdAsync(id);
 
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-            var result = await _userManager.ResetPasswordAsync(user, token, pass);
+                var result = await _userManager.ResetPasswordAsync(user, token, pass);
+            }
         }
         public static string GenerarPassword(int longitud)
         {
@@ -160,6 +164,55 @@ namespace Service.Identity.Repository
                 }
             }
             return contraseña;
+        }
+
+        public static bool PasswordValidator(string pass) {
+            Match matchLongitud = Regex.Match(pass, @"^\w{8}\b");
+            Match matchNumeros = Regex.Match(pass, @"\d");
+            Match matchMayusculas = Regex.Match(pass, @"[A-Z]");
+            Match matchAdmin = Regex.Match(pass, @"admin");
+            Match matchContraseña = Regex.Match(pass, @"contraseña");
+           String[] palabrasProhibidas = { "123", "12345", "56789", "123456789", "321", "54321", "987654321", "56789", "qwerty", "asdf", "zxcv", "poiuy", "lkjhg", " mnbv" };
+            bool errorFlag = false;
+            int errorCode = 0;
+            if (!matchNumeros.Success)
+            {
+
+                errorCode = 1;
+                errorFlag = true;
+            }
+            else if (errorFlag || !matchLongitud.Success)
+            {
+
+                errorCode = 2;
+                errorFlag = true;
+            }
+
+            for (int i = 0; i < palabrasProhibidas.Length; i++)
+            {
+                Match Match = Regex.Match(pass, palabrasProhibidas[i]);
+                if (Match.Success)
+                {
+                    errorCode = 3;
+                    errorFlag = true;
+
+                }
+            }
+            switch (errorCode)
+            {
+                case 1:
+                    return false;
+                    break;
+                case 2:
+                    return false;
+                    break;
+                case 3:
+                    return false;
+                    break;
+                default:
+                    return true;
+                    break;
+            }
         }
     }
 }
