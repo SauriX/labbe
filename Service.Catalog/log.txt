@@ -1,0 +1,7 @@
+
+
+28/3/2022 16:32:37 => The property 'Medics.Clinicas' is of type 'ICollection<MedicoClinica>' which is not supported by the current database provider. Either change the property CLR type, or ignore the property using the '[NotMapped]' attribute or by using 'EntityTypeBuilder.Ignore' in 'OnModelCreating'.
+
+28/3/2022 17:03:47 => The property 'Medics.Clinicas' is of type 'ICollection<MedicoClinica>' which is not supported by the current database provider. Either change the property CLR type, or ignore the property using the '[NotMapped]' attribute or by using 'EntityTypeBuilder.Ignore' in 'OnModelCreating'.
+
+28/3/2022 17:13:31 => The property 'Medics.Clinicas' is of type 'ICollection<MedicoClinica>' which is not supported by the current database provider. Either change the property CLR type, or ignore the property using the '[NotMapped]' attribute or by using 'EntityTypeBuilder.Ignore' in 'OnModelCreating'.

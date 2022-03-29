@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Identidad.Api.Model.Medicos;
+using System;
 using System.Collections.Generic;
 
 namespace Identidad.Api.ViewModels.Menu
@@ -28,6 +29,6 @@ namespace Identidad.Api.ViewModels.Menu
         public int UsuarioModId { get; set; }
         public DateTime FechaMod { get; set; }
 
-        //public virtual ICollection<MedicoClinica> Clinicas { get; set; }
+        public virtual ICollection<MedicoClinica> Clinicas { get; set; }
     }
 }
