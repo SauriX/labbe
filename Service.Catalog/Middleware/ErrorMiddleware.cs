@@ -2,6 +2,7 @@
 using Shared.Error;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.Json;
@@ -43,7 +44,7 @@ namespace Service.Catalog.Middleware
                 case Exception ex:
                     errors = string.IsNullOrWhiteSpace(ex.Message) ? "Error" : ex.Message;
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    //File.AppendAllText(Path.Combine(Directory.GetCurrentDirectory(), "log.txt"), Environment.NewLine + Environment.NewLine + DateTime.Now.ToString() + " => " + e.Message);
+                    File.AppendAllText(Path.Combine(Directory.GetCurrentDirectory(), "log.txt"), Environment.NewLine + Environment.NewLine + DateTime.Now.ToString() + " => " + e.Message);
                     break;
             }
 

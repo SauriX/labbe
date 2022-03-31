@@ -21,14 +21,14 @@ namespace Identidad.Api.ViewModels.Menu
         public string Calle { get; set; }
         public long ColoniaId { get; set; }
         public string Correo { get; set; }
-        public int Celular { get; set; }
-        public int Telefono { get; set; }
+        public long Celular { get; set; }
+        public long Telefono { get; set; }
         public bool Activo { get; set; }
         public int UsuarioCreoId { get; set; }
         public DateTime FechaCreo { get; set; }
         public int UsuarioModId { get; set; }
         public DateTime FechaMod { get; set; }
 
-        public virtual ICollection<MedicoClinica> Clinicas { get; set; }
+        public virtual ICollection<MedicClinic> Clinicas { get; set; }
     }
 }

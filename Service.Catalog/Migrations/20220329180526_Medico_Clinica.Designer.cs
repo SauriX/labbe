@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220329180526_Medico_Clinica")]
+    partial class Medico_Clinica
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -19,7 +21,7 @@ namespace Service.Catalog.Migrations
                 .HasAnnotation("ProductVersion", "5.0.15")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Identidad.Api.Model.Medicos.MedicClinic", b =>
+            modelBuilder.Entity("Identidad.Api.Model.Medicos.MedicoClinica", b =>
                 {
                     b.Property<int>("IdMedico_Clinica")
                         .ValueGeneratedOnAdd()
@@ -57,7 +59,7 @@ namespace Service.Catalog.Migrations
 
                     b.HasIndex("MedicoIdMedico");
 
-                    b.ToTable("CAT_Medico_Clinica");
+                    b.ToTable("CAT_Medicos_Clinica");
                 });
 
             modelBuilder.Entity("Identidad.Api.ViewModels.Menu.Medics", b =>
@@ -75,8 +77,8 @@ namespace Service.Catalog.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<long>("Celular")
-                        .HasColumnType("bigint");
+                    b.Property<int>("Celular")
+                        .HasColumnType("int");
 
                     b.Property<long>("CiudadId")
                         .HasColumnType("bigint");
@@ -130,8 +132,8 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("SegundoApellido")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("Telefono")
-                        .HasColumnType("bigint");
+                    b.Property<int>("Telefono")
+                        .HasColumnType("int");
 
                     b.Property<int>("UsuarioCreoId")
                         .HasColumnType("int");
@@ -189,7 +191,7 @@ namespace Service.Catalog.Migrations
                     b.ToTable("CAT_Reactivo_Contpaq");
                 });
 
-            modelBuilder.Entity("Identidad.Api.Model.Medicos.MedicClinic", b =>
+            modelBuilder.Entity("Identidad.Api.Model.Medicos.MedicoClinica", b =>
                 {
                     b.HasOne("Identidad.Api.ViewModels.Menu.Medics", "Medico")
                         .WithMany("Clinicas")
