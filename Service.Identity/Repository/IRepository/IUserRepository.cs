@@ -7,7 +7,7 @@ namespace Service.Identity.Repository.IRepository
 {
     public interface IUserRepository
     {
-        Task<List<UsersModel>> GetAll(string search);
+        Task<List<UserList>> GetAll(string search);
         Task<UsersModel> GetById(string id);
         Task<UsersModel> NewUser(UsersModel user);
         Task DeleteUser(UsersModel user);

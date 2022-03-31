@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Service.Identity.Mapper;
+using System.Text;
 
 namespace Service.Identity.Repository
 {
@@ -31,7 +33,7 @@ namespace Service.Identity.Repository
             _context = indentityContext;
         }
 
-        public async Task<List<UsersModel>> GetAll(string search)
+        public async Task<List<UserList>> GetAll(string search)
         {
             var users = _context.Users.AsQueryable();
 
@@ -41,23 +43,25 @@ namespace Service.Identity.Repository
             {
                 users = users.Where(x => x.Clave.ToLower().Contains(search) || x.Nombre.ToLower().Contains(search));
             }
-
-            return await users.ToListAsync();
+             var listuser =Mapper.UserMapper.ToUserListDto(users);
+            return (List<UserList>)listuser;
         }
         public async Task<UsersModel> NewUser(UsersModel user) {
-
+            StringBuilder clave = new StringBuilder();
+            clave.Append(user.Nombre.Substring(0, 1));
+            clave.Append(user.PrimerApellido);
             string password = GenerarPassword(8);
-            await _userManager.CreateAsync(user,password);
+            user.Contraseña = password;
+            user.Id = Guid.NewGuid();
+            user.Clave = clave.ToString();
+            IdentityResult results= await _userManager.CreateAsync(user,password);
             ApUsers = _userManager.Users.ToList();
-            ApUser = await _userManager.Users.LastAsync();
+            ApUser = ApUsers.Last();
             if (ApUser != null)
             {
-                IdentityResult result = await _userManager.UpdateAsync(ApUser);
-                if (result.Succeeded)
-                {
-                    ApUser.Contraseña = password;
+
                     return ApUser;
-                }
+                
             }
             return null;
         }

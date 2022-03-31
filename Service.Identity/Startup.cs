@@ -43,7 +43,17 @@ namespace Service.Identity
             });
             services.AddDbContext<IndentityContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<UsersModel, UserRol>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddIdentity<UsersModel, UserRol>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = false;
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 8;
+                options.Password.RequiredUniqueChars = 0;
+            }
+            )
                             .AddEntityFrameworkStores<IndentityContext>();
 
             

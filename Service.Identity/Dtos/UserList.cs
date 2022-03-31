@@ -6,6 +6,7 @@ namespace Service.Identity.Dtos
     {
         public Guid IdUsuario { get; set; }
         public string Nombre { get; set; }
+        public string clave { get; set; }
         public string PrimerApellido { get; set; }
         public string SegundoApellido { get; set; }
         public Guid IdRol { get; set; }
