@@ -12,8 +12,8 @@ namespace Service.Catalog.Dtos.Medicos
         public string Direccion { get; set; }
         public string Clinica { get; set; }
         public string Correo { get; set; }
-        public long Celular { get; set; }
-        public long Telefono { get; set; }
+        public long? Celular { get; set; }
+        public long? Telefono { get; set; }
         public bool Activo { get; set; }
     }
 }

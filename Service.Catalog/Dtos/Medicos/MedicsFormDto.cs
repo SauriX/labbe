@@ -11,15 +11,15 @@ namespace Identidad.Api.ViewModels.Medicos
         public long EspecialidadId { get; set; }
         public string Observaciones { get; set; }
         public int CodigoPostal { get; set; }
-        public long EstadoId { get; set; }
-        public long CiudadId { get; set; }
+        public long? EstadoId { get; set; }
+        public long? CiudadId { get; set; }
         public int NumeroExterior { get; set; }
-        public int NumeroInterior { get; set; }
+        public int? NumeroInterior { get; set; }
         public string Calle { get; set; }
         public long ColoniaId { get; set; }
         public string Correo { get; set; }
-        public long Celular { get; set; }
-        public long Telefono { get; set; }
+        public long? Celular { get; set; }
+        public long? Telefono { get; set; }
         public bool Activo { get; set; }
         public int IdUsuario { get; set; }
 
