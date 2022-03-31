@@ -1,4 +1,5 @@
 ﻿using Identidad.Api.Infraestructure.Repository.IRepository;
+using Identidad.Api.ViewModels.Medicos;
 using Identidad.Api.ViewModels.Menu;
 using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Context;

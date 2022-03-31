@@ -1,4 +1,8 @@
 using FluentValidation.AspNetCore;
+using Identidad.Api.Infraestructure.Repository;
+using Identidad.Api.Infraestructure.Repository.IRepository;
+using Identidad.Api.Infraestructure.Services;
+using Identidad.Api.Infraestructure.Services.IServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -87,6 +91,7 @@ namespace Service.Catalog
             services.AddScoped<ICatalogDescApplication<Domain.Catalog.Service>, CatalogDescApplication<Domain.Catalog.Service>>();
             services.AddScoped<ICatalogApplication<Domain.Catalog.Service>, CatalogApplication<Domain.Catalog.Service>>();
             services.AddScoped<IReagentApplication, ReagentApplication>();
+            services.AddScoped<IMedicsApplication, MedicsApplication>();
 
             services.AddScoped<ICatalogRepository<Delivery>, CatalogRepository<Delivery>>();
             services.AddScoped<ICatalogRepository<Area>, CatalogRepository<Area>>();
@@ -106,6 +111,7 @@ namespace Service.Catalog
             services.AddScoped<ICatalogDescRepository<Domain.Catalog.Service>, CatalogDescRepository<Domain.Catalog.Service>>();
             services.AddScoped<ICatalogRepository<Domain.Catalog.Service>, CatalogRepository<Domain.Catalog.Service>>();
             services.AddScoped<IReagentRepository, ReagentRepository>();
+            services.AddScoped<IMedicsRepository, MedicsRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

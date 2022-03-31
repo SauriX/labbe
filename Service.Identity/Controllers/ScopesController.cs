@@ -24,5 +24,19 @@ namespace Service.Identity.Controllers
                 Descargar = true,
             };
         }
+
+        [HttpGet("medics")]
+        public ScopeDto GetMedicsScopes()
+        {
+            return new ScopeDto
+            {
+                Pantalla = "Catálogo de Medicos",
+                Acceder = true,
+                Crear = true,
+                Editar = true,
+                Descargar = true,
+            };
+        }
     }
+
 }
