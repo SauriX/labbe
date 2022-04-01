@@ -39,6 +39,8 @@ namespace Service.Catalog.Context.EntityConfiguration.Medics
             builder
               .Property(x => x.FechaMod)
               .IsRequired(true);
+
+            builder.HasOne(x => x.Clinica).WithMany().HasForeignKey(x => x.ClinicaId);
         }
             
     }

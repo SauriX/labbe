@@ -55,3 +55,5 @@
 31/03/2022 12:19:46 => An error occurred while updating the entries. See the inner exception for details.
 
 31/03/2022 12:21:10 => An error occurred while updating the entries. See the inner exception for details.
+
+01/04/2022 9:41:59 => Exception has been thrown by the target of an invocation.
