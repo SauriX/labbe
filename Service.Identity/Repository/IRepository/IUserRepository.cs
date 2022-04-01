@@ -13,6 +13,6 @@ namespace Service.Identity.Repository.IRepository
         Task DeleteUser(UsersModel user);
         Task<UsersModel> UpdateUser(UsersModel user);
         Task<UsersModel> AssingRol(string rolId, string userId);
-        Task ChangePassword(string id, string pass);
+        Task<UsersModel> ChangePassword(ChangePasswordForm form);
     }
 }

@@ -22,6 +22,7 @@ namespace  Service.Identity.Mapper
                     IdRol = user.IdRol,
                     Activo = user.Activo,
                     clave = user.Clave,
+                    TipoUsuario = "test",
                 });
             }
             return users;

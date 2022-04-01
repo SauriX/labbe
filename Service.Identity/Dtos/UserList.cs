@@ -12,5 +12,6 @@ namespace Service.Identity.Dtos
         public Guid IdRol { get; set; }
         public int IdSucursal { get; set; }
         public bool Activo { get; set; }
+        public string TipoUsuario { get; set; }
     }
 }

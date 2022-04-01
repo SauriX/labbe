@@ -53,12 +53,12 @@ namespace Service.Identity
                 options.Password.RequiredLength = 8;
                 options.Password.RequiredUniqueChars = 0;
             }
-            )
-                            .AddEntityFrameworkStores<IndentityContext>();
+            ).AddEntityFrameworkStores<IndentityContext>().AddDefaultTokenProviders();
 
             
             services.AddControllers();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ISessionRepository, SessionRepository>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Service.Identity", Version = "v1" });

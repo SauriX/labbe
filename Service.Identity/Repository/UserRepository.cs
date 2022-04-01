@@ -11,6 +11,13 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Service.Identity.Mapper;
 using System.Text;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Logging;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Http;
+using System.Security.Principal;
 
 namespace Service.Identity.Repository
 {
@@ -19,29 +26,36 @@ namespace Service.Identity.Repository
         private readonly UserManager<UsersModel> _userManager;
         private readonly SignInManager<UsersModel> _signInManager;
         private readonly IndentityContext _context;
-
+        private readonly IConfiguration _configuration;
         public List<UsersModel> ApUsers { get; private set; }
         public UsersModel ApUser { get; private set; }
 
         public UserRepository(
                     UserManager<UsersModel> userManager,
                     SignInManager<UsersModel> signInManager,
-                    IndentityContext indentityContext)
+                    IndentityContext indentityContext,
+                    IConfiguration configuration)
+                    
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _context = indentityContext;
+            _configuration = configuration;
         }
 
         public async Task<List<UserList>> GetAll(string search)
         {
             var users = _context.Users.AsQueryable();
 
-            search = search.Trim().ToLower();
+
 
             if (!string.IsNullOrWhiteSpace(search) && search != "all")
             {
+                search = search.Trim().ToLower();
                 users = users.Where(x => x.Clave.ToLower().Contains(search) || x.Nombre.ToLower().Contains(search));
+            }
+            else {
+                users = users.Where(x => x.Activo);
             }
              var listuser =Mapper.UserMapper.ToUserListDto(users);
             return (List<UserList>)listuser;
@@ -51,15 +65,15 @@ namespace Service.Identity.Repository
             clave.Append(user.Nombre.Substring(0, 1));
             clave.Append(user.PrimerApellido);
             string password = GenerarPassword(8);
-            user.Contraseña = password;
             user.Id = Guid.NewGuid();
+            user.IdUsuario = user.Id;
             user.Clave = clave.ToString();
             IdentityResult results= await _userManager.CreateAsync(user,password);
             ApUsers = _userManager.Users.ToList();
             ApUser = ApUsers.Last();
             if (ApUser != null)
             {
-
+                ApUser.Contraseña = password;
                     return ApUser;
                 
             }
@@ -136,16 +150,50 @@ namespace Service.Identity.Repository
             }
             return null;
         }
-        public async Task ChangePassword(string id,string pass) {
-            if (PasswordValidator(pass))
+        public async Task<UsersModel> ChangePassword(ChangePasswordForm form) {
+            string jwt= form.token; 
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+            var securityToken = (JwtSecurityToken)tokenHandler.ReadToken(jwt);
+            var claimValue = securityToken.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;
+
+
+            var id = claimValue;
+            if (form.Password.Contains(form.ConfirmPassword))
             {
-                var user = await _userManager.FindByIdAsync(id);
+                if (PasswordValidator(form.Password))
+                {
+                    var user = await _userManager.FindByIdAsync(id);
 
-                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-                var result = await _userManager.ResetPasswordAsync(user, token, pass);
+                    var result = await _userManager.ResetPasswordAsync(user, token, form.Password);
+                    ApUsers = _userManager.Users.ToList();
+                    ApUser = await _userManager.FindByIdAsync(id);
+                    if (ApUser != null)
+                    {
+                        ApUser.flagpassword = true;
+                        IdentityResult identityResult = await _userManager.UpdateAsync(ApUser);
+                        if (identityResult.Succeeded)
+                        {
+                            ApUsers = _userManager.Users.ToList();
+                            ApUser = await _userManager.FindByIdAsync(id);
+                            if (ApUser != null)
+                            {
+                                if (result.Succeeded)
+                                {
+                                    return ApUser;
+                                }
+                            }
+                            
+                        }
+                    }
+                    return null;
+                }
+                return null;
             }
+            return null;
         }
+
         public static string GenerarPassword(int longitud)
         {
             string contraseña = string.Empty;
@@ -172,45 +220,32 @@ namespace Service.Identity.Repository
 
         public static bool PasswordValidator(string pass) {
             Match matchLongitud = Regex.Match(pass, @"^\w{8}\b");
-            Match matchNumeros = Regex.Match(pass, @"\d");
-            Match matchMayusculas = Regex.Match(pass, @"[A-Z]");
-            Match matchAdmin = Regex.Match(pass, @"admin");
-            Match matchContraseña = Regex.Match(pass, @"contraseña");
-           String[] palabrasProhibidas = { "123", "12345", "56789", "123456789", "321", "54321", "987654321", "56789", "qwerty", "asdf", "zxcv", "poiuy", "lkjhg", " mnbv" };
+           // Match matchNumeros = Regex.Match(pass, @"\d");
+           // Match matchMayusculas = Regex.Match(pass, @"[A-Z]");
+           // Match matchAdmin = Regex.Match(pass, @"admin");
+           // Match matchContraseña = Regex.Match(pass, @"contraseña");
+          // String[] palabrasProhibidas = { "123", "12345", "56789", "123456789", "321", "54321", "987654321", "56789", "qwerty", "asdf", "zxcv", "poiuy", "lkjhg", " mnbv" };
             bool errorFlag = false;
             int errorCode = 0;
-            if (!matchNumeros.Success)
+            /*if (!matchNumeros.Success)
             {
 
                 errorCode = 1;
                 errorFlag = true;
-            }
-            else if (errorFlag || !matchLongitud.Success)
+            }*/
+            if (errorFlag || !matchLongitud.Success)
             {
 
                 errorCode = 2;
                 errorFlag = true;
             }
 
-            for (int i = 0; i < palabrasProhibidas.Length; i++)
-            {
-                Match Match = Regex.Match(pass, palabrasProhibidas[i]);
-                if (Match.Success)
-                {
-                    errorCode = 3;
-                    errorFlag = true;
-
-                }
-            }
             switch (errorCode)
             {
                 case 1:
                     return false;
                     break;
                 case 2:
-                    return false;
-                    break;
-                case 3:
                     return false;
                     break;
                 default:

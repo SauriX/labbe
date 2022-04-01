@@ -23,7 +23,7 @@ namespace Service.Identity.Controllers
         [HttpGet("all/{search?}")]
         public async Task<IEnumerable<UserList>> GetAll(string search = null)
         {
-            return (IEnumerable<UserList>)await _service.GetAll(search);
+            return await _service.GetAll(search);
         }
         [HttpGet("user/{id}")]
         public async Task<UsersModel> GetById(string id) {
@@ -48,11 +48,11 @@ namespace Service.Identity.Controllers
         }
 
         [HttpPut("updatepassword")]
-        public async Task<UsersModel> UpdatePassword(string IdRol, string password)
+        public async Task<UsersModel> UpdatePassword(ChangePasswordForm form)
         {
-            if (password.Length >= 8)
+            if (form.Password.Length >= 8)
             {
-                return await _service.AssingRol(IdRol, password);
+                return await _service.ChangePassword(form);
             }
             else {
                 return null;

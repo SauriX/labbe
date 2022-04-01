@@ -212,6 +212,9 @@ namespace Service.Identity.Migrations
                     b.Property<Guid>("UsuarioModId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("flagpassword")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")

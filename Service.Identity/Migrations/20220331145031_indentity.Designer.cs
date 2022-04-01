@@ -10,7 +10,7 @@ using Service.Identity.Context;
 namespace Service.Identity.Migrations
 {
     [DbContext(typeof(IndentityContext))]
-    [Migration("20220331140434_indentity")]
+    [Migration("20220331145031_indentity")]
     partial class indentity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -213,6 +213,9 @@ namespace Service.Identity.Migrations
 
                     b.Property<Guid>("UsuarioModId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("flagpassword")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
