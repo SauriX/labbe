@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220331182501_Telefono y celular nulleables")]
+    partial class Telefonoycelularnulleables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,11 +93,13 @@ namespace Service.Catalog.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("int");
 
-                    b.Property<long>("ColoniaId")
+                    b.Property<long?>("ColoniaId")
+                        .IsRequired()
                         .HasMaxLength(15)
                         .HasColumnType("bigint");
 
                     b.Property<string>("Correo")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -103,7 +107,6 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<long?>("EstadoId")
-                        .HasMaxLength(15)
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("FechaCreo")
@@ -122,6 +125,7 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("NumeroInterior")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("int");
 

@@ -21,19 +21,57 @@ namespace Identidad.Api.Infraestructure.EntityConfiguration.CatalogoMedicosConfi
               .Property(x => x.Nombre)
               .IsRequired(true)
               .HasMaxLength(100);
-
+            builder
+              .Property(x => x.PrimerApellido)
+              .IsRequired(true)
+              .HasMaxLength(100);
+            builder
+              .Property(x => x.SegundoApellido)
+              .IsRequired(false)
+              .HasMaxLength(100);
             builder
               .Property(x => x.Correo)
+              .IsRequired(false)
+              .HasMaxLength(100);
+            builder
+              .Property(x => x.CodigoPostal)
+              .IsRequired(true)
+              .HasMaxLength(15);
+            builder
+              .Property(x => x.Calle)
+              .IsRequired(true)
+              .HasMaxLength(100);
+            builder
+              .Property(x => x.NumeroExterior)
+              .IsRequired(true)
+              .HasMaxLength(100);
+            builder
+              .Property(x => x.NumeroInterior)
+              .IsRequired(false)
+              .HasMaxLength(100);
+
+            builder
+              .Property(x => x.CiudadId)
+              .IsRequired(false)
+              .HasMaxLength(15);
+
+            builder
+              .Property(x => x.EstadoId)
+              .IsRequired(false)
+              .HasMaxLength(15);
+
+            builder
+              .Property(x => x.ColoniaId)
               .IsRequired(true)
               .HasMaxLength(15);
 
             builder
               .Property(x => x.Telefono)
-              .IsRequired(true);
+              .IsRequired(false);
 
             builder
               .Property(x => x.Celular)
-              .IsRequired(true);
+              .IsRequired(false);
 
             builder
               .Property(x => x.Calle)

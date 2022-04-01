@@ -64,6 +64,7 @@ namespace Identidad.Api.mapper
                 CodigoPostal = model.CodigoPostal,
                 EstadoId = model.EstadoId,
                 CiudadId = model.CiudadId,
+                ColoniaId = model.ColoniaId,
                 NumeroExterior = model.NumeroExterior,
                 NumeroInterior = model.NumeroInterior,
                 Observaciones = model.Observaciones.Trim(),
