@@ -46,33 +46,38 @@ namespace Service.Identity.Repository
             {
                 ApUsers = _userManager.Users.ToList();
                 ApUser = await _userManager.FindByNameAsync(user.UserName);
-                var secretKey = _configuration.GetValue<string>("SecretKey");
-                var key = Encoding.ASCII.GetBytes(secretKey);
-                var claims = new Claim[]
+                if (ApUser.Activo)
                 {
+                    var secretKey = _configuration.GetValue<string>("SecretKey");
+                    var key = Encoding.ASCII.GetBytes(secretKey);
+                    var claims = new Claim[]
+                    {
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(ClaimTypes.NameIdentifier, ApUser.Id.ToString())
-                };
+                    };
 
-                var tokenDescriptor = new SecurityTokenDescriptor
-                {
-                    Subject = new ClaimsIdentity(claims),
-                    // Nuestro token va a durar un día
-                    Expires = DateTime.UtcNow.AddDays(1),
-                    // Credenciales para generar el token usando nuestro secretykey y el algoritmo hash 256
-                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-                };
+                    var tokenDescriptor = new SecurityTokenDescriptor
+                    {
+                        Subject = new ClaimsIdentity(claims),
+                        // Nuestro token va a durar un día
+                        Expires = DateTime.UtcNow.AddDays(1),
+                        // Credenciales para generar el token usando nuestro secretykey y el algoritmo hash 256
+                        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                    };
 
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var createdToken = tokenHandler.CreateToken(tokenDescriptor);
+                    var tokenHandler = new JwtSecurityTokenHandler();
+                    var createdToken = tokenHandler.CreateToken(tokenDescriptor);
 
 
-                var response = new LoginResponse {
-                    token = tokenHandler.WriteToken(createdToken),
-                    changePassword = !ApUser.flagpassword,
-                    id = ApUser.Id
-               };
-                return response;
+                    var response = new LoginResponse
+                    {
+                        token = tokenHandler.WriteToken(createdToken),
+                        changePassword = !ApUser.flagpassword,
+                        id = ApUser.Id
+                    };
+                    return response;
+                }
+                return null;
             }
             return null;
         }

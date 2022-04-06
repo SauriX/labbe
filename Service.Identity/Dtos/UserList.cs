@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Service.Identity.Dtos
 {
@@ -13,5 +14,8 @@ namespace Service.Identity.Dtos
         public int IdSucursal { get; set; }
         public bool Activo { get; set; }
         public string TipoUsuario { get; set; }
+        public string contraseña { get; set; }
+        public string confirmaContraseña { get; set; }
+        public List<UserPermission> permisos  { get; set; }
     }
 }

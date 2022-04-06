@@ -2,6 +2,8 @@
 using Service.Identity.Dtos;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 
 namespace  Service.Identity.Mapper
 {
@@ -14,7 +16,7 @@ namespace  Service.Identity.Mapper
             foreach (UsersModel user in modelList) {
                 users.Add(new UserList
                 {
-                    IdUsuario = user.IdUsuario,
+                    IdUsuario = user.Id,
                     IdSucursal = user.IdSucursal,
                     Nombre = user.Nombre,
                     PrimerApellido = user.PrimerApellido,
@@ -23,20 +25,113 @@ namespace  Service.Identity.Mapper
                     Activo = user.Activo,
                     clave = user.Clave,
                     TipoUsuario = "test",
-                });
+                    confirmaContraseña = DecodeFrom64(user.Contraseña),
+                    contraseña = DecodeFrom64(user.Contraseña)
+                }); ;
             }
             return users;
         }
-        public static RegisterUserDTO ToregisterUSerDto<T>(this T model) where T : UsersModel
+
+        public static UserList ToUserInfoDto(UsersModel model)
         {
             if (model == null) return null;
-
-            return new RegisterUserDTO
+            List<UserPermission> permisio= new List<UserPermission>();
+            permisio.Add(new UserPermission {
+                     id = "1",
+                     number = 11,
+                     menu ="test",
+                     permiso = "test",
+                     asignado = true,
+                     tipo =1
+             });
+            permisio.Add(new UserPermission
+            {
+                id = "3",
+                number = 33,
+                menu = "test3",
+                permiso = "test3",
+                asignado = true,
+                tipo = 3
+            });
+            permisio.Add(new UserPermission
+            {
+                id = "2",
+                number = 22,
+                menu = "test2",
+                permiso = "test2",
+                asignado = true,
+                tipo = 2
+            });
+            return new UserList
             {
                 IdUsuario = model.Id,
-                Clave = model.Clave,
+                IdSucursal = model.IdSucursal,
                 Nombre = model.Nombre,
+                PrimerApellido = model.PrimerApellido,
+                SegundoApellido = model.SegundoApellido,
+                IdRol = model.IdRol,
                 Activo = model.Activo,
+                clave = model.Clave,
+                contraseña = DecodeFrom64(model.Contraseña),
+                confirmaContraseña = DecodeFrom64(model.Contraseña),
+                TipoUsuario = "test",
+                permisos = permisio,
+            };
+            
+            
+        }
+        public static UsersModel ToregisterUSerDto(RegisterUserDTO model,string token)  
+        {
+            string jwt = token;
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+            var securityToken = (JwtSecurityToken)tokenHandler.ReadToken(jwt);
+            var claimValue = securityToken.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;
+
+            if (model == null) return null;
+
+            return new UsersModel
+            {
+
+                Activo = model.activo,
+                Clave = model.Clave,
+                Contraseña =EncodeTo64(model.Contraseña),
+                FechaCreo =DateTime.Now,
+                flagpassword=false,
+                Id= new Guid(),
+                IdSucursal=model.IdSucursal,
+                Nombre=model.Nombre,
+                PrimerApellido=model.PrimerApellido,
+                SegundoApellido=model.SegundoApellido,
+                IdRol=Guid.Parse(model.usertype),
+                UserName=model.Clave,
+                UsuarioCreoId=Guid.Parse(claimValue),
+            };
+        }
+        public static UsersModel ToupdateUSerDto(RegisterUserDTO model, string token)
+        {
+            string jwt = token;
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+            var securityToken = (JwtSecurityToken)tokenHandler.ReadToken(jwt);
+            var claimValue = securityToken.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;
+
+            if (model == null) return null;
+
+            return new UsersModel
+            {
+
+                Activo = model.activo,
+                Clave = model.Clave,
+                Contraseña = model.Contraseña,
+                FechaCreo = DateTime.Now,   
+                flagpassword = false,
+                Id = Guid.Parse(model.idUsuario),
+                IdSucursal = model.IdSucursal,
+                Nombre = model.Nombre,
+                PrimerApellido = model.PrimerApellido,
+                SegundoApellido = model.SegundoApellido,
+                IdRol = Guid.Parse(model.usertype),
+                UserName = model.Clave,
+                UsuarioCreoId = Guid.Parse(claimValue),
             };
         }
 
@@ -49,11 +144,13 @@ namespace  Service.Identity.Mapper
                 Id = new Guid(),
                 Clave = dto.Clave,
                 Nombre = dto.Nombre,
-                Activo = dto.Activo,
-                UsuarioCreoId = dto.IdUsuario,
                 FechaCreo = DateTime.Now,
             };
         }
+
+
+
+        
 
         public static T ToModel<T>(this RegisterUserDTO dto, T model) where T : UsersModel, new()
         {
@@ -64,12 +161,46 @@ namespace  Service.Identity.Mapper
                 Id = model.Id,
                 Clave = dto.Clave,
                 Nombre = dto.Nombre,
-                Activo = dto.Activo,
+                Activo = true,
                 UsuarioCreoId = model.UsuarioCreoId,
                 FechaCreo = model.FechaCreo,
-                UsuarioModId = dto.IdUsuario,
                 FechaMod = DateTime.Now,
             };
+        }
+        static public string EncodeTo64(string toEncode)
+
+        {
+
+            byte[] toEncodeAsBytes
+
+                  = System.Text.ASCIIEncoding.ASCII.GetBytes(toEncode);
+
+            string returnValue
+
+                  = System.Convert.ToBase64String(toEncodeAsBytes);
+
+            
+            return returnValue;
+
+        }
+
+        static public string DecodeFrom64(string encodedData)
+
+        {
+            string returnValue = "";
+            if (!string.IsNullOrWhiteSpace(encodedData))
+            {
+
+                byte[] encodedDataAsBytes
+
+                    = System.Convert.FromBase64String(encodedData);
+
+                 returnValue =
+
+                   System.Text.ASCIIEncoding.ASCII.GetString(encodedDataAsBytes);
+            }
+            return returnValue;
+
         }
     }
 }

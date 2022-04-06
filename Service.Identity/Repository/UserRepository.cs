@@ -18,6 +18,8 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
 using System.Security.Principal;
+using Microsoft.Identity.Web;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Service.Identity.Repository
 {
@@ -27,6 +29,8 @@ namespace Service.Identity.Repository
         private readonly SignInManager<UsersModel> _signInManager;
         private readonly IndentityContext _context;
         private readonly IConfiguration _configuration;
+        readonly ITokenAcquisition _tokenAcquisition;
+
         public List<UsersModel> ApUsers { get; private set; }
         public UsersModel ApUser { get; private set; }
 
@@ -60,22 +64,17 @@ namespace Service.Identity.Repository
              var listuser =Mapper.UserMapper.ToUserListDto(users);
             return (List<UserList>)listuser;
         }
-        public async Task<UsersModel> NewUser(UsersModel user) {
-            StringBuilder clave = new StringBuilder();
-            clave.Append(user.Nombre.Substring(0, 1));
-            clave.Append(user.PrimerApellido);
-            string password = GenerarPassword(8);
-            user.Id = Guid.NewGuid();
-            user.IdUsuario = user.Id;
-            user.Clave = clave.ToString();
-            IdentityResult results= await _userManager.CreateAsync(user,password);
-            ApUsers = _userManager.Users.ToList();
-            ApUser = ApUsers.Last();
-            if (ApUser != null)
-            {
-                ApUser.Contraseña = password;
-                    return ApUser;
-                
+        public async Task<UserList> NewUser(RegisterUserDTO user,string token) {
+            token = token.Replace("Bearer ",string.Empty);
+            var usermodel = Mapper.UserMapper.ToregisterUSerDto(user,token);
+            IdentityResult results= await _userManager.CreateAsync(usermodel,user.Contraseña);
+                if (results.Succeeded) {
+                ApUsers = _userManager.Users.ToList();
+                ApUser = await _userManager.FindByIdAsync(usermodel.Id.ToString());
+                if (ApUser != null)
+                {
+                    return Mapper.UserMapper.ToUserInfoDto(ApUser);
+                }
             }
             return null;
         }
@@ -109,7 +108,7 @@ namespace Service.Identity.Repository
                 }
             }
         }
-        public async Task<UsersModel> GetById(string id) {
+        public async Task<UserList> GetById(string id) {
             ApUsers = _userManager.Users.ToList();
             ApUser = await _userManager.FindByIdAsync(id);
             if (ApUser != null)
@@ -117,25 +116,59 @@ namespace Service.Identity.Repository
                 IdentityResult result = await _userManager.UpdateAsync(ApUser);
                 if (result.Succeeded)
                 {
-                    return ApUser;
+                    return Mapper.UserMapper.ToUserInfoDto(ApUser);
                 }
             }
             return null;
         }
-        public async Task<UsersModel> UpdateUser(UsersModel user) {
-            string id = user.IdUsuario.ToString();
+        public async Task<UserList> UpdateUser(RegisterUserDTO user,string token) {
+            token = token.Replace("Bearer ", string.Empty);
+            string id = user.idUsuario;
             ApUsers = _userManager.Users.ToList();
+            
             ApUser = await _userManager.FindByIdAsync(id);
+            
             if (ApUser != null)
             {
-                ApUser = user;
+                
+                var ApUsers = Mapper.UserMapper.ToupdateUSerDto(user,token);
+                ApUser.Activo = ApUsers.Activo;
+                ApUser.Clave = ApUsers.Clave;
+                ApUser.FechaMod = DateTime.Now;
+                ApUser.Nombre = ApUsers.Nombre;
+                ApUser.PrimerApellido = ApUsers.PrimerApellido;
+                ApUser.SegundoApellido = ApUsers.SegundoApellido;
+                ApUser.UserName = ApUsers.UserName;
+                ApUser.UsuarioModId = ApUsers.UsuarioModId;
+                ApUser.IdRol = ApUsers.IdRol;
+                ApUser.IdSucursal = ApUsers.IdSucursal;
                 IdentityResult result = await _userManager.UpdateAsync(ApUser);
-                if (result.Succeeded) {
-                    return ApUser;
-                }
+                var AppUsers = Mapper.UserMapper.ToUserInfoDto(ApUsers);
+                return AppUsers;
             }
             return null;
         }
+        public async Task<string> generatePassword()     {
+            return GenerarPassword(8);
+        }
+        public async Task<string> generateClave(clave data) {
+            StringBuilder clave = new StringBuilder();
+            clave.Append(data.nombre.Substring(0, 1));
+            clave.Append(data.primerApllido);
+            var result = await _userManager.FindByNameAsync(clave.ToString());
+            if (result is null)
+            {
+                return clave.ToString();
+            }
+            else {
+                clave.Clear();
+                clave.Append(data.nombre.Substring(0, 1));
+                clave.Append(data.primerApllido.Substring(0, 1));
+                clave.Append(data.segundoApellido);
+                return clave.ToString().Trim();
+            }
+        }
+
         public async Task<UsersModel> AssingRol(string rolId,string userId) {
             ApUsers = _userManager.Users.ToList();
             ApUser = await _userManager.FindByIdAsync(userId);
@@ -151,13 +184,16 @@ namespace Service.Identity.Repository
             return null;
         }
         public async Task<UsersModel> ChangePassword(ChangePasswordForm form) {
-            string jwt= form.token; 
-            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-            var securityToken = (JwtSecurityToken)tokenHandler.ReadToken(jwt);
-            var claimValue = securityToken.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;
-
-
-            var id = claimValue;
+            var id = form.id;
+            if (form.id.IsNullOrEmpty())
+            {
+                string jwt = form.token;
+                JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+                var securityToken = (JwtSecurityToken)tokenHandler.ReadToken(jwt);
+                var claimValue = securityToken.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;
+                 id = claimValue;
+            }
+ 
             if (form.Password.Contains(form.ConfirmPassword))
             {
                 if (PasswordValidator(form.Password))
@@ -217,7 +253,6 @@ namespace Service.Identity.Repository
             }
             return contraseña;
         }
-
         public static bool PasswordValidator(string pass) {
             Match matchLongitud = Regex.Match(pass, @"^\w{8}\b");
            // Match matchNumeros = Regex.Match(pass, @"\d");

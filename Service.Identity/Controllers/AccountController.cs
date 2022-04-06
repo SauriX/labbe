@@ -26,20 +26,28 @@ namespace Service.Identity.Controllers
             return await _service.GetAll(search);
         }
         [HttpGet("user/{id}")]
-        public async Task<UsersModel> GetById(string id) {
+        public async Task<UserList> GetById(string id) {
             return await _service.GetById(id);
         }
 
         [HttpPost]
-        public async Task<UsersModel> Create(UsersModel user)
+        public async Task<UserList> Create(RegisterUserDTO user, [FromHeader] string authorization)
         {
-             return await _service.NewUser(user);
+             return await _service.NewUser(user,authorization);
         }
 
+        [HttpPost("user/clave")]
+        public async Task<string> generateClave(clave data) {
+            return await _service.generateClave(data);
+        }
+        [HttpGet("user/paswwordgenerator")]
+        public async Task<string> generatePassword() {
+            return await _service.generatePassword();
+        }
         [HttpPut]
-        public async Task<UsersModel> Update(UsersModel user)
+        public async Task<UserList> Update(RegisterUserDTO user, [FromHeader] string authorization)
         {
-            return await _service.UpdateUser(user);
+            return await _service.UpdateUser(user,authorization);
         }
 
         [HttpPut("assingrole")]
