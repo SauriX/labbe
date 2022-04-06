@@ -24,6 +24,10 @@ namespace Identidad.Api.Infraestructure.Services
         public async Task<MedicsFormDto> GetById(int Id)
         {
             var Medicos = await _repository.GetById(Id);
+            if (Medicos == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
+            }
             return Medicos.ToMedicsFormDto();
         }
         public async Task<MedicsFormDto> Create(MedicsFormDto medics)

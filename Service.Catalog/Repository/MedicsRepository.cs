@@ -21,7 +21,9 @@ namespace Identidad.Api.Infraestructure.Repository
         public async Task<Medics> GetById(int Id)
         {
             return await _context.CAT_Medicos
-                .Include(x => x.Clinicas).FirstOrDefaultAsync(x => x.IdMedico == Id);
+            .Include(x => x.Clinicas)
+            .ThenInclude(x => x.Clinica)
+            .FirstOrDefaultAsync(x => x.IdMedico == Id);
                        
 
         }

@@ -1,6 +1,8 @@
 ﻿using Identidad.Api.ViewModels.Medicos;
 using Identidad.Api.ViewModels.Menu;
+using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Dtos.Medicos;
+using Service.Catalog.Mapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +14,7 @@ namespace Identidad.Api.mapper
         public static MedicsListDto ToMedicsListDto(this Medics model)
         {
             if (model == null) return null;
+
             return new MedicsListDto
             {
                 IdMedico = model.IdMedico,
@@ -21,7 +24,7 @@ namespace Identidad.Api.mapper
                 Telefono = model.Telefono,
                 Celular = model.Celular,
                 Direccion = $"{model.Calle.Trim()} {model.NumeroExterior} {model.ColoniaId} {model.CiudadId} {model.EstadoId}",
-                Clinica = string.Join(", ", model.Clinicas.Select(x => x.ClinicaId)),
+                Clinicas = model.Clinicas.Select(y => y.Clinica).ToList().ToCatalogListDto(),
                 Observaciones = model.Observaciones.Trim(),
                 EspecialidadId = model.EspecialidadId,
                 Activo = model.Activo
@@ -40,11 +43,10 @@ namespace Identidad.Api.mapper
                 Telefono = x.Telefono,
                 Celular = x.Celular,
                 Direccion = x.Calle?.Trim() + " " + x.NumeroExterior + " " + x.ColoniaId + " " + x.EstadoId + " " + x.CiudadId + " " + x.CodigoPostal,
-                Clinica = x.Clinicas == null ? null : string.Join(", ", x.Clinicas.Select(x => x.ClinicaId)),
                 EspecialidadId = x.EspecialidadId,
                 Observaciones = x.Observaciones?.Trim(),
-                Activo = x.Activo
-
+                Activo = x.Activo,
+                Clinicas = x.Clinicas?.Select(y => y.Clinica)?.ToList()?.ToCatalogListDto()
             });
         }
         public static MedicsFormDto ToMedicsFormDto(this Medics model)
@@ -69,8 +71,8 @@ namespace Identidad.Api.mapper
                 NumeroInterior = model.NumeroInterior,
                 Observaciones = model.Observaciones.Trim(),
                 EspecialidadId = model.EspecialidadId,
-                Activo = model.Activo
-
+                Activo = model.Activo,
+                Clinicas = model.Clinicas.Select(x => x.Clinica).ToList().ToCatalogListDto()
             };
         }
 
@@ -108,7 +110,7 @@ namespace Identidad.Api.mapper
 
             return new Medics
             {
-                IdMedico = model.IdMedico,
+                IdMedico = dto.IdMedico,
                 Clave = dto.Clave.Trim(),
                 Nombre = dto.Nombre.Trim(),
                 PrimerApellido = dto.PrimerApellido.Trim(),

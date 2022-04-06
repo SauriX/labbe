@@ -10,7 +10,7 @@ namespace Identidad.Api.ViewModels.Menu
         public string Clave { get; set; }
         public string Nombre { get; set; }
         public string PrimerApellido { get; set; }
-        public string? SegundoApellido { get; set; }
+        public string SegundoApellido { get; set; }
         public long EspecialidadId { get; set; }
         public string Observaciones { get; set; }
         public int CodigoPostal { get; set; }
@@ -29,6 +29,6 @@ namespace Identidad.Api.ViewModels.Menu
         public int UsuarioModId { get; set; }
         public DateTime FechaMod { get; set; }
 
-        public virtual ICollection<MedicClinic> Clinicas { get; set; }
+        public virtual ICollection<MedicClinic> Clinicas { get; set; } = new List<MedicClinic>();
     }
 }

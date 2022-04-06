@@ -10,8 +10,8 @@ using Service.Catalog.Context;
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220331184406_Not null ColoniaId")]
-    partial class NotnullColoniaId
+    [Migration("20220401181300_Inicial")]
+    partial class Inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -31,8 +31,8 @@ namespace Service.Catalog.Migrations
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
 
-                    b.Property<long>("ClinicaId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("ClinicaId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
@@ -40,10 +40,7 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaMod")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("MedicoId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int?>("MedicoIdMedico")
+                    b.Property<int>("MedicoId")
                         .HasColumnType("int");
 
                     b.Property<string>("UsuarioCreo")
@@ -57,7 +54,9 @@ namespace Service.Catalog.Migrations
 
                     b.HasKey("IdMedico_Clinica");
 
-                    b.HasIndex("MedicoIdMedico");
+                    b.HasIndex("ClinicaId");
+
+                    b.HasIndex("MedicoId");
 
                     b.ToTable("CAT_Medico_Clinica");
                 });
@@ -154,6 +153,43 @@ namespace Service.Catalog.Migrations
                     b.ToTable("CAT_Medico");
                 });
 
+            modelBuilder.Entity("Service.Catalog.Domain.Catalog.Clinic", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Clave")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<DateTime>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaModifico")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("UsuarioCreoId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UsuarioModificoId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CAT_Clinica");
+                });
+
             modelBuilder.Entity("Service.Catalog.Domain.Reagent.Reagent", b =>
                 {
                     b.Property<int>("Id")
@@ -201,10 +237,19 @@ namespace Service.Catalog.Migrations
 
             modelBuilder.Entity("Identidad.Api.Model.Medicos.MedicClinic", b =>
                 {
+                    b.HasOne("Service.Catalog.Domain.Catalog.Clinic", "Clinica")
+                        .WithMany()
+                        .HasForeignKey("ClinicaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Identidad.Api.ViewModels.Menu.Medics", "Medico")
                         .WithMany("Clinicas")
-                        .HasForeignKey("MedicoIdMedico")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("MedicoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Clinica");
 
                     b.Navigation("Medico");
                 });
