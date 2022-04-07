@@ -22,33 +22,40 @@ namespace Service.Catalog.Repository
 
         public async Task<List<T>> GetAll(string search = null)
         {
-            var reagents = _entity.AsQueryable();
+            var catalogs = _entity.AsQueryable();
 
-            if (search != null)
+            if (!string.IsNullOrWhiteSpace(search) && search != "all")
             {
-                reagents = reagents.Where(x => x.Clave == search || x.Nombre == search);
+                catalogs = catalogs.Where(x => x.Clave == search || x.Nombre == search);
             }
 
-            return await reagents.ToListAsync();
+            return await catalogs.ToListAsync();
+        }
+
+        public async Task<List<T>> GetActive()
+        {
+            var catalogs = _entity.Where(x => x.Activo);
+
+            return await catalogs.ToListAsync();
         }
 
         public async Task<T> GetById(int id)
         {
-            var reagent = await _entity.FindAsync(id);
+            var catalog = await _entity.FindAsync(id);
 
-            return reagent;
+            return catalog;
         }
 
-        public async Task Crete(T reagent)
+        public async Task Crete(T catalog)
         {
-            _entity.Add(reagent);
+            _entity.Add(catalog);
 
             await _context.SaveChangesAsync();
         }
 
-        public async Task Update(T reagent)
+        public async Task Update(T catalog)
         {
-            _entity.Update(reagent);
+            _entity.Update(catalog);
             await _context.SaveChangesAsync();
         }
     }

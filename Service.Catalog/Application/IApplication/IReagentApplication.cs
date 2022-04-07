@@ -12,5 +12,7 @@ namespace Service.Catalog.Application.IApplication
         Task<ReagentFormDto> GetById(int id);
         Task Create(ReagentFormDto reagent);
         Task Update(ReagentFormDto reagent);
+        Task<byte[]> ExportList(string search = null);
+        Task<byte[]> ExportForm(int id);
     }
 }

@@ -13,30 +13,23 @@ using System.Threading.Tasks;
 
 namespace Service.Catalog.Application
 {
-    public class CatalogApplication<T> : ICatalogApplication<T> where T : GenericCatalog, new()
+    public class CatalogDescriptionApplication<T> : ICatalogDescriptionApplication<T> where T : GenericCatalogDescription, new()
     {
         private readonly ICatalogRepository<T> _repository;
 
-        public CatalogApplication(ICatalogRepository<T> repository)
+        public CatalogDescriptionApplication(ICatalogRepository<T> repository)
         {
             _repository = repository;
         }
 
-        public async Task<IEnumerable<CatalogListDto>> GetAll(string search = null)
+        public async Task<IEnumerable<CatalogDescriptionListDto>> GetAll(string search = null)
         {
             var catalogs = await _repository.GetAll(search);
 
-            return catalogs.ToCatalogListDto();
-        }      
-        
-        public async Task<IEnumerable<CatalogListDto>> GetActive()
-        {
-            var catalogs = await _repository.GetActive();
-
-            return catalogs.ToCatalogListDto();
+            return catalogs.ToCatalogDescriptionListDto();
         }
 
-        public async Task<CatalogFormDto> GetById(int id)
+        public async Task<CatalogDescriptionFormDto> GetById(int id)
         {
             var catalog = await _repository.GetById(id);
 
@@ -45,10 +38,10 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
 
-            return catalog.ToCatalogFormDto();
+            return catalog.ToCatalogDescriptionFormDto();
         }
 
-        public async Task<CatalogListDto> Create(CatalogFormDto catalog)
+        public async Task<CatalogDescriptionListDto> Create(CatalogDescriptionFormDto catalog)
         {
             if (catalog.Id != 0)
             {
@@ -59,10 +52,10 @@ namespace Service.Catalog.Application
 
             await _repository.Crete(newCatalog);
 
-            return newCatalog.ToCatalogListDto();
+            return newCatalog.ToCatalogDescriptionListDto();
         }
 
-        public async Task<CatalogListDto> Update(CatalogFormDto catalog)
+        public async Task<CatalogDescriptionListDto> Update(CatalogDescriptionFormDto catalog)
         {
             var existing = await _repository.GetById(catalog.Id);
 
@@ -75,7 +68,7 @@ namespace Service.Catalog.Application
 
             await _repository.Update(updatedAgent);
 
-            return updatedAgent.ToCatalogListDto();
+            return updatedAgent.ToCatalogDescriptionListDto();
         }
     }
 }

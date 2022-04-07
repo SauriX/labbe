@@ -10,8 +10,9 @@ namespace Service.Catalog.Application.IApplication
     public interface ICatalogApplication<T> where T : GenericCatalog
     {
         Task<IEnumerable<CatalogListDto>> GetAll(string search = null);
+        Task<IEnumerable<CatalogListDto>> GetActive();
         Task<CatalogFormDto> GetById(int id);
-        Task Create(CatalogFormDto Catalog);
-        Task Update(CatalogFormDto Catalog);
+        Task<CatalogListDto> Create(CatalogFormDto Catalog);
+        Task<CatalogListDto> Update(CatalogFormDto Catalog);
     }
 }

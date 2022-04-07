@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dtos.Reagent;
+using Shared.Dictionary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +45,20 @@ namespace Service.Catalog.Controllers
         {
             reagent.UsuarioId = "userId";
             await _service.Update(reagent);
+        }
+
+        [HttpPost("export/list/{search?}")]
+        public async Task<IActionResult> ExportList(string search = null)
+        {
+            var file = await _service.ExportList(search);
+            return File(file, MimeType.XLSX);
+        }
+
+        [HttpPost("export/form/{id}")]
+        public async Task<IActionResult> ExportForm(int id)
+        {
+            var file = await _service.ExportForm(id);
+            return File(file, MimeType.XLSX);
         }
     }
 }
