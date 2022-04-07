@@ -14,6 +14,7 @@ namespace Service.Catalog.Dtos.Reagent
         public string ClaveSistema { get; set; }
         public string NombreSistema { get; set; }
         public bool Activo { get; set; }
+        public string ActivoDescripcion => Activo ? "Sí" : "No";
         public string UsuarioId { get; set; }
     }
 

@@ -57,3 +57,11 @@
 31/03/2022 12:21:10 => An error occurred while updating the entries. See the inner exception for details.
 
 01/04/2022 9:41:59 => Exception has been thrown by the target of an invocation.
+
+1/4/2022 22:59:49 => There is already an object named 'CAT_Reactivo_Contpaq' in the database.
+
+7/4/2022 12:17:08 => The process cannot access the file 'C:\Users\LAPAXSIS-00\source\repos\LaboratorioRamos\Service.Catalog\wwwroot\layout\excel\reagent\ReactivoListado.xlsx' because it is being used by another process.
+
+7/4/2022 12:37:39 => The process cannot access the file 'C:\Users\LAPAXSIS-00\source\repos\LaboratorioRamos\Service.Catalog\wwwroot\layout\excel\reagent\ReactivoFormulario.xlsx' because it is being used by another process.
+
+7/4/2022 12:59:09 => The process cannot access the file 'C:\Users\LAPAXSIS-00\source\repos\LaboratorioRamos\Service.Catalog\wwwroot\layout\excel\reagent\ReactivoListado.xlsx' because it is being used by another process.
