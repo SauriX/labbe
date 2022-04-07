@@ -1,4 +1,8 @@
-﻿using System;
+﻿using FluentValidation;
+using Service.Catalog.Dtos.Catalog;
+using System;
+using System.Collections.Generic;
+
 namespace Identidad.Api.ViewModels.Medicos
 {
     public class MedicsFormDto
@@ -22,6 +26,23 @@ namespace Identidad.Api.ViewModels.Medicos
         public long? Telefono { get; set; }
         public bool Activo { get; set; }
         public int IdUsuario { get; set; }
+        public IEnumerable<CatalogListDto> Clinicas { get;set;}
+    }
 
+    public class MedicosFormDtoValidator : AbstractValidator<MedicsFormDto>
+    {
+        public MedicosFormDtoValidator()
+        {
+            RuleFor(x => x.IdMedico).GreaterThanOrEqualTo(0);
+            RuleFor(x => x.Clave).NotEmpty().MaximumLength(15);//.NotEqual();
+            RuleFor(x => x.Nombre).NotEmpty().MaximumLength(50);
+            RuleFor(x => x.PrimerApellido).NotEmpty().MaximumLength(50);
+            RuleFor(x => x.SegundoApellido).NotEmpty().MaximumLength(50);
+            RuleFor(x => x.EspecialidadId).NotEmpty();
+            RuleFor(x => x.Calle).NotEmpty().MaximumLength(50);
+            RuleFor(x => x.ColoniaId).NotEmpty();
+           
+        }
+        
     }
 }

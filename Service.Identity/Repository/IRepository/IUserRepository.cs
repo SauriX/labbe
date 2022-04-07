@@ -7,12 +7,14 @@ namespace Service.Identity.Repository.IRepository
 {
     public interface IUserRepository
     {
-        Task<List<UsersModel>> GetAll(string search);
-        Task<UsersModel> GetById(string id);
-        Task<UsersModel> NewUser(UsersModel user);
+        Task<List<UserList>> GetAll(string search);
+        Task<UserList> GetById(string id);
+        Task<UserList> NewUser(RegisterUserDTO user,string token);
         Task DeleteUser(UsersModel user);
-        Task<UsersModel> UpdateUser(UsersModel user);
+        Task<UserList> UpdateUser(RegisterUserDTO user, string token);
         Task<UsersModel> AssingRol(string rolId, string userId);
-        Task ChangePassword(string id, string pass);
+        Task<UsersModel> ChangePassword(ChangePasswordForm form);
+        Task<string> generateClave(clave data);
+        Task<string> generatePassword();
     }
 }

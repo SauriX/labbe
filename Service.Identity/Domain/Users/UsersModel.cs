@@ -20,5 +20,7 @@ namespace Service.Identity.Domain.Users
         public DateTime FechaCreo { get; set; }
         public Guid UsuarioModId { get; set; }
         public DateTime FechaMod { get; set; }
+
+        public bool flagpassword { get; set; }
     }
 }

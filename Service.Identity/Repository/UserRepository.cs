@@ -7,7 +7,19 @@ using Service.Identity.Repository.IRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Service.Identity.Mapper;
+using System.Text;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Logging;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Http;
+using System.Security.Principal;
+using Microsoft.Identity.Web;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Service.Identity.Repository
 {
@@ -16,6 +28,8 @@ namespace Service.Identity.Repository
         private readonly UserManager<UsersModel> _userManager;
         private readonly SignInManager<UsersModel> _signInManager;
         private readonly IndentityContext _context;
+        private readonly IConfiguration _configuration;
+        readonly ITokenAcquisition _tokenAcquisition;
 
         public List<UsersModel> ApUsers { get; private set; }
         public UsersModel ApUser { get; private set; }
@@ -23,39 +37,43 @@ namespace Service.Identity.Repository
         public UserRepository(
                     UserManager<UsersModel> userManager,
                     SignInManager<UsersModel> signInManager,
-                    IndentityContext indentityContext)
+                    IndentityContext indentityContext,
+                    IConfiguration configuration)
+                    
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _context = indentityContext;
+            _configuration = configuration;
         }
 
-        public async Task<List<UsersModel>> GetAll(string search)
+        public async Task<List<UserList>> GetAll(string search)
         {
             var users = _context.Users.AsQueryable();
 
-            search = search.Trim().ToLower();
+
 
             if (!string.IsNullOrWhiteSpace(search) && search != "all")
             {
+                search = search.Trim().ToLower();
                 users = users.Where(x => x.Clave.ToLower().Contains(search) || x.Nombre.ToLower().Contains(search));
             }
-
-            return await users.ToListAsync();
+            else {
+                users = users.Where(x => x.Activo);
+            }
+             var listuser =Mapper.UserMapper.ToUserListDto(users);
+            return (List<UserList>)listuser;
         }
-        public async Task<UsersModel> NewUser(UsersModel user) {
-
-            string password = GenerarPassword(8);
-            await _userManager.CreateAsync(user,password);
-            ApUsers = _userManager.Users.ToList();
-            ApUser = await _userManager.Users.LastAsync();
-            if (ApUser != null)
-            {
-                IdentityResult result = await _userManager.UpdateAsync(ApUser);
-                if (result.Succeeded)
+        public async Task<UserList> NewUser(RegisterUserDTO user,string token) {
+            token = token.Replace("Bearer ",string.Empty);
+            var usermodel = Mapper.UserMapper.ToregisterUSerDto(user,token);
+            IdentityResult results= await _userManager.CreateAsync(usermodel,user.Contraseña);
+                if (results.Succeeded) {
+                ApUsers = _userManager.Users.ToList();
+                ApUser = await _userManager.FindByIdAsync(usermodel.Id.ToString());
+                if (ApUser != null)
                 {
-                    ApUser.Contraseña = password;
-                    return ApUser;
+                    return Mapper.UserMapper.ToUserInfoDto(ApUser);
                 }
             }
             return null;
@@ -90,7 +108,7 @@ namespace Service.Identity.Repository
                 }
             }
         }
-        public async Task<UsersModel> GetById(string id) {
+        public async Task<UserList> GetById(string id) {
             ApUsers = _userManager.Users.ToList();
             ApUser = await _userManager.FindByIdAsync(id);
             if (ApUser != null)
@@ -98,25 +116,59 @@ namespace Service.Identity.Repository
                 IdentityResult result = await _userManager.UpdateAsync(ApUser);
                 if (result.Succeeded)
                 {
-                    return ApUser;
+                    return Mapper.UserMapper.ToUserInfoDto(ApUser);
                 }
             }
             return null;
         }
-        public async Task<UsersModel> UpdateUser(UsersModel user) {
-            string id = user.IdUsuario.ToString();
+        public async Task<UserList> UpdateUser(RegisterUserDTO user,string token) {
+            token = token.Replace("Bearer ", string.Empty);
+            string id = user.idUsuario;
             ApUsers = _userManager.Users.ToList();
+            
             ApUser = await _userManager.FindByIdAsync(id);
+            
             if (ApUser != null)
             {
-                ApUser = user;
+                
+                var ApUsers = Mapper.UserMapper.ToupdateUSerDto(user,token);
+                ApUser.Activo = ApUsers.Activo;
+                ApUser.Clave = ApUsers.Clave;
+                ApUser.FechaMod = DateTime.Now;
+                ApUser.Nombre = ApUsers.Nombre;
+                ApUser.PrimerApellido = ApUsers.PrimerApellido;
+                ApUser.SegundoApellido = ApUsers.SegundoApellido;
+                ApUser.UserName = ApUsers.UserName;
+                ApUser.UsuarioModId = ApUsers.UsuarioModId;
+                ApUser.IdRol = ApUsers.IdRol;
+                ApUser.IdSucursal = ApUsers.IdSucursal;
                 IdentityResult result = await _userManager.UpdateAsync(ApUser);
-                if (result.Succeeded) {
-                    return ApUser;
-                }
+                var AppUsers = Mapper.UserMapper.ToUserInfoDto(ApUsers);
+                return AppUsers;
             }
             return null;
         }
+        public async Task<string> generatePassword()     {
+            return GenerarPassword(8);
+        }
+        public async Task<string> generateClave(clave data) {
+            StringBuilder clave = new StringBuilder();
+            clave.Append(data.nombre.Substring(0, 1));
+            clave.Append(data.primerApllido);
+            var result = await _userManager.FindByNameAsync(clave.ToString());
+            if (result is null)
+            {
+                return clave.ToString();
+            }
+            else {
+                clave.Clear();
+                clave.Append(data.nombre.Substring(0, 1));
+                clave.Append(data.primerApllido.Substring(0, 1));
+                clave.Append(data.segundoApellido);
+                return clave.ToString().Trim();
+            }
+        }
+
         public async Task<UsersModel> AssingRol(string rolId,string userId) {
             ApUsers = _userManager.Users.ToList();
             ApUser = await _userManager.FindByIdAsync(userId);
@@ -131,13 +183,53 @@ namespace Service.Identity.Repository
             }
             return null;
         }
-        public async Task ChangePassword(string id,string pass) {
-            var user = await _userManager.FindByIdAsync(id);
+        public async Task<UsersModel> ChangePassword(ChangePasswordForm form) {
+            var id = form.id;
+            if (form.id.IsNullOrEmpty())
+            {
+                string jwt = form.token;
+                JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+                var securityToken = (JwtSecurityToken)tokenHandler.ReadToken(jwt);
+                var claimValue = securityToken.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;
+                 id = claimValue;
+            }
+ 
+            if (form.Password.Contains(form.ConfirmPassword))
+            {
+                if (PasswordValidator(form.Password))
+                {
+                    var user = await _userManager.FindByIdAsync(id);
 
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-            var result = await _userManager.ResetPasswordAsync(user, token, pass);
+                    var result = await _userManager.ResetPasswordAsync(user, token, form.Password);
+                    ApUsers = _userManager.Users.ToList();
+                    ApUser = await _userManager.FindByIdAsync(id);
+                    if (ApUser != null)
+                    {
+                        ApUser.flagpassword = true;
+                        IdentityResult identityResult = await _userManager.UpdateAsync(ApUser);
+                        if (identityResult.Succeeded)
+                        {
+                            ApUsers = _userManager.Users.ToList();
+                            ApUser = await _userManager.FindByIdAsync(id);
+                            if (ApUser != null)
+                            {
+                                if (result.Succeeded)
+                                {
+                                    return ApUser;
+                                }
+                            }
+                            
+                        }
+                    }
+                    return null;
+                }
+                return null;
+            }
+            return null;
         }
+
         public static string GenerarPassword(int longitud)
         {
             string contraseña = string.Empty;
@@ -160,6 +252,41 @@ namespace Service.Identity.Repository
                 }
             }
             return contraseña;
+        }
+        public static bool PasswordValidator(string pass) {
+            Match matchLongitud = Regex.Match(pass, @"^\w{8}\b");
+           // Match matchNumeros = Regex.Match(pass, @"\d");
+           // Match matchMayusculas = Regex.Match(pass, @"[A-Z]");
+           // Match matchAdmin = Regex.Match(pass, @"admin");
+           // Match matchContraseña = Regex.Match(pass, @"contraseña");
+          // String[] palabrasProhibidas = { "123", "12345", "56789", "123456789", "321", "54321", "987654321", "56789", "qwerty", "asdf", "zxcv", "poiuy", "lkjhg", " mnbv" };
+            bool errorFlag = false;
+            int errorCode = 0;
+            /*if (!matchNumeros.Success)
+            {
+
+                errorCode = 1;
+                errorFlag = true;
+            }*/
+            if (errorFlag || !matchLongitud.Success)
+            {
+
+                errorCode = 2;
+                errorFlag = true;
+            }
+
+            switch (errorCode)
+            {
+                case 1:
+                    return false;
+                    break;
+                case 2:
+                    return false;
+                    break;
+                default:
+                    return true;
+                    break;
+            }
         }
     }
 }
