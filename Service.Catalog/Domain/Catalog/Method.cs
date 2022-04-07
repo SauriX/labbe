@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Service.Catalog.Domain.Catalog
 {
-    public class Dimensions : GenericCatalog
+    public class Method : GenericCatalog
     {
     }
 }

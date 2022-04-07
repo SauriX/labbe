@@ -27,6 +27,13 @@ namespace Service.Catalog.Application
             var catalogs = await _repository.GetAll(search);
 
             return catalogs.ToCatalogListDto();
+        }      
+        
+        public async Task<IEnumerable<CatalogListDto>> GetActive()
+        {
+            var catalogs = await _repository.GetActive();
+
+            return catalogs.ToCatalogListDto();
         }
 
         public async Task<CatalogFormDto> GetById(int id)
@@ -41,7 +48,7 @@ namespace Service.Catalog.Application
             return catalog.ToCatalogFormDto();
         }
 
-        public async Task Create(CatalogFormDto catalog)
+        public async Task<CatalogListDto> Create(CatalogFormDto catalog)
         {
             if (catalog.Id != 0)
             {
@@ -51,9 +58,11 @@ namespace Service.Catalog.Application
             var newCatalog = catalog.ToModel<T>();
 
             await _repository.Crete(newCatalog);
+
+            return newCatalog.ToCatalogListDto();
         }
 
-        public async Task Update(CatalogFormDto catalog)
+        public async Task<CatalogListDto> Update(CatalogFormDto catalog)
         {
             var existing = await _repository.GetById(catalog.Id);
 
@@ -65,6 +74,8 @@ namespace Service.Catalog.Application
             var updatedAgent = catalog.ToModel(existing);
 
             await _repository.Update(updatedAgent);
+
+            return updatedAgent.ToCatalogListDto();
         }
     }
 }

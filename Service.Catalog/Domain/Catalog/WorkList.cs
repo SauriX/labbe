@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Service.Catalog.Domain.Catalog
 {
-    public class Departments : GenericCatalog
+    public class WorkList : GenericCatalog
     {
     }
 }

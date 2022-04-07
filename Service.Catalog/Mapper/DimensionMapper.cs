@@ -7,76 +7,76 @@ using System.Threading.Tasks;
 
 namespace Service.Catalog.Mapper
 {
-    public static class CatalogDescMapper
+    public static class DimensionMapper
     {
-        public static CatalogDescListDto ToCatalogDescListDto<T>(this T model) where T : GenericCatalogDescription
+        public static DimensionListDto ToDimensionListDto(this Dimension model)
         {
             if (model == null) return null;
 
-            return new CatalogDescListDto
+            return new DimensionListDto
             {
                 Id = model.Id,
                 Clave = model.Clave,
-                Nombre = model.Nombre,
-                Descripcion = model.Descripcion,
+                Largo = model.Largo,
+                Ancho = model.Ancho,
                 Activo = model.Activo,
             };
         }
 
-        public static IEnumerable<CatalogDescListDto> ToCatalogDescListDto<T>(this List<T> model) where T : GenericCatalogDescription
+        public static IEnumerable<DimensionListDto> ToDimensionListDto(this List<Dimension> model)
         {
             if (model == null) return null;
 
-            return model.Select(x => new CatalogDescListDto
+            return model.Select(x => new DimensionListDto
             {
                 Id = x.Id,
                 Clave = x.Clave,
-                Nombre = x.Nombre,
-                Descripcion = x.Descripcion,
+                Largo = x.Largo,
+                Ancho = x.Ancho,
                 Activo = x.Activo,
             });
         }
 
-        public static CatalogDescFormDto ToCatalogDescFormDto<T>(this T model) where T : GenericCatalogDescription
+        public static DimensionFormDto ToDimensionFormDto(this Dimension model)
         {
             if (model == null) return null;
 
-            return new CatalogDescFormDto
+            return new DimensionFormDto
             {
                 Id = model.Id,
                 Clave = model.Clave,
-                Nombre = model.Nombre,
-                Descripcion = model.Descripcion,
+                Largo = model.Largo,
+                Ancho = model.Ancho,
                 Activo = model.Activo,
             };
         }
 
-        public static T ToModel<T>(this CatalogDescFormDto dto) where T : GenericCatalogDescription, new()
+        public static Dimension ToModel(this DimensionFormDto dto)
         {
             if (dto == null) return null;
 
-            return new T
+            return new Dimension
             {
                 Id = 0,
-                Clave = dto.Clave,
-                Nombre = dto.Nombre,
-                Descripcion = dto.Descripcion,
+                Clave = dto.Clave.Trim(),
+                Largo = dto.Largo,
+                Ancho = dto.Ancho,
                 Activo = dto.Activo,
                 UsuarioCreoId = dto.UsuarioId,
                 FechaCreo = DateTime.Now,
             };
         }
 
-        public static T ToModel<T>(this CatalogDescFormDto dto, T model) where T : GenericCatalogDescription, new()
+        public static Dimension ToModel(this DimensionFormDto dto, Dimension model)
         {
             if (dto == null || model == null) return null;
 
-            return new T
+            return new Dimension
             {
                 Id = model.Id,
-                Clave = dto.Clave,
-                Nombre = dto.Nombre,
-                Descripcion = dto.Descripcion,
+                Clave = dto.Clave.Trim(),
+                Largo = model.Largo,
+                Ancho = model.Ancho,
                 Activo = dto.Activo,
                 UsuarioCreoId = model.UsuarioCreoId,
                 FechaCreo = model.FechaCreo,

@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 
 namespace Service.Catalog.Domain.Catalog
 {
-    public class Indicators : GenericCatalogDescription
+    public class Payment : GenericCatalogDescription
     {
-
     }
 }

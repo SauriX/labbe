@@ -6,7 +6,6 @@ namespace Service.Catalog.Context.EntityConfiguration.Catalog
 {
     public class ClinicConfiguration : IEntityTypeConfiguration<Clinic>
     {
-       
         public void Configure(EntityTypeBuilder<Clinic> builder)
         {
             builder.ToTable("CAT_Clinica");
@@ -23,7 +22,6 @@ namespace Service.Catalog.Context.EntityConfiguration.Catalog
               .IsRequired(true)
               .HasMaxLength(100);
             
-
             builder
               .Property(x => x.Activo)
               .IsRequired(true);
