@@ -3,8 +3,10 @@ using Identidad.Api.ViewModels.Medicos;
 using Identidad.Api.ViewModels.Menu;
 using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Context;
+using Service.Catalog.Domain.Medics;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Identidad.Api.Infraestructure.Repository
@@ -24,9 +26,8 @@ namespace Identidad.Api.Infraestructure.Repository
             .Include(x => x.Clinicas)
             .ThenInclude(x => x.Clinica)
             .FirstOrDefaultAsync(x => x.IdMedico == Id);
-                       
-
         }
+
         public async Task<List<Medics>> GetAll(string search)
         {
             var doctors = _context.CAT_Medicos.AsQueryable();
@@ -38,7 +39,11 @@ namespace Identidad.Api.Infraestructure.Repository
             }
 
             return await doctors.ToListAsync();
+        }
 
+        public async Task<Medics> GetByCode(string code)
+        {
+            return await _context.CAT_Medicos.FirstOrDefaultAsync(x => x.Clave == code);
         }
 
         public async Task Create(Medics doctors)
@@ -54,5 +59,7 @@ namespace Identidad.Api.Infraestructure.Repository
 
             await _context.SaveChangesAsync();
         }
+
+      
     }
 }

@@ -111,7 +111,7 @@ namespace Identidad.Api.mapper
             return new Medics
             {
                 IdMedico = dto.IdMedico,
-                Clave = dto.Clave.Trim(),
+                Clave = model.Clave,
                 Nombre = dto.Nombre.Trim(),
                 PrimerApellido = dto.PrimerApellido.Trim(),
                 SegundoApellido = dto.SegundoApellido.Trim(),
