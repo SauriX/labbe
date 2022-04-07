@@ -67,6 +67,7 @@ namespace Service.Identity.Repository
         public async Task<UserList> NewUser(RegisterUserDTO user,string token) {
             token = token.Replace("Bearer ",string.Empty);
             var usermodel = Mapper.UserMapper.ToregisterUSerDto(user,token);
+            usermodel.TwoFactorEnabled = false;
             IdentityResult results= await _userManager.CreateAsync(usermodel,user.Contraseña);
                 if (results.Succeeded) {
                 ApUsers = _userManager.Users.ToList();

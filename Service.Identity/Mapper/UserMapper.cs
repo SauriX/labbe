@@ -105,6 +105,7 @@ namespace  Service.Identity.Mapper
                 IdRol=Guid.Parse(model.usertype),
                 UserName=model.Clave,
                 UsuarioCreoId=Guid.Parse(claimValue),
+                
             };
         }
         public static UsersModel ToupdateUSerDto(RegisterUserDTO model, string token)

@@ -40,7 +40,8 @@ namespace Service.Identity.Repository
 
         }
         public async Task<LoginResponse> Login(LoginDto user)
-        {
+            {
+            var response = new LoginResponse{};
             var result = await _signInManager.PasswordSignInAsync(user.UserName, user.Password, false, false);
             if (result.Succeeded)
             {
@@ -69,17 +70,19 @@ namespace Service.Identity.Repository
                     var createdToken = tokenHandler.CreateToken(tokenDescriptor);
 
 
-                    var response = new LoginResponse
-                    {
-                        token = tokenHandler.WriteToken(createdToken),
-                        changePassword = !ApUser.flagpassword,
-                        id = ApUser.Id
-                    };
+
+
+                    response.token = tokenHandler.WriteToken(createdToken);
+                    response.changePassword = !ApUser.flagpassword;
+                    response.id = ApUser.Id;
+                  
                     return response;
                 }
-                return null;
+                response.code = 1;
+                return response;
             }
-            return null;
+            response.code = 2;
+            return response;
         }
     }
 }

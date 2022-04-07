@@ -71,3 +71,7 @@
 04/04/2022 18:21:11 => Value cannot be null. (Parameter 'source')
 
 04/04/2022 18:21:28 => Value cannot be null. (Parameter 'source')
+
+06/04/2022 05:17:58 p. m. => A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: Named Pipes Provider, error: 40 - Could not open a connection to SQL Server)
+
+06/04/2022 05:51:08 p. m. => Value cannot be null. (Parameter 'connectionString')
