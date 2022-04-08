@@ -3,6 +3,7 @@ using Identidad.Api.Infraestructure.Services.IServices;
 using Identidad.Api.mapper;
 using Identidad.Api.ViewModels.Medicos;
 using Identidad.Api.ViewModels.Menu;
+using Service.Catalog.Domain.Medics;
 using Service.Catalog.Dtos.Medicos;
 using Shared.Dictionary;
 using Shared.Error;
@@ -14,7 +15,7 @@ namespace Identidad.Api.Infraestructure.Services
 {
     public class MedicsApplication : IMedicsApplication
     {
-        private readonly IMedicsRepository _repository ;
+        private readonly IMedicsRepository _repository;
 
         public MedicsApplication(IMedicsRepository repository)
         {
@@ -30,14 +31,18 @@ namespace Identidad.Api.Infraestructure.Services
             }
             return Medicos.ToMedicsFormDto();
         }
-        public async Task<MedicsFormDto> Create(MedicsFormDto medics)
+        public async Task<MedicsFormDto> Create(MedicsFormDto medic)
         {
-            if (medics.IdMedico != 0)
+            if (medic.IdMedico != 0)
             {
                 throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
             }
 
-            var newMedics = medics.ToModel();
+            var code = await GenerateCode(medic);
+
+            medic.Clave = code;
+
+            var newMedics = medic.ToModel();
 
             await _repository.Create(newMedics);
             return newMedics.ToMedicsFormDto();
@@ -61,6 +66,24 @@ namespace Identidad.Api.Infraestructure.Services
 
             await _repository.Update(updatedAgent);
             return existing.ToMedicsFormDto();
+        }
+
+        public async Task<string> GenerateCode(MedicsFormDto medics, string suffix = null)
+        {
+            var code = medics.Nombre[..3];
+            code += medics.PrimerApellido[..1];
+            code += medics.SegundoApellido[..1];
+            code += suffix;
+
+            var exists = await _repository.GetByCode(code);
+
+            if (exists != null)
+            {
+                var dotIndex = code.IndexOf(".");
+                return await GenerateCode(medics, dotIndex == -1 ? "." : code[code.IndexOf(".")..] + ".");
+            }
+
+            return code;
         }
     }
 }

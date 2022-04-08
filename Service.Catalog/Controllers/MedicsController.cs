@@ -2,6 +2,7 @@
 using Identidad.Api.ViewModels.Medicos;
 using Identidad.Api.ViewModels.Menu;
 using Microsoft.AspNetCore.Mvc;
+using Service.Catalog.Domain.Medics;
 using Service.Catalog.Dtos.Medicos;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -42,5 +43,11 @@ namespace Identidad.Api.Controllers
         {
             await _Services.Update(medics);
         }
+
+        //[HttpPost("medics/clave")]
+        //public async Task<string> GenerateClave(Clave data)
+        //{
+        //    return await _Services.GenerateClave(data);
+        //}
     }
 }
