@@ -7,6 +7,8 @@ namespace Service.Identity.Repository.IRepository
 {
     public interface IUserRepository
     {
+        Task<byte[]> ExportForm(string id);
+        Task<byte[]> ExportList(string search = null);
         Task<List<UserList>> GetAll(string search);
         Task<UserList> GetById(string id);
         Task<UserList> NewUser(RegisterUserDTO user,string token);
