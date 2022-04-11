@@ -13,6 +13,12 @@ namespace Service.Catalog.Controllers.Catalog
             return await _clinicService.GetAll(search);
         }
 
+        [HttpGet("clinic/active")]
+        public async Task<IEnumerable<CatalogListDto>> GetActiveClinic()
+        {
+            return await _clinicService.GetActive();
+        }
+
         [HttpGet("clinic/{id}")]
         public async Task<CatalogFormDto> GetClinicById(int id)
         {
