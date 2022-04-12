@@ -273,10 +273,8 @@ namespace Service.Identity.Repository
             template.AddVariable("Titulo", "Usuarios");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
             template.AddVariable("Usuario", user);
-
+            template.AddVariable("Permisos", user.permisos);
             template.Generate();
-
-            template.Format();
 
             return template.ToByteArray();
         }

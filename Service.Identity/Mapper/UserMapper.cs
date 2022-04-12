@@ -37,17 +37,17 @@ namespace  Service.Identity.Mapper
             if (model == null) return null;
             List<UserPermission> permisio= new List<UserPermission>();
             permisio.Add(new UserPermission {
-                     id = "1",
-                     number = 11,
+                     id = 1,
+                   
                      menu ="test",
                      permiso = "test",
-                     asignado = true,
+                     asignado = false,
                      tipo =1
              });
             permisio.Add(new UserPermission
             {
-                id = "3",
-                number = 33,
+                id = 3,
+                
                 menu = "test3",
                 permiso = "test3",
                 asignado = true,
@@ -55,8 +55,8 @@ namespace  Service.Identity.Mapper
             });
             permisio.Add(new UserPermission
             {
-                id = "2",
-                number = 22,
+                id = 2,
+                
                 menu = "test2",
                 permiso = "test2",
                 asignado = true,
