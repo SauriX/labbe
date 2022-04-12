@@ -79,3 +79,11 @@
 08/04/2022 17:51:23 => Could not find a part of the path 'C:\Users\Lapaxsis-00\source\repos\API\Service.Catalog\wwwroot\layout\excel\indication\IndicacionesFormulario.xlsx'.
 
 08/04/2022 17:51:37 => Could not find a part of the path 'C:\Users\Lapaxsis-00\source\repos\API\Service.Catalog\wwwroot\layout\excel\indication\IndicacionesFormulario.xlsx'.
+
+11/04/2022 16:16:39 => Could not find a part of the path 'C:\Users\Lapaxsis-00\source\repos\API\Service.Catalog\wwwroot\layout\excel\indication\IndicacionesListado.xlsx'.
+
+11/04/2022 17:16:50 => Exception has been thrown by the target of an invocation.
+
+11/04/2022 17:36:17 => Could not find a part of the path 'C:\Users\Lapaxsis-00\source\repos\API\Service.Catalog\wwwroot\layout\excel\indication\IndicacionesFormulario.xlsx'.
+
+11/04/2022 18:36:25 => The instance of entity type 'MedicClinic' cannot be tracked because another instance with the same key value for {'MedicoId', 'ClinicaId'} is already being tracked. When attaching existing entities, ensure that only one entity instance with a given key value is attached. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see the conflicting key values.

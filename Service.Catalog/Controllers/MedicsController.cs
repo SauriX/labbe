@@ -58,6 +58,14 @@ namespace Identidad.Api.Controllers
             var file = await _Services.ExportForm(id);
             return File(file, MimeType.XLSX);
         }
+
+        //[HttpPost("medics/GenerateCode")]
+        //public async Task<string> GenerateCode(MedicsClaveDto Medics)
+        //{
+
+        //    await _Services.GenerateCode(Medics);
+        //    return await _Services.GenerateCode(Medics);
+        //}
         //[HttpPost("medics/clave")]
         //public async Task<string> GenerateClave(Clave data)
         //{

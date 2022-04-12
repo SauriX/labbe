@@ -1,4 +1,5 @@
-﻿using Identidad.Api.ViewModels.Medicos;
+﻿using Identidad.Api.Model.Medicos;
+using Identidad.Api.ViewModels.Medicos;
 using Identidad.Api.ViewModels.Menu;
 using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Dtos.Medicos;
@@ -100,7 +101,13 @@ namespace Identidad.Api.mapper
                 Telefono = dto.Telefono,
                 Activo = dto.Activo,
                 UsuarioCreoId = dto.IdUsuario,
-                FechaCreo = DateTime.Now
+                FechaCreo = DateTime.Now,
+                Clinicas = dto.Clinicas.Select(x => new MedicClinic
+                {
+                    ClinicaId = x.Id ,
+                    FechaCreo = DateTime.Now,
+                    UsuarioCreoId = dto.IdUsuario,
+                }).ToList(),
             };
         }
 
@@ -131,7 +138,15 @@ namespace Identidad.Api.mapper
                 UsuarioCreoId = model.UsuarioCreoId,
                 FechaCreo = model.FechaCreo,
                 UsuarioModId = dto.IdUsuario,
-                FechaMod = DateTime.Now
+                FechaMod = DateTime.Now,
+                Clinicas = dto.Clinicas.Select(x => new MedicClinic
+                {
+                    MedicoId = model.IdMedico,
+                    ClinicaId = x.Id,
+                    FechaCreo = model.FechaCreo,
+                    UsuarioCreoId = model.UsuarioCreoId,
+                    FechaMod = DateTime.Now,
+                }).ToList(),
             };
         }
 

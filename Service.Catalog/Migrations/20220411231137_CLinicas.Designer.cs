@@ -3,56 +3,23 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220411231137_CLinicas")]
+    partial class CLinicas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.15")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("Identidad.Api.Model.Medicos.MedicClinic", b =>
-                {
-                    b.Property<int>("MedicoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ClinicaId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaMod")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("MedicsIdMedico")
-                        .HasColumnType("int");
-
-                    b.Property<long>("UsuarioCreoId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("UsuarioModId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("MedicoId", "ClinicaId");
-
-                    b.HasIndex("ClinicaId");
-
-                    b.HasIndex("MedicsIdMedico");
-
-                    b.ToTable("CAT_Medico_Clinica");
-                });
 
             modelBuilder.Entity("Identidad.Api.ViewModels.Menu.Medics", b =>
                 {
@@ -716,29 +683,6 @@ namespace Service.Catalog.Migrations
                     b.ToTable("CAT_Reactivo_Contpaq");
                 });
 
-            modelBuilder.Entity("Identidad.Api.Model.Medicos.MedicClinic", b =>
-                {
-                    b.HasOne("Service.Catalog.Domain.Catalog.Clinic", "Clinica")
-                        .WithMany()
-                        .HasForeignKey("ClinicaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Identidad.Api.ViewModels.Menu.Medics", "Medico")
-                        .WithMany()
-                        .HasForeignKey("MedicoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Identidad.Api.ViewModels.Menu.Medics", null)
-                        .WithMany("Clinicas")
-                        .HasForeignKey("MedicsIdMedico");
-
-                    b.Navigation("Clinica");
-
-                    b.Navigation("Medico");
-                });
-
             modelBuilder.Entity("Service.Catalog.Domain.Catalog.Area", b =>
                 {
                     b.HasOne("Service.Catalog.Domain.Catalog.Department", "Departamento")
@@ -748,11 +692,6 @@ namespace Service.Catalog.Migrations
                         .IsRequired();
 
                     b.Navigation("Departamento");
-                });
-
-            modelBuilder.Entity("Identidad.Api.ViewModels.Menu.Medics", b =>
-                {
-                    b.Navigation("Clinicas");
                 });
 #pragma warning restore 612, 618
         }

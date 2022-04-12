@@ -44,13 +44,16 @@ namespace Identidad.Api.Infraestructure.Services
             }
 
             var code = await GenerateCode(medic);
-
-            medic.Clave = code.ToUpper();
+            var sameCode = medic.Clave == code;
 
             var newMedics = medic.ToModel();
 
             await _repository.Create(newMedics);
-            return newMedics.ToMedicsFormDto();
+
+            medic = newMedics.ToMedicsFormDto();
+            medic.ClaveCambio = !sameCode;
+
+            return medic;
         }
 
         public async Task<IEnumerable<MedicsListDto>> GetAll(string search = null)
@@ -75,6 +78,7 @@ namespace Identidad.Api.Infraestructure.Services
 
         private async Task<string> GenerateCode(MedicsFormDto medics, string suffix = null)
         {
+
             var code = medics.Nombre[..3];
             code += medics.PrimerApellido[..1];
             code += medics.SegundoApellido[..1];
