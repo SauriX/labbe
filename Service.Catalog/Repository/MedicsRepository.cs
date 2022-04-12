@@ -49,9 +49,27 @@ namespace Service.Catalog.Repository
 
         public async Task Create(Medics doctors)
         {
-            _context.CAT_Medicos.Add(doctors);
+            using var transaction = _context.Database.BeginTransaction();
 
-            await _context.SaveChangesAsync();
+            try
+            {
+                var clinics = doctors.Clinicas.ToList();
+
+                doctors.Clinicas = null;
+                _context.CAT_Medicos.Add(doctors);
+
+                await _context.SaveChangesAsync();
+
+                clinics.ForEach(x => x.MedicoId = doctors.IdMedico);
+                await _context.BulkInsertOrUpdateOrDeleteAsync(clinics);
+
+                transaction.Commit();
+            }
+            catch (System.Exception)
+            {
+                transaction.Rollback();
+                throw;
+            }
         }
 
         public async Task Update(Medics doctors)

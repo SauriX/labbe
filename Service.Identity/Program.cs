@@ -16,7 +16,7 @@ namespace Service.Identity
         {
             var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
-            var config = new ConfigurationBuilder()
+            new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: false)
                 .AddJsonFile($"appsettings.{environmentName}.json", optional: false)
                 .AddEnvironmentVariables()

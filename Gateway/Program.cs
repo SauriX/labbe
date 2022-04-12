@@ -13,6 +13,14 @@ namespace Gateway
     {
         public static void Main(string[] args)
         {
+            var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+            new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: false)
+                .AddJsonFile($"appsettings.{environmentName}.json", optional: false)
+                .AddEnvironmentVariables()
+                .Build();
+
             CreateHostBuilder(args).Build().Run();
         }
 

@@ -40,9 +40,9 @@ namespace Service.Catalog.Context.EntityConfiguration.Medics
               .Property(x => x.FechaMod)
               .IsRequired(true);
 
-            builder
-              .HasOne(x => x.Medico)
-              .WithMany();
+            //builder
+            //  .HasOne(x => x.Medico)
+            //  .WithMany();
         }
 
     }

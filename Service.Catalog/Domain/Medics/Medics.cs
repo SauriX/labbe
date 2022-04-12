@@ -29,6 +29,6 @@ namespace Identidad.Api.ViewModels.Menu
         public int UsuarioModId { get; set; }
         public DateTime FechaMod { get; set; }
 
-        public virtual ICollection<MedicClinic> Clinicas { get; set; } = new List<MedicClinic>();
+        public virtual ICollection<MedicClinic> Clinicas { get; set; }
     }
 }

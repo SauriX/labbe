@@ -87,3 +87,7 @@
 11/04/2022 17:36:17 => Could not find a part of the path 'C:\Users\Lapaxsis-00\source\repos\API\Service.Catalog\wwwroot\layout\excel\indication\IndicacionesFormulario.xlsx'.
 
 11/04/2022 18:36:25 => The instance of entity type 'MedicClinic' cannot be tracked because another instance with the same key value for {'MedicoId', 'ClinicaId'} is already being tracked. When attaching existing entities, ensure that only one entity instance with a given key value is attached. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see the conflicting key values.
+
+12/4/2022 07:47:20 => The value of 'MedicClinic.MedicoId' is unknown when attempting to save changes. This is because the property is also part of a foreign key for which the principal entity in the relationship is not known.
+
+12/4/2022 07:53:38 => Value cannot be null. (Parameter 'source')
