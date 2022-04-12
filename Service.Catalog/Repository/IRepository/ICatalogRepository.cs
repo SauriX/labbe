@@ -11,6 +11,7 @@ namespace Service.Catalog.Repository.IRepository
         Task<List<T>> GetAll(string search = null);
         Task<List<T>> GetActive();
         Task<T> GetById(int id);
+        Task<bool> IsDuplicate(T catalog);
         Task Crete(T reagent);
         Task Update(T reagent);
     }

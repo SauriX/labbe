@@ -50,6 +50,13 @@ namespace Service.Catalog.Application
 
             var newCatalog = catalog.ToModel<T>();
 
+            var isDuplicate = await _repository.IsDuplicate(newCatalog);
+
+            if (isDuplicate)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
+            }
+
             await _repository.Crete(newCatalog);
 
             return newCatalog.ToCatalogDescriptionListDto();
@@ -65,6 +72,13 @@ namespace Service.Catalog.Application
             }
 
             var updatedAgent = catalog.ToModel(existing);
+
+            var isDuplicate = await _repository.IsDuplicate(updatedAgent);
+
+            if (isDuplicate)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
+            }
 
             await _repository.Update(updatedAgent);
 

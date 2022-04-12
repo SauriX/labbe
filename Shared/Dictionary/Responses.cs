@@ -11,7 +11,7 @@ namespace Shared.Dictionary
         public const string NotFound = "No se encontró el registro";
         public const string Forbidden = "No tiene permisos para realizar esta acción";
         public const string NotPossible = "No es posible realizar esta acción";
-        public const string Duplicated = "El registro ya existe";
+        public static string Duplicated(string name) => $"{name} ya se encuentra asignado(a) a un reigstro, favor de ingresar otro valor";
         public const string Unregistered = "El usuario no se encuentra registrado";
         public const string Blocked = "El usuario se encuentra bloqueado, contacte al administrador";
         public const string Disabled = "El usuario no se encuentra activo, contacte al administrador";
