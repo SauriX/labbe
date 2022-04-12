@@ -21,16 +21,14 @@ namespace Service.Catalog.Migrations
 
             modelBuilder.Entity("Identidad.Api.Model.Medicos.MedicClinic", b =>
                 {
-                    b.Property<int>("IdMedico_Clinica")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
+                    b.Property<int>("MedicoId")
+                        .HasColumnType("int");
 
                     b.Property<int>("ClinicaId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
@@ -38,23 +36,15 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaMod")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("MedicoId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UsuarioCreo")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<long>("UsuarioCreoId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("UsuarioModId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("IdMedico_Clinica");
+                    b.HasKey("MedicoId", "ClinicaId");
 
                     b.HasIndex("ClinicaId");
-
-                    b.HasIndex("MedicoId");
 
                     b.ToTable("CAT_Medico_Clinica");
                 });
@@ -170,7 +160,7 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FechaModifico")
+                    b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Nombre")
@@ -205,7 +195,7 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FechaModifico")
+                    b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Nombre")
@@ -240,7 +230,7 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FechaModifico")
+                    b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Nombre")
@@ -275,7 +265,7 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FechaModifico")
+                    b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Nombre")
@@ -308,7 +298,7 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FechaModifico")
+                    b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Nombre")
@@ -377,7 +367,7 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FechaModifico")
+                    b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Nombre")
@@ -413,7 +403,7 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FechaModifico")
+                    b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Nombre")
@@ -446,7 +436,7 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FechaModifico")
+                    b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Nombre")
@@ -482,7 +472,7 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FechaModifico")
+                    b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Nombre")
@@ -515,7 +505,7 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FechaModifico")
+                    b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Nombre")
@@ -548,7 +538,7 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FechaModifico")
+                    b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Nombre")
@@ -584,7 +574,7 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FechaModifico")
+                    b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Nombre")
@@ -617,7 +607,7 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FechaModifico")
+                    b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Nombre")
@@ -632,6 +622,48 @@ namespace Service.Catalog.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CAT_ListaTrabajo");
+                });
+
+            modelBuilder.Entity("Service.Catalog.Domain.Indication.Indication", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Clave")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Descripcion")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaModifico")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("UsuarioCreoId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UsuarioModificoId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CAT_Indicacion");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Reagent.Reagent", b =>
@@ -690,7 +722,7 @@ namespace Service.Catalog.Migrations
                     b.HasOne("Identidad.Api.ViewModels.Menu.Medics", "Medico")
                         .WithMany("Clinicas")
                         .HasForeignKey("MedicoId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Clinica");

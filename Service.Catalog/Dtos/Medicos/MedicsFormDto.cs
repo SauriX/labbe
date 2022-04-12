@@ -9,6 +9,7 @@ namespace Identidad.Api.ViewModels.Medicos
     {
         public int IdMedico { get; set; }
         public string Clave { get; set; }
+        public bool ClaveCambio { get; set; }
         public string Nombre { get; set; }
         public string PrimerApellido { get; set; }
         public string SegundoApellido { get; set; }

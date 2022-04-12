@@ -1,13 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Service.Identity.Domain.Users;
 using Service.Identity.Dtos;
 using Service.Identity.Repository.IRepository;
+using Shared.Dictionary;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
 namespace Service.Identity.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RolController
+    public class RolController : ControllerBase
     {
         private readonly IRolRepository _service;
         public RolController(IRolRepository service)
@@ -35,6 +39,19 @@ namespace Service.Identity.Controllers
         [HttpGet("permisos")]
         public async Task<List<UserPermission>> GetPermission() {
             return await _service.GetPermission();
+        }
+
+        [HttpPost("export/list/{search?}")]
+        public async Task<IActionResult> ExportList(string search = null)
+        {
+            var file = await _service.ExportList(search);
+            return File(file, MimeType.XLSX);
+        }
+        [HttpPost("export/form/{id}")]
+        public async Task<IActionResult> ExportForm(string id)
+        {
+            var file = await _service.ExportForm(id);
+            return File(file, MimeType.XLSX);
         }
     }
 }

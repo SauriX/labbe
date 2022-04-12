@@ -1,10 +1,14 @@
-﻿using Service.Catalog.Application.IApplication;
+﻿using ClosedXML.Excel;
+using ClosedXML.Report;
+using Service.Catalog.Application.IApplication;
+using Service.Catalog.Dictionary;
 using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Dtos.Catalog;
 using Service.Catalog.Mapper;
 using Service.Catalog.Repository.IRepository;
 using Shared.Dictionary;
 using Shared.Error;
+using Shared.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,6 +54,13 @@ namespace Service.Catalog.Application
 
             var newCatalog = catalog.ToModel<T>();
 
+            var isDuplicate = await _repository.IsDuplicate(newCatalog);
+
+            if (isDuplicate)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
+            }
+
             await _repository.Crete(newCatalog);
 
             return newCatalog.ToCatalogDescriptionListDto();
@@ -66,9 +77,62 @@ namespace Service.Catalog.Application
 
             var updatedAgent = catalog.ToModel(existing);
 
+            var isDuplicate = await _repository.IsDuplicate(updatedAgent);
+
+            if (isDuplicate)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
+            }
+
             await _repository.Update(updatedAgent);
 
             return updatedAgent.ToCatalogDescriptionListDto();
+        }
+
+        public async Task<byte[]> ExportListIndication(string search = null)
+        {
+            var indication = await GetAll(search);
+
+            var path = AssetsIndication.IndicationList;
+
+            var template = new XLTemplate(path);
+
+            template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
+            template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
+            template.AddVariable("Titulo", "Indicaciones");
+            template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
+            template.AddVariable("Indicaciones", indication);
+
+            template.Generate();
+
+            var range = template.Workbook.Worksheet("Indicaciones").Range("Indicaciones");
+            var table = template.Workbook.Worksheet("Indicaciones").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
+            table.Theme = XLTableTheme.TableStyleMedium2;
+
+            template.Format();
+
+            return template.ToByteArray();
+        }
+
+        public async Task<byte[]> ExportFormIndication(int id)
+        {
+            var indication = await GetById(id);
+
+            var path = AssetsIndication.IndicationForm;
+
+            var template = new XLTemplate(path);
+
+            template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
+            template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
+            template.AddVariable("Titulo", "Indicaciones");
+            template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
+            template.AddVariable("Indicaciones", indication);
+
+            template.Generate();
+
+            template.Format();
+
+            return template.ToByteArray();
         }
     }
 }

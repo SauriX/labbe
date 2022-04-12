@@ -60,6 +60,7 @@ namespace Service.Identity
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ISessionRepository, SessionRepository>();
             services.AddScoped<IRolRepository, RolRepository>();
+            services.AddScoped<IBranchRepository,BranchRepository>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Service.Identity", Version = "v1" });

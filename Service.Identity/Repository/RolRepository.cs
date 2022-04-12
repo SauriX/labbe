@@ -9,6 +9,10 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
+using ClosedXML.Report;
+using Shared.Extensions;
+using ClosedXML.Excel;
+using Service.Identity.Dictionary;
 
 namespace Service.Identity.Repository
 {
@@ -26,7 +30,14 @@ namespace Service.Identity.Repository
             var userRol = Mapper.RolMapper.ToUserRol(rol, token);
             IdentityResult result = await _roleManager.CreateAsync(userRol);
             if (result.Succeeded) {
-                return true;
+                var role =await _roleManager.FindByNameAsync(userRol.Name);
+                if (role != null) {
+                    var permiso = Mapper.PermissionMapper.toPermission(rol,role.Id,token);
+                     await _context.CAT_Permisos.AddAsync(permiso);
+                    await _context.SaveChangesAsync();
+                    return true;                
+                }
+                return false;
             }
             return false;
         }
@@ -80,7 +91,10 @@ namespace Service.Identity.Repository
                 var rol = await _roleManager.FindByIdAsync(id);
             if (rol != null) 
             {
-                return Mapper.RolMapper.ToRolForm(rol);
+                var permisos = _context.CAT_Permisos.AsQueryable();
+                var permiso = permisos.Where(x=>x.RolId==rol.Id);
+                 var permisoM = Mapper.PermissionMapper.toListPermision(permiso);
+                return Mapper.RolMapper.ToRolForm(rol,permisoM);
             }
             return null;
         }
@@ -136,6 +150,49 @@ namespace Service.Identity.Repository
             });
 
             return list;
+        }
+        public async Task<byte[]> ExportList(string search = null)
+        {
+            var rol = await GetAll(search);
+
+            var path = Assets.RoleList;
+
+            var template = new XLTemplate(path);
+
+            template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
+            template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
+            template.AddVariable("Titulo", "Roles");
+            template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
+            template.AddVariable("Roles", rol);
+
+            template.Generate();
+
+            var range = template.Workbook.Worksheet("Roles").Range("Roles");
+            var table = template.Workbook.Worksheet("Roles").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
+            table.Theme = XLTableTheme.TableStyleMedium2;
+
+            template.Format();
+
+            return template.ToByteArray();
+        }
+
+        public async Task<byte[]> ExportForm(string id)
+        {
+            var rol = await GetById(id);
+
+            var path = Assets.RoleForm;
+
+            var template = new XLTemplate(path);
+
+            template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
+            template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
+            template.AddVariable("Titulo", "Roles");
+            template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
+            template.AddVariable("Rol", rol);
+            template.AddVariable("Permisos", rol.permisos);
+            template.Generate();
+
+            return template.ToByteArray();
         }
     }
 }

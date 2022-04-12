@@ -1,4 +1,5 @@
-﻿using Identidad.Api.Infraestructure.Repository.IRepository;
+﻿using EFCore.BulkExtensions;
+using Identidad.Api.Infraestructure.Repository.IRepository;
 using Identidad.Api.ViewModels.Medicos;
 using Identidad.Api.ViewModels.Menu;
 using Microsoft.EntityFrameworkCore;
@@ -9,9 +10,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Identidad.Api.Infraestructure.Repository
+namespace Service.Catalog.Repository
 {
-    public class MedicsRepository: IMedicsRepository
+    public class MedicsRepository : IMedicsRepository
     {
         private readonly ApplicationDbContext _context;
 
@@ -48,18 +49,41 @@ namespace Identidad.Api.Infraestructure.Repository
 
         public async Task Create(Medics doctors)
         {
-            _context.CAT_Medicos.Add(doctors);
+            using var transaction = _context.Database.BeginTransaction();
 
-            await _context.SaveChangesAsync();
+            try
+            {
+                var clinics = doctors.Clinicas.ToList();
+
+                doctors.Clinicas = null;
+                _context.CAT_Medicos.Add(doctors);
+
+                await _context.SaveChangesAsync();
+
+                clinics.ForEach(x => x.MedicoId = doctors.IdMedico);
+                await _context.BulkInsertOrUpdateOrDeleteAsync(clinics);
+
+                transaction.Commit();
+            }
+            catch (System.Exception)
+            {
+                transaction.Rollback();
+                throw;
+            }
         }
 
         public async Task Update(Medics doctors)
         {
+            var clinics = doctors.Clinicas.ToList();
+
+            doctors.Clinicas = null;
             _context.CAT_Medicos.Update(doctors);
+
+            await _context.BulkInsertOrUpdateOrDeleteAsync(clinics);
 
             await _context.SaveChangesAsync();
         }
 
-      
+
     }
 }

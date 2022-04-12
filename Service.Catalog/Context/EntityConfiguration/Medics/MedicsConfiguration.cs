@@ -91,11 +91,11 @@ namespace Identidad.Api.Infraestructure.EntityConfiguration.CatalogoMedicosConfi
               .Property(x => x.Activo)
               .IsRequired(true);
 
-            /*builder
+            builder
                 .HasMany(x => x.Clinicas)
                 .WithOne(x => x.Medico)
-                .OnDelete(DeleteBehavior.Restrict);*/
-
+                //.HasForeignKey(x => x.ClinicaId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

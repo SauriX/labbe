@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Domain;
 using Service.Catalog.Domain.Catalog;
+using Service.Catalog.Domain.Indication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,7 @@ namespace Service.Catalog.Controllers.Catalog
         private readonly ICatalogApplication<PaymentMethod> _paymentMethodService;
         private readonly ICatalogApplication<SampleType> _sampleTypeService;
         private readonly ICatalogDescriptionApplication<UseOfCFDI> _useOfCFDIService;
+        
 
         public CatalogController(
             ICatalogApplication<Delivery> deliveryService,

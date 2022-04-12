@@ -12,5 +12,7 @@ namespace Service.Identity.Repository.IRepository
         Task<List<RolInfo>> GetAll(string search);
         Task<RolForm> GetById(string id);
         Task<List<UserPermission>> GetPermission();
+        Task<byte[]> ExportForm(string id);
+        Task<byte[]> ExportList(string search = null);
     }
 }

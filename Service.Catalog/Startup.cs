@@ -18,6 +18,7 @@ using Service.Catalog.Application;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Context;
 using Service.Catalog.Domain.Catalog;
+using Service.Catalog.Domain.Indication;
 using Service.Catalog.Middleware;
 using Service.Catalog.Repository;
 using Service.Catalog.Repository.IRepository;
@@ -86,6 +87,7 @@ namespace Service.Catalog
             services.AddScoped<ICatalogDescriptionApplication<UseOfCFDI>, CatalogDescriptionApplication<UseOfCFDI>>();
             services.AddScoped<ICatalogDescriptionApplication<Payment>, CatalogDescriptionApplication<Payment>>();
             services.AddScoped<ICatalogDescriptionApplication<Indicator>, CatalogDescriptionApplication<Indicator>>();
+            services.AddScoped<ICatalogDescriptionApplication<Indication>, CatalogDescriptionApplication<Indication>>();
             services.AddScoped<IAreaApplication, AreaApplication>();
             services.AddScoped<IDimensionApplication, DimensionApplication>();
             services.AddScoped<IReagentApplication, ReagentApplication>();
@@ -104,6 +106,7 @@ namespace Service.Catalog
             services.AddScoped<ICatalogRepository<UseOfCFDI>, CatalogRepository<UseOfCFDI>>();
             services.AddScoped<ICatalogRepository<Payment>, CatalogRepository<Payment>>();
             services.AddScoped<ICatalogRepository<Indicator>, CatalogRepository<Indicator>>();
+            services.AddScoped<ICatalogRepository<Indication>, CatalogRepository<Indication>>();
             services.AddScoped<IAreaRepository, AreaRepository>();
             services.AddScoped<IDimensionRepository, DimensionRepository>();
             services.AddScoped<IReagentRepository, ReagentRepository>();

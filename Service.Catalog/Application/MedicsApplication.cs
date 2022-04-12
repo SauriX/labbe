@@ -1,12 +1,17 @@
-﻿using Identidad.Api.Infraestructure.Repository.IRepository;
+﻿using ClosedXML.Excel;
+using ClosedXML.Report;
+using Identidad.Api.Infraestructure.Repository.IRepository;
 using Identidad.Api.Infraestructure.Services.IServices;
 using Identidad.Api.mapper;
 using Identidad.Api.ViewModels.Medicos;
 using Identidad.Api.ViewModels.Menu;
+using Service.Catalog.Dictionary;
 using Service.Catalog.Domain.Medics;
 using Service.Catalog.Dtos.Medicos;
 using Shared.Dictionary;
 using Shared.Error;
+using Shared.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -39,13 +44,16 @@ namespace Identidad.Api.Infraestructure.Services
             }
 
             var code = await GenerateCode(medic);
-
-            medic.Clave = code;
+            var sameCode = medic.Clave == code;
 
             var newMedics = medic.ToModel();
 
             await _repository.Create(newMedics);
-            return newMedics.ToMedicsFormDto();
+
+            medic = newMedics.ToMedicsFormDto();
+            medic.ClaveCambio = !sameCode;
+
+            return medic;
         }
 
         public async Task<IEnumerable<MedicsListDto>> GetAll(string search = null)
@@ -68,8 +76,9 @@ namespace Identidad.Api.Infraestructure.Services
             return existing.ToMedicsFormDto();
         }
 
-        public async Task<string> GenerateCode(MedicsFormDto medics, string suffix = null)
+        private async Task<string> GenerateCode(MedicsFormDto medics, string suffix = null)
         {
+
             var code = medics.Nombre[..3];
             code += medics.PrimerApellido[..1];
             code += medics.SegundoApellido[..1];
@@ -79,11 +88,64 @@ namespace Identidad.Api.Infraestructure.Services
 
             if (exists != null)
             {
-                var dotIndex = code.IndexOf(".");
-                return await GenerateCode(medics, dotIndex == -1 ? "." : code[code.IndexOf(".")..] + ".");
+                if (code.Length == 5)
+                {
+                    return await GenerateCode(medics, "A");
+                }
+
+                var last = code[^1];
+                var next = (char)((int)last + 1);
+
+                return await GenerateCode(medics, next.ToString());
             }
 
             return code;
+        }
+
+        public async Task<byte[]> ExportList(string search = null)
+        {
+            var medics = await GetAll(search);
+
+            var path = AssetsMedic.MedicList;
+
+            var template = new XLTemplate(path);
+
+            template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
+            template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
+            template.AddVariable("Titulo", "Medicos");
+            template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
+            template.AddVariable("Medicos", medics);
+
+            template.Generate();
+
+            var range = template.Workbook.Worksheet("Medicos").Range("Medicos");
+            var table = template.Workbook.Worksheet("Medicos").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
+            table.Theme = XLTableTheme.TableStyleMedium2;
+
+            template.Format();
+
+            return template.ToByteArray();
+        }
+
+        public async Task<byte[]> ExportForm(int id)
+        {
+            var medics = await GetById(id);
+
+            var path = AssetsMedic.MedicForm;
+
+            var template = new XLTemplate(path);
+
+            template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
+            template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
+            template.AddVariable("Titulo", "Medicos");
+            template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
+            template.AddVariable("Medico", medics);
+
+            template.Generate();
+
+            template.Format();
+
+            return template.ToByteArray();
         }
     }
 }

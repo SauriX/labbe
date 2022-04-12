@@ -26,7 +26,7 @@ namespace Service.Identity.Mapper
                 Name = model.nombre
             };
         }
-        public static RolForm ToRolForm(UserRol model)
+        public static RolForm ToRolForm(UserRol model,List<UserPermission>permisos)
         {
           
             if (model == null) return null;
@@ -35,7 +35,7 @@ namespace Service.Identity.Mapper
                 Id = model.Id.ToString(),
                 nombre = model.RolUsuario,
                 activo = model.Activo,
-                //permisos=new list<UserPermission>,
+                permisos=permisos,
             };
         }
         public static IEnumerable<RolInfo> ToRolListDto(IEnumerable<UserRol> modelList)

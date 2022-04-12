@@ -10,15 +10,15 @@ namespace Service.Catalog.Context.EntityConfiguration.Medics
         {
             builder.ToTable("CAT_Medico_Clinica");
 
-            builder.HasKey(x => x.IdMedico_Clinica);
+            builder.HasKey(x => new { x.MedicoId, x.ClinicaId });
 
-            builder
-              .Property(x => x.MedicoId)
-              .IsRequired(true);
+            //builder
+            //  .Property(x => x.MedicoId)
+            //  .IsRequired(true);
 
-            builder
-              .Property(x => x.ClinicaId)
-              .IsRequired(true);
+            //builder
+            //  .Property(x => x.ClinicaId)
+            //  .IsRequired(true);
 
             builder
               .Property(x => x.Activo)
@@ -40,8 +40,10 @@ namespace Service.Catalog.Context.EntityConfiguration.Medics
               .Property(x => x.FechaMod)
               .IsRequired(true);
 
-            builder.HasOne(x => x.Clinica).WithMany().HasForeignKey(x => x.ClinicaId);
+            //builder
+            //  .HasOne(x => x.Medico)
+            //  .WithMany();
         }
-            
+
     }
 }
