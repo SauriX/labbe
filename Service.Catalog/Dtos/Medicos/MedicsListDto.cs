@@ -15,6 +15,7 @@ namespace Service.Catalog.Dtos.Medicos
         public string Correo { get; set; }
         public long? Celular { get; set; }
         public long? Telefono { get; set; }
+        public string ActivoDescripcion => Activo ? "Si" : "No";
         public bool Activo { get; set; }
         public IEnumerable<CatalogListDto> Clinicas { get; set; }
     }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220408173928_CAT_Indiacion")]
+    partial class CAT_Indiacion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,14 +23,16 @@ namespace Service.Catalog.Migrations
 
             modelBuilder.Entity("Identidad.Api.Model.Medicos.MedicClinic", b =>
                 {
-                    b.Property<int>("MedicoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ClinicaId")
-                        .HasColumnType("int");
+                    b.Property<int>("IdMedico_Clinica")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
+
+                    b.Property<int>("ClinicaId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
@@ -36,8 +40,11 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaMod")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("MedicsIdMedico")
+                    b.Property<int>("MedicoId")
                         .HasColumnType("int");
+
+                    b.Property<string>("UsuarioCreo")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("UsuarioCreoId")
                         .HasColumnType("bigint");
@@ -45,11 +52,11 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("UsuarioModId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("MedicoId", "ClinicaId");
+                    b.HasKey("IdMedico_Clinica");
 
                     b.HasIndex("ClinicaId");
 
-                    b.HasIndex("MedicsIdMedico");
+                    b.HasIndex("MedicoId");
 
                     b.ToTable("CAT_Medico_Clinica");
                 });
@@ -725,14 +732,10 @@ namespace Service.Catalog.Migrations
                         .IsRequired();
 
                     b.HasOne("Identidad.Api.ViewModels.Menu.Medics", "Medico")
-                        .WithMany()
+                        .WithMany("Clinicas")
                         .HasForeignKey("MedicoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Identidad.Api.ViewModels.Menu.Medics", null)
-                        .WithMany("Clinicas")
-                        .HasForeignKey("MedicsIdMedico");
 
                     b.Navigation("Clinica");
 
