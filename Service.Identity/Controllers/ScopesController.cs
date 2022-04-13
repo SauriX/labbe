@@ -37,6 +37,19 @@ namespace Service.Identity.Controllers
                 Descargar = true,
             };
         }
+
+        [HttpGet("indication")]
+        public ScopeDto GetIndicationScopes()
+        {
+            return new ScopeDto
+            {
+                Pantalla = "Catálogo de Indicaciones",
+                Acceder = true,
+                Crear = true,
+                Editar = true,
+                Descargar = true,
+            };
+        }
     }
 
 }

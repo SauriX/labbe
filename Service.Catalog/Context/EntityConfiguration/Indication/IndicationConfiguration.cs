@@ -1,6 +1,5 @@
 ﻿using Service.Catalog.Domain.Indication;
 using Microsoft.EntityFrameworkCore;
-using Service.Catalog.Domain.Indication;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Service.Catalog.Context.EntityConfiguration.IndicationConfiguration
@@ -47,10 +46,12 @@ namespace Service.Catalog.Context.EntityConfiguration.IndicationConfiguration
             builder
               .Property(x => x.FechaModifico)
               .IsRequired(false);
-            /*builder
-                .HasMany(x => x.Clinicas)
-                .WithOne(x => x.Medico)
-                .OnDelete(DeleteBehavior.Restrict);*/
+
+            builder
+               .HasMany(x => x.Estudios)
+               .WithOne(x => x.Indicacion)
+               //.HasForeignKey(x => x.ClinicaId)
+               .OnDelete(DeleteBehavior.Restrict);
 
         }
     }
