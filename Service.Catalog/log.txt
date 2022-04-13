@@ -105,3 +105,7 @@
 12/04/2022 12:47:31 => Could not find a part of the path 'C:\Users\Lapaxsis-00\source\repos\API\Service.Catalog\wwwroot\layout\excel\indication\IndicacionesFormulario.xlsx'.
 
 12/04/2022 12:57:18 => Could not find a part of the path 'C:\Users\Lapaxsis-00\source\repos\API\Service.Catalog\wwwroot\layout\excel\indication\IndicacionesListado.xlsx'.
+
+13/4/2022 09:00:32 => Object reference not set to an instance of an object.
+
+13/4/2022 09:00:39 => A connection was successfully established with the server, but then an error occurred during the pre-login handshake. (provider: SSL Provider, error: 0 - Tiempo de espera de la operación de espera agotado.)
