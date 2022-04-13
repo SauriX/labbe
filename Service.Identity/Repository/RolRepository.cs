@@ -13,6 +13,7 @@ using ClosedXML.Report;
 using Shared.Extensions;
 using ClosedXML.Excel;
 using Service.Identity.Dictionary;
+using Service.Identity.Domain.permissions;
 
 namespace Service.Identity.Repository
 {
@@ -26,16 +27,20 @@ namespace Service.Identity.Repository
             _context = context;
         }
         public async Task<bool> Create(RolForm rol, string token) {
+            var Menus = await getMenus();
             token = token.Replace("Bearer ", string.Empty);
             var userRol = Mapper.RolMapper.ToUserRol(rol, token);
             IdentityResult result = await _roleManager.CreateAsync(userRol);
             if (result.Succeeded) {
-                var role =await _roleManager.FindByNameAsync(userRol.Name);
+                var role = await _roleManager.FindByNameAsync(userRol.Name);
                 if (role != null) {
-                    var permiso = Mapper.PermissionMapper.toPermission(rol,role.Id,token);
-                     await _context.CAT_Permisos.AddAsync(permiso);
-                    await _context.SaveChangesAsync();
-                    return true;                
+                    var permisos = Mapper.PermissionMapper.toPermission(rol, role.Id, token,Menus);
+                    foreach (Permission permiso in permisos) {
+                        await _context.CAT_Permisos.AddAsync(permiso);
+                        await _context.SaveChangesAsync();
+                    }
+                    
+                    return true;
                 }
                 return false;
             }
@@ -57,10 +62,10 @@ namespace Service.Identity.Repository
                     var role = _roleManager.Roles.First(r => r.Id == Guid.Parse(rolForm.Id));
 
                     role.Name = rolForm.nombre;
-                    role.Activo = rolForm.activo;   
+                    role.Activo = rolForm.activo;
                     role.FechaMod = DateTime.Now;
                     role.UsuarioModId = Guid.Parse(idMod);
-                    var rol=await _roleManager.UpdateAsync(role);
+                    var rol = await _roleManager.UpdateAsync(role);
                     if (rol.Succeeded) {
                         return true;
                     }
@@ -72,6 +77,7 @@ namespace Service.Identity.Repository
         public async Task<List<RolInfo>> GetAll(string search)
         {
             var roles = _context.Roles.AsQueryable();
+
             if (!string.IsNullOrWhiteSpace(search) && search != "all")
             {
                 search = search.Trim().ToLower();
@@ -88,67 +94,122 @@ namespace Service.Identity.Repository
         public async Task<RolForm> GetById(string id)
         {
             var Roles = _roleManager.Roles.ToList();
-                var rol = await _roleManager.FindByIdAsync(id);
-            if (rol != null) 
+            var rol = await _roleManager.FindByIdAsync(id);
+            if (rol != null)
             {
                 var permisos = _context.CAT_Permisos.AsQueryable();
-                var permiso = permisos.Where(x=>x.RolId==rol.Id);
-                 var permisoM = Mapper.PermissionMapper.toListPermision(permiso);
-                return Mapper.RolMapper.ToRolForm(rol,permisoM);
+                var permiso = permisos.Where(x => x.RolId == rol.Id);
+                var permisoM = Mapper.PermissionMapper.toListPermision(permiso);
+                return Mapper.RolMapper.ToRolForm(rol, permisoM);
             }
             return null;
         }
 
         public async Task<List<UserPermission>> GetPermission() {
             List<UserPermission> list = new List<UserPermission>();
-            list.Add(new UserPermission{
-                id=1,
-                permiso = "Crear",
-                asignado= false,
-                menu = "Permisos",
-                tipo = 1
-            });
-            list.Add(new UserPermission
-            {
-                id = 2,
-                permiso = "Modificación",
-                asignado = false,   
-                menu = "Permisos",
-                tipo = 1
-            });
-            list.Add(new UserPermission
-            {
-                id = 3,
-                permiso = "Impresión",
-                asignado = false,
-                menu = "Permisos",
-                tipo = 1
-            });
-            list.Add(new UserPermission
-            {
-                id = 4,
-                permiso = "Descarga",
-                asignado = false,
-                menu = "Permisos",
-                tipo = 1
-            });
-            list.Add(new UserPermission
-            {
-                id = 5,
-                permiso = "EnvioCorreo",
-                asignado = false,
-                menu = "Permisos",
-                tipo = 1
-            });
-            list.Add(new UserPermission
-            {
-                id = 6,
-                permiso = "EnvioWapp",
-                asignado = false,
-                menu = "Permisos",
-                tipo = 1
-            });
-
+            var Menus = await getMenus();
+            var idP = 1;
+            foreach (Menu menu in Menus) {
+                list.Add(new UserPermission {
+                    id = idP++,
+                    permiso = "Crear",
+                    asignado = false,
+                    menu = menu.descripcion,
+                    tipo = menu.id
+                });
+                list.Add(new UserPermission
+                {
+                    id = idP++,
+                    permiso = "Modificación",
+                    asignado = false,
+                    menu = menu.descripcion,
+                    tipo = menu.id
+                });
+                list.Add(new UserPermission
+                {
+                    id = idP++,
+                    permiso = "Impresión",
+                    asignado = false,
+                    menu = menu.descripcion,
+                    tipo = menu.id
+                });
+                list.Add(new UserPermission
+                {
+                    id = idP++,
+                    permiso = "Descarga",
+                    asignado = false,
+                    menu = menu.descripcion,
+                    tipo = menu.id
+                });
+                list.Add(new UserPermission
+                {
+                    id = idP++,
+                    permiso = "EnvioCorreo",
+                    asignado = false,
+                    menu = menu.descripcion,
+                    tipo = menu.id
+                });
+                list.Add(new UserPermission
+                {
+                    id = idP++,
+                    permiso = "EnvioWapp",
+                    asignado = false,
+                    menu = menu.descripcion,
+                    tipo = menu.id
+                });
+                if (menu.subMenus != null) {
+                    foreach (Menu subMenu in menu.subMenus.ToList<Menu>()) {
+                        list.Add(new UserPermission
+                        {
+                            id = idP++,
+                            permiso = "Crear",
+                            asignado = false,
+                            menu = subMenu.descripcion,
+                            tipo = subMenu.id
+                        });
+                        list.Add(new UserPermission
+                        {
+                            id = idP++,
+                            permiso = "Modificación",
+                            asignado = false,
+                            menu = subMenu.descripcion,
+                            tipo = subMenu.id
+                        });
+                        list.Add(new UserPermission
+                        {
+                            id = idP++,
+                            permiso = "Impresión",
+                            asignado = false,
+                            menu = subMenu.descripcion,
+                            tipo = subMenu.id
+                        });
+                        list.Add(new UserPermission
+                        {
+                            id = idP++,
+                            permiso = "Descarga",
+                            asignado = false,
+                            menu = subMenu.descripcion,
+                            tipo = subMenu.id
+                        });
+                        list.Add(new UserPermission
+                        {
+                            id = idP++,
+                            permiso = "EnvioCorreo",
+                            asignado = false,
+                            menu = subMenu.descripcion,
+                            tipo = subMenu.id
+                        });
+                        list.Add(new UserPermission
+                        {
+                            id = idP++,
+                            permiso = "EnvioWapp",
+                            asignado = false,
+                            menu = subMenu.descripcion,
+                            tipo = subMenu.id
+                        });
+                    }
+                }
+            }
             return list;
         }
         public async Task<byte[]> ExportList(string search = null)
@@ -194,5 +255,39 @@ namespace Service.Identity.Repository
 
             return template.ToByteArray();
         }
+
+        public async Task<List<Menu>>getMenus(){
+            List<Menu> menu = new List<Menu>();
+            List<Menu> subMenu = new List<Menu>();
+            subMenu.Add(new Menu { id = 3, ruta = "users", icono = "user", descripcion = "Usuarios" });
+            subMenu.Add(new Menu { id = 4, ruta = "roles", icono = "role", descripcion = "Roles" });
+            subMenu.Add(new Menu { id = 7, ruta = "sucursales", icono = "laboratorio", descripcion = "Sucursales" });
+            menu.Add(new Menu   {
+                id= 1,
+                ruta= "",
+                icono= "home",
+                descripcion= "Inicio",
+            });
+            menu.Add(new Menu   {
+                id= 2,
+                icono= "admin",
+                descripcion= "Administración",
+                subMenus=subMenu,
+            });
+            menu.Add(new Menu   {
+                id= 5,
+                ruta= "medics",
+                descripcion= "Medicos",
+                icono= "medico",
+            });
+            menu.Add(new Menu  {
+                id= 6,
+                ruta= "indication",
+                descripcion= "Indicaciones",
+                icono= "role",
+            });
+            return menu;
+        }
+
     }
 }

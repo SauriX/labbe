@@ -319,8 +319,8 @@ namespace Service.Identity.Migrations
                     b.Property<Guid>("RolId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("SubmoduloId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("SubmoduloId")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");

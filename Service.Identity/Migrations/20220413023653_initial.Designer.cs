@@ -10,8 +10,8 @@ using Service.Identity.Context;
 namespace Service.Identity.Migrations
 {
     [DbContext(typeof(IndentityContext))]
-    [Migration("20220411192508_permisos")]
-    partial class permisos
+    [Migration("20220413023653_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -120,6 +120,77 @@ namespace Service.Identity.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("Service.Identity.Domain.Branch.Branch", b =>
+                {
+                    b.Property<Guid>("IdSucursal")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Calle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("CiudadId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Clave")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ClinicosId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("CodigoPostal")
+                        .HasColumnType("int");
+
+                    b.Property<long>("ColoniaId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Correo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("EstadoId")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("FacturaciónId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaMod")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NumeroExterior")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("NumeroInterior")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("PresupuestosId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ServicioId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<long?>("Telefono")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("UsuarioCreoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsuarioModId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("IdSucursal");
+
+                    b.ToTable("CAT_Sucursal");
                 });
 
             modelBuilder.Entity("Service.Identity.Domain.Users.UsersModel", b =>
@@ -321,8 +392,8 @@ namespace Service.Identity.Migrations
                     b.Property<Guid>("RolId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("SubmoduloId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("SubmoduloId")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");
@@ -336,6 +407,73 @@ namespace Service.Identity.Migrations
                     b.HasKey("IdPermiso");
 
                     b.ToTable("CAT_Permisos");
+                });
+
+            modelBuilder.Entity("Service.Identity.Domain.permissions.RolPermiso", b =>
+                {
+                    b.Property<Guid>("IdRelacion_Rol_PermisoE")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaMod")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PermisoEspecialId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("RolId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsuarioCreoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsuarioModId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("IdRelacion_Rol_PermisoE");
+
+                    b.ToTable("Relacion_Rol_PermisoEspecial");
+                });
+
+            modelBuilder.Entity("Service.Identity.Domain.permissions.SpecialPermissions", b =>
+                {
+                    b.Property<Guid>("IdPermisoEspecial")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Clave")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaMod")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SubmoduloId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UsuarioCreoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsuarioModId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("IdPermisoEspecial");
+
+                    b.ToTable("CAT_PermisoEspecial");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
