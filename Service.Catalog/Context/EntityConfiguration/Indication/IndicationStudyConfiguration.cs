@@ -1,18 +1,19 @@
 ﻿using Identidad.Api.Model.Medicos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Service.Catalog.Domain.Indication;
 
 namespace Service.Catalog.Context.EntityConfiguration.Medics
 {
-    public class MedicClinicConfiguration : IEntityTypeConfiguration<MedicClinic>
+    public class IndicationStudyConfiguration : IEntityTypeConfiguration<IndicationStudy>
     {
-        public void Configure(EntityTypeBuilder<MedicClinic> builder)
+        public void Configure(EntityTypeBuilder<IndicationStudy> builder)
         {
-            builder.ToTable("CAT_Medico_Clinica");
+            builder.ToTable("Relacion_Estudio_Indicacion");
 
-            builder.HasKey(x => new { x.MedicoId, x.ClinicaId });
+            builder.HasKey(x => new { x.EstudioId, x.IndicacionId});
 
-
+                
 
             builder
               .Property(x => x.Activo)

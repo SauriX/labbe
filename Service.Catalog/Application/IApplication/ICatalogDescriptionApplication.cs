@@ -13,7 +13,5 @@ namespace Service.Catalog.Application.IApplication
         Task<CatalogDescriptionFormDto> GetById(int id);
         Task<CatalogDescriptionListDto> Create(CatalogDescriptionFormDto Catalog);
         Task<CatalogDescriptionListDto> Update(CatalogDescriptionFormDto Catalog);
-        Task<byte[]> ExportListIndication(string search = null);
-        Task<byte[]> ExportFormIndication(int id);
     }
 }

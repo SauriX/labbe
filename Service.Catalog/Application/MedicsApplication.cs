@@ -50,7 +50,7 @@ namespace Identidad.Api.Infraestructure.Services
 
             await _repository.Create(newMedics);
 
-            medic = newMedics.ToMedicsFormDto();
+            medic = await GetById(newMedics.IdMedico);
             medic.ClaveCambio = !sameCode;
 
             return medic;
@@ -79,9 +79,9 @@ namespace Identidad.Api.Infraestructure.Services
         private async Task<string> GenerateCode(MedicsFormDto medics, string suffix = null)
         {
 
-            var code = medics.Nombre[..3];
-            code += medics.PrimerApellido[..1];
-            code += medics.SegundoApellido[..1];
+            var code = medics.Nombre[..3].ToUpper();
+            code += medics.PrimerApellido[..1].ToUpper();
+            code += medics.SegundoApellido[..1].ToUpper();
             code += suffix;
 
             var exists = await _repository.GetByCode(code);

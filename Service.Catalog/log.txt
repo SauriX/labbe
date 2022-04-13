@@ -74,4 +74,34 @@
 
 06/04/2022 05:17:58 p. m. => A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: Named Pipes Provider, error: 40 - Could not open a connection to SQL Server)
 
-06/04/2022 05:51:08 p. m. => Value cannot be null. (Parameter 'connectionString')
+08/04/2022 17:51:07 => Could not find a part of the path 'C:\Users\Lapaxsis-00\source\repos\API\Service.Catalog\wwwroot\layout\excel\indication\IndicacionesListado.xlsx'.
+
+08/04/2022 17:51:23 => Could not find a part of the path 'C:\Users\Lapaxsis-00\source\repos\API\Service.Catalog\wwwroot\layout\excel\indication\IndicacionesFormulario.xlsx'.
+
+08/04/2022 17:51:37 => Could not find a part of the path 'C:\Users\Lapaxsis-00\source\repos\API\Service.Catalog\wwwroot\layout\excel\indication\IndicacionesFormulario.xlsx'.
+
+11/04/2022 16:16:39 => Could not find a part of the path 'C:\Users\Lapaxsis-00\source\repos\API\Service.Catalog\wwwroot\layout\excel\indication\IndicacionesListado.xlsx'.
+
+11/04/2022 17:16:50 => Exception has been thrown by the target of an invocation.
+
+11/04/2022 17:36:17 => Could not find a part of the path 'C:\Users\Lapaxsis-00\source\repos\API\Service.Catalog\wwwroot\layout\excel\indication\IndicacionesFormulario.xlsx'.
+
+11/04/2022 18:36:25 => The instance of entity type 'MedicClinic' cannot be tracked because another instance with the same key value for {'MedicoId', 'ClinicaId'} is already being tracked. When attaching existing entities, ensure that only one entity instance with a given key value is attached. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see the conflicting key values.
+
+12/4/2022 07:47:20 => The value of 'MedicClinic.MedicoId' is unknown when attempting to save changes. This is because the property is also part of a foreign key for which the principal entity in the relationship is not known.
+
+12/4/2022 07:53:38 => Value cannot be null. (Parameter 'source')
+
+12/04/2022 10:05:47 => Value cannot be null. (Parameter 'source')
+
+12/04/2022 10:20:10 => Value cannot be null. (Parameter 'source')
+
+12/04/2022 11:08:52 => Value cannot be null. (Parameter 'source')
+
+12/04/2022 11:10:08 => A connection was successfully established with the server, but then an error occurred during the pre-login handshake. (provider: SSL Provider, error: 0 - Tiempo de espera de la operación de espera agotado.)
+
+12/04/2022 11:39:08 => Value cannot be null. (Parameter 'source')
+
+12/04/2022 12:47:31 => Could not find a part of the path 'C:\Users\Lapaxsis-00\source\repos\API\Service.Catalog\wwwroot\layout\excel\indication\IndicacionesFormulario.xlsx'.
+
+12/04/2022 12:57:18 => Could not find a part of the path 'C:\Users\Lapaxsis-00\source\repos\API\Service.Catalog\wwwroot\layout\excel\indication\IndicacionesListado.xlsx'.
