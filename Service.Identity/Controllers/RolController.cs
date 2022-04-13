@@ -24,7 +24,7 @@ namespace Service.Identity.Controllers
             return await _service.Create(rolForm, authorization);
         }
 
-        [HttpPut("update")]
+        [HttpPut]
         public async Task<bool> Update(RolForm rolForm, [FromHeader] string authorization) {
             return await _service.Update(rolForm, authorization);
         }
