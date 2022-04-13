@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Identity.Context;
 
 namespace Service.Identity.Migrations
 {
     [DbContext(typeof(IndentityContext))]
-    partial class IndentityContextModelSnapshot : ModelSnapshot
+    [Migration("20220411195147_permiso-especial")]
+    partial class permisoespecial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -118,77 +120,6 @@ namespace Service.Identity.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("Service.Identity.Domain.Branch.Branch", b =>
-                {
-                    b.Property<Guid>("IdSucursal")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Calle")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long?>("CiudadId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Clave")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("ClinicosId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("CodigoPostal")
-                        .HasColumnType("int");
-
-                    b.Property<long>("ColoniaId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Correo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long?>("EstadoId")
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid>("FacturaciónId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaMod")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("NumeroExterior")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NumeroInterior")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("PresupuestosId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ServicioId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<long?>("Telefono")
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UsuarioModId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("IdSucursal");
-
-                    b.ToTable("CAT_Sucursal");
                 });
 
             modelBuilder.Entity("Service.Identity.Domain.Users.UsersModel", b =>
