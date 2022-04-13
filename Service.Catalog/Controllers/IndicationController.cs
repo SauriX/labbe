@@ -1,49 +1,47 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Service.Catalog.Dtos.Catalog;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Shared.Dictionary;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Domain.Indication;
+using Service.Catalog.Dtos.Indication;
 
-namespace Service.Catalog.Controllers.Catalog
+namespace Identidad.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public partial class IndicationController : ControllerBase
-
+    public class IndicationController : ControllerBase
     {
-        private readonly ICatalogDescriptionApplication<Indication> _indicationService;
+
+        private readonly IIndicationApplication _indicationService;
         
 
-        public IndicationController(ICatalogDescriptionApplication<Indication> indicationService)
+        public IndicationController(IIndicationApplication indicationService)
         {
             _indicationService = indicationService;
         }
         [HttpGet("all/{search?}")]
-        public async Task<IEnumerable<CatalogDescriptionListDto>> GetAllIndication(string search = null)
+        public async Task<IEnumerable<IndicationListDto>> GetAll(string search = null)
         {
             return await _indicationService.GetAll(search);
         }
 
         [HttpGet("{id}")]
-        public async Task<CatalogDescriptionFormDto> GetByIdIndication(int id)
+        public async Task<IndicationFormDto> GetById(int id)
         {
             return await _indicationService.GetById(id);
         }
 
         [HttpPost]
-        public async Task<CatalogListDto> CreateIndication(CatalogDescriptionFormDto catalog)
+        public async Task Create(IndicationFormDto indicacion)
         {
-            catalog.UsuarioId = "userId";
-            return await _indicationService.Create(catalog);
+             await _indicationService.Create(indicacion);
         }
 
         [HttpPut]
-        public async Task<CatalogListDto> UpdateIndication(CatalogDescriptionFormDto catalog)
+        public async Task Update(IndicationFormDto indication)
         {
-            catalog.UsuarioId = "userId";
-            return await _indicationService.Update(catalog);
+            await _indicationService.Update(indication);
         }
 
         [HttpPost("export/list/{search?}")]

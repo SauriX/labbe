@@ -20,6 +20,10 @@ using Microsoft.AspNetCore.Http;
 using System.Security.Principal;
 using Microsoft.Identity.Web;
 using Microsoft.AspNetCore.Mvc;
+using Service.Identity.Dictionary;
+using ClosedXML.Report;
+using Shared.Extensions;
+using ClosedXML.Excel;
 
 namespace Service.Identity.Repository
 {
@@ -67,6 +71,7 @@ namespace Service.Identity.Repository
         public async Task<UserList> NewUser(RegisterUserDTO user,string token) {
             token = token.Replace("Bearer ",string.Empty);
             var usermodel = Mapper.UserMapper.ToregisterUSerDto(user,token);
+            usermodel.TwoFactorEnabled = false;
             IdentityResult results= await _userManager.CreateAsync(usermodel,user.Contraseña);
                 if (results.Succeeded) {
                 ApUsers = _userManager.Users.ToList();
@@ -228,6 +233,50 @@ namespace Service.Identity.Repository
                 return null;
             }
             return null;
+        }
+
+        public async Task<byte[]> ExportList(string search = null)
+        {
+            var users = await GetAll(search);
+
+            var path = Assets.UserList;
+
+            var template = new XLTemplate(path);
+
+            template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
+            template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
+            template.AddVariable("Titulo", "Usuarios");
+            template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
+            template.AddVariable("Usuarios", users);
+
+            template.Generate();
+
+            var range = template.Workbook.Worksheet("Usuarios").Range("Usuarios");
+            var table = template.Workbook.Worksheet("Usuarios").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
+            table.Theme = XLTableTheme.TableStyleMedium2;
+
+            template.Format();
+
+            return template.ToByteArray();
+        }
+
+        public async Task<byte[]> ExportForm(string id)
+        {
+            var user = await GetById(id);
+
+            var path = Assets.UserForm;
+
+            var template = new XLTemplate(path);
+
+            template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
+            template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
+            template.AddVariable("Titulo", "Usuarios");
+            template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
+            template.AddVariable("Usuario", user);
+            template.AddVariable("Permisos", user.permisos);
+            template.Generate();
+
+            return template.ToByteArray();
         }
 
         public static string GenerarPassword(int longitud)

@@ -120,6 +120,77 @@ namespace Service.Identity.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Service.Identity.Domain.Branch.Branch", b =>
+                {
+                    b.Property<Guid>("IdSucursal")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Calle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("CiudadId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Clave")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ClinicosId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("CodigoPostal")
+                        .HasColumnType("int");
+
+                    b.Property<long>("ColoniaId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Correo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("EstadoId")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("FacturaciónId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaMod")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NumeroExterior")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("NumeroInterior")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("PresupuestosId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ServicioId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<long?>("Telefono")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("UsuarioCreoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsuarioModId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("IdSucursal");
+
+                    b.ToTable("CAT_Sucursal");
+                });
+
             modelBuilder.Entity("Service.Identity.Domain.Users.UsersModel", b =>
                 {
                     b.Property<Guid>("Id")
@@ -275,6 +346,132 @@ namespace Service.Identity.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
+                });
+
+            modelBuilder.Entity("Service.Identity.Domain.permissions.Permission", b =>
+                {
+                    b.Property<Guid>("IdPermiso")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Acceso")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Clave")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Crear")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Descarga")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("EnvioCorreo")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("EnvioWapp")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaMod")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Impresión")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Modificación")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("RolId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SubmoduloId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsuarioCreoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsuarioId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsuarioModId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("IdPermiso");
+
+                    b.ToTable("CAT_Permisos");
+                });
+
+            modelBuilder.Entity("Service.Identity.Domain.permissions.RolPermiso", b =>
+                {
+                    b.Property<Guid>("IdRelacion_Rol_PermisoE")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaMod")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PermisoEspecialId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("RolId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsuarioCreoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsuarioModId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("IdRelacion_Rol_PermisoE");
+
+                    b.ToTable("Relacion_Rol_PermisoEspecial");
+                });
+
+            modelBuilder.Entity("Service.Identity.Domain.permissions.SpecialPermissions", b =>
+                {
+                    b.Property<Guid>("IdPermisoEspecial")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Clave")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaMod")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SubmoduloId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UsuarioCreoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsuarioModId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("IdPermisoEspecial");
+
+                    b.ToTable("CAT_PermisoEspecial");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

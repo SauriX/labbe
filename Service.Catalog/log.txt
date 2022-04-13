@@ -58,21 +58,21 @@
 
 01/04/2022 9:41:59 => Exception has been thrown by the target of an invocation.
 
-1/4/2022 22:59:49 => There is already an object named 'CAT_Reactivo_Contpaq' in the database.
+04/04/2022 17:32:29 => Value cannot be null. (Parameter 'source')
 
-7/4/2022 12:17:08 => The process cannot access the file 'C:\Users\LAPAXSIS-00\source\repos\LaboratorioRamos\Service.Catalog\wwwroot\layout\excel\reagent\ReactivoListado.xlsx' because it is being used by another process.
+04/04/2022 17:34:41 => Value cannot be null. (Parameter 'source')
 
-7/4/2022 12:37:39 => The process cannot access the file 'C:\Users\LAPAXSIS-00\source\repos\LaboratorioRamos\Service.Catalog\wwwroot\layout\excel\reagent\ReactivoFormulario.xlsx' because it is being used by another process.
+04/04/2022 17:37:26 => Value cannot be null. (Parameter 'source')
 
-7/4/2022 12:59:09 => The process cannot access the file 'C:\Users\LAPAXSIS-00\source\repos\LaboratorioRamos\Service.Catalog\wwwroot\layout\excel\reagent\ReactivoListado.xlsx' because it is being used by another process.
+04/04/2022 18:04:16 => Value cannot be null. (Parameter 'source')
 
-07/04/2022 16:55:22 => There isn't a worksheet named 'Medicos'.
+04/04/2022 18:20:57 => Value cannot be null. (Parameter 'source')
 
-07/04/2022 16:55:43 => There isn't a worksheet named 'Medicos'.
+04/04/2022 18:21:11 => Value cannot be null. (Parameter 'source')
 
-07/04/2022 17:00:51 => There isn't a worksheet named 'Medicos'.
+04/04/2022 18:21:28 => Value cannot be null. (Parameter 'source')
 
-07/04/2022 17:49:53 => No property or field 'Reactivos' exists in type 'MedicsListDto'
+06/04/2022 05:17:58 p. m. => A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: Named Pipes Provider, error: 40 - Could not open a connection to SQL Server)
 
 08/04/2022 17:51:07 => Could not find a part of the path 'C:\Users\Lapaxsis-00\source\repos\API\Service.Catalog\wwwroot\layout\excel\indication\IndicacionesListado.xlsx'.
 
@@ -91,3 +91,17 @@
 12/4/2022 07:47:20 => The value of 'MedicClinic.MedicoId' is unknown when attempting to save changes. This is because the property is also part of a foreign key for which the principal entity in the relationship is not known.
 
 12/4/2022 07:53:38 => Value cannot be null. (Parameter 'source')
+
+12/04/2022 10:05:47 => Value cannot be null. (Parameter 'source')
+
+12/04/2022 10:20:10 => Value cannot be null. (Parameter 'source')
+
+12/04/2022 11:08:52 => Value cannot be null. (Parameter 'source')
+
+12/04/2022 11:10:08 => A connection was successfully established with the server, but then an error occurred during the pre-login handshake. (provider: SSL Provider, error: 0 - Tiempo de espera de la operación de espera agotado.)
+
+12/04/2022 11:39:08 => Value cannot be null. (Parameter 'source')
+
+12/04/2022 12:47:31 => Could not find a part of the path 'C:\Users\Lapaxsis-00\source\repos\API\Service.Catalog\wwwroot\layout\excel\indication\IndicacionesFormulario.xlsx'.
+
+12/04/2022 12:57:18 => Could not find a part of the path 'C:\Users\Lapaxsis-00\source\repos\API\Service.Catalog\wwwroot\layout\excel\indication\IndicacionesListado.xlsx'.

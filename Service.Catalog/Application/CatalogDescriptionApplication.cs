@@ -88,51 +88,5 @@ namespace Service.Catalog.Application
 
             return updatedAgent.ToCatalogDescriptionListDto();
         }
-
-        public async Task<byte[]> ExportListIndication(string search = null)
-        {
-            var indication = await GetAll(search);
-
-            var path = AssetsIndication.IndicationList;
-
-            var template = new XLTemplate(path);
-
-            template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
-            template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
-            template.AddVariable("Titulo", "Indicaciones");
-            template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
-            template.AddVariable("Indicaciones", indication);
-
-            template.Generate();
-
-            var range = template.Workbook.Worksheet("Indicaciones").Range("Indicaciones");
-            var table = template.Workbook.Worksheet("Indicaciones").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
-            table.Theme = XLTableTheme.TableStyleMedium2;
-
-            template.Format();
-
-            return template.ToByteArray();
-        }
-
-        public async Task<byte[]> ExportFormIndication(int id)
-        {
-            var indication = await GetById(id);
-
-            var path = AssetsIndication.IndicationForm;
-
-            var template = new XLTemplate(path);
-
-            template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
-            template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
-            template.AddVariable("Titulo", "Indicaciones");
-            template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
-            template.AddVariable("Indicaciones", indication);
-
-            template.Generate();
-
-            template.Format();
-
-            return template.ToByteArray();
-        }
     }
 }

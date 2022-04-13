@@ -12,13 +12,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Medics
 
             builder.HasKey(x => new { x.MedicoId, x.ClinicaId });
 
-            //builder
-            //  .Property(x => x.MedicoId)
-            //  .IsRequired(true);
 
-            //builder
-            //  .Property(x => x.ClinicaId)
-            //  .IsRequired(true);
 
             builder
               .Property(x => x.Activo)
@@ -40,9 +34,6 @@ namespace Service.Catalog.Context.EntityConfiguration.Medics
               .Property(x => x.FechaMod)
               .IsRequired(true);
 
-            //builder
-            //  .HasOne(x => x.Medico)
-            //  .WithMany();
         }
 
     }

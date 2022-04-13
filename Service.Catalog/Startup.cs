@@ -87,11 +87,11 @@ namespace Service.Catalog
             services.AddScoped<ICatalogDescriptionApplication<UseOfCFDI>, CatalogDescriptionApplication<UseOfCFDI>>();
             services.AddScoped<ICatalogDescriptionApplication<Payment>, CatalogDescriptionApplication<Payment>>();
             services.AddScoped<ICatalogDescriptionApplication<Indicator>, CatalogDescriptionApplication<Indicator>>();
-            services.AddScoped<ICatalogDescriptionApplication<Indication>, CatalogDescriptionApplication<Indication>>();
             services.AddScoped<IAreaApplication, AreaApplication>();
             services.AddScoped<IDimensionApplication, DimensionApplication>();
             services.AddScoped<IReagentApplication, ReagentApplication>();
             services.AddScoped<IMedicsApplication, MedicsApplication>();
+            services.AddScoped<IIndicationApplication, IndicationApplication>();
 
             services.AddScoped<ICatalogRepository<Delivery>, CatalogRepository<Delivery>>();
             services.AddScoped<ICatalogRepository<Area>, CatalogRepository<Area>>();
@@ -106,11 +106,11 @@ namespace Service.Catalog
             services.AddScoped<ICatalogRepository<UseOfCFDI>, CatalogRepository<UseOfCFDI>>();
             services.AddScoped<ICatalogRepository<Payment>, CatalogRepository<Payment>>();
             services.AddScoped<ICatalogRepository<Indicator>, CatalogRepository<Indicator>>();
-            services.AddScoped<ICatalogRepository<Indication>, CatalogRepository<Indication>>();
             services.AddScoped<IAreaRepository, AreaRepository>();
             services.AddScoped<IDimensionRepository, DimensionRepository>();
             services.AddScoped<IReagentRepository, ReagentRepository>();
             services.AddScoped<IMedicsRepository, MedicsRepository>();
+            services.AddScoped<IIndicationRepository, IndicationRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
