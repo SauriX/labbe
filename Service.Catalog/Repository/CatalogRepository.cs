@@ -24,9 +24,11 @@ namespace Service.Catalog.Repository
         {
             var catalogs = _entity.AsQueryable();
 
+            search = search.Trim().ToLower();
+
             if (!string.IsNullOrWhiteSpace(search) && search != "all")
             {
-                catalogs = catalogs.Where(x => x.Clave == search || x.Nombre == search);
+                catalogs = catalogs.Where(x => x.Clave.ToLower().Contains(search) || x.Nombre.ToLower().Contains(search));
             }
 
             return await catalogs.ToListAsync();

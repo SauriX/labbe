@@ -75,8 +75,8 @@ namespace Service.Catalog.Mapper
             {
                 Id = model.Id,
                 Clave = dto.Clave.Trim(),
-                Largo = model.Largo,
-                Ancho = model.Ancho,
+                Largo = dto.Largo,
+                Ancho = dto.Ancho,
                 Activo = dto.Activo,
                 UsuarioCreoId = model.UsuarioCreoId,
                 FechaCreo = model.FechaCreo,
