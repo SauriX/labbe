@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220413023905_Estado, Ciudad, Colonia")]
+    partial class EstadoCiudadColonia
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -139,70 +141,6 @@ namespace Service.Catalog.Migrations
                     b.HasKey("IdMedico");
 
                     b.ToTable("CAT_Medico");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Branch.Branch", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Calle")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Clave")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("ClinicosId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("ColoniaId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Correo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("FacturaciónId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("smalldatetime");
-
-                    b.Property<DateTime>("FechaModifico")
-                        .HasColumnType("smalldatetime");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NumeroExterior")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NumeroInterior")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("PresupuestosId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ServicioId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<long?>("Telefono")
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UsuarioModificoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ColoniaId");
-
-                    b.ToTable("CAT_Sucursal");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Catalog.Area", b =>
@@ -956,17 +894,6 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Clinica");
 
                     b.Navigation("Medico");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Branch.Branch", b =>
-                {
-                    b.HasOne("Service.Catalog.Domain.Constant.Colony", "Colonia")
-                        .WithMany()
-                        .HasForeignKey("ColoniaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Colonia");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Catalog.Area", b =>
