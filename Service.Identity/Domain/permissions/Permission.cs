@@ -18,7 +18,7 @@ namespace Service.Identity.Domain.permissions
         public bool EnvioWapp { get; set; }
         public Guid RolId { get; set; }
         public Guid UsuarioId { get; set; }
-        public Guid SubmoduloId { get; set; }
+        public int SubmoduloId { get; set; }
         public bool Activo { get; set; }
         public Guid UsuarioCreoId { get; set; }
         public DateTime FechaCreo { get; set; }

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Service.Identity.Migrations
 {
-    public partial class indentity : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -65,6 +65,101 @@ namespace Service.Identity.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CAT_PermisoEspecial",
+                columns: table => new
+                {
+                    IdPermisoEspecial = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Clave = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SubmoduloId = table.Column<int>(type: "int", nullable: false),
+                    Activo = table.Column<bool>(type: "bit", nullable: false),
+                    UsuarioCreoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FechaCreo = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UsuarioModId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FechaMod = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CAT_PermisoEspecial", x => x.IdPermisoEspecial);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CAT_Permisos",
+                columns: table => new
+                {
+                    IdPermiso = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Clave = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Acceso = table.Column<bool>(type: "bit", nullable: false),
+                    Crear = table.Column<bool>(type: "bit", nullable: false),
+                    Modificación = table.Column<bool>(type: "bit", nullable: false),
+                    Impresión = table.Column<bool>(type: "bit", nullable: false),
+                    Descarga = table.Column<bool>(type: "bit", nullable: false),
+                    EnvioCorreo = table.Column<bool>(type: "bit", nullable: false),
+                    EnvioWapp = table.Column<bool>(type: "bit", nullable: false),
+                    RolId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UsuarioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SubmoduloId = table.Column<int>(type: "int", nullable: false),
+                    Activo = table.Column<bool>(type: "bit", nullable: false),
+                    UsuarioCreoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FechaCreo = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UsuarioModId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FechaMod = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CAT_Permisos", x => x.IdPermiso);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CAT_Sucursal",
+                columns: table => new
+                {
+                    IdSucursal = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Clave = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CodigoPostal = table.Column<int>(type: "int", nullable: false),
+                    EstadoId = table.Column<long>(type: "bigint", nullable: true),
+                    CiudadId = table.Column<long>(type: "bigint", nullable: true),
+                    NumeroExterior = table.Column<int>(type: "int", nullable: false),
+                    NumeroInterior = table.Column<int>(type: "int", nullable: true),
+                    Calle = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ColoniaId = table.Column<long>(type: "bigint", nullable: false),
+                    Correo = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Telefono = table.Column<long>(type: "bigint", nullable: true),
+                    PresupuestosId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FacturaciónId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ClinicosId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ServicioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Activo = table.Column<bool>(type: "bit", nullable: false),
+                    UsuarioCreoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FechaCreo = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UsuarioModId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FechaMod = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CAT_Sucursal", x => x.IdSucursal);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Relacion_Rol_PermisoEspecial",
+                columns: table => new
+                {
+                    IdRelacion_Rol_PermisoE = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RolId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PermisoEspecialId = table.Column<int>(type: "int", nullable: false),
+                    Activo = table.Column<bool>(type: "bit", nullable: false),
+                    UsuarioCreoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FechaCreo = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UsuarioModId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FechaMod = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Relacion_Rol_PermisoEspecial", x => x.IdRelacion_Rol_PermisoE);
                 });
 
             migrationBuilder.CreateTable(
@@ -229,6 +324,18 @@ namespace Service.Identity.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "CAT_PermisoEspecial");
+
+            migrationBuilder.DropTable(
+                name: "CAT_Permisos");
+
+            migrationBuilder.DropTable(
+                name: "CAT_Sucursal");
+
+            migrationBuilder.DropTable(
+                name: "Relacion_Rol_PermisoEspecial");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

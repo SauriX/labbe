@@ -9,43 +9,92 @@ namespace Service.Identity.Mapper
 {
     public class PermissionMapper
     {
-        public static Permission toPermission(RolForm rolForm,Guid idRol,string token) {
+        public static  List<Permission> toPermission(RolForm rolForm,Guid idRol,string token,List<Menu>menus) {
             string jwt = token;
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
             var securityToken = (JwtSecurityToken)tokenHandler.ReadToken(jwt);
             var claimValue = securityToken.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;
             Permission permission = new Permission();
+            List<Permission> permissions = new List<Permission>();
             var modelList = rolForm.permisos;
-            foreach (var model in modelList) {
-                switch (model.permiso) {
-                    case "Crear":
-                        permission.Crear = model.asignado;
-                        break;
-                    case "Modificación":
-                        permission.Modificación = model.asignado;
-                        break;
-                    case "Impresión":
-                        permission.Impresión = model.asignado;
-                        break;
-                    case "Descarga":
-                        permission.Descarga = model.asignado;
-                        break;
-                    case "EnvioCorreo":
-                        permission.EnvioCorreo = model.asignado;
-                        break;
-                    case "EnvioWapp":
-                        permission.EnvioWapp = model.asignado;
-                        break;
-                    default:
-                        break;
-                }            
+            foreach (var menu in menus)
+            {
+                var  list = modelList.Where(x => x.tipo == menu.id);
+                foreach (var model in list)
+                {
+                    switch (model.permiso)
+                    {
+                        case "Crear":
+                            permission.Crear = model.asignado;
+                            break;
+                        case "Modificación":
+                            permission.Modificación = model.asignado;
+                            break;
+                        case "Impresión":
+                            permission.Impresión = model.asignado;
+                            break;
+                        case "Descarga":
+                            permission.Descarga = model.asignado;
+                            break;
+                        case "EnvioCorreo":
+                            permission.EnvioCorreo = model.asignado;
+                            break;
+                        case "EnvioWapp":
+                            permission.EnvioWapp = model.asignado;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                permission.Activo = rolForm.activo;
+                permission.FechaCreo = DateTime.Now;
+                permission.RolId = idRol;
+                permission.UsuarioCreoId = Guid.Parse(claimValue);
+                permission.IdPermiso = new Guid();
+                permission.SubmoduloId = menu.id;
+                permissions.Add(permission);
+
+                if (menu.subMenus != null) {
+                    foreach (var submenu in menu.subMenus) {
+                        var lists = modelList.Where(x => x.tipo == menu.id);
+                        foreach (var model in lists)
+                        {
+                            switch (model.permiso)
+                            {
+                                case "Crear":
+                                    permission.Crear = model.asignado;
+                                    break;
+                                case "Modificación":
+                                    permission.Modificación = model.asignado;
+                                    break;
+                                case "Impresión":
+                                    permission.Impresión = model.asignado;
+                                    break;
+                                case "Descarga":
+                                    permission.Descarga = model.asignado;
+                                    break;
+                                case "EnvioCorreo":
+                                    permission.EnvioCorreo = model.asignado;
+                                    break;
+                                case "EnvioWapp":
+                                    permission.EnvioWapp = model.asignado;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        permission.Activo = rolForm.activo;
+                        permission.FechaCreo = DateTime.Now;
+                        permission.RolId = idRol;
+                        permission.UsuarioCreoId = Guid.Parse(claimValue);
+                        permission.IdPermiso = new Guid();
+                        permission.SubmoduloId = menu.id;
+                        permissions.Add(permission);
+                    }                
+                }
             }
-            permission.Activo = rolForm.activo;
-            permission.FechaCreo = DateTime.Now;
-            permission.RolId = idRol;
-            permission.UsuarioCreoId = Guid.Parse(claimValue);
-            permission.IdPermiso = new Guid();
-            return permission;
+
+            return permissions;
         }
 
         public static List<UserPermission> toListPermision(IEnumerable<Permission> permissions) { 
