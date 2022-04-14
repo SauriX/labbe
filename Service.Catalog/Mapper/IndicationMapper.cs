@@ -39,13 +39,15 @@ namespace Service.Catalog.Mapper
         public static IndicationFormDto ToIndicationFormDto(this Indication model)
         {
             if (model == null) return null;
+
             return new IndicationFormDto
             {
                 Id = model.Id,
                 Clave = model.Clave.Trim(),
                 Nombre = model.Nombre.Trim(),
                 Descripcion = model.Descripcion.Trim(),
-                Activo = model.Activo
+                Activo = model.Activo,
+                Estudios = model.Estudios?.Select(y => y.Estudio)?.ToList()?.ToStudyListDto()
             };
         }
 

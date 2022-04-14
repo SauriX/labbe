@@ -59,17 +59,5 @@ namespace Identidad.Api.Controllers
             return File(file, MimeType.XLSX);
         }
 
-        //[HttpPost("medics/GenerateCode")]
-        //public async Task<string> GenerateCode(MedicsClaveDto Medics)
-        //{
-
-        //    await _Services.GenerateCode(Medics);
-        //    return await _Services.GenerateCode(Medics);
-        //}
-        //[HttpPost("medics/clave")]
-        //public async Task<string> GenerateClave(Clave data)
-        //{
-        //    return await _Services.GenerateClave(data);
-        //}
     }
 }

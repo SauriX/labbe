@@ -19,6 +19,12 @@ namespace Service.Catalog.Controllers.Catalog
             return await _fieldService.GetById(id);
         }
 
+        [HttpGet("field/active")]
+        public async Task<IEnumerable<CatalogListDto>> GetActiveField(int id)
+        {
+            return await _departmentService.GetActive();
+        }
+
         [HttpPost("field")]
         public async Task<CatalogListDto> CreateField(CatalogFormDto catalog)
         {

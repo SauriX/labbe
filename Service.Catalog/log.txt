@@ -109,3 +109,9 @@
 13/4/2022 09:00:32 => Object reference not set to an instance of an object.
 
 13/4/2022 09:00:39 => A connection was successfully established with the server, but then an error occurred during the pre-login handshake. (provider: SSL Provider, error: 0 - Tiempo de espera de la operación de espera agotado.)
+
+13/04/2022 11:01:01 => Object reference not set to an instance of an object.
+
+13/04/2022 13:12:02 => Unable to cast object of type 'System.Int64' to type 'System.Int32'.
+
+13/04/2022 13:28:59 => Unable to cast object of type 'System.Int64' to type 'System.String'.

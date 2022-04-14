@@ -14,7 +14,7 @@ namespace Service.Catalog.Mapper
             return model.Select(x => new StudyListDto
             {
                 Id = x.Id,
-                Nombre = x.Clave,
+                Nombre = x.Nombre,
                 AreaId = x.AreaId,
                 Area = x.Area,
             });
