@@ -4,24 +4,24 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Service.Identity.Mapper
 {
-    public class PermissionMapper
+    public class UserPermissionMapper
     {
-        public static  List<Permission> toPermission(RolForm rolForm,Guid idRol,string token,List<Menu>menus) {
+        public static List<Permission> toPermission(RegisterUserDTO rolForm, Guid iduser, string token, List<Menu> menus)
+        {
             string jwt = token;
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
             var securityToken = (JwtSecurityToken)tokenHandler.ReadToken(jwt);
             var claimValue = securityToken.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;
-            
+
             List<Permission> permissions = new List<Permission>();
             var modelList = rolForm.permisos;
             foreach (var menu in menus)
             {
                 Permission permission = new Permission();
-                var  list = modelList.Where(x => x.tipo == menu.id);
+                var list = modelList.Where(x => x.tipo == menu.id);
                 foreach (var model in list)
                 {
                     switch (model.permiso)
@@ -50,22 +50,25 @@ namespace Service.Identity.Mapper
                 }
                 permission.Activo = rolForm.activo;
                 permission.FechaCreo = DateTime.Now;
-                permission.RolId = idRol;
+                permission.UsuarioId = iduser;
                 permission.UsuarioCreoId = Guid.Parse(claimValue);
                 permission.IdPermiso = Guid.NewGuid();
                 permission.SubmoduloId = menu.id;
-                if (permission.EnvioWapp || permission.EnvioCorreo || permission.Crear || permission.Modificación || permission.Impresión || permission.Descarga) {
+                if (permission.EnvioWapp || permission.EnvioCorreo || permission.Crear || permission.Modificación || permission.Impresión || permission.Descarga)
+                {
                     permissions.Add(permission);
-                    
+
                 }
-                if (menu.subMenus != null) {
-                    
-                    foreach (var submenu in menu.subMenus) {
+                if (menu.subMenus != null)
+                {
+
+                    foreach (var submenu in menu.subMenus)
+                    {
                         var lists = modelList.Where(x => x.tipo == submenu.id);
                         Permission permissionsub = new Permission();
                         foreach (var model2 in lists)
                         {
-                           
+
                             switch (model2.permiso)
                             {
                                 case "Crear":
@@ -92,23 +95,23 @@ namespace Service.Identity.Mapper
                         }
                         permissionsub.Activo = rolForm.activo;
                         permissionsub.FechaCreo = DateTime.Now;
-                        permissionsub.RolId = idRol;
+                        permission.UsuarioId = iduser;
                         permissionsub.UsuarioCreoId = Guid.Parse(claimValue);
                         permissionsub.IdPermiso = Guid.NewGuid();
                         permissionsub.SubmoduloId = submenu.id;
                         if (permissionsub.EnvioWapp || permissionsub.EnvioCorreo || permissionsub.Crear || permissionsub.Modificación || permissionsub.Impresión || permissionsub.Descarga)
                         {
                             permissions.Add(permissionsub);
-                            
+
                         }
-                    }                
+                    }
                 }
             }
 
             return permissions;
         }
 
-        public static List<Permission> toEditPermission(List<UserPermission> rolForm, Guid idRol, string token, List<Menu> menus, string idpermiso)
+        public static List<Permission> toEditPermission(List<UserPermission> rolForm, Guid iduser, string token, List<Menu> menus, string idpermiso)
         {
             string jwt = token;
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
@@ -149,7 +152,7 @@ namespace Service.Identity.Mapper
                 }
                 permission.Activo = true;
                 permission.FechaCreo = DateTime.Now;
-                permission.RolId = idRol;
+                permission.RolId = iduser;
                 permission.UsuarioCreoId = Guid.Parse(claimValue);
                 permission.IdPermiso = new Guid();
                 permission.SubmoduloId = menu.id;
@@ -195,7 +198,7 @@ namespace Service.Identity.Mapper
                         }
                         permission.Activo = true;
                         permission.FechaCreo = DateTime.Now;
-                        permission.RolId = idRol;
+                        permission.RolId = iduser;
                         permission.UsuarioCreoId = Guid.Parse(claimValue);
                         permission.IdPermiso = id;
                         permission.SubmoduloId = menu.id;
@@ -209,15 +212,16 @@ namespace Service.Identity.Mapper
 
             return permissions;
         }
-        public static List<UserPermission> toListPermision(IEnumerable<Permission> permissions, List<Menu> menus, List<UserPermission> completelist) { 
+        public static List<UserPermission> toListPermision(IEnumerable<Permission> permissions, List<Menu> menus, List<UserPermission> completelist)
+        {
             List<UserPermission> list = new List<UserPermission>();
-            
+
             var idp = 1;
             foreach (var permission in permissions)
             {
                 var menu1 = menus.Where(x => x.id == permission.SubmoduloId);
                 var menucount = menu1.Count();
-                if (menucount>0)
+                if (menucount > 0)
                 {
                     var menu = menu1.ToArray()[0];
                     list.Add(new UserPermission
@@ -269,9 +273,12 @@ namespace Service.Identity.Mapper
                         tipo = menu.id
                     });
                 }
-                else {
-                    foreach (var item in menus) {
-                        if (item.subMenus != null) {
+                else
+                {
+                    foreach (var item in menus)
+                    {
+                        if (item.subMenus != null)
+                        {
                             var submenu = item.subMenus.Where(x => x.id == permission.SubmoduloId).ToArray()[0];
                             list.Add(new UserPermission
                             {
@@ -322,7 +329,7 @@ namespace Service.Identity.Mapper
                                 tipo = submenu.id
                             });
                         }
-                    
+
                     }
 
                 }
@@ -336,7 +343,7 @@ namespace Service.Identity.Mapper
                 foreach (var item in completelist)
                 {
 
-                    var per = list.Count(x => x.tipo == item.tipo && x.permiso == item.permiso);
+                    var per = list.Count(x => x.tipo == item.tipo && x.permiso == item.permiso );
                     if (per == 0)
                     {
                         item.id = idp++;

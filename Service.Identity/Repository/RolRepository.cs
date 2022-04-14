@@ -17,7 +17,7 @@ using Service.Identity.Domain.permissions;
 
 namespace Service.Identity.Repository
 {
-    public class RolRepository : IRolRepository
+    public class RolRepository : IRolRepository 
     {
         private RoleManager<UserRol> _roleManager;
         private readonly IndentityContext _context;
@@ -122,6 +122,7 @@ namespace Service.Identity.Repository
                 var permisos = _context.CAT_Permisos.AsQueryable();
                 var permiso = permisos.Where(x => x.RolId == rol.Id);
                 var permisoM = Mapper.PermissionMapper.toListPermision(permiso,Menus,permisoslist);
+                
                 return Mapper.RolMapper.ToRolForm(rol, permisoM);
             }
             return null;

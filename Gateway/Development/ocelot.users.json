@@ -1,0 +1,172 @@
+﻿{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/scopes/reagent",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 45216
+        }
+      ],
+      "UpstreamPathTemplate": "/api/scopes/reagent",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/scopes/medics",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 45216
+        }
+      ],
+      "UpstreamPathTemplate": "/api/scopes/medics",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Account/all/{search}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 45216
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Account/all/{search}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Account/menu",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 45216
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Account/menu",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Account/profile",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 45216
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Account/profile",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Account/user/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 45216
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Account/user/{id}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api​/Account​/user​/paswwordgenerator",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 45216
+        }
+      ],
+      "UpstreamPathTemplate": "​/api​/Account​/user​/paswwordgenerator",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Account/export/form/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 45216
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Account/export/form/{id}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Account/export/list/{search}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 45216
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Account/export/list/{search}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Session/login",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 45216
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Session/login",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Account/user/clave",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 45216
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Account/user/clave",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Account",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 45216
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Account",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Account",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 45216
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Account",
+      "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "​/api​/Account​/updatepassword",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 45216
+        }
+      ],
+      "UpstreamPathTemplate": "/api​/Account​/updatepassword",
+      "UpstreamHttpMethod": [ "PUT" ]
+    }
+  ]
+}

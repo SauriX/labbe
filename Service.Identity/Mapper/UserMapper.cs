@@ -32,36 +32,10 @@ namespace  Service.Identity.Mapper
             return users;
         }
 
-        public static UserList ToUserInfoDto(UsersModel model)
+        public static UserList ToUserInfoDto(UsersModel model, List<UserPermission> permisos=null)
         {
+
             if (model == null) return null;
-            List<UserPermission> permisio= new List<UserPermission>();
-            permisio.Add(new UserPermission {
-                     id = 1,
-                   
-                     menu ="test",
-                     permiso = "test",
-                     asignado = false,
-                     tipo =1
-             });
-            permisio.Add(new UserPermission
-            {
-                id = 3,
-                
-                menu = "test3",
-                permiso = "test3",
-                asignado = true,
-                tipo = 3
-            });
-            permisio.Add(new UserPermission
-            {
-                id = 2,
-                
-                menu = "test2",
-                permiso = "test2",
-                asignado = true,
-                tipo = 2
-            });
             return new UserList
             {
                 IdUsuario = model.Id,
@@ -74,8 +48,8 @@ namespace  Service.Identity.Mapper
                 clave = model.Clave,
                 contraseña = DecodeFrom64(model.Contraseña),
                 confirmaContraseña = DecodeFrom64(model.Contraseña),
-                TipoUsuario = "test",
-                permisos = permisio,
+                TipoUsuario = model.IdRol.ToString(),
+                permisos = permisos,
             };
             
             

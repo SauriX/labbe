@@ -30,7 +30,14 @@ namespace Service.Identity.Controllers
         public async Task<UserList> GetById(string id) {
             return await _service.GetById(id);
         }
-
+        [HttpGet("menu")]
+        public async Task<List<Menu>> getUserMenus([FromHeader] string authorization) {
+            return await _service.getUserMenus(authorization);
+        }
+        [HttpGet("profile")]
+        public async Task<Profile> getProfile([FromHeader] string authorization) { 
+            return await _service.getProfile(authorization);
+        }
         [HttpPost]
         public async Task<UserList> Create(RegisterUserDTO user, [FromHeader] string authorization)
         {
