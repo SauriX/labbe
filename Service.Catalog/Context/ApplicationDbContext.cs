@@ -1,6 +1,7 @@
 ﻿using Identidad.Api.Model.Medicos;
 using Identidad.Api.ViewModels.Menu;
 using Microsoft.EntityFrameworkCore;
+using Service.Catalog.Domain;
 using Service.Catalog.Domain.Branch;
 using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Domain.Constant;
@@ -40,6 +41,7 @@ namespace Service.Catalog.Context
         public DbSet<City> CAT_Ciudad { get; set; }
         public DbSet<Colony> CAT_Colonia { get; set; }
         public DbSet<Branch> CAT_Sucursal { get; set; }
+        public DbSet<Study> CAT_Estudio { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

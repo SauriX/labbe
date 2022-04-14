@@ -19,3 +19,9 @@
 12/4/2022 21:43:44 => There is already an object named 'AspNetRoles' in the database.
 
 13/4/2022 07:35:16 => There is already an object named 'AspNetRoles' in the database.
+
+13/04/2022 10:15:19 => There is already an object named 'AspNetRoles' in the database.
+
+13/04/2022 10:41:13 => There is already an object named 'AspNetRoles' in the database.
+
+13/04/2022 10:50:20 => Cannot drop the table 'CAT_Sucursal', because it does not exist or you do not have permission.

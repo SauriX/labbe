@@ -293,163 +293,9 @@
       "UpstreamHttpMethod": [ "PUT" ]
     },
     //Medics
-    {
-      "DownstreamPathTemplate": "/api/medics/all/{search}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 20347
-        }
-      ],
-      "UpstreamPathTemplate": "/api/medics/all/{search}",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/medics/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 20347
-        }
-      ],
-      "UpstreamPathTemplate": "/api/medics/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/medics",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 20347
-        }
-      ],
-      "UpstreamPathTemplate": "/api/medics",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    //{
-    // "DownstreamPathTemplate": "/api/medics/GenerateCode",
-    // "DownstreamScheme": "http",
-    // "DownstreamHostAndPorts": [
-    // {
-    // "Host": "localhost",
-    // "Port": 20347
-    // }
-    // ],
-    // "UpstreamPathTemplate": "/api/medics/GenerateCode",
-    // "UpstreamHttpMethod": [ "POST" ]
-    //},
-    {
-      "DownstreamPathTemplate": "/api/medics",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 20347
-        }
-      ],
-      "UpstreamPathTemplate": "/api/medics",
-      "UpstreamHttpMethod": [ "PUT" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/medics/export/list/{search}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 20347
-        }
-      ],
-      "UpstreamPathTemplate": "/api/medics/export/list/{search}",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/medics/export/form/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 20347
-        }
-      ],
-      "UpstreamPathTemplate": "/api/medics/export/form/{id}",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
+
     //Indication
-    {
-      "DownstreamPathTemplate": "/api/indication/all/{search}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 20347
-        }
-      ],
-      "UpstreamPathTemplate": "/api/indication/all/{search}",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/indication/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 20347
-        }
-      ],
-      "UpstreamPathTemplate": "/api/indication/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/indication",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 20347
-        }
-      ],
-      "UpstreamPathTemplate": "/api/indication",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/indication",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 20347
-        }
-      ],
-      "UpstreamPathTemplate": "/api/indication",
-      "UpstreamHttpMethod": [ "PUT" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/indication/export/list/{search}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 20347
-        }
-      ],
-      "UpstreamPathTemplate": "/api/indication/export/list/{search}",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/indication/export/form/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 20347
-        }
-      ],
-      "UpstreamPathTemplate": "/api/indication/export/form/{id}",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
+
     //Area
     {
       "DownstreamPathTemplate": "/api/catalog/area/all/{search}",
@@ -755,6 +601,18 @@
       ],
       "UpstreamPathTemplate": "/api/catalog/field",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/field/active",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/field/active",
+      "UpstreamHttpMethod": [ "GET" ]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/field",
