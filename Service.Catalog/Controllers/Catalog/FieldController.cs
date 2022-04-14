@@ -22,7 +22,7 @@ namespace Service.Catalog.Controllers.Catalog
         [HttpGet("field/active")]
         public async Task<IEnumerable<CatalogListDto>> GetActiveField(int id)
         {
-            return await _departmentService.GetActive();
+            return await _fieldService.GetActive();
         }
 
         [HttpPost("field")]
