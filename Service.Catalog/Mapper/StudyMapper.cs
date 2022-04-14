@@ -15,6 +15,7 @@ namespace Service.Catalog.Mapper
             {
                 Id = x.Id,
                 Nombre = x.Nombre,
+                Clave = x.Clave,
                 AreaId = x.AreaId,
                 Area = x.Area,
             });
