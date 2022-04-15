@@ -1,6 +1,7 @@
 ﻿using Service.Catalog.Domain;
 using Service.Catalog.Domain.Branch;
 using Service.Catalog.Dtos.Branch;
+using Service.Catalog.Dtos.Catalog;
 using Service.Catalog.Dtos.Study;
 using System;
 using System.Collections.Generic;
@@ -65,6 +66,7 @@ namespace Service.Catalog.Mapper
         public static BranchForm ToBranchFormDto(this Branch model, IEnumerable<StudyListDto> study)
         {
             if (model == null) return null;
+            List<CatalogListDto> permissions =new  List<CatalogListDto>();
 
             return new BranchForm
             {
@@ -72,21 +74,27 @@ namespace Service.Catalog.Mapper
                 activo = model.Activo,
                 calle = model.Calle,
                 clave = model.Clave,
-                ciudad=model.Ciudad,
-                clinicosId= "test",
-                codigoPostal=model.Codigopostal,
-                coloniaId=model.ColoniaId,
-                correo= model.Correo,
+                ciudad = model.Ciudad,
+                clinicosId = "test",
+                codigoPostal = model.Codigopostal,
+                coloniaId = model.ColoniaId,
+                correo = model.Correo,
                 estado = model.Estado,
-                estudios=study,
-                facturaciónId="test",
+                facturaciónId = "test",
                 nombre = model.Nombre,
-                numeroExt= int.Parse(model.NumeroExterior),
-                numeroInt= int.Parse(model.NumeroInterior),
-                presupuestosId="test",
-                telefono= (long)model.Telefono
+                numeroExt = int.Parse(model.NumeroExterior),
+                numeroInt = int.Parse(model.NumeroInterior),
+                presupuestosId = "test",
+                telefono = (long)model.Telefono,
+                departaments = permissions.ToArray()
+
 
             };
+        }
+
+        private static IEnumerable<T> IEnumerable<T>()
+        {
+            throw new NotImplementedException();
         }
 
         public static Branch ToModel(this BranchForm dto,Branch model)

@@ -1,4 +1,5 @@
 ﻿using Service.Catalog.Domain.Constant;
+using Service.Catalog.Dtos.Catalog;
 using Service.Catalog.Dtos.Study;
 using System.Collections.Generic;
 
@@ -22,6 +23,6 @@ namespace Service.Catalog.Dtos.Branch
         public string ciudad { get; set; }
         public int coloniaId { get; set; }
         public string codigoPostal { get; set; }
-        public IEnumerable<StudyListDto> estudios { get; set; }
+        public IEnumerable<CatalogListDto> departaments { get; set; }
     }
 }

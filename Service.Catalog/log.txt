@@ -167,3 +167,11 @@
 14/04/2022 03:32:32 p. m. => Unable to cast object of type 'SelectListIterator`2[Service.Catalog.Domain.Study,Service.Catalog.Dtos.Study.StudyListDto]' to type 'System.Collections.Generic.List`1[Service.Catalog.Dtos.Study.StudyListDto]'.
 
 14/04/2022 03:34:48 p. m. => Unable to cast object of type 'SelectListIterator`2[Service.Catalog.Domain.Study,Service.Catalog.Dtos.Study.StudyListDto]' to type 'System.Collections.Generic.List`1[Service.Catalog.Dtos.Study.StudyListDto]'.
+
+14/04/2022 09:32:51 p. m. => The method or operation is not implemented.
+
+14/04/2022 09:32:51 p. m. => The method or operation is not implemented.
+
+14/04/2022 09:34:35 p. m. => The method or operation is not implemented.
+
+14/04/2022 09:34:37 p. m. => The method or operation is not implemented.
