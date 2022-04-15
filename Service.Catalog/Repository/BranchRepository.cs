@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Context;
+using Service.Catalog.Domain;
 using Service.Catalog.Domain.Branch;
+using Service.Catalog.Dtos.Study;
+using Service.Catalog.Mapper;
 using Service.Catalog.Repository.IRepository;
 using System;
 using System.Collections.Generic;
@@ -32,18 +35,19 @@ namespace Service.Catalog.Repository
             return await branchs.ToListAsync();
         }
 
-        public async Task<Branch> GetById(int id)
+        public async Task<Branch> GetById(string id)
         {
-            var branch = await _context.CAT_Sucursal.FindAsync(id);
+            var branch = await _context.CAT_Sucursal.FindAsync(Guid.Parse(id));
 
             return branch;
         }
 
         public async Task Create(Branch branch)
         {
-            _context.CAT_Sucursal.Add(branch);
+           await _context.CAT_Sucursal.AddAsync(branch);
 
-            await _context.SaveChangesAsync();
+            var cont =  await _context.SaveChangesAsync();
+           
         }
 
         public async Task Update(Branch branch)
@@ -51,6 +55,30 @@ namespace Service.Catalog.Repository
             _context.CAT_Sucursal.Update(branch);
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<Domain.Constant.Colony>> GetColoniesByZipCode(short id)
+        {
+            var colonies = await _context.CAT_Colonia
+                .Include(x => x.Ciudad).ThenInclude(x => x.Estado)
+                .Where(x => x.CiudadId==id).ToListAsync();
+
+            return colonies;
+        }
+
+        public async Task <IEnumerable<StudyListDto>> getservicios(string id) {
+            List<Study> studys = new List<Study>();
+            var servicios = _context.Relacion_Estudio_Sucursal.Where(x=>x.BranchId==Guid.Parse(id));
+            foreach (var study in servicios) {
+                var stud = _context.CAT_Estudio.Where(x=>x.Id==study.EstudioId);
+                foreach (var estu in stud) {
+                    
+                    studys.Add(estu);
+                }
+                
+            }
+            var estudios = studys.ToStudyListDtos();
+            return estudios;
         }
     }
 }

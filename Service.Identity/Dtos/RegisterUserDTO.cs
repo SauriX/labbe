@@ -11,7 +11,7 @@ namespace Service.Identity.Dtos
         public string PrimerApellido { get; set; }
         public string SegundoApellido { get; set; }
         public int IdSucursal { get; set; }
-        public string usertype { get; set; }
+        public string tipoUsuario { get; set; }
         public string Contraseña { get; set; }
         public string confirmaContraseña { get; set; }
         public bool activo { get; set; }

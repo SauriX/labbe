@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220414194026_sucursalerelations")]
+    partial class sucursalerelations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -153,25 +155,16 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("Calle")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Ciudad")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Clave")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("ClinicosId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Codigopostal")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("ColoniaId")
                         .HasColumnType("int");
 
                     b.Property<string>("Correo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Estado")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("FacturaciónId")
@@ -206,9 +199,6 @@ namespace Service.Catalog.Migrations
 
                     b.Property<Guid>("UsuarioModificoId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("colony")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

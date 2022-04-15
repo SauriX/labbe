@@ -19,5 +19,15 @@ namespace Service.Catalog.Mapper
                 Area = x.Area,
             });
         }
+        public static IEnumerable<StudyListDto> ToStudyListDtos(this List<Study> model)
+        {
+            if (model == null) return null;
+
+            return model.Select(x => new StudyListDto
+            {
+                Id = x.Id,
+                Nombre = x.Nombre,
+            });
+        }
     }
 }

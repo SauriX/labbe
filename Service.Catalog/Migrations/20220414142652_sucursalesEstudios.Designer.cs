@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220414142652_sucursalesEstudios")]
+    partial class sucursalesEstudios
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -153,25 +155,16 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("Calle")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Ciudad")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Clave")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("ClinicosId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Codigopostal")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("ColoniaId")
                         .HasColumnType("int");
 
                     b.Property<string>("Correo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Estado")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("FacturaciónId")
@@ -206,9 +199,6 @@ namespace Service.Catalog.Migrations
 
                     b.Property<Guid>("UsuarioModificoId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("colony")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -245,6 +235,10 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
+
+                    b.HasIndex("EstudioId");
 
                     b.ToTable("Relacion_Estudio_Sucursal");
                 });
@@ -1011,6 +1005,25 @@ namespace Service.Catalog.Migrations
                         .IsRequired();
 
                     b.Navigation("Colonia");
+                });
+
+            modelBuilder.Entity("Service.Catalog.Domain.Branch.BranchStudy", b =>
+                {
+                    b.HasOne("Service.Catalog.Domain.Branch.Branch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Service.Catalog.Domain.Study", "Estudio")
+                        .WithMany()
+                        .HasForeignKey("EstudioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
+
+                    b.Navigation("Estudio");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Catalog.Area", b =>

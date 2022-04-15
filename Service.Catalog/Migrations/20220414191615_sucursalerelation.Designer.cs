@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220414191615_sucursalerelation")]
+    partial class sucursalerelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -153,25 +155,16 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("Calle")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Ciudad")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Clave")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("ClinicosId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Codigopostal")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("ColoniaId")
                         .HasColumnType("int");
 
                     b.Property<string>("Correo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Estado")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("FacturaciónId")
@@ -207,12 +200,10 @@ namespace Service.Catalog.Migrations
                     b.Property<Guid>("UsuarioModificoId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("colony")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("ColoniaId");
+                    b.HasIndex("ColoniaId")
+                        .IsUnique();
 
                     b.ToTable("CAT_Sucursal");
                 });
@@ -1005,9 +996,9 @@ namespace Service.Catalog.Migrations
             modelBuilder.Entity("Service.Catalog.Domain.Branch.Branch", b =>
                 {
                     b.HasOne("Service.Catalog.Domain.Constant.Colony", "Colonia")
-                        .WithMany()
-                        .HasForeignKey("ColoniaId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithOne()
+                        .HasForeignKey("Service.Catalog.Domain.Branch.Branch", "ColoniaId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Colonia");

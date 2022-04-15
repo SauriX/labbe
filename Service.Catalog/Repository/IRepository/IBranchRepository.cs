@@ -1,4 +1,5 @@
 ﻿using Service.Catalog.Domain.Branch;
+using Service.Catalog.Dtos.Study;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +9,10 @@ namespace Service.Catalog.Repository.IRepository
 {
     public interface IBranchRepository
     {
+
+        Task<IEnumerable<StudyListDto>> getservicios(string id);
         Task<List<Branch>> GetAll(string search = null);
-        Task<Branch> GetById(int id);
+        Task<Branch> GetById(string id);
         Task Create(Branch reagent);
         Task Update(Branch reagent);
     }
