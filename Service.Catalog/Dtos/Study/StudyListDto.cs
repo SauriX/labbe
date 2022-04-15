@@ -6,6 +6,7 @@ namespace Service.Catalog.Dtos.Study
     {
         public int Id { get; set; }
         public string Nombre { get; set; }
+        public string Clave { get; set; }
         public int AreaId { get; set; }
         public virtual Area? Area { get; set; }
     }
