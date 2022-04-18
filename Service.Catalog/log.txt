@@ -175,3 +175,5 @@
 14/04/2022 09:34:35 p. m. => The method or operation is not implemented.
 
 14/04/2022 09:34:37 p. m. => The method or operation is not implemented.
+
+18/04/2022 13:11:38 => The entity type 'Contact' requires a primary key to be defined. If you intended to use a keyless entity type, call 'HasNoKey' in 'OnModelCreating'. For more information on keyless entity types, see https://go.microsoft.com/fwlink/?linkid=2141943.

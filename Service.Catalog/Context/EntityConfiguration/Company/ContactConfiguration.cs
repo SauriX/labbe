@@ -1,0 +1,48 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Service.Catalog.Domain.Company;
+
+namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
+{
+    public class ContactConfiguration
+    {
+        public void Configure(EntityTypeBuilder<Contact> builder)
+        {
+            builder.ToTable("CAT_CompañiaContacto");
+
+            builder.HasKey(x => x.Id);
+
+            builder
+              .Property(x => x.Nombre)
+              .IsRequired(true)
+              .HasMaxLength(100);
+
+            builder
+              .Property(x => x.Apellidos)
+              .IsRequired(true)
+              .HasMaxLength(100);
+            builder
+              .Property(x => x.Correo)
+              .IsRequired(true)
+              .HasMaxLength(100);
+            builder
+               .Property(x => x.Telefono)
+               .IsRequired(true);
+            builder
+              .Property(x => x.UsuarioCreoId)
+              .IsRequired(true);
+
+            builder
+              .Property(x => x.FechaCreo)
+              .IsRequired(true);
+
+            builder
+              .Property(x => x.UsuarioModId)
+              .IsRequired(false);
+
+            builder
+              .Property(x => x.FechaMod)
+              .IsRequired(false);
+        }
+    }
+}
