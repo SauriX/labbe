@@ -115,3 +115,63 @@
 13/04/2022 13:12:02 => Unable to cast object of type 'System.Int64' to type 'System.Int32'.
 
 13/04/2022 13:28:59 => Unable to cast object of type 'System.Int64' to type 'System.String'.
+
+14/04/2022 10:55:49 a. m. => A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: Named Pipes Provider, error: 40 - Could not open a connection to SQL Server)
+
+14/04/2022 10:57:22 a. m. => A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: Named Pipes Provider, error: 40 - Could not open a connection to SQL Server)
+
+14/04/2022 02:19:19 p. m. => An error occurred while updating the entries. See the inner exception for details.
+
+14/04/2022 02:20:39 p. m. => An error occurred while updating the entries. See the inner exception for details.
+
+14/04/2022 02:48:58 p. m. => Object reference not set to an instance of an object.
+
+14/04/2022 03:08:29 p. m. => The key value at position 0 of the call to 'DbSet<Branch>.Find' was of type 'string', which does not match the property type of 'Guid'.
+
+14/04/2022 03:08:29 p. m. => The key value at position 0 of the call to 'DbSet<Branch>.Find' was of type 'string', which does not match the property type of 'Guid'.
+
+14/04/2022 03:11:36 p. m. => Unable to cast object of type 'SelectListIterator`2[Service.Catalog.Domain.Study,Service.Catalog.Dtos.Study.StudyListDto]' to type 'System.Collections.Generic.List`1[Service.Catalog.Dtos.Study.StudyListDto]'.
+
+14/04/2022 03:11:45 p. m. => Unable to cast object of type 'SelectListIterator`2[Service.Catalog.Domain.Study,Service.Catalog.Dtos.Study.StudyListDto]' to type 'System.Collections.Generic.List`1[Service.Catalog.Dtos.Study.StudyListDto]'.
+
+14/04/2022 03:13:53 p. m. => There is already an open DataReader associated with this Connection which must be closed first.
+
+14/04/2022 03:14:19 p. m. => There is already an open DataReader associated with this Connection which must be closed first.
+
+14/04/2022 03:15:28 p. m. => There is already an open DataReader associated with this Connection which must be closed first.
+
+14/04/2022 03:15:39 p. m. => There is already an open DataReader associated with this Connection which must be closed first.
+
+14/04/2022 03:17:35 p. m. => There is already an open DataReader associated with this Connection which must be closed first.
+
+14/04/2022 03:17:40 p. m. => There is already an open DataReader associated with this Connection which must be closed first.
+
+14/04/2022 03:18:07 p. m. => There is already an open DataReader associated with this Connection which must be closed first.
+
+14/04/2022 03:18:12 p. m. => There is already an open DataReader associated with this Connection which must be closed first.
+
+14/04/2022 03:19:04 p. m. => There is already an open DataReader associated with this Connection which must be closed first.
+
+14/04/2022 03:19:35 p. m. => There is already an open DataReader associated with this Connection which must be closed first.
+
+14/04/2022 03:21:51 p. m. => There is already an open DataReader associated with this Connection which must be closed first.
+
+14/04/2022 03:21:53 p. m. => There is already an open DataReader associated with this Connection which must be closed first.
+
+14/04/2022 03:27:28 p. m. => Unable to cast object of type 'SelectListIterator`2[Service.Catalog.Domain.Study,Service.Catalog.Dtos.Study.StudyListDto]' to type 'System.Collections.Generic.List`1[Service.Catalog.Dtos.Study.StudyListDto]'.
+
+14/04/2022 03:28:30 p. m. => Unable to cast object of type 'SelectListIterator`2[Service.Catalog.Domain.Study,Service.Catalog.Dtos.Study.StudyListDto]' to type 'System.Collections.Generic.List`1[Service.Catalog.Dtos.Study.StudyListDto]'.
+
+14/04/2022 03:32:20 p. m. => Unable to cast object of type 'SelectListIterator`2[Service.Catalog.Domain.Study,Service.Catalog.Dtos.Study.StudyListDto]' to type 'System.Collections.Generic.List`1[Service.Catalog.Dtos.Study.StudyListDto]'.
+
+14/04/2022 03:32:32 p. m. => Unable to cast object of type 'SelectListIterator`2[Service.Catalog.Domain.Study,Service.Catalog.Dtos.Study.StudyListDto]' to type 'System.Collections.Generic.List`1[Service.Catalog.Dtos.Study.StudyListDto]'.
+
+14/04/2022 03:34:48 p. m. => Unable to cast object of type 'SelectListIterator`2[Service.Catalog.Domain.Study,Service.Catalog.Dtos.Study.StudyListDto]' to type 'System.Collections.Generic.List`1[Service.Catalog.Dtos.Study.StudyListDto]'.
+
+14/04/2022 09:32:51 p. m. => The method or operation is not implemented.
+
+14/04/2022 09:32:51 p. m. => The method or operation is not implemented.
+
+14/04/2022 09:34:35 p. m. => The method or operation is not implemented.
+
+14/04/2022 09:34:37 p. m. => The method or operation is not implemented.

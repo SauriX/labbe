@@ -32,36 +32,10 @@ namespace  Service.Identity.Mapper
             return users;
         }
 
-        public static UserList ToUserInfoDto(UsersModel model)
+        public static UserList ToUserInfoDto(UsersModel model, List<UserPermission> permisos=null)
         {
+
             if (model == null) return null;
-            List<UserPermission> permisio= new List<UserPermission>();
-            permisio.Add(new UserPermission {
-                     id = 1,
-                   
-                     menu ="test",
-                     permiso = "test",
-                     asignado = false,
-                     tipo =1
-             });
-            permisio.Add(new UserPermission
-            {
-                id = 3,
-                
-                menu = "test3",
-                permiso = "test3",
-                asignado = true,
-                tipo = 3
-            });
-            permisio.Add(new UserPermission
-            {
-                id = 2,
-                
-                menu = "test2",
-                permiso = "test2",
-                asignado = true,
-                tipo = 2
-            });
             return new UserList
             {
                 IdUsuario = model.Id,
@@ -74,8 +48,8 @@ namespace  Service.Identity.Mapper
                 clave = model.Clave,
                 contraseña = DecodeFrom64(model.Contraseña),
                 confirmaContraseña = DecodeFrom64(model.Contraseña),
-                TipoUsuario = "test",
-                permisos = permisio,
+                TipoUsuario = model.IdRol.ToString(),
+                permisos = permisos,
             };
             
             
@@ -86,7 +60,7 @@ namespace  Service.Identity.Mapper
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
             var securityToken = (JwtSecurityToken)tokenHandler.ReadToken(jwt);
             var claimValue = securityToken.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;
-
+          
             if (model == null) return null;
 
             return new UsersModel
@@ -94,17 +68,20 @@ namespace  Service.Identity.Mapper
 
                 Activo = model.activo,
                 Clave = model.Clave,
-                Contraseña =EncodeTo64(model.Contraseña),
-                FechaCreo =DateTime.Now,
-                flagpassword=false,
-                Id= new Guid(),
-                IdSucursal=model.IdSucursal,
-                Nombre=model.Nombre,
-                PrimerApellido=model.PrimerApellido,
-                SegundoApellido=model.SegundoApellido,
-                IdRol=Guid.Parse(model.usertype),
-                UserName=model.Clave,
-                UsuarioCreoId=Guid.Parse(claimValue),
+                Contraseña = EncodeTo64(model.Contraseña),
+                FechaCreo = DateTime.Now,
+                flagpassword = false,
+                Id = Guid.NewGuid(),
+                IdSucursal = model.IdSucursal,
+                Nombre = model.Nombre,
+                PrimerApellido = model.PrimerApellido,
+                SegundoApellido = model.SegundoApellido,
+                IdRol = Guid.Parse(model.tipoUsuario),
+                UserName = model.Clave,
+                UsuarioCreoId = Guid.NewGuid(),
+                UsuarioModId = Guid.NewGuid(),
+                FechaMod = DateTime.Now,
+
                 
             };
         }
@@ -130,7 +107,7 @@ namespace  Service.Identity.Mapper
                 Nombre = model.Nombre,
                 PrimerApellido = model.PrimerApellido,
                 SegundoApellido = model.SegundoApellido,
-                IdRol = Guid.Parse(model.usertype),
+                IdRol = Guid.Parse(model.tipoUsuario),
                 UserName = model.Clave,
                 UsuarioCreoId = Guid.Parse(claimValue),
             };

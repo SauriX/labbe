@@ -1,4 +1,5 @@
-﻿using Service.Catalog.Domain.Constant;
+﻿using Service.Catalog.Domain.Catalog;
+using Service.Catalog.Domain.Constant;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -16,10 +17,10 @@ namespace Service.Catalog.Domain.Branch
         //public string CodigoPostal { get; set; }
         public int ColoniaId { get; set; }
         public virtual Colony Colonia { get; set; }
-        //public short? CiudadId { get; set; }
-        //public virtual City Ciudad { get; set; }
-        //public byte? EstadoId { get; set; }
-        //public virtual State Estado { get; set; }
+        public string Ciudad { get; set; }
+        public string colony { get; set; }
+        public string Estado { get; set; }
+        public string Codigopostal {get; set;}
         public string NumeroExterior { get; set; }
         public string NumeroInterior { get; set; }
         public string Calle { get; set; }

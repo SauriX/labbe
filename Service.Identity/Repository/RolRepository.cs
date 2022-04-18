@@ -17,7 +17,7 @@ using Service.Identity.Domain.permissions;
 
 namespace Service.Identity.Repository
 {
-    public class RolRepository : IRolRepository
+    public class RolRepository : IRolRepository 
     {
         private RoleManager<UserRol> _roleManager;
         private readonly IndentityContext _context;
@@ -51,6 +51,7 @@ namespace Service.Identity.Repository
 
             if (!string.IsNullOrEmpty(token))
             {
+                var Menus = await getMenus();
                 token = token.Replace("Bearer ", string.Empty);
                 string jwt = token;
                 JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
@@ -67,6 +68,25 @@ namespace Service.Identity.Repository
                     role.UsuarioModId = Guid.Parse(idMod);
                     var rol = await _roleManager.UpdateAsync(role);
                     if (rol.Succeeded) {
+                        var permisions = _context.CAT_Permisos.ToList();
+                        var permisios = permisions.Where(x => x.RolId == Guid.Parse(rolForm.Id));
+                        foreach (var permiso in permisios)
+                        {
+               
+
+                                _context.CAT_Permisos.Remove(permiso);
+                                _context.SaveChanges();
+
+                    
+                        }
+                            var nuevosPermisos = Mapper.PermissionMapper.toPermission(rolForm, role.Id, token, Menus);
+                            foreach (Permission permiso in nuevosPermisos)
+                            {
+                                await _context.CAT_Permisos.AddAsync(permiso);
+                                await _context.SaveChangesAsync();
+                            }
+                        
+
                         return true;
                     }
                 }
@@ -93,13 +113,16 @@ namespace Service.Identity.Repository
 
         public async Task<RolForm> GetById(string id)
         {
+            var Menus = await getMenus();
+            var permisoslist = await GetPermission();
             var Roles = _roleManager.Roles.ToList();
             var rol = await _roleManager.FindByIdAsync(id);
             if (rol != null)
             {
                 var permisos = _context.CAT_Permisos.AsQueryable();
                 var permiso = permisos.Where(x => x.RolId == rol.Id);
-                var permisoM = Mapper.PermissionMapper.toListPermision(permiso);
+                var permisoM = Mapper.PermissionMapper.toListPermision(permiso,Menus,permisoslist);
+                
                 return Mapper.RolMapper.ToRolForm(rol, permisoM);
             }
             return null;

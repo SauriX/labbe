@@ -42,7 +42,7 @@ namespace Service.Catalog.Context
         public DbSet<Colony> CAT_Colonia { get; set; }
         public DbSet<Branch> CAT_Sucursal { get; set; }
         public DbSet<Study> CAT_Estudio { get; set; }
-
+       public DbSet<BranchStudy> Relacion_Estudio_Sucursal { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

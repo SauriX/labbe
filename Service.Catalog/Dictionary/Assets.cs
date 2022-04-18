@@ -9,5 +9,7 @@ namespace Service.Catalog.Dictionary
     {
         public const string ReagentList = "wwwroot/layout/excel/reagent/ReactivoListado.xlsx";
         public const string ReagentForm = "wwwroot/layout/excel/reagent/ReactivoFormulario.xlsx";
+        public const string BranchList = "wwwroot/layout/excel/branch/BranchListado.xlsx";
+        public const string BranchtForm = "wwwroot/layout/excel/branch/BranchFormulario.xlsx";
     }
 }

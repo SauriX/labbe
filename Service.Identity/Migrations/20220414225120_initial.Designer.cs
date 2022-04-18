@@ -10,8 +10,8 @@ using Service.Identity.Context;
 namespace Service.Identity.Migrations
 {
     [DbContext(typeof(IndentityContext))]
-    [Migration("20220413025451_Eliminar Sucursal")]
-    partial class EliminarSucursal
+    [Migration("20220414225120_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -321,8 +321,8 @@ namespace Service.Identity.Migrations
                     b.Property<Guid>("RolId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("SubmoduloId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("SubmoduloId")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");
