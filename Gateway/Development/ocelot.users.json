@@ -157,7 +157,7 @@
       "UpstreamHttpMethod": [ "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "​/api​/Account​/updatepassword",
+      "DownstreamPathTemplate": "/api/Account/updatepassword",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -165,7 +165,7 @@
           "Port": 45216
         }
       ],
-      "UpstreamPathTemplate": "/api​/Account​/updatepassword",
+      "UpstreamPathTemplate": "/api/Account/updatepassword",
       "UpstreamHttpMethod": [ "PUT" ]
     }
   ]

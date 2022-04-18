@@ -103,7 +103,7 @@ namespace Service.Catalog.Mapper
 
             return new Branch
             {
-                Clave = model.Clave,
+                Clave = dto.clave,
                 Nombre = dto.nombre.Trim(),
                 Activo = dto.activo,
                 Calle = dto.calle.Trim(),
