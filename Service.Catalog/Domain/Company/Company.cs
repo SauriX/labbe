@@ -5,7 +5,7 @@ namespace Service.Catalog.Domain.Company
 {
     public class Company
     {
-        public int IdCompania { get; set; }
+        public int Id { get; set; }
         public string Clave { get; set;}
         public string Contrasena { get; set;}
         public string EmailEmpresarial { get; set;}
@@ -28,8 +28,8 @@ namespace Service.Catalog.Domain.Company
         public bool Activo { get; set; }
         public int UsuarioCreoId { get; set; }
         public DateTime FechaCreo { get; set; }
-        public int UduarioModId { get; set;}
-        public DateTime FechaMod { get; set; }
+        public int? UsuarioModId { get; set;}
+        public DateTime? FechaMod { get; set; }
         public virtual ICollection<Contact> Contacts { get; set; }
     }
 }
