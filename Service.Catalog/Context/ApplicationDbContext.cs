@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Domain;
 using Service.Catalog.Domain.Branch;
 using Service.Catalog.Domain.Catalog;
+using Service.Catalog.Domain.Company;
 using Service.Catalog.Domain.Constant;
 using Service.Catalog.Domain.Indication;
 using Service.Catalog.Domain.Reagent;
@@ -42,7 +43,9 @@ namespace Service.Catalog.Context
         public DbSet<Colony> CAT_Colonia { get; set; }
         public DbSet<Branch> CAT_Sucursal { get; set; }
         public DbSet<Study> CAT_Estudio { get; set; }
-       public DbSet<BranchStudy> Relacion_Estudio_Sucursal { get; set; }
+        public DbSet<Company> CAT_Compañia { get; set; }
+        public DbSet<Contact> CAT_CompañiaContacto { get; set; }
+        public DbSet<BranchStudy> Relacion_Estudio_Sucursal { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

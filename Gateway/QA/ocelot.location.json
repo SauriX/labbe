@@ -1,0 +1,15 @@
+﻿{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/location/getByZipCode/{zipCode}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/location/getByZipCode/{zipCode}",
+      "UpstreamHttpMethod": [ "GET" ]
+    }
+  ]
+}
