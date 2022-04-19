@@ -29,6 +29,33 @@ namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
             builder
              .Property(x => x.Procedencia)
              .IsRequired(true);
+            builder
+             .Property(x => x.ListaPrecioId)
+             .IsRequired(false);
+            builder
+             .Property(x => x.PromocionesId)
+             .IsRequired(false);
+            builder
+             .Property(x => x.ListaPrecioId)
+             .IsRequired(false);
+            builder
+             .Property(x => x.CodigoPostal)
+             .IsRequired(false);
+            builder
+             .Property(x => x.EstadoId)
+             .IsRequired(false);
+            builder
+             .Property(x => x.FormaDePagoId)
+             .IsRequired(false);
+            builder
+             .Property(x => x.DiasCredito)
+             .IsRequired(false);
+            builder
+             .Property(x => x.CFDIId)
+             .IsRequired(false);
+            builder
+             .Property(x => x.BancoId)
+             .IsRequired(false);
 
             builder
               .Property(x => x.RFC)
@@ -36,7 +63,7 @@ namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
               .HasMaxLength(100);
             builder
               .Property(x => x.MunicipioId)
-              .IsRequired(true);
+              .IsRequired(false);
             builder
               .Property(x => x.MetodoDePagoId)
               .IsRequired(true);

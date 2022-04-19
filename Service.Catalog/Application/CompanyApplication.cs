@@ -72,7 +72,7 @@ namespace Service.Catalog.Application
             return existing.ToCompanyFormDto();
         }
 
-        public async Task<byte[]> ExportListIndication(string search = null)
+        public async Task<byte[]> ExportListCompany(string search = null)
         {
             var company = await GetAll(search);
 
@@ -82,14 +82,14 @@ namespace Service.Catalog.Application
 
             template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
-            template.AddVariable("Titulo", "Indicaciones");
+            template.AddVariable("Titulo", "Compañias");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
-            template.AddVariable("Indicaciones", company);
+            template.AddVariable("Compañias", company);
 
             template.Generate();
 
-            var range = template.Workbook.Worksheet("Indicaciones").Range("Indicaciones");
-            var table = template.Workbook.Worksheet("Indicaciones").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
+            var range = template.Workbook.Worksheet("Compañias").Range("Compañias");
+            var table = template.Workbook.Worksheet("Compañias").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
             table.Theme = XLTableTheme.TableStyleMedium2;
 
             template.Format();
@@ -97,7 +97,7 @@ namespace Service.Catalog.Application
             return template.ToByteArray();
         }
 
-        public async Task<byte[]> ExportFormIndication(int id)
+        public async Task<byte[]> ExportFormCompany(int id)
         {
             var company = await GetById(id);
 
@@ -107,9 +107,9 @@ namespace Service.Catalog.Application
 
             template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
-            template.AddVariable("Titulo", "Indicaciones");
+            template.AddVariable("Titulo", "Compañias");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
-            template.AddVariable("Indicaciones", company);
+            template.AddVariable("Compañias", company);
 
             template.Generate();
 

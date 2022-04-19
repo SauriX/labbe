@@ -447,6 +447,20 @@ namespace Service.Identity.Repository
                 descripcion = "Indicaciones",
                 icono = "role",
             });
+            menu.Add(new Menu
+            {
+                id = 8,
+                ruta = "parameter",
+                descripcion = "Parametros",
+                icono = "role",
+            });
+            menu.Add(new Menu
+            {
+                id = 9,
+                ruta = "company",
+                descripcion = "Compañias",
+                icono = "role",
+            });//Siguiente id libre 10
             return menu;
         }
         public async Task<List<UserPermission>> GetPermission()

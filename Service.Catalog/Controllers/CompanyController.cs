@@ -46,14 +46,14 @@ namespace Identidad.Api.Controllers
         [HttpPost("export/list/{search?}")]
         public async Task<IActionResult> ExportList(string search = null)
         {
-            var file = await _Services.ExportListIndication(search);
+            var file = await _Services.ExportListCompany(search);
             return File(file, MimeType.XLSX);
         }
 
         [HttpPost("export/form/{id}")]
         public async Task<IActionResult> ExportForm(int id)
         {
-            var file = await _Services.ExportFormIndication(id);
+            var file = await _Services.ExportFormCompany(id);
             return File(file, MimeType.XLSX);
         }
     }

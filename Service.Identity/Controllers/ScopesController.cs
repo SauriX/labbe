@@ -50,6 +50,19 @@ namespace Service.Identity.Controllers
                 Descargar = true,
             };
         }
+
+        [HttpGet("company")]
+        public ScopeDto GetCompanyScopes()
+        {
+            return new ScopeDto
+            {
+                Pantalla = "Catálogo de Compañias",
+                Acceder = true,
+                Crear = true,
+                Editar = true,
+                Descargar = true,
+            };
+        }
     }
 
 }
