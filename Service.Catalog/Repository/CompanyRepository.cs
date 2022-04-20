@@ -17,12 +17,17 @@ namespace Service.Catalog.Repository
         {
             _context = context;
         }
+        public async Task<List<Company>> GetActive()
+        {
+            var catalogs = _context.CAT_Compañia.Where(x => x.Activo);
+
+            return await catalogs.ToListAsync();
+        }
 
         public async Task<Company> GetById(int Id)
         {
             return await _context.CAT_Compañia
             .Include(x => x.Contacts)
-            .ThenInclude(x => x.Compañia)
             .FirstOrDefaultAsync(x => x.Id == Id);
         }
 
@@ -45,12 +50,14 @@ namespace Service.Catalog.Repository
 
             try
             {
-                var contacts = company.Contacts.ToList();
+                var contacts = company.Contacts?.ToList();
 
                 company.Contacts = null;
                 _context.CAT_Compañia.Add(company);
 
                 await _context.SaveChangesAsync();
+
+                contacts ??= new List<Contact>();
 
                 contacts.ForEach(x => x.CompañiaId = company.Id);
                 await _context.BulkInsertOrUpdateOrDeleteAsync(contacts);

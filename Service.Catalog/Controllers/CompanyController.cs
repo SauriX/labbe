@@ -19,6 +19,12 @@ namespace Identidad.Api.Controllers
             _Services = services;
         }
 
+        [HttpGet("active")]
+        public async Task<IEnumerable<CompanyListDto>> GetActive(int id)
+        {
+            return await _Services.GetActive();
+        }
+
         [HttpGet("{Id}")]
 
         public async Task<CompanyFormDto> GetById(int Id)

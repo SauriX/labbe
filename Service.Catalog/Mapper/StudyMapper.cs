@@ -17,7 +17,7 @@ namespace Service.Catalog.Mapper
                 Nombre = x.Nombre,
                 Clave = x.Clave,
                 AreaId = x.AreaId,
-                Area = x.Area,
+                Area = x.Area.Nombre,
             });
         }
         public static IEnumerable<StudyListDto> ToStudyListDtos(this List<Study> model)

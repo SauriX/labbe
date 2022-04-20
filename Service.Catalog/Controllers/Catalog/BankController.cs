@@ -11,6 +11,13 @@ namespace Service.Catalog.Controllers.Catalog
         public async Task<IEnumerable<CatalogListDto>> GetAllBank(string search = null)
         {
             return await _bankService.GetAll(search);
+
+        }
+
+        [HttpGet("bank/active")]
+        public async Task<IEnumerable<CatalogListDto>> GetActiveBank(int id)
+        {
+            return await _bankService.GetActive();
         }
 
         [HttpGet("bank/{id}")]

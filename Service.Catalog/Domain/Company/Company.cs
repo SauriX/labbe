@@ -14,9 +14,9 @@ namespace Service.Catalog.Domain.Company
         public int? ListaPrecioId { get; set;}
         public long? PromocionesId { get; set;}
         public string RFC { get; set; }
-        public int? CodigoPostal { get; set; }
-        public int? EstadoId { get; set; }
-        public int? MunicipioId { get; set; }
+        public string CodigoPostal { get; set; }
+        public string Estado { get; set; }
+        public string Ciudad { get; set; }
         public string RazonSocial { get; set; }
         public int MetodoDePagoId { get; set; }
         public int? FormaDePagoId { get; set; }

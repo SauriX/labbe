@@ -454,7 +454,6 @@ namespace Service.Identity.Repository
                 descripcion = "Parametros",
                 icono = "role",
             });
-<<<<<<< HEAD
             menu.Add(new Menu
             {
                 id = 9,
@@ -462,8 +461,6 @@ namespace Service.Identity.Repository
                 descripcion = "Compañias",
                 icono = "role",
             });//Siguiente id libre 10
-=======
->>>>>>> 36639fa91e4a7974522c787acc2795668ab249ed
             return menu;
         }
         public async Task<List<UserPermission>> GetPermission()

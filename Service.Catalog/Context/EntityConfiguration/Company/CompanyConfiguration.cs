@@ -42,7 +42,7 @@ namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
              .Property(x => x.CodigoPostal)
              .IsRequired(false);
             builder
-             .Property(x => x.EstadoId)
+             .Property(x => x.Estado)
              .IsRequired(false);
             builder
              .Property(x => x.FormaDePagoId)
@@ -62,7 +62,7 @@ namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
               .IsRequired(true)
               .HasMaxLength(100);
             builder
-              .Property(x => x.MunicipioId)
+              .Property(x => x.Ciudad)
               .IsRequired(false);
             builder
               .Property(x => x.MetodoDePagoId)
