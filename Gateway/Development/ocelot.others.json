@@ -116,6 +116,18 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
+      "DownstreamPathTemplate": "/api/catalog/bank/active",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/bank/active",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/catalog/bank/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -336,6 +348,18 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
+      "DownstreamPathTemplate": "/api/catalog/field/active",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/field/active",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/catalog/field/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -360,18 +384,6 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/catalog/field/active",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 20347
-        }
-      ],
-      "UpstreamPathTemplate": "/api/catalog/field/active",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
       "DownstreamPathTemplate": "/api/catalog/field",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -394,6 +406,18 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/payment/all/{search}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/payment/active",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/payment/active",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
@@ -654,6 +678,18 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
+      "DownstreamPathTemplate": "/api/catalog/paymentMethod/active",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/paymentMethod/active",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/catalog/paymentMethod",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -749,6 +785,18 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/useOfCFDI/{id}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/useOfCFDI/active",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/useOfCFDI/active",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {

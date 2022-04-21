@@ -13,6 +13,12 @@ namespace Service.Catalog.Controllers.Catalog
             return await _useOfCFDIService.GetAll(search);
         }
 
+        [HttpGet("useOfCFDI/active")]
+        public async Task<IEnumerable<CatalogDescriptionListDto>> GetActiveUseOfCFDI(int id)
+        {
+            return await _useOfCFDIService.GetActive();
+        }
+
         [HttpGet("useOfCFDI/{id}")]
         public async Task<CatalogDescriptionFormDto> GetUseOfCFDIById(int id)
         {

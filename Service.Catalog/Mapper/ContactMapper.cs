@@ -7,7 +7,7 @@ namespace Service.Catalog.Mapper
 {
     public static class ContactMapper
     {
-        public static IEnumerable<ContactListDto> ToContactListDto(this List<Contact> model)
+        public static IEnumerable<ContactListDto> ToContactListDto(this IEnumerable<Contact> model)
         {
             if (model == null) return null;
 

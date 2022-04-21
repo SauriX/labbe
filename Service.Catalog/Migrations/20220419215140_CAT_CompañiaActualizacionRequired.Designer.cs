@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220419215140_CAT_CompañiaActualizacionRequired")]
+    partial class CAT_CompañiaActualizacionRequired
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -748,16 +750,13 @@ namespace Service.Catalog.Migrations
                     b.Property<int?>("CFDIId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Ciudad")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Clave")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("CodigoPostal")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("CodigoPostal")
+                        .HasColumnType("int");
 
                     b.Property<string>("Contrasena")
                         .IsRequired()
@@ -770,8 +769,8 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("EmailEmpresarial")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Estado")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("EstadoId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
@@ -789,6 +788,9 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("MetodoDePagoId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("MunicipioId")
                         .HasColumnType("int");
 
                     b.Property<string>("NombreComercial")

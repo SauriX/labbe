@@ -13,6 +13,12 @@ namespace Service.Catalog.Controllers.Catalog
             return await _paymentService.GetAll(search);
         }
 
+        [HttpGet("payment/active")]
+        public async Task<IEnumerable<CatalogDescriptionListDto>> GetActivePayment(int id)
+        {
+            return await _paymentService.GetActive();
+        }
+
         [HttpGet("payment/{id}")]
         public async Task<CatalogDescriptionFormDto> GetPaymentById(int id)
         {

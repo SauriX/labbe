@@ -60,7 +60,7 @@ namespace Service.Catalog.Mapper
                 Id = 0,
                 Clave = dto.Clave.Trim(),
                 Nombre = dto.Nombre.Trim(),
-                Descripcion = dto.Descripcion.Trim(),
+                Descripcion = dto.Descripcion?.Trim(),
                 Activo = dto.Activo,
                 UsuarioCreoId = dto.UsuarioId,
                 FechaCreo = DateTime.Now,
