@@ -26,6 +26,7 @@ using Shared.Extensions;
 using ClosedXML.Excel;
 using Service.Identity.Domain.permissions;
 using System.Linq.Dynamic.Core;
+using Shared.Helpers;
 
 namespace Service.Identity.Repository
 {
@@ -190,7 +191,8 @@ namespace Service.Identity.Repository
             return null;
         }
         public async Task<string> generatePassword()     {
-            return GenerarPassword(8);
+            
+            return PasswordGenerator.GenerarPassword(8);
         }
         public async Task<string> generateClave(clave data) {
             StringBuilder clave = new StringBuilder();
@@ -354,29 +356,7 @@ namespace Service.Identity.Repository
                 token = token
             };
         }
-        public static string GenerarPassword(int longitud)
-        {
-            string contraseña = string.Empty;
-            string[] letras = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "ñ", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
-                                "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
-            Random EleccionAleatoria = new Random();
-
-            for (int i = 0; i < longitud; i++)
-            {
-                int LetraAleatoria = EleccionAleatoria.Next(0, 100);
-                int NumeroAleatorio = EleccionAleatoria.Next(0, 9);
-
-                if (LetraAleatoria < letras.Length)
-                {
-                    contraseña += letras[LetraAleatoria];
-                }
-                else
-                {
-                    contraseña += NumeroAleatorio.ToString();
-                }
-            }
-            return contraseña;
-        }
+        
         public static bool PasswordValidator(string pass) {
             Match matchLongitud = Regex.Match(pass, @"^\w{8}\b");
            // Match matchNumeros = Regex.Match(pass, @"\d");
