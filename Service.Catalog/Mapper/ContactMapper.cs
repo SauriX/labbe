@@ -14,9 +14,9 @@ namespace Service.Catalog.Mapper
             return model.Select(x => new ContactListDto
             {
                 IdContacto = x.Id,
-                Nombre = x.Nombre,
+                Nombre = x.Nombre + " " + x.Apellidos,
                 Correo = x.Correo,
-                Telefono = x.Telefono,
+                Telefono = x.Telefono, 
                 Activo = x.Activo,
             });
         }
@@ -27,7 +27,7 @@ namespace Service.Catalog.Mapper
             return model.Select(x => new ContactListDto
             {
                 IdContacto = x.Id,
-                Nombre = x.Nombre,
+                Nombre = x.Nombre + " " + x.Apellidos,
                 Correo = x.Correo,
                 Telefono = x.Telefono,
                 Activo = x.Activo,
