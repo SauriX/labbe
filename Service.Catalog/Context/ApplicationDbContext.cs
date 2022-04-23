@@ -7,6 +7,7 @@ using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Domain.Company;
 using Service.Catalog.Domain.Constant;
 using Service.Catalog.Domain.Indication;
+using Service.Catalog.Domain.Parameter;
 using Service.Catalog.Domain.Reagent;
 using System;
 using System.Collections.Generic;
@@ -46,6 +47,10 @@ namespace Service.Catalog.Context
         public DbSet<Company> CAT_Compañia { get; set; }
         public DbSet<Contact> CAT_CompañiaContacto { get; set; }
         public DbSet<BranchStudy> Relacion_Estudio_Sucursal { get; set; }
+        public DbSet<Parameters> CAT_Parametro { get; set; }
+        public DbSet<TipoValor> CAT_Tipo_Valor { get; set; }
+        public DbSet<Format> Cat_Formato { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

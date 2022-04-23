@@ -217,3 +217,5 @@
 20/04/2022 13:50:32 => Object reference not set to an instance of an object.
 
 20/04/2022 14:57:14 => Object reference not set to an instance of an object.
+
+22/04/2022 08:46:17 a. m. => The entity type 'TipoValor' requires a primary key to be defined. If you intended to use a keyless entity type, call 'HasNoKey' in 'OnModelCreating'. For more information on keyless entity types, see https://go.microsoft.com/fwlink/?linkid=2141943.
