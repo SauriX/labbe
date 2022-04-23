@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220421161235_CAT_CompañiaContactoRequired")]
+    partial class CAT_CompañiaContactoRequired
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1000,197 +1002,6 @@ namespace Service.Catalog.Migrations
                     b.ToTable("Relacion_Estudio_Indicacion");
                 });
 
-            modelBuilder.Entity("Service.Catalog.Domain.Parameter.Format", b =>
-                {
-                    b.Property<string>("NombreFormato")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaMod")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UsuarioModId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("NombreFormato");
-
-                    b.ToTable("Cat_Formato");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Parameter.Parameters", b =>
-                {
-                    b.Property<Guid>("IdParametro")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("AreaId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Clave")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("DepartamentId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("FCSI")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaMod")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Formato")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Formula")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Nombre")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("NombreCorto")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("NombreFormato")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ReagentId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UnidadSi")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<double>("Unidades")
-                        .HasColumnType("float");
-
-                    b.Property<Guid>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UsuarioModId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ValorInicial")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("IdParametro");
-
-                    b.HasIndex("AreaId")
-                        .IsUnique();
-
-                    b.HasIndex("DepartamentId")
-                        .IsUnique();
-
-                    b.HasIndex("ReagentId")
-                        .IsUnique();
-
-                    b.ToTable("CAT_Parametro");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Parameter.TipoValor", b =>
-                {
-                    b.Property<Guid>("IdTipo_Valor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("DescripcionParrafo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DescripcionTexto")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaMod")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("HombreValorFinal")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("HombreValorInicial")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("IdParametro")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("MedidaTiempo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MujerValorFinal")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MujerValorInicial")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Opcion")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RangoEdadFinal")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RangoEdadInicial")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UsuarioModId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ValorFinal")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ValorFinalNumerico")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ValorInicial")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ValorInicialNumerico")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("parametresIdParametro")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("IdTipo_Valor");
-
-                    b.HasIndex("parametresIdParametro");
-
-                    b.ToTable("CAT_Tipo_Valor");
-                });
-
             modelBuilder.Entity("Service.Catalog.Domain.Reagent.Reagent", b =>
                 {
                     b.Property<int>("Id")
@@ -1401,42 +1212,6 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Estudio");
 
                     b.Navigation("Indicacion");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Parameter.Parameters", b =>
-                {
-                    b.HasOne("Service.Catalog.Domain.Catalog.Area", "Area")
-                        .WithOne()
-                        .HasForeignKey("Service.Catalog.Domain.Parameter.Parameters", "AreaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Service.Catalog.Domain.Catalog.Department", "Department")
-                        .WithOne()
-                        .HasForeignKey("Service.Catalog.Domain.Parameter.Parameters", "DepartamentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Service.Catalog.Domain.Reagent.Reagent", "Reagent")
-                        .WithOne()
-                        .HasForeignKey("Service.Catalog.Domain.Parameter.Parameters", "ReagentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Area");
-
-                    b.Navigation("Department");
-
-                    b.Navigation("Reagent");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Parameter.TipoValor", b =>
-                {
-                    b.HasOne("Service.Catalog.Domain.Parameter.Parameters", "parametres")
-                        .WithMany()
-                        .HasForeignKey("parametresIdParametro");
-
-                    b.Navigation("parametres");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Study", b =>
