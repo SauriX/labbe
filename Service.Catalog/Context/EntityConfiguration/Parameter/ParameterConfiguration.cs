@@ -48,11 +48,11 @@ namespace Service.Catalog.Context.EntityConfiguration.Parameter
 
             builder
                 .HasOne(x => x.Area)
-                .WithOne();
+                .WithMany();
 
             builder
                 .HasOne(x => x.Reagent)
-                .WithOne();
+                .WithMany();
 
             builder
                 .Property(x => x.UnidadSi)
@@ -64,10 +64,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Parameter
                 .IsRequired(true)
                 .HasMaxLength(50);
 
-            builder
-                .HasOne(x => x.Department)
-                .WithOne()
-                .HasForeignKey<Parameters>(x=>x.DepartamentId);
+
             
         }
     }

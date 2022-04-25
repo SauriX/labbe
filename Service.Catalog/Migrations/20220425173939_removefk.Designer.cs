@@ -10,8 +10,8 @@ using Service.Catalog.Context;
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220423005055_ParametersDepartement")]
-    partial class ParametersDepartement
+    [Migration("20220425173939_removefk")]
+    partial class removefk
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -854,8 +854,8 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("Nombre")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Telefono")
-                        .HasColumnType("int");
+                    b.Property<long>("Telefono")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("UsuarioCreoId")
                         .HasColumnType("int");
@@ -1046,6 +1046,9 @@ namespace Service.Catalog.Migrations
                     b.Property<int>("DepartamentId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("DepartmentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("FCSI")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -1105,8 +1108,7 @@ namespace Service.Catalog.Migrations
                     b.HasIndex("AreaId")
                         .IsUnique();
 
-                    b.HasIndex("DepartamentId")
-                        .IsUnique();
+                    b.HasIndex("DepartmentId");
 
                     b.HasIndex("ReagentId")
                         .IsUnique();
@@ -1414,10 +1416,8 @@ namespace Service.Catalog.Migrations
                         .IsRequired();
 
                     b.HasOne("Service.Catalog.Domain.Catalog.Department", "Department")
-                        .WithOne()
-                        .HasForeignKey("Service.Catalog.Domain.Parameter.Parameters", "DepartamentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("DepartmentId");
 
                     b.HasOne("Service.Catalog.Domain.Reagent.Reagent", "Reagent")
                         .WithOne()

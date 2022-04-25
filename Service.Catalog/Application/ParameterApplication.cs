@@ -44,10 +44,6 @@ namespace Service.Catalog.Application
 
         public async Task Create(ParameterForm parameter)
         {
-            if (string.IsNullOrEmpty(parameter.id))
-            {
-                throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
-            }
 
             var newReagent = parameter.toParameters();
 

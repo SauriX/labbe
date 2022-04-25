@@ -95,6 +95,7 @@ namespace Service.Catalog
             services.AddScoped<ILocationApplication, LocationApplication>();
             services.AddScoped<IBranchApplication, BranchApplication>();
             services.AddScoped<ICompanyApplication, CompanyApplication>();
+            services.AddScoped<IParameterApplication, ParameterApplication>();
 
             services.AddScoped<ICatalogRepository<Delivery>, CatalogRepository<Delivery>>();
             services.AddScoped<ICatalogRepository<Area>, CatalogRepository<Area>>();
@@ -117,6 +118,7 @@ namespace Service.Catalog
             services.AddScoped<ILocationRepository, LocationRepository>();
             services.AddScoped<IBranchRepository, BranchRepository>();
             services.AddScoped<ICompanyRepository, CompanyRepository>();
+            services.AddScoped<IParameterRepository, ParametersRepository>();        
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
