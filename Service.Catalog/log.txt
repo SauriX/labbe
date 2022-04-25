@@ -240,3 +240,7 @@ The statement has been terminated.
 22/04/2022 16:59:21 => Object reference not set to an instance of an object.
 
 24/04/2022 21:56:28 => The process cannot access the file 'C:\Users\Lapaxsis-00\source\repos\API\Service.Catalog\wwwroot\layout\excel\company\CompañiaFormulario.xlsx' because it is being used by another process.
+
+25/04/2022 14:05:22 => Either the parameter @objname is ambiguous or the claimed @objtype (COLUMN) is wrong.
+
+25/04/2022 14:08:17 => Either the parameter @objname is ambiguous or the claimed @objtype (COLUMN) is wrong.

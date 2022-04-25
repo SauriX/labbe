@@ -1,18 +1,22 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Service.Catalog.Domain.Company;
+using Service.Catalog.Domain.Price;
 
 namespace Service.Catalog.Context.EntityConfiguration.Company
 {
-
-    public class Company_LPriceConfiguration : IEntityTypeConfiguration<Price_Company>
+  
+    public class Price_PromotionConfiguration : IEntityTypeConfiguration<Price_Promotion>
     {
-        public void Configure(EntityTypeBuilder<Price_Company> builder)
+        public void Configure(EntityTypeBuilder<Price_Promotion> builder)
         {
-            builder.ToTable("CAT_ListaP_Compañia");
+            builder.ToTable("CAT_ListaP_Promocion");
 
-            builder.HasKey(x => new { x.PrecioId, x.CompañiaId });
+            builder.HasKey(x => new { x.PrecioId, x.PromocionId });
 
+            builder
+              .HasOne(x => x.Precio)
+              .WithMany()
+              .OnDelete(DeleteBehavior.Restrict);
 
 
             builder
@@ -34,6 +38,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Company
             builder
               .Property(x => x.FechaMod)
               .IsRequired(true);
+           
 
         }
 

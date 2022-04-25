@@ -17,7 +17,7 @@ namespace Service.Catalog.Mapper
                 Id = model.Id,
                 Clave = model.Clave.Trim(),
                 Contrasena = model.Contrasena.Trim(),
-                Procedencia = model.Procedencia,
+                Procedencia = model.ProcedenciaId + " " + model.Procedencia.Nombre.Trim(),
                 ListaPrecioId = model.ListaPrecioId,
                 Activo = model.Activo
 
@@ -32,10 +32,9 @@ namespace Service.Catalog.Mapper
                 Clave = x.Clave.Trim(),
                 Contrasena = x.Contrasena.Trim(),
                 NombreComercial = x.NombreComercial.Trim(),
-                Procedencia = x.Procedencia,
+                Procedencia = x.ProcedenciaId + " " + x.Procedencia.Nombre.Trim(),
                 ListaPrecioId = x.ListaPrecioId,
                 Activo = x.Activo,
-                //Clinicas = x.Clinicas?.Select(y => y.Clinica)?.ToList()?.ToCatalogListDto()
                 Contacts = x.Contacts?.ToList()?.ToContactListDto()
             });
         }
@@ -49,7 +48,7 @@ namespace Service.Catalog.Mapper
                 Contrasena = model.Contrasena.Trim(),
                 EmailEmpresarial = model.EmailEmpresarial.Trim(),
                 NombreComercial = model.NombreComercial.Trim(),
-                Procedencia = model.Procedencia,
+                ProcedenciaId = model.ProcedenciaId,
                 ListaPrecioId = model.ListaPrecioId,
                 PromocionesId = model.PromocionesId,
                 RFC = model.RFC.Trim(),
@@ -65,7 +64,6 @@ namespace Service.Catalog.Mapper
                 NumeroDeCuenta = model.NumeroDeCuenta.Trim(),
                 BancoId = model.BancoId,
                 Activo = model.Activo,
-                //Clinicas = model.Clinicas.Select(x => x.Clinica).ToList().ToCatalogListDto()
                 Contacts = model.Contacts.ToList().ToContactListDto()
             };
         }
@@ -81,7 +79,7 @@ namespace Service.Catalog.Mapper
                 Contrasena = dto.Contrasena.Trim(),
                 EmailEmpresarial = dto.EmailEmpresarial.Trim(),
                 NombreComercial = dto.NombreComercial.Trim(),
-                Procedencia = dto.Procedencia,
+                ProcedenciaId = dto.ProcedenciaId,
                 ListaPrecioId = dto.ListaPrecioId,
                 PromocionesId = dto.PromocionesId,
                 RFC = dto.RFC.Trim(),
@@ -124,7 +122,7 @@ namespace Service.Catalog.Mapper
                 Contrasena = dto.Contrasena.Trim(),
                 EmailEmpresarial = dto.EmailEmpresarial.Trim(),
                 NombreComercial = dto.NombreComercial.Trim(),
-                Procedencia = dto.Procedencia,
+                ProcedenciaId = dto.ProcedenciaId,
                 ListaPrecioId = dto.ListaPrecioId,
                 PromocionesId = dto.PromocionesId,
                 RFC = dto.RFC.Trim(),

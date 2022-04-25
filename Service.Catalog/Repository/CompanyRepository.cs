@@ -89,5 +89,10 @@ namespace Service.Catalog.Repository
 
             return PasswordGenerator.GenerarPassword(8);
         }
+
+        public async Task<Company> GetByCode(string clave)
+        {
+            return await _context.CAT_Compañia.FirstOrDefaultAsync(x => x.Clave == clave);
+        }
     }
 }

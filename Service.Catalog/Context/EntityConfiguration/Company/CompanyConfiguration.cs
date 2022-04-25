@@ -28,9 +28,6 @@ namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
               .IsRequired(true)
               .HasMaxLength(100);
             builder
-             .Property(x => x.Procedencia)
-             .IsRequired(true);
-            builder
              .Property(x => x.ListaPrecioId)
              .IsRequired(false);
             builder
@@ -95,14 +92,14 @@ namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
                .OnDelete(DeleteBehavior.Restrict);
 
             builder
-               .HasMany(x => x.Precios)
+               .HasMany(x => x.Precio)
                .WithOne(x => x.Compañia)
                .OnDelete(DeleteBehavior.Restrict);
 
-            //builder
-            //   .HasOne(x => x.Procedencia)
-            //   .WithMany()
-            //   .OnDelete(DeleteBehavior.Restrict);
+            builder
+               .HasOne(x => x.Procedencia)
+               .WithMany()
+               .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -45,6 +45,8 @@ namespace Service.Catalog.Application
         }
         public async Task<CompanyFormDto> Create(CompanyFormDto company)
         {
+            var code = await GenerateCode(company);
+
             if (company.Id != 0)
             {
                 throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
@@ -136,6 +138,21 @@ namespace Service.Catalog.Application
         {
 
             return PasswordGenerator.GenerarPassword(8);
+        }
+
+        private async Task<string> GenerateCode(CompanyFormDto company)
+        {
+
+            var clave = company.Clave;
+
+            var exists = await _repository.GetByCode(clave);
+
+            if (exists != null)
+            {
+                return ("La clave ya existe, favor de modificarla");
+            }
+
+            return clave;
         }
     }
 }
