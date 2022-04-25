@@ -42,16 +42,26 @@ namespace Service.Catalog.Repository
 
         public async Task Create(Parameters parameter)
         {
-            _context.CAT_Parametro.Add(parameter);
+            try
+            {
+                _context.CAT_Parametro.Add(parameter);
 
-            await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.InnerException.Message);
+            }
         }
 
         public async Task Update(Parameters parameter)
         {
-            _context.CAT_Parametro.Update(parameter);
+      
+                _context.CAT_Parametro.Update(parameter);
 
-            await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+           
+
         }
     }
 }

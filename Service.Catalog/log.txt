@@ -219,28 +219,22 @@
 20/04/2022 14:57:14 => Object reference not set to an instance of an object.
 
 22/04/2022 08:46:17 a. m. => The entity type 'TipoValor' requires a primary key to be defined. If you intended to use a keyless entity type, call 'HasNoKey' in 'OnModelCreating'. For more information on keyless entity types, see https://go.microsoft.com/fwlink/?linkid=2141943.
-21/04/2022 11:09:00 => Unable to cast object of type 'System.Int32' to type 'System.Int64'.
 
-21/04/2022 11:09:31 => Unable to cast object of type 'System.Int32' to type 'System.Int64'.
+25/04/2022 08:36:36 a. m. => Introducing FOREIGN KEY constraint 'FK_CAT_Parametro_CAT_Departamento_DepartamentId' on table 'CAT_Parametro' may cause cycles or multiple cascade paths. Specify ON DELETE NO ACTION or ON UPDATE NO ACTION, or modify other FOREIGN KEY constraints.
+Could not create constraint. See previous errors.
 
-22/04/2022 11:47:17 => The MERGE statement conflicted with the FOREIGN KEY constraint "FK_CAT_CompañiaContacto_CAT_Compañia_CompañiaId". The conflict occurred in database "LAB_RAMOS_DEV_CATALOGO", table "dbo.CAT_Compañia", column 'Id'.
-The statement has been terminated.
+25/04/2022 08:59:17 a. m. => Introducing FOREIGN KEY constraint 'FK_CAT_Parametro_CAT_Departamento_DepartamentId' on table 'CAT_Parametro' may cause cycles or multiple cascade paths. Specify ON DELETE NO ACTION or ON UPDATE NO ACTION, or modify other FOREIGN KEY constraints.
+Could not create constraint. See previous errors.
 
-22/04/2022 11:50:29 => The MERGE statement conflicted with the FOREIGN KEY constraint "FK_CAT_CompañiaContacto_CAT_Compañia_CompañiaId". The conflict occurred in database "LAB_RAMOS_DEV_CATALOGO", table "dbo.CAT_Compañia", column 'Id'.
-The statement has been terminated.
+25/04/2022 11:57:12 a. m. => Unable to resolve service for type 'Service.Catalog.Application.IApplication.IParameterApplication' while attempting to activate 'Service.Catalog.Controllers.ParameterController'.
 
-22/04/2022 15:22:16 => The ALTER TABLE statement conflicted with the FOREIGN KEY constraint "FK_CAT_Compañia_Provenance_ProcedenciaId". The conflict occurred in database "LAB_RAMOS_DEV_CATALOGO", table "dbo.Provenance", column 'Id'.
+25/04/2022 12:17:09 p. m. => Input string was not in a correct format.
 
-22/04/2022 15:25:54 => Invalid column name 'ProcedenciaId'.
-
-22/04/2022 16:32:33 => Object reference not set to an instance of an object.
-
-22/04/2022 16:57:11 => Object reference not set to an instance of an object.
-
-22/04/2022 16:59:21 => Object reference not set to an instance of an object.
+25/04/2022 12:19:50 p. m. => An error occurred while updating the entries. See the inner exception for details.
 
 24/04/2022 21:56:28 => The process cannot access the file 'C:\Users\Lapaxsis-00\source\repos\API\Service.Catalog\wwwroot\layout\excel\company\CompañiaFormulario.xlsx' because it is being used by another process.
 
 25/04/2022 14:05:22 => Either the parameter @objname is ambiguous or the claimed @objtype (COLUMN) is wrong.
 
 25/04/2022 14:08:17 => Either the parameter @objname is ambiguous or the claimed @objtype (COLUMN) is wrong.
+25/04/2022 12:33:47 p. m. => An error occurred while updating the entries. See the inner exception for details.

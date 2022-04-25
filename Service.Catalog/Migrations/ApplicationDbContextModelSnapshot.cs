@@ -1076,6 +1076,9 @@ namespace Service.Catalog.Migrations
                     b.Property<int>("DepartamentId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("DepartmentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("FCSI")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -1135,8 +1138,7 @@ namespace Service.Catalog.Migrations
                     b.HasIndex("AreaId")
                         .IsUnique();
 
-                    b.HasIndex("DepartamentId")
-                        .IsUnique();
+                    b.HasIndex("DepartmentId");
 
                     b.HasIndex("ReagentId")
                         .IsUnique();
@@ -1635,10 +1637,8 @@ namespace Service.Catalog.Migrations
                         .IsRequired();
 
                     b.HasOne("Service.Catalog.Domain.Catalog.Department", "Department")
-                        .WithOne()
-                        .HasForeignKey("Service.Catalog.Domain.Parameter.Parameters", "DepartamentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("DepartmentId");
 
                     b.HasOne("Service.Catalog.Domain.Reagent.Reagent", "Reagent")
                         .WithOne()
