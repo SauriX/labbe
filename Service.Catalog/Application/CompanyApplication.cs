@@ -14,6 +14,7 @@ using ClosedXML.Excel;
 using Shared.Extensions;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dictionary.Company;
+using Shared.Helpers;
 
 namespace Service.Catalog.Application
 {
@@ -118,12 +119,23 @@ namespace Service.Catalog.Application
             template.AddVariable("Titulo", "Compañias");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
             template.AddVariable("Compañias", company);
+            template.AddVariable("Contactos", company.Contacts);
 
             template.Generate();
 
-            template.Format();
+            //var range = template.Workbook.Worksheet("Compañias").Range("Contactos");
+            //var table = template.Workbook.Worksheet("Compañias").Range("$A$28:" + range.RangeAddress.LastAddress).CreateTable();
+            //table.Theme = XLTableTheme.TableStyleMedium2; 
+
+            //template.Format();
 
             return template.ToByteArray();
+        }
+
+        public async Task<string> GeneratePassword()
+        {
+
+            return PasswordGenerator.GenerarPassword(8);
         }
     }
 }

@@ -62,5 +62,11 @@ namespace Identidad.Api.Controllers
             var file = await _Services.ExportFormCompany(id);
             return File(file, MimeType.XLSX);
         }
+
+        [HttpGet("paswwordgenerator")]
+        public async Task<string> GeneratePassword()
+        {
+            return await _Services.GeneratePassword();
+        }
     }
 }

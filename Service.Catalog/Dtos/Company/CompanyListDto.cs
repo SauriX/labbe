@@ -4,7 +4,7 @@ namespace Service.Catalog.Dtos.Company
 {
     public class CompanyListDto
     {
-        public int IdCompania { get; set; }
+        public int Id { get; set; }
         public string Clave { get; set; }
         public string Contrasena { get; set; }
         public string NombreComercial { get; set; }

@@ -14,7 +14,7 @@ namespace Service.Catalog.Mapper
 
             return new CompanyListDto
             {
-                IdCompania = model.Id,
+                Id = model.Id,
                 Clave = model.Clave.Trim(),
                 Contrasena = model.Contrasena.Trim(),
                 Procedencia = model.Procedencia,
@@ -28,7 +28,7 @@ namespace Service.Catalog.Mapper
             if (model == null) return null;
             return model.Select(x => new CompanyListDto
             {
-                IdCompania = x.Id,
+                Id = x.Id,
                 Clave = x.Clave.Trim(),
                 Contrasena = x.Contrasena.Trim(),
                 NombreComercial = x.NombreComercial.Trim(),
@@ -101,9 +101,10 @@ namespace Service.Catalog.Mapper
                 FechaCreo = DateTime.Now,
                 Contacts = dto.Contacts?.Select(x => new Contact
                 {
-                    Id = x.IdContacto,
+                    Id = x.Id,
+                    CompañiaId = dto.Id,
                     Nombre = x.Nombre.Trim(),
-                    Telefono = x.IdContacto,
+                    Telefono = x.Id,
                     Correo = x.Correo,
                     Activo = x.Activo,
                     FechaCreo = DateTime.Now,
@@ -143,9 +144,10 @@ namespace Service.Catalog.Mapper
                 FechaCreo = DateTime.Now,
                 Contacts = dto.Contacts.Select(x => new Contact
                 {
-                    Id = x.IdContacto,
+                    Id = x.Id,
+                    CompañiaId = dto.Id,
                     Nombre = x.Nombre.Trim(),
-                    Telefono = x.IdContacto,
+                    Telefono = x.Telefono,
                     Correo = x.Correo,
                     Activo = x.Activo,
                     FechaCreo = DateTime.Now,

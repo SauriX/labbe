@@ -83,6 +83,18 @@
       ],
       "UpstreamPathTemplate": "/api/company/export/form/{id}",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api​/company/paswwordgenerator",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 45216
+        }
+      ],
+      "UpstreamPathTemplate": "​/api​/company​/paswwordgenerator",
+      "UpstreamHttpMethod": [ "GET" ]
     }
   ]
 }
