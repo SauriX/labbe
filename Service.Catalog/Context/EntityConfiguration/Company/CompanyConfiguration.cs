@@ -12,12 +12,12 @@ namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
             builder.ToTable("CAT_Compañia");
 
             builder.HasKey(x => x.Id);
+                
 
             builder
               .Property(x => x.Clave)
               .IsRequired(true)
               .HasMaxLength(100);
-              //.NotEqual();
 
             builder
               .Property(x => x.Contrasena)
@@ -33,6 +33,7 @@ namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
             builder
              .Property(x => x.PromocionesId)
              .IsRequired(false);
+
             builder
              .Property(x => x.ListaPrecioId)
              .IsRequired(false);
@@ -89,6 +90,7 @@ namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
             builder
                .HasMany(x => x.Contacts)
                .WithOne(x => x.Compañia)
+
                .OnDelete(DeleteBehavior.Restrict);
 
             builder
@@ -100,6 +102,7 @@ namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
                .HasOne(x => x.Procedencia)
                .WithMany()
                .OnDelete(DeleteBehavior.Restrict);
+               
         }
     }
 }

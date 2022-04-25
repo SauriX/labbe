@@ -10,8 +10,8 @@ using Service.Catalog.Context;
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220425190853_CAT_RelacionesCompañiasPrecios")]
-    partial class CAT_RelacionesCompañiasPrecios
+    [Migration("20220425214231_Cat_CompañiaProcedencia")]
+    partial class Cat_CompañiaProcedencia
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -874,10 +874,10 @@ namespace Service.Catalog.Migrations
 
             modelBuilder.Entity("Service.Catalog.Domain.Company.Price_Company", b =>
                 {
-                    b.Property<int>("PrecioId")
+                    b.Property<int?>("PrecioId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CompañiaId")
+                    b.Property<int?>("CompañiaId")
                         .HasColumnType("int");
 
                     b.Property<bool>("Activo")
@@ -1078,6 +1078,9 @@ namespace Service.Catalog.Migrations
                     b.Property<int>("DepartamentId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("DepartmentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("FCSI")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -1134,14 +1137,11 @@ namespace Service.Catalog.Migrations
 
                     b.HasKey("IdParametro");
 
-                    b.HasIndex("AreaId")
-                        .IsUnique();
+                    b.HasIndex("AreaId");
 
-                    b.HasIndex("DepartamentId")
-                        .IsUnique();
+                    b.HasIndex("DepartmentId");
 
-                    b.HasIndex("ReagentId")
-                        .IsUnique();
+                    b.HasIndex("ReagentId");
 
                     b.ToTable("CAT_Parametro");
                 });
@@ -1268,10 +1268,10 @@ namespace Service.Catalog.Migrations
 
             modelBuilder.Entity("Service.Catalog.Domain.Price.Price_Promotion", b =>
                 {
-                    b.Property<int>("PrecioId")
+                    b.Property<int?>("PrecioId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PromocionId")
+                    b.Property<int?>("PromocionId")
                         .HasColumnType("int");
 
                     b.Property<bool>("Activo")
@@ -1631,20 +1631,18 @@ namespace Service.Catalog.Migrations
             modelBuilder.Entity("Service.Catalog.Domain.Parameter.Parameters", b =>
                 {
                     b.HasOne("Service.Catalog.Domain.Catalog.Area", "Area")
-                        .WithOne()
-                        .HasForeignKey("Service.Catalog.Domain.Parameter.Parameters", "AreaId")
+                        .WithMany()
+                        .HasForeignKey("AreaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Service.Catalog.Domain.Catalog.Department", "Department")
-                        .WithOne()
-                        .HasForeignKey("Service.Catalog.Domain.Parameter.Parameters", "DepartamentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("DepartmentId");
 
                     b.HasOne("Service.Catalog.Domain.Reagent.Reagent", "Reagent")
-                        .WithOne()
-                        .HasForeignKey("Service.Catalog.Domain.Parameter.Parameters", "ReagentId")
+                        .WithMany()
+                        .HasForeignKey("ReagentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

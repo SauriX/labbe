@@ -34,7 +34,7 @@ namespace Service.Catalog.Repository
 
         public async Task<List<Company>> GetAll(string search)
         {
-            var Company = _context.CAT_Compañia.AsQueryable();
+            var Company = _context.CAT_Compañia.Include(x => x.Procedencia).AsQueryable();
             search = search.Trim().ToLower();
 
             if (!string.IsNullOrWhiteSpace(search) && search != "all")
@@ -90,9 +90,20 @@ namespace Service.Catalog.Repository
             return PasswordGenerator.GenerarPassword(8);
         }
 
-        public async Task<Company> GetByCode(string clave)
+        public async Task<bool> ValidateClaveNamne(string clave, string nombre)
         {
-            return await _context.CAT_Compañia.FirstOrDefaultAsync(x => x.Clave == clave);
+            var validate =  _context.CAT_Compañia.Where(x => x.Clave == clave || x.NombreComercial == nombre).Count();
+            
+            if (validate == 0)
+            {
+                return false;
+            }
+            else
+            {
+               
+                return true;
+            }
+
         }
     }
 }
