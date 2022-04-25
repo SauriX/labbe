@@ -5,9 +5,9 @@ using Service.Catalog.Domain.Company;
 
 namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
 {
-    public class CompanyConfiguration : IEntityTypeConfiguration<Company>
+    public class CompanyConfiguration : IEntityTypeConfiguration<Domain.Company.Company>
     {
-        public void Configure(EntityTypeBuilder<Company> builder)
+        public void Configure(EntityTypeBuilder<Domain.Company.Company> builder)
         {
             builder.ToTable("CAT_Compañia");
 
@@ -17,6 +17,7 @@ namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
               .Property(x => x.Clave)
               .IsRequired(true)
               .HasMaxLength(100);
+              //.NotEqual();
 
             builder
               .Property(x => x.Contrasena)
@@ -93,6 +94,15 @@ namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
                .WithOne(x => x.Compañia)
                .OnDelete(DeleteBehavior.Restrict);
 
+            builder
+               .HasMany(x => x.Precios)
+               .WithOne(x => x.Compañia)
+               .OnDelete(DeleteBehavior.Restrict);
+
+            //builder
+            //   .HasOne(x => x.Procedencia)
+            //   .WithMany()
+            //   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

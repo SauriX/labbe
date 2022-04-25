@@ -221,3 +221,21 @@
 21/04/2022 11:09:00 => Unable to cast object of type 'System.Int32' to type 'System.Int64'.
 
 21/04/2022 11:09:31 => Unable to cast object of type 'System.Int32' to type 'System.Int64'.
+
+22/04/2022 11:47:17 => The MERGE statement conflicted with the FOREIGN KEY constraint "FK_CAT_CompañiaContacto_CAT_Compañia_CompañiaId". The conflict occurred in database "LAB_RAMOS_DEV_CATALOGO", table "dbo.CAT_Compañia", column 'Id'.
+The statement has been terminated.
+
+22/04/2022 11:50:29 => The MERGE statement conflicted with the FOREIGN KEY constraint "FK_CAT_CompañiaContacto_CAT_Compañia_CompañiaId". The conflict occurred in database "LAB_RAMOS_DEV_CATALOGO", table "dbo.CAT_Compañia", column 'Id'.
+The statement has been terminated.
+
+22/04/2022 15:22:16 => The ALTER TABLE statement conflicted with the FOREIGN KEY constraint "FK_CAT_Compañia_Provenance_ProcedenciaId". The conflict occurred in database "LAB_RAMOS_DEV_CATALOGO", table "dbo.Provenance", column 'Id'.
+
+22/04/2022 15:25:54 => Invalid column name 'ProcedenciaId'.
+
+22/04/2022 16:32:33 => Object reference not set to an instance of an object.
+
+22/04/2022 16:57:11 => Object reference not set to an instance of an object.
+
+22/04/2022 16:59:21 => Object reference not set to an instance of an object.
+
+24/04/2022 21:56:28 => The process cannot access the file 'C:\Users\Lapaxsis-00\source\repos\API\Service.Catalog\wwwroot\layout\excel\company\CompañiaFormulario.xlsx' because it is being used by another process.

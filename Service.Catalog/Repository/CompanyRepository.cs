@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Context;
 using Service.Catalog.Domain.Company;
 using Service.Catalog.Repository.IRepository;
+using Shared.Helpers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -81,6 +82,12 @@ namespace Service.Catalog.Repository
             await _context.BulkInsertOrUpdateOrDeleteAsync(contact);
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<string> GeneratePassword()
+        {
+
+            return PasswordGenerator.GenerarPassword(8);
         }
     }
 }
