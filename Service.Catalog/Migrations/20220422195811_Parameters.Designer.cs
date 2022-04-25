@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220422195811_Parameters")]
+    partial class Parameters
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -852,8 +854,8 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("Nombre")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("Telefono")
-                        .HasColumnType("bigint");
+                    b.Property<int>("Telefono")
+                        .HasColumnType("int");
 
                     b.Property<int>("UsuarioCreoId")
                         .HasColumnType("int");
@@ -1041,7 +1043,7 @@ namespace Service.Catalog.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("DepartamentId")
+                    b.Property<int>("DepartamentoId")
                         .HasColumnType("int");
 
                     b.Property<string>("FCSI")
@@ -1101,9 +1103,6 @@ namespace Service.Catalog.Migrations
                     b.HasKey("IdParametro");
 
                     b.HasIndex("AreaId")
-                        .IsUnique();
-
-                    b.HasIndex("DepartamentId")
                         .IsUnique();
 
                     b.HasIndex("ReagentId")
@@ -1411,12 +1410,6 @@ namespace Service.Catalog.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Service.Catalog.Domain.Catalog.Department", "Department")
-                        .WithOne()
-                        .HasForeignKey("Service.Catalog.Domain.Parameter.Parameters", "DepartamentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Service.Catalog.Domain.Reagent.Reagent", "Reagent")
                         .WithOne()
                         .HasForeignKey("Service.Catalog.Domain.Parameter.Parameters", "ReagentId")
@@ -1424,8 +1417,6 @@ namespace Service.Catalog.Migrations
                         .IsRequired();
 
                     b.Navigation("Area");
-
-                    b.Navigation("Department");
 
                     b.Navigation("Reagent");
                 });
