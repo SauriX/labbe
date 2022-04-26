@@ -66,6 +66,6 @@ namespace Service.Catalog.Controllers.Catalog
             _paymentMethodService = paymentMethodService;
             _workListService = workListService;
             _provenanceService = provenanceService;
-    }
+        }
     }
 }
