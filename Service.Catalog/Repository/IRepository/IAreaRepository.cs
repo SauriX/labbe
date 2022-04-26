@@ -12,5 +12,7 @@ namespace Service.Catalog.Repository.IRepository
         Task<Area> GetById(int id);
         Task Create(Area area);
         Task Update(Area area);
+        Task<IEnumerable<Area>> GetAreas(int id);
+        
     }
 }

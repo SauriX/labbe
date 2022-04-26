@@ -18,8 +18,8 @@ namespace Service.Catalog.Mapper
                 clave = x.Clave.ToString(),
                 nombre = x.Nombre.ToString(),
                 nombreCorto = x.NombreCorto.ToString(),
-                area = x.Area.ToString(),
-                departamento= x.Department.ToString(),
+                area = x.Area.Nombre,
+                departamento= x.Area.Departamento.Nombre,
                 activo = x.Activo
             });
         }

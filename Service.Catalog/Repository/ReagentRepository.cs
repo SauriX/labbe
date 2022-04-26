@@ -22,10 +22,11 @@ namespace Service.Catalog.Repository
         {
             var reagents = _context.CAT_Reactivo_Contpaq.AsQueryable();
 
-            search = search.Trim().ToLower();
+            
 
             if (!string.IsNullOrWhiteSpace(search) && search != "all")
             {
+                search = search.Trim().ToLower();
                 reagents = reagents.Where(x => x.Clave.ToLower().Contains(search) || x.Nombre.ToLower().Contains(search));
             }
 

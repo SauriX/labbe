@@ -20,7 +20,8 @@ namespace Service.Catalog.Repository
 
         public async Task<List<Parameters>> GetAll(string search)
         {
-            var parameters = _context.CAT_Parametro.AsQueryable();
+            
+            var parameters = _context.CAT_Parametro.Include(x => x.Area).ThenInclude(x=>x.Departamento).AsQueryable();
 
             search = search.Trim().ToLower();
 
@@ -31,7 +32,7 @@ namespace Service.Catalog.Repository
 
             return await parameters.ToListAsync();
         }
-
+        
         public async Task<Parameters> GetById(string id)
         {
             var parameter = await _context.CAT_Parametro.FindAsync(Guid.Parse(id));

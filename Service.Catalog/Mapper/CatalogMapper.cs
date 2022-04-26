@@ -22,6 +22,19 @@ namespace Service.Catalog.Mapper
             };
         }
 
+        public static IEnumerable<CatalogListDto> ToAreaDto(this IEnumerable<Area> model)
+        {
+            if (model == null) return null;
+
+            return model.Select(x=> new CatalogListDto
+            {
+                Id = x.Id,
+                Clave = x.Clave,
+                Nombre = x.Nombre,
+                Activo = x.Activo,
+            });
+        }
+
         public static IEnumerable<CatalogListDto> ToCatalogListDto<T>(this List<T> model) where T : GenericCatalog
         {
             if (model == null) return null;
