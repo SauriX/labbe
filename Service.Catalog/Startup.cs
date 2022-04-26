@@ -19,6 +19,7 @@ using Service.Catalog.Application.IApplication;
 using Service.Catalog.Context;
 using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Domain.Indication;
+using Service.Catalog.Domain.Provenance;
 using Service.Catalog.Middleware;
 using Service.Catalog.Repository;
 using Service.Catalog.Repository.IRepository;
@@ -77,6 +78,7 @@ namespace Service.Catalog
             services.AddScoped<ICatalogApplication<Delivery>, CatalogApplication<Delivery>>();
             services.AddScoped<ICatalogApplication<Area>, CatalogApplication<Area>>();
             services.AddScoped<ICatalogApplication<Bank>, CatalogApplication<Bank>>();
+            services.AddScoped<ICatalogApplication<Provenance>,CatalogApplication<Provenance>>();
             services.AddScoped<ICatalogApplication<Clinic>, CatalogApplication<Clinic>>();
             services.AddScoped<ICatalogApplication<Department>, CatalogApplication<Department>>();
             services.AddScoped<ICatalogApplication<Method>, CatalogApplication<Method>>();
@@ -100,6 +102,7 @@ namespace Service.Catalog
             services.AddScoped<ICatalogRepository<Delivery>, CatalogRepository<Delivery>>();
             services.AddScoped<ICatalogRepository<Area>, CatalogRepository<Area>>();
             services.AddScoped<ICatalogRepository<Bank>, CatalogRepository<Bank>>();
+            services.AddScoped<ICatalogRepository<Provenance>, CatalogRepository<Provenance>>();
             services.AddScoped<ICatalogRepository<Clinic>, CatalogRepository<Clinic>>();
             services.AddScoped<ICatalogRepository<Department>, CatalogRepository<Department>>();
             services.AddScoped<ICatalogRepository<Method>, CatalogRepository<Method>>();

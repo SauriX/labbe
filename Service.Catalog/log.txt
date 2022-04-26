@@ -262,3 +262,9 @@ Could not create constraint. See previous errors.
 25/04/2022 16:45:55 => There is already an object named 'CAT_ListaP_Compañia' in the database.
 
 25/04/2022 16:48:25 => The operation failed because an index or statistics with name 'IX_CAT_ListaP_Compañia_CompañiaId' already exists on table 'CAT_ListaP_Compañia'.
+
+25/04/2022 19:16:17 => Unable to resolve service for type 'Service.Catalog.Application.IApplication.ICatalogApplication`1[Service.Catalog.Domain.Provenance.Provenance]' while attempting to activate 'Service.Catalog.Controllers.Catalog.CatalogController'.
+
+25/04/2022 19:16:19 => Unable to resolve service for type 'Service.Catalog.Application.IApplication.ICatalogApplication`1[Service.Catalog.Domain.Provenance.Provenance]' while attempting to activate 'Service.Catalog.Controllers.Catalog.CatalogController'.
+
+25/04/2022 19:27:34 => Unable to resolve service for type 'Service.Catalog.Application.IApplication.ICatalogApplication`1[Service.Catalog.Domain.Provenance.Provenance]' while attempting to activate 'Service.Catalog.Controllers.Catalog.CatalogController'.
