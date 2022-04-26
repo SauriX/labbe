@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220425214231_Cat_CompañiaProcedencia")]
+    partial class Cat_CompañiaProcedencia
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1564,23 +1566,6 @@ namespace Service.Catalog.Migrations
                         .IsRequired();
 
                     b.Navigation("Compañia");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Company.Price_Company", b =>
-                {
-                    b.HasOne("Service.Catalog.Domain.Company.Company", "Compañia")
-                        .WithMany("Precios")
-                        .HasForeignKey("CompañiaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Service.Catalog.Domain.Price.Price", "ListaPrecio")
-                        .WithMany()
-                        .HasForeignKey("ListaPrecioId");
-
-                    b.Navigation("Compañia");
-
-                    b.Navigation("ListaPrecio");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Company.Price_Company", b =>

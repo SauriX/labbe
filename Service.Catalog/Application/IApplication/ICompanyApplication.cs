@@ -14,5 +14,6 @@ namespace Service.Catalog.Application.IApplication
         Task<byte[]> ExportListCompany(string search = null);
         Task<byte[]> ExportFormCompany(int id);
         Task<string> GeneratePassword();
+        //Task<CompanyFormDto> GetByCode(string clave);
     }
 }

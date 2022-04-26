@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Service.Catalog.Application.IApplication;
+using Service.Catalog.Dtos.Catalog;
 using Service.Catalog.Dtos.Company;
 using Shared.Dictionary;
 using System.Collections.Generic;
@@ -24,6 +25,12 @@ namespace Identidad.Api.Controllers
         {
             return await _Services.GetActive();
         }
+
+        //[HttpGet("provenance/active")]
+        //public async Task<IEnumerable<CatalogListDto>> GetActiveProvenance(int id)
+        //{
+        //    return await _Services.GetActive();
+        //}
 
         [HttpGet("{Id}")]
 

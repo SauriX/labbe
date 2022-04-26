@@ -8,7 +8,7 @@ namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
     {
         public void Configure(EntityTypeBuilder<Contact> builder)
         {
-            builder.ToTable("CAT_CompañiaContacto");
+            builder.ToTable("CAT_Contacto");
 
             builder.HasKey(x => x.Id);
 

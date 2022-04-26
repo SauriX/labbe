@@ -10,8 +10,8 @@ namespace Service.Catalog.Domain.Company
         public string Contrasena { get; set;}
         public string EmailEmpresarial { get; set;}
         public string NombreComercial { get; set;}
-        public int Procedencia { get; set;}
-        //public virtual Provenance.Provenance Procedencia { get; set; }
+        public int ProcedenciaId { get; set; }
+        public virtual Provenance.Provenance Procedencia { get; set; }
         public int? ListaPrecioId { get; set;}
         public long? PromocionesId { get; set;}
         public string RFC { get; set; }
@@ -33,6 +33,6 @@ namespace Service.Catalog.Domain.Company
         public DateTime? FechaMod { get; set; }
         
         public virtual ICollection<Contact> Contacts { get; set; }
-        public virtual ICollection<Price_Company> Precios { get; set; }
+        public virtual ICollection<Price_Company> Precio { get; set;   }
     }
 }

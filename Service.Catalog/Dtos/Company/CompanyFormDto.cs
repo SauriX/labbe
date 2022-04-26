@@ -11,7 +11,7 @@ namespace Service.Catalog.Dtos.Company
         public string Contrasena { get; set; }
         public string EmailEmpresarial { get; set; }
         public string NombreComercial { get; set; }
-        public int Procedencia { get; set; }
+        public int ProcedenciaId { get; set; }
         public int? ListaPrecioId { get; set; }
         public long? PromocionesId { get; set; }
         public string RFC { get; set; }
@@ -42,7 +42,6 @@ namespace Service.Catalog.Dtos.Company
             RuleFor(x => x.Clave).NotEmpty().MaximumLength(100);
             RuleFor(x => x.Contrasena).NotEmpty().MaximumLength(100);
             RuleFor(x => x.NombreComercial).NotEmpty().MaximumLength(100);
-            RuleFor(x => x.Procedencia).NotEmpty();
             RuleFor(x => x.RFC).NotEmpty().MaximumLength(100);
             RuleFor(x => x.RazonSocial).NotEmpty().MaximumLength(500);
             RuleFor(x => x.MetodoDePagoId).NotEmpty();

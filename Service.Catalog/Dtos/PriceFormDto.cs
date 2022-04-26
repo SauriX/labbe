@@ -1,10 +1,9 @@
-﻿using Service.Catalog.Domain.Company;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace Service.Catalog.Domain.Price
+namespace Service.Catalog.Dtos
 {
-    public class Price
+    public class PriceFormDto
     {
         public int Id { get; set; }
         public string Clave { get; set; }
@@ -15,7 +14,6 @@ namespace Service.Catalog.Domain.Price
         public DateTime FechaCreo { get; set; }
         public string UsuarioModificoId { get; set; }
         public DateTime? FechaModifico { get; set; }
-        public virtual ICollection<Price_Promotion> Promocion { get; set; }
-        public virtual ICollection<Price_Company> Compañia { get; set; }
+        public virtual IEnumerable<PromotionFormDto> Promocion { get; set; }
     }
 }

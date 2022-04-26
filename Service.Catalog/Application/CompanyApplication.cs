@@ -34,6 +34,7 @@ namespace Service.Catalog.Application
             return catalogs.ToCompanyListDto();
         }
 
+
         public async Task<CompanyFormDto> GetById(int Id)
         {
             var Company = await _repository.GetById(Id);
@@ -45,9 +46,11 @@ namespace Service.Catalog.Application
         }
         public async Task<CompanyFormDto> Create(CompanyFormDto company)
         {
-            if (company.Id != 0)
+            var code = await ValidarClaveNombre(company);
+            
+            if (company.Id != 0 || code !=0 )
             {
-                throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
             }
 
             var newIndication = company.ToModel();
@@ -136,6 +139,22 @@ namespace Service.Catalog.Application
         {
 
             return PasswordGenerator.GenerarPassword(8);
+        }
+
+        private async Task<int> ValidarClaveNombre(CompanyFormDto company)
+        {
+
+            var clave = company.Clave;
+            var name = company.NombreComercial;
+
+            var exists = await _repository.ValidateClaveNamne(clave, name);
+
+            if (exists)
+            {
+                return 1;
+            }
+
+            return 0;
         }
     }
 }
