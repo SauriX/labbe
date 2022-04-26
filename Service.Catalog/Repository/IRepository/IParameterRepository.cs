@@ -10,5 +10,6 @@ namespace Service.Catalog.Repository.IRepository
         Task<Parameters> GetById(string id);
         Task Create(Parameters parameter);
         Task Update(Parameters parameter);
+
     }
 }

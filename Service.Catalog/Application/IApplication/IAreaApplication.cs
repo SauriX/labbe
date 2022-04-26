@@ -12,5 +12,6 @@ namespace Service.Catalog.Application.IApplication
         Task<AreaFormDto> GetById(int id);
         Task<AreaListDto> Create(AreaFormDto Catalog);
         Task<AreaListDto> Update(AreaFormDto Catalog);
+        Task<IEnumerable<CatalogListDto>> GetAreaByDépartament(int id);
     }
 }

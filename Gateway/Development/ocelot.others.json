@@ -2,7 +2,7 @@
   "Routes": [
     //Reagent
     {
-      "DownstreamPathTemplate": "/api/Rol/all/{search}",
+      "DownstreamPathTemplate": "/api/reagent/all/{search}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -67,7 +67,7 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/catalog/area/{id}",
+      "DownstreamPathTemplate": "/api/catalog/area/departament/{id}/active",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -75,7 +75,7 @@
           "Port": 20347
         }
       ],
-      "UpstreamPathTemplate": "/api/catalog/area/{id}",
+      "UpstreamPathTemplate": "/api/catalog/area/departament/{id}/active",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {

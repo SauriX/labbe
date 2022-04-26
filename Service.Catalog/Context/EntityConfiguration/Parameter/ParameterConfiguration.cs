@@ -47,7 +47,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Parameter
                 .HasMaxLength(100);
 
             builder
-                .HasOne(x => x.Area)
+                .HasOne(x=>x.Area)
                 .WithMany();
 
             builder

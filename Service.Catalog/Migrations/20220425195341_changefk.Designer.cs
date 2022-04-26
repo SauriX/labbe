@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220425195341_changefk")]
+    partial class changefk
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -799,7 +801,7 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("NumeroDeCuenta")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProcedenciaId")
+                    b.Property<int>("Procedencia")
                         .HasColumnType("int");
 
                     b.Property<long?>("PromocionesId")
@@ -820,8 +822,6 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProcedenciaId");
 
                     b.ToTable("CAT_Compañia");
                 });
@@ -872,10 +872,10 @@ namespace Service.Catalog.Migrations
 
             modelBuilder.Entity("Service.Catalog.Domain.Company.Price_Company", b =>
                 {
-                    b.Property<int?>("PrecioId")
+                    b.Property<int>("PrecioId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CompañiaId")
+                    b.Property<int>("CompañiaId")
                         .HasColumnType("int");
 
                     b.Property<bool>("Activo")
@@ -887,6 +887,9 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaMod")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("ListaPrecioId")
+                        .HasColumnType("int");
+
                     b.Property<long>("UsuarioCreoId")
                         .HasColumnType("bigint");
 
@@ -896,6 +899,8 @@ namespace Service.Catalog.Migrations
                     b.HasKey("PrecioId", "CompañiaId");
 
                     b.HasIndex("CompañiaId");
+
+                    b.HasIndex("ListaPrecioId");
 
                     b.ToTable("CAT_ListaP_Compañia");
                 });
@@ -1234,9 +1239,7 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Clave")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
@@ -1245,9 +1248,7 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UsuarioCreoId")
                         .HasColumnType("nvarchar(max)");
@@ -1256,20 +1257,19 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Visibilidad")
-                        .HasMaxLength(100)
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
 
-                    b.ToTable("CAT_ListPrecio");
+                    b.ToTable("Price");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Price.Price_Promotion", b =>
                 {
-                    b.Property<int?>("PrecioId")
+                    b.Property<int>("PrecioId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PromocionId")
+                    b.Property<int>("PromocionId")
                         .HasColumnType("int");
 
                     b.Property<bool>("Activo")
@@ -1281,9 +1281,6 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaMod")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("PriceId")
-                        .HasColumnType("int");
-
                     b.Property<long>("UsuarioCreoId")
                         .HasColumnType("bigint");
 
@@ -1291,8 +1288,6 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PrecioId", "PromocionId");
-
-                    b.HasIndex("PriceId");
 
                     b.HasIndex("PromocionId");
 
@@ -1345,43 +1340,6 @@ namespace Service.Catalog.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Promotion");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Provenance.Provenance", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Clave")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaModifico")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("UsuarioCreoId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UsuarioModificoId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CAT_Procedencia");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Reagent.Reagent", b =>
@@ -1544,17 +1502,6 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Departamento");
                 });
 
-            modelBuilder.Entity("Service.Catalog.Domain.Company.Company", b =>
-                {
-                    b.HasOne("Service.Catalog.Domain.Provenance.Provenance", "Procedencia")
-                        .WithMany()
-                        .HasForeignKey("ProcedenciaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Procedencia");
-                });
-
             modelBuilder.Entity("Service.Catalog.Domain.Company.Contact", b =>
                 {
                     b.HasOne("Service.Catalog.Domain.Company.Company", "Compañia")
@@ -1581,25 +1528,6 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Compañia");
 
                     b.Navigation("ListaPrecio");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Company.Price_Company", b =>
-                {
-                    b.HasOne("Service.Catalog.Domain.Company.Company", "Compañia")
-                        .WithMany("Precio")
-                        .HasForeignKey("CompañiaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Service.Catalog.Domain.Price.Price", "Precio")
-                        .WithMany("Compañia")
-                        .HasForeignKey("PrecioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Compañia");
-
-                    b.Navigation("Precio");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Constant.City", b =>
@@ -1680,14 +1608,10 @@ namespace Service.Catalog.Migrations
             modelBuilder.Entity("Service.Catalog.Domain.Price.Price_Promotion", b =>
                 {
                     b.HasOne("Service.Catalog.Domain.Price.Price", "Precio")
-                        .WithMany()
-                        .HasForeignKey("PrecioId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Service.Catalog.Domain.Price.Price", null)
                         .WithMany("Promocion")
-                        .HasForeignKey("PriceId");
+                        .HasForeignKey("PrecioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Service.Catalog.Domain.Promotion.Promotion", "Promocion")
                         .WithMany()
@@ -1720,7 +1644,7 @@ namespace Service.Catalog.Migrations
                 {
                     b.Navigation("Contacts");
 
-                    b.Navigation("Precio");
+                    b.Navigation("Precios");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Indication.Indication", b =>
@@ -1730,8 +1654,6 @@ namespace Service.Catalog.Migrations
 
             modelBuilder.Entity("Service.Catalog.Domain.Price.Price", b =>
                 {
-                    b.Navigation("Compañia");
-
                     b.Navigation("Promocion");
                 });
 #pragma warning restore 612, 618
