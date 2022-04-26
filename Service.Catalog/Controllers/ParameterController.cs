@@ -24,6 +24,11 @@ namespace Service.Catalog.Controllers
             await _ParameterService.Create(Parameter);
         }
 
+        [HttpPut]
+        public async Task Update(ParameterForm parameter)
+        {
+            await _ParameterService.Update(parameter);
+        }
 
         [HttpGet("all/{search?}")]
         public async Task<IEnumerable<ParameterList>> GetAll(string search = null)

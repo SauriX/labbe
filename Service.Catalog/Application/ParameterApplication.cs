@@ -44,7 +44,12 @@ namespace Service.Catalog.Application
 
         public async Task Create(ParameterForm parameter)
         {
+            var code = await ValidarClaveNombre(parameter);
 
+            if ( code != 0)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
+            }
             var newReagent = parameter.toParameters();
 
             await _repository.Create(newReagent);
@@ -108,6 +113,21 @@ namespace Service.Catalog.Application
             template.Format();
 
             return template.ToByteArray();
+        }
+        private async Task<int> ValidarClaveNombre(ParameterForm parameter)
+        {
+
+            var clave = parameter.clave;
+            var name = parameter.nombre;
+
+            var exists = await _repository.ValidateClaveNamne(clave, name);
+
+            if (exists)
+            {
+                return 1;
+            }
+
+            return 0;
         }
     }
 }

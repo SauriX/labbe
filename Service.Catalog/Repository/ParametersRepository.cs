@@ -64,5 +64,20 @@ namespace Service.Catalog.Repository
            
 
         }
+        public async Task<bool> ValidateClaveNamne(string clave, string nombre)
+        {
+            var validate = _context.CAT_Parametro.Where(x => x.Clave == clave || x.Nombre == nombre).Count();
+
+            if (validate == 0)
+            {
+                return false;
+            }
+            else
+            {
+
+                return true;
+            }
+
+        }
     }
 }

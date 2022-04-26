@@ -272,3 +272,23 @@ Could not create constraint. See previous errors.
 25/04/2022 19:16:19 => Unable to resolve service for type 'Service.Catalog.Application.IApplication.ICatalogApplication`1[Service.Catalog.Domain.Provenance.Provenance]' while attempting to activate 'Service.Catalog.Controllers.Catalog.CatalogController'.
 
 25/04/2022 19:27:34 => Unable to resolve service for type 'Service.Catalog.Application.IApplication.ICatalogApplication`1[Service.Catalog.Domain.Provenance.Provenance]' while attempting to activate 'Service.Catalog.Controllers.Catalog.CatalogController'.
+
+26/04/2022 11:16:06 a. m. => Value cannot be null. (Parameter 's')
+
+26/04/2022 11:17:38 a. m. => Value cannot be null. (Parameter 's')
+
+26/04/2022 11:21:11 a. m. => Value cannot be null. (Parameter 's')
+
+26/04/2022 11:21:34 a. m. => Value cannot be null. (Parameter 's')
+
+26/04/2022 11:25:17 a. m. => Value cannot be null. (Parameter 's')
+
+26/04/2022 11:26:59 a. m. => Value cannot be null. (Parameter 's')
+
+26/04/2022 11:29:41 a. m. => Value cannot be null. (Parameter 's')
+
+26/04/2022 11:30:05 a. m. => Value cannot be null. (Parameter 's')
+
+26/04/2022 11:32:56 a. m. => Value cannot be null. (Parameter 's')
+
+26/04/2022 11:34:23 a. m. => Value cannot be null. (Parameter 's')
