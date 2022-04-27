@@ -64,8 +64,11 @@ namespace Service.Catalog.Context.EntityConfiguration.Parameter
                 .IsRequired(true)
                 .HasMaxLength(50);
 
+            builder
+               .HasMany(x => x.Estudios)
+               .WithOne(x=>x.Parameters)
+               .OnDelete(DeleteBehavior.Restrict);
 
-            
         }
     }
 }

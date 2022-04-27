@@ -57,8 +57,16 @@ namespace Service.Catalog.Application
 
         public async Task Update(ParameterForm parameter)
         {
-            var existing = await _repository.GetById(parameter.id);
 
+            var newReagent = parameter.toParameters();
+            var existing = await _repository.GetById(parameter.id);
+            var code = await ValidarClaveNombre(parameter);
+            if (existing.Clave != parameter.clave || existing.Nombre != parameter.nombre) {
+                if (code != 0)
+                {
+                    throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
+                } 
+            }
             if (existing == null)
             {
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
