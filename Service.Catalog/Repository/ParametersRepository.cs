@@ -35,7 +35,7 @@ namespace Service.Catalog.Repository
         
         public async Task<Parameters> GetById(string id)
         {
-            var parameter = await _context.CAT_Parametro.FindAsync(Guid.Parse(id));
+            var parameter = await _context.CAT_Parametro.Include(x=>x.Estudios).ThenInclude(x=>x.Estudio).FirstOrDefaultAsync(x => x.IdParametro == Guid.Parse(id));
 
             return parameter;
         }

@@ -1073,8 +1073,8 @@ namespace Service.Catalog.Migrations
                     b.Property<int>("EstudioId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ParametersId")
-                        .HasColumnType("int");
+                    b.Property<string>("ParametersId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
@@ -1086,7 +1086,7 @@ namespace Service.Catalog.Migrations
                         .IsRequired()
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("ParametersIdParametro")
+                    b.Property<Guid?>("ParametersIdParametro")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UsuarioCreoId")
@@ -1681,8 +1681,7 @@ namespace Service.Catalog.Migrations
                     b.HasOne("Service.Catalog.Domain.Parameter.Parameters", "Parameters")
                         .WithMany("Estudios")
                         .HasForeignKey("ParametersIdParametro")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Estudio");
 

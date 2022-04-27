@@ -10,8 +10,8 @@ using Service.Catalog.Context;
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220427161649_studyparametro")]
-    partial class studyparametro
+    [Migration("20220427175012_studyparametrochangeparameter")]
+    partial class studyparametrochangeparameter
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -1075,8 +1075,8 @@ namespace Service.Catalog.Migrations
                     b.Property<int>("EstudioId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ParametersId")
-                        .HasColumnType("int");
+                    b.Property<string>("ParametersId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
@@ -1088,7 +1088,7 @@ namespace Service.Catalog.Migrations
                         .IsRequired()
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("ParametersIdParametro")
+                    b.Property<Guid?>("ParametersIdParametro")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UsuarioCreoId")
@@ -1683,8 +1683,7 @@ namespace Service.Catalog.Migrations
                     b.HasOne("Service.Catalog.Domain.Parameter.Parameters", "Parameters")
                         .WithMany("Estudios")
                         .HasForeignKey("ParametersIdParametro")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Estudio");
 

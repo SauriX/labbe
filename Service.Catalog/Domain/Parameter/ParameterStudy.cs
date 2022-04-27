@@ -4,7 +4,7 @@ namespace Service.Catalog.Domain.Parameter
 {
     public class ParameterStudy
     {
-        public int ParametersId { get; set; }
+        public string ParametersId { get; set; }
         public virtual Parameters Parameters { get; set; }
         public int EstudioId { get; set; }
         public virtual Study Estudio { get; set; }

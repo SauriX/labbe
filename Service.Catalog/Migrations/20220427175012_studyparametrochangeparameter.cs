@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Service.Catalog.Migrations
 {
-    public partial class studyparametro : Migration
+    public partial class studyparametrochangeparameter : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,9 +11,9 @@ namespace Service.Catalog.Migrations
                 name: "Relacion_Estudio_Parametro",
                 columns: table => new
                 {
-                    ParametersId = table.Column<int>(type: "int", nullable: false),
+                    ParametersId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     EstudioId = table.Column<int>(type: "int", nullable: false),
-                    ParametersIdParametro = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ParametersIdParametro = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Activo = table.Column<bool>(type: "bit", nullable: false),
                     UsuarioCreoId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FechaCreo = table.Column<DateTime>(type: "datetime2", nullable: false),

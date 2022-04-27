@@ -330,3 +330,12 @@ Could not create constraint. See previous errors.
 26/04/2022 05:53:25 p. m. => Invalid column name 'FormatId'.
 
 26/04/2022 05:53:33 p. m. => Invalid column name 'FormatId'.
+
+27/04/2022 12:29:59 p. m. => Unable to cast object of type 'System.Collections.Generic.List`1[Service.Catalog.Domain.Study]' to type 'System.Collections.Generic.ICollection`1[Service.Catalog.Dtos.Study.StudyListDto]'.
+
+27/04/2022 12:42:03 p. m. => The object 'PK_Relacion_Estudio_Parametro' is dependent on column 'ParametersId'.
+ALTER TABLE ALTER COLUMN ParametersId failed because one or more objects access this column.
+
+27/04/2022 01:20:58 p. m. => Unable to cast object of type 'System.Collections.Generic.List`1[Service.Catalog.Domain.Study]' to type 'System.Collections.Generic.ICollection`1[Service.Catalog.Dtos.Study.StudyListDto]'.
+
+27/04/2022 01:33:03 p. m. => Connection Timeout Expired.  The timeout period elapsed while attempting to consume the pre-login handshake acknowledgement.  This could be because the pre-login handshake failed or the server was unable to respond back in time.  The duration spent while attempting to connect to this server was - [Pre-Login] initialization=28519; handshake=32; 
