@@ -331,11 +331,12 @@ Could not create constraint. See previous errors.
 
 26/04/2022 05:53:33 p. m. => Invalid column name 'FormatId'.
 
-26/04/2022 19:51:03 => An error occurred while updating the entries. See the inner exception for details.
+27/04/2022 12:29:59 p. m. => Unable to cast object of type 'System.Collections.Generic.List`1[Service.Catalog.Domain.Study]' to type 'System.Collections.Generic.ICollection`1[Service.Catalog.Dtos.Study.StudyListDto]'.
 
-26/04/2022 19:51:14 => An error occurred while updating the entries. See the inner exception for details.
+27/04/2022 12:42:03 p. m. => The object 'PK_Relacion_Estudio_Parametro' is dependent on column 'ParametersId'.
+ALTER TABLE ALTER COLUMN ParametersId failed because one or more objects access this column.
 
-26/04/2022 19:51:23 => An error occurred while updating the entries. See the inner exception for details.
+27/04/2022 01:20:58 p. m. => Unable to cast object of type 'System.Collections.Generic.List`1[Service.Catalog.Domain.Study]' to type 'System.Collections.Generic.ICollection`1[Service.Catalog.Dtos.Study.StudyListDto]'.
 
 26/04/2022 19:58:54 => An error occurred while updating the entries. See the inner exception for details.
 

@@ -417,7 +417,7 @@ namespace Service.Identity.Repository
             {
                 id = 5,
                 ruta = "medics",
-                descripcion = "Medicos",
+                descripcion = "Médicos",
                 icono = "medico",
             });
             menu.Add(new Menu
@@ -431,7 +431,7 @@ namespace Service.Identity.Repository
             {
                 id = 8,
                 ruta = "parameter",
-                descripcion = "Parametros",
+                descripcion = "Parámetros",
                 icono = "role",
             });
             menu.Add(new Menu

@@ -40,7 +40,8 @@ namespace Service.Catalog.Mapper
                 unidadSi = parameters.UnidadSi.ToString(),
                 fcs = parameters.FCSI.ToString(),
                 activo = parameters.Activo,
-                formatoImpresion = parameters.FormatId
+                formatoImpresion = parameters.FormatId,
+                //estudios= parameters.Estudios?.Select(y => y.Estudio)?.ToList())
             };
         }
         public static Parameters toParameters(this ParameterForm form) {
