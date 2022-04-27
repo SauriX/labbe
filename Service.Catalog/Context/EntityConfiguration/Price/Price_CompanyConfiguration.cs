@@ -13,7 +13,6 @@ namespace Service.Catalog.Context.EntityConfiguration.Company
 
             builder.HasKey(x => new { x.PrecioId, x.CompañiaId });
                 
-
             builder
               .Property(x => x.Activo)
               .IsRequired(true);

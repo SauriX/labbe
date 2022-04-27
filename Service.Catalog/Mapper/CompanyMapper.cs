@@ -17,7 +17,7 @@ namespace Service.Catalog.Mapper
                 Id = model.Id,
                 Clave = model.Clave.Trim(),
                 Contrasena = model.Contrasena.Trim(),
-                Procedencia = model?.ProcedenciaId + " " + model.Procedencia.Nombre.Trim(),
+                Procedencia = model.Procedencia.Nombre.Trim(),
                 ListaPrecioId = model.ListaPrecioId,
                 Activo = model.Activo
 
@@ -32,7 +32,7 @@ namespace Service.Catalog.Mapper
                 Clave = x.Clave.Trim(),
                 Contrasena = x.Contrasena.Trim(),
                 NombreComercial = x.NombreComercial.Trim(),
-                Procedencia = x?.ProcedenciaId + " " + x.Procedencia.Nombre.Trim(),
+                Procedencia = x.Procedencia.Nombre.Trim(),
                 ListaPrecioId = x.ListaPrecioId,
                 Activo = x.Activo,
                 Contacts = x.Contacts?.ToList()?.ToContactListDto()
@@ -48,7 +48,7 @@ namespace Service.Catalog.Mapper
                 Contrasena = model.Contrasena.Trim(),
                 EmailEmpresarial = model.EmailEmpresarial.Trim(),
                 NombreComercial = model.NombreComercial.Trim(),
-                ProcedenciaId = model.ProcedenciaId,
+                ProcedenciaId = model.ProcedenciaId ,
                 ListaPrecioId = model.ListaPrecioId,
                 PromocionesId = model.PromocionesId,
                 RFC = model.RFC.Trim(),

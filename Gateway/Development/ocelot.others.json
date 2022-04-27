@@ -823,7 +823,8 @@
       "UpstreamPathTemplate": "/api/catalog/useOfCFDI",
       "UpstreamHttpMethod": [ "PUT" ]
     },
-    //provenance
+
+    //Provenance
     {
       "DownstreamPathTemplate": "/api/catalog/provenance/all/{search}",
       "DownstreamScheme": "http",
@@ -837,18 +838,6 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/catalog/provenance/active",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 20347
-        }
-      ],
-      "UpstreamPathTemplate": "/api/catalog/provenance/active",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
       "DownstreamPathTemplate": "/api/catalog/provenance/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -858,6 +847,18 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/provenance/{id}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/provenance/active",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/provenance/active",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {

@@ -12,7 +12,7 @@ namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
             builder.ToTable("CAT_Compañia");
 
             builder.HasKey(x => x.Id);
-                
+
 
             builder
               .Property(x => x.Clave)
@@ -90,19 +90,19 @@ namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
             builder
                .HasMany(x => x.Contacts)
                .WithOne(x => x.Compañia)
-
                .OnDelete(DeleteBehavior.Restrict);
 
             builder
                .HasMany(x => x.Precio)
                .WithOne(x => x.Compañia)
+               .HasForeignKey(x => x.CompañiaId)
                .OnDelete(DeleteBehavior.Restrict);
 
             builder
                .HasOne(x => x.Procedencia)
                .WithMany()
                .OnDelete(DeleteBehavior.Restrict);
-               
+
         }
     }
 }

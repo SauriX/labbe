@@ -27,6 +27,12 @@ namespace Service.Catalog.Context.EntityConfiguration
               .IsRequired(true)
               .HasMaxLength(100);
 
+            builder
+             .HasMany(x => x.Compañia)
+             .WithOne(x => x.Precio)
+             .HasForeignKey(x => x.PrecioId)
+             .OnDelete(DeleteBehavior.Restrict);
+
             //builder
             //   .HasOne(x => x.Procedencia)
             //   .WithMany()

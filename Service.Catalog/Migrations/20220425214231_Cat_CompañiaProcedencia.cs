@@ -86,10 +86,10 @@ namespace Service.Catalog.Migrations
             //        UsuarioModificoId = table.Column<string>(type: "nvarchar(max)", nullable: true),
             //        FechaModifico = table.Column<DateTime>(type: "datetime2", nullable: true)
             //    },
-                //constraints: table =>
-                //{
-                //    table.PrimaryKey("PK_Promotion", x => x.Id);
-                //});
+            //constraints: table =>
+            //{
+            //    table.PrimaryKey("PK_Promotion", x => x.Id);
+            //});
 
             //migrationBuilder.CreateTable(
             //    name: "CAT_ListaP_Compañia",
@@ -156,104 +156,104 @@ namespace Service.Catalog.Migrations
             //            onDelete: ReferentialAction.Cascade);
             //    });
 
-        //    migrationBuilder.CreateIndex(
-        //        name: "IX_CAT_Parametro_AreaId",
-        //        table: "CAT_Parametro",
-        //        column: "AreaId");
+            //    migrationBuilder.CreateIndex(
+            //        name: "IX_CAT_Parametro_AreaId",
+            //        table: "CAT_Parametro",
+            //        column: "AreaId");
 
-        //    migrationBuilder.CreateIndex(
-        //        name: "IX_CAT_Parametro_ReagentId",
-        //        table: "CAT_Parametro",
-        //        column: "ReagentId");
+            //    migrationBuilder.CreateIndex(
+            //        name: "IX_CAT_Parametro_ReagentId",
+            //        table: "CAT_Parametro",
+            //        column: "ReagentId");
 
-        //    migrationBuilder.CreateIndex(
-        //        name: "IX_CAT_Compañia_ProcedenciaId",
-        //        table: "CAT_Compañia",
-        //        column: "ProcedenciaId");
+            //    migrationBuilder.CreateIndex(
+            //        name: "IX_CAT_Compañia_ProcedenciaId",
+            //        table: "CAT_Compañia",
+            //        column: "ProcedenciaId");
 
-        //    migrationBuilder.CreateIndex(
-        //        name: "IX_CAT_ListaP_Compañia_CompañiaId",
-        //        table: "CAT_ListaP_Compañia",
-        //        column: "CompañiaId");
+            //    migrationBuilder.CreateIndex(
+            //        name: "IX_CAT_ListaP_Compañia_CompañiaId",
+            //        table: "CAT_ListaP_Compañia",
+            //        column: "CompañiaId");
 
-        //    migrationBuilder.CreateIndex(
-        //        name: "IX_CAT_ListaP_Promocion_PriceId",
-        //        table: "CAT_ListaP_Promocion",
-        //        column: "PriceId");
+            //    migrationBuilder.CreateIndex(
+            //        name: "IX_CAT_ListaP_Promocion_PriceId",
+            //        table: "CAT_ListaP_Promocion",
+            //        column: "PriceId");
 
-        //    migrationBuilder.CreateIndex(
-        //        name: "IX_CAT_ListaP_Promocion_PromocionId",
-        //        table: "CAT_ListaP_Promocion",
-        //        column: "PromocionId");
+            //    migrationBuilder.CreateIndex(
+            //        name: "IX_CAT_ListaP_Promocion_PromocionId",
+            //        table: "CAT_ListaP_Promocion",
+            //        column: "PromocionId");
 
-        //    migrationBuilder.AddForeignKey(
-        //        name: "FK_CAT_Compañia_CAT_Procedencia_ProcedenciaId",
-        //        table: "CAT_Compañia",
-        //        column: "ProcedenciaId",
-        //        principalTable: "CAT_Procedencia",
-        //        principalColumn: "Id",
-        //        onDelete: ReferentialAction.Restrict);
-        //}
+            //    migrationBuilder.AddForeignKey(
+            //        name: "FK_CAT_Compañia_CAT_Procedencia_ProcedenciaId",
+            //        table: "CAT_Compañia",
+            //        column: "ProcedenciaId",
+            //        principalTable: "CAT_Procedencia",
+            //        principalColumn: "Id",
+            //        onDelete: ReferentialAction.Restrict);
+        }
 
-        //protected override void Down(MigrationBuilder migrationBuilder)
-        //{
-        //    migrationBuilder.DropForeignKey(
-        //        name: "FK_CAT_Compañia_CAT_Procedencia_ProcedenciaId",
-        //        table: "CAT_Compañia");
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropForeignKey(
+                name: "FK_CAT_Compañia_CAT_Procedencia_ProcedenciaId",
+                table: "CAT_Compañia");
 
-        //    migrationBuilder.DropTable(
-        //        name: "CAT_ListaP_Compañia");
+            migrationBuilder.DropTable(
+                name: "CAT_ListaP_Compañia");
 
-        //    migrationBuilder.DropTable(
-        //        name: "CAT_ListaP_Promocion");
+            migrationBuilder.DropTable(
+                name: "CAT_ListaP_Promocion");
 
-        //    migrationBuilder.DropTable(
-        //        name: "CAT_Procedencia");
+            migrationBuilder.DropTable(
+                name: "CAT_Procedencia");
 
-        //    migrationBuilder.DropTable(
-        //        name: "CAT_ListPrecio");
+            //migrationBuilder.DropTable(
+            //    name: "CAT_ListPrecio");
 
-        //    migrationBuilder.DropTable(
-        //        name: "Promotion");
+            //migrationBuilder.DropTable(
+            //    name: "Promotion");
 
-        //    migrationBuilder.DropIndex(
-        //        name: "IX_CAT_Parametro_AreaId",
-        //        table: "CAT_Parametro");
+            //migrationBuilder.DropIndex(
+            //    name: "IX_CAT_Parametro_AreaId",
+            //    table: "CAT_Parametro");
 
-        //    migrationBuilder.DropIndex(
-        //        name: "IX_CAT_Parametro_ReagentId",
-        //        table: "CAT_Parametro");
+            //migrationBuilder.DropIndex(
+            //    name: "IX_CAT_Parametro_ReagentId",
+            //    table: "CAT_Parametro");
 
-        //    migrationBuilder.DropIndex(
-        //        name: "IX_CAT_Compañia_ProcedenciaId",
-        //        table: "CAT_Compañia");
+            //migrationBuilder.DropIndex(
+            //    name: "IX_CAT_Compañia_ProcedenciaId",
+            //    table: "CAT_Compañia");
 
-        //    migrationBuilder.RenameColumn(
-        //        name: "ProcedenciaId",
-        //        table: "CAT_Compañia",
-        //        newName: "Procedencia");
+            //migrationBuilder.RenameColumn(
+            //    name: "ProcedenciaId",
+            //    table: "CAT_Compañia",
+            //    newName: "Procedencia");
 
-        //    migrationBuilder.AlterColumn<long>(
-        //        name: "Telefono",
-        //        table: "CAT_CompañiaContacto",
-        //        type: "bigint",
-        //        nullable: false,
-        //        defaultValue: 0L,
-        //        oldClrType: typeof(long),
-        //        oldType: "bigint",
-        //        oldNullable: true);
+            //migrationBuilder.AlterColumn<long>(
+            //    name: "Telefono",
+            //    table: "CAT_CompañiaContacto",
+            //    type: "bigint",
+            //    nullable: false,
+            //    defaultValue: 0L,
+            //    oldClrType: typeof(long),
+            //    oldType: "bigint",
+            //    oldNullable: true);
 
-        //    migrationBuilder.CreateIndex(
-        //        name: "IX_CAT_Parametro_AreaId",
-        //        table: "CAT_Parametro",
-        //        column: "AreaId",
-        //        unique: true);
+            //migrationBuilder.CreateIndex(
+            //    name: "IX_CAT_Parametro_AreaId",
+            //    table: "CAT_Parametro",
+            //    column: "AreaId",
+            //    unique: true);
 
-        //    migrationBuilder.CreateIndex(
-        //        name: "IX_CAT_Parametro_ReagentId",
-        //        table: "CAT_Parametro",
-        //        column: "ReagentId",
-        //        unique: true);
+            //migrationBuilder.CreateIndex(
+            //    name: "IX_CAT_Parametro_ReagentId",
+            //    table: "CAT_Parametro",
+            //    column: "ReagentId",
+            //    unique: true);
         }
     }
 }
