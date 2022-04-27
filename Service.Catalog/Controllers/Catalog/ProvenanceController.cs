@@ -14,8 +14,8 @@ namespace Service.Catalog.Controllers.Catalog
 
         }
 
-        [HttpGet("peovenance/active")]
-        public async Task<IEnumerable<CatalogListDto>> GetActiveRpovenance(int id)
+        [HttpGet("provenance/active")]
+        public async Task<IEnumerable<CatalogListDto>> GetActiveProvenance()
         {
             return await _provenanceService.GetActive();
         }
@@ -26,7 +26,7 @@ namespace Service.Catalog.Controllers.Catalog
             return await _provenanceService.GetById(id);
         }
 
-        [HttpPost("peovenance")]
+        [HttpPost("provenance")]
         public async Task<CatalogListDto> CreateProvenance(CatalogFormDto catalog)
         {
             catalog.UsuarioId = "userId";

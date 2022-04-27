@@ -110,6 +110,7 @@ namespace Service.Catalog.Application
             template.AddVariable("Titulo", "Indicaciones");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
             template.AddVariable("Indicaciones", indication);
+            template.AddVariable("Estudios", indication.Estudios);
 
             template.Generate();
 
