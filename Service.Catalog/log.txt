@@ -350,3 +350,9 @@ Could not create constraint. See previous errors.
 27/04/2022 9:07:21 => An error occurred while updating the entries. See the inner exception for details.
 
 27/04/2022 11:06:16 => Object reference not set to an instance of an object.
+
+27/04/2022 12:52:36 => There is already an object named 'Relacion_Estudio_Parametro' in the database.
+
+27/04/2022 12:53:13 => There is already an object named 'Relacion_Estudio_Parametro' in the database.
+
+27/04/2022 13:38:30 => There is already an object named 'Relacion_Estudio_Parametro' in the database.
