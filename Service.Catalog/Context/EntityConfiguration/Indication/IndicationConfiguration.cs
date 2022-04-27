@@ -33,7 +33,7 @@ namespace Service.Catalog.Context.EntityConfiguration.IndicationConfiguration
 
             builder
               .Property(x => x.UsuarioCreoId)
-              .IsRequired(true);
+              .IsRequired(false);
 
             builder
               .Property(x => x.FechaCreo)

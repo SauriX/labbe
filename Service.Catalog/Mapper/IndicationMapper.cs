@@ -61,7 +61,7 @@ namespace Service.Catalog.Mapper
                 Nombre = dto.Nombre.Trim(),
                 Descripcion = dto.Descripcion.Trim(),
                 Activo = dto.Activo,
-                UsuarioCreoId = dto.UsuarioCreoId,
+                UsuarioCreoId = dto?.UsuarioCreoId,
                 FechaCreo = DateTime.Now,
                 Estudios = dto.Estudios.Select(x => new IndicationStudy
                 {
@@ -84,7 +84,7 @@ namespace Service.Catalog.Mapper
                 Nombre = dto.Nombre.Trim(),
                 Descripcion = dto.Descripcion.Trim(),
                 Activo = dto.Activo,
-                UsuarioCreoId = model.UsuarioCreoId,
+                UsuarioCreoId = model?.UsuarioCreoId,
                 FechaCreo = model.FechaCreo,
                 UsuarioModificoId = dto.UsuarioModId,
                 FechaModifico = DateTime.Now,
