@@ -339,3 +339,15 @@ ALTER TABLE ALTER COLUMN ParametersId failed because one or more objects access 
 27/04/2022 01:20:58 p. m. => Unable to cast object of type 'System.Collections.Generic.List`1[Service.Catalog.Domain.Study]' to type 'System.Collections.Generic.ICollection`1[Service.Catalog.Dtos.Study.StudyListDto]'.
 
 27/04/2022 01:33:03 p. m. => Connection Timeout Expired.  The timeout period elapsed while attempting to consume the pre-login handshake acknowledgement.  This could be because the pre-login handshake failed or the server was unable to respond back in time.  The duration spent while attempting to connect to this server was - [Pre-Login] initialization=28519; handshake=32; 
+
+27/04/2022 02:02:55 p. m. => The CREATE UNIQUE INDEX statement terminated because a duplicate key was found for the object name 'dbo.Relacion_Estudio_Parametro' and the index name 'PK_Relacion_Estudio_Parametro'. The duplicate key value is (4, 00000000-0000-0000-0000-000000000000).
+Could not create constraint. See previous errors.
+The statement has been terminated.
+
+27/04/2022 02:05:45 p. m. => The CREATE UNIQUE INDEX statement terminated because a duplicate key was found for the object name 'dbo.Relacion_Estudio_Parametro' and the index name 'PK_Relacion_Estudio_Parametro'. The duplicate key value is (4, 00000000-0000-0000-0000-000000000000).
+Could not create constraint. See previous errors.
+The statement has been terminated.
+
+27/04/2022 02:15:55 p. m. => Unable to cast object of type 'SelectListIterator`2[Service.Catalog.Domain.Study,Service.Catalog.Dtos.Study.StudyListDto]' to type 'System.Collections.Generic.ICollection`1[Service.Catalog.Dtos.Study.StudyListDto]'.
+
+27/04/2022 02:16:15 p. m. => Unable to cast object of type 'SelectListIterator`2[Service.Catalog.Domain.Study,Service.Catalog.Dtos.Study.StudyListDto]' to type 'System.Collections.Generic.ICollection`1[Service.Catalog.Dtos.Study.StudyListDto]'.

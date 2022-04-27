@@ -21,7 +21,7 @@ namespace Service.Catalog.Dtos.Parameters
         public string fcs { get; set; }
         public bool activo { get; set; }
         public int formatoImpresion { get; set; }
-        public ICollection<StudyListDto> estudios { get; set; }
+        public IEnumerable<StudyListDto> estudios { get; set; }
 
  
     }
