@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220427192317_nullearUsuarioCreoId")]
+    partial class nullearUsuarioCreoId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1072,8 +1074,8 @@ namespace Service.Catalog.Migrations
                     b.Property<int>("EstudioId")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("ParametroId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("ParametersId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
@@ -1085,6 +1087,9 @@ namespace Service.Catalog.Migrations
                         .IsRequired()
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid?>("ParametersIdParametro")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("UsuarioCreoId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -1092,9 +1097,9 @@ namespace Service.Catalog.Migrations
                     b.Property<int?>("UsuarioModId")
                         .HasColumnType("int");
 
-                    b.HasKey("EstudioId", "ParametroId");
+                    b.HasKey("EstudioId", "ParametersId");
 
-                    b.HasIndex("ParametroId");
+                    b.HasIndex("ParametersIdParametro");
 
                     b.ToTable("Relacion_Estudio_Parametro");
                 });
@@ -1674,15 +1679,14 @@ namespace Service.Catalog.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Service.Catalog.Domain.Parameter.Parameters", "Parametro")
+                    b.HasOne("Service.Catalog.Domain.Parameter.Parameters", "Parameters")
                         .WithMany("Estudios")
-                        .HasForeignKey("ParametroId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("ParametersIdParametro")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Estudio");
 
-                    b.Navigation("Parametro");
+                    b.Navigation("Parameters");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Parameter.Parameters", b =>
