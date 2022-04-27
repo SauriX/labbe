@@ -11,6 +11,12 @@ namespace Service.Catalog.Context.EntityConfiguration.Parameter
             builder.ToTable("CAT_Tipo_Valor");
             builder.HasKey(x => x.IdTipo_Valor);
 
+            builder
+                .HasOne(x => x.parametro)
+                .WithMany()
+                .HasForeignKey(x=>x.IdParametro);
+                
+
         }
     }
 }

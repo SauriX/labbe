@@ -6,7 +6,7 @@ namespace Service.Catalog.Domain.Parameter
     {
         public Guid IdTipo_Valor { get; set; }
         public Guid IdParametro { get; set; }
-        public virtual Parameters parametres { get; set; }
+        public virtual Parameters parametro { get; set; }
         public string Nombre { get; set; }
         public string ValorInicial { get; set; }
         public string ValorFinal { get; set; }
