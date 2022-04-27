@@ -72,6 +72,16 @@ namespace Service.Catalog.Application
         {
             var existing = await _repository.GetById(company.Id);
 
+            var code = await ValidarClaveNombre(company);
+            if (existing.Clave != company.Clave || existing.NombreComercial != company.NombreComercial)
+            {
+                if (company.Id != 0 || code != 0)
+                {
+                    throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
+                }
+
+            }            
+
             if (existing == null)
             {
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);

@@ -330,3 +330,23 @@ Could not create constraint. See previous errors.
 26/04/2022 05:53:25 p. m. => Invalid column name 'FormatId'.
 
 26/04/2022 05:53:33 p. m. => Invalid column name 'FormatId'.
+
+26/04/2022 19:51:03 => An error occurred while updating the entries. See the inner exception for details.
+
+26/04/2022 19:51:14 => An error occurred while updating the entries. See the inner exception for details.
+
+26/04/2022 19:51:23 => An error occurred while updating the entries. See the inner exception for details.
+
+26/04/2022 19:58:54 => An error occurred while updating the entries. See the inner exception for details.
+
+26/04/2022 20:10:34 => An error occurred while updating the entries. See the inner exception for details.
+
+26/04/2022 20:11:03 => An error occurred while updating the entries. See the inner exception for details.
+
+26/04/2022 20:11:49 => An error occurred while updating the entries. See the inner exception for details.
+
+27/04/2022 9:04:49 => An error occurred while updating the entries. See the inner exception for details.
+
+27/04/2022 9:07:21 => An error occurred while updating the entries. See the inner exception for details.
+
+27/04/2022 11:06:16 => Object reference not set to an instance of an object.
