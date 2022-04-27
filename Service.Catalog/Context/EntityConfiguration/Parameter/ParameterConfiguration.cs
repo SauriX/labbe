@@ -66,7 +66,8 @@ namespace Service.Catalog.Context.EntityConfiguration.Parameter
 
             builder
                .HasMany(x => x.Estudios)
-               .WithOne(x=>x.Parameters)
+               .WithOne (x=>x.Parametro)
+               .HasForeignKey(x=>x.ParametroId)
                .OnDelete(DeleteBehavior.Restrict);
 
         }

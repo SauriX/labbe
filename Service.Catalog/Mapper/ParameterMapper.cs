@@ -41,7 +41,7 @@ namespace Service.Catalog.Mapper
                 fcs = parameters.FCSI.ToString(),
                 activo = parameters.Activo,
                 formatoImpresion = parameters.FormatId,
-                //estudios= parameters.Estudios?.Select(y => y.Estudio)?.ToList())
+                estudios= parameters.Estudios?.Select(y => y.Estudio)?.ToList().ToStudyListDto()
             };
         }
         public static Parameters toParameters(this ParameterForm form) {
