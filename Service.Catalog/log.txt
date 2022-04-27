@@ -272,3 +272,61 @@ Could not create constraint. See previous errors.
 25/04/2022 19:16:19 => Unable to resolve service for type 'Service.Catalog.Application.IApplication.ICatalogApplication`1[Service.Catalog.Domain.Provenance.Provenance]' while attempting to activate 'Service.Catalog.Controllers.Catalog.CatalogController'.
 
 25/04/2022 19:27:34 => Unable to resolve service for type 'Service.Catalog.Application.IApplication.ICatalogApplication`1[Service.Catalog.Domain.Provenance.Provenance]' while attempting to activate 'Service.Catalog.Controllers.Catalog.CatalogController'.
+
+26/04/2022 11:16:06 a. m. => Value cannot be null. (Parameter 's')
+
+26/04/2022 11:17:38 a. m. => Value cannot be null. (Parameter 's')
+
+26/04/2022 11:21:11 a. m. => Value cannot be null. (Parameter 's')
+
+26/04/2022 11:21:34 a. m. => Value cannot be null. (Parameter 's')
+
+26/04/2022 11:25:17 a. m. => Value cannot be null. (Parameter 's')
+
+26/04/2022 11:26:59 a. m. => Value cannot be null. (Parameter 's')
+
+26/04/2022 11:29:41 a. m. => Value cannot be null. (Parameter 's')
+
+26/04/2022 11:30:05 a. m. => Value cannot be null. (Parameter 's')
+
+26/04/2022 11:32:56 a. m. => Value cannot be null. (Parameter 's')
+
+26/04/2022 11:34:23 a. m. => Value cannot be null. (Parameter 's')
+
+26/04/2022 02:17:28 p. m. => Both relationships between 'Contact' and 'Company.Contacts' and between 'Contact.Compañia' and 'Company' could use {'CompañiaId'} as the foreign key. To resolve this, configure the foreign key properties explicitly in 'OnModelCreating' on at least one of the relationships.
+
+26/04/2022 03:26:48 p. m. => Invalid column name 'FormatId'.
+
+26/04/2022 03:26:49 p. m. => Invalid column name 'FormatId'.
+
+26/04/2022 03:32:41 p. m. => Invalid column name 'FormatId'.
+
+26/04/2022 03:33:27 p. m. => Invalid column name 'FormatId'.
+
+26/04/2022 03:33:35 p. m. => Invalid column name 'FormatId'.
+
+26/04/2022 04:27:00 p. m. => Invalid column name 'FormatId'.
+
+26/04/2022 04:28:34 p. m. => Invalid column name 'FormatId'.
+
+26/04/2022 04:29:54 p. m. => Invalid column name 'FormatId'.
+
+26/04/2022 04:31:01 p. m. => Invalid column name 'FormatId'.
+
+26/04/2022 04:37:56 p. m. => Invalid column name 'FormatId'.
+
+26/04/2022 04:39:16 p. m. => Invalid column name 'FormatId'.
+
+26/04/2022 04:40:34 p. m. => Invalid column name 'FormatId'.
+
+26/04/2022 04:42:10 p. m. => Invalid column name 'FormatId'.
+
+26/04/2022 04:43:21 p. m. => Invalid column name 'FormatId'.
+
+26/04/2022 05:11:47 p. m. => Invalid column name 'FormatId'.
+
+26/04/2022 05:42:47 p. m. => Invalid column name 'FormatId'.
+
+26/04/2022 05:53:25 p. m. => Invalid column name 'FormatId'.
+
+26/04/2022 05:53:33 p. m. => Invalid column name 'FormatId'.

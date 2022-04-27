@@ -92,17 +92,16 @@ namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
                .WithOne(x => x.Compañia)
                .OnDelete(DeleteBehavior.Restrict);
 
-            builder
+           /* builder
                .HasMany(x => x.Precio)
                .WithOne(x => x.Compañia)
-               .HasForeignKey(x => x.CompañiaId)
-               .OnDelete(DeleteBehavior.Restrict);
+               .OnDelete(DeleteBehavior.Restrict);*/
 
             builder
                .HasOne(x => x.Procedencia)
                .WithMany()
                .OnDelete(DeleteBehavior.Restrict);
-
+      
         }
     }
 }

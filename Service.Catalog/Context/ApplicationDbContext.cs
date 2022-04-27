@@ -49,10 +49,10 @@ namespace Service.Catalog.Context
         public DbSet<BranchStudy> Relacion_Estudio_Sucursal { get; set; }
         public DbSet<Parameters> CAT_Parametro { get; set; }
         public DbSet<TipoValor> CAT_Tipo_Valor { get; set; }
-        public DbSet<Format> Cat_Formato { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
     }

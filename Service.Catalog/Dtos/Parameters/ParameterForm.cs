@@ -10,7 +10,7 @@ namespace Service.Catalog.Dtos.Parameters
         public string nombre { get; set; }
         public string nombreCorto { get; set; }
         public string unidades { get; set; }
-        public string tipoValor { get; set; }
+        public int tipoValor { get; set; }
         public string formula { get; set; }
         public string formato { get; set; }
         public string valorInicial  { get; set; }
@@ -20,7 +20,7 @@ namespace Service.Catalog.Dtos.Parameters
         public string unidadSi { get; set; }
         public string fcs { get; set; }
         public bool activo { get; set; }
-        public string formatoImpresion { get; set; }
+        public int formatoImpresion { get; set; }
         public ICollection<StudyListDto> estudios { get; set; }
 
  

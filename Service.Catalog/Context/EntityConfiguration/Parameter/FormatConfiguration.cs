@@ -9,7 +9,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Parameter
         public void Configure(EntityTypeBuilder<Format> builder)
         {
             builder.ToTable("Cat_Formato");
-            builder.HasKey(x=>x.NombreFormato);
+            builder.HasKey(x=>x.Id);
         }
     }
 }
