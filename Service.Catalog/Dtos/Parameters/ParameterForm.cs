@@ -20,7 +20,7 @@ namespace Service.Catalog.Dtos.Parameters
         public string unidadSi { get; set; }
         public string fcs { get; set; }
         public bool activo { get; set; }
-        public string formatoImpresion { get; set; }
+        public int formatoImpresion { get; set; }
         public ICollection<StudyListDto> estudios { get; set; }
 
  

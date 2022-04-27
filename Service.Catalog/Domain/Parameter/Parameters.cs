@@ -17,7 +17,8 @@ namespace Service.Catalog.Domain.Parameter
         public virtual Department Department { get; set; }
         public int AreaId { get; set; }
         public virtual Area Area { get; set; }
-        public string NombreFormato { get; set; }
+        public int FormatId { get; set; }
+        public virtual Format Format { get; set; }
         public int ReagentId { get; set; }
         public virtual Reagent.Reagent Reagent { get; set; }
         public string UnidadSi { get; set; } 

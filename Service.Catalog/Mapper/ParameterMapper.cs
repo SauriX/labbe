@@ -40,7 +40,7 @@ namespace Service.Catalog.Mapper
                 unidadSi = parameters.UnidadSi.ToString(),
                 fcs = parameters.FCSI.ToString(),
                 activo = parameters.Activo,
-                formatoImpresion = parameters.NombreFormato.ToString()
+                formatoImpresion = parameters.FormatId
             };
         }
         public static Parameters toParameters(this ParameterForm form) {
@@ -55,7 +55,7 @@ namespace Service.Catalog.Mapper
                 Formato = form.formato,
                 DepartamentId = form.departamento,
                 AreaId = form.area,
-                NombreFormato = form.formatoImpresion,
+                FormatId = form.formatoImpresion,
                 ReagentId = form.reactivo,
                 UnidadSi = form.unidadSi,
                 FCSI = form.fcs,
@@ -81,7 +81,7 @@ namespace Service.Catalog.Mapper
                 Formato = form.formato,
                 DepartamentId = form.departamento,
                 AreaId = form.area,
-                NombreFormato = form.formatoImpresion,
+                FormatId = form.formatoImpresion,
                 ReagentId = form.reactivo,
                 UnidadSi = form.unidadSi,
                 FCSI = form.fcs,

@@ -881,6 +881,9 @@ namespace Service.Catalog.Migrations
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("CompanyId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
@@ -895,7 +898,7 @@ namespace Service.Catalog.Migrations
 
                     b.HasKey("PrecioId", "CompañiaId");
 
-                    b.HasIndex("CompañiaId");
+                    b.HasIndex("CompanyId");
 
                     b.ToTable("CAT_ListaP_Compañia");
                 });
@@ -1034,25 +1037,33 @@ namespace Service.Catalog.Migrations
 
             modelBuilder.Entity("Service.Catalog.Domain.Parameter.Format", b =>
                 {
-                    b.Property<string>("NombreFormato")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Clave")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FechaMod")
+                    b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UsuarioModId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UsuarioCreoId")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("NombreFormato");
+                    b.Property<string>("UsuarioModificoId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
 
                     b.ToTable("Cat_Formato");
                 });
@@ -1090,6 +1101,9 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaMod")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("FormatId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Formato")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -1107,9 +1121,6 @@ namespace Service.Catalog.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("NombreFormato")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ReagentId")
                         .HasColumnType("int");
@@ -1138,6 +1149,8 @@ namespace Service.Catalog.Migrations
                     b.HasIndex("AreaId");
 
                     b.HasIndex("DepartmentId");
+
+                    b.HasIndex("FormatId");
 
                     b.HasIndex("ReagentId");
 
@@ -1568,36 +1581,15 @@ namespace Service.Catalog.Migrations
 
             modelBuilder.Entity("Service.Catalog.Domain.Company.Price_Company", b =>
                 {
-                    b.HasOne("Service.Catalog.Domain.Company.Company", "Compañia")
-                        .WithMany("Precios")
-                        .HasForeignKey("CompañiaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Service.Catalog.Domain.Price.Price", "ListaPrecio")
-                        .WithMany()
-                        .HasForeignKey("ListaPrecioId");
-
-                    b.Navigation("Compañia");
-
-                    b.Navigation("ListaPrecio");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Company.Price_Company", b =>
-                {
-                    b.HasOne("Service.Catalog.Domain.Company.Company", "Compañia")
+                    b.HasOne("Service.Catalog.Domain.Company.Company", null)
                         .WithMany("Precio")
-                        .HasForeignKey("CompañiaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("CompanyId");
 
                     b.HasOne("Service.Catalog.Domain.Price.Price", "Precio")
-                        .WithMany("Compañia")
+                        .WithMany()
                         .HasForeignKey("PrecioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Compañia");
 
                     b.Navigation("Precio");
                 });
@@ -1655,6 +1647,12 @@ namespace Service.Catalog.Migrations
                         .WithMany()
                         .HasForeignKey("DepartmentId");
 
+                    b.HasOne("Service.Catalog.Domain.Parameter.Format", "Format")
+                        .WithMany()
+                        .HasForeignKey("FormatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Service.Catalog.Domain.Reagent.Reagent", "Reagent")
                         .WithMany()
                         .HasForeignKey("ReagentId")
@@ -1664,6 +1662,8 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Area");
 
                     b.Navigation("Department");
+
+                    b.Navigation("Format");
 
                     b.Navigation("Reagent");
                 });
@@ -1730,8 +1730,6 @@ namespace Service.Catalog.Migrations
 
             modelBuilder.Entity("Service.Catalog.Domain.Price.Price", b =>
                 {
-                    b.Navigation("Compañia");
-
                     b.Navigation("Promocion");
                 });
 #pragma warning restore 612, 618
