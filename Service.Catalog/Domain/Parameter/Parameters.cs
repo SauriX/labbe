@@ -1,5 +1,6 @@
 ﻿using Service.Catalog.Domain.Catalog;
 using System;
+using System.Collections.Generic;
 
 namespace Service.Catalog.Domain.Parameter
 {
@@ -28,5 +29,6 @@ namespace Service.Catalog.Domain.Parameter
         public DateTime FechaCreo { get; set; }
         public Guid UsuarioModId { get; set; }
         public DateTime FechaMod { get; set; }
+        public virtual ICollection<ParameterStudy> Estudios { get; set; }
     }
 }

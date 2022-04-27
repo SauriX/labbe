@@ -884,9 +884,9 @@
       "UpstreamPathTemplate": "/api/catalog/provenance",
       "UpstreamHttpMethod": [ "PUT" ]
     },
-    //PrintFormat
+    //format
     {
-      "DownstreamPathTemplate": "/api/catalog/printFormat/all/{search}",
+      "DownstreamPathTemplate": "/api/catalog/format/all/{search}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -894,11 +894,11 @@
           "Port": 20347
         }
       ],
-      "UpstreamPathTemplate": "/api/catalog/printFormat/all/{search}",
+      "UpstreamPathTemplate": "/api/catalog/format/all/{search}",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/catalog/printFormat/active",
+      "DownstreamPathTemplate": "/api/catalog/format/active",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -906,11 +906,11 @@
           "Port": 20347
         }
       ],
-      "UpstreamPathTemplate": "/api/catalog/printFormat/active",
+      "UpstreamPathTemplate": "/api/catalog/format/active",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/catalog/printFormat/{id}",
+      "DownstreamPathTemplate": "/api/catalog/format/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -918,11 +918,11 @@
           "Port": 20347
         }
       ],
-      "UpstreamPathTemplate": "/api/catalog/printFormat/{id}",
+      "UpstreamPathTemplate": "/api/catalog/format/{id}",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/catalog/printFormat",
+      "DownstreamPathTemplate": "/api/catalog/format",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -930,11 +930,11 @@
           "Port": 20347
         }
       ],
-      "UpstreamPathTemplate": "/api/catalog/printFormat",
+      "UpstreamPathTemplate": "/api/catalog/format",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/catalog/printFormat",
+      "DownstreamPathTemplate": "/api/catalog/format",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -942,7 +942,7 @@
           "Port": 20347
         }
       ],
-      "UpstreamPathTemplate": "/api/catalog/printFormat",
+      "UpstreamPathTemplate": "/api/catalog/format",
       "UpstreamHttpMethod": [ "PUT" ]
     }
   ]
