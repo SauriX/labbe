@@ -63,6 +63,18 @@ namespace Service.Identity.Controllers
                 Descargar = true,
             };
         }
+        [HttpGet("maquilador")]
+        public ScopeDto GetMaquiladorScopes()
+        {
+            return new ScopeDto
+            {
+                Pantalla = "Catálogo de Maquilador",
+                Acceder = true,
+                Crear = true,
+                Editar = true,
+                Descargar = true,
+            };
+        }
     }
 
 }

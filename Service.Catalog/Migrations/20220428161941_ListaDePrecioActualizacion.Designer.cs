@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220428161941_ListaDePrecioActualizacion")]
+    partial class ListaDePrecioActualizacion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1029,73 +1031,6 @@ namespace Service.Catalog.Migrations
                     b.HasIndex("IndicacionId");
 
                     b.ToTable("Relacion_Estudio_Indicacion");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Maquilador.Maquilador", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Calle")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long?>("CiudadId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Clave")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.Property<int>("CodigoPostal")
-                        .HasColumnType("int");
-
-                    b.Property<long>("ColoniaId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Correo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long?>("EstadoId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("smalldatetime");
-
-                    b.Property<DateTime>("FechaMod")
-                        .HasColumnType("smalldatetime");
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("NumeroExterior")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NumeroInterior")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PaginaWeb")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long?>("Telefono")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("UsuarioCreoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsuarioModId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CAT_Maquilador");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Parameter.Format", b =>
