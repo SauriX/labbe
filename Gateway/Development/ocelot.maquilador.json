@@ -1,6 +1,18 @@
 ﻿{
   "Routes": [
     {
+      "DownstreamPathTemplate": "/api/scopes/maquilador",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 45216
+        }
+      ],
+      "UpstreamPathTemplate": "/api/scopes/maquilador",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/maquilador/all/{search}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

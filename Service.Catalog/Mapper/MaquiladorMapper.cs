@@ -34,7 +34,7 @@ namespace Service.Catalog.Mapper
                 Nombre = x.Nombre?.Trim(),
                 Correo = x.Correo?.Trim(),
                 Telefono = x.Telefono,
-                Direccion = x.Calle?.Trim() + " " + x.NumeroExterior + " " + x.ColoniaId + " " + x.EstadoId + " " + x.CiudadId + " " + x.CodigoPostal,
+                Direccion = x.Calle?.Trim() + ", " + x.NumeroExterior + ", " + x.ColoniaId + ", " + x.EstadoId + ", " + x.CiudadId + ", " + x.CodigoPostal,
                 Activo = x.Activo,
             });
         }
