@@ -45,6 +45,10 @@ namespace Service.Catalog.Context.EntityConfiguration.Parameter
                 .Property(x => x.Formato)
                 .IsRequired(true)
                 .HasMaxLength(100);
+            builder
+                .Property(x => x.TipoValor)
+                .HasDefaultValue(0)
+                .HasMaxLength(100);
 
             builder
                 .HasOne(x=>x.Area)

@@ -41,8 +41,115 @@ namespace Service.Catalog.Mapper
                 fcs = parameters.FCSI.ToString(),
                 activo = parameters.Activo,
                 formatoImpresion = parameters.FormatId,
-                estudios= parameters.Estudios?.Select(y => y.Estudio)?.ToList().ToStudyListDtos()
+                tipoValor = parameters.TipoValor,
+                estudios = parameters.Estudios?.Select(y => y.Estudio)?.ToList().ToStudyListDtos(),
+                areas = parameters.Area,
+                reactivos= parameters.Reagent.ToReagentFormDto(),
+                format= parameters.Format
+                
             };
+        }
+        public static TipoValor toTipoValor(this ValorTipeForm tipeForm) {  
+            return new TipoValor
+            {
+                IdParametro = Guid.Parse(tipeForm.idParametro),
+                Nombre = tipeForm.nombre.ToString(),
+                ValorInicial = tipeForm.valorInicial.ToString(),
+                ValorFinal = tipeForm.valorFinal.ToString(),
+                ValorInicialNumerico = tipeForm.valorInicialNumerico.ToString(),
+                ValorFinalNumerico = tipeForm.valorFinalNumerico.ToString(),
+                RangoEdadInicial = tipeForm.rangoEdadInicial.ToString(),
+                RangoEdadFinal = tipeForm.rangoEdadFinal.ToString(),
+                HombreValorInicial = tipeForm.hombreValorInicial.ToString(),
+                HombreValorFinal = tipeForm.hombreValorFinal.ToString(),
+                MujerValorInicial = tipeForm.mujerValorInicial.ToString(),
+                MujerValorFinal = tipeForm.mujerValorFinal.ToString(),
+                MedidaTiempo = tipeForm.medidaTiempo.ToString(),
+                Opcion = tipeForm.opcion.ToString(),
+                DescripcionTexto = tipeForm.descripcionTexto.ToString(),
+                DescripcionParrafo = tipeForm.descripcionParrafo.ToString(),
+                Activo = true,
+                UsuarioCreoId = Guid.NewGuid(),
+                FechaCreo = DateTime.Now,
+                UsuarioModId = Guid.NewGuid(),
+                FechaMod = DateTime.Now,
+            };
+        }
+        public static TipoValor toTipoValorUpdate(this ValorTipeForm tipeForm)
+        {
+            return new TipoValor
+            {
+                IdTipo_Valor = Guid.Parse(tipeForm.id),
+                IdParametro = Guid.Parse(tipeForm.idParametro),
+                Nombre = tipeForm.nombre.ToString(),
+                ValorInicial = tipeForm.valorInicial.ToString(),
+                ValorFinal = tipeForm.valorFinal.ToString(),
+                ValorInicialNumerico = tipeForm.valorInicialNumerico.ToString(),
+                ValorFinalNumerico = tipeForm.valorFinalNumerico.ToString(),
+                RangoEdadInicial = tipeForm.rangoEdadInicial.ToString(),
+                RangoEdadFinal = tipeForm.rangoEdadFinal.ToString(),
+                HombreValorInicial = tipeForm.hombreValorInicial.ToString(),
+                HombreValorFinal = tipeForm.hombreValorFinal.ToString(),
+                MujerValorInicial = tipeForm.mujerValorInicial.ToString(),
+                MujerValorFinal = tipeForm.mujerValorFinal.ToString(),
+                MedidaTiempo = tipeForm.medidaTiempo.ToString(),
+                Opcion = tipeForm.opcion.ToString(),
+                DescripcionTexto = tipeForm.descripcionTexto.ToString(),
+                DescripcionParrafo = tipeForm.descripcionParrafo.ToString(),
+                Activo = true,
+                UsuarioCreoId = Guid.NewGuid(),
+                FechaCreo = DateTime.Now,
+                UsuarioModId = Guid.NewGuid(),
+                FechaMod = DateTime.Now,
+            };
+        }
+        public static ValorTipeForm toTipoValorForm(this TipoValor tipeForm)
+        {
+            return new ValorTipeForm
+            {
+                 id = tipeForm.IdTipo_Valor.ToString(),
+                 idParametro = tipeForm.IdParametro.ToString(),
+                 nombre = tipeForm.Nombre,
+                 valorInicial = int.Parse(tipeForm.ValorInicial),
+                 valorFinal = int.Parse(tipeForm.ValorFinal),
+                 valorInicialNumerico = int.Parse(tipeForm.ValorInicialNumerico),
+                 valorFinalNumerico = int.Parse(tipeForm.ValorFinalNumerico),
+                 rangoEdadInicial = int.Parse(tipeForm.RangoEdadInicial),
+                 rangoEdadFinal = int.Parse(tipeForm.RangoEdadFinal),
+                 hombreValorInicial = int.Parse(tipeForm.HombreValorInicial),
+                 hombreValorFinal = int.Parse(tipeForm.HombreValorFinal),
+                 mujerValorInicial = int.Parse(tipeForm.MujerValorInicial),
+                 mujerValorFinal = int.Parse(tipeForm.MujerValorFinal),
+                 medidaTiempo = int.Parse(tipeForm.MedidaTiempo),
+                 opcion = tipeForm.Opcion,
+                 descripcionTexto = tipeForm.DescripcionTexto,
+                 descripcionParrafo = tipeForm.DescripcionParrafo,
+
+            };
+        }
+        public static IEnumerable<ValorTipeForm> toTipoValorFormList(this List<TipoValor> model)
+        {
+            return model.Select(tipeForm=> new ValorTipeForm
+            {
+                id = tipeForm.IdTipo_Valor.ToString(),
+                idParametro = tipeForm.IdParametro.ToString(),
+                nombre = tipeForm.Nombre,
+                valorInicial = int.Parse(tipeForm.ValorInicial),
+                valorFinal = int.Parse(tipeForm.ValorFinal),
+                valorInicialNumerico = int.Parse(tipeForm.ValorInicialNumerico),
+                valorFinalNumerico = int.Parse(tipeForm.ValorFinalNumerico),
+                rangoEdadInicial = int.Parse(tipeForm.RangoEdadInicial),
+                rangoEdadFinal = int.Parse(tipeForm.RangoEdadFinal),
+                hombreValorInicial = int.Parse(tipeForm.HombreValorInicial),
+                hombreValorFinal = int.Parse(tipeForm.HombreValorFinal),
+                mujerValorInicial = int.Parse(tipeForm.MujerValorInicial),
+                mujerValorFinal = int.Parse(tipeForm.MujerValorFinal),
+                medidaTiempo = int.Parse(tipeForm.MedidaTiempo),
+                opcion = tipeForm.Opcion,
+                descripcionTexto = tipeForm.DescripcionTexto,
+                descripcionParrafo = tipeForm.DescripcionParrafo,
+
+            });
         }
         public static Parameters toParameters(this ParameterForm form) {
             return new Parameters {
@@ -64,7 +171,8 @@ namespace Service.Catalog.Mapper
                 UsuarioCreoId = Guid.NewGuid(),
                 FechaCreo =DateTime.Now,
                 UsuarioModId= Guid.NewGuid(),
-                FechaMod = DateTime.Now
+                FechaMod = DateTime.Now,
+                TipoValor = form.tipoValor,
               };
         }
 
@@ -90,7 +198,9 @@ namespace Service.Catalog.Mapper
                 UsuarioCreoId = model.UsuarioCreoId,
                 FechaCreo = model.FechaCreo,
                 UsuarioModId = Guid.NewGuid(),
-                FechaMod = DateTime.Now
+                FechaMod = DateTime.Now,
+                TipoValor = form.tipoValor
+                
             };
         }
     }

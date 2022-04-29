@@ -35,7 +35,7 @@ namespace Service.Catalog.Repository
         
         public async Task<Parameters> GetById(string id)
         {
-            var parameter = await _context.CAT_Parametro.Include(x=>x.Estudios).ThenInclude(x=>x.Estudio).FirstOrDefaultAsync(x => x.IdParametro == Guid.Parse(id));
+            var parameter = await _context.CAT_Parametro.Include(x=>x.Estudios).ThenInclude(x=>x.Estudio).Include(x=>x.Area).ThenInclude(x=>x.Departamento).Include(x=>x.Reagent).Include(x=>x.Format).FirstOrDefaultAsync(x => x.IdParametro == Guid.Parse(id));
 
             return parameter;
         }
@@ -79,5 +79,53 @@ namespace Service.Catalog.Repository
             }
 
         }
+        public async Task addValuNumeric(TipoValor tipoValor) { 
+            _context.CAT_Tipo_Valor.Add(tipoValor);
+            await _context.SaveChangesAsync();
+
+        }
+
+        public async Task<TipoValor> getvalueNum(string id) { 
+          var value= await _context.CAT_Tipo_Valor.FirstOrDefaultAsync(x => x.IdParametro == Guid.Parse(id));
+            return value;
+        }
+
+        public async Task updateValueNumeric(TipoValor tipoValor) {
+            _context.CAT_Tipo_Valor.Update(tipoValor);
+            await _context.SaveChangesAsync();
+        }
+        public async Task<List<TipoValor>> Getvalues(string id,string tipe)
+        {
+           var parameters = _context.CAT_Tipo_Valor.AsQueryable();
+
+            if (tipe == "4") {
+                return await parameters.Where(x => x.IdParametro == Guid.Parse(id) && x.Nombre == "hombre" || x.Nombre=="mujer").ToListAsync();
+            }
+
+            return await parameters.Where(x=>x.IdParametro == Guid.Parse(id) && x.Nombre== tipe).ToListAsync();
+        }
+
+        public async Task<bool> existingvalue(string id) {
+          var existing=  _context.CAT_Tipo_Valor.Where(p => p.IdTipo_Valor == Guid.Parse(id)).Count();
+            if (existing
+                == 0)
+            {
+                return false;
+            }
+            else
+            {
+
+                return true;
+            }
+
+        }
+
+        public async Task deletevalue(string id) {
+            _context.CAT_Tipo_Valor.Where(p => p.IdParametro == Guid.Parse(id))
+               .ToList().ForEach(p => _context.CAT_Tipo_Valor.Remove(p));
+
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

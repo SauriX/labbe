@@ -1,4 +1,8 @@
-﻿using Service.Catalog.Dtos.Study;
+﻿using Service.Catalog.Domain.Catalog;
+using Service.Catalog.Domain.Parameter;
+using Service.Catalog.Dtos.Catalog;
+using Service.Catalog.Dtos.Reagent;
+using Service.Catalog.Dtos.Study;
 using System.Collections.Generic;
 
 namespace Service.Catalog.Dtos.Parameters
@@ -22,7 +26,9 @@ namespace Service.Catalog.Dtos.Parameters
         public bool activo { get; set; }
         public int formatoImpresion { get; set; }
         public IEnumerable<StudyListDto> estudios { get; set; }
+        public Area areas { get; set; }
+        public ReagentFormDto reactivos { get; set; }
+        public Format format { get; set; }
 
- 
     }
 }

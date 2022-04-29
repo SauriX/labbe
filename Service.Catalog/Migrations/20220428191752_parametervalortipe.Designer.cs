@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220428191752_parametervalortipe")]
+    partial class parametervalortipe
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -867,7 +869,7 @@ namespace Service.Catalog.Migrations
 
                     b.HasIndex("CompañiaId");
 
-                    b.ToTable("Contact");
+                    b.ToTable("CAT_CompañiaContacto");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Company.Price_Company", b =>
@@ -880,6 +882,9 @@ namespace Service.Catalog.Migrations
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
+
+                    b.Property<int?>("CompanyId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
@@ -895,7 +900,7 @@ namespace Service.Catalog.Migrations
 
                     b.HasKey("PrecioId", "CompañiaId");
 
-                    b.HasIndex("CompañiaId");
+                    b.HasIndex("CompanyId");
 
                     b.ToTable("CAT_ListaP_Compañia");
                 });
@@ -1029,71 +1034,6 @@ namespace Service.Catalog.Migrations
                     b.HasIndex("IndicacionId");
 
                     b.ToTable("Relacion_Estudio_Indicacion");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Maquilador.Maquilador", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Calle")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Clave")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.Property<int>("CodigoPostal")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ColoniaId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Correo")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("smalldatetime");
-
-                    b.Property<DateTime?>("FechaMod")
-                        .HasColumnType("smalldatetime");
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("NumeroExterior")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NumeroInterior")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PaginaWeb")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<long?>("Telefono")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("UsuarioCreoId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UsuarioModId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ColoniaId");
-
-                    b.ToTable("CAT_Maquilador");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Parameter.Format", b =>
@@ -1370,7 +1310,7 @@ namespace Service.Catalog.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CAT_ListaPrecio");
+                    b.ToTable("CAT_ListPrecio");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Price.Price_Promotion", b =>
@@ -1677,19 +1617,15 @@ namespace Service.Catalog.Migrations
 
             modelBuilder.Entity("Service.Catalog.Domain.Company.Price_Company", b =>
                 {
-                    b.HasOne("Service.Catalog.Domain.Company.Company", "Compañia")
+                    b.HasOne("Service.Catalog.Domain.Company.Company", null)
                         .WithMany("Precio")
-                        .HasForeignKey("CompañiaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CompanyId");
 
                     b.HasOne("Service.Catalog.Domain.Price.Price", "Precio")
-                        .WithMany("Compañia")
+                        .WithMany()
                         .HasForeignKey("PrecioId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Compañia");
 
                     b.Navigation("Precio");
                 });
@@ -1733,17 +1669,6 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Estudio");
 
                     b.Navigation("Indicacion");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Maquilador.Maquilador", b =>
-                {
-                    b.HasOne("Service.Catalog.Domain.Constant.Colony", "Colonia")
-                        .WithMany()
-                        .HasForeignKey("ColoniaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Colonia");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Parameter.ParameterStudy", b =>
@@ -1867,8 +1792,6 @@ namespace Service.Catalog.Migrations
 
             modelBuilder.Entity("Service.Catalog.Domain.Price.Price", b =>
                 {
-                    b.Navigation("Compañia");
-
                     b.Navigation("Promocion");
                 });
 #pragma warning restore 612, 618
