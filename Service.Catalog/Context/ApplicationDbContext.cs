@@ -7,7 +7,10 @@ using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Domain.Company;
 using Service.Catalog.Domain.Constant;
 using Service.Catalog.Domain.Indication;
+using Service.Catalog.Domain.Maquilador;
 using Service.Catalog.Domain.Parameter;
+using Service.Catalog.Domain.Price;
+using Service.Catalog.Domain.Provenance;
 using Service.Catalog.Domain.Reagent;
 using System;
 using System.Collections.Generic;
@@ -49,6 +52,15 @@ namespace Service.Catalog.Context
         public DbSet<BranchStudy> Relacion_Estudio_Sucursal { get; set; }
         public DbSet<Parameters> CAT_Parametro { get; set; }
         public DbSet<TipoValor> CAT_Tipo_Valor { get; set; }
+        //De aqui
+        public DbSet<Price> CAT_ListaPrecio { get; set; }
+        public DbSet<Price_Company> CAT_ListaP_Compañia { get; set; }
+        public DbSet<Price_Company> CAT_ListaP_Promocion { get; set; }
+        public DbSet<Provenance> CAT_Procedencia { get; set; }
+        public DbSet<Contact> CAT_Contacto { get; set; }
+        //hasta aqui es zona de pruebas
+        public DbSet<Maquilador> CAT_Maquilador { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

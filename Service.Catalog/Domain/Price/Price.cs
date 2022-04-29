@@ -16,6 +16,6 @@ namespace Service.Catalog.Domain.Price
         public string UsuarioModificoId { get; set; }
         public DateTime? FechaModifico { get; set; }
         public virtual ICollection<Price_Promotion> Promocion { get; set; }
-        //public virtual ICollection<Price_Company> Compañia { get; set; }
+        public virtual ICollection<Price_Company> Compañia { get; set; }
     }
 }

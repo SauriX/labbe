@@ -8,7 +8,7 @@ namespace Service.Catalog.Context.EntityConfiguration
     {
         public void Configure(EntityTypeBuilder<Domain.Price.Price> builder)
         {
-            builder.ToTable("CAT_ListPrecio");
+            builder.ToTable("CAT_ListaPrecio");
 
             builder.HasKey(x => x.Id);
 
@@ -27,16 +27,12 @@ namespace Service.Catalog.Context.EntityConfiguration
               .IsRequired(true)
               .HasMaxLength(100);
 
-            //builder
-            // .HasMany(x => x.Compañia)
-            // .WithOne(x => x.Precio)
-            // .HasForeignKey(x => x.PrecioId)
-            // .OnDelete(DeleteBehavior.Restrict);
+            builder
+             .HasMany(x => x.Compañia)
+             .WithOne(x => x.Precio)
+             .HasForeignKey(x => x.PrecioId)
+             .OnDelete(DeleteBehavior.Restrict);
 
-            //builder
-            //   .HasOne(x => x.Procedencia)
-            //   .WithMany()
-            //   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
