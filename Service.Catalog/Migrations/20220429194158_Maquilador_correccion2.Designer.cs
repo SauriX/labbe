@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220429194158_Maquilador_correccion2")]
+    partial class Maquilador_correccion2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1044,6 +1046,9 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("Calle")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long?>("CiudadId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Clave")
                         .IsRequired()
                         .HasMaxLength(15)
@@ -1052,12 +1057,15 @@ namespace Service.Catalog.Migrations
                     b.Property<int>("CodigoPostal")
                         .HasColumnType("int");
 
-                    b.Property<int>("ColoniaId")
-                        .HasColumnType("int");
+                    b.Property<long>("ColoniaId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Correo")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<long?>("EstadoId")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("smalldatetime");
@@ -1090,8 +1098,6 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ColoniaId");
 
                     b.ToTable("CAT_Maquilador");
                 });
@@ -1727,17 +1733,6 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Estudio");
 
                     b.Navigation("Indicacion");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Maquilador.Maquilador", b =>
-                {
-                    b.HasOne("Service.Catalog.Domain.Constant.Colony", "Colonia")
-                        .WithMany()
-                        .HasForeignKey("ColoniaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Colonia");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Parameter.ParameterStudy", b =>

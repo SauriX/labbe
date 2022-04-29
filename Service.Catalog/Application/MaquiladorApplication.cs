@@ -50,11 +50,11 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
             }
 
-            var newIndication = maqui.ToModel();
+            var newMaquilador = maqui.ToModel();
 
-            await _repository.Create(newIndication);
+            await _repository.Create(newMaquilador);
 
-            maqui = await GetById(newIndication.Id);
+            maqui = await GetById(newMaquilador.Id);
 
             return maqui;
         }

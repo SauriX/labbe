@@ -19,7 +19,7 @@ namespace Service.Catalog.Mapper
                 Nombre = model.Nombre.Trim(),
                 Correo = model.Correo.Trim(),
                 Telefono = model.Telefono,
-                Direccion = $"{model.Calle.Trim()} {model.NumeroExterior} {model.ColoniaId} {model.CiudadId} {model.EstadoId}",
+                Direccion = $"{model.Calle.Trim()} {model.NumeroExterior} {model.Colonia.Colonia.Trim()} {model.Colonia.Ciudad.Ciudad.Trim()} {model.Colonia.Ciudad.Estado.Estado.Trim()} {model.CodigoPostal} ",
                 Activo = model.Activo
 
             };
@@ -34,7 +34,7 @@ namespace Service.Catalog.Mapper
                 Nombre = x.Nombre?.Trim(),
                 Correo = x.Correo?.Trim(),
                 Telefono = x.Telefono,
-                Direccion = x.Calle?.Trim() + ", " + x.NumeroExterior + ", " + x.ColoniaId + ", " + x.EstadoId + ", " + x.CiudadId + ", " + x.CodigoPostal,
+                Direccion = x.Calle?.Trim() + " " + x.NumeroExterior + ", " + x.Colonia.Colonia.Trim() + ", " + x.Colonia.Ciudad.Ciudad.Trim() + ", " + x.Colonia.Ciudad.Estado.Estado.Trim() + ", " + x.CodigoPostal,
                 Activo = x.Activo,
             });
         }
@@ -46,16 +46,14 @@ namespace Service.Catalog.Mapper
                 Id = model.Id,
                 Clave = model.Clave.Trim(),
                 Nombre = model.Nombre.Trim(),
-                Correo = model.Correo.Trim(),
-                Telefono = model.Telefono,
-                PaginaWeb = model.PaginaWeb,
+                Correo = model?.Correo?.Trim(),
+                Telefono = model?.Telefono,
+                PaginaWeb = model?.PaginaWeb?.Trim(),
                 Calle = model.Calle.Trim(),
                 CodigoPostal = model.CodigoPostal,
-                EstadoId = model.EstadoId,
-                CiudadId = model.CiudadId,
                 ColoniaId = model.ColoniaId,
                 NumeroExterior = model.NumeroExterior,
-                NumeroInterior = model.NumeroInterior,
+                NumeroInterior = model?.NumeroInterior,
                 Activo = model.Activo,
             };
         }
@@ -66,21 +64,22 @@ namespace Service.Catalog.Mapper
 
             return new Maquilador
             {
+                Id = dto.Id,
                 Clave = dto.Clave.Trim(),
                 Nombre = dto.Nombre.Trim(),
                 CodigoPostal = dto.CodigoPostal,
-                EstadoId = dto.EstadoId,
-                CiudadId = dto.CiudadId,
                 NumeroExterior = dto.NumeroExterior,
-                NumeroInterior = dto.NumeroInterior,
+                NumeroInterior = dto?.NumeroInterior,
                 Calle = dto.Calle.Trim(),
                 ColoniaId = dto.ColoniaId,
-                Correo = dto.Correo.Trim(),
-                PaginaWeb = dto.PaginaWeb,
-                Telefono = dto.Telefono,
+                Correo = dto?.Correo?.Trim(),
+                PaginaWeb = dto?.PaginaWeb?.Trim(),
+                Telefono = dto?.Telefono,
                 Activo = dto.Activo,
-                UsuarioCreoId = dto.UsuarioCreoId,
+                UsuarioCreoId = dto?.UsuarioId,
                 FechaCreo = DateTime.Now,
+                UsuarioModId = dto?.UsuarioId,
+                FechaMod = DateTime.Now,
             };
         }
 
@@ -94,19 +93,17 @@ namespace Service.Catalog.Mapper
                 Clave = model.Clave,
                 Nombre = dto.Nombre.Trim(),
                 CodigoPostal = dto.CodigoPostal,
-                EstadoId = dto.EstadoId,
-                CiudadId = dto.CiudadId,
                 NumeroExterior = dto.NumeroExterior,
-                NumeroInterior = dto.NumeroInterior,
+                NumeroInterior = dto?.NumeroInterior,
                 Calle = dto.Calle.Trim(),
                 ColoniaId = dto.ColoniaId,
-                Correo = dto.Correo.Trim(),
-                PaginaWeb = dto.PaginaWeb,
-                Telefono = dto.Telefono,
+                Correo = dto?.Correo?.Trim(),
+                PaginaWeb = dto?.PaginaWeb?.Trim(),
+                Telefono = dto?.Telefono,
                 Activo = dto.Activo,
                 UsuarioCreoId = model.UsuarioCreoId,
                 FechaCreo = model.FechaCreo,
-                UsuarioModId = dto.UsuarioModId,
+                UsuarioModId = dto?.UsuarioId,
                 FechaMod = DateTime.Now,
             };
         }

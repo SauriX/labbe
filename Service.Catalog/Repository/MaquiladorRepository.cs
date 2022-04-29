@@ -25,12 +25,15 @@ namespace Service.Catalog.Repository
 
         public async Task<Maquilador> GetById(int Id)
         {
-            return await _context.CAT_Maquilador.FindAsync(Id);
+            return await _context.CAT_Maquilador
+                .Include(x => x.Colonia).ThenInclude(x => x.Ciudad).ThenInclude(x => x.Estado)
+                .FirstOrDefaultAsync(x => x.Id == Id );
         }
 
         public async Task<List<Maquilador>> GetAll(string search)
         {
-            var Maqui = _context.CAT_Maquilador.AsQueryable();
+            var Maqui = _context.CAT_Maquilador
+                .Include(x => x.Colonia).ThenInclude(x => x.Ciudad).ThenInclude(x => x.Estado).AsQueryable();
             search = search.Trim().ToLower();
 
             if (!string.IsNullOrWhiteSpace(search) && search != "all")

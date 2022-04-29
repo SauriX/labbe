@@ -359,3 +359,31 @@ ALTER TABLE ALTER COLUMN ParametersId failed because one or more objects access 
 27/04/2022 13:38:30 => There is already an object named 'Relacion_Estudio_Parametro' in the database.
 
 27/04/2022 14:13:08 => An error occurred while updating the entries. See the inner exception for details.
+
+29/04/2022 11:32:38 => Object reference not set to an instance of an object.
+
+29/04/2022 11:43:26 => Object reference not set to an instance of an object.
+
+29/04/2022 11:48:32 => An error occurred while updating the entries. See the inner exception for details.
+
+29/04/2022 11:49:55 => An error occurred while updating the entries. See the inner exception for details.
+
+29/04/2022 12:29:11 => Object reference not set to an instance of an object.
+
+29/04/2022 12:33:19 => Object reference not set to an instance of an object.
+
+29/04/2022 13:55:46 => Object reference not set to an instance of an object.
+
+29/04/2022 14:15:05 => Object reference not set to an instance of an object.
+
+29/04/2022 14:16:42 => Object reference not set to an instance of an object.
+
+29/04/2022 14:22:31 => Object reference not set to an instance of an object.
+
+29/04/2022 14:33:14 => Object reference not set to an instance of an object.
+
+29/04/2022 14:49:23 => Object reference not set to an instance of an object.
+
+29/04/2022 14:50:36 => Object reference not set to an instance of an object.
+
+29/04/2022 14:59:27 => Object reference not set to an instance of an object.

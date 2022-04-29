@@ -25,6 +25,15 @@ namespace Service.Catalog.Context.EntityConfiguration.Reagent
                 .Property(x => x.Nombre)
                 .IsRequired()
                 .HasMaxLength(50);
+            builder
+                .Property(x => x.Correo)
+                .IsRequired(false)
+                .HasMaxLength(100);
+
+            builder
+                .Property(x => x.PaginaWeb)
+                .IsRequired(false)
+                .HasMaxLength(500);
 
             builder
                 .Property(x => x.FechaCreo)

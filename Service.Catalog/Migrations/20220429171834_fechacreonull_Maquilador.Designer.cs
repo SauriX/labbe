@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220429171834_fechacreonull_Maquilador")]
+    partial class fechacreonull_Maquilador
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1044,6 +1046,9 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("Calle")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long?>("CiudadId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Clave")
                         .IsRequired()
                         .HasMaxLength(15)
@@ -1052,14 +1057,16 @@ namespace Service.Catalog.Migrations
                     b.Property<int>("CodigoPostal")
                         .HasColumnType("int");
 
-                    b.Property<int>("ColoniaId")
-                        .HasColumnType("int");
+                    b.Property<long>("ColoniaId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Correo")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("FechaCreo")
+                    b.Property<long?>("EstadoId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("FechaCreo")
                         .HasColumnType("smalldatetime");
 
                     b.Property<DateTime?>("FechaMod")
@@ -1077,21 +1084,18 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("PaginaWeb")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("Telefono")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("UsuarioCreoId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("UsuarioCreoId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("UsuarioModId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("UsuarioModId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ColoniaId");
 
                     b.ToTable("CAT_Maquilador");
                 });
@@ -1727,17 +1731,6 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Estudio");
 
                     b.Navigation("Indicacion");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Maquilador.Maquilador", b =>
-                {
-                    b.HasOne("Service.Catalog.Domain.Constant.Colony", "Colonia")
-                        .WithMany()
-                        .HasForeignKey("ColoniaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Colonia");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Parameter.ParameterStudy", b =>

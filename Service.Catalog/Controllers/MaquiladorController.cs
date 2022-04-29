@@ -31,15 +31,15 @@ namespace Identidad.Api.Controllers
             return await _Services.GetAll(search);
         }
         [HttpPost]
-        public async Task Create(MaquiladorFormDto Company)
+        public async Task Create(MaquiladorFormDto maqui)
         {
 
-            await _Services.Create(Company);
+            await _Services.Create(maqui);
         }
         [HttpPut]
-        public async Task Update(MaquiladorFormDto Company)
+        public async Task Update(MaquiladorFormDto maqui)
         {
-            await _Services.Update(Company);
+            await _Services.Update(maqui);
         }
 
         [HttpPost("export/list/{search?}")]

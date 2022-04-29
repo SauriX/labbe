@@ -36,9 +36,11 @@ namespace Service.Catalog.Application
         }
         public async Task<IndicationFormDto> Create(IndicationFormDto indicacion)
         {
-            if (indicacion.Id != 0)
+            var code = await ValidarClave(indicacion);
+
+            if (indicacion.Id != 0 || code != 0)
             {
-                throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
             }
 
             var newIndication = indicacion.ToModel();
@@ -59,6 +61,16 @@ namespace Service.Catalog.Application
         public async Task<IndicationFormDto> Update(IndicationFormDto indication)
         {
             var existing = await _repository.GetById(indication.Id);
+
+            var code = await ValidarClave(indication);
+            if (existing.Clave != indication.Clave)
+            {
+                if (indication.Id != 0 || code != 0)
+                {
+                    throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
+                }
+
+            }
 
             if (existing == null)
             {
@@ -117,6 +129,21 @@ namespace Service.Catalog.Application
             template.Format();
 
             return template.ToByteArray();
+        }
+
+        private async Task<int> ValidarClave(IndicationFormDto indication)
+        {
+
+            var clave = indication.Clave;
+
+            var exists = await _repository.ValidateClave(clave);
+
+            if (exists)
+            {
+                return 1;
+            }
+
+            return 0;
         }
     }
 
