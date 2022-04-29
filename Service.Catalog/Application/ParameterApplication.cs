@@ -30,6 +30,12 @@ namespace Service.Catalog.Application
             return parameters.ToParameterListDto();
         }
 
+        public async Task<IEnumerable<ValorTipeForm>> getallvalues(string id,string tipe) {
+            var values = await _repository.Getvalues(id,tipe);
+
+            return values.toTipoValorFormList();
+        }
+
         public async Task<ParameterForm> GetById(string id)
         {
             var parameter = await _repository.GetById(id);
@@ -76,25 +82,37 @@ namespace Service.Catalog.Application
 
             await _repository.Update(updatedAgent);
         }
-
+        public async Task AddValue(ValorTipeForm valorTipeForm) {
+            
+                var newValor = valorTipeForm.toTipoValor();
+                await _repository.addValuNumeric(newValor);
+        }
+        public async Task<ValorTipeForm> getvalueNum(string id) {
+            var valorform = await _repository.getvalueNum(id);
+            return valorform.toTipoValorForm();
+        }
+        public async Task updateValueNumeric(ValorTipeForm tipoValor) {
+            var newValor = tipoValor.toTipoValorUpdate();
+            await _repository.updateValueNumeric(newValor);
+        }
         public async Task<byte[]> ExportList(string search = null)
         {
-            var reagents = await GetAll(search);
+            var parameters = await GetAll(search);
 
-            var path = Assets.ReagentList;
+            var path = Assets.ParameterList;
 
             var template = new XLTemplate(path);
 
             template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
-            template.AddVariable("Titulo", "Reactivos");
+            template.AddVariable("Titulo", "Parametros");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
-            template.AddVariable("Reactivos", reagents);
+            template.AddVariable("Parameters", parameters);
 
             template.Generate();
 
-            var range = template.Workbook.Worksheet("Reactivos").Range("Reactivos");
-            var table = template.Workbook.Worksheet("Reactivos").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
+            var range = template.Workbook.Worksheet("Parameters").Range("Parameters");
+            var table = template.Workbook.Worksheet("Parameters").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
             table.Theme = XLTableTheme.TableStyleMedium2;
 
             template.Format();
@@ -104,25 +122,32 @@ namespace Service.Catalog.Application
 
         public async Task<byte[]> ExportForm(string id)
         {
-            var reagent = await GetById(id);
+            var parameter = await GetById(id);
+            var tipo = parameter.tipoValor;
 
-            var path = Assets.ReagentForm;
+            var valor = await getallvalues(parameter.id, tipo.ToString());
+            var path = Assets.ParameterForm;
 
             var template = new XLTemplate(path);
 
             template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
-            template.AddVariable("Titulo", "Reactivos");
+            template.AddVariable("Titulo", "Parametros");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
-            template.AddVariable("Reactivo", reagent);
-
+            template.AddVariable("Parameter", parameter);
+            template.AddVariable("TiposVAlor", valor);
+            template.AddVariable("Estudios",parameter.estudios);
             template.Generate();
 
             template.Format();
 
             return template.ToByteArray();
         }
-        private async Task<int> ValidarClaveNombre(ParameterForm parameter)
+        public async Task deletevalue(string id)
+        {
+            await _repository.deletevalue(id);
+        }
+            private async Task<int> ValidarClaveNombre(ParameterForm parameter)
         {
 
             var clave = parameter.clave;

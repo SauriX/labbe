@@ -13,5 +13,10 @@ namespace Service.Catalog.Application.IApplication
         Task Update(ParameterForm parameter);
         Task<byte[]> ExportList(string search = null);
         Task<byte[]> ExportForm(string id);
+        Task AddValue(ValorTipeForm valorTipeForm);
+        Task<ValorTipeForm> getvalueNum(string id);
+        Task updateValueNumeric(ValorTipeForm tipoValor);
+        Task<IEnumerable<ValorTipeForm>> getallvalues(string id,string tipe);
+        Task deletevalue(string id);
     }
 }

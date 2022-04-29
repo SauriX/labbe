@@ -359,3 +359,51 @@ ALTER TABLE ALTER COLUMN ParametersId failed because one or more objects access 
 27/04/2022 13:38:30 => There is already an object named 'Relacion_Estudio_Parametro' in the database.
 
 27/04/2022 14:13:08 => An error occurred while updating the entries. See the inner exception for details.
+
+28/04/2022 02:35:35 p. m. => Unrecognized Guid format.
+
+28/04/2022 02:37:05 p. m. => Unrecognized Guid format.
+
+28/04/2022 08:18:23 p. m. => Value cannot be null. (Parameter 'input')
+
+28/04/2022 08:18:28 p. m. => An exception was thrown while attempting to evaluate a LINQ query parameter expression. See the inner exception for more information. To show additional information call 'DbContextOptionsBuilder.EnableSensitiveDataLogging'.
+
+28/04/2022 08:21:35 p. m. => Value cannot be null. (Parameter 'input')
+
+28/04/2022 08:21:47 p. m. => Value cannot be null. (Parameter 'input')
+
+28/04/2022 08:21:49 p. m. => Value cannot be null. (Parameter 'input')
+
+28/04/2022 08:24:28 p. m. => Value cannot be null. (Parameter 'input')
+
+28/04/2022 08:26:09 p. m. => Value cannot be null. (Parameter 'input')
+
+28/04/2022 08:26:50 p. m. => Value cannot be null. (Parameter 'input')
+
+28/04/2022 08:30:58 p. m. => Value cannot be null. (Parameter 'input')
+
+29/04/2022 10:19:13 a. m. => An exception was thrown while attempting to evaluate a LINQ query parameter expression. See the inner exception for more information. To show additional information call 'DbContextOptionsBuilder.EnableSensitiveDataLogging'.
+
+29/04/2022 10:36:59 a. m. => An exception was thrown while attempting to evaluate a LINQ query parameter expression. See the inner exception for more information. To show additional information call 'DbContextOptionsBuilder.EnableSensitiveDataLogging'.
+
+29/04/2022 12:55:56 p. m. => An exception was thrown while attempting to evaluate a LINQ query parameter expression. See the inner exception for more information. To show additional information call 'DbContextOptionsBuilder.EnableSensitiveDataLogging'.
+
+29/04/2022 12:58:48 p. m. => An exception was thrown while attempting to evaluate a LINQ query parameter expression. See the inner exception for more information. To show additional information call 'DbContextOptionsBuilder.EnableSensitiveDataLogging'.
+
+29/04/2022 02:02:28 p. m. => Object reference not set to an instance of an object.
+
+29/04/2022 03:04:41 p. m. => An exception was thrown while attempting to evaluate a LINQ query parameter expression. See the inner exception for more information. To show additional information call 'DbContextOptionsBuilder.EnableSensitiveDataLogging'.
+
+29/04/2022 04:03:38 p. m. => There isn't a worksheet named 'Parameters'.
+
+29/04/2022 04:04:36 p. m. => There isn't a worksheet named 'Parameters'.
+
+29/04/2022 04:05:23 p. m. => There isn't a worksheet named 'Parameters'.
+
+29/04/2022 04:06:19 p. m. => There isn't a worksheet named 'Parameters'.
+
+29/04/2022 04:06:39 p. m. => There isn't a worksheet named 'Parameters'.
+
+29/04/2022 04:06:42 p. m. => There isn't a worksheet named 'Parameters'.
+
+29/04/2022 04:08:04 p. m. => There isn't a worksheet named 'Parameters'.
