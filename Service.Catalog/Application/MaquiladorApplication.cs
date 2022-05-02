@@ -118,7 +118,7 @@ namespace Service.Catalog.Application
 
         public async Task<byte[]> ExportFormMaquilador(int id)
         {
-            var company = await GetById(id);
+            var maqui = await GetById(id);
 
             var path = Assets.MaquiladorForm;
 
@@ -128,7 +128,8 @@ namespace Service.Catalog.Application
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
             template.AddVariable("Titulo", "Maquilador");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
-            template.AddVariable("Maquilador", company);
+            template.AddVariable("Maquilador", maqui);
+            
 
             template.Generate();
 

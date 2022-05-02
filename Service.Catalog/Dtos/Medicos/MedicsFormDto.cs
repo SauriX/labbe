@@ -13,7 +13,7 @@ namespace Identidad.Api.ViewModels.Medicos
         public string Nombre { get; set; }
         public string PrimerApellido { get; set; }
         public string SegundoApellido { get; set; }
-        public long EspecialidadId { get; set; }
+        public string EspecialidadId { get; set; }
         public string Observaciones { get; set; }
         public int CodigoPostal { get; set; }
         public long? EstadoId { get; set; }

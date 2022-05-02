@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220502185311_Medics_Especialidad")]
+    partial class Medics_Especialidad
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1077,18 +1079,18 @@ namespace Service.Catalog.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("NumeroExterior")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("NumeroExterior")
+                        .HasColumnType("int");
 
-                    b.Property<string>("NumeroInterior")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("NumeroInterior")
+                        .HasColumnType("int");
 
                     b.Property<string>("PaginaWeb")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("Telefono")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<long?>("Telefono")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("UsuarioCreoId")
                         .HasColumnType("nvarchar(max)");

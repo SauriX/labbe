@@ -12,7 +12,7 @@ namespace Service.Catalog.Dtos.Indication
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
         public bool Activo { get; set; }
-        public string? UsuarioCreoId { get; set; }
+        public string UsuarioCreoId { get; set; }
         public DateTime FechaCreo { get; set; }
         public string UsuarioModId { get; set; }
         public DateTime FechaMod { get; set; }

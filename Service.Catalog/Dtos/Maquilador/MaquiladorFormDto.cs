@@ -9,13 +9,16 @@ namespace Service.Catalog.Dtos.Maquilador
         public string Clave { set; get; }
         public string Nombre { set; get; }
         public string Correo { set; get; }
-        public long? Telefono { set; get; }
+        public string Telefono { set; get; }
         public string PaginaWeb { set; get; }
         public int CodigoPostal { get; set; }
-        public int NumeroExterior { get; set; }
-        public int? NumeroInterior { get; set; }
+        public string NumeroExterior { get; set; }
+        public string NumeroInterior { get; set; }
         public string Calle { get; set; }
         public int ColoniaId { get; set; }
+        public string Colonia { get; set; }
+        public string Estado { get; set; }
+        public string Ciudad { get; set; }
         public bool Activo { get; set; }
         public string UsuarioId { get; set; }
     }

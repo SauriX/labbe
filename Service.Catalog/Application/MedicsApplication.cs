@@ -140,6 +140,7 @@ namespace Identidad.Api.Infraestructure.Services
             template.AddVariable("Titulo", "Medicos");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
             template.AddVariable("Medico", medics);
+            //template.AddVariable("Medico", medics);
 
             template.Generate();
 

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220502183658_Maquilador_Direccion")]
+    partial class Maquilador_Direccion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -88,9 +90,8 @@ namespace Service.Catalog.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("EspecialidadId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<long>("EspecialidadId")
+                        .HasColumnType("bigint");
 
                     b.Property<long?>("EstadoId")
                         .HasMaxLength(15)
@@ -1077,18 +1078,18 @@ namespace Service.Catalog.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("NumeroExterior")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("NumeroExterior")
+                        .HasColumnType("int");
 
-                    b.Property<string>("NumeroInterior")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("NumeroInterior")
+                        .HasColumnType("int");
 
                     b.Property<string>("PaginaWeb")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("Telefono")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<long?>("Telefono")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("UsuarioCreoId")
                         .HasColumnType("nvarchar(max)");

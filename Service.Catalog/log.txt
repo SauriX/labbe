@@ -436,3 +436,5 @@ ALTER TABLE ALTER COLUMN ParametersId failed because one or more objects access 
 29/04/2022 04:06:42 p. m. => There isn't a worksheet named 'Parameters'.
 
 29/04/2022 04:08:04 p. m. => There isn't a worksheet named 'Parameters'.
+
+02/05/2022 13:42:09 => Object reference not set to an instance of an object.
