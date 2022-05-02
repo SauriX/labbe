@@ -16,7 +16,7 @@ namespace Service.Identity
         {
             var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
-            new ConfigurationBuilder()
+            var config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: false)
                 .AddJsonFile($"appsettings.{environmentName}.json", optional: false)
                 .AddEnvironmentVariables()
@@ -29,8 +29,11 @@ namespace Service.Identity
 
             try
             {
-                var context = services.GetRequiredService<IndentityContext>();
+                var context = services.GetRequiredService<ApplicationDbContext>();
                 await context.Database.MigrateAsync();
+
+                var key = config.GetValue<string>("PasswordKey");
+                await Seed.SeedData(context, key);
             }
             catch (Exception e)
             {

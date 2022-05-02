@@ -80,7 +80,7 @@ namespace Service.Catalog.Mapper
             return new Indication
             {
                 Id = dto.Id,
-                Clave = model.Clave,
+                Clave = dto.Clave,
                 Nombre = dto.Nombre.Trim(),
                 Descripcion = dto.Descripcion.Trim(),
                 Activo = dto.Activo,

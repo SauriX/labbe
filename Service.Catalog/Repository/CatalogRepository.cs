@@ -55,7 +55,7 @@ namespace Service.Catalog.Repository
             return isDuplicate;
         }
 
-        public async Task Crete(T catalog)
+        public async Task Create(T catalog)
         {
             _entity.Add(catalog);
 

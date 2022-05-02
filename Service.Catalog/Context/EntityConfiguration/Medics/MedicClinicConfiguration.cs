@@ -32,7 +32,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Medics
 
             builder
               .Property(x => x.FechaMod)
-              .IsRequired(true);
+              .IsRequired(false);
 
         }
 

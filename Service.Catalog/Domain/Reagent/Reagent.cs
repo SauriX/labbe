@@ -13,9 +13,9 @@ namespace Service.Catalog.Domain.Reagent
         public string ClaveSistema { get; set; }
         public string NombreSistema { get; set; }
         public bool Activo { get; set; }
-        public string UsuarioCreoId { get; set; }
+        public Guid UsuarioCreoId { get; set; }
         public DateTime FechaCreo { get; set; }
-        public string UsuarioModificoId { get; set; }
+        public Guid? UsuarioModificoId { get; set; }
         public DateTime? FechaModifico { get; set; }
     }
 }

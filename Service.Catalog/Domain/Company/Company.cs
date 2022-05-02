@@ -26,9 +26,9 @@ namespace Service.Catalog.Domain.Company
         public string NumeroDeCuenta { get; set; }
         public int? BancoId { get; set; }
         public bool Activo { get; set; }
-        public int UsuarioCreoId { get; set; }
-        public DateTime FechaCreo { get; set; }
-        public int? UsuarioModId { get; set;}
+        public Guid? UsuarioCreoId { get; set; }
+        public DateTime? FechaCreo { get; set; }
+        public Guid? UsuarioModId { get; set; }
         public DateTime? FechaMod { get; set; }
         public virtual ICollection<Contact> Contacts { get; set; }
     }

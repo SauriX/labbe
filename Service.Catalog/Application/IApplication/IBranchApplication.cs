@@ -8,9 +8,9 @@ namespace Service.Catalog.Application.IApplication
     {
         Task<byte[]> ExportListBranch(string search = null);
         Task<byte[]> ExportFormBranch(string id);
-        Task<IEnumerable<BranchInfo>> GetAll(string search = null);
-        Task<BranchForm> GetById(string Id);
-        Task<bool> Create(BranchForm branch);
-        Task<bool> Update(BranchForm branch);
+        Task<IEnumerable<BranchInfoDto>> GetAll(string search = null);
+        Task<BranchFormDto> GetById(string Id);
+        Task<bool> Create(BranchFormDto branch);
+        Task<bool> Update(BranchFormDto branch);
     }
 }

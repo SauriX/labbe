@@ -40,6 +40,13 @@ namespace Service.Catalog.Repository
             return await Indications.ToListAsync();
         }
 
+        public async Task<bool> IsDuplicate(Indication indication)
+        {
+            var isDuplicate = await _context.CAT_Indicacion.AnyAsync(x => x.Id != indication.Id && x.Clave == indication.Clave);
+
+            return isDuplicate;
+        }
+
         public async Task Create(Indication indication)
         {
             using var transaction = _context.Database.BeginTransaction();

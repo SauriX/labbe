@@ -23,5 +23,6 @@ namespace Shared.Dictionary
         public const string ConfigurePassword = "Configure su contraseña";
         public const string PasswordExpired = "La contraseña ha expirado, configurela de nuevo";
         public const string ConfigureEmail = "Configure su correo";
+        public const string InvalidGuid = "El Id no es válido";
     }
 }

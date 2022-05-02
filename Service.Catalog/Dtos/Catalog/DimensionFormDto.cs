@@ -12,6 +12,6 @@ namespace Service.Catalog.Dtos.Catalog
         public byte Largo { get; set; }
         public byte Ancho { get; set; }
         public bool Activo { get; set; }
-        public string UsuarioId { get; set; }
+        public Guid UsuarioId { get; set; }
     }
 }

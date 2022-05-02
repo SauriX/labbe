@@ -1,185 +1,184 @@
-﻿using Service.Identity.Domain.Users;
-using Service.Identity.Dtos;
+﻿using Service.Identity.Domain.User;
+using Service.Identity.Dtos.User;
+using Service.Identity.Utils;
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Threading.Tasks;
+using PP = Service.Identity.Dictionary.PermissionProps;
 
-namespace  Service.Identity.Mapper
+namespace Service.Identity.Mapper
 {
     public static class UserMapper
     {
-        public static IEnumerable<UserList> ToUserListDto(IEnumerable<UsersModel> modelList)
+        public static UserListDto ToUserListDto(this User model)
         {
-            List<UserList> users = new List<UserList>();
-            if (modelList == null) return null;
-            foreach (UsersModel user in modelList) {
-                users.Add(new UserList
-                {
-                    IdUsuario = user.Id,
-                    IdSucursal = user.IdSucursal,
-                    Nombre = user.Nombre,
-                    PrimerApellido = user.PrimerApellido,
-                    SegundoApellido = user.SegundoApellido,
-                    IdRol = user.IdRol,
-                    Activo = user.Activo,
-                    clave = user.Clave,
-                    TipoUsuario = "test",
-                    confirmaContraseña = DecodeFrom64(user.Contraseña),
-                    contraseña = DecodeFrom64(user.Contraseña)
-                }); ;
-            }
-            return users;
-        }
-
-        public static UserList ToUserInfoDto(UsersModel model, List<UserPermission> permisos=null)
-        {
-
             if (model == null) return null;
-            return new UserList
+
+            return new UserListDto
             {
-                IdUsuario = model.Id,
-                IdSucursal = model.IdSucursal,
-                Nombre = model.Nombre,
-                PrimerApellido = model.PrimerApellido,
-                SegundoApellido = model.SegundoApellido,
-                IdRol = model.IdRol,
+                Id = model.Id.ToString(),
+                Clave = model.Clave,
+                Nombre = model.NombreCompleto,
+                TipoUsuario = model.Rol.Nombre,
                 Activo = model.Activo,
-                clave = model.Clave,
-                contraseña = DecodeFrom64(model.Contraseña),
-                confirmaContraseña = DecodeFrom64(model.Contraseña),
-                TipoUsuario = model.IdRol.ToString(),
-                permisos = permisos,
             };
-            
-            
         }
-        public static UsersModel ToregisterUSerDto(RegisterUserDTO model,string token)  
+
+        public static IEnumerable<UserListDto> ToUserListDto(this List<User> model)
         {
-            string jwt = token;
-            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-            var securityToken = (JwtSecurityToken)tokenHandler.ReadToken(jwt);
-            var claimValue = securityToken.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;
-          
             if (model == null) return null;
 
-            return new UsersModel
+            return model.Select(x => new UserListDto
             {
+                Id = x.Id.ToString(),
+                Clave = x.Clave,
+                Nombre = x.NombreCompleto,
+                TipoUsuario = x.Rol.Nombre,
+                Activo = x.Activo,
+                SucursalId = x.SucursalId,
+            });
+        }
 
-                Activo = model.activo,
+        public static UserFormDto ToUserFormDto(this User model, string key)
+        {
+            if (model == null) return null;
+
+            return new UserFormDto
+            {
+                Id = model.Id.ToString(),
                 Clave = model.Clave,
-                Contraseña = EncodeTo64(model.Contraseña),
-                FechaCreo = DateTime.Now,
-                flagpassword = false,
-                Id = Guid.NewGuid(),
-                IdSucursal = model.IdSucursal,
                 Nombre = model.Nombre,
                 PrimerApellido = model.PrimerApellido,
                 SegundoApellido = model.SegundoApellido,
-                IdRol = Guid.Parse(model.tipoUsuario),
-                UserName = model.Clave,
-                UsuarioCreoId = Guid.NewGuid(),
-                UsuarioModId = Guid.NewGuid(),
-                FechaMod = DateTime.Now,
-
-                
+                SucursalId = model.SucursalId,
+                RolId = model.RolId,
+                Rol = model.Rol.Nombre,
+                Contraseña = Crypto.DecryptString(model.Contraseña, key),
+                ConfirmaContraseña = Crypto.DecryptString(model.Contraseña, key),
+                Activo = model.Activo,
+                Permisos = model.Permisos.ToUserPermissionDto(),
             };
         }
-        public static UsersModel ToupdateUSerDto(RegisterUserDTO model, string token)
+
+        public static List<UserPermissionDto> ToUserPermissionDto(this IEnumerable<UserPermission> model)
         {
-            string jwt = token;
-            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-            var securityToken = (JwtSecurityToken)tokenHandler.ReadToken(jwt);
-            var claimValue = securityToken.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;
+            if (model == null)
+                return null;
 
-            if (model == null) return null;
+            var dto = new List<UserPermissionDto>();
 
-            return new UsersModel
+            int i = 1;
+            foreach (var item in model)
             {
+                dto.Add(new UserPermissionDto(i++, item.MenuId, item.Menu.Descripcion, PP.Access, item.Acceder, PP.AccessType));
+                dto.Add(new UserPermissionDto(i++, item.MenuId, item.Menu.Descripcion, PP.Create, item.Crear, PP.CreateType));
+                dto.Add(new UserPermissionDto(i++, item.MenuId, item.Menu.Descripcion, PP.Update, item.Modificar, PP.UpdateType));
+                dto.Add(new UserPermissionDto(i++, item.MenuId, item.Menu.Descripcion, PP.Print, item.Imprimir, PP.PrintType));
+                dto.Add(new UserPermissionDto(i++, item.MenuId, item.Menu.Descripcion, PP.Download, item.Descargar, PP.DownloadType));
+                dto.Add(new UserPermissionDto(i++, item.MenuId, item.Menu.Descripcion, PP.Mail, item.EnviarCorreo, PP.MailType));
+                dto.Add(new UserPermissionDto(i++, item.MenuId, item.Menu.Descripcion, PP.Wapp, item.EnviarWapp, PP.WappType));
+            }
 
-                Activo = model.activo,
-                Clave = model.Clave,
-                Contraseña = model.Contraseña,
-                FechaCreo = DateTime.Now,   
-                flagpassword = false,
-                Id = Guid.Parse(model.idUsuario),
-                IdSucursal = model.IdSucursal,
-                Nombre = model.Nombre,
-                PrimerApellido = model.PrimerApellido,
-                SegundoApellido = model.SegundoApellido,
-                IdRol = Guid.Parse(model.tipoUsuario),
-                UserName = model.Clave,
-                UsuarioCreoId = Guid.Parse(claimValue),
-            };
+            return dto;
         }
 
-        public static T ToModel<T>(this RegisterUserDTO dto) where T : UsersModel, new()
+        public static User ToModel(this UserFormDto dto, string key)
         {
             if (dto == null) return null;
 
-            return new T
+            return new User
             {
-                Id = new Guid(),
                 Clave = dto.Clave,
                 Nombre = dto.Nombre,
+                PrimerApellido = dto.PrimerApellido,
+                SegundoApellido = dto.SegundoApellido,
+                SucursalId = dto.SucursalId,
+                RolId = dto.RolId,
+                Contraseña = Crypto.EncryptString(dto.Contraseña, key),
+                Activo = dto.Activo,
+                UsuarioCreoId = dto.UsuarioId,
                 FechaCreo = DateTime.Now,
+                Permisos = dto.Permisos.ToModel(dto.UsuarioId)
             };
         }
 
-
-
-        
-
-        public static T ToModel<T>(this RegisterUserDTO dto, T model) where T : UsersModel, new()
+        public static User ToModel(this UserFormDto dto, User model, string key)
         {
             if (dto == null || model == null) return null;
 
-            return new T
+            return new User
             {
                 Id = model.Id,
                 Clave = dto.Clave,
                 Nombre = dto.Nombre,
-                Activo = true,
+                PrimerApellido = dto.PrimerApellido,
+                SegundoApellido = dto.SegundoApellido,
+                SucursalId = dto.SucursalId,
+                RolId = dto.RolId,
+                Contraseña = Crypto.EncryptString(dto.Contraseña, key),
+                Activo = dto.Activo,
+                FlagPassword = model.FlagPassword,
                 UsuarioCreoId = model.UsuarioCreoId,
                 FechaCreo = model.FechaCreo,
-                FechaMod = DateTime.Now,
+                UsuarioModificoId = dto.UsuarioId,
+                FechaModifico = DateTime.Now,
+                Permisos = dto.Permisos.ToModel(model.Permisos, model.Id, dto.UsuarioId)
             };
         }
-        static public string EncodeTo64(string toEncode)
 
+        public static List<UserPermission> ToModel(this IEnumerable<UserPermissionDto> dto, Guid userId)
         {
+            if (dto == null) return null;
 
-            byte[] toEncodeAsBytes
+            var permissions = dto
+                .GroupBy(x => x.MenuId)
+                .Select(x => new UserPermission
+                {
+                    MenuId = x.Key,
+                    Acceder = x.FirstOrDefault(p => p.Tipo == PP.AccessType).Asignado,
+                    Crear = x.FirstOrDefault(p => p.Tipo == PP.CreateType).Asignado,
+                    Modificar = x.FirstOrDefault(p => p.Tipo == PP.UpdateType).Asignado,
+                    Imprimir = x.FirstOrDefault(p => p.Tipo == PP.PrintType).Asignado,
+                    Descargar = x.FirstOrDefault(p => p.Tipo == PP.DownloadType).Asignado,
+                    EnviarCorreo = x.FirstOrDefault(p => p.Tipo == PP.MailType).Asignado,
+                    EnviarWapp = x.FirstOrDefault(p => p.Tipo == PP.WappType).Asignado,
+                    UsuarioCreoId = userId,
+                    FechaCreo = DateTime.Now,
+                }).ToList();
 
-                  = System.Text.ASCIIEncoding.ASCII.GetBytes(toEncode);
-
-            string returnValue
-
-                  = System.Convert.ToBase64String(toEncodeAsBytes);
-
-            
-            return returnValue;
-
+            return permissions;
         }
 
-        static public string DecodeFrom64(string encodedData)
-
+        public static List<UserPermission> ToModel(this IEnumerable<UserPermissionDto> dto, IEnumerable<UserPermission> model, Guid userId, Guid editionUserId)
         {
-            string returnValue = "";
-            if (!string.IsNullOrWhiteSpace(encodedData))
-            {
+            if (dto == null || model == null) return null;
 
-                byte[] encodedDataAsBytes
+            var permissions = dto
+                .GroupBy(x => x.MenuId)
+                .Select(x =>
+                {
+                    var permission = model.FirstOrDefault(m => m.MenuId == x.Key);
 
-                    = System.Convert.FromBase64String(encodedData);
+                    return new UserPermission
+                    {
+                        MenuId = x.Key,
+                        UsuarioId = userId,
+                        Acceder = x.FirstOrDefault(p => p.Tipo == PP.AccessType).Asignado,
+                        Crear = x.FirstOrDefault(p => p.Tipo == PP.CreateType).Asignado,
+                        Modificar = x.FirstOrDefault(p => p.Tipo == PP.UpdateType).Asignado,
+                        Imprimir = x.FirstOrDefault(p => p.Tipo == PP.PrintType).Asignado,
+                        Descargar = x.FirstOrDefault(p => p.Tipo == PP.DownloadType).Asignado,
+                        EnviarCorreo = x.FirstOrDefault(p => p.Tipo == PP.MailType).Asignado,
+                        EnviarWapp = x.FirstOrDefault(p => p.Tipo == PP.WappType).Asignado,
+                        UsuarioCreoId = permission?.UsuarioCreoId ?? editionUserId,
+                        FechaCreo = permission?.FechaCreo ?? DateTime.Now,
+                        UsuarioModificoId = permission == null ? null : editionUserId,
+                        FechaModifico = permission == null ? null : DateTime.Now
+                    };
+                }).ToList();
 
-                 returnValue =
-
-                   System.Text.ASCIIEncoding.ASCII.GetString(encodedDataAsBytes);
-            }
-            return returnValue;
-
+            return permissions;
         }
     }
 }
-

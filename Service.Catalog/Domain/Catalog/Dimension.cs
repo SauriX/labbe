@@ -12,9 +12,9 @@ namespace Service.Catalog.Domain.Catalog
         public byte Largo { get; set; }
         public byte Ancho { get; set; }
         public bool Activo { get; set; }
-        public string UsuarioCreoId { get; set; }
-        public DateTime FechaCreo { get; set; }
-        public string UsuarioModificoId { get; set; }
-        public DateTime FechaModifico { get; set; }
+        public Guid? UsuarioCreoId { get; set; }
+        public DateTime? FechaCreo { get; set; }
+        public Guid? UsuarioModificoId { get; set; }
+        public DateTime? FechaModifico { get; set; }
     }
 }

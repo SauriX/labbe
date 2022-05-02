@@ -60,7 +60,6 @@ namespace Service.Catalog.Mapper
 
             return new Reagent
             {
-                Id = 0,
                 Clave = dto.Clave.Trim(),
                 Nombre = dto.Nombre.Trim(),
                 ClaveSistema = dto.ClaveSistema.Trim(),

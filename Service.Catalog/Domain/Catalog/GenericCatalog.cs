@@ -11,14 +11,14 @@ namespace Service.Catalog.Domain.Catalog
         public string Clave { get; set; }
         public string Nombre { get; set; }
         public bool Activo { get; set; }
-        public string UsuarioCreoId { get; set; }
-        public DateTime FechaCreo { get; set; }
-        public string? UsuarioModificoId { get; set; }
+        public Guid? UsuarioCreoId { get; set; }
+        public DateTime? FechaCreo { get; set; }
+        public Guid? UsuarioModificoId { get; set; }
         public DateTime? FechaModifico { get; set; }
     }
 
     public class GenericCatalogDescription : GenericCatalog
     {
-        public string? Descripcion { get; set; }
+        public string Descripcion { get; set; }
     }
 }

@@ -23,7 +23,7 @@ namespace Service.Catalog.Application
             _repository = repository;
         }
 
-        public async Task<bool> Create(BranchForm branch)
+        public async Task<bool> Create(BranchFormDto branch)
         {
             if (!string.IsNullOrEmpty(branch.idSucursal))
             {
@@ -32,22 +32,29 @@ namespace Service.Catalog.Application
             
             var newBranch = branch.ToModel();
 
+            var isDuplicate = await _repository.IsDuplicate(newBranch);
+
+            if (isDuplicate)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave "));
+            }
+
             await _repository.Create(newBranch);
 
             return true;
         }
-        public async Task<BranchForm> GetById(string Id)
+        public async Task<BranchFormDto> GetById(string Id)
         {
             var branch = await _repository.GetById(Id);
             if (branch == null)
             {
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
-            var studyes = await _repository.getservicios(Id);
-            return branch.ToBranchFormDto(studyes);
+            //var studyes = await _repository.getservicios(Id);
+            return branch.ToBranchFormDto();
         }
 
-        public async Task<bool> Update(BranchForm branch)
+        public async Task<bool> Update(BranchFormDto branch)
         {
             var existing = await _repository.GetById(branch.idSucursal);
 
@@ -58,12 +65,19 @@ namespace Service.Catalog.Application
 
             var updatedAgent = branch.ToModel(existing);
 
+            var isDuplicate = await _repository.IsDuplicate(updatedAgent);
+
+            if (isDuplicate)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave "));
+            }
+
             await _repository.Update(updatedAgent);
 
             return true;
         }
 
-        public async Task<IEnumerable<BranchInfo>> GetAll(string search = null)
+        public async Task<IEnumerable<BranchInfoDto>> GetAll(string search = null)
         {
             var branch = await _repository.GetAll(search);
             return branch.ToBranchListDto();

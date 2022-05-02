@@ -29,7 +29,6 @@ namespace Service.Catalog.Controllers.Catalog
         private readonly ICatalogApplication<PaymentMethod> _paymentMethodService;
         private readonly ICatalogApplication<SampleType> _sampleTypeService;
         private readonly ICatalogDescriptionApplication<UseOfCFDI> _useOfCFDIService;
-        
 
         public CatalogController(
             ICatalogApplication<Delivery> deliveryService,

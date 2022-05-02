@@ -43,6 +43,13 @@ namespace Service.Catalog.Application
 
             var newIndication = indicacion.ToModel();
 
+            var isDuplicate = await _repository.IsDuplicate(newIndication);
+
+            if (isDuplicate)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave "));
+            }
+
             await _repository.Create(newIndication);
 
             indicacion = await GetById(newIndication.Id);
@@ -66,6 +73,13 @@ namespace Service.Catalog.Application
             }
 
             var updatedAgent = indication.ToModel(existing);
+
+            var isDuplicate = await _repository.IsDuplicate(updatedAgent);
+
+            if (isDuplicate)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave "));
+            }
 
             await _repository.Update(updatedAgent);
 

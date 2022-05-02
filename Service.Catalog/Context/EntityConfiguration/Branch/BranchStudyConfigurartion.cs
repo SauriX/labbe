@@ -10,7 +10,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Branch
         {
             builder.ToTable("Relacion_Estudio_Sucursal");
             builder.HasKey(t => t.Id);
-            builder.HasKey(x => new { x.EstudioId, x.BranchId });
+            //builder.HasKey(x => new { x.EstudioId, x.BranchId });
 
 
 

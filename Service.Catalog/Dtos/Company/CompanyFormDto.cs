@@ -27,9 +27,9 @@ namespace Service.Catalog.Dtos.Company
         public string NumeroDeCuenta { get; set; }
         public int? BancoId { get; set; }
         public bool Activo { get; set; }
-        public int UsuarioCreoId { get; set; }
+        public Guid UsuarioCreoId { get; set; }
         public DateTime FechaCreo { get; set; }
-        public int UduarioModId { get; set; }
+        public Guid UduarioModId { get; set; }
         public DateTime FechaMod { get; set; }
         public virtual ICollection<ContactListDto> Contacts { get; set; }
     }

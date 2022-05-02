@@ -22,6 +22,12 @@ namespace Service.Catalog.Context.EntityConfiguration.Branch
             builder
                 .Property(x => x.FechaModifico)
                 .HasColumnType("smalldatetime");
+
+            builder
+                .HasMany(x => x.Departamentos)
+                .WithOne(x => x.Sucursal)
+                //.HasForeignKey(x => x.ClinicaId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

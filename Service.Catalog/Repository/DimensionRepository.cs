@@ -32,11 +32,25 @@ namespace Service.Catalog.Repository
             return await dimensions.ToListAsync();
         }
 
+        public async Task<List<Dimension>> GetActive()
+        {
+            var dimensions = await _context.CAT_Dimension.Where(x => x.Activo).ToListAsync();
+
+            return dimensions;
+        }
+
         public async Task<Dimension> GetById(int id)
         {
             var dimension = await _context.CAT_Dimension.FindAsync(id);
 
             return dimension;
+        }
+
+        public async Task<bool> IsDuplicate(Dimension dimension)
+        {
+            var isDuplicate = await _context.CAT_Area.AnyAsync(x => x.Id != dimension.Id && x.Clave == dimension.Clave);
+
+            return isDuplicate;
         }
 
         public async Task Create(Dimension dimension)

@@ -32,11 +32,25 @@ namespace Service.Catalog.Repository
             return await areas.ToListAsync();
         }
 
+        public async Task<List<Area>> GetActive()
+        {
+            var areas = await _context.CAT_Area.Include(x => x.Departamento).Where(x => x.Activo).ToListAsync();
+
+            return areas;
+        }
+
         public async Task<Area> GetById(int id)
         {
             var area = await _context.CAT_Area.Include(x => x.Departamento).FirstOrDefaultAsync(x => x.Id == id);
 
             return area;
+        }
+
+        public async Task<bool> IsDuplicate(Area catalog)
+        {
+            var isDuplicate = await _context.CAT_Area.AnyAsync(x => x.Id != catalog.Id && (x.Clave == catalog.Clave || x.Nombre == catalog.Nombre));
+
+            return isDuplicate;
         }
 
         public async Task Create(Area area)

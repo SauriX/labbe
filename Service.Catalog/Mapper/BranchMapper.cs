@@ -11,23 +11,24 @@ namespace Service.Catalog.Mapper
 {
     public static class BranchMapper
     {
-        public static IEnumerable<BranchInfo> ToBranchListDto(this List<Branch> model)
+        public static IEnumerable<BranchInfoDto> ToBranchListDto(this List<Branch> model)
         {
             if (model == null) return null;
-            return model.Select(x => new BranchInfo
+            return model.Select(x => new BranchInfoDto
             {
-                idSucursal= x.Id.ToString(),
+                idSucursal = x.Id.ToString(),
                 clave = x.Clave,
                 nombre = x.Nombre,
-                correo = x.Correo ,
-                telefono = (long)x.Telefono,
-                ubicacion = $"{x.Calle} {x.NumeroExterior} {x.Ciudad}",
+                correo = x.Correo,
+                telefono = x.Telefono,
+                //ubicacion = $"{x.Calle} {x.NumeroExterior} {x.Ciudad}",
+                ubicacion = x.Calle.Trim() + " " + x.NumeroExterior.Trim() + ", " + x.Colonia.Colonia.Trim() + ", " + x.Colonia.Ciudad.Ciudad.Trim() + ", " + x.Colonia.Ciudad.Estado.Estado.Trim(),
                 clinico = "test",
                 activo = x.Activo,
                 codigoPostal = x.Codigopostal
-             });
+            });
         }
-        public static Branch ToModel(this BranchForm dto)
+        public static Branch ToModel(this BranchFormDto dto)
         {
             if (dto == null) return null;
 
@@ -40,35 +41,34 @@ namespace Service.Catalog.Mapper
                 ClinicosId = Guid.NewGuid(),
                 ColoniaId = dto.coloniaId,
                 Correo = dto.correo,
-                FechaCreo= DateTime.Now,
+                FechaCreo = DateTime.Now,
                 FacturaciónId = Guid.NewGuid(),
-                FechaModifico= DateTime.Now,
-                Id=Guid.NewGuid(),
-                NumeroInterior= dto.numeroInt.ToString(),
-                NumeroExterior=dto.numeroExt.ToString(),
-                PresupuestosId= Guid.NewGuid(),
-                Telefono=dto.telefono,
-                UsuarioCreoId= Guid.NewGuid(),
-                UsuarioModificoId= Guid.NewGuid(),
-                Ciudad = dto.ciudad,               
+                FechaModifico = DateTime.Now,
+                Id = Guid.NewGuid(),
+                NumeroInterior = dto.numeroInt?.ToString(),
+                NumeroExterior = dto.numeroExt.ToString(),
+                PresupuestosId = Guid.NewGuid(),
+                Telefono = dto.telefono,
+                UsuarioCreoId = Guid.NewGuid(),
+                UsuarioModificoId = Guid.NewGuid(),
+                Ciudad = dto.ciudad,
                 Estado = dto.estado,
-                Codigopostal = dto.codigoPostal
-        /*Estudios = dto.Estudios.Select(x => new IndicationStudy
-        {
-            EstudioId = x.Id,
-            FechaCreo = DateTime.Now,
-            UsuarioCreoId = dto.UsuarioId,
-            FechaMod = DateTime.Now,
-        }).ToList(),*/
-    };
+                Codigopostal = dto.codigoPostal,
+                Departamentos = dto.departamentos.Select(x => new BranchDepartment
+                {
+                    DepartamentoId = x.DepartamentoId,
+                    UsuarioCreoId = dto.UsuarioId,
+                    FechaCreo = DateTime.Now
+                }).ToList(),
+            };
         }
 
-        public static BranchForm ToBranchFormDto(this Branch model, IEnumerable<StudyListDto> study)
+        public static BranchFormDto ToBranchFormDto(this Branch model)
         {
             if (model == null) return null;
-            List<CatalogListDto> permissions =new  List<CatalogListDto>();
+            //List<CatalogListDto> permissions = new List<CatalogListDto>();
 
-            return new BranchForm
+            return new BranchFormDto
             {
                 idSucursal = model.Id.ToString(),
                 activo = model.Activo,
@@ -82,14 +82,24 @@ namespace Service.Catalog.Mapper
                 estado = model.Estado,
                 facturaciónId = "test",
                 nombre = model.Nombre,
-                numeroExt = int.Parse(model.NumeroExterior),
-                numeroInt = int.Parse(model.NumeroInterior),
+                numeroExt = model.NumeroExterior,
+                numeroInt = model.NumeroInterior,
                 presupuestosId = "test",
-                telefono = (long)model.Telefono,
-                departaments = permissions.ToArray()
-
-
+                telefono = model.Telefono,
+                departamentos = model.Departamentos.ToBranchDepartmentDto()
             };
+        }
+
+        private static IEnumerable<BranchDepartmentDto> ToBranchDepartmentDto(this IEnumerable<BranchDepartment> model)
+        {
+            if (model == null) return null;
+
+            return model.Select(x => new BranchDepartmentDto
+            {
+                SucursalId = x.SucursalId.ToString(),
+                DepartamentoId = x.DepartamentoId,
+                Departamento = x.Departamento.Nombre,
+            });
         }
 
         private static IEnumerable<T> IEnumerable<T>()
@@ -97,7 +107,7 @@ namespace Service.Catalog.Mapper
             throw new NotImplementedException();
         }
 
-        public static Branch ToModel(this BranchForm dto,Branch model)
+        public static Branch ToModel(this BranchFormDto dto, Branch model)
         {
             if (dto == null) return null;
 
@@ -114,22 +124,22 @@ namespace Service.Catalog.Mapper
                 FacturaciónId = model.FacturaciónId,
                 FechaModifico = model.FechaModifico,
                 Id = Guid.Parse(dto.idSucursal),
-                NumeroInterior = dto.numeroInt.ToString(),
-                NumeroExterior = dto.numeroExt.ToString(),
+                NumeroInterior = dto.numeroInt,
+                NumeroExterior = dto.numeroExt,
                 PresupuestosId = model.PresupuestosId,
                 Telefono = dto.telefono,
                 UsuarioCreoId = model.UsuarioCreoId,
                 UsuarioModificoId = model.UsuarioModificoId,
                 Ciudad = dto.ciudad,
                 Estado = dto.estado,
-                Codigopostal = dto.codigoPostal
-                /*Estudios = dto.Estudios.Select(x => new IndicationStudy
+                Codigopostal = dto.codigoPostal,
+                Departamentos = dto.departamentos.Select(x => new BranchDepartment
                 {
-                    EstudioId = x.Id,
-                    FechaCreo = DateTime.Now,
+                    SucursalId = model.Id,
+                    DepartamentoId = x.DepartamentoId,
                     UsuarioCreoId = dto.UsuarioId,
-                    FechaMod = DateTime.Now,
-                }).ToList(),*/
+                    FechaCreo = DateTime.Now
+                }).ToList(),
             };
         }
     }

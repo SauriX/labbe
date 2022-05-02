@@ -10,9 +10,10 @@ namespace Service.Catalog.Repository.IRepository
     public interface IBranchRepository
     {
 
-        Task<IEnumerable<StudyListDto>> getservicios(string id);
+        //Task<IEnumerable<StudyListDto>> getservicios(string id);
         Task<List<Branch>> GetAll(string search = null);
         Task<Branch> GetById(string id);
+        Task<bool> IsDuplicate(Branch branch);
         Task Create(Branch reagent);
         Task Update(Branch reagent);
     }

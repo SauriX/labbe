@@ -23,10 +23,10 @@ namespace Service.Catalog.Domain
         public int TiempoRespuesta { get; set; }
         public string Prioridad { get; set; }
         public bool Activo { get; set; }
-        public int UsuarioCreoId { get; set; }
-        public DateTime FechaCreo { get; set; }
-        public int UsuarioModId { get; set; }
-        public DateTime FechaMod { get; set; }
+        public Guid? UsuarioCreoId { get; set; }
+        public DateTime? FechaCreo { get; set; }
+        public Guid? UsuarioModId { get; set; }
+        public DateTime? FechaMod { get; set; }
        
     }
 }

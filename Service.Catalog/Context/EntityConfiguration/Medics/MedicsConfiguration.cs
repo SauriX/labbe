@@ -61,11 +61,6 @@ namespace Identidad.Api.Infraestructure.EntityConfiguration.CatalogoMedicosConfi
               .HasMaxLength(15);
 
             builder
-              .Property(x => x.ColoniaId)
-              .IsRequired(true)
-              .HasMaxLength(15);
-
-            builder
               .Property(x => x.Telefono)
               .IsRequired(false);
 
@@ -84,12 +79,18 @@ namespace Identidad.Api.Infraestructure.EntityConfiguration.CatalogoMedicosConfi
               .HasMaxLength(255);
 
             builder
-              .Property(x => x.EspecialidadId)
+              .Property(x => x.Activo)
               .IsRequired(true);
 
             builder
-              .Property(x => x.Activo)
-              .IsRequired(true);
+                .HasOne(x => x.Colonia)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);          
+            
+            builder
+                .HasOne(x => x.Especialidad)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder
                 .HasMany(x => x.Clinicas)

@@ -1,9 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Service.Identity.Application.IApplication;
+using Service.Identity.Dictionary;
 using Service.Identity.Dtos;
+using Service.Identity.Dtos.Scopes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Service.Identity.Controllers
@@ -12,56 +16,128 @@ namespace Service.Identity.Controllers
     [ApiController]
     public class ScopesController : ControllerBase
     {
-        [HttpGet("reagent")]
-        public ScopeDto GetReagentScopes()
+        private readonly IProfileApplication _service;
+
+        public ScopesController(IProfileApplication service)
         {
-            return new ScopeDto
-            {
-                Pantalla = "Catálogo de Reactivos",
-                Acceder = true,
-                Crear = true,
-                Editar = true,
-                Descargar = true,
-            };
+            _service = service;
         }
 
-        [HttpGet("medics")]
-        public ScopeDto GetMedicsScopes()
+        [HttpGet(ControllerNames.Role)]
+        public async Task<ScopesDto> GetRoleScopes()
         {
-            return new ScopeDto
-            {
-                Pantalla = "Catálogo de Medicos",
-                Acceder = true,
-                Crear = true,
-                Editar = true,
-                Descargar = true,
-            };
+            var userId = GetUserId();
+            return await _service.GetScopes(userId, ControllerNames.Role);
+        }   
+        
+        [HttpGet(ControllerNames.User)]
+        public async Task<ScopesDto> GetUserScopes()
+        {
+            var userId = GetUserId();
+            return await _service.GetScopes(userId, ControllerNames.User);
         }
 
-        [HttpGet("indication")]
-        public ScopeDto GetIndicationScopes()
+        [HttpGet(ControllerNames.Branch)]
+        public async Task<ScopesDto> GetBranchScopes()
         {
-            return new ScopeDto
-            {
-                Pantalla = "Catálogo de Indicaciones",
-                Acceder = true,
-                Crear = true,
-                Editar = true,
-                Descargar = true,
-            };
+            var userId = GetUserId();
+            return await _service.GetScopes(userId, ControllerNames.Branch);
         }
 
-        [HttpGet("company")]
-        public ScopeDto GetCompanyScopes()
+        [HttpGet(ControllerNames.Company)]
+        public async Task<ScopesDto> GetCompanyScopes()
         {
-            return new ScopeDto
-            {
-                Pantalla = "Catálogo de Compañias",
-                Acceder = true,
-                Crear = true,
-                Editar = true,
-                Descargar = true,
-            };
+            var userId = GetUserId();
+            return await _service.GetScopes(userId, ControllerNames.Company);
+        }
+
+        [HttpGet(ControllerNames.Medic)]
+        public async Task<ScopesDto> GetMedicScopes()
+        {
+            var userId = GetUserId();
+            return await _service.GetScopes(userId, ControllerNames.Medic);
+        }
+
+        [HttpGet(ControllerNames.Study)]
+        public async Task<ScopesDto> GetStudyScopes()
+        {
+            var userId = GetUserId();
+            return await _service.GetScopes(userId, ControllerNames.Study);
+        }
+
+        [HttpGet(ControllerNames.Reagent)]
+        public async Task<ScopesDto> GetReagentScopes()
+        {
+            var userId = GetUserId();
+            return await _service.GetScopes(userId, ControllerNames.Reagent);
+        }
+
+        [HttpGet(ControllerNames.Indication)]
+        public async Task<ScopesDto> GetIndicationScopes()
+        {
+            var userId = GetUserId();
+            return await _service.GetScopes(userId, ControllerNames.Indication);
+        }
+
+        [HttpGet(ControllerNames.Parameter)]
+        public async Task<ScopesDto> GetParameterScopes()
+        {
+            var userId = GetUserId();
+            return await _service.GetScopes(userId, ControllerNames.Parameter);
+        }
+
+        [HttpGet(ControllerNames.Catalog)]
+        public async Task<ScopesDto> GetCatalogScopes()
+        {
+            var userId = GetUserId();
+            return await _service.GetScopes(userId, ControllerNames.Catalog);
+        }
+
+        [HttpGet(ControllerNames.Price)]
+        public async Task<ScopesDto> GetPriceScopes()
+        {
+            var userId = GetUserId();
+            return await _service.GetScopes(userId, ControllerNames.Price);
+        }
+
+        [HttpGet(ControllerNames.Pack)]
+        public async Task<ScopesDto> GetPackScopes()
+        {
+            var userId = GetUserId();
+            return await _service.GetScopes(userId, ControllerNames.Pack);
+        }
+
+        [HttpGet(ControllerNames.Promo)]
+        public async Task<ScopesDto> GetPromoScopes()
+        {
+            var userId = GetUserId();
+            return await _service.GetScopes(userId, ControllerNames.Promo);
+        }
+
+        [HttpGet(ControllerNames.Loyalty)]
+        public async Task<ScopesDto> GetLoyaltyScopes()
+        {
+            var userId = GetUserId();
+            return await _service.GetScopes(userId, ControllerNames.Loyalty);
+        }
+
+        [HttpGet(ControllerNames.Tag)]
+        public async Task<ScopesDto> GetTagScopes()
+        {
+            var userId = GetUserId();
+            return await _service.GetScopes(userId, ControllerNames.Tag);
+        }
+
+        [HttpGet(ControllerNames.Route)]
+        public async Task<ScopesDto> GetRouteScopes()
+        {
+            var userId = GetUserId();
+            return await _service.GetScopes(userId, ControllerNames.Route);
+        }
+
+        private Guid GetUserId()
+        {
+            return Guid.Parse(User.Claims.SingleOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
         }
     }
 

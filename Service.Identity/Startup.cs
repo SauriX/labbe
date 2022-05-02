@@ -10,8 +10,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Service.Identity.Context;
-using Service.Identity.Domain.Users;
-using Service.Identity.Domain.UsersRol;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +17,20 @@ using System.Threading.Tasks;
 using Service.Identity.Repository;
 using Service.Identity.Repository.IRepository;
 using Service.Identity.Controllers;
+using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Shared.Dictionary;
+using Service.Identity.Requirements;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using FluentValidation.AspNetCore;
+using System.Reflection;
+using System.Globalization;
+using Service.Identity.Application.IApplication;
+using Service.Identity.Application;
+using Service.Identity.Middleware;
 
 namespace Service.Identity
 {
@@ -34,36 +46,107 @@ namespace Service.Identity
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options => 
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                options.UseSqlServer(Configuration.GetConnectionString("Default"));
+                options.EnableSensitiveDataLogging();
+            }, ServiceLifetime.Scoped);
+
+            services.AddHealthChecks()
+               .AddSqlServer(Configuration.GetConnectionString("Default"));
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Service.Identity", Version = "v1" });
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authentication",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer"
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement{
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Id = "Bearer",
+                                Type = ReferenceType.SecurityScheme
+                            }
+                        }, new List<string>()
+                    }
+                });
+            });
+
+            var key = Configuration["SecretKey"];
+            var tokenKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.IncludeErrorDetails = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = tokenKey,
+                        ValidateIssuer = true,
+                        ValidIssuer = Configuration["Issuer"],
+                        ValidateAudience = true,
+                        ValidAudience = Configuration["Audience"],
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero
+                    };
+                    options.RequireHttpsMetadata = false;
+                });
+
+            services.AddAuthorization(opt =>
+            {
+                opt.AddPolicy(Policies.Access, p => p.RequireAuthenticatedUser().Requirements.Add(new AccessRequirement()));
+                opt.AddPolicy(Policies.Create, p => p.RequireAuthenticatedUser().Requirements.Add(new CreateRequirement()));
+                opt.AddPolicy(Policies.Update, p => p.RequireAuthenticatedUser().Requirements.Add(new UpdateRequirement()));
+                opt.AddPolicy(Policies.Download, p => p.RequireAuthenticatedUser().Requirements.Add(new DownloadRequirement()));
+                opt.AddPolicy(Policies.Mail, p => p.RequireAuthenticatedUser().Requirements.Add(new MailRequirement()));
+                opt.AddPolicy(Policies.Wapp, p => p.RequireAuthenticatedUser().Requirements.Add(new WappRequirement()));
+            });
+
+            services.AddTransient<IAuthorizationHandler, AccessRequirementHandler>();
+            services.AddTransient<IAuthorizationHandler, CreateRequirementHandler>();
+            services.AddTransient<IAuthorizationHandler, UpdateRequirementHandler>();
+            services.AddTransient<IAuthorizationHandler, DownloadRequirementHandler>();
+            services.AddTransient<IAuthorizationHandler, MailRequirementHandler>();
+            services.AddTransient<IAuthorizationHandler, WappRequirementHandler>();
+
+            services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", policy =>
                 {
                     policy.AllowAnyHeader().AllowAnyMethod().WithExposedHeaders("WWW-Authenticate").AllowAnyOrigin();
                 });
             });
-            services.AddDbContext<IndentityContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<UsersModel, UserRol>(options =>
+            services.AddControllers(options =>
             {
-                options.SignIn.RequireConfirmedAccount = false;
-                options.Password.RequireDigit = false;
-                options.Password.RequireLowercase = false;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequiredLength = 8;
-                options.Password.RequiredUniqueChars = 0;
-            }
-            ).AddEntityFrameworkStores<IndentityContext>().AddDefaultTokenProviders();
+                var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+            })
+                .AddFluentValidation(config =>
+                {
+                    config.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+                    config.ValidatorOptions.LanguageManager.Culture = new CultureInfo("es");
+                });
 
-            
-            services.AddControllers();
+            services.AddScoped<IProfileApplication, ProfileApplication>();
+            services.AddScoped<IUserApplication, UserApplication>();
+            services.AddScoped<IRoleApplication, RoleApplication>();
+
+            services.AddScoped<IProfileRepository, ProfileRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<ISessionRepository, SessionRepository>();
-            services.AddScoped<IRolRepository, RolRepository>();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Service.Identity", Version = "v1" });
-            });
+            services.AddScoped<IRoleRepository, RoleRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -78,9 +161,11 @@ namespace Service.Identity
 
             app.UseCors("CorsPolicy");
 
-            app.UseHttpsRedirection();
+            app.UseMiddleware<ErrorMiddleware>();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

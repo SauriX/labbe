@@ -1,5 +1,6 @@
 ﻿using EFCore.BulkExtensions;
 using Identidad.Api.Infraestructure.Repository.IRepository;
+using Identidad.Api.Model.Medicos;
 using Identidad.Api.ViewModels.Medicos;
 using Identidad.Api.ViewModels.Menu;
 using Microsoft.EntityFrameworkCore;
@@ -24,14 +25,20 @@ namespace Service.Catalog.Repository
         public async Task<Medics> GetById(int Id)
         {
             return await _context.CAT_Medicos
-            .Include(x => x.Clinicas)
-            .ThenInclude(x => x.Clinica)
-            .FirstOrDefaultAsync(x => x.IdMedico == Id);
+                .Include(x => x.Clinicas)
+                .ThenInclude(x => x.Clinica)
+                .Include(x => x.Colonia).ThenInclude(x => x.Ciudad).ThenInclude(x => x.Estado)
+                .Include(x => x.Especialidad)
+                .FirstOrDefaultAsync(x => x.IdMedico == Id);
         }
 
         public async Task<List<Medics>> GetAll(string search)
         {
-            var doctors = _context.CAT_Medicos.AsQueryable();
+            var doctors = _context.CAT_Medicos
+                .Include(x => x.Colonia).ThenInclude(x => x.Ciudad).ThenInclude(x => x.Estado)
+                .Include(x => x.Especialidad)
+                .AsQueryable();
+
             search = search.Trim().ToLower();
 
             if (!string.IsNullOrWhiteSpace(search) && search != "all")
@@ -61,7 +68,11 @@ namespace Service.Catalog.Repository
                 await _context.SaveChangesAsync();
 
                 clinics.ForEach(x => x.MedicoId = doctors.IdMedico);
-                await _context.BulkInsertOrUpdateOrDeleteAsync(clinics);
+
+                var config = new BulkConfig();
+                config.SetSynchronizeFilter<MedicClinic>(x => x.MedicoId == doctors.IdMedico);
+
+                await _context.BulkInsertOrUpdateOrDeleteAsync(clinics, config);
 
                 transaction.Commit();
             }
@@ -79,7 +90,10 @@ namespace Service.Catalog.Repository
             doctors.Clinicas = null;
             _context.CAT_Medicos.Update(doctors);
 
-            await _context.BulkInsertOrUpdateOrDeleteAsync(clinics);
+            var config = new BulkConfig();
+            config.SetSynchronizeFilter<MedicClinic>(x => x.MedicoId == doctors.IdMedico);
+
+            await _context.BulkInsertOrUpdateOrDeleteAsync(clinics, config);
 
             await _context.SaveChangesAsync();
         }

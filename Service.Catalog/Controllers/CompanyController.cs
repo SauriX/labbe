@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dtos.Company;
 using Shared.Dictionary;
@@ -19,31 +20,37 @@ namespace Identidad.Api.Controllers
             _Services = services;
         }
 
-        [HttpGet("{Id}")]
+        [HttpGet("all/{search}")]
+        [Authorize(Policies.Access)]
+        public async Task<IEnumerable<CompanyListDto>> GetAll(string search = null)
+        {
+            return await _Services.GetAll(search);
+        }
 
+        [HttpGet("{Id}")]
+        [Authorize(Policies.Access)]
         public async Task<CompanyFormDto> GetById(int Id)
         {
             return await _Services.GetById(Id);
         }
 
-        [HttpGet("all/{search}")]
-        public async Task<IEnumerable<CompanyListDto>> GetAll(string search = null)
-        {
-            return await _Services.GetAll(search);
-        }
         [HttpPost]
+        [Authorize(Policies.Create)]
         public async Task Create(CompanyFormDto Company)
         {
 
             await _Services.Create(Company);
         }
+
         [HttpPut]
+        [Authorize(Policies.Update)]
         public async Task Update(CompanyFormDto Company)
         {
             await _Services.Update(Company);
         }
 
         [HttpPost("export/list/{search?}")]
+        [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportList(string search = null)
         {
             var file = await _Services.ExportListCompany(search);
@@ -51,6 +58,7 @@ namespace Identidad.Api.Controllers
         }
 
         [HttpPost("export/form/{id}")]
+        [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportForm(int id)
         {
             var file = await _Services.ExportFormCompany(id);

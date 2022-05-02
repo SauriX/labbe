@@ -26,7 +26,7 @@ namespace Service.Catalog.Application
             _repository = repository;
         }
 
-        public async Task<IEnumerable<ReagentListDto>> GetAll(string search = null)
+        public async Task<IEnumerable<ReagentListDto>> GetAll(string search)
         {
             var reagents = await _repository.GetAll(search);
 
@@ -71,7 +71,7 @@ namespace Service.Catalog.Application
             await _repository.Update(updatedAgent);
         }
 
-        public async Task<byte[]> ExportList(string search = null)
+        public async Task<(byte[] file, string fileName)> ExportList(string search)
         {
             var reagents = await GetAll(search);
 
@@ -93,10 +93,10 @@ namespace Service.Catalog.Application
 
             template.Format();
 
-            return template.ToByteArray();
+            return (template.ToByteArray(), "Catálogo de Reactivos.xlsx");
         }
 
-        public async Task<byte[]> ExportForm(int id)
+        public async Task<(byte[] file, string fileName)> ExportForm(int id)
         {
             var reagent = await GetById(id);
 
@@ -114,7 +114,7 @@ namespace Service.Catalog.Application
 
             template.Format();
 
-            return template.ToByteArray();
+            return (template.ToByteArray(), $"Catálogo de Reactivos ({reagent.Clave}).xlsx");
         }
     }
 }

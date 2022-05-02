@@ -1,10 +1,14 @@
-﻿using Service.Catalog.Application.IApplication;
+﻿using ClosedXML.Excel;
+using ClosedXML.Report;
+using Service.Catalog.Application.IApplication;
+using Service.Catalog.Dictionary;
 using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Dtos.Catalog;
 using Service.Catalog.Mapper;
 using Service.Catalog.Repository.IRepository;
 using Shared.Dictionary;
 using Shared.Error;
+using Shared.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,7 +68,7 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
             }
 
-            await _repository.Crete(newCatalog);
+            await _repository.Create(newCatalog);
 
             return newCatalog.ToCatalogListDto();
         }
@@ -78,18 +82,64 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
 
-            var updatedAgent = catalog.ToModel(existing);
+            var updatedCatalog = catalog.ToModel(existing);
 
-            var isDuplicate = await _repository.IsDuplicate(updatedAgent);
+            var isDuplicate = await _repository.IsDuplicate(updatedCatalog);
 
             if (isDuplicate)
             {
                 throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
             }
 
-            await _repository.Update(updatedAgent);
+            await _repository.Update(updatedCatalog);
 
-            return updatedAgent.ToCatalogListDto();
+            return updatedCatalog.ToCatalogListDto();
+        }
+
+        public async Task<byte[]> ExportList(string search)
+        {
+            var catalogs = await GetAll(search);
+
+            var path = Assets.CatalogList;
+
+            var template = new XLTemplate(path);
+
+            template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
+            template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
+            template.AddVariable("Titulo", "Reactivos");
+            template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
+            template.AddVariable("Catalogos", catalogs);
+
+            template.Generate();
+
+            var range = template.Workbook.Worksheet("Catalogos").Range("Catalogos");
+            var table = template.Workbook.Worksheet("Catalogos").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
+            table.Theme = XLTableTheme.TableStyleMedium2;
+
+            template.Format();
+
+            return template.ToByteArray();
+        }
+
+        public async Task<byte[]> ExportForm(int id)
+        {
+            var catalog = await GetById(id);
+
+            var path = Assets.CatalogForm;
+
+            var template = new XLTemplate(path);
+
+            template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
+            template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
+            template.AddVariable("Titulo", "Reactivos");
+            template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
+            template.AddVariable("Catalogo", catalog);
+
+            template.Generate();
+
+            template.Format();
+
+            return template.ToByteArray();
         }
     }
 }

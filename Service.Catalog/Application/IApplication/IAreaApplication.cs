@@ -8,9 +8,12 @@ namespace Service.Catalog.Application.IApplication
 {
     public interface IAreaApplication
     {
-        Task<IEnumerable<AreaListDto>> GetAll(string search = null);
+        Task<IEnumerable<AreaListDto>> GetAll(string search);
+        Task<IEnumerable<AreaListDto>> GetActive();
         Task<AreaFormDto> GetById(int id);
         Task<AreaListDto> Create(AreaFormDto Catalog);
         Task<AreaListDto> Update(AreaFormDto Catalog);
+        Task<byte[]> ExportList(string search);
+        Task<byte[]> ExportForm(int id);
     }
 }

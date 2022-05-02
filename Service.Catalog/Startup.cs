@@ -3,30 +3,39 @@ using Identidad.Api.Infraestructure.Repository;
 using Identidad.Api.Infraestructure.Repository.IRepository;
 using Identidad.Api.Infraestructure.Services;
 using Identidad.Api.Infraestructure.Services.IServices;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Service.Catalog.Application;
 using Service.Catalog.Application.IApplication;
+using Service.Catalog.Client;
+using Service.Catalog.Client.IClient;
 using Service.Catalog.Context;
 using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Domain.Indication;
 using Service.Catalog.Middleware;
 using Service.Catalog.Repository;
 using Service.Catalog.Repository.IRepository;
+using Service.Catalog.Requirements;
+using Shared.Dictionary;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Service.Catalog
@@ -47,6 +56,7 @@ namespace Service.Catalog
             {
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
                 options.UseSqlServer(Configuration.GetConnectionString("Default"));
+                options.EnableSensitiveDataLogging();
             }, ServiceLifetime.Scoped);
 
             services.AddHealthChecks()
@@ -54,20 +64,98 @@ namespace Service.Catalog
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
+            services.AddScoped<IIdentityClient, IdentityClient>();
+
+            services.AddHttpClient<IIdentityClient, IdentityClient>(client =>
+            {
+                var token = new HttpContextAccessor().HttpContext.Request.Headers["Authorization"].ToString();
+
+                client.BaseAddress = new Uri(Configuration["ClientUrls:Identity"]);
+
+                if (!string.IsNullOrWhiteSpace(token))
+                {
+                    client.DefaultRequestHeaders.Add("Authorization", token);
+                }
+
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Service.Catalog", Version = "v1" });
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authentication",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer"
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement{
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Id = "Bearer",
+                                Type = ReferenceType.SecurityScheme
+                            }
+                        }, new List<string>()
+                    }
+                });
             });
+
+            var key = Configuration["SecretKey"];
+            var tokenKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.IncludeErrorDetails = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = tokenKey,
+                        ValidateIssuer = true,
+                        ValidIssuer = Configuration["Issuer"],
+                        ValidateAudience = true,
+                        ValidAudience = Configuration["Audience"],
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero
+                    };
+                    options.RequireHttpsMetadata = false;
+                });
+
+            services.AddAuthorization(opt =>
+            {
+                opt.AddPolicy(Policies.Access, p => p.RequireAuthenticatedUser().Requirements.Add(new AccessRequirement()));
+                opt.AddPolicy(Policies.Create, p => p.RequireAuthenticatedUser().Requirements.Add(new CreateRequirement()));
+                opt.AddPolicy(Policies.Update, p => p.RequireAuthenticatedUser().Requirements.Add(new UpdateRequirement()));
+                opt.AddPolicy(Policies.Download, p => p.RequireAuthenticatedUser().Requirements.Add(new DownloadRequirement()));
+                opt.AddPolicy(Policies.Mail, p => p.RequireAuthenticatedUser().Requirements.Add(new MailRequirement()));
+                opt.AddPolicy(Policies.Wapp, p => p.RequireAuthenticatedUser().Requirements.Add(new WappRequirement()));
+            });
+
+            services.AddTransient<IAuthorizationHandler, AccessRequirementHandler>();
+            services.AddTransient<IAuthorizationHandler, CreateRequirementHandler>();
+            services.AddTransient<IAuthorizationHandler, UpdateRequirementHandler>();
+            services.AddTransient<IAuthorizationHandler, DownloadRequirementHandler>();
+            services.AddTransient<IAuthorizationHandler, MailRequirementHandler>();
+            services.AddTransient<IAuthorizationHandler, WappRequirementHandler>();
 
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", policy =>
                 {
-                    policy.AllowAnyHeader().AllowAnyMethod().WithExposedHeaders("WWW-Authenticate").AllowAnyOrigin();
+                    policy.AllowAnyHeader().AllowAnyMethod().WithExposedHeaders("WWW-Authenticate", "Content-Disposition").AllowAnyOrigin();
                 });
             });
 
-            services.AddControllers()
+            services.AddControllers(options =>
+            {
+                var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+            })
                 .AddFluentValidation(config =>
                 {
                     config.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());

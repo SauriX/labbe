@@ -12,6 +12,6 @@ namespace Service.Catalog.Dtos.Catalog
         public string Nombre { get; set; }
         public bool Activo { get; set; }
         public int DepartamentoId { get; set; }
-        public string UsuarioId { get; set; }
+        public Guid UsuarioId { get; set; }
     }
 }

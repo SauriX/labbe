@@ -44,6 +44,7 @@ namespace Identidad.Api.Infraestructure.Services
             }
 
             var code = await GenerateCode(medic);
+            medic.Clave = code;
             var sameCode = medic.Clave == code;
 
             var newMedics = medic.ToModel();

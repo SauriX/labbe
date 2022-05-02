@@ -24,12 +24,12 @@ namespace Identidad.Api.mapper
                 Correo = model.Correo.Trim(),
                 Telefono = model.Telefono,
                 Celular = model.Celular,
-                Direccion = $"{model.Calle.Trim()} {model.NumeroExterior} {model.ColoniaId} {model.CiudadId} {model.EstadoId}",
+                Direccion = model.Calle.Trim() + " " + model.NumeroExterior.Trim() + ", " + model.Colonia.Colonia.Trim() + ", " + model.Colonia.Ciudad.Ciudad.Trim() + ", " + model.Colonia.Ciudad.Estado.Estado.Trim(),
                 Clinicas = model.Clinicas.Select(y => y.Clinica).ToList().ToCatalogListDto(),
                 Observaciones = model.Observaciones.Trim(),
                 EspecialidadId = model.EspecialidadId,
+                Especialidad = model.Especialidad.Nombre,
                 Activo = model.Activo
-
             };
         }
         public static IEnumerable<MedicsListDto> ToMedicsListDto(this List<Medics> model)
@@ -43,8 +43,9 @@ namespace Identidad.Api.mapper
                 Correo = x.Correo?.Trim(),
                 Telefono = x.Telefono,
                 Celular = x.Celular,
-                Direccion = x.Calle?.Trim() + " " + x.NumeroExterior + " " + x.ColoniaId + " " + x.EstadoId + " " + x.CiudadId + " " + x.CodigoPostal,
+                Direccion = x.Calle.Trim() + " " + x.NumeroExterior.Trim() + ", " + x.Colonia.Colonia.Trim() + ", " + x.Colonia.Ciudad.Ciudad.Trim() + ", " + x.Colonia.Ciudad.Estado.Estado.Trim(),
                 EspecialidadId = x.EspecialidadId,
+                Especialidad = x.Especialidad.Nombre,
                 Observaciones = x.Observaciones?.Trim(),
                 Activo = x.Activo,
                 Clinicas = x.Clinicas?.Select(y => y.Clinica)?.ToList()?.ToCatalogListDto()
@@ -104,7 +105,7 @@ namespace Identidad.Api.mapper
                 FechaCreo = DateTime.Now,
                 Clinicas = dto.Clinicas.Select(x => new MedicClinic
                 {
-                    ClinicaId = x.Id ,
+                    ClinicaId = x.Id,
                     FechaCreo = DateTime.Now,
                     UsuarioCreoId = dto.IdUsuario,
                 }).ToList(),

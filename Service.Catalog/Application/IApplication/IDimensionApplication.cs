@@ -8,9 +8,12 @@ namespace Service.Catalog.Application.IApplication
 {
     public interface IDimensionApplication
     {
-        Task<IEnumerable<DimensionListDto>> GetAll(string search = null);
+        Task<IEnumerable<DimensionListDto>> GetAll(string search);
+        Task<IEnumerable<DimensionListDto>> GetActive();
         Task<DimensionFormDto> GetById(int id);
         Task<DimensionListDto> Create(DimensionFormDto Catalog);
         Task<DimensionListDto> Update(DimensionFormDto Catalog);
+        Task<byte[]> ExportList(string search);
+        Task<byte[]> ExportForm(int id);
     }
 }
