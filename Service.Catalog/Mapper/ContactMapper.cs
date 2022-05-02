@@ -7,16 +7,16 @@ namespace Service.Catalog.Mapper
 {
     public static class ContactMapper
     {
-        public static IEnumerable<ContactListDto> ToContactListDto(this List<Contact> model)
+        public static IEnumerable<ContactListDto> ToContactListDto(this IEnumerable<Contact> model)
         {
             if (model == null) return null;
 
             return model.Select(x => new ContactListDto
             {
-                IdContacto = x.Id,
-                Nombre = x.Nombre,
+                Id = x.Id,
+                Nombre = x.Nombre + " " + x.Apellidos,
                 Correo = x.Correo,
-                Telefono = x.Telefono,
+                Telefono = x.Telefono, 
                 Activo = x.Activo,
             });
         }
@@ -26,8 +26,8 @@ namespace Service.Catalog.Mapper
 
             return model.Select(x => new ContactListDto
             {
-                IdContacto = x.Id,
-                Nombre = x.Nombre,
+                Id = x.Id,
+                Nombre = x.Nombre + " " + x.Apellidos,
                 Correo = x.Correo,
                 Telefono = x.Telefono,
                 Activo = x.Activo,

@@ -6,17 +6,18 @@ namespace Service.Catalog.Domain.Company
     public class Company
     {
         public int Id { get; set; }
-        public string Clave { get; set;}
-        public string Contrasena { get; set;}
-        public string EmailEmpresarial { get; set;}
-        public string NombreComercial { get; set;}
-        public int Procedencia { get; set;}
-        public int? ListaPrecioId { get; set;}
-        public long? PromocionesId { get; set;}
+        public string Clave { get; set; }
+        public string Contrasena { get; set; }
+        public string EmailEmpresarial { get; set; }
+        public string NombreComercial { get; set; }
+        public int ProcedenciaId { get; set; }
+        public virtual Provenance.Provenance Procedencia { get; set; }
+        public int? ListaPrecioId { get; set; }
+        public long? PromocionesId { get; set; }
         public string RFC { get; set; }
-        public int? CodigoPostal { get; set; }
-        public int? EstadoId { get; set; }
-        public int? MunicipioId { get; set; }
+        public string CodigoPostal { get; set; }
+        public string Estado { get; set; }
+        public string Ciudad { get; set; }
         public string RazonSocial { get; set; }
         public int MetodoDePagoId { get; set; }
         public int? FormaDePagoId { get; set; }
@@ -30,6 +31,8 @@ namespace Service.Catalog.Domain.Company
         public DateTime? FechaCreo { get; set; }
         public Guid? UsuarioModId { get; set; }
         public DateTime? FechaMod { get; set; }
+
         public virtual ICollection<Contact> Contacts { get; set; }
+        public virtual ICollection<Price_Company> Precio { get; set; }
     }
 }

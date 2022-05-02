@@ -139,6 +139,18 @@ namespace Service.Identity.Controllers
         {
             return Guid.Parse(User.Claims.SingleOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
         }
+        [HttpGet("maquilador")]
+        public ScopeDto GetMaquiladorScopes()
+        {
+            return new ScopeDto
+            {
+                Pantalla = "Catálogo de Maquilador",
+                Acceder = true,
+                Crear = true,
+                Editar = true,
+                Descargar = true,
+            };
+        }
     }
 
 }

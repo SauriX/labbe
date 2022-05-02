@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Catalog.Application.IApplication;
+using Service.Catalog.Dtos.Catalog;
 using Service.Catalog.Dtos.Company;
 using Shared.Dictionary;
 using System.Collections.Generic;
@@ -26,6 +27,19 @@ namespace Identidad.Api.Controllers
         {
             return await _Services.GetAll(search);
         }
+        [HttpGet("active")]
+        public async Task<IEnumerable<CompanyListDto>> GetActive(int id)
+        {
+            return await _Services.GetActive();
+        }
+
+        //[HttpGet("provenance/active")]
+        //public async Task<IEnumerable<CatalogListDto>> GetActiveProvenance(int id)
+        //{
+        //    return await _Services.GetActive();
+        //}
+
+        [HttpGet("{Id}")]
 
         [HttpGet("{Id}")]
         [Authorize(Policies.Access)]
@@ -63,6 +77,12 @@ namespace Identidad.Api.Controllers
         {
             var file = await _Services.ExportFormCompany(id);
             return File(file, MimeType.XLSX);
+        }
+
+        [HttpGet("paswwordgenerator")]
+        public async Task<string> GeneratePassword()
+        {
+            return await _Services.GeneratePassword();
         }
     }
 }

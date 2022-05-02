@@ -13,6 +13,18 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
+      "DownstreamPathTemplate": "/api/company/active",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/company/active",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/company/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -71,6 +83,18 @@
       ],
       "UpstreamPathTemplate": "/api/company/export/form/{id}",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api​/company/paswwordgenerator",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 45216
+        }
+      ],
+      "UpstreamPathTemplate": "​/api​/company​/paswwordgenerator",
+      "UpstreamHttpMethod": [ "GET" ]
     }
   ]
 }

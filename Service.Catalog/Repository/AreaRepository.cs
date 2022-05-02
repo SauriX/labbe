@@ -45,6 +45,11 @@ namespace Service.Catalog.Repository
 
             return area;
         }
+        public async Task<IEnumerable<Area>> GetAreas(int id)
+        {
+            var catalog = _context.CAT_Area.Where(x => x.DepartamentoId == id && x.Activo);
+            return catalog;
+        }
 
         public async Task<bool> IsDuplicate(Area catalog)
         {

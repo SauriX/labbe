@@ -8,7 +8,7 @@ namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
     {
         public void Configure(EntityTypeBuilder<Contact> builder)
         {
-            builder.ToTable("CAT_CompañiaContacto");
+            builder.ToTable("CAT_Contacto");
 
             builder.HasKey(x => x.Id);
 
@@ -19,15 +19,15 @@ namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
 
             builder
               .Property(x => x.Apellidos)
-              .IsRequired(true)
+              .IsRequired(false)
               .HasMaxLength(100);
             builder
               .Property(x => x.Correo)
-              .IsRequired(true)
+              .IsRequired(false)
               .HasMaxLength(100);
             builder
                .Property(x => x.Telefono)
-               .IsRequired(true);
+               .IsRequired(false);
             builder
               .Property(x => x.UsuarioCreoId)
               .IsRequired(true);

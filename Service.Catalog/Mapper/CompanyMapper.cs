@@ -14,10 +14,10 @@ namespace Service.Catalog.Mapper
 
             return new CompanyListDto
             {
-                IdCompania = model.Id,
+                Id = model.Id,
                 Clave = model.Clave.Trim(),
                 Contrasena = model.Contrasena.Trim(),
-                Procedencia = model.Procedencia,
+                Procedencia = model.Procedencia.Nombre.Trim(),
                 ListaPrecioId = model.ListaPrecioId,
                 Activo = model.Activo
 
@@ -28,15 +28,14 @@ namespace Service.Catalog.Mapper
             if (model == null) return null;
             return model.Select(x => new CompanyListDto
             {
-                IdCompania = x.Id,
+                Id = x.Id,
                 Clave = x.Clave.Trim(),
                 Contrasena = x.Contrasena.Trim(),
                 NombreComercial = x.NombreComercial.Trim(),
-                Procedencia = x.Procedencia,
+                Procedencia = x.Procedencia.Nombre.Trim(),
                 ListaPrecioId = x.ListaPrecioId,
                 Activo = x.Activo,
-                //Clinicas = x.Clinicas?.Select(y => y.Clinica)?.ToList()?.ToCatalogListDto()
-                Contacts = x.Contacts.ToList().ToContactListDto()
+                Contacts = x.Contacts?.ToList()?.ToContactListDto()
             });
         }
         public static CompanyFormDto ToCompanyFormDto(this Company model)
@@ -44,18 +43,18 @@ namespace Service.Catalog.Mapper
             if (model == null) return null;
             return new CompanyFormDto
             {
-                IdCompania = model.Id,
+                Id = model.Id,
                 Clave = model.Clave.Trim(),
                 Contrasena = model.Contrasena.Trim(),
                 EmailEmpresarial = model.EmailEmpresarial.Trim(),
                 NombreComercial = model.NombreComercial.Trim(),
-                Procedencia = model.Procedencia,
+                ProcedenciaId = model.ProcedenciaId ,
                 ListaPrecioId = model.ListaPrecioId,
                 PromocionesId = model.PromocionesId,
                 RFC = model.RFC.Trim(),
                 CodigoPostal = model.CodigoPostal,
-                EstadoId = model.EstadoId,
-                MunicipioId = model.MunicipioId,
+                Estado = model.Estado,
+                Ciudad = model.Ciudad,
                 RazonSocial = model.RazonSocial.Trim(),
                 MetodoDePagoId = model.MetodoDePagoId,
                 FormaDePagoId = model.FormaDePagoId,
@@ -65,8 +64,7 @@ namespace Service.Catalog.Mapper
                 NumeroDeCuenta = model.NumeroDeCuenta.Trim(),
                 BancoId = model.BancoId,
                 Activo = model.Activo,
-                //Clinicas = model.Clinicas.Select(x => x.Clinica).ToList().ToCatalogListDto()
-                Contacts = (ICollection<ContactListDto>)model.Contacts.ToList().ToContactListDto()
+                Contacts = model.Contacts.ToList().ToContactListDto()
             };
         }
 
@@ -76,18 +74,18 @@ namespace Service.Catalog.Mapper
 
             return new Company
             {
-                Id = dto.IdCompania,
+                Id = dto.Id,
                 Clave = dto.Clave.Trim(),
                 Contrasena = dto.Contrasena.Trim(),
                 EmailEmpresarial = dto.EmailEmpresarial.Trim(),
                 NombreComercial = dto.NombreComercial.Trim(),
-                Procedencia = dto.Procedencia,
+                ProcedenciaId = dto.ProcedenciaId,
                 ListaPrecioId = dto.ListaPrecioId,
                 PromocionesId = dto.PromocionesId,
                 RFC = dto.RFC.Trim(),
                 CodigoPostal = dto.CodigoPostal,
-                EstadoId = dto.EstadoId,
-                MunicipioId = dto.MunicipioId,
+                Estado = dto.Estado,
+                Ciudad = dto.Ciudad,
                 RazonSocial = dto.RazonSocial.Trim(),
                 MetodoDePagoId = dto.MetodoDePagoId,
                 FormaDePagoId = dto.FormaDePagoId,
@@ -99,16 +97,17 @@ namespace Service.Catalog.Mapper
                 Activo = dto.Activo,
                 UsuarioCreoId = dto.UsuarioCreoId,
                 FechaCreo = DateTime.Now,
-                Contacts = dto.Contacts.Select(x => new Contact
+                Contacts = dto.Contacts?.Select(x => new Contact
                 {
-                    Id = x.IdContacto,
+                    Id = x.Id,
+                    CompañiaId = dto.Id,
                     Nombre = x.Nombre.Trim(),
-                    Telefono = x.IdContacto,
+                    Telefono = x.Id,
                     Correo = x.Correo,
                     Activo = x.Activo,
                     FechaCreo = DateTime.Now,
                     UsuarioCreoId = dto.UsuarioCreoId,
-                }).ToList(),
+                })?.ToList(),
             };
         }
 
@@ -118,18 +117,18 @@ namespace Service.Catalog.Mapper
 
             return new Company
             {
-                Id = dto.IdCompania,
+                Id = dto.Id,
                 Clave = dto.Clave.Trim(),
                 Contrasena = dto.Contrasena.Trim(),
                 EmailEmpresarial = dto.EmailEmpresarial.Trim(),
                 NombreComercial = dto.NombreComercial.Trim(),
-                Procedencia = dto.Procedencia,
+                ProcedenciaId = dto.ProcedenciaId,
                 ListaPrecioId = dto.ListaPrecioId,
                 PromocionesId = dto.PromocionesId,
                 RFC = dto.RFC.Trim(),
                 CodigoPostal = dto.CodigoPostal,
-                EstadoId = dto.EstadoId,
-                MunicipioId = dto.MunicipioId,
+                Estado = dto.Estado,
+                Ciudad = dto.Ciudad,
                 RazonSocial = dto.RazonSocial.Trim(),
                 MetodoDePagoId = dto.MetodoDePagoId,
                 FormaDePagoId = dto.FormaDePagoId,
@@ -143,9 +142,10 @@ namespace Service.Catalog.Mapper
                 FechaCreo = DateTime.Now,
                 Contacts = dto.Contacts.Select(x => new Contact
                 {
-                    Id = x.IdContacto,
+                    Id = x.Id,
+                    CompañiaId = dto.Id,
                     Nombre = x.Nombre.Trim(),
-                    Telefono = x.IdContacto,
+                    Telefono = x.Telefono,
                     Correo = x.Correo,
                     Activo = x.Activo,
                     FechaCreo = DateTime.Now,

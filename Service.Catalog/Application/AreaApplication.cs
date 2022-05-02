@@ -66,7 +66,12 @@ namespace Service.Catalog.Application
 
             return newArea.ToAreaListDto();
         }
+        public async Task<IEnumerable<CatalogListDto>> GetAreaByDépartament(int id)
+        {
+            var catalogs = await _repository.GetAreas(id);
 
+            return catalogs.ToAreaDto();
+        }
         public async Task<AreaListDto> Update(AreaFormDto area)
         {
             var existing = await _repository.GetById(area.Id);

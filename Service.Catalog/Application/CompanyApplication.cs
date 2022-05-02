@@ -13,6 +13,8 @@ using System;
 using ClosedXML.Excel;
 using Shared.Extensions;
 using Service.Catalog.Application.IApplication;
+using Service.Catalog.Dictionary.Company;
+using Shared.Helpers;
 
 namespace Service.Catalog.Application
 {
@@ -25,6 +27,14 @@ namespace Service.Catalog.Application
             _repository = repository;
         }
 
+        public async Task<IEnumerable<CompanyListDto>> GetActive()
+        {
+            var catalogs = await _repository.GetActive();
+
+            return catalogs.ToCompanyListDto();
+        }
+
+
         public async Task<CompanyFormDto> GetById(int Id)
         {
             var Company = await _repository.GetById(Id);
@@ -36,9 +46,11 @@ namespace Service.Catalog.Application
         }
         public async Task<CompanyFormDto> Create(CompanyFormDto company)
         {
-            if (company.IdCompania != 0)
+            var code = await ValidarClaveNombre(company);
+            
+            if (company.Id != 0 || code !=0 )
             {
-                throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
             }
 
             var newIndication = company.ToModel();
@@ -58,7 +70,17 @@ namespace Service.Catalog.Application
         }
         public async Task<CompanyFormDto> Update(CompanyFormDto company)
         {
-            var existing = await _repository.GetById(company.IdCompania);
+            var existing = await _repository.GetById(company.Id);
+
+            var code = await ValidarClaveNombre(company);
+            if (existing.Clave != company.Clave || existing.NombreComercial != company.NombreComercial)
+            {
+                if (company.Id != 0 || code != 0)
+                {
+                    throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
+                }
+
+            }            
 
             if (existing == null)
             {
@@ -76,7 +98,7 @@ namespace Service.Catalog.Application
         {
             var company = await GetAll(search);
 
-            var path = AssetsIndication.IndicationList;
+            var path = AssetsCompany.CompanyList;
 
             var template = new XLTemplate(path);
 
@@ -101,7 +123,7 @@ namespace Service.Catalog.Application
         {
             var company = await GetById(id);
 
-            var path = AssetsIndication.IndicationForm;
+            var path = AssetsCompany.CompanyForm;
 
             var template = new XLTemplate(path);
 
@@ -110,12 +132,39 @@ namespace Service.Catalog.Application
             template.AddVariable("Titulo", "Compañias");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
             template.AddVariable("Compañias", company);
+            template.AddVariable("Contactos", company.Contacts);
 
             template.Generate();
 
-            template.Format();
+            //var range = template.Workbook.Worksheet("Compañias").Range("Contactos");
+            //var table = template.Workbook.Worksheet("Compañias").Range("$A$28:" + range.RangeAddress.LastAddress).CreateTable();
+            //table.Theme = XLTableTheme.TableStyleMedium2; 
+
+            //template.Format();
 
             return template.ToByteArray();
+        }
+
+        public async Task<string> GeneratePassword()
+        {
+
+            return PasswordGenerator.GenerarPassword(8);
+        }
+
+        private async Task<int> ValidarClaveNombre(CompanyFormDto company)
+        {
+
+            var clave = company.Clave;
+            var name = company.NombreComercial;
+
+            var exists = await _repository.ValidateClaveNamne(clave, name);
+
+            if (exists)
+            {
+                return 1;
+            }
+
+            return 0;
         }
     }
 }

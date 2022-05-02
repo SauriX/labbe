@@ -17,6 +17,12 @@ namespace Service.Catalog.Controllers.Catalog
             return await _paymentMethodService.GetAll(search);
         }
 
+        [HttpGet("paymentMethod/active")]
+        public async Task<IEnumerable<CatalogListDto>> GetActivePaymentMethod(int id)
+        {
+            return await _paymentMethodService.GetActive();
+        }
+
         [HttpGet("paymentMethod/{id}")]
         [Authorize(Policies.Access)]
         public async Task<CatalogFormDto> GetPaymentMethodById(int id)

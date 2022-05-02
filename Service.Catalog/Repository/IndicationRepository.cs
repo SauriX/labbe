@@ -84,5 +84,21 @@ namespace Service.Catalog.Repository
             await _context.SaveChangesAsync();
         }
 
+        public async Task<bool> ValidateClave(string clave)
+        {
+            var validate = _context.CAT_Indicacion.Where(x => x.Clave == clave).Count();
+
+            if (validate == 0)
+            {
+                return false;
+            }
+            else
+            {
+
+                return true;
+            }
+
+        }
+
     }
 }

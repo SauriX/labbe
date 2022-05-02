@@ -72,7 +72,7 @@ namespace Identidad.Api.mapper
                 NumeroExterior = model.NumeroExterior,
                 NumeroInterior = model.NumeroInterior,
                 Observaciones = model.Observaciones.Trim(),
-                EspecialidadId = model.EspecialidadId,
+                EspecialidadId = model.EspecialidadId?.Trim(),
                 Activo = model.Activo,
                 Clinicas = model.Clinicas.Select(x => x.Clinica).ToList().ToCatalogListDto()
             };
@@ -88,7 +88,7 @@ namespace Identidad.Api.mapper
                 Nombre = dto.Nombre.Trim(),
                 PrimerApellido = dto.PrimerApellido.Trim(),
                 SegundoApellido = dto.SegundoApellido.Trim(),
-                EspecialidadId = dto.EspecialidadId,
+                EspecialidadId = dto.EspecialidadId?.Trim(),
                 Observaciones = dto.Observaciones.Trim(),
                 CodigoPostal = dto.CodigoPostal,
                 EstadoId = dto.EstadoId,
@@ -123,7 +123,7 @@ namespace Identidad.Api.mapper
                 Nombre = dto.Nombre.Trim(),
                 PrimerApellido = dto.PrimerApellido.Trim(),
                 SegundoApellido = dto.SegundoApellido.Trim(),
-                EspecialidadId = dto.EspecialidadId,
+                EspecialidadId = dto.EspecialidadId?.Trim(),
                 Observaciones = dto.Observaciones.Trim(),
                 CodigoPostal = dto.CodigoPostal,
                 EstadoId = dto.EstadoId,

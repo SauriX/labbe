@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Context;
 using Service.Catalog.Domain.Company;
 using Service.Catalog.Repository.IRepository;
+using Shared.Helpers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,18 +18,23 @@ namespace Service.Catalog.Repository
         {
             _context = context;
         }
+        public async Task<List<Company>> GetActive()
+        {
+            var catalogs = _context.CAT_Compañia.Where(x => x.Activo);
+
+            return await catalogs.ToListAsync();
+        }
 
         public async Task<Company> GetById(int Id)
         {
             return await _context.CAT_Compañia
             .Include(x => x.Contacts)
-            .ThenInclude(x => x.Compañia)
             .FirstOrDefaultAsync(x => x.Id == Id);
         }
 
         public async Task<List<Company>> GetAll(string search)
         {
-            var Company = _context.CAT_Compañia.AsQueryable();
+            var Company = _context.CAT_Compañia.Include(x => x.Procedencia).AsQueryable();
             search = search.Trim().ToLower();
 
             if (!string.IsNullOrWhiteSpace(search) && search != "all")
@@ -45,12 +51,14 @@ namespace Service.Catalog.Repository
 
             try
             {
-                var contacts = company.Contacts.ToList();
+                var contacts = company.Contacts?.ToList();
 
                 company.Contacts = null;
                 _context.CAT_Compañia.Add(company);
 
                 await _context.SaveChangesAsync();
+
+                contacts ??= new List<Contact>();
 
                 contacts.ForEach(x => x.CompañiaId = company.Id);
                 await _context.BulkInsertOrUpdateOrDeleteAsync(contacts);
@@ -74,6 +82,28 @@ namespace Service.Catalog.Repository
             await _context.BulkInsertOrUpdateOrDeleteAsync(contact);
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<string> GeneratePassword()
+        {
+
+            return PasswordGenerator.GenerarPassword(8);
+        }
+
+        public async Task<bool> ValidateClaveNamne(string clave, string nombre)
+        {
+            var validate =  _context.CAT_Compañia.Where(x => x.Clave == clave || x.NombreComercial == nombre).Count();
+            
+            if (validate == 0)
+            {
+                return false;
+            }
+            else
+            {
+               
+                return true;
+            }
+
         }
     }
 }

@@ -19,5 +19,9 @@ namespace Service.Catalog.Dictionary
         public const string AreaForm = "wwwroot/layout/excel/catalog/AreaFormulario.xlsx";    
         public const string DimensionList = "wwwroot/layout/excel/catalog/DimensionListado.xlsx";
         public const string DimensionForm = "wwwroot/layout/excel/catalog/DimensionFormulario.xlsx";
+        public const string MaquiladorList = "wwwroot/layout/excel/Maquilador/MaquiladorListado.xlsx";
+        public const string MaquiladorForm = "wwwroot/layout/excel/Maquilador/MaquiladorFormulario.xlsx";
+        public const string ParameterList = "wwwroot/layout/excel/parameter/ParameterListado.xlsx";
+        public const string ParameterForm = "wwwroot/layout/excel/parameter/ParameterFormulario.xlsx";
     }
 }

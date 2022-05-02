@@ -12,6 +12,7 @@ namespace Service.Catalog.Repository.IRepository
         Task Create(Indication indication);
         Task Update(Indication indication);
         Task<List<Indication>> GetAll(string search = null);
+        Task<bool> ValidateClave(string clave);
 
     }
 }

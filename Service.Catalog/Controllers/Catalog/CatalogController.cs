@@ -4,6 +4,8 @@ using Service.Catalog.Application.IApplication;
 using Service.Catalog.Domain;
 using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Domain.Indication;
+using Service.Catalog.Domain.Parameter;
+using Service.Catalog.Domain.Provenance;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +19,7 @@ namespace Service.Catalog.Controllers.Catalog
     {
         private readonly IAreaApplication _areaService;
         private readonly ICatalogApplication<Bank> _bankService;
+        private readonly ICatalogApplication<Provenance> _provenanceService;
         private readonly ICatalogApplication<Clinic> _clinicService;
         private readonly ICatalogApplication<Department> _departmentService;
         private readonly IDimensionApplication _dimensionService;
@@ -29,6 +32,7 @@ namespace Service.Catalog.Controllers.Catalog
         private readonly ICatalogApplication<PaymentMethod> _paymentMethodService;
         private readonly ICatalogApplication<SampleType> _sampleTypeService;
         private readonly ICatalogDescriptionApplication<UseOfCFDI> _useOfCFDIService;
+        private readonly ICatalogApplication<Format> _FormatService;
 
         public CatalogController(
             ICatalogApplication<Delivery> deliveryService,
@@ -44,7 +48,10 @@ namespace Service.Catalog.Controllers.Catalog
             ICatalogDescriptionApplication<UseOfCFDI> useOfCFDIService,
             ICatalogDescriptionApplication<Payment> paymentService,
             ICatalogApplication<PaymentMethod> paymentMethodService,
-            ICatalogApplication<WorkList> workListService)
+            ICatalogApplication<WorkList> workListService,
+            ICatalogApplication<Provenance> provenanceService,
+            ICatalogApplication<Format> formatService
+            )
         {
             _deliveryService = deliveryService;
             _areaService = areaService;
@@ -60,6 +67,8 @@ namespace Service.Catalog.Controllers.Catalog
             _paymentService = paymentService;
             _paymentMethodService = paymentMethodService;
             _workListService = workListService;
+            _provenanceService = provenanceService;
+            _FormatService = formatService;
         }
     }
 }

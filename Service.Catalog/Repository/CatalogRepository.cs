@@ -48,6 +48,7 @@ namespace Service.Catalog.Repository
             return catalog;
         }
 
+
         public async Task<bool> IsDuplicate(T catalog)
         {
             var isDuplicate = await _entity.AnyAsync(x => x.Id != catalog.Id && (x.Clave == catalog.Clave || x.Nombre == catalog.Nombre));

@@ -5,13 +5,14 @@ using Service.Catalog.Domain.Company;
 
 namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
 {
-    public class CompanyConfiguration : IEntityTypeConfiguration<Company>
+    public class CompanyConfiguration : IEntityTypeConfiguration<Domain.Company.Company>
     {
-        public void Configure(EntityTypeBuilder<Company> builder)
+        public void Configure(EntityTypeBuilder<Domain.Company.Company> builder)
         {
             builder.ToTable("CAT_Compañia");
 
             builder.HasKey(x => x.Id);
+
 
             builder
               .Property(x => x.Clave)
@@ -27,14 +28,12 @@ namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
               .IsRequired(true)
               .HasMaxLength(100);
             builder
-             .Property(x => x.Procedencia)
-             .IsRequired(true);
-            builder
              .Property(x => x.ListaPrecioId)
              .IsRequired(false);
             builder
              .Property(x => x.PromocionesId)
              .IsRequired(false);
+
             builder
              .Property(x => x.ListaPrecioId)
              .IsRequired(false);
@@ -42,7 +41,7 @@ namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
              .Property(x => x.CodigoPostal)
              .IsRequired(false);
             builder
-             .Property(x => x.EstadoId)
+             .Property(x => x.Estado)
              .IsRequired(false);
             builder
              .Property(x => x.FormaDePagoId)
@@ -62,7 +61,7 @@ namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
               .IsRequired(true)
               .HasMaxLength(100);
             builder
-              .Property(x => x.MunicipioId)
+              .Property(x => x.Ciudad)
               .IsRequired(false);
             builder
               .Property(x => x.MetodoDePagoId)
@@ -93,6 +92,16 @@ namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
                .WithOne(x => x.Compañia)
                .OnDelete(DeleteBehavior.Restrict);
 
+           /* builder
+               .HasMany(x => x.Precio)
+               .WithOne(x => x.Compañia)
+               .OnDelete(DeleteBehavior.Restrict);*/
+
+            builder
+               .HasOne(x => x.Procedencia)
+               .WithMany()
+               .OnDelete(DeleteBehavior.Restrict);
+      
         }
     }
 }
