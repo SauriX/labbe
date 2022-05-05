@@ -5,7 +5,7 @@ namespace Service.Catalog.Domain.Parameter
     public class ParameterStudy
     {
         public Guid ParametroId { get; set; }
-        public virtual Parameters Parametro { get; set; }
+        public virtual Parameter Parametro { get; set; }
         public int EstudioId { get; set; }
         public virtual Study Estudio { get; set; }
         public bool Activo { get; set; }

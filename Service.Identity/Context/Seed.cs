@@ -56,6 +56,32 @@ namespace Service.Identity.Context
                 }
             }
 
+            if (context.CAT_Menu.Count() == 17)
+            {
+                using var transaction = context.Database.BeginTransaction();
+
+                try
+                {
+                    var menus = new List<Menu>
+                    {
+                        new Menu(18, 1, "Maquilador", "maquilador", "maquilador", 1017),
+                    };
+
+                    context.CAT_Menu.AddRange(menus);
+
+                    context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Menu ON;");
+                    await context.SaveChangesAsync();
+                    context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Menu OFF;");
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+
             var roleId = Guid.NewGuid();
 
             if (!context.CAT_Rol.Any())

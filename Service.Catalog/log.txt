@@ -277,3 +277,43 @@ The statement has been terminated.
 
 26/4/2022 15:31:56 => The MERGE statement conflicted with the FOREIGN KEY constraint "FK_CAT_Sucursal_Departamento_CAT_Sucursal_SucursalId". The conflict occurred in database "LAB_RAMOS_DEVELOP_CATALOGO", table "dbo.CAT_Sucursal", column 'Id'.
 The statement has been terminated.
+
+3/5/2022 07:04:48 => Invalid column name 'Id'.
+
+3/5/2022 07:10:47 => Invalid column name 'Id'.
+
+3/5/2022 07:12:44 => Invalid column name 'Id'.
+
+3/5/2022 15:16:28 => Value cannot be null. (Parameter 'input')
+
+3/5/2022 15:17:00 => Value cannot be null. (Parameter 'input')
+
+3/5/2022 15:17:13 => Value cannot be null. (Parameter 'input')
+
+3/5/2022 15:17:29 => Value cannot be null. (Parameter 'input')
+
+3/5/2022 15:17:32 => Value cannot be null. (Parameter 'input')
+
+3/5/2022 15:17:34 => Value cannot be null. (Parameter 'input')
+
+3/5/2022 15:18:03 => Value cannot be null. (Parameter 'input')
+
+3/5/2022 15:18:52 => Value cannot be null. (Parameter 'input')
+
+3/5/2022 15:33:31 => The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. Path: $ | LineNumber: 0 | BytePositionInLine: 0.
+
+3/5/2022 15:34:15 => The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. Path: $ | LineNumber: 0 | BytePositionInLine: 0.
+
+3/5/2022 15:41:20 => Value cannot be null. (Parameter 'input')
+
+3/5/2022 15:52:47 => Value cannot be null. (Parameter 'input')
+
+3/5/2022 15:52:53 => Value cannot be null. (Parameter 'input')
+
+3/5/2022 15:54:15 => Value cannot be null. (Parameter 'input')
+
+3/5/2022 15:54:35 => Value cannot be null. (Parameter 'input')
+
+3/5/2022 16:14:52 => Value cannot be null. (Parameter 'input')
+
+3/5/2022 16:24:49 => Value cannot be null. (Parameter 'input')

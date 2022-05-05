@@ -7,16 +7,17 @@ namespace Service.Catalog.Application.IApplication
 {
     public interface IParameterApplication
     {
-        Task<IEnumerable<ParameterList>> GetAll(string search = null);
-        Task<ParameterForm> GetById(string id);
-        Task Create(ParameterForm parameter);
-        Task Update(ParameterForm parameter);
-        Task<byte[]> ExportList(string search = null);
-        Task<byte[]> ExportForm(string id);
-        Task AddValue(ValorTipeForm valorTipeForm);
-        Task<ValorTipeForm> getvalueNum(string id);
-        Task updateValueNumeric(ValorTipeForm tipoValor);
-        Task<IEnumerable<ValorTipeForm>> getallvalues(string id,string tipe);
-        Task deletevalue(string id);
+        Task<IEnumerable<ParameterListDto>> GetAll(string search);
+        Task<IEnumerable<ParameterListDto>> GetActive();
+        Task<ParameterFormDto> GetById(string id);
+        Task<IEnumerable<ParameterValueDto>> GetAllValues(string id);
+        Task<ParameterValueDto> GetValueById(string id);
+        Task<ParameterListDto> Create(ParameterFormDto parameter);
+        Task AddValue(ParameterValueDto value);
+        Task<ParameterListDto> Update(ParameterFormDto parameter);
+        Task UpdateValue(ParameterValueDto value);
+        Task DeleteValue(string id);
+        Task<(byte[] file, string fileName)> ExportList(string search);
+        Task<(byte[] file, string fileName)> ExportForm(string id);
     }
 }

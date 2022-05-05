@@ -59,3 +59,5 @@
 27/4/2022 12:05:24 => Sequence contains no elements
 
 27/4/2022 12:06:33 => Sequence contains no elements
+
+3/5/2022 08:18:31 => Database operation expected to affect 1 row(s) but actually affected 0 row(s). Data may have been modified or deleted since entities were loaded. See http://go.microsoft.com/fwlink/?LinkId=527962 for information on understanding and handling optimistic concurrency exceptions.

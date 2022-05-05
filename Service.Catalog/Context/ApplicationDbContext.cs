@@ -51,8 +51,8 @@ namespace Service.Catalog.Context
         public DbSet<Company> CAT_Compañia { get; set; }
         public DbSet<Contact> CAT_CompañiaContacto { get; set; }
         public DbSet<BranchStudy> Relacion_Estudio_Sucursal { get; set; }
-        public DbSet<Parameters> CAT_Parametro { get; set; }
-        public DbSet<TipoValor> CAT_Tipo_Valor { get; set; }
+        public DbSet<Parameter> CAT_Parametro { get; set; }
+        public DbSet<ParameterValue> CAT_Tipo_Valor { get; set; }
         //De aqui
         public DbSet<Price> CAT_ListaPrecio { get; set; }
         public DbSet<Price_Company> CAT_ListaP_Compañia { get; set; }
@@ -60,7 +60,7 @@ namespace Service.Catalog.Context
         public DbSet<Provenance> CAT_Procedencia { get; set; }
         public DbSet<Contact> CAT_Contacto { get; set; }
         //hasta aqui es zona de pruebas
-        public DbSet<Maquilador> CAT_Maquilador { get; set; }
+        public DbSet<Maquila> CAT_Maquilador { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)

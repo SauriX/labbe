@@ -18,26 +18,27 @@ namespace Service.Catalog.Repository
             _context = context;
         }
 
-        public async Task<Indication> GetById(int Id)
-        {
-            return await _context.CAT_Indicacion
-            .Include(x => x.Estudios)
-            .ThenInclude(x => x.Estudio)
-            .ThenInclude(x => x.Area)
-            .FirstOrDefaultAsync(x => x.Id == Id);
-        }
-
         public async Task<List<Indication>> GetAll(string search)
         {
-            var Indications = _context.CAT_Indicacion.AsQueryable();
+            var indications = _context.CAT_Indicacion.AsQueryable();
+
             search = search.Trim().ToLower();
 
             if (!string.IsNullOrWhiteSpace(search) && search != "all")
             {
-                Indications = Indications.Where(x => x.Clave.ToLower().Contains(search) || x.Nombre.ToLower().Contains(search));
+                indications = indications.Where(x => x.Clave.ToLower().Contains(search) || x.Nombre.ToLower().Contains(search));
             }
 
-            return await Indications.ToListAsync();
+            return await indications.ToListAsync();
+        }
+
+        public async Task<Indication> GetById(int Id)
+        {
+            var indication = await _context.CAT_Indicacion
+                .Include(x => x.Estudios).ThenInclude(x => x.Estudio).ThenInclude(x => x.Area)
+                .FirstOrDefaultAsync(x => x.Id == Id);
+
+            return indication;
         }
 
         public async Task<bool> IsDuplicate(Indication indication)
@@ -49,56 +50,16 @@ namespace Service.Catalog.Repository
 
         public async Task Create(Indication indication)
         {
-            using var transaction = _context.Database.BeginTransaction();
-
-            try
-            {
-                var clinics = indication.Estudios.ToList();
-
-                indication.Estudios = null;
-                _context.CAT_Indicacion.Add(indication);
-
-                await _context.SaveChangesAsync();
-
-                clinics.ForEach(x => x.IndicacionId = indication.Id);
-                await _context.BulkInsertOrUpdateOrDeleteAsync(clinics);
-
-                transaction.Commit();
-            }
-            catch (System.Exception)
-            {
-                transaction.Rollback();
-                throw;
-            }
-        }
-
-        public async Task Update(Indication indicacion)
-        {
-            var study = indicacion.Estudios.ToList();
-
-            indicacion.Estudios = null;
-            _context.CAT_Indicacion.Update(indicacion);
-
-            await _context.BulkInsertOrUpdateOrDeleteAsync(study);
+            _context.CAT_Indicacion.Add(indication);
 
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> ValidateClave(string clave)
+        public async Task Update(Indication indicacion)
         {
-            var validate = _context.CAT_Indicacion.Where(x => x.Clave == clave).Count();
+            _context.CAT_Indicacion.Update(indicacion);
 
-            if (validate == 0)
-            {
-                return false;
-            }
-            else
-            {
-
-                return true;
-            }
-
+            await _context.SaveChangesAsync();
         }
-
     }
 }

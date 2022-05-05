@@ -28,7 +28,7 @@ namespace Identidad.Api.Controllers
             return await _Services.GetAll(search);
         }
         [HttpGet("active")]
-        public async Task<IEnumerable<CompanyListDto>> GetActive(int id)
+        public async Task<IEnumerable<CompanyListDto>> GetActive()
         {
             return await _Services.GetActive();
         }
@@ -38,8 +38,6 @@ namespace Identidad.Api.Controllers
         //{
         //    return await _Services.GetActive();
         //}
-
-        [HttpGet("{Id}")]
 
         [HttpGet("{Id}")]
         [Authorize(Policies.Access)]
@@ -80,9 +78,9 @@ namespace Identidad.Api.Controllers
         }
 
         [HttpGet("paswwordgenerator")]
-        public async Task<string> GeneratePassword()
+        public string GeneratePassword()
         {
-            return await _Services.GeneratePassword();
+            return _Services.GeneratePassword();
         }
     }
 }

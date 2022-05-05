@@ -8,6 +8,7 @@ using Service.Catalog.Repository.IRepository;
 using Shared.Dictionary;
 using Shared.Error;
 using Shared.Extensions;
+using Shared.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -15,30 +16,34 @@ using System.Threading.Tasks;
 
 namespace Service.Catalog.Application
 {
-    public class ParameterApplication: IParameterApplication
+    public class ParameterApplication : IParameterApplication
     {
         private readonly IParameterRepository _repository;
 
-        public ParameterApplication(IParameterRepository repository) 
+        public ParameterApplication(IParameterRepository repository)
         {
             _repository = repository;
         }
-        public async Task<IEnumerable<ParameterList>> GetAll(string search = null)
+
+        public async Task<IEnumerable<ParameterListDto>> GetAll(string search)
         {
             var parameters = await _repository.GetAll(search);
 
             return parameters.ToParameterListDto();
         }
 
-        public async Task<IEnumerable<ValorTipeForm>> getallvalues(string id,string tipe) {
-            var values = await _repository.Getvalues(id,tipe);
+        public async Task<IEnumerable<ParameterListDto>> GetActive()
+        {
+            var parameters = await _repository.GetActive();
 
-            return values.toTipoValorFormList();
+            return parameters.ToParameterListDto();
         }
 
-        public async Task<ParameterForm> GetById(string id)
+        public async Task<ParameterFormDto> GetById(string id)
         {
-            var parameter = await _repository.GetById(id);
+            Helpers.ValidateGuid(id, out Guid guid);
+
+            var parameter = await _repository.GetById(guid);
 
             if (parameter == null)
             {
@@ -48,54 +53,112 @@ namespace Service.Catalog.Application
             return parameter.ToParameterFormDto();
         }
 
-        public async Task Create(ParameterForm parameter)
+        public async Task<IEnumerable<ParameterValueDto>> GetAllValues(string id)
         {
-            var code = await ValidarClaveNombre(parameter);
+            Helpers.ValidateGuid(id, out Guid guid);
 
-            if ( code != 0)
-            {
-                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
-            }
-            var newReagent = parameter.toParameters();
+            var values = await _repository.GetAllValues(guid);
 
-            await _repository.Create(newReagent);
+            return values.ToParameterValueDto();
         }
 
-        public async Task Update(ParameterForm parameter)
+        public async Task<ParameterValueDto> GetValueById(string id)
         {
+            Helpers.ValidateGuid(id, out Guid guid);
 
-            var newReagent = parameter.toParameters();
-            var existing = await _repository.GetById(parameter.id);
-            var code = await ValidarClaveNombre(parameter);
-            if (existing.Clave != parameter.clave || existing.Nombre != parameter.nombre) {
-                if (code != 0)
-                {
-                    throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
-                } 
+            var value = await _repository.GetValueById(guid);
+
+            if (value == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
+
+            return value.ToParameterValueDto();
+        }
+
+        public async Task<ParameterListDto> Create(ParameterFormDto parameter)
+        {
+            if (!string.IsNullOrEmpty(parameter.Id))
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
+            }
+
+            var newParameter = parameter.ToModel();
+
+            await CheckDuplicate(newParameter);
+
+            await _repository.Create(newParameter);
+
+            newParameter = await _repository.GetById(newParameter.Id);
+
+            return newParameter.ToParameterListDto();
+        }
+
+        public async Task AddValue(ParameterValueDto value)
+        {
+            if (!string.IsNullOrEmpty(value.Id))
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
+            }
+
+            var newValue = value.ToModel();
+
+            await _repository.AddValue(newValue);
+        }
+
+        public async Task<ParameterListDto> Update(ParameterFormDto parameter)
+        {
+            Helpers.ValidateGuid(parameter.Id, out Guid guid);
+
+            var existing = await _repository.GetById(guid);
+
             if (existing == null)
             {
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
 
-            var updatedAgent = parameter.toParameters(existing);
+            var updatedParameter = parameter.ToModel(existing);
 
-            await _repository.Update(updatedAgent);
+            await CheckDuplicate(updatedParameter);
+
+            await _repository.Update(updatedParameter);
+
+            updatedParameter = await _repository.GetById(updatedParameter.Id);
+
+            return updatedParameter.ToParameterListDto();
         }
-        public async Task AddValue(ValorTipeForm valorTipeForm) {
-            
-                var newValor = valorTipeForm.toTipoValor();
-                await _repository.addValuNumeric(newValor);
+
+        public async Task UpdateValue(ParameterValueDto value)
+        {
+            Helpers.ValidateGuid(value.Id, out Guid guid);
+
+            var existing = await _repository.GetValueById(guid);
+
+            if (existing == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
+            }
+
+            var updatedValue = value.ToModel(existing);
+
+            await _repository.UpdateValue(updatedValue);
         }
-        public async Task<ValorTipeForm> getvalueNum(string id) {
-            var valorform = await _repository.getvalueNum(id);
-            return valorform.toTipoValorForm();
+
+        public async Task DeleteValue(string id)
+        {
+            Helpers.ValidateGuid(id, out Guid guid);
+
+            var existing = await _repository.GetById(guid);
+
+            if (existing == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
+            }
+
+            await _repository.DeleteValue(guid);
         }
-        public async Task updateValueNumeric(ValorTipeForm tipoValor) {
-            var newValor = tipoValor.toTipoValorUpdate();
-            await _repository.updateValueNumeric(newValor);
-        }
-        public async Task<byte[]> ExportList(string search = null)
+
+        public async Task<(byte[] file, string fileName)> ExportList(string search)
         {
             var parameters = await GetAll(search);
 
@@ -117,15 +180,15 @@ namespace Service.Catalog.Application
 
             template.Format();
 
-            return template.ToByteArray();
+            return (template.ToByteArray(), "Catálogo de Sucursales.xlsx");
         }
 
-        public async Task<byte[]> ExportForm(string id)
+        public async Task<(byte[] file, string fileName)> ExportForm(string id)
         {
             var parameter = await GetById(id);
-            var tipo = parameter.tipoValor;
 
-            var valor = await getallvalues(parameter.id, tipo.ToString());
+            var value = await GetAllValues(parameter.Id);
+
             var path = Assets.ParameterForm;
 
             var template = new XLTemplate(path);
@@ -135,32 +198,23 @@ namespace Service.Catalog.Application
             template.AddVariable("Titulo", "Parametros");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
             template.AddVariable("Parameter", parameter);
-            template.AddVariable("TiposVAlor", valor);
-            template.AddVariable("Estudios",parameter.estudios);
+            template.AddVariable("TiposVAlor", value);
+            template.AddVariable("Estudios", parameter.Estudios);
             template.Generate();
 
             template.Format();
 
-            return template.ToByteArray();
+            return (template.ToByteArray(), $"Catálogo de Parametros ({parameter.Clave}).xlsx");
         }
-        public async Task deletevalue(string id)
+
+        private async Task CheckDuplicate(Domain.Parameter.Parameter parameter)
         {
-            await _repository.deletevalue(id);
-        }
-            private async Task<int> ValidarClaveNombre(ParameterForm parameter)
-        {
+            var isDuplicate = await _repository.IsDuplicate(parameter);
 
-            var clave = parameter.clave;
-            var name = parameter.nombre;
-
-            var exists = await _repository.ValidateClaveNamne(clave, name);
-
-            if (exists)
+            if (isDuplicate)
             {
-                return 1;
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
             }
-
-            return 0;
         }
     }
 }

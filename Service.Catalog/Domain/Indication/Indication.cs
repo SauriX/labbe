@@ -7,6 +7,5 @@ namespace Service.Catalog.Domain.Indication
     public class Indication : GenericCatalogDescription
     {
         public virtual ICollection<IndicationStudy> Estudios { get; set; }
-
     }
 }

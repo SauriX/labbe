@@ -10,8 +10,5 @@ namespace Service.Catalog.Dtos.Indication
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
         public bool Activo { get; set; }
-        public string ActivoDescripcion => Activo ? "Si" : "No";
-        
-        public IEnumerable<CatalogListDto> Estudios { get; set; }
     }
 }

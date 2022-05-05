@@ -47,8 +47,8 @@ namespace Service.Catalog.Application
         public async Task<CompanyFormDto> Create(CompanyFormDto company)
         {
             var code = await ValidarClaveNombre(company);
-            
-            if (company.Id != 0 || code !=0 )
+
+            if (company.Id != 0 || code != 0)
             {
                 throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
             }
@@ -80,7 +80,7 @@ namespace Service.Catalog.Application
                     throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
                 }
 
-            }            
+            }
 
             if (existing == null)
             {
@@ -145,7 +145,7 @@ namespace Service.Catalog.Application
             return template.ToByteArray();
         }
 
-        public async Task<string> GeneratePassword()
+        public string GeneratePassword()
         {
 
             return PasswordGenerator.GenerarPassword(8);

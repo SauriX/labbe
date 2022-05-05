@@ -2,6 +2,7 @@
 using ClosedXML.Report;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dictionary;
+using Service.Catalog.Domain.Reagent;
 using Service.Catalog.Dtos.Reagent;
 using Service.Catalog.Mapper;
 using Service.Catalog.Repository.IRepository;
@@ -9,6 +10,7 @@ using Service.Catalog.Transactions;
 using Shared.Dictionary;
 using Shared.Error;
 using Shared.Extensions;
+using Shared.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,9 +35,18 @@ namespace Service.Catalog.Application
             return reagents.ToReagentListDto();
         }
 
-        public async Task<ReagentFormDto> GetById(int id)
+        public async Task<IEnumerable<ReagentListDto>> GetActive()
         {
-            var reagent = await _repository.GetById(id);
+            var reagents = await _repository.GetActive();
+
+            return reagents.ToReagentListDto();
+        }
+
+        public async Task<ReagentFormDto> GetById(string id)
+        {
+            Helpers.ValidateGuid(id, out Guid guid);
+
+            var reagent = await _repository.GetById(guid);
 
             if (reagent == null)
             {
@@ -45,30 +56,40 @@ namespace Service.Catalog.Application
             return reagent.ToReagentFormDto();
         }
 
-        public async Task Create(ReagentFormDto reagent)
+        public async Task<ReagentListDto> Create(ReagentFormDto reagent)
         {
-            if (reagent.Id != 0)
+            if (!string.IsNullOrEmpty(reagent.Id))
             {
                 throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
             }
 
             var newReagent = reagent.ToModel();
 
+            await CheckDuplicate(newReagent);
+
             await _repository.Create(newReagent);
+
+            return newReagent.ToReagentListDto();
         }
 
-        public async Task Update(ReagentFormDto reagent)
+        public async Task<ReagentListDto> Update(ReagentFormDto reagent)
         {
-            var existing = await _repository.GetById(reagent.Id);
+            Helpers.ValidateGuid(reagent.Id, out Guid guid);
+
+            var existing = await _repository.GetById(guid);
 
             if (existing == null)
             {
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
 
-            var updatedAgent = reagent.ToModel(existing);
+            var updatedReagent = reagent.ToModel(existing);
 
-            await _repository.Update(updatedAgent);
+            await CheckDuplicate(updatedReagent);
+
+            await _repository.Update(updatedReagent);
+
+            return updatedReagent.ToReagentListDto();
         }
 
         public async Task<(byte[] file, string fileName)> ExportList(string search)
@@ -96,7 +117,7 @@ namespace Service.Catalog.Application
             return (template.ToByteArray(), "Catálogo de Reactivos.xlsx");
         }
 
-        public async Task<(byte[] file, string fileName)> ExportForm(int id)
+        public async Task<(byte[] file, string fileName)> ExportForm(string id)
         {
             var reagent = await GetById(id);
 
@@ -115,6 +136,16 @@ namespace Service.Catalog.Application
             template.Format();
 
             return (template.ToByteArray(), $"Catálogo de Reactivos ({reagent.Clave}).xlsx");
+        }
+
+        private async Task CheckDuplicate(Reagent reagent)
+        {
+            var isDuplicate = await _repository.IsDuplicate(reagent);
+
+            if (isDuplicate)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
+            }
         }
     }
 }

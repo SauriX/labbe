@@ -63,8 +63,7 @@ namespace Service.Identity.Mapper
 
         public static List<UserPermissionDto> ToUserPermissionDto(this IEnumerable<UserPermission> model)
         {
-            if (model == null)
-                return null;
+            if (model == null) return null;
 
             var dto = new List<UserPermissionDto>();
 

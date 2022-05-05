@@ -7,7 +7,7 @@ namespace Service.Catalog.Domain.Reagent
 {
     public class Reagent
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Clave { get; set; }
         public string Nombre { get; set; }
         public string ClaveSistema { get; set; }

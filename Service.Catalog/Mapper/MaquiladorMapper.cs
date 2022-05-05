@@ -8,110 +8,104 @@ namespace Service.Catalog.Mapper
 {
     public static class MaquiladorMapper
     {
-        public static MaquiladorListDto ToMaquiladorListDto(this Maquilador model)
+        public static MaquilaListDto ToMaquilaListDto(this Maquila model)
         {
             if (model == null) return null;
 
-            return new MaquiladorListDto
+            return new MaquilaListDto
             {
                 Id = model.Id,
-                Clave = model.Clave.Trim(),
-                Nombre = model.Nombre.Trim(),
-                Correo = model.Correo.Trim(),
+                Clave = model.Clave,
+                Nombre = model.Nombre,
+                Correo = model.Correo,
                 Telefono = model.Telefono,
-                Direccion = $"{model.Calle.Trim()} {model.NumeroExterior} {model.Colonia.Colonia.Trim()} {model.Colonia.Ciudad.Ciudad.Trim()} {model.Colonia.Ciudad.Estado.Estado.Trim()} {model.CodigoPostal} ",
+                Direccion = $"{model.Calle} {model.NumeroExterior}, {model.Colonia.Colonia}, {model.Colonia.Ciudad.Ciudad}, {model.Colonia.Ciudad.Estado.Estado}",
                 Activo = model.Activo
-
             };
         }
-        public static IEnumerable<MaquiladorListDto> ToMaquiladorListDto(this List<Maquilador> model)
+
+        public static IEnumerable<MaquilaListDto> ToMaquilaListDto(this List<Maquila> model)
         {
             if (model == null) return null;
-            return model.Select(x => new MaquiladorListDto
+
+            return model.Select(x => new MaquilaListDto
             {
                 Id = x.Id,
-                Clave = x.Clave?.Trim(),
-                Nombre = x.Nombre?.Trim(),
-                Correo = x.Correo?.Trim(),
+                Clave = x.Clave,
+                Nombre = x.Nombre,
+                Correo = x.Correo,
                 Telefono = x.Telefono,
-                Direccion = x.Calle?.Trim() + " " + x.NumeroExterior + ", " + x.Colonia.Colonia.Trim() + ", " + x.Colonia.Ciudad.Ciudad.Trim() + ", " + x.Colonia.Ciudad.Estado.Estado.Trim() + ", " + x.CodigoPostal,
-                Activo = x.Activo,
+                Direccion = $"{x.Calle} {x.NumeroExterior}, {x.Colonia.Colonia}, {x.Colonia.Ciudad.Ciudad}, {x.Colonia.Ciudad.Estado.Estado}",
+                Activo = x.Activo
             });
         }
-        public static MaquiladorFormDto ToMaquiladorFormDto(this Maquilador model)
+
+        public static MaquilaFormDto ToMaquilaFormDto(this Maquila model)
         {
             if (model == null) return null;
-            return new MaquiladorFormDto
+
+            return new MaquilaFormDto
             {
                 Id = model.Id,
-                Clave = model.Clave.Trim(),
-                Nombre = model.Nombre.Trim(),
-                Correo = model?.Correo?.Trim(),
-                Telefono = model?.Telefono,
-                PaginaWeb = model?.PaginaWeb?.Trim(),
-                Calle = model.Calle.Trim(),
-                CodigoPostal = model.CodigoPostal,
+                Clave = model.Clave,
+                Nombre = model.Nombre,
+                Correo = model.Correo,
+                Telefono = model.Telefono,
+                PaginaWeb = model.PaginaWeb,
+                Calle = model.Calle,
+                CodigoPostal = model.Colonia.CodigoPostal,
                 ColoniaId = model.ColoniaId,
-                Colonia = model.Colonia.Colonia?.Trim(),
-                Ciudad = model.Ciudad?.Trim(),
-                Estado = model.Estado?.Trim(),
+                Ciudad = model.Colonia.Ciudad.Ciudad,
+                Estado = model.Colonia.Ciudad.Estado.Estado,
                 NumeroExterior = model.NumeroExterior,
-                NumeroInterior = model?.NumeroInterior,
+                NumeroInterior = model.NumeroInterior,
                 Activo = model.Activo,
             };
         }
 
-        public static Maquilador ToModel(this MaquiladorFormDto dto)
+        public static Maquila ToModel(this MaquilaFormDto dto)
         {
             if (dto == null) return null;
 
-            return new Maquilador
+            return new Maquila
             {
                 Id = dto.Id,
                 Clave = dto.Clave.Trim(),
                 Nombre = dto.Nombre.Trim(),
-                CodigoPostal = dto.CodigoPostal,
-                NumeroExterior = dto.NumeroExterior,
-                NumeroInterior = dto?.NumeroInterior,
+                NumeroExterior = dto.NumeroExterior.Trim(),
+                NumeroInterior = dto.NumeroInterior?.Trim(),
                 Calle = dto.Calle.Trim(),
                 ColoniaId = dto.ColoniaId,
-                Ciudad = dto.Ciudad?.Trim(),
-                Estado = dto.Estado?.Trim(),
-                Correo = dto?.Correo?.Trim(),
-                PaginaWeb = dto?.PaginaWeb?.Trim(),
-                Telefono = dto?.Telefono,
+                Correo = dto.Correo.Trim(),
+                PaginaWeb = dto.PaginaWeb?.Trim(),
+                Telefono = dto.Telefono,
                 Activo = dto.Activo,
-                UsuarioCreoId = dto?.UsuarioId,
-                FechaCreo = DateTime.Now,
-                UsuarioModId = dto?.UsuarioId,
-                FechaMod = DateTime.Now,
+                UsuarioCreoId = dto.UsuarioId,
+                FechaCreo = DateTime.Now
             };
         }
 
-        public static Maquilador ToModel(this MaquiladorFormDto dto, Maquilador model)
+        public static Maquila ToModel(this MaquilaFormDto dto, Maquila model)
         {
-            if (model == null) return null;
+            if (dto == null || model == null) return null;
 
-            return new Maquilador
+            return new Maquila
             {
-                Id = dto.Id,
-                Clave = model.Clave,
+                Id = model.Id,
+                Clave = dto.Clave.Trim(),
                 Nombre = dto.Nombre.Trim(),
-                CodigoPostal = dto.CodigoPostal,
-                NumeroExterior = dto.NumeroExterior,
-                NumeroInterior = dto?.NumeroInterior,
+                NumeroExterior = dto.NumeroExterior.Trim(),
+                NumeroInterior = dto.NumeroInterior?.Trim(),
                 Calle = dto.Calle.Trim(),
                 ColoniaId = dto.ColoniaId,
-                Ciudad = dto.Ciudad?.Trim(),
-                Estado = dto.Estado?.Trim(),
-                Correo = dto?.Correo?.Trim(),
-                PaginaWeb = dto?.PaginaWeb?.Trim(),
-                Telefono = dto?.Telefono,
+                Correo = dto.Correo.Trim(),
+                PaginaWeb = dto.PaginaWeb?.Trim(),
+                Telefono = dto.Telefono,
                 Activo = dto.Activo,
                 UsuarioCreoId = model.UsuarioCreoId,
                 FechaCreo = model.FechaCreo,
-                UsuarioModId = dto?.UsuarioId,
-                FechaMod = DateTime.Now,
+                UsuarioModificoId = dto.UsuarioId,
+                FechaModifico = DateTime.Now
             };
         }
     }

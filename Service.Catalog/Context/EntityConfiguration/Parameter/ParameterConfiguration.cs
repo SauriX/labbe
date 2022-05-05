@@ -4,13 +4,13 @@ using Service.Catalog.Domain.Parameter;
 
 namespace Service.Catalog.Context.EntityConfiguration.Parameter
 {
-    public class ParameterConfiguration : IEntityTypeConfiguration<Parameters>
+    public class ParameterConfiguration : IEntityTypeConfiguration<Domain.Parameter.Parameter>
     {
-        public void Configure(EntityTypeBuilder<Parameters> builder)
+        public void Configure(EntityTypeBuilder<Domain.Parameter.Parameter> builder)
         {
             builder.ToTable("CAT_Parametro");
 
-            builder.HasKey(x => x.IdParametro);
+            builder.HasKey(x => x.Id);
 
             builder
               .Property(x => x.Clave)
@@ -46,7 +46,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Parameter
                 .IsRequired(true)
                 .HasMaxLength(100);
             builder
-                .Property(x => x.TipoValor)
+                .Property(x => x.TipoValorId)
                 .HasDefaultValue(0)
                 .HasMaxLength(100);
 
@@ -55,7 +55,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Parameter
                 .WithMany();
 
             builder
-                .HasOne(x => x.Reagent)
+                .HasOne(x => x.Reactivo)
                 .WithMany();
 
             builder

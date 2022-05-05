@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Shared.Dictionary;
 using Service.Catalog.Application.IApplication;
-using Service.Catalog.Domain.Indication;
 using Service.Catalog.Dtos.Indication;
 using Microsoft.AspNetCore.Authorization;
+using System;
 
 namespace Identidad.Api.Controllers
 {
@@ -13,57 +13,57 @@ namespace Identidad.Api.Controllers
     [ApiController]
     public class IndicationController : ControllerBase
     {
+        private readonly IIndicationApplication _service;
 
-        private readonly IIndicationApplication _indicationService;
-
-        public IndicationController(IIndicationApplication indicationService)
+        public IndicationController(IIndicationApplication service)
         {
-            _indicationService = indicationService;
+            _service = service;
         }
 
-        [HttpGet("all/{search?}")]
+        [HttpGet("all/{search}")]
         [Authorize(Policies.Access)]
-        public async Task<IEnumerable<IndicationListDto>> GetAll(string search = null)
+        public async Task<IEnumerable<IndicationListDto>> GetAll(string search)
         {
-            return await _indicationService.GetAll(search);
+            return await _service.GetAll(search);
         }
 
         [HttpGet("{id}")]
         [Authorize(Policies.Access)]
         public async Task<IndicationFormDto> GetById(int id)
         {
-            return await _indicationService.GetById(id);
+            return await _service.GetById(id);
         }
 
         [HttpPost]
         [Authorize(Policies.Create)]
-        public async Task Create(IndicationFormDto indicacion)
+        public async Task<IndicationListDto> Create(IndicationFormDto indicacion)
         {
-            await _indicationService.Create(indicacion);
+            indicacion.UsuarioId = (Guid)HttpContext.Items["userId"];
+            return await _service.Create(indicacion);
         }
 
         [HttpPut]
         [Authorize(Policies.Update)]
-        public async Task Update(IndicationFormDto indication)
+        public async Task<IndicationListDto> Update(IndicationFormDto indication)
         {
-            await _indicationService.Update(indication);
+            indication.UsuarioId = (Guid)HttpContext.Items["userId"];
+            return await _service.Update(indication);
         }
 
-        [HttpPost("export/list/{search?}")]
+        [HttpPost("export/list/{search}")]
         [Authorize(Policies.Download)]
-        public async Task<IActionResult> ExportListIndication(string search = null)
+        public async Task<IActionResult> ExportListIndication(string search)
         {
-            var file = await _indicationService.ExportListIndication(search);
-            return File(file, MimeType.XLSX);
+            var (file, fileName) = await _service.ExportList(search);
+            return File(file, MimeType.XLSX, fileName);
         }
 
         [HttpPost("export/form/{id}")]
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportFormIndication(int id)
         {
-            var file = await _indicationService.ExportFormIndication(id);
-            return File(file, MimeType.XLSX);
+            var (file, fileName) = await _service.ExportForm(id);
+            return File(file, MimeType.XLSX, fileName);
         }
     }
-
 }

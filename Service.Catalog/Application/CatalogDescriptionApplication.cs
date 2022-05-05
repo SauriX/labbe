@@ -26,13 +26,6 @@ namespace Service.Catalog.Application
             _repository = repository;
         }
 
-        public async Task<IEnumerable<CatalogDescriptionListDto>> GetActive()
-        {
-            var catalogs = await _repository.GetActive();
-
-            return catalogs.ToCatalogDescriptionListDto();
-        }
-
         public async Task<IEnumerable<CatalogDescriptionListDto>> GetAll(string search = null)
         {
             var catalogs = await _repository.GetAll(search);

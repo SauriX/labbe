@@ -33,8 +33,6 @@ namespace Service.Catalog.Application
             return catalogs.ToCatalogListDto();
         }
 
-
-
         public async Task<IEnumerable<CatalogListDto>> GetActive()
         {
             var catalogs = await _repository.GetActive();

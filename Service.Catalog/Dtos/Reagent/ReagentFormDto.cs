@@ -8,7 +8,7 @@ namespace Service.Catalog.Dtos.Reagent
 {
     public class ReagentFormDto
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Clave { get; set; }
         public string Nombre { get; set; }
         public string ClaveSistema { get; set; }
@@ -17,15 +17,14 @@ namespace Service.Catalog.Dtos.Reagent
         public Guid UsuarioId { get; set; }
     }
 
-    public class ReactivoFormDtoValidator : AbstractValidator<ReagentFormDto>
+    public class ReagentFormDtoValidator : AbstractValidator<ReagentFormDto>
     {
-        public ReactivoFormDtoValidator()
+        public ReagentFormDtoValidator()
         {
-            RuleFor(x => x.Id).GreaterThanOrEqualTo(0);
-            RuleFor(x => x.Clave).NotEmpty().MaximumLength(15);
-            RuleFor(x => x.Nombre).NotEmpty().MaximumLength(50);
-            RuleFor(x => x.ClaveSistema).MaximumLength(15);
-            RuleFor(x => x.NombreSistema).MaximumLength(50);
+            RuleFor(x => x.Clave).NotEmpty().MaximumLength(100);
+            RuleFor(x => x.Nombre).NotEmpty().MaximumLength(100);
+            RuleFor(x => x.ClaveSistema).MaximumLength(100);
+            RuleFor(x => x.NombreSistema).MaximumLength(100);
         }
     }
 }

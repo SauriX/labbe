@@ -2,6 +2,7 @@
 using ClosedXML.Report;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dictionary;
+using Service.Catalog.Domain.Indication;
 using Service.Catalog.Dtos.Indication;
 using Service.Catalog.Mapper;
 using Service.Catalog.Repository.IRepository;
@@ -17,7 +18,6 @@ namespace Service.Catalog.Application
 {
     public class IndicationApplication : IIndicationApplication
     {
-
         private readonly IIndicationRepository _repository;
 
         public IndicationApplication(IIndicationRepository repository)
@@ -25,82 +25,63 @@ namespace Service.Catalog.Application
             _repository = repository;
         }
 
-        public async Task<IndicationFormDto> GetById(int Id)
-        {
-            var indication = await _repository.GetById(Id);
-            if (indication == null)
-            {
-                throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
-            }
-            return indication.ToIndicationFormDto();
-        }
-        public async Task<IndicationFormDto> Create(IndicationFormDto indicacion)
-        {
-            var code = await ValidarClave(indicacion);
-
-            if (indicacion.Id != 0 || code != 0)
-            {
-                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
-            }
-
-            var newIndication = indicacion.ToModel();
-
-            var isDuplicate = await _repository.IsDuplicate(newIndication);
-
-            if (isDuplicate)
-            {
-                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave "));
-            }
-
-            await _repository.Create(newIndication);
-
-            indicacion = await GetById(newIndication.Id);
-
-            return indicacion;
-        }
-
-        public async Task<IEnumerable<IndicationListDto>> GetAll(string search = null)
+        public async Task<IEnumerable<IndicationListDto>> GetAll(string search)
         {
             var indications = await _repository.GetAll(search);
 
             return indications.ToIndicationListDto();
         }
-        public async Task<IndicationFormDto> Update(IndicationFormDto indication)
+
+        public async Task<IndicationFormDto> GetById(int Id)
+        {
+            var indication = await _repository.GetById(Id);
+
+            if (indication == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
+            }
+
+            return indication.ToIndicationFormDto();
+        }
+
+        public async Task<IndicationListDto> Create(IndicationFormDto indicacion)
+        {
+            if (indicacion.Id != 0)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
+            }
+
+            var newIndication = indicacion.ToModel();
+
+            await CheckDuplicate(newIndication);
+
+            await _repository.Create(newIndication);
+
+            return newIndication.ToIndicationListDto();
+        }
+
+
+        public async Task<IndicationListDto> Update(IndicationFormDto indication)
         {
             var existing = await _repository.GetById(indication.Id);
-
-            var code = await ValidarClave(indication);
-            if (existing.Clave != indication.Clave)
-            {
-                if (indication.Id != 0 || code != 0)
-                {
-                    throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
-                }
-
-            }
 
             if (existing == null)
             {
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
 
-            var updatedAgent = indication.ToModel(existing);
+            var updatedIndication = indication.ToModel(existing);
 
-            var isDuplicate = await _repository.IsDuplicate(updatedAgent);
+            await CheckDuplicate(updatedIndication);
 
-            if (isDuplicate)
-            {
-                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave "));
-            }
+            await _repository.Update(updatedIndication);
 
-            await _repository.Update(updatedAgent);
-
-            return existing.ToIndicationFormDto();
+            return updatedIndication.ToIndicationListDto();
         }
 
-        public async Task<byte[]> ExportListIndication(string search = null)
+        public async Task<(byte[] file, string fileName)> ExportList(string search)
         {
-            var indication = await GetAll(search);
+            var indications = await GetAll(search);
 
             var path = AssetsIndication.IndicationList;
 
@@ -110,7 +91,7 @@ namespace Service.Catalog.Application
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
             template.AddVariable("Titulo", "Indicaciones");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
-            template.AddVariable("Indicaciones", indication);
+            template.AddVariable("Indicaciones", indications);
 
             template.Generate();
 
@@ -120,10 +101,10 @@ namespace Service.Catalog.Application
 
             template.Format();
 
-            return template.ToByteArray();
+            return (template.ToByteArray(), "Catálogo de Indicaciones.xlsx");
         }
 
-        public async Task<byte[]> ExportFormIndication(int id)
+        public async Task<(byte[] file, string fileName)> ExportForm(int id)
         {
             var indication = await GetById(id);
 
@@ -142,24 +123,17 @@ namespace Service.Catalog.Application
 
             template.Format();
 
-            return template.ToByteArray();
+            return (template.ToByteArray(), $"Catálogo de Indicaciones (${indication.Clave}).xlsx");
         }
 
-        private async Task<int> ValidarClave(IndicationFormDto indication)
+        private async Task CheckDuplicate(Indication indication)
         {
+            var isDuplicate = await _repository.IsDuplicate(indication);
 
-            var clave = indication.Clave;
-
-            var exists = await _repository.ValidateClave(clave);
-
-            if (exists)
+            if (isDuplicate)
             {
-                return 1;
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave"));
             }
-
-            return 0;
         }
     }
-
-    
 }

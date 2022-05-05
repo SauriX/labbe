@@ -16,7 +16,7 @@ namespace Service.Catalog.Controllers.Catalog
         }
 
         [HttpGet("format/active")]
-        public async Task<IEnumerable<CatalogListDto>> GetActiveFormat(int id)
+        public async Task<IEnumerable<CatalogListDto>> GetActiveFormat()
         {
             return await _FormatService.GetActive();
         }
@@ -30,14 +30,14 @@ namespace Service.Catalog.Controllers.Catalog
         [HttpPost("format")]
         public async Task<CatalogListDto> CreateFormat(CatalogFormDto catalog)
         {
-            catalog.UsuarioId = "userId";
+            catalog.UsuarioId = System.Guid.NewGuid();
             return await _FormatService.Create(catalog);
         }
 
         [HttpPut("format")]
         public async Task<CatalogListDto> UpdateFormat(CatalogFormDto catalog)
         {
-            catalog.UsuarioId = "userId";
+            catalog.UsuarioId = System.Guid.NewGuid();
             return await _FormatService.Update(catalog);
         }
     }

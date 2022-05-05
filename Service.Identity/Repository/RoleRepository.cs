@@ -51,7 +51,9 @@ namespace Service.Identity.Repository
 
         public async Task<Role> GetById(Guid id)
         {
-            var role = await _context.CAT_Rol.Include(x => x.Permisos).ThenInclude(x => x.Menu).FirstOrDefaultAsync(x => x.Id == id);
+            var role = await _context.CAT_Rol.FirstOrDefaultAsync(x => x.Id == id);
+
+            role.Permisos = await GetPermission(id);
 
             return role;
         }

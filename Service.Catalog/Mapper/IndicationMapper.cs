@@ -11,31 +11,31 @@ namespace Service.Catalog.Mapper
         public static IndicationListDto ToIndicationListDto(this Indication model)
         {
             if (model == null) return null;
-            var Suma = model.Estudios.Select(y => y.Estudio).ToList().ToStudyListDto();
+
             return new IndicationListDto
             {
                 Id = model.Id,
-                Clave = model.Clave.Trim(),
-                Nombre = model.Nombre.Trim(),
-                Descripcion = model.Descripcion.Trim(),
-                Estudios = (IEnumerable<Dtos.Catalog.CatalogListDto>)Suma,
+                Clave = model.Clave,
+                Nombre = model.Nombre,
+                Descripcion = model.Descripcion,
                 Activo = model.Activo
-
             };
         }
+
         public static IEnumerable<IndicationListDto> ToIndicationListDto(this List<Indication> model)
         {
             if (model == null) return null;
+
             return model.Select(x => new IndicationListDto
             {
                 Id = x.Id,
-                Clave = x.Clave?.Trim(),
-                Nombre = x.Nombre?.Trim(),
-                Descripcion = x.Descripcion.Trim(),
-                Activo = x.Activo,
-                Estudios = (IEnumerable<Dtos.Catalog.CatalogListDto>)(x.Estudios?.Select(y => y.Estudio)?.ToList()?.ToStudyListDto())
+                Clave = x.Clave,
+                Nombre = x.Nombre,
+                Descripcion = x.Descripcion,
+                Activo = x.Activo
             });
         }
+
         public static IndicationFormDto ToIndicationFormDto(this Indication model)
         {
             if (model == null) return null;
@@ -47,8 +47,20 @@ namespace Service.Catalog.Mapper
                 Nombre = model.Nombre.Trim(),
                 Descripcion = model.Descripcion.Trim(),
                 Activo = model.Activo,
-                Estudios = model.Estudios?.Select(y => y.Estudio)?.ToList()?.ToStudyListDto()
+                Estudios = model.Estudios.ToIndicationStudyDto(),
             };
+        }
+
+        private static IEnumerable<IndicationStudyDto> ToIndicationStudyDto(this IEnumerable<IndicationStudy> model)
+        {
+            if (model == null) return null;
+
+            return model.Select(x => x.Estudio).Select(x => new IndicationStudyDto
+            {
+                Id = x.Id,
+                Nombre = x.Nombre,
+                Area = x.Area.Nombre,
+            });
         }
 
         public static Indication ToModel(this IndicationFormDto dto)
@@ -59,43 +71,28 @@ namespace Service.Catalog.Mapper
             {
                 Clave = dto.Clave.Trim(),
                 Nombre = dto.Nombre.Trim(),
-                Descripcion = dto.Descripcion.Trim(),
+                Descripcion = dto.Descripcion?.Trim(),
                 Activo = dto.Activo,
-                UsuarioCreoId = dto?.UsuarioCreoId,
+                UsuarioCreoId = dto.UsuarioId,
                 FechaCreo = DateTime.Now,
-                Estudios = dto.Estudios.Select(x => new IndicationStudy
-                {
-                    EstudioId = x.Id,
-                    FechaCreo = DateTime.Now,
-                    UsuarioCreoId = dto.UsuarioCreoId,
-                    FechaMod = DateTime.Now,
-                }).ToList(),
             };
         }
 
         public static Indication ToModel(this IndicationFormDto dto, Indication model)
         {
-            if (model == null) return null;
+            if (dto == null || model == null) return null;
 
             return new Indication
             {
-                Id = dto.Id,
-                Clave = dto.Clave,
+                Id = model.Id,
+                Clave = dto.Clave.Trim(),
                 Nombre = dto.Nombre.Trim(),
-                Descripcion = dto.Descripcion.Trim(),
+                Descripcion = dto.Descripcion?.Trim(),
                 Activo = dto.Activo,
-                UsuarioCreoId = model?.UsuarioCreoId,
+                UsuarioCreoId = model.UsuarioCreoId,
                 FechaCreo = model.FechaCreo,
-                UsuarioModificoId = dto.UsuarioModId,
+                UsuarioModificoId = dto.UsuarioId,
                 FechaModifico = DateTime.Now,
-                Estudios = dto.Estudios.Select(x => new IndicationStudy
-                {
-                    IndicacionId = model.Id,
-                    EstudioId = x.Id,
-                    FechaCreo = model.FechaCreo,
-                    UsuarioCreoId = model.UsuarioCreoId,
-                    FechaMod = DateTime.Now,
-                }).ToList(),
             };
         }
     }

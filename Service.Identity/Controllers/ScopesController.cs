@@ -28,8 +28,8 @@ namespace Service.Identity.Controllers
         {
             var userId = GetUserId();
             return await _service.GetScopes(userId, ControllerNames.Role);
-        }   
-        
+        }
+
         [HttpGet(ControllerNames.User)]
         public async Task<ScopesDto> GetUserScopes()
         {
@@ -135,21 +135,16 @@ namespace Service.Identity.Controllers
             return await _service.GetScopes(userId, ControllerNames.Route);
         }
 
+        [HttpGet(ControllerNames.Maquila)]
+        public async Task<ScopesDto> GetMaquilaScopes()
+        {
+            var userId = GetUserId();
+            return await _service.GetScopes(userId, ControllerNames.Maquila);
+        }
+
         private Guid GetUserId()
         {
             return Guid.Parse(User.Claims.SingleOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
-        }
-        [HttpGet("maquilador")]
-        public ScopeDto GetMaquiladorScopes()
-        {
-            return new ScopeDto
-            {
-                Pantalla = "Catálogo de Maquilador",
-                Acceder = true,
-                Crear = true,
-                Editar = true,
-                Descargar = true,
-            };
         }
     }
 

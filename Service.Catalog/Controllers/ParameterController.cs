@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dtos.Parameters;
 using Shared.Dictionary;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,75 +14,96 @@ namespace Service.Catalog.Controllers
     [ApiController]
     public class ParameterController : ControllerBase
     {
-        private readonly IParameterApplication _ParameterService;
+        private readonly IParameterApplication _service;
 
-        public ParameterController(IParameterApplication indicationService)
+        public ParameterController(IParameterApplication service)
         {
-            _ParameterService = indicationService;
+            _service = service;
+        }
+
+        [HttpGet("all/{search}")]
+        [Authorize(Policies.Access)]
+        public async Task<IEnumerable<ParameterListDto>> GetAll(string search)
+        {
+            return await _service.GetAll(search);
+        }
+
+        [HttpGet("active")]
+        public async Task<IEnumerable<ParameterListDto>> GetActive()
+        {
+            return await _service.GetActive();
+        }
+
+        [HttpGet("{id}")]
+        [Authorize(Policies.Access)]
+        public async Task<ParameterFormDto> GetById(string id)
+        {
+            return await _service.GetById(id);
+        }
+
+        [HttpGet("value/{id}")]
+        [Authorize(Policies.Access)]
+        public async Task<ParameterValueDto> GetValue(string id)
+        {
+            return await _service.GetValueById(id);
+        }
+
+        [HttpGet("all/values/{id}/{type}")]
+        [Authorize(Policies.Access)]
+        public async Task<IEnumerable<ParameterValueDto>> GetAllValues(string id)
+        {
+            return await _service.GetAllValues(id);
         }
 
         [HttpPost]
-        public async Task Create(ParameterForm Parameter)
+        [Authorize(Policies.Create)]
+        public async Task<ParameterListDto> Create(ParameterFormDto parameter)
         {
-            await _ParameterService.Create(Parameter);
+            parameter.UsuarioId = (Guid)HttpContext.Items["userId"];
+            return await _service.Create(parameter);
+        }
+
+        [HttpPost("value")]
+        [Authorize(Policies.Create)]
+        public async Task AddValue(ParameterValueDto value)
+        {
+            await _service.AddValue(value);
         }
 
         [HttpPut]
-        public async Task Update(ParameterForm parameter)
+        [Authorize(Policies.Update)]
+        public async Task<ParameterListDto> Update(ParameterFormDto parameter)
         {
-            await _ParameterService.Update(parameter);
+            parameter.UsuarioId = (Guid)HttpContext.Items["userId"];
+            return await _service.Update(parameter);
         }
 
-        [HttpGet("all/{search?}")]
-        public async Task<IEnumerable<ParameterList>> GetAll(string search = null)
+        [HttpPut("value")]
+        [Authorize(Policies.Update)]
+        public async Task UpdateValue(ParameterValueDto value)
         {
-
-            return await _ParameterService.GetAll(search);
+            await _service.UpdateValue(value);
         }
-        [HttpGet("all/values/{id?}/{tipe?}")]
-        public async Task<IEnumerable<ValorTipeForm>> Values(string id,string tipe)
+
+        [HttpDelete("{id}")]
+        [Authorize(Policies.Update)]
+        public async Task DeleteValue(string id)
         {
-
-            return await _ParameterService.getallvalues(id,tipe);
-        }
-        [HttpGet("{id}")]
-        public async Task<ParameterForm> GetById(string id) {
-            return await _ParameterService.GetById(id);
+            await _service.DeleteValue(id);
         }
 
-        [HttpPost("addValue")]
-        public async Task AddValue(ValorTipeForm valorTipeForm) { 
-            await _ParameterService.AddValue(valorTipeForm);
-        }
-
-        [HttpGet("valuetipe/{id}")]
-        public async Task<ValorTipeForm> GetValor(string id) {
-            return await _ParameterService.getvalueNum(id);
-        }
-
-        [HttpPut("valuetipe")]
-        public async Task Update(ValorTipeForm tipeForm)
+        [HttpPost("export/list/{search}")]
+        public async Task<IActionResult> ExportList(string search)
         {
-            await _ParameterService.updateValueNumeric(tipeForm);
-        }
-
-        [HttpDelete("{id?}")]
-        public async Task deletevalue(string id) {
-            await _ParameterService.deletevalue(id);        
-        }
-
-        [HttpPost("export/list/{search?}")]
-        public async Task<IActionResult> ExportList(string search = null)
-        {
-            var file = await _ParameterService.ExportList(search);
-            return File(file, MimeType.XLSX);
+            var (file, fileName) = await _service.ExportList(search);
+            return File(file, MimeType.XLSX, fileName);
         }
 
         [HttpPost("export/form/{id}")]
         public async Task<IActionResult> ExportForm(string id)
         {
-            var file = await _ParameterService.ExportForm(id);
-            return File(file, MimeType.XLSX);
+            var (file, fileName) = await _service.ExportForm(id);
+            return File(file, MimeType.XLSX, fileName);
         }
     }
 }

@@ -29,14 +29,14 @@ namespace Service.Catalog.Controllers.Catalog
         [HttpPost("provenance")]
         public async Task<CatalogListDto> CreateProvenance(CatalogFormDto catalog)
         {
-            catalog.UsuarioId = "userId";
+            catalog.UsuarioId = System.Guid.NewGuid();
             return await _provenanceService.Create(catalog);
         }
 
         [HttpPut("provenance")]
         public async Task<CatalogListDto> UpdateProvenance(CatalogFormDto catalog)
         {
-            catalog.UsuarioId = "userId";
+            catalog.UsuarioId = System.Guid.NewGuid();
             return await _provenanceService.Update(catalog);
         }
     }

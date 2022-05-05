@@ -23,5 +23,6 @@ namespace Service.Identity.Dictionary
         public const string Loyalty = "loyalty";
         public const string Tag = "tag";
         public const string Route = "route";
+        public const string Maquila = "maquila";
     }
 }

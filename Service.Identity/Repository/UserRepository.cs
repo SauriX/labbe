@@ -26,6 +26,7 @@ using ClosedXML.Excel;
 using Service.Identity.Domain.permissions;
 using System.Linq.Dynamic.Core;
 using Service.Identity.Domain.User;
+using EFCore.BulkExtensions;
 
 namespace Service.Identity.Repository
 {
@@ -54,7 +55,9 @@ namespace Service.Identity.Repository
 
         public async Task<User> GetById(Guid id)
         {
-            var user = await _context.CAT_Usuario.Include(x => x.Rol).Include(x => x.Permisos).ThenInclude(x => x.Menu).FirstOrDefaultAsync(x => x.Id == id);
+            var user = await _context.CAT_Usuario.Include(x => x.Rol).FirstOrDefaultAsync(x => x.Id == id);
+
+            user.Permisos = await GetPermission(id);
 
             return user;
         }
@@ -87,9 +90,29 @@ namespace Service.Identity.Repository
 
         public async Task Update(User user)
         {
-            _context.CAT_Usuario.Update(user);
+            using var transaction = _context.Database.BeginTransaction();
 
-            await _context.SaveChangesAsync();
+            try
+            {
+                var permissions = user.Permisos.ToList();
+
+                user.Permisos = null;
+                _context.CAT_Usuario.Update(user);
+
+                await _context.SaveChangesAsync();
+
+                var config = new BulkConfig();
+                config.SetSynchronizeFilter<UserPermission>(x => x.UsuarioId == user.Id);
+
+                await _context.BulkInsertOrUpdateOrDeleteAsync(permissions, config);
+
+                transaction.Commit();
+            }
+            catch (System.Exception)
+            {
+                transaction.Rollback();
+                throw;
+            }
         }
 
         private async Task<List<UserPermission>> GetPermissions(Guid? id = null)

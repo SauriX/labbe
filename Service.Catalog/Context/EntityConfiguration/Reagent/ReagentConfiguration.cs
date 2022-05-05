@@ -19,22 +19,22 @@ namespace Service.Catalog.Context.EntityConfiguration.Reagent
             builder
                 .Property(x => x.Clave)
                 .IsRequired()
-                .HasMaxLength(15);
+                .HasMaxLength(100);
 
             builder
                 .Property(x => x.Nombre)
                 .IsRequired()
-                .HasMaxLength(50);
+                .HasMaxLength(100);
 
             builder
                 .Property(x => x.ClaveSistema)
                 .IsRequired(false)
-                .HasMaxLength(15);
+                .HasMaxLength(100);
 
             builder
                 .Property(x => x.NombreSistema)
                 .IsRequired(false)
-                .HasMaxLength(50);
+                .HasMaxLength(100);
 
             builder
                 .Property(x => x.FechaCreo)

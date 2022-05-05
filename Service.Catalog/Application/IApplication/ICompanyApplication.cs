@@ -13,6 +13,6 @@ namespace Service.Catalog.Application.IApplication
         Task<IEnumerable<CompanyListDto>> GetAll(string search = null);
         Task<byte[]> ExportListCompany(string search = null);
         Task<byte[]> ExportFormCompany(int id);
-        Task<string> GeneratePassword();
+        string GeneratePassword();
     }
 }

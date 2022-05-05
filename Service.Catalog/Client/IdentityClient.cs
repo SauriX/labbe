@@ -27,7 +27,7 @@ namespace Service.Catalog.Client
         {
             var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Identity")}/api/scopes/{module}");
 
-            if (response.IsSuccessStatusCode || response.StatusCode != HttpStatusCode.OK)
+            if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
             {
                 return await response.Content.ReadFromJsonAsync<ScopesDto>();
             }

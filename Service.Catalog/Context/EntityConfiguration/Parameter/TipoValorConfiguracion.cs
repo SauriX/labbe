@@ -4,17 +4,17 @@ using Service.Catalog.Domain.Parameter;
 
 namespace Service.Catalog.Context.EntityConfiguration.Parameter
 {
-    public class TipoValorConfiguracion : IEntityTypeConfiguration<TipoValor>
+    public class TipoValorConfiguracion : IEntityTypeConfiguration<ParameterValue>
     {
-        public void Configure(EntityTypeBuilder<TipoValor> builder)
+        public void Configure(EntityTypeBuilder<ParameterValue> builder)
         {
             builder.ToTable("CAT_Tipo_Valor");
-            builder.HasKey(x => x.IdTipo_Valor);
+            builder.HasKey(x => x.Id);
 
             builder
-                .HasOne(x => x.parametro)
+                .HasOne(x => x.Parametro)
                 .WithMany()
-                .HasForeignKey(x=>x.IdParametro);
+                .HasForeignKey(x=>x.ParametroId);
                 
 
         }

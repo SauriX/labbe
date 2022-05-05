@@ -22,22 +22,35 @@ namespace Service.Catalog.Repository
         {
             var reagents = _context.CAT_Reactivo_Contpaq.AsQueryable();
 
-            
+            search = search.Trim().ToLower();
 
             if (!string.IsNullOrWhiteSpace(search) && search != "all")
             {
-                search = search.Trim().ToLower();
                 reagents = reagents.Where(x => x.Clave.ToLower().Contains(search) || x.Nombre.ToLower().Contains(search));
             }
 
             return await reagents.ToListAsync();
         }
 
-        public async Task<Reagent> GetById(int id)
+        public async Task<List<Reagent>> GetActive()
+        {
+            var reagents = await _context.CAT_Reactivo_Contpaq.Where(x => x.Activo).ToListAsync();
+
+            return reagents;
+        }
+
+        public async Task<Reagent> GetById(Guid id)
         {
             var reagent = await _context.CAT_Reactivo_Contpaq.FindAsync(id);
 
             return reagent;
+        }
+
+        public async Task<bool> IsDuplicate(Reagent reagent)
+        {
+            var isDuplicate = await _context.CAT_Reactivo_Contpaq.AnyAsync(x => x.Id != reagent.Id && (x.Clave == reagent.Clave || x.Nombre == reagent.Nombre));
+
+            return isDuplicate;
         }
 
         public async Task Create(Reagent reagent)

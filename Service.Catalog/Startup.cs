@@ -128,14 +128,31 @@ namespace Service.Catalog
                     options.RequireHttpsMetadata = false;
                 });
 
+            services.AddControllers(options =>
+            {
+                var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+            })
+    .AddFluentValidation(config =>
+    {
+        config.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        config.ValidatorOptions.LanguageManager.Culture = new CultureInfo("es");
+    });
+
             services.AddAuthorization(opt =>
             {
-                opt.AddPolicy(Policies.Access, p => p.RequireAuthenticatedUser().Requirements.Add(new AccessRequirement()));
-                opt.AddPolicy(Policies.Create, p => p.RequireAuthenticatedUser().Requirements.Add(new CreateRequirement()));
-                opt.AddPolicy(Policies.Update, p => p.RequireAuthenticatedUser().Requirements.Add(new UpdateRequirement()));
-                opt.AddPolicy(Policies.Download, p => p.RequireAuthenticatedUser().Requirements.Add(new DownloadRequirement()));
-                opt.AddPolicy(Policies.Mail, p => p.RequireAuthenticatedUser().Requirements.Add(new MailRequirement()));
-                opt.AddPolicy(Policies.Wapp, p => p.RequireAuthenticatedUser().Requirements.Add(new WappRequirement()));
+                opt.AddPolicy(Policies.Access, p => {
+                    p.RequireAuthenticatedUser();
+                    p.AddRequirements(new AccessRequirement());
+                });
+                opt.AddPolicy(Policies.Create, p => {
+                    p.RequireAuthenticatedUser();
+                    p.Requirements.Add(new CreateRequirement());
+                });
+                opt.AddPolicy(Policies.Update, p => { p.Requirements.Add(new UpdateRequirement()); });
+                opt.AddPolicy(Policies.Download, p => { p.Requirements.Add(new DownloadRequirement()); });
+                opt.AddPolicy(Policies.Mail, p => { p.Requirements.Add(new MailRequirement()); });
+                opt.AddPolicy(Policies.Wapp, p => { p.Requirements.Add(new WappRequirement()); });
             });
 
             services.AddTransient<IAuthorizationHandler, AccessRequirementHandler>();
@@ -153,22 +170,11 @@ namespace Service.Catalog
                 });
             });
 
-            services.AddControllers(options =>
-            {
-                var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
-                options.Filters.Add(new AuthorizeFilter(policy));
-            })
-                .AddFluentValidation(config =>
-                {
-                    config.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-                    config.ValidatorOptions.LanguageManager.Culture = new CultureInfo("es");
-                });
-
             services.AddScoped<ICatalogApplication<Delivery>, CatalogApplication<Delivery>>();
             services.AddScoped<ICatalogApplication<Area>, CatalogApplication<Area>>();
             services.AddScoped<ICatalogApplication<Bank>, CatalogApplication<Bank>>();
-            services.AddScoped<ICatalogApplication<Provenance>,CatalogApplication<Provenance>>();
-            services.AddScoped<ICatalogApplication<Format>,CatalogApplication<Format>>();
+            services.AddScoped<ICatalogApplication<Provenance>, CatalogApplication<Provenance>>();
+            services.AddScoped<ICatalogApplication<Format>, CatalogApplication<Format>>();
             services.AddScoped<ICatalogApplication<Clinic>, CatalogApplication<Clinic>>();
             services.AddScoped<ICatalogApplication<Department>, CatalogApplication<Department>>();
             services.AddScoped<ICatalogApplication<Method>, CatalogApplication<Method>>();
@@ -188,7 +194,7 @@ namespace Service.Catalog
             services.AddScoped<IBranchApplication, BranchApplication>();
             services.AddScoped<ICompanyApplication, CompanyApplication>();
             services.AddScoped<IParameterApplication, ParameterApplication>();
-            services.AddScoped<IMaquiladorApplication, MaquiladorApplication>();
+            services.AddScoped<IMaquilaApplication, MaquilaApplication>();
 
             services.AddScoped<ICatalogRepository<Delivery>, CatalogRepository<Delivery>>();
             services.AddScoped<ICatalogRepository<Area>, CatalogRepository<Area>>();
@@ -213,8 +219,8 @@ namespace Service.Catalog
             services.AddScoped<ILocationRepository, LocationRepository>();
             services.AddScoped<IBranchRepository, BranchRepository>();
             services.AddScoped<ICompanyRepository, CompanyRepository>();
-            services.AddScoped<IParameterRepository, ParametersRepository>();
-            services.AddScoped<IMaquiladorRepository, MaquiladorRepository>(); 
+            services.AddScoped<IParameterRepository, ParameterRepository>();
+            services.AddScoped<IMaquilaRepository, MaquilaRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

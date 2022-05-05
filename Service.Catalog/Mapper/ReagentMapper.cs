@@ -15,7 +15,7 @@ namespace Service.Catalog.Mapper
 
             return new ReagentListDto
             {
-                Id = model.Id,
+                Id = model.Id.ToString(),
                 Clave = model.Clave,
                 Nombre = model.Nombre,
                 ClaveSistema = model.ClaveSistema,
@@ -30,7 +30,7 @@ namespace Service.Catalog.Mapper
 
             return model.Select(x => new ReagentListDto
             {
-                Id = x.Id,
+                Id = x.Id.ToString(),
                 Clave = x.Clave,
                 Nombre = x.Nombre,
                 ClaveSistema = x.ClaveSistema,
@@ -45,7 +45,7 @@ namespace Service.Catalog.Mapper
 
             return new ReagentFormDto
             {
-                Id = model.Id,
+                Id = model.Id.ToString(),
                 Clave = model.Clave,
                 Nombre = model.Nombre,
                 ClaveSistema = model.ClaveSistema,

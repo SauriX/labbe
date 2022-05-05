@@ -84,7 +84,7 @@ namespace Service.Catalog.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<string> GeneratePassword()
+        public string GeneratePassword()
         {
 
             return PasswordGenerator.GenerarPassword(8);
@@ -92,15 +92,15 @@ namespace Service.Catalog.Repository
 
         public async Task<bool> ValidateClaveNamne(string clave, string nombre)
         {
-            var validate =  _context.CAT_Compañia.Where(x => x.Clave == clave || x.NombreComercial == nombre).Count();
-            
+            var validate = await _context.CAT_Compañia.Where(x => x.Clave == clave || x.NombreComercial == nombre).CountAsync();
+
             if (validate == 0)
             {
                 return false;
             }
             else
             {
-               
+
                 return true;
             }
 

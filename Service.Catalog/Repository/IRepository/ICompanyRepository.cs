@@ -11,7 +11,7 @@ namespace Service.Catalog.Repository.IRepository
         Task Create(Company company);
         Task Update(Company company);
         Task<List<Company>> GetAll(string search = null);
-        Task<string> GeneratePassword();
+        string GeneratePassword();
         Task<bool> ValidateClaveNamne(string clave, string nombre);
     }
 }

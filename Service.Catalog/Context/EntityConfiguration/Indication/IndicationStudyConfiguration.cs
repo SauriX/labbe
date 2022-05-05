@@ -11,31 +11,15 @@ namespace Service.Catalog.Context.EntityConfiguration.Medics
         {
             builder.ToTable("Relacion_Estudio_Indicacion");
 
-            builder.HasKey(x => new { x.EstudioId, x.IndicacionId});
-
-                
-
-            builder
-              .Property(x => x.Activo)
-              .IsRequired(true);
-
-            builder
-              .Property(x => x.UsuarioCreoId)
-              .IsRequired(true);
+            builder.HasKey(x => new { x.EstudioId, x.IndicacionId});   
 
             builder
               .Property(x => x.FechaCreo)
-              .IsRequired(true);
-
-            builder
-              .Property(x => x.UsuarioModId)
-              .IsRequired(false);
+              .HasColumnType("smalldatetime");
 
             builder
               .Property(x => x.FechaMod)
-              .IsRequired(true);
-
+              .HasColumnType("smalldatetime");
         }
-
     }
 }

@@ -28,32 +28,38 @@ namespace Service.Catalog.Controllers
             return await _service.GetAll(search);
         }
 
+        [HttpGet("active")]
+        public async Task<IEnumerable<ReagentListDto>> GetActive()
+        {
+            return await _service.GetActive();
+        }
+
         [HttpGet("{id}")]
         [Authorize(Policies.Access)]
-        public async Task<ReagentFormDto> GetById(int id)
+        public async Task<ReagentFormDto> GetById(string id)
         {
             return await _service.GetById(id);
         }
 
         [HttpPost]
         [Authorize(Policies.Create)]
-        public async Task Create(ReagentFormDto reagent)
+        public async Task<ReagentListDto> Create(ReagentFormDto reagent)
         {
             reagent.UsuarioId = (Guid)HttpContext.Items["userId"];
-            await _service.Create(reagent);
+            return await _service.Create(reagent);
         }
 
         [HttpPut]
         [Authorize(Policies.Update)]
-        public async Task Update(ReagentFormDto reagent)
+        public async Task<ReagentListDto> Update(ReagentFormDto reagent)
         {
             reagent.UsuarioId = (Guid)HttpContext.Items["userId"];
-            await _service.Update(reagent);
+            return await _service.Update(reagent);
         }
 
-        [HttpPost("export/list/{search?}")]
+        [HttpPost("export/list/{search}")]
         [Authorize(Policies.Download)]
-        public async Task<IActionResult> ExportList(string search = null)
+        public async Task<IActionResult> ExportList(string search)
         {
             var (file, fileName) = await _service.ExportList(search);
             return File(file, MimeType.XLSX, fileName);
@@ -61,7 +67,7 @@ namespace Service.Catalog.Controllers
 
         [HttpPost("export/form/{id}")]
         [Authorize(Policies.Download)]
-        public async Task<IActionResult> ExportForm(int id)
+        public async Task<IActionResult> ExportForm(string id)
         {
             var (file, fileName) = await _service.ExportForm(id);
             return File(file, MimeType.XLSX, fileName);
