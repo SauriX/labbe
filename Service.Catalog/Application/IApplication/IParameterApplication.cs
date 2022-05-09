@@ -10,7 +10,7 @@ namespace Service.Catalog.Application.IApplication
         Task<IEnumerable<ParameterListDto>> GetAll(string search);
         Task<IEnumerable<ParameterListDto>> GetActive();
         Task<ParameterFormDto> GetById(string id);
-        Task<IEnumerable<ParameterValueDto>> GetAllValues(string id);
+        Task<IEnumerable<ParameterValueDto>> GetAllValues(string id, string type);
         Task<ParameterValueDto> GetValueById(string id);
         Task<ParameterListDto> Create(ParameterFormDto parameter);
         Task AddValue(ParameterValueDto value);

@@ -1,61 +1,6 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/Parameter/export/list/{search}",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "axsishost.online"
-        }
-      ],
-      "UpstreamPathTemplate": "/api/Parameter/export/list/{search}",
-      "UpstreamhttpsMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/Parameter/export/form/{id}",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "axsishost.online"
-        }
-      ],
-      "UpstreamPathTemplate": "/api/Parameter/export/form/{id}",
-      "UpstreamhttpsMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/Parameter",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "axsishost.online"
-        }
-      ],
-      "UpstreamPathTemplate": "/api/Parameter",
-      "UpstreamhttpsMethod": [ "POST", "PUT" ]
-    },
-    {
-      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/Parameter/valuetipe",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "axsishost.online"
-        }
-      ],
-      "UpstreamPathTemplate": "/api/Parameter/valuetipe",
-      "UpstreamhttpsMethod": [ "PUT" ]
-    },
-    {
-      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/Parameter/addValue",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "axsishost.online"
-        }
-      ],
-      "UpstreamPathTemplate": "/api/Parameter/addValue",
-      "UpstreamhttpsMethod": [ "POST" ]
-    },
-    {
       "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/Parameter/all/{search}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -64,18 +9,18 @@
         }
       ],
       "UpstreamPathTemplate": "/api/Parameter/all/{search}",
-      "UpstreamhttpsMethod": [ "GET" ]
+      "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/Parameter/all/values/{id}/{tipe}",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/Parameter/active",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/Parameter/all/values/{id}/{tipe}",
-      "UpstreamhttpsMethod": [ "GET" ]
+      "UpstreamPathTemplate": "/api/Parameter/active",
+      "UpstreamHttpMethod": [ "GET" ]
     },
     {
       "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/Parameter/{id}",
@@ -86,7 +31,18 @@
         }
       ],
       "UpstreamPathTemplate": "/api/Parameter/{id}",
-      "UpstreamhttpsMethod": [ "GET", "DELETE" ]
+      "UpstreamHttpMethod": [ "GET", "DELETE" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/Parameter/all/values/{id}/{type}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Parameter/all/values/{id}/{type}",
+      "UpstreamHttpMethod": [ "GET" ]
     },
     {
       "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/Parameter/valuetipe/{id}",
@@ -97,7 +53,51 @@
         }
       ],
       "UpstreamPathTemplate": "/api/Parameter/valuetipe/{id}",
-      "UpstreamhttpsMethod": [ "GET" ]
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/Parameter",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Parameter",
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/Parameter/value",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Parameter/value",
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/Parameter/export/list/{search}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Parameter/export/list/{search}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/Parameter/export/form/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Parameter/export/form/{id}",
+      "UpstreamHttpMethod": [ "POST" ]
     }
   ]
 }

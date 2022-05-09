@@ -62,7 +62,7 @@ namespace Service.Catalog.Mapper
                 Fcsi = model.FCSI,
                 Activo = model.Activo,
                 FormatoImpresionId = model.FormatoImpresionId,
-                TipoValorId = model.TipoValorId,
+                TipoValor = model.TipoValor,
                 Estudios = model.Estudios.ToIndicationStudyDto()
             };
         }
@@ -86,7 +86,7 @@ namespace Service.Catalog.Mapper
             {
                 Id = model.Id.ToString(),
                 ParametroId = model.ParametroId.ToString(),
-                TipoValorId = model.TipoValorId,
+                Nombre = model.Nombre,
                 ValorInicial = model.ValorInicial,
                 ValorFinal = model.ValorFinal,
                 ValorInicialNumerico = model.ValorInicialNumerico,
@@ -112,7 +112,7 @@ namespace Service.Catalog.Mapper
             {
                 Id = x.Id.ToString(),
                 ParametroId = x.ParametroId.ToString(),
-                TipoValorId = x.TipoValorId,
+                Nombre = x.Nombre,
                 ValorInicial = x.ValorInicial,
                 ValorFinal = x.ValorFinal,
                 ValorInicialNumerico = x.ValorInicialNumerico,
@@ -136,8 +136,9 @@ namespace Service.Catalog.Mapper
 
             return new ParameterValue
             {
+                Id = dto.Id == null ? Guid.NewGuid() : Guid.Parse(dto.Id),
                 ParametroId = Guid.Parse(dto.ParametroId),
-                TipoValorId = dto.TipoValorId,
+                Nombre = dto.Nombre,
                 ValorInicial = dto.ValorInicial,
                 ValorFinal = dto.ValorFinal,
                 ValorInicialNumerico = dto.ValorInicialNumerico,
@@ -149,9 +150,9 @@ namespace Service.Catalog.Mapper
                 MujerValorInicial = dto.MujerValorInicial,
                 MujerValorFinal = dto.MujerValorFinal,
                 MedidaTiempoId = dto.MedidaTiempoId,
-                Opcion = dto.Opcion.ToString(),
-                DescripcionTexto = dto.DescripcionTexto.ToString(),
-                DescripcionParrafo = dto.DescripcionParrafo.ToString(),
+                Opcion = dto.Opcion?.ToString(),
+                DescripcionTexto = dto.DescripcionTexto?.ToString(),
+                DescripcionParrafo = dto.DescripcionParrafo?.ToString(),
                 Activo = true,
                 UsuarioCreoId = dto.UsuarioId,
                 FechaCreo = DateTime.Now,
@@ -166,7 +167,7 @@ namespace Service.Catalog.Mapper
             {
                 Id = model.Id,
                 ParametroId = Guid.Parse(dto.ParametroId),
-                TipoValorId = dto.TipoValorId,
+                Nombre = dto.Nombre,
                 ValorInicial = dto.ValorInicial,
                 ValorFinal = dto.ValorFinal,
                 ValorInicialNumerico = dto.ValorInicialNumerico,
@@ -197,7 +198,7 @@ namespace Service.Catalog.Mapper
             {
                 Clave = dto.Clave,
                 Nombre = dto.Nombre,
-                TipoValorId = dto.TipoValorId,
+                TipoValor = dto.TipoValor,
                 ValorInicial = dto.ValorInicial,
                 NombreCorto = dto.NombreCorto,
                 Unidades = dto.Unidades,
@@ -224,7 +225,7 @@ namespace Service.Catalog.Mapper
                 Id = model.Id,
                 Clave = dto.Clave,
                 Nombre = dto.Nombre,
-                TipoValorId = dto.TipoValorId,
+                TipoValor = dto.TipoValor,
                 ValorInicial = dto.ValorInicial,
                 NombreCorto = dto.NombreCorto,
                 Unidades = dto.Unidades,

@@ -49,6 +49,13 @@ namespace Service.Catalog.Application
             var areas = await _repository.GetActive();
 
             return areas.ToAreaListDto();
+        }     
+        
+        public async Task<IEnumerable<AreaListDto>> GetAreaByDepartment(int departmentId)
+        {
+            var areas = await _repository.GetAreaByDepartment(departmentId);
+
+            return areas.ToAreaListDto();
         }
 
         public async Task<AreaListDto> Create(AreaFormDto area)

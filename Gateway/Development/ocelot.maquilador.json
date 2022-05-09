@@ -1,7 +1,7 @@
 ﻿{
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/scopes/maquilador",
+      "DownstreamPathTemplate": "/api/scopes/maquila",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -9,11 +9,11 @@
           "Port": 45216
         }
       ],
-      "UpstreamPathTemplate": "/api/scopes/maquilador",
+      "UpstreamPathTemplate": "/api/scopes/maquila",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/maquilador/all/{search}",
+      "DownstreamPathTemplate": "/api/maquila/all/{search}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -21,11 +21,11 @@
           "Port": 20347
         }
       ],
-      "UpstreamPathTemplate": "/api/maquilador/all/{search}",
+      "UpstreamPathTemplate": "/api/maquila/all/{search}",
       "UpstreamHttpMethod": [ "GET" ]
     },
     //{
-    //  "DownstreamPathTemplate": "/api/maquilador/active",
+    //  "DownstreamPathTemplate": "/api/maquila/active",
     //  "DownstreamScheme": "http",
     //  "DownstreamHostAndPorts": [
     //    {
@@ -33,11 +33,11 @@
     //      "Port": 20347
     //    }
     //  ],
-    //  "UpstreamPathTemplate": "/api/maquilador/active",
+    //  "UpstreamPathTemplate": "/api/maquila/active",
     //  "UpstreamHttpMethod": [ "GET" ]
     //},
     {
-      "DownstreamPathTemplate": "/api/maquilador/{id}",
+      "DownstreamPathTemplate": "/api/maquila/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -45,11 +45,11 @@
           "Port": 20347
         }
       ],
-      "UpstreamPathTemplate": "/api/maquilador/{id}",
+      "UpstreamPathTemplate": "/api/maquila/{id}",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/maquilador",
+      "DownstreamPathTemplate": "/api/maquila",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -57,11 +57,11 @@
           "Port": 20347
         }
       ],
-      "UpstreamPathTemplate": "/api/maquilador",
+      "UpstreamPathTemplate": "/api/maquila",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/maquilador",
+      "DownstreamPathTemplate": "/api/maquila",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -69,11 +69,11 @@
           "Port": 20347
         }
       ],
-      "UpstreamPathTemplate": "/api/maquilador",
+      "UpstreamPathTemplate": "/api/maquila",
       "UpstreamHttpMethod": [ "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/api/maquilador/export/list/{search}",
+      "DownstreamPathTemplate": "/api/maquila/export/list/{search}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -81,11 +81,11 @@
           "Port": 20347
         }
       ],
-      "UpstreamPathTemplate": "/api/maquilador/export/list/{search}",
+      "UpstreamPathTemplate": "/api/maquila/export/list/{search}",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/maquilador/export/form/{id}",
+      "DownstreamPathTemplate": "/api/maquila/export/form/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -93,7 +93,7 @@
           "Port": 20347
         }
       ],
-      "UpstreamPathTemplate": "/api/maquilador/export/form/{id}",
+      "UpstreamPathTemplate": "/api/maquila/export/form/{id}",
       "UpstreamHttpMethod": [ "POST" ]
     }
   ]

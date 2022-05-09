@@ -1,7 +1,7 @@
 ﻿{
   "Routes": [
     {
-      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/scopes/maquilador",
+      "DownstreamPathTemplate": "/LabRamos/services/identity/api/scopes/maquilador",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {

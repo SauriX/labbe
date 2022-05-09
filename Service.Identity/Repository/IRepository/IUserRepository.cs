@@ -13,6 +13,6 @@ namespace Service.Identity.Repository.IRepository
         Task<User> GetByCode(string code);
         Task<bool> IsDuplicate(User role);
         Task Create(User user);
-        Task Update(User user);
+        Task Update(User user, bool updatePermission = true);
     }
 }

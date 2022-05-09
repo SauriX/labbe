@@ -1104,8 +1104,8 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("PaginaWeb")
-                        .HasMaxLength(1)
-                        .HasColumnType("nvarchar(1)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Telefono")
                         .IsRequired()
@@ -1158,6 +1158,100 @@ namespace Service.Catalog.Migrations
                     b.ToTable("Cat_Formato");
                 });
 
+            modelBuilder.Entity("Service.Catalog.Domain.Parameter.Parameter", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("AreaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Clave")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("DepartamentoId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("DepartmentoId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FCSI")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaModifico")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Formato")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("FormatoImpresionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Formula")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Nombre")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("NombreCorto")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<Guid>("ReactivoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("TipoValor")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasDefaultValue("0");
+
+                    b.Property<string>("UnidadSi")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal>("Unidades")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("UsuarioCreoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsuarioModificoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("ValorInicial")
+                        .HasMaxLength(100)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AreaId");
+
+                    b.HasIndex("DepartmentoId");
+
+                    b.HasIndex("FormatoImpresionId");
+
+                    b.HasIndex("ReactivoId");
+
+                    b.ToTable("CAT_Parametro");
+                });
+
             modelBuilder.Entity("Service.Catalog.Domain.Parameter.ParameterStudy", b =>
                 {
                     b.Property<int>("EstudioId")
@@ -1190,104 +1284,9 @@ namespace Service.Catalog.Migrations
                     b.ToTable("Relacion_Estudio_Parametro");
                 });
 
-            modelBuilder.Entity("Service.Catalog.Domain.Parameter.Parameters", b =>
+            modelBuilder.Entity("Service.Catalog.Domain.Parameter.ParameterValue", b =>
                 {
-                    b.Property<Guid>("IdParametro")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("AreaId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Clave")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("DepartamentId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DepartmentId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("FCSI")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaMod")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("FormatId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Formato")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Formula")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Nombre")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("NombreCorto")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<Guid>("ReagentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("TipoValor")
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(100)
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
-
-                    b.Property<string>("UnidadSi")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<double>("Unidades")
-                        .HasColumnType("float");
-
-                    b.Property<Guid>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UsuarioModId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ValorInicial")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("IdParametro");
-
-                    b.HasIndex("AreaId");
-
-                    b.HasIndex("DepartmentId");
-
-                    b.HasIndex("FormatId");
-
-                    b.HasIndex("ReagentId");
-
-                    b.ToTable("CAT_Parametro");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Parameter.TipoValor", b =>
-                {
-                    b.Property<Guid>("IdTipo_Valor")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -1303,26 +1302,23 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FechaMod")
+                    b.Property<DateTime>("FechaModifico")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("HombreValorFinal")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("HombreValorFinal")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("HombreValorInicial")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("HombreValorInicial")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("IdParametro")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<byte>("MedidaTiempoId")
+                        .HasColumnType("tinyint");
 
-                    b.Property<string>("MedidaTiempo")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("MujerValorFinal")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("MujerValorFinal")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MujerValorInicial")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("MujerValorInicial")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Nombre")
                         .HasColumnType("nvarchar(max)");
@@ -1330,33 +1326,36 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("Opcion")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RangoEdadFinal")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("ParametroId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("RangoEdadInicial")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("RangoEdadFinal")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RangoEdadInicial")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UsuarioModId")
+                    b.Property<Guid>("UsuarioModificoId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ValorFinal")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("ValorFinal")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("ValorFinalNumerico")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("ValorFinalNumerico")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("ValorInicial")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("ValorInicial")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("ValorInicialNumerico")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("ValorInicialNumerico")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("IdTipo_Valor");
+                    b.HasKey("Id");
 
-                    b.HasIndex("IdParametro");
+                    b.HasIndex("ParametroId");
 
                     b.ToTable("CAT_Tipo_Valor");
                 });
@@ -1812,6 +1811,39 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Colonia");
                 });
 
+            modelBuilder.Entity("Service.Catalog.Domain.Parameter.Parameter", b =>
+                {
+                    b.HasOne("Service.Catalog.Domain.Catalog.Area", "Area")
+                        .WithMany()
+                        .HasForeignKey("AreaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Service.Catalog.Domain.Catalog.Department", "Departmento")
+                        .WithMany()
+                        .HasForeignKey("DepartmentoId");
+
+                    b.HasOne("Service.Catalog.Domain.Parameter.Format", "FormatoImpresion")
+                        .WithMany()
+                        .HasForeignKey("FormatoImpresionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Service.Catalog.Domain.Reagent.Reagent", "Reactivo")
+                        .WithMany()
+                        .HasForeignKey("ReactivoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Area");
+
+                    b.Navigation("Departmento");
+
+                    b.Navigation("FormatoImpresion");
+
+                    b.Navigation("Reactivo");
+                });
+
             modelBuilder.Entity("Service.Catalog.Domain.Parameter.ParameterStudy", b =>
                 {
                     b.HasOne("Service.Catalog.Domain.Study", "Estudio")
@@ -1820,7 +1852,7 @@ namespace Service.Catalog.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Service.Catalog.Domain.Parameter.Parameters", "Parametro")
+                    b.HasOne("Service.Catalog.Domain.Parameter.Parameter", "Parametro")
                         .WithMany("Estudios")
                         .HasForeignKey("ParametroId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1831,48 +1863,15 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Parametro");
                 });
 
-            modelBuilder.Entity("Service.Catalog.Domain.Parameter.Parameters", b =>
+            modelBuilder.Entity("Service.Catalog.Domain.Parameter.ParameterValue", b =>
                 {
-                    b.HasOne("Service.Catalog.Domain.Catalog.Area", "Area")
+                    b.HasOne("Service.Catalog.Domain.Parameter.Parameter", "Parametro")
                         .WithMany()
-                        .HasForeignKey("AreaId")
+                        .HasForeignKey("ParametroId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Service.Catalog.Domain.Catalog.Department", "Department")
-                        .WithMany()
-                        .HasForeignKey("DepartmentId");
-
-                    b.HasOne("Service.Catalog.Domain.Parameter.Format", "Format")
-                        .WithMany()
-                        .HasForeignKey("FormatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Service.Catalog.Domain.Reagent.Reagent", "Reagent")
-                        .WithMany()
-                        .HasForeignKey("ReagentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Area");
-
-                    b.Navigation("Department");
-
-                    b.Navigation("Format");
-
-                    b.Navigation("Reagent");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Parameter.TipoValor", b =>
-                {
-                    b.HasOne("Service.Catalog.Domain.Parameter.Parameters", "parametro")
-                        .WithMany()
-                        .HasForeignKey("IdParametro")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("parametro");
+                    b.Navigation("Parametro");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Price.Price_Promotion", b =>
@@ -1931,7 +1930,7 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Estudios");
                 });
 
-            modelBuilder.Entity("Service.Catalog.Domain.Parameter.Parameters", b =>
+            modelBuilder.Entity("Service.Catalog.Domain.Parameter.Parameter", b =>
                 {
                     b.Navigation("Estudios");
                 });

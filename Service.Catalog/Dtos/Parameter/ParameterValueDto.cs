@@ -6,7 +6,7 @@ namespace Service.Catalog.Dtos.Parameters
     {
         public string Id { get; set; }
         public string ParametroId { get; set; }
-        public byte TipoValorId { get; set; }
+        public string Nombre { get; set; }
         public decimal ValorInicial { get; set; }
         public decimal ValorFinal { get; set; }
         public decimal ValorInicialNumerico { get; set; }

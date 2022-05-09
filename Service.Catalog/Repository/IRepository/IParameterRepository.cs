@@ -10,7 +10,7 @@ namespace Service.Catalog.Repository.IRepository
         Task<List<Parameter>> GetAll(string search);
         Task<List<Parameter>> GetActive();
         Task<Parameter> GetById(Guid id);
-        Task<List<ParameterValue>> GetAllValues(Guid id);
+        Task<List<ParameterValue>> GetAllValues(Guid id, string type);
         Task<ParameterValue> GetValueById(Guid id);
         Task<bool> IsDuplicate(Parameter reagent);
         Task Create(Parameter parameter);

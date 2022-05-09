@@ -10,7 +10,7 @@ namespace Service.Catalog.Domain.Parameter
         public string Clave { get; set; }
         public string Nombre { get; set; }
         public decimal ValorInicial { get; set; }
-        public byte TipoValorId { get; set; }
+        public string TipoValor { get; set; }
         public string NombreCorto { get; set; }
         public decimal Unidades { get; set; }
         public string Formula { get; set; }

@@ -102,10 +102,10 @@ namespace Service.Identity.Application
                 throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
             }
 
-            if (user.Contraseña != user.ConfirmaContraseña)
-            {
-                throw new CustomException(HttpStatusCode.BadRequest, "Las contraseñas deben coincidir");
-            }
+            //if (user.Contraseña != user.ConfirmaContraseña)
+            //{
+            //    throw new CustomException(HttpStatusCode.BadRequest, "Las contraseñas deben coincidir");
+            //}
 
             var newUser = user.ToModel(key);
 
@@ -132,10 +132,10 @@ namespace Service.Identity.Application
                 throw new CustomException(HttpStatusCode.BadRequest, Responses.NotFound);
             }
 
-            if (user.Contraseña != user.ConfirmaContraseña)
-            {
-                throw new CustomException(HttpStatusCode.BadRequest, "Las contraseñas deben coincidir");
-            }
+            //if (user.Contraseña != user.ConfirmaContraseña)
+            //{
+            //    throw new CustomException(HttpStatusCode.BadRequest, "Las contraseñas deben coincidir");
+            //}
 
             var existing = await _repository.GetById(guid);
 
@@ -191,7 +191,7 @@ namespace Service.Identity.Application
             existing.UsuarioModificoId = data.UsuarioId;
             existing.FechaModifico = DateTime.Now;
 
-            await _repository.Update(existing);
+            await _repository.Update(existing, false);
         }
 
         public async Task<byte[]> ExportList(string search = null)

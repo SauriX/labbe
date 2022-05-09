@@ -88,7 +88,7 @@ namespace Service.Identity.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task Update(User user)
+        public async Task Update(User user, bool updatePermission = true)
         {
             using var transaction = _context.Database.BeginTransaction();
 
@@ -101,10 +101,13 @@ namespace Service.Identity.Repository
 
                 await _context.SaveChangesAsync();
 
-                var config = new BulkConfig();
-                config.SetSynchronizeFilter<UserPermission>(x => x.UsuarioId == user.Id);
+                if (updatePermission)
+                {
+                    var config = new BulkConfig();
+                    config.SetSynchronizeFilter<UserPermission>(x => x.UsuarioId == user.Id);
 
-                await _context.BulkInsertOrUpdateOrDeleteAsync(permissions, config);
+                    await _context.BulkInsertOrUpdateOrDeleteAsync(permissions, config);
+                }
 
                 transaction.Commit();
             }

@@ -7,7 +7,7 @@ namespace Service.Catalog.Domain.Parameter
         public Guid Id { get; set; }
         public Guid ParametroId { get; set; }
         public virtual Parameter Parametro { get; set; }
-        public byte TipoValorId { get; set; }
+        public string Nombre { get; set; }
         public decimal ValorInicial { get; set; }
         public decimal ValorFinal { get; set; }
         public decimal ValorInicialNumerico { get; set; }

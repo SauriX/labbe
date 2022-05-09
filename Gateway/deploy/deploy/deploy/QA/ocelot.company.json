@@ -59,6 +59,17 @@
       ],
       "UpstreamPathTemplate": "/api/company/export/form/{id}",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api​/company/paswwordgenerator",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "​/api​/company​/paswwordgenerator",
+      "UpstreamHttpMethod": [ "GET" ]
     }
   ]
 }

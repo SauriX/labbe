@@ -10,6 +10,7 @@ namespace Service.Catalog.Application.IApplication
     {
         Task<IEnumerable<AreaListDto>> GetAll(string search);
         Task<IEnumerable<AreaListDto>> GetActive();
+        Task<IEnumerable<AreaListDto>> GetAreaByDepartment(int departmentId);
         Task<AreaFormDto> GetById(int id);
         Task<AreaListDto> Create(AreaFormDto Catalog);
         Task<AreaListDto> Update(AreaFormDto Catalog);

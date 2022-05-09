@@ -86,18 +86,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/Parameter/{id}",
-      "UpstreamhttpsMethod": [ "DELETE" ]
-    },
-    {
-      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/Parameter/{id}",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "axsishost.online"
-        }
-      ],
-      "UpstreamPathTemplate": "/api/Parameter/{id}",
-      "UpstreamhttpsMethod": [ "GET" ]
+      "UpstreamhttpsMethod": [ "GET", "DELETE" ]
     },
     {
       "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/Parameter/valuetipe/{id}",

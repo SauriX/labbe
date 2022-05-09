@@ -41,18 +41,18 @@ namespace Service.Catalog.Controllers
             return await _service.GetById(id);
         }
 
+        [HttpGet("all/values/{id}/{type}")]
+        [Authorize(Policies.Access)]
+        public async Task<IEnumerable<ParameterValueDto>> GetAllValues(string id, string type)
+        {
+            return await _service.GetAllValues(id, type);
+        }
+
         [HttpGet("value/{id}")]
         [Authorize(Policies.Access)]
         public async Task<ParameterValueDto> GetValue(string id)
         {
             return await _service.GetValueById(id);
-        }
-
-        [HttpGet("all/values/{id}/{type}")]
-        [Authorize(Policies.Access)]
-        public async Task<IEnumerable<ParameterValueDto>> GetAllValues(string id)
-        {
-            return await _service.GetAllValues(id);
         }
 
         [HttpPost]

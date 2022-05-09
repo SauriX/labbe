@@ -46,7 +46,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Parameter
                 .IsRequired(true)
                 .HasMaxLength(100);
             builder
-                .Property(x => x.TipoValorId)
+                .Property(x => x.TipoValor)
                 .HasDefaultValue(0)
                 .HasMaxLength(100);
 

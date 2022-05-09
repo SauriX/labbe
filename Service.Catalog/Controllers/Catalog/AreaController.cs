@@ -16,19 +16,26 @@ namespace Service.Catalog.Controllers.Catalog
         {
             return await _areaService.GetAll(search);
         }
-
-        [HttpGet("area/{id}")]
-        [Authorize(Policies.Access)]
-        public async Task<AreaFormDto> GetAreaById(int id)
-        {
-            return await _areaService.GetById(id);
-        }     
         
         [HttpGet("area/active")]
         [Authorize(Policies.Access)]
         public async Task<IEnumerable<AreaListDto>> GetActiveArea()
         {
             return await _areaService.GetActive();
+        }
+
+        [HttpGet("area/department/{departmentId}/active")]
+        [Authorize(Policies.Access)]
+        public async Task<IEnumerable<AreaListDto>> GetAreaByDepartment(int departmentId)
+        {
+            return await _areaService.GetAreaByDepartment(departmentId);
+        }
+
+        [HttpGet("area/{id}")]
+        [Authorize(Policies.Access)]
+        public async Task<AreaFormDto> GetAreaById(int id)
+        {
+            return await _areaService.GetById(id);
         }
 
         [HttpPost("area")]

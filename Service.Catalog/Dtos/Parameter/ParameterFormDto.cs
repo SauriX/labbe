@@ -17,7 +17,7 @@ namespace Service.Catalog.Dtos.Parameters
         public string Nombre { get; set; }
         public string NombreCorto { get; set; }
         public decimal Unidades { get; set; }
-        public byte TipoValorId { get; set; }
+        public string TipoValor { get; set; }
         public string Formula { get; set; }
         public string Formato { get; set; }
         public decimal ValorInicial { get; set; }
@@ -41,7 +41,7 @@ namespace Service.Catalog.Dtos.Parameters
             RuleFor(x => x.ValorInicial).NotEmpty();
             RuleFor(x => x.NombreCorto).NotEmpty().MaximumLength(50);
             RuleFor(x => x.Unidades).GreaterThan(0);
-            RuleFor(x => x.TipoValorId).NotEmpty();
+            RuleFor(x => x.TipoValor).NotEmpty();
             RuleFor(x => x.DepartamentoId).GreaterThan(0);
             RuleFor(x => x.AreaId).GreaterThan(0);
             RuleFor(x => x.FormatoImpresionId).GreaterThan(0);

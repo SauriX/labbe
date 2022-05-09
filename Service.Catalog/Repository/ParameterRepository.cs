@@ -51,11 +51,16 @@ namespace Service.Catalog.Repository
             return parameter;
         }
 
-        public async Task<List<ParameterValue>> GetAllValues(Guid id)
+        public async Task<List<ParameterValue>> GetAllValues(Guid id, string type)
         {
-            var values = await _context.CAT_Tipo_Valor.Where(x => x.ParametroId == id).ToListAsync();
+            var values = _context.CAT_Tipo_Valor.Where(x => x.ParametroId == id);
 
-            return values;
+            if (type == "4")
+            {
+                return await values.Where(x => x.Nombre == "hombre" || x.Nombre == "mujer").ToListAsync();
+            }
+
+            return await values.Where(x => x.Nombre == type).ToListAsync();
         }
 
         public async Task<ParameterValue> GetValueById(Guid id)
@@ -65,9 +70,11 @@ namespace Service.Catalog.Repository
             return value;
         }
 
-        public Task<bool> IsDuplicate(Parameter reagent)
+        public async Task<bool> IsDuplicate(Parameter parameter)
         {
-            throw new NotImplementedException();
+            var isDuplicate = await _context.CAT_Parametro.AnyAsync(x => x.Id != parameter.Id && (x.Clave == parameter.Clave || x.Nombre == parameter.Nombre));
+
+            return isDuplicate;
         }
 
         public async Task Create(Parameter parameter)

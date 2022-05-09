@@ -53,11 +53,11 @@ namespace Service.Catalog.Application
             return parameter.ToParameterFormDto();
         }
 
-        public async Task<IEnumerable<ParameterValueDto>> GetAllValues(string id)
+        public async Task<IEnumerable<ParameterValueDto>> GetAllValues(string id, string type)
         {
             Helpers.ValidateGuid(id, out Guid guid);
 
-            var values = await _repository.GetAllValues(guid);
+            var values = await _repository.GetAllValues(guid, type);
 
             return values.ToParameterValueDto();
         }
@@ -132,14 +132,14 @@ namespace Service.Catalog.Application
         {
             Helpers.ValidateGuid(value.Id, out Guid guid);
 
-            var existing = await _repository.GetValueById(guid);
+            //var existing = await _repository.GetValueById(guid);
 
-            if (existing == null)
-            {
-                throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
-            }
+            //if (existing == null)
+            //{
+            //    throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
+            //}
 
-            var updatedValue = value.ToModel(existing);
+            var updatedValue = value.ToModel();
 
             await _repository.UpdateValue(updatedValue);
         }
@@ -148,12 +148,12 @@ namespace Service.Catalog.Application
         {
             Helpers.ValidateGuid(id, out Guid guid);
 
-            var existing = await _repository.GetById(guid);
+            //var existing = await _repository.GetById(guid);
 
-            if (existing == null)
-            {
-                throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
-            }
+            //if (existing == null)
+            //{
+            //    throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
+            //}
 
             await _repository.DeleteValue(guid);
         }
@@ -187,7 +187,7 @@ namespace Service.Catalog.Application
         {
             var parameter = await GetById(id);
 
-            var value = await GetAllValues(parameter.Id);
+            var value = await GetAllValues(parameter.Id, parameter.TipoValor);
 
             var path = Assets.ParameterForm;
 

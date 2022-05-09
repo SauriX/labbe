@@ -61,3 +61,9 @@
 27/4/2022 12:06:33 => Sequence contains no elements
 
 3/5/2022 08:18:31 => Database operation expected to affect 1 row(s) but actually affected 0 row(s). Data may have been modified or deleted since entities were loaded. See http://go.microsoft.com/fwlink/?LinkId=527962 for information on understanding and handling optimistic concurrency exceptions.
+
+6/5/2022 11:32:43 => The MERGE statement conflicted with the FOREIGN KEY constraint "FK_CAT_Usuario_Permiso_CAT_Usuario_UsuarioId". The conflict occurred in database "LAB_RAMOS_DEVELOP_IDENTITY", table "dbo.CAT_Usuario", column 'Id'.
+The statement has been terminated.
+
+6/5/2022 11:33:13 => The MERGE statement conflicted with the FOREIGN KEY constraint "FK_CAT_Usuario_Permiso_CAT_Usuario_UsuarioId". The conflict occurred in database "LAB_RAMOS_DEVELOP_IDENTITY", table "dbo.CAT_Usuario", column 'Id'.
+The statement has been terminated.
