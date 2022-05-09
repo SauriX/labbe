@@ -7,7 +7,7 @@ namespace Service.Catalog.Domain.Indication
         public int IndicacionId { get; set; }
         public virtual Indication Indicacion { get; set; }
         public int EstudioId { get; set; }
-        public virtual Study Estudio { get; set; }
+        public virtual Domain.Study.Study Estudio { get; set; }
         public bool Activo { get; set; }
         public Guid? UsuarioCreoId { get; set; }
         public DateTime? FechaCreo { get; set; }

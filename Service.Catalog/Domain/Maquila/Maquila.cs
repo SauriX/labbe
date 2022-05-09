@@ -1,7 +1,7 @@
 ﻿using Service.Catalog.Domain.Constant;
 using System;
 
-namespace Service.Catalog.Domain.Maquilador
+namespace Service.Catalog.Domain.Maquila
 {
     public class Maquila
     {

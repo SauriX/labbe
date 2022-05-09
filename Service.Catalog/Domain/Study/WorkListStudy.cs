@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Service.Catalog.Domain.Catalog;
+using System;
 
-namespace Service.Catalog.Domain.Parameter
+namespace Service.Catalog.Domain.Study
 {
-    public class ParameterStudy
+    public class WorkListStudy
     {
-        public Guid ParametroId { get; set; }
-        public virtual Parameter Parametro { get; set; }
+        public int WorkListId { get; set; }
+        public virtual WorkList WorkList { get; set; }
         public int EstudioId { get; set; }
-        public virtual Domain.Study.Study Estudio { get; set; }
+        public virtual Study Estudio { get; set; }
         public bool Activo { get; set; }
         public string UsuarioCreoId { get; set; }
         public DateTime FechaCreo { get; set; }

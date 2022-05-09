@@ -7,11 +7,13 @@ using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Domain.Company;
 using Service.Catalog.Domain.Constant;
 using Service.Catalog.Domain.Indication;
-using Service.Catalog.Domain.Maquilador;
+using Service.Catalog.Domain.Maquila;
 using Service.Catalog.Domain.Parameter;
 using Service.Catalog.Domain.Price;
 using Service.Catalog.Domain.Provenance;
 using Service.Catalog.Domain.Reagent;
+using Service.Catalog.Domain.Study;
+using Service.Catalog.Domain.Tapon;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,7 +63,7 @@ namespace Service.Catalog.Context
         public DbSet<Contact> CAT_Contacto { get; set; }
         //hasta aqui es zona de pruebas
         public DbSet<Maquila> CAT_Maquilador { get; set; }
-
+        public DbSet<Tapon> CAT_Tipo_Tapon { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

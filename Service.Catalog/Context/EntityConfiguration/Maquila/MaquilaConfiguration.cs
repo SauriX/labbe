@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Service.Catalog.Context.EntityConfiguration.Reagent
 {
-    public class MaquilaConfiguration : IEntityTypeConfiguration<Domain.Maquilador.Maquila>
+    public class MaquilaConfiguration : IEntityTypeConfiguration<Domain.Maquila.Maquila>
     {
-        public void Configure(EntityTypeBuilder<Domain.Maquilador.Maquila> builder)
+        public void Configure(EntityTypeBuilder<Domain.Maquila.Maquila> builder)
         {
             builder.ToTable("CAT_Maquilador");
 

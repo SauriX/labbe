@@ -195,6 +195,8 @@ namespace Service.Catalog
             services.AddScoped<ICompanyApplication, CompanyApplication>();
             services.AddScoped<IParameterApplication, ParameterApplication>();
             services.AddScoped<IMaquilaApplication, MaquilaApplication>();
+            services.AddScoped<IStudyApplication, StudyApplication>();
+            services.AddScoped<ITaponApplication, TaponApplication>();
 
             services.AddScoped<ICatalogRepository<Delivery>, CatalogRepository<Delivery>>();
             services.AddScoped<ICatalogRepository<Area>, CatalogRepository<Area>>();
@@ -221,6 +223,8 @@ namespace Service.Catalog
             services.AddScoped<ICompanyRepository, CompanyRepository>();
             services.AddScoped<IParameterRepository, ParameterRepository>();
             services.AddScoped<IMaquilaRepository, MaquilaRepository>();
+            services.AddScoped<IStudyRepository, StudyRepository>();
+            services.AddScoped<ITaponRepository, TaponRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

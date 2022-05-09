@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Context;
-using Service.Catalog.Domain.Maquilador;
+using Service.Catalog.Domain.Maquila;
 using Service.Catalog.Repository.IRepository;
 using System.Collections.Generic;
 using System.Linq;

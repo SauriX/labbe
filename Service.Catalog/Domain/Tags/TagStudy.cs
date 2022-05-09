@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace Service.Catalog.Domain.Parameter
+namespace Service.Catalog.Domain.Tags
 {
-    public class ParameterStudy
+    public class TagStudy
     {
-        public Guid ParametroId { get; set; }
-        public virtual Parameter Parametro { get; set; }
+        public int TagsId { get; set; }
+        public virtual Tag Etiqueta { get; set; }
         public int EstudioId { get; set; }
         public virtual Domain.Study.Study Estudio { get; set; }
         public bool Activo { get; set; }

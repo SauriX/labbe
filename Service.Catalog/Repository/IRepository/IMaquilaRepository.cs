@@ -1,4 +1,4 @@
-﻿using Service.Catalog.Domain.Maquilador;
+﻿using Service.Catalog.Domain.Maquila;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
