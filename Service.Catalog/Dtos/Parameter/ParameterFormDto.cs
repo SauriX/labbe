@@ -7,6 +7,7 @@ using Service.Catalog.Dtos.Study;
 using System;
 using System.Collections.Generic;
 using Service.Catalog.Dtos.Parameter;
+using Service.Catalog.Dtos.Reagent;
 
 namespace Service.Catalog.Dtos.Parameters
 {
@@ -30,6 +31,9 @@ namespace Service.Catalog.Dtos.Parameters
         public bool Activo { get; set; }
         public Guid UsuarioId { get; set; }
         public IEnumerable<ParameterStudyDto> Estudios { get; set; }
+        public Area Areas { get; set; }
+        public ReagentFormDto Reactivos { get; set; }
+        public Format Format { get; set; }
     }
 
     public class ParameterFormDtoValidator : AbstractValidator<ParameterFormDto>

@@ -63,7 +63,10 @@ namespace Service.Catalog.Mapper
                 Activo = model.Activo,
                 FormatoImpresionId = model.FormatoImpresionId,
                 TipoValor = model.TipoValor,
-                Estudios = model.Estudios.ToIndicationStudyDto()
+                Estudios = model.Estudios.ToIndicationStudyDto(),
+                Areas = model.Area,
+                Reactivos = model.Reactivo.ToReagentFormDto(),
+                Format = model.FormatoImpresion
             };
         }
 

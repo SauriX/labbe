@@ -180,7 +180,7 @@ namespace Service.Catalog.Application
 
             template.Format();
 
-            return (template.ToByteArray(), "Catálogo de Sucursales.xlsx");
+            return (template.ToByteArray(), "Catálogo de Parametros.xlsx");
         }
 
         public async Task<(byte[] file, string fileName)> ExportForm(string id)
