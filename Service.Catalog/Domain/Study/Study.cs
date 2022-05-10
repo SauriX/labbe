@@ -35,9 +35,9 @@ namespace Service.Catalog.Domain.Study
         public bool Prioridad { get; set; }
         public bool Urgencia { get; set; }
         public bool Activo { get; set; }
-        public int UsuarioCreoId { get; set; }
+        public Guid UsuarioCreoId { get; set; }
         public DateTime FechaCreo { get; set; }
-        public int UsuarioModId { get; set; }
+        public Guid UsuarioModId { get; set; }
         public DateTime FechaMod { get; set; }
         public virtual ICollection<ParameterStudy> Parameters { get; set; }
         public virtual ICollection<Domain.Study.WorkListStudy> WorkLists { get; set; }

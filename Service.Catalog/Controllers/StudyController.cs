@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dtos.Study;
 using Shared.Dictionary;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -36,12 +37,14 @@ namespace Service.Catalog.Controllers
         [Authorize(Policies.Create)]
         public async Task<StudyFormDto> Create(StudyFormDto study)
         {
+            study.UsuarioId = (Guid)HttpContext.Items["userId"];
             return await _Service.Create(study);
         }
         [HttpPut]
         [Authorize(Policies.Update)]
         public async Task<StudyFormDto> Update(StudyFormDto study)
         {
+            study.UsuarioId = (Guid)HttpContext.Items["userId"];
             return await _Service.Update(study);
         }
 

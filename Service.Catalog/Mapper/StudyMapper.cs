@@ -106,9 +106,9 @@ namespace Service.Catalog.Mapper
                 Prioridad=model.Prioridad,
                 Urgencia=model.Urgencia,
                 Activo=model.Activo,
-                UsuarioCreoId=1,
+                UsuarioCreoId=study.UsuarioCreoId,
                 FechaCreo=DateTime.Now,
-                UsuarioModId=1,
+                UsuarioModId=model.UsuarioId,
                 FechaMod=DateTime.Now,
                 Parameters=model.Parameters.Select(x=>new ParameterStudy {
                     ParametroId = Guid.Parse(x.Id),
@@ -174,9 +174,9 @@ namespace Service.Catalog.Mapper
                 Prioridad = model.Prioridad,
                 Urgencia = model.Urgencia,
                 Activo = model.Activo,
-                UsuarioCreoId = 1,
+                UsuarioCreoId = model.UsuarioId,
                 FechaCreo = DateTime.Now,
-                UsuarioModId = 1,
+                UsuarioModId = model.UsuarioId,
                 FechaMod = DateTime.Now,
                 Parameters = model.Parameters.Select(x => new ParameterStudy
                 {
