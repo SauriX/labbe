@@ -32,11 +32,11 @@ namespace Service.Catalog.Application
             
             var newBranch = branch.ToModel();
 
-            var isDuplicate = await _repository.IsDuplicate(newBranch);
+            var (isDuplicate,code) = await _repository.IsDuplicate(newBranch);
 
             if (isDuplicate)
             {
-                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave "));
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated(Responses.Duplicated($"El {code} esta duplicado")));
             }
 
             await _repository.Create(newBranch);
@@ -65,11 +65,11 @@ namespace Service.Catalog.Application
 
             var updatedAgent = branch.ToModel(existing);
 
-            var isDuplicate = await _repository.IsDuplicate(updatedAgent);
+            var (isDuplicate,code) = await _repository.IsDuplicate(updatedAgent);
 
             if (isDuplicate)
             {
-                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave "));
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated($"El {code} esta duplicado"));
             }
 
             await _repository.Update(updatedAgent);

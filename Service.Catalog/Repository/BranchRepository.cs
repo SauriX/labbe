@@ -1,6 +1,7 @@
 ﻿using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Context;
+using Service.Catalog.Dictionary;
 using Service.Catalog.Domain;
 using Service.Catalog.Domain.Branch;
 using Service.Catalog.Dtos.Study;
@@ -10,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static Service.Catalog.Dictionary.DuplicateCodes;
 
 namespace Service.Catalog.Repository
 {
@@ -48,11 +50,29 @@ namespace Service.Catalog.Repository
             return branch;
         }
 
-        public async Task<bool> IsDuplicate(Branch branch)
+        public async Task<(bool,string)> IsDuplicate(Branch branch)
         {
-            var isDuplicate = await _context.CAT_Sucursal.AnyAsync(x => x.Id != branch.Id && x.Clave == branch.Clave);
+            var isDuplicate = false;
+            var code = "";
+            var isDuplicateName = await _context.CAT_Sucursal.AnyAsync(x =>x.Id != branch.Id && x.Nombre == branch.Nombre);
+            var isDuplicateClave = await _context.CAT_Sucursal.AnyAsync(x => x.Id != branch.Id && x.Clave == branch.Clave);
+            var isDuplicateEmail = await _context.CAT_Sucursal.AnyAsync(x => x.Id != branch.Id && x.Correo == branch.Correo);
+            if (isDuplicateName) { 
+                isDuplicate=isDuplicateName;
+                code = DuplicateCodesEnum.Nombre.ToString();
+            }
+            if (isDuplicateClave)
+            {
+                isDuplicate = isDuplicateClave;
+                code = DuplicateCodesEnum.Clave.ToString();
+            }
+            if (isDuplicateEmail)
+            {
+                isDuplicate = isDuplicateEmail;
+                code = DuplicateCodesEnum.Email.ToString();
+            }
 
-            return isDuplicate;
+            return (isDuplicate,code);
         }
 
         public async Task Create(Branch branch)
