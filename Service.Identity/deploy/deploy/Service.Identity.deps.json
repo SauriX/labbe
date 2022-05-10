@@ -2107,6 +2107,7 @@
         "dependencies": {
           "ClosedXML": "0.95.4",
           "ClosedXML.Report": "0.2.4",
+          "FluentValidation": "10.4.0",
           "Microsoft.AspNetCore.Http.Features": "5.0.15"
         },
         "runtime": {

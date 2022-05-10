@@ -1,70 +1,70 @@
 ﻿{
   "Routes": [
     {
-      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/scopes/maquilador",
+      "DownstreamPathTemplate": "/LabRamos/services/identity/api/scopes/maquila",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/scopes/maquilador",
-      "UpstreamhttpsMethod": [ "GET" ]
+      "UpstreamPathTemplate": "/api/scopes/maquila",
+      "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/maquilador/all/{search}",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/maquila/all/{search}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/maquilador/all/{search}",
-      "UpstreamhttpsMethod": [ "GET" ]
+      "UpstreamPathTemplate": "/api/maquila/all/{search}",
+      "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/maquilador/{id}",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/maquila/{id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/maquilador/{id}",
-      "UpstreamhttpsMethod": [ "GET" ]
+      "UpstreamPathTemplate": "/api/maquila/{id}",
+      "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/maquilador",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/maquila",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/maquilador",
-      "UpstreamhttpsMethod": [ "POST", "PUT" ]
+      "UpstreamPathTemplate": "/api/maquila",
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/maquilador/export/list/{search}",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/maquila/export/list/{search}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/maquilador/export/list/{search}",
-      "UpstreamhttpsMethod": [ "POST" ]
+      "UpstreamPathTemplate": "/api/maquila/export/list/{search}",
+      "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/maquilador/export/form/{id}",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/maquila/export/form/{id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/maquilador/export/form/{id}",
-      "UpstreamhttpsMethod": [ "POST" ]
+      "UpstreamPathTemplate": "/api/maquila/export/form/{id}",
+      "UpstreamHttpMethod": [ "POST" ]
     }
   ]
 }

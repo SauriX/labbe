@@ -794,6 +794,18 @@
       ],
       "UpstreamPathTemplate": "/api/catalog/format",
       "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Tapon/all",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Tapon/all",
+      "UpstreamHttpMethod": [ "GET" ]
     }
   ]
 }

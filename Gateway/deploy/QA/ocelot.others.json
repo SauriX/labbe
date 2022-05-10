@@ -650,6 +650,17 @@
       ],
       "UpstreamPathTemplate": "/api/catalog/format",
       "UpstreamHttpMethod": [ "POST", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/Tapon/all",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Tapon/all",
+      "UpstreamHttpMethod": [ "GET" ]
     }
   ]
 }
