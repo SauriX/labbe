@@ -46,6 +46,7 @@ namespace Service.Catalog.Dtos.Study
         public  Method Method { get; set; }
         public  SampleType SampleType { get; set; }
         public Domain.Tapon.Tapon Tapa { get; set; }
+        public Guid UsuarioId { get; set; }
     }
     public class StudyFormDtoValidator : AbstractValidator<StudyFormDto>
     {
