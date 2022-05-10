@@ -36,7 +36,7 @@ namespace Service.Catalog.Application
 
             if (isDuplicate)
             {
-                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated(Responses.Duplicated($"El {code} esta duplicado")));
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated(Responses.Duplicated($"El {code}")));
             }
 
             await _repository.Create(newBranch);
@@ -69,7 +69,7 @@ namespace Service.Catalog.Application
 
             if (isDuplicate)
             {
-                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated($"El {code} esta duplicado"));
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated($"El {code}"));
             }
 
             await _repository.Update(updatedAgent);
