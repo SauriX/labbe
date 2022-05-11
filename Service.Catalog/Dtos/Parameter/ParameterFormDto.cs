@@ -31,9 +31,10 @@ namespace Service.Catalog.Dtos.Parameters
         public bool Activo { get; set; }
         public Guid UsuarioId { get; set; }
         public IEnumerable<ParameterStudyDto> Estudios { get; set; }
-        public Area Areas { get; set; }
-        public ReagentFormDto Reactivos { get; set; }
-        public Format Format { get; set; }
+        public string Area { get; set; }
+        public string Departamento { get; set; }
+        public string Reactivos { get; set; }
+        public string Format { get; set; }
     }
 
     public class ParameterFormDtoValidator : AbstractValidator<ParameterFormDto>
