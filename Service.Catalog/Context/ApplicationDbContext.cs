@@ -8,6 +8,7 @@ using Service.Catalog.Domain.Company;
 using Service.Catalog.Domain.Constant;
 using Service.Catalog.Domain.Indication;
 using Service.Catalog.Domain.Maquila;
+using Service.Catalog.Domain.Packet;
 using Service.Catalog.Domain.Parameter;
 using Service.Catalog.Domain.Price;
 using Service.Catalog.Domain.Provenance;
@@ -64,6 +65,7 @@ namespace Service.Catalog.Context
         //hasta aqui es zona de pruebas
         public DbSet<Maquila> CAT_Maquilador { get; set; }
         public DbSet<Tapon> CAT_Tipo_Tapon { get; set; }
+        public DbSet<Packet> CAT_Paquete { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
