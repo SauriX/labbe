@@ -2,12 +2,12 @@
 
 namespace Service.Catalog.Domain.Price
 {
-    public class Price_Promotion
+    public class PriceList_Study
     {
-        public int? PrecioId { get; set; }
-        public virtual PriceList Precio { get; set; }
-        public int? PromocionId { get; set; }
-        public virtual Promotion.Promotion Promocion { get; set; }
+        public Guid PrecioId { get; set; }
+        public virtual Price.PriceList Precio { get; set; }
+        public int? EstudioId { get; set; }
+        public virtual Study.Study Estudio { get; set; }
         public bool Activo { get; set; }
         public long UsuarioCreoId { get; set; }
         public DateTime FechaCreo { get; set; }

@@ -56,11 +56,13 @@ namespace Service.Catalog.Context
         public DbSet<Parameter> CAT_Parametro { get; set; }
         public DbSet<ParameterValue> CAT_Tipo_Valor { get; set; }
         //De aqui
-        public DbSet<Price> CAT_ListaPrecio { get; set; }
+        public DbSet<PriceList> CAT_ListaPrecio { get; set; }
         public DbSet<Price_Company> CAT_ListaP_Compañia { get; set; }
         public DbSet<Price_Company> CAT_ListaP_Promocion { get; set; }
         public DbSet<Provenance> CAT_Procedencia { get; set; }
         public DbSet<Contact> CAT_Contacto { get; set; }
+        public DbSet<PriceList_Packet> Relacion_ListaP_Paquete { get; set; }
+        public DbSet<PriceList_Study> Relacion_ListaP_Estudio { get; set; }
         //hasta aqui es zona de pruebas
         public DbSet<Maquila> CAT_Maquilador { get; set; }
         public DbSet<Tapon> CAT_Tipo_Tapon { get; set; }

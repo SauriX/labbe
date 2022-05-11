@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace Service.Catalog.Context.EntityConfiguration
 {
 
-    public class PriceConfiguration : IEntityTypeConfiguration<Domain.Price.Price>
+    public class PriceConfiguration : IEntityTypeConfiguration<Domain.Price.PriceList>
     {
-        public void Configure(EntityTypeBuilder<Domain.Price.Price> builder)
+        public void Configure(EntityTypeBuilder<Domain.Price.PriceList> builder)
         {
             builder.ToTable("CAT_ListaPrecio");
 
@@ -27,12 +27,32 @@ namespace Service.Catalog.Context.EntityConfiguration
               .IsRequired(true)
               .HasMaxLength(100);
 
+            //builder
+            // .HasMany(x => x.Compañia)
+            // .WithOne(x => x.Precio)
+            // .HasForeignKey(x => x.PrecioId)
+            // .OnDelete(DeleteBehavior.Restrict);
+
+
             builder
              .HasMany(x => x.Compañia)
              .WithOne(x => x.Precio)
-             .HasForeignKey(x => x.PrecioId)
              .OnDelete(DeleteBehavior.Restrict);
 
+            builder
+             .HasMany(x => x.Promocion)
+             .WithOne(x => x.Precio)
+             .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+             .HasMany(x => x.Estudios)
+             .WithOne(x => x.Precio)
+             .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+             .HasMany(x => x.Paquete)
+             .WithOne(x => x.Precio)
+             .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
