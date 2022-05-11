@@ -225,6 +225,7 @@ namespace Service.Catalog
             services.AddScoped<IMaquilaRepository, MaquilaRepository>();
             services.AddScoped<IStudyRepository, StudyRepository>();
             services.AddScoped<ITaponRepository, TaponRepository>();
+            services.AddScoped<IPackRepository, PackRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
