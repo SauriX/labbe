@@ -198,6 +198,7 @@ namespace Service.Catalog
             services.AddScoped<IStudyApplication, StudyApplication>();
             services.AddScoped<ITaponApplication, TaponApplication>();
             services.AddScoped<IPriceListApplication, PriceListApplication>();
+            services.AddScoped<IPackApplication, PackApplication>();
 
             services.AddScoped<ICatalogRepository<Delivery>, CatalogRepository<Delivery>>();
             services.AddScoped<ICatalogRepository<Area>, CatalogRepository<Area>>();

@@ -16,6 +16,11 @@ namespace Service.Catalog.Controllers.Catalog
         {
             return await _workListService.GetAll(search);
         }
+        [HttpGet("workList/active")]
+        public async Task<IEnumerable<CatalogListDto>> GetAllWorkListActive()
+        {
+            return await _workListService.GetAll("all");
+        }
 
         [HttpGet("workList/{id}")]
         [Authorize(Policies.Access)]

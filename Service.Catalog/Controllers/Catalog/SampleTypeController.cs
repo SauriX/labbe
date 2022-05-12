@@ -16,7 +16,11 @@ namespace Service.Catalog.Controllers.Catalog
         {
             return await _sampleTypeService.GetAll(search);
         }
-
+        [HttpGet("sampleType/active")]
+        public async Task<IEnumerable<CatalogListDto>> GetAllSampleTypeActive(string search = null)
+        {
+            return await _sampleTypeService.GetAll("all");
+        }
         [HttpGet("sampleType/{id}")]
         [Authorize(Policies.Access)]
         public async Task<CatalogFormDto> GetSampleTypeById(int id)
