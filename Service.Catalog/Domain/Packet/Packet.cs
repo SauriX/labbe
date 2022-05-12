@@ -7,6 +7,7 @@ namespace Service.Catalog.Domain.Packet
     public class Packet : GenericCatalog
     {
         public int AreaId { get; set; }
+        public int DepartamentoId { get; set; }
         public virtual Area Area { get; set; }
         public string NombreLargo { get; set; }
         public bool Visibilidad { get; set; }

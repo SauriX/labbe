@@ -85,7 +85,8 @@ namespace Service.Catalog.Context.EntityConfiguration.Study
 
             builder
                .HasMany(x => x.Packets)
-               .WithOne(x => x.Estudio);
+               .WithOne(x => x.Estudio)
+               .OnDelete(DeleteBehavior.Restrict);
 
             builder
                 .HasOne(x=>x.Tapon)
