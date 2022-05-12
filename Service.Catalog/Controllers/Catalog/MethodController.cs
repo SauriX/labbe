@@ -16,6 +16,12 @@ namespace Service.Catalog.Controllers.Catalog
         {
             return await _methodService.GetAll(search);
         }
+        [HttpGet("method/active")]
+        public async Task<IEnumerable<CatalogListDto>> GetAllMethod()
+        {
+            return await _methodService.GetAll("all");
+        }
+
 
         [HttpGet("method/{id}")]
         [Authorize(Policies.Access)]

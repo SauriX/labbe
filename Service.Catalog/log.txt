@@ -508,3 +508,67 @@ ALTER TABLE ALTER COLUMN ParametersId failed because one or more objects access 
 
 11/05/2022 09:46:53 p. m. => Introducing FOREIGN KEY constraint 'FK_Relacion_Estudio_Paquete_CAT_Paquete_PacketId' on table 'Relacion_Estudio_Paquete' may cause cycles or multiple cascade paths. Specify ON DELETE NO ACTION or ON UPDATE NO ACTION, or modify other FOREIGN KEY constraints.
 Could not create constraint. See previous errors.
+
+12/05/2022 10:25:19 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 10:25:53 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 10:26:04 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 10:54:36 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 10:54:56 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 10:55:17 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 10:56:29 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 10:57:12 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 10:57:25 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 10:57:42 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 10:58:13 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 11:05:16 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 11:05:20 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 11:05:20 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 11:05:21 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 11:05:45 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 11:05:46 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 11:05:47 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 11:05:54 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 11:05:55 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 11:05:55 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 11:05:55 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 11:05:56 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 11:05:59 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 11:05:59 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 11:06:00 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 11:06:01 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 11:06:03 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 11:06:03 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 11:06:04 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 11:06:05 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 11:10:37 a. m. => Value cannot be null. (Parameter 'input')
