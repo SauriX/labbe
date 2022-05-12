@@ -20,5 +20,15 @@ namespace Shared.Helpers
                 throw new CustomException(HttpStatusCode.BadRequest, Responses.NotFound);
             }
         }
+
+        public static void Validateint(string text, out int guid)
+        {
+            var validGuid = int.TryParse(text, out guid);
+
+            if (!validGuid)
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, Responses.NotFound);
+            }
+        }
     }
 }

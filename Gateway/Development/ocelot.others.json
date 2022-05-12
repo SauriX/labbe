@@ -454,6 +454,18 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
+      "DownstreamPathTemplate": "/api/catalog/workList/active",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/workList/active",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/catalog/workList/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -549,6 +561,18 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/method/all/{search}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/method/active",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/method/active",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
@@ -650,6 +674,18 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
+      "DownstreamPathTemplate": "/api/catalog/sampleType/active",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/sampleType/active",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/catalog/sampleType/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -733,7 +769,7 @@
       ],
       "UpstreamPathTemplate": "/api/catalog/useOfCFDI",
       "UpstreamHttpMethod": [ "PUT" ]
-    }, 
+    },
     //Format
     {
       "DownstreamPathTemplate": "/api/catalog/format/all/{search}",
