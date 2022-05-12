@@ -59,7 +59,9 @@ namespace Service.Catalog.Context
         //De aqui
         public DbSet<PriceList> CAT_ListaPrecio { get; set; }
         public DbSet<Price_Company> CAT_ListaP_Compañia { get; set; }
-        public DbSet<Price_Company> CAT_ListaP_Promocion { get; set; }
+        public DbSet<Price_Promotion> CAT_ListaP_Promocion { get; set; }
+        public DbSet<Price_Branch> CAT_ListaP_Sucursal { get; set; }
+        public DbSet<Price_Medics> CAT_ListaP_Medicos { get; set; }
         public DbSet<Provenance> CAT_Procedencia { get; set; }
         public DbSet<Contact> CAT_Contacto { get; set; }
         public DbSet<PriceList_Packet> Relacion_ListaP_Paquete { get; set; }

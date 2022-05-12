@@ -733,7 +733,7 @@
       ],
       "UpstreamPathTemplate": "/api/catalog/useOfCFDI",
       "UpstreamHttpMethod": [ "PUT" ]
-    }, 
+    },
     //Format
     {
       "DownstreamPathTemplate": "/api/catalog/format/all/{search}",
@@ -806,6 +806,67 @@
       ],
       "UpstreamPathTemplate": "/api/Tapon/all",
       "UpstreamHttpMethod": [ "GET" ]
+    },
+    //Provenance
+    {
+      "DownstreamPathTemplate": "/api/catalog/provenance/all/{search}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/provenance/all/{search}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/provenance/active",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/provenance/active",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/provenance/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/provenance/{id}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/provenance",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/provenance",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/provenance",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/provenance",
+      "UpstreamHttpMethod": [ "PUT" ]
     }
   ]
 }

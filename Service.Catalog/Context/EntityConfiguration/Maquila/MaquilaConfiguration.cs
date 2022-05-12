@@ -28,7 +28,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Reagent
 
             builder
                 .Property(x => x.Correo)
-                .IsRequired()
+                .IsRequired(false)
                 .HasMaxLength(100);  
             
             builder
@@ -48,7 +48,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Reagent
             
             builder
                 .Property(x => x.Telefono)
-                .IsRequired()
+                .IsRequired(false)
                 .HasMaxLength(13);
 
             builder
