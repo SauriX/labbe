@@ -42,7 +42,7 @@ namespace Service.Catalog.Application
 
         public async Task<PriceListFormDto> GetById(string id)
         {
-            Helpers.Validateint(id, out int guid);
+            Helpers.ValidateGuid(id, out Guid guid);
 
             var price = await _repository.GetById(guid);
 
@@ -77,7 +77,7 @@ namespace Service.Catalog.Application
 
         public async Task<PriceListListDto> Update(PriceListFormDto price)
         {
-            Helpers.Validateint(price.Id, out int guid);
+            Helpers.ValidateGuid(price.Id, out Guid guid);
 
             var existing = await _repository.GetById(guid);
 
@@ -153,5 +153,23 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
             }
         }
+        //public async Task<IEnumerable<PriceListListDto>> GetAllCompany(int companyId)
+        //{
+        //    var prices = await _repository.GetAllCompany(companyId);
+
+        //    return prices.ToPriceListListDto();
+        //}
+        //public async Task<IEnumerable<PriceListListDto>> GetAllBranch(Guid branchId)
+        //{
+        //    var prices = await _repository.GetAllBranch(branchId);
+
+        //    return prices.ToPriceListListDto();
+        //}
+        //public async Task<IEnumerable<PriceListListDto>> GetAllMedics(int medicsId)
+        //{
+        //    var prices = await _repository.GetAllMedics(medicsId);
+
+        //    return prices.ToPriceListListDto();
+        //}
     }
 }

@@ -1,14 +1,11 @@
 ﻿using EFCore.BulkExtensions;
 using Identidad.Api.Infraestructure.Repository.IRepository;
 using Identidad.Api.Model.Medicos;
-using Identidad.Api.ViewModels.Medicos;
-using Identidad.Api.ViewModels.Menu;
 using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Context;
 using Service.Catalog.Domain.Medics;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Service.Catalog.Repository

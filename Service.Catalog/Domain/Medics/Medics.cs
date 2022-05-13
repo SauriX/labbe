@@ -4,7 +4,8 @@ using Service.Catalog.Domain.Constant;
 using System;
 using System.Collections.Generic;
 
-namespace Identidad.Api.ViewModels.Menu
+namespace Service.Catalog.Domain.Medics
+
 {
     public class Medics
     {

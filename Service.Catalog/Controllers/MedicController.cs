@@ -1,9 +1,6 @@
 ﻿using Identidad.Api.Infraestructure.Services.IServices;
-using Identidad.Api.ViewModels.Medicos;
-using Identidad.Api.ViewModels.Menu;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Service.Catalog.Domain.Medics;
 using Service.Catalog.Dtos.Medicos;
 using Shared.Dictionary;
 using System.Collections.Generic;

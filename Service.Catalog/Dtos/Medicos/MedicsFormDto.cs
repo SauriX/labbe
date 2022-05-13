@@ -3,7 +3,7 @@ using Service.Catalog.Dtos.Catalog;
 using System;
 using System.Collections.Generic;
 
-namespace Identidad.Api.ViewModels.Medicos
+namespace Service.Catalog.Dtos.Medicos
 {
     public class MedicsFormDto
     {

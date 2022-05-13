@@ -1,6 +1,6 @@
-﻿using Identidad.Api.ViewModels.Menu;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Service.Catalog.Domain.Medics;
 
 namespace Identidad.Api.Infraestructure.EntityConfiguration.CatalogoMedicosConfiguration
 {

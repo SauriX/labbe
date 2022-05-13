@@ -1,7 +1,5 @@
-﻿using Identidad.Api.ViewModels.Medicos;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Identidad.Api.ViewModels.Menu;
 using Service.Catalog.Dtos.Medicos;
 
 namespace Identidad.Api.Infraestructure.Services.IServices

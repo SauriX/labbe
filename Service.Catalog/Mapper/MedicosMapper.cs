@@ -1,7 +1,5 @@
 ﻿using Identidad.Api.Model.Medicos;
-using Identidad.Api.ViewModels.Medicos;
-using Identidad.Api.ViewModels.Menu;
-using Service.Catalog.Domain.Catalog;
+using Service.Catalog.Domain.Medics;
 using Service.Catalog.Dtos.Medicos;
 using Service.Catalog.Mapper;
 using System;
