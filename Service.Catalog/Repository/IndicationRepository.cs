@@ -43,7 +43,7 @@ namespace Service.Catalog.Repository
 
         public async Task<bool> IsDuplicate(Indication indication)
         {
-            var isDuplicate = await _context.CAT_Indicacion.AnyAsync(x => x.Id != indication.Id && x.Clave == indication.Clave);
+            var isDuplicate = await _context.CAT_Indicacion.AnyAsync(x => x.Id != indication.Id && x.Clave == indication.Clave || x.Nombre == indication.Nombre);
 
             return isDuplicate;
         }
