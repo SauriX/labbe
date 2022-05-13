@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Context;
+using Service.Catalog.Domain.Branch;
+using Service.Catalog.Domain.Company;
 using Service.Catalog.Domain.Price;
 using Service.Catalog.Repository.IRepository;
 using System;
@@ -20,7 +22,12 @@ namespace Service.Catalog.Repository
 
         public async Task<List<PriceList>> GetAll(string search)
         {
-            var indications = _context.CAT_ListaPrecio.AsQueryable();
+            var indications = _context.CAT_ListaPrecio.AsQueryable()
+                    .Include(x => x.Estudios)
+                    .ThenInclude(x => x.Estudio)
+                    .Include(x => x.Paquete)
+                    .Include(x => x.Compañia)
+                    .AsQueryable();
 
             search = search.Trim().ToLower();
 
@@ -34,11 +41,11 @@ namespace Service.Catalog.Repository
 
         public async Task<PriceList> GetById(int Id)
         {
-            var indication = await _context.CAT_ListaPrecio.FirstOrDefaultAsync(x => x.Id == Id); ;
-                //.Include(x => x.Estudios).ThenInclude(x => x.Estudio).ThenInclude(x => x.Area)
-                //.FirstOrDefaultAsync(x => x.Id == Id);
+            var indication = await _context.CAT_ListaPrecio
+                .Include(x => x.Estudios).ThenInclude(x => x.Estudio).ThenInclude(x => x.Area)
+                .FirstOrDefaultAsync(x => x.Id == Id);
 
-           return indication;
+            return indication;
         }
         public async Task<List<PriceList>> GetActive()
         {
@@ -66,5 +73,54 @@ namespace Service.Catalog.Repository
 
             await _context.SaveChangesAsync();
         }
+        public async Task<List<Price_Company>> GetAllCompany(int companyId)
+        {
+            var asignado = await
+                (from company in _context.CAT_Compañia
+                 join priceList in _context.CAT_ListaP_Compañia.Where(x => x.CompañiaId == companyId) on company.Id equals priceList.CompañiaId into ljPriceList
+                 from pList in ljPriceList.DefaultIfEmpty()
+                 select new { company, pList })
+                 .Select(x => new Price_Company
+                 {
+                     Compañia = x.company,
+                     Precio = x.pList == null ? null : x.pList.Precio,
+                 })
+                .ToListAsync();
+
+            return asignado;
+        }
+        //public async Task<List<Price_Branch>> GetAllBranch(int branchId)
+        //{
+        //    var asignado = await
+        //        (from branch in _context.CAT_Sucursal
+        //         join priceList in _context.CAT_ListaP_Sucursal.Where(x => x.SucursalId == branchId) on branch.Id equals priceList.SucursalId into ljPriceList
+        //         from pList in ljPriceList.DefaultIfEmpty()
+        //         select new { branch, pList })
+        //         .Select(x => new Price_Branch
+        //         {
+        //             Sucursal = x.branch,
+        //             Precio = x.pList == null ? null : x.pList.Precio,
+        //         })
+        //        .ToListAsync();
+
+        //    return asignado;
+        //}
+
+        //public async Task<List<Price_Medics>> GetAllMedics(int medicsId)
+        //{
+        //    var asignado = await
+        //        (from medics in _context.CAT_Medicos
+        //         join priceList in _context.CAT_ListaP_Sucursal.Where(x => x.SucursalId == medicsId) on medics.IdMedico equals priceList.SucursalId into ljPriceList
+        //         from pList in ljPriceList.DefaultIfEmpty()
+        //         select new { medics, pList })
+        //         .Select(x => new Price_Medics
+        //         {
+        //             Medico = x.medics,
+        //             Precio = x.pList == null ? null : x.pList.Precio,
+        //         })
+        //        .ToListAsync();
+
+        //    return asignado;
+        //}
     }
 }

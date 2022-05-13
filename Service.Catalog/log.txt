@@ -188,389 +188,246 @@
 
 19/04/2022 17:58:36 => Object reference not set to an instance of an object.
 
-20/04/2022 10:05:14 => Value cannot be null. (Parameter 'source')
+20/4/2022 09:23:29 => Value cannot be null. (Parameter 'input')
 
-20/04/2022 10:09:22 => Value cannot be null. (Parameter 'source')
+20/4/2022 09:24:01 => Value cannot be null. (Parameter 'input')
 
-20/04/2022 10:09:38 => Value cannot be null. (Parameter 'source')
+20/4/2022 11:44:36 => IDX20803: Unable to obtain configuration from: 'System.String'.
 
-20/04/2022 10:12:15 => Value cannot be null. (Parameter 'source')
+20/4/2022 11:45:22 => IDX20803: Unable to obtain configuration from: 'System.String'.
 
-20/04/2022 10:12:23 => Value cannot be null. (Parameter 'source')
+20/4/2022 11:47:33 => IDX20803: Unable to obtain configuration from: 'System.String'.
 
-20/04/2022 10:13:34 => Value cannot be null. (Parameter 'source')
+20/4/2022 11:53:13 => IDX20803: Unable to obtain configuration from: 'System.String'.
 
-20/04/2022 10:15:35 => Value cannot be null. (Parameter 'source')
+20/4/2022 12:01:09 => Value cannot be null. (Parameter 'input')
 
-20/04/2022 10:19:26 => The Include path 'Contacts->Compañia' results in a cycle. Cycles are not allowed in no-tracking queries; either use a tracking query or remove the cycle.
+20/4/2022 12:16:29 => Value cannot be null. (Parameter 'input')
 
-20/04/2022 10:22:57 => The Include path 'Contacts->Compañia' results in a cycle. Cycles are not allowed in no-tracking queries; either use a tracking query or remove the cycle.
+20/4/2022 14:27:00 => Value cannot be null. (Parameter 'input')
 
-20/04/2022 10:24:54 => Unable to cast object of type 'SelectListIterator`2[Service.Catalog.Domain.Company.Contact,Service.Catalog.Dtos.Company.ContactListDto]' to type 'System.Collections.Generic.ICollection`1[Service.Catalog.Dtos.Company.ContactListDto]'.
+21/4/2022 08:03:54 => Value cannot be null. (Parameter 'input')
 
-20/04/2022 13:24:28 => There isn't a worksheet named 'Compañias'.
+21/4/2022 08:27:30 => Value cannot be null. (Parameter 'input')
 
-20/04/2022 13:26:01 => Object reference not set to an instance of an object.
+21/4/2022 08:30:06 => Value cannot be null. (Parameter 'input')
 
-20/04/2022 13:40:33 => Object reference not set to an instance of an object.
+21/4/2022 08:43:37 => Value cannot be null. (Parameter 'input')
 
-20/04/2022 13:50:32 => Object reference not set to an instance of an object.
+21/4/2022 08:51:41 => Value cannot be null. (Parameter 'input')
 
-20/04/2022 14:57:14 => Object reference not set to an instance of an object.
+26/4/2022 06:32:50 => Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding.
 
-22/04/2022 08:46:17 a. m. => The entity type 'TipoValor' requires a primary key to be defined. If you intended to use a keyless entity type, call 'HasNoKey' in 'OnModelCreating'. For more information on keyless entity types, see https://go.microsoft.com/fwlink/?linkid=2141943.
+26/4/2022 07:24:36 => Value cannot be null. (Parameter 'input')
 
-25/04/2022 08:36:36 a. m. => Introducing FOREIGN KEY constraint 'FK_CAT_Parametro_CAT_Departamento_DepartamentId' on table 'CAT_Parametro' may cause cycles or multiple cascade paths. Specify ON DELETE NO ACTION or ON UPDATE NO ACTION, or modify other FOREIGN KEY constraints.
-Could not create constraint. See previous errors.
+26/4/2022 07:34:29 => Value cannot be null. (Parameter 'input')
 
-25/04/2022 08:59:17 a. m. => Introducing FOREIGN KEY constraint 'FK_CAT_Parametro_CAT_Departamento_DepartamentId' on table 'CAT_Parametro' may cause cycles or multiple cascade paths. Specify ON DELETE NO ACTION or ON UPDATE NO ACTION, or modify other FOREIGN KEY constraints.
-Could not create constraint. See previous errors.
+26/4/2022 07:35:31 => Value cannot be null. (Parameter 'input')
 
-25/04/2022 11:57:12 a. m. => Unable to resolve service for type 'Service.Catalog.Application.IApplication.IParameterApplication' while attempting to activate 'Service.Catalog.Controllers.ParameterController'.
+26/4/2022 07:39:43 => Value cannot be null. (Parameter 'input')
 
-25/04/2022 12:17:09 p. m. => Input string was not in a correct format.
+26/4/2022 07:40:05 => Value cannot be null. (Parameter 'input')
 
-25/04/2022 12:19:50 p. m. => An error occurred while updating the entries. See the inner exception for details.
+26/4/2022 07:41:10 => Value cannot be null. (Parameter 'input')
 
-24/04/2022 21:56:28 => The process cannot access the file 'C:\Users\Lapaxsis-00\source\repos\API\Service.Catalog\wwwroot\layout\excel\company\CompañiaFormulario.xlsx' because it is being used by another process.
+26/4/2022 07:42:09 => Value cannot be null. (Parameter 'input')
 
-25/04/2022 14:05:22 => Either the parameter @objname is ambiguous or the claimed @objtype (COLUMN) is wrong.
+26/4/2022 07:42:22 => Value cannot be null. (Parameter 'input')
 
-25/04/2022 14:08:17 => Either the parameter @objname is ambiguous or the claimed @objtype (COLUMN) is wrong.
-25/04/2022 12:33:47 p. m. => An error occurred while updating the entries. See the inner exception for details.
+26/4/2022 07:46:51 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-25/04/2022 14:27:11 => The ALTER TABLE statement conflicted with the FOREIGN KEY constraint "FK_CAT_Compañia_CAT_Procedencia_ProcedenciaId". The conflict occurred in database "LAB_RAMOS_DEV_CATALOGO", table "dbo.CAT_Procedencia", column 'Id'.
+26/4/2022 07:48:58 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-25/04/2022 14:41:41 => The ALTER TABLE statement conflicted with the FOREIGN KEY constraint "FK_CAT_Compañia_CAT_Procedencia_ProcedenciaId". The conflict occurred in database "LAB_RAMOS_DEV_CATALOGO", table "dbo.CAT_Procedencia", column 'Id'.
+26/4/2022 07:49:10 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-25/04/2022 15:03:50 => There is already an object named 'Promotion' in the database.
+26/4/2022 07:49:49 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-25/04/2022 15:07:39 => There is already an object named 'Promotion' in the database.
+26/4/2022 08:37:53 => Operand type clash: int is incompatible with uniqueidentifier
 
-25/04/2022 15:10:21 => There is already an object named 'Promotion' in the database.
+26/4/2022 08:58:50 => Operand type clash: int is incompatible with uniqueidentifier
 
-25/04/2022 15:12:29 => There is already an object named 'Promotion' in the database.
+26/4/2022 09:03:11 => There is already an object named 'CAT_Banco' in the database.
 
-25/04/2022 15:34:41 => Invalid column name 'ProcedenciaId'.
+26/4/2022 13:06:25 => Column 'FechaMod' does not allow DBNull.Value.
 
-25/04/2022 15:35:43 => Invalid column name 'ProcedenciaId'.
+26/4/2022 13:07:19 => Column 'FechaMod' does not allow DBNull.Value.
 
-25/04/2022 16:37:38 => There is already an object named 'Promotion' in the database.
+26/4/2022 13:09:23 => Column 'FechaMod' does not allow DBNull.Value.
 
-25/04/2022 16:43:19 => There is already an object named 'Promotion' in the database.
+26/4/2022 13:30:46 => Exception has been thrown by the target of an invocation.
 
-25/04/2022 16:45:55 => There is already an object named 'CAT_ListaP_Compañia' in the database.
+26/4/2022 13:34:17 => Both 'Area' and 'GenericCatalog' are mapped to the table 'GenericCatalog'. All the entity types in a hierarchy that don't have a discriminator must be mapped to different tables. See https://go.microsoft.com/fwlink/?linkid=2130430 for more information.
 
-25/04/2022 16:48:25 => The operation failed because an index or statistics with name 'IX_CAT_ListaP_Compañia_CompañiaId' already exists on table 'CAT_ListaP_Compañia'.
-25/04/2022 12:33:47 p. m. => An error occurred while updating the entries. See the inner exception for details.
+26/4/2022 13:38:05 => Invalid column name 'ColoniaId1'.
+Invalid column name 'EspecialidadId1'.
+Invalid column name 'ColoniaId1'.
+Invalid column name 'EspecialidadId1'.
 
-25/04/2022 06:30:08 p. m. => Object reference not set to an instance of an object.
-25/04/2022 16:48:25 => The operation failed because an index or statistics with name 'IX_CAT_ListaP_Compañia_CompañiaId' already exists on table 'CAT_ListaP_Compañia'.
+26/4/2022 14:58:53 => Invalid column name 'BranchId'.
+Invalid column name 'BranchId'.
 
-25/04/2022 19:16:17 => Unable to resolve service for type 'Service.Catalog.Application.IApplication.ICatalogApplication`1[Service.Catalog.Domain.Provenance.Provenance]' while attempting to activate 'Service.Catalog.Controllers.Catalog.CatalogController'.
+26/4/2022 15:19:53 => Invalid column name 'BranchId'.
+Invalid column name 'BranchId'.
 
-25/04/2022 19:16:19 => Unable to resolve service for type 'Service.Catalog.Application.IApplication.ICatalogApplication`1[Service.Catalog.Domain.Provenance.Provenance]' while attempting to activate 'Service.Catalog.Controllers.Catalog.CatalogController'.
+26/4/2022 15:29:59 => The MERGE statement conflicted with the FOREIGN KEY constraint "FK_CAT_Sucursal_Departamento_CAT_Sucursal_SucursalId". The conflict occurred in database "LAB_RAMOS_DEVELOP_CATALOGO", table "dbo.CAT_Sucursal", column 'Id'.
+The statement has been terminated.
 
-25/04/2022 19:27:34 => Unable to resolve service for type 'Service.Catalog.Application.IApplication.ICatalogApplication`1[Service.Catalog.Domain.Provenance.Provenance]' while attempting to activate 'Service.Catalog.Controllers.Catalog.CatalogController'.
+26/4/2022 15:30:08 => The MERGE statement conflicted with the FOREIGN KEY constraint "FK_CAT_Sucursal_Departamento_CAT_Sucursal_SucursalId". The conflict occurred in database "LAB_RAMOS_DEVELOP_CATALOGO", table "dbo.CAT_Sucursal", column 'Id'.
+The statement has been terminated.
 
-26/04/2022 11:16:06 a. m. => Value cannot be null. (Parameter 's')
+26/4/2022 15:31:56 => The MERGE statement conflicted with the FOREIGN KEY constraint "FK_CAT_Sucursal_Departamento_CAT_Sucursal_SucursalId". The conflict occurred in database "LAB_RAMOS_DEVELOP_CATALOGO", table "dbo.CAT_Sucursal", column 'Id'.
+The statement has been terminated.
 
-26/04/2022 11:17:38 a. m. => Value cannot be null. (Parameter 's')
+3/5/2022 07:04:48 => Invalid column name 'Id'.
 
-26/04/2022 11:21:11 a. m. => Value cannot be null. (Parameter 's')
+3/5/2022 07:10:47 => Invalid column name 'Id'.
 
-26/04/2022 11:21:34 a. m. => Value cannot be null. (Parameter 's')
+3/5/2022 07:12:44 => Invalid column name 'Id'.
 
-26/04/2022 11:25:17 a. m. => Value cannot be null. (Parameter 's')
+3/5/2022 15:16:28 => Value cannot be null. (Parameter 'input')
 
-26/04/2022 11:26:59 a. m. => Value cannot be null. (Parameter 's')
+3/5/2022 15:17:00 => Value cannot be null. (Parameter 'input')
 
-26/04/2022 11:29:41 a. m. => Value cannot be null. (Parameter 's')
+3/5/2022 15:17:13 => Value cannot be null. (Parameter 'input')
 
-26/04/2022 11:30:05 a. m. => Value cannot be null. (Parameter 's')
+3/5/2022 15:17:29 => Value cannot be null. (Parameter 'input')
 
-26/04/2022 11:32:56 a. m. => Value cannot be null. (Parameter 's')
+3/5/2022 15:17:32 => Value cannot be null. (Parameter 'input')
 
-26/04/2022 11:34:23 a. m. => Value cannot be null. (Parameter 's')
+3/5/2022 15:17:34 => Value cannot be null. (Parameter 'input')
 
-26/04/2022 02:17:28 p. m. => Both relationships between 'Contact' and 'Company.Contacts' and between 'Contact.Compañia' and 'Company' could use {'CompañiaId'} as the foreign key. To resolve this, configure the foreign key properties explicitly in 'OnModelCreating' on at least one of the relationships.
+3/5/2022 15:18:03 => Value cannot be null. (Parameter 'input')
 
-26/04/2022 03:26:48 p. m. => Invalid column name 'FormatId'.
+3/5/2022 15:18:52 => Value cannot be null. (Parameter 'input')
 
-26/04/2022 03:26:49 p. m. => Invalid column name 'FormatId'.
+3/5/2022 15:33:31 => The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. Path: $ | LineNumber: 0 | BytePositionInLine: 0.
 
-26/04/2022 03:32:41 p. m. => Invalid column name 'FormatId'.
+3/5/2022 15:34:15 => The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. Path: $ | LineNumber: 0 | BytePositionInLine: 0.
 
-26/04/2022 03:33:27 p. m. => Invalid column name 'FormatId'.
+3/5/2022 15:41:20 => Value cannot be null. (Parameter 'input')
 
-26/04/2022 03:33:35 p. m. => Invalid column name 'FormatId'.
+3/5/2022 15:52:47 => Value cannot be null. (Parameter 'input')
 
-26/04/2022 04:27:00 p. m. => Invalid column name 'FormatId'.
+3/5/2022 15:52:53 => Value cannot be null. (Parameter 'input')
 
-26/04/2022 04:28:34 p. m. => Invalid column name 'FormatId'.
+3/5/2022 15:54:15 => Value cannot be null. (Parameter 'input')
 
-26/04/2022 04:29:54 p. m. => Invalid column name 'FormatId'.
+3/5/2022 15:54:35 => Value cannot be null. (Parameter 'input')
 
-26/04/2022 04:31:01 p. m. => Invalid column name 'FormatId'.
+3/5/2022 16:14:52 => Value cannot be null. (Parameter 'input')
 
-26/04/2022 04:37:56 p. m. => Invalid column name 'FormatId'.
+3/5/2022 16:24:49 => Value cannot be null. (Parameter 'input')
 
-26/04/2022 04:39:16 p. m. => Invalid column name 'FormatId'.
+6/5/2022 10:25:06 => Value cannot be null. (Parameter 'input')
 
-26/04/2022 04:40:34 p. m. => Invalid column name 'FormatId'.
+6/5/2022 10:25:54 => Value cannot be null. (Parameter 'input')
 
-26/04/2022 04:42:10 p. m. => Invalid column name 'FormatId'.
+6/5/2022 10:26:22 => Value cannot be null. (Parameter 'input')
 
-26/04/2022 04:43:21 p. m. => Invalid column name 'FormatId'.
+6/5/2022 10:27:02 => Value cannot be null. (Parameter 'input')
 
-26/04/2022 05:11:47 p. m. => Invalid column name 'FormatId'.
+6/5/2022 10:27:55 => The method or operation is not implemented.
 
-26/04/2022 05:42:47 p. m. => Invalid column name 'FormatId'.
+6/5/2022 10:41:09 => Value cannot be null. (Parameter 'input')
 
-26/04/2022 05:53:25 p. m. => Invalid column name 'FormatId'.
+6/5/2022 10:41:33 => Value cannot be null. (Parameter 'input')
 
-26/04/2022 05:53:33 p. m. => Invalid column name 'FormatId'.
+6/5/2022 10:45:04 => Value cannot be null. (Parameter 'input')
 
-27/04/2022 12:29:59 p. m. => Unable to cast object of type 'System.Collections.Generic.List`1[Service.Catalog.Domain.Study]' to type 'System.Collections.Generic.ICollection`1[Service.Catalog.Dtos.Study.StudyListDto]'.
+6/5/2022 10:48:19 => Object reference not set to an instance of an object.
 
-27/04/2022 12:42:03 p. m. => The object 'PK_Relacion_Estudio_Parametro' is dependent on column 'ParametersId'.
-ALTER TABLE ALTER COLUMN ParametersId failed because one or more objects access this column.
+6/5/2022 10:52:12 => An error occurred while updating the entries. See the inner exception for details.
 
-27/04/2022 01:20:58 p. m. => Unable to cast object of type 'System.Collections.Generic.List`1[Service.Catalog.Domain.Study]' to type 'System.Collections.Generic.ICollection`1[Service.Catalog.Dtos.Study.StudyListDto]'.
+6/5/2022 11:19:09 => An error occurred while updating the entries. See the inner exception for details.
 
-26/04/2022 19:58:54 => An error occurred while updating the entries. See the inner exception for details.
+6/5/2022 11:19:56 => An error occurred while updating the entries. See the inner exception for details.
 
-26/04/2022 20:10:34 => An error occurred while updating the entries. See the inner exception for details.
+6/5/2022 11:20:02 => An error occurred while updating the entries. See the inner exception for details.
 
-26/04/2022 20:11:03 => An error occurred while updating the entries. See the inner exception for details.
+6/5/2022 11:20:44 => An error occurred while updating the entries. See the inner exception for details.
 
-26/04/2022 20:11:49 => An error occurred while updating the entries. See the inner exception for details.
+6/5/2022 11:21:19 => An error occurred while updating the entries. See the inner exception for details.
 
-27/04/2022 9:04:49 => An error occurred while updating the entries. See the inner exception for details.
+10/05/2022 08:57:40 a. m. => Operand type clash: int is incompatible with uniqueidentifier
 
-27/04/2022 9:07:21 => An error occurred while updating the entries. See the inner exception for details.
+10/05/2022 14:52:26 => To change the IDENTITY property of a column, the column needs to be dropped and recreated.
 
-27/04/2022 11:06:16 => Object reference not set to an instance of an object.
+10/05/2022 15:01:50 => To change the IDENTITY property of a column, the column needs to be dropped and recreated.
 
-27/04/2022 12:52:36 => There is already an object named 'Relacion_Estudio_Parametro' in the database.
+11/05/2022 10:13:36 => Value cannot be null. (Parameter 'input')
 
-27/04/2022 12:53:13 => There is already an object named 'Relacion_Estudio_Parametro' in the database.
+11/05/2022 16:30:46 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-27/04/2022 13:38:30 => There is already an object named 'Relacion_Estudio_Parametro' in the database.
+11/05/2022 16:31:11 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-27/04/2022 14:13:08 => An error occurred while updating the entries. See the inner exception for details.
+11/05/2022 16:31:12 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-29/04/2022 11:32:38 => Object reference not set to an instance of an object.
+11/05/2022 16:31:26 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-29/04/2022 11:43:26 => Object reference not set to an instance of an object.
+11/05/2022 16:32:42 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-29/04/2022 11:48:32 => An error occurred while updating the entries. See the inner exception for details.
+11/05/2022 16:32:43 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-29/04/2022 11:49:55 => An error occurred while updating the entries. See the inner exception for details.
+11/05/2022 16:35:08 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-29/04/2022 12:29:11 => Object reference not set to an instance of an object.
+11/05/2022 16:35:09 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-29/04/2022 12:33:19 => Object reference not set to an instance of an object.
+11/05/2022 16:35:47 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-29/04/2022 13:55:46 => Object reference not set to an instance of an object.
+11/05/2022 16:35:48 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-29/04/2022 14:15:05 => Object reference not set to an instance of an object.
+11/05/2022 16:37:42 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-29/04/2022 14:16:42 => Object reference not set to an instance of an object.
+11/05/2022 16:37:51 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-29/04/2022 14:22:31 => Object reference not set to an instance of an object.
+11/05/2022 16:37:51 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-29/04/2022 14:33:14 => Object reference not set to an instance of an object.
+11/05/2022 17:07:39 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-29/04/2022 14:49:23 => Object reference not set to an instance of an object.
+11/05/2022 17:07:40 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-29/04/2022 14:50:36 => Object reference not set to an instance of an object.
+11/05/2022 17:26:04 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-29/04/2022 14:59:27 => Object reference not set to an instance of an object.
-27/04/2022 14:13:08 => An error occurred while updating the entries. See the inner exception for details.
+11/05/2022 17:26:04 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-28/04/2022 02:35:35 p. m. => Unrecognized Guid format.
+11/05/2022 17:26:07 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-28/04/2022 02:37:05 p. m. => Unrecognized Guid format.
+11/05/2022 17:26:08 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-28/04/2022 08:18:23 p. m. => Value cannot be null. (Parameter 'input')
+11/05/2022 17:27:18 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-28/04/2022 08:18:28 p. m. => An exception was thrown while attempting to evaluate a LINQ query parameter expression. See the inner exception for more information. To show additional information call 'DbContextOptionsBuilder.EnableSensitiveDataLogging'.
+11/05/2022 17:27:29 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-28/04/2022 08:21:35 p. m. => Value cannot be null. (Parameter 'input')
+11/05/2022 17:28:30 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-28/04/2022 08:21:47 p. m. => Value cannot be null. (Parameter 'input')
+11/05/2022 17:29:21 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-28/04/2022 08:21:49 p. m. => Value cannot be null. (Parameter 'input')
+11/05/2022 17:29:36 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-28/04/2022 08:24:28 p. m. => Value cannot be null. (Parameter 'input')
+11/05/2022 17:29:57 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-28/04/2022 08:26:09 p. m. => Value cannot be null. (Parameter 'input')
+11/05/2022 17:30:27 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-28/04/2022 08:26:50 p. m. => Value cannot be null. (Parameter 'input')
+11/05/2022 17:31:52 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-28/04/2022 08:30:58 p. m. => Value cannot be null. (Parameter 'input')
+11/05/2022 17:34:54 => Unable to cast object of type 'System.String' to type 'System.Guid'.
 
-29/04/2022 10:19:13 a. m. => An exception was thrown while attempting to evaluate a LINQ query parameter expression. See the inner exception for more information. To show additional information call 'DbContextOptionsBuilder.EnableSensitiveDataLogging'.
+12/05/2022 9:21:16 => A transport-level error has occurred when receiving results from the server. (provider: Session Provider, error: 19 - Physical connection is not usable)
 
-29/04/2022 10:36:59 a. m. => An exception was thrown while attempting to evaluate a LINQ query parameter expression. See the inner exception for more information. To show additional information call 'DbContextOptionsBuilder.EnableSensitiveDataLogging'.
+12/05/2022 10:18:40 => A connection was successfully established with the server, but then an error occurred during the pre-login handshake. (provider: SSL Provider, error: 0 - Tiempo de espera de la operación de espera agotado.)
 
-29/04/2022 12:55:56 p. m. => An exception was thrown while attempting to evaluate a LINQ query parameter expression. See the inner exception for more information. To show additional information call 'DbContextOptionsBuilder.EnableSensitiveDataLogging'.
+12/05/2022 14:11:36 => An error occurred while updating the entries. See the inner exception for details.
 
-29/04/2022 12:58:48 p. m. => An exception was thrown while attempting to evaluate a LINQ query parameter expression. See the inner exception for more information. To show additional information call 'DbContextOptionsBuilder.EnableSensitiveDataLogging'.
+12/05/2022 14:15:00 => An error occurred while updating the entries. See the inner exception for details.
 
-29/04/2022 02:02:28 p. m. => Object reference not set to an instance of an object.
+12/05/2022 15:01:52 => An error occurred while updating the entries. See the inner exception for details.
 
-29/04/2022 03:04:41 p. m. => An exception was thrown while attempting to evaluate a LINQ query parameter expression. See the inner exception for more information. To show additional information call 'DbContextOptionsBuilder.EnableSensitiveDataLogging'.
+12/05/2022 15:03:43 => An error occurred while updating the entries. See the inner exception for details.
 
-29/04/2022 04:03:38 p. m. => There isn't a worksheet named 'Parameters'.
+12/05/2022 15:04:07 => An error occurred while updating the entries. See the inner exception for details.
 
-29/04/2022 04:04:36 p. m. => There isn't a worksheet named 'Parameters'.
-
-29/04/2022 04:05:23 p. m. => There isn't a worksheet named 'Parameters'.
-
-29/04/2022 04:06:19 p. m. => There isn't a worksheet named 'Parameters'.
-
-29/04/2022 04:06:39 p. m. => There isn't a worksheet named 'Parameters'.
-
-29/04/2022 04:06:42 p. m. => There isn't a worksheet named 'Parameters'.
-
-29/04/2022 04:08:04 p. m. => There isn't a worksheet named 'Parameters'.
-
-02/05/2022 13:42:09 => Object reference not set to an instance of an object.
-
-03/05/2022 17:41:15 => The entity type 'TagParameter' requires a primary key to be defined. If you intended to use a keyless entity type, call 'HasNoKey' in 'OnModelCreating'. For more information on keyless entity types, see https://go.microsoft.com/fwlink/?linkid=2141943.
-
-04/05/2022 13:28:35 => Unable to cast object of type 'SelectListIterator`2[Service.Catalog.Domain.Study,Service.Catalog.Dtos.Study.StudyListDto]' to type 'System.Collections.Generic.ICollection`1[Service.Catalog.Domain.Tags.TagStudy]'.
-
-04/05/2022 14:32:09 => Unable to determine the relationship represented by navigation 'OpenXmlElement.FirstChild' of type 'OpenXmlElement'. Either manually configure the relationship, or ignore this property using the '[NotMapped]' attribute or by using 'EntityTypeBuilder.Ignore' in 'OnModelCreating'.
-
-04/05/2022 14:37:20 => Value cannot be null. (Parameter 'source')
-
-04/05/2022 14:40:09 => Value cannot be null. (Parameter 'source')
-
-04/05/2022 14:52:15 => Value cannot be null. (Parameter 'source')
-
-04/05/2022 16:12:44 => Unable to cast object of type 'SelectListIterator`2[Service.Catalog.Domain.Study,Service.Catalog.Dtos.Study.StudyListDto]' to type 'System.Collections.Generic.ICollection`1[Service.Catalog.Domain.Tags.TagStudy]'.
-
-04/05/2022 16:22:35 => Value cannot be null. (Parameter 'source')
-
-04/05/2022 16:25:20 => Value cannot be null. (Parameter 'source')
-
-04/05/2022 16:28:04 => Unable to cast object of type 'System.Int32' to type 'System.String'.
-
-04/05/2022 16:40:55 => Value cannot be null. (Parameter 'source')
-
-04/05/2022 16:43:21 => Value cannot be null. (Parameter 'source')
-
-05/05/2022 18:26:26 => The relationship from 'PriceList_Study.Precio' to 'PriceList' with foreign key properties {'PrecioId' : Guid} cannot target the primary key {'Id' : int} because it is not compatible. Configure a principal key or a set of compatible foreign key properties for this relationship.
-03/05/2022 17:41:15 => The entity type 'TagParameter' requires a primary key to be defined. If you intended to use a keyless entity type, call 'HasNoKey' in 'OnModelCreating'. For more information on keyless entity types, see https://go.microsoft.com/fwlink/?linkid=2141943.
-
-04/05/2022 04:37:08 p. m. => Unable to cast object of type 'System.String' to type 'System.Int32'.
-
-04/05/2022 04:37:46 p. m. => Unable to cast object of type 'System.String' to type 'System.Int32'.
-
-04/05/2022 04:38:18 p. m. => Unable to cast object of type 'System.String' to type 'System.Int32'.
-
-04/05/2022 04:39:33 p. m. => Unable to cast object of type 'System.String' to type 'System.Int32'.
-
-05/05/2022 12:33:55 p. m. => Exception has been thrown by the target of an invocation.
-
-05/05/2022 12:35:01 p. m. => The entity type 'PacketStudy' requires a primary key to be defined. If you intended to use a keyless entity type, call 'HasNoKey' in 'OnModelCreating'. For more information on keyless entity types, see https://go.microsoft.com/fwlink/?linkid=2141943.
-
-05/05/2022 12:36:39 p. m. => The entity type 'PacketStudy' requires a primary key to be defined. If you intended to use a keyless entity type, call 'HasNoKey' in 'OnModelCreating'. For more information on keyless entity types, see https://go.microsoft.com/fwlink/?linkid=2141943.
-
-05/05/2022 04:22:32 p. m. => The ALTER TABLE statement conflicted with the FOREIGN KEY constraint "FK_CAT_Estudio_CAT_Maquilador_MaquiladorId". The conflict occurred in database "LAB_RAMOS_DEV_CATALOGO", table "dbo.CAT_Maquilador", column 'Id'.
-
-05/05/2022 04:27:23 p. m. => The ALTER TABLE statement conflicted with the FOREIGN KEY constraint "FK_CAT_Estudio_CAT_Maquilador_MaquiladorId". The conflict occurred in database "LAB_RAMOS_DEV_CATALOGO", table "dbo.CAT_Maquilador", column 'Id'.
-
-05/05/2022 06:43:25 p. m. => The ALTER TABLE statement conflicted with the FOREIGN KEY constraint "FK_CAT_Estudio_CAT_Maquilador_MaquiladorId". The conflict occurred in database "LAB_RAMOS_DEV_CATALOGO", table "dbo.CAT_Maquilador", column 'Id'.
-
-05/05/2022 06:44:57 p. m. => The ALTER TABLE statement conflicted with the FOREIGN KEY constraint "FK_CAT_Estudio_CAT_Maquilador_MaquiladorId". The conflict occurred in database "LAB_RAMOS_DEV_CATALOGO", table "dbo.CAT_Maquilador", column 'Id'.
-
-05/05/2022 06:51:36 p. m. => The ALTER TABLE statement conflicted with the FOREIGN KEY constraint "FK_CAT_Estudio_CAT_Maquilador_MaquiladorId". The conflict occurred in database "LAB_RAMOS_DEV_CATALOGO", table "dbo.CAT_Maquilador", column 'Id'.
-
-05/05/2022 08:00:49 p. m. => Unable to resolve service for type 'Service.Catalog.Application.IApplication.ITaponApplication' while attempting to activate 'Service.Catalog.Controllers.TaponController'.
-
-06/05/2022 10:52:37 => To change the IDENTITY property of a column, the column needs to be dropped and recreated.
-
-06/05/2022 11:01:06 => To change the IDENTITY property of a column, the column needs to be dropped and recreated.
-
-06/05/2022 11:06:31 => To change the IDENTITY property of a column, the column needs to be dropped and recreated.
-
-06/05/2022 14:52:52 => To change the IDENTITY property of a column, the column needs to be dropped and recreated.
-
-06/05/2022 16:44:54 => To change the IDENTITY property of a column, the column needs to be dropped and recreated.
-
-11/05/2022 08:36:55 p. m. => The entity type 'Price_Company' requires a primary key to be defined. If you intended to use a keyless entity type, call 'HasNoKey' in 'OnModelCreating'. For more information on keyless entity types, see https://go.microsoft.com/fwlink/?linkid=2141943.
-
-11/05/2022 08:40:26 p. m. => The entity type 'Price_Company' requires a primary key to be defined. If you intended to use a keyless entity type, call 'HasNoKey' in 'OnModelCreating'. For more information on keyless entity types, see https://go.microsoft.com/fwlink/?linkid=2141943.
-
-11/05/2022 09:46:53 p. m. => Introducing FOREIGN KEY constraint 'FK_Relacion_Estudio_Paquete_CAT_Paquete_PacketId' on table 'Relacion_Estudio_Paquete' may cause cycles or multiple cascade paths. Specify ON DELETE NO ACTION or ON UPDATE NO ACTION, or modify other FOREIGN KEY constraints.
-Could not create constraint. See previous errors.
-
-12/05/2022 10:25:19 a. m. => Value cannot be null. (Parameter 'input')
-
-12/05/2022 10:25:53 a. m. => Value cannot be null. (Parameter 'input')
-
-12/05/2022 10:26:04 a. m. => Value cannot be null. (Parameter 'input')
-
-12/05/2022 10:54:36 a. m. => Value cannot be null. (Parameter 'input')
-
-12/05/2022 10:54:56 a. m. => Value cannot be null. (Parameter 'input')
-
-12/05/2022 10:55:17 a. m. => Value cannot be null. (Parameter 'input')
-
-12/05/2022 10:56:29 a. m. => Value cannot be null. (Parameter 'input')
-
-12/05/2022 10:57:12 a. m. => Value cannot be null. (Parameter 'input')
-
-12/05/2022 10:57:25 a. m. => Value cannot be null. (Parameter 'input')
-
-12/05/2022 10:57:42 a. m. => Value cannot be null. (Parameter 'input')
-
-12/05/2022 10:58:13 a. m. => Value cannot be null. (Parameter 'input')
-
-12/05/2022 11:05:16 a. m. => Value cannot be null. (Parameter 'input')
-
-12/05/2022 11:05:20 a. m. => Value cannot be null. (Parameter 'input')
-
-12/05/2022 11:05:20 a. m. => Value cannot be null. (Parameter 'input')
-
-12/05/2022 11:05:21 a. m. => Value cannot be null. (Parameter 'input')
-
-12/05/2022 11:05:45 a. m. => Value cannot be null. (Parameter 'input')
-
-12/05/2022 11:05:46 a. m. => Value cannot be null. (Parameter 'input')
-
-12/05/2022 11:05:47 a. m. => Value cannot be null. (Parameter 'input')
-
-12/05/2022 11:05:54 a. m. => Value cannot be null. (Parameter 'input')
-
-12/05/2022 11:05:55 a. m. => Value cannot be null. (Parameter 'input')
-
-12/05/2022 11:05:55 a. m. => Value cannot be null. (Parameter 'input')
-
-12/05/2022 11:05:55 a. m. => Value cannot be null. (Parameter 'input')
-
-12/05/2022 11:05:56 a. m. => Value cannot be null. (Parameter 'input')
-
-12/05/2022 11:05:59 a. m. => Value cannot be null. (Parameter 'input')
-
-12/05/2022 11:05:59 a. m. => Value cannot be null. (Parameter 'input')
-
-12/05/2022 11:06:00 a. m. => Value cannot be null. (Parameter 'input')
-
-12/05/2022 11:06:01 a. m. => Value cannot be null. (Parameter 'input')
-
-12/05/2022 11:06:03 a. m. => Value cannot be null. (Parameter 'input')
-
-12/05/2022 11:06:03 a. m. => Value cannot be null. (Parameter 'input')
-
-12/05/2022 11:06:04 a. m. => Value cannot be null. (Parameter 'input')
-
-12/05/2022 11:06:05 a. m. => Value cannot be null. (Parameter 'input')
-
+12/05/2022 15:06:49 => 'FK_CAT_ListaP_Promocion_CAT_ListaPrecio_PriceId' is not a constraint.
+Could not drop constraint. See previous errors.
 12/05/2022 11:10:37 a. m. => Value cannot be null. (Parameter 'input')
 
 12/05/2022 11:23:59 a. m. => Connection Timeout Expired.  The timeout period elapsed while attempting to consume the pre-login handshake acknowledgement.  This could be because the pre-login handshake failed or the server was unable to respond back in time.  The duration spent while attempting to connect to this server was - [Pre-Login] initialization=39646; handshake=17; 

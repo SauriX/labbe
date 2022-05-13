@@ -30,12 +30,12 @@ namespace Service.Catalog.Dtos.Maquilador
             RuleFor(x => x.Clave).NotEmpty().MaximumLength(100);
             RuleFor(x => x.Nombre).NotEmpty().MaximumLength(100);
             RuleFor(x => x.CodigoPostal).NotEmpty().MinimumLength(5).MaximumLength(5);
-            RuleFor(x => x.Correo).NotEmpty().EmailAddress().MaximumLength(100);
+            //RuleFor(x => x.Correo).EmailAddress().MaximumLength(100);
             RuleFor(x => x.PaginaWeb).MaximumLength(100);
             RuleFor(x => x.NumeroExterior).NotEmpty().MaximumLength(10);
             RuleFor(x => x.NumeroInterior).MaximumLength(10);
             RuleFor(x => x.Calle).MaximumLength(100);
-            RuleFor(x => x.Telefono).PhoneNumber();
+            //RuleFor(x => x.Telefono).PhoneNumber();
         }
     }
 }
