@@ -17,6 +17,6 @@ namespace Service.Catalog.Dtos.Pack
         public bool Activo { get; set; }
         public bool visible { get; set; }
         public Guid IdUsuario { get; set; }
-        public IEnumerable<PackStudyDto> Estudios { get; set; }
+        public IEnumerable<PackStudyDto> Estudio { get; set; }
     }
 }

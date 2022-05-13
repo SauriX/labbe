@@ -27,5 +27,7 @@ namespace Service.Catalog.Dictionary
         public const string StudyForm = "wwwroot/layout/excel/study/StudyFormulario.xlsx";
         public const string PriceListList = "wwwroot/layout/excel/PriceList/ListadePrecioListado.xlsx";
         public const string PriceListForm = "wwwroot/layout/excel/PriceList/ListadePrecioFormulario.xlsx";
+        public const string PackList = "wwwroot/layout/excel/pack/PackListado.xlsx";
+        public const string PackForm = "wwwroot/layout/excel/pack/PackFormulario.xlsx";
     }
 }
