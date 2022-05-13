@@ -52,13 +52,13 @@ namespace Service.Catalog.Mapper
                 Departamento = model.Area.Departamento.Nombre,
                 Activo = model.Activo,
                 visible = model.Visibilidad,
-                Estudios = model.studies.Select(x => new PackStudyDto
+                Estudio = model.studies.Select(x => new PackStudyDto
                 {
                     Id = x.EstudioId,
                     Clave = x.Estudio.Clave,
                     Nombre = x.Estudio.Nombre,
                     Area = x.Estudio.Area.Nombre,
-                    Activo = x.Activo,
+                    Activo = true,
                 }).ToList()
             };
         }
@@ -76,7 +76,7 @@ namespace Service.Catalog.Mapper
                 DepartamentoId = dto.IdDepartamento,
                 NombreLargo = dto.NombreLargo,
                 Visibilidad = dto.visible,
-                studies = dto.Estudios.Select(x => new PacketStudy
+                studies = dto.Estudio.Select(x => new PacketStudy
                 {
                     PacketId = dto.Id,
                     EstudioId = x.Id,
@@ -106,7 +106,7 @@ namespace Service.Catalog.Mapper
                 DepartamentoId = dto.IdDepartamento,
                 NombreLargo = dto.NombreLargo,
                 Visibilidad = dto.visible,
-                studies = dto.Estudios.Select(x => new PacketStudy
+                studies = dto.Estudio.Select(x => new PacketStudy
                 {
                     PacketId = dto.Id,
                     EstudioId = x.Id,

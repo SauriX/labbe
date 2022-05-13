@@ -572,3 +572,29 @@ Could not create constraint. See previous errors.
 12/05/2022 11:06:05 a. m. => Value cannot be null. (Parameter 'input')
 
 12/05/2022 11:10:37 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 11:23:59 a. m. => Connection Timeout Expired.  The timeout period elapsed while attempting to consume the pre-login handshake acknowledgement.  This could be because the pre-login handshake failed or the server was unable to respond back in time.  The duration spent while attempting to connect to this server was - [Pre-Login] initialization=39646; handshake=17; 
+
+12/05/2022 11:23:59 a. m. => Connection Timeout Expired.  The timeout period elapsed while attempting to consume the pre-login handshake acknowledgement.  This could be because the pre-login handshake failed or the server was unable to respond back in time.  The duration spent while attempting to connect to this server was - [Pre-Login] initialization=39646; handshake=17; 
+
+12/05/2022 11:23:59 a. m. => Connection Timeout Expired.  The timeout period elapsed while attempting to consume the pre-login handshake acknowledgement.  This could be because the pre-login handshake failed or the server was unable to respond back in time.  The duration spent while attempting to connect to this server was - [Pre-Login] initialization=39646; handshake=17; 
+
+12/05/2022 11:39:25 a. m. => Value cannot be null. (Parameter 'input')
+
+12/05/2022 03:20:35 p. m. => Value cannot be null. (Parameter 'source')
+
+12/05/2022 03:22:22 p. m. => Value cannot be null. (Parameter 'source')
+
+12/05/2022 03:24:53 p. m. => Value cannot be null. (Parameter 'source')
+
+12/05/2022 03:25:43 p. m. => Value cannot be null. (Parameter 'source')
+
+12/05/2022 03:27:06 p. m. => Value cannot be null. (Parameter 'source')
+
+12/05/2022 03:27:53 p. m. => Value cannot be null. (Parameter 'source')
+
+12/05/2022 03:58:35 p. m. => Could not find a part of the path 'E:\ResposAxsis\API\Service.Catalog\wwwroot\layout\excel\PriceList\PackListado.xlsx'.
+
+12/05/2022 03:58:54 p. m. => Could not find a part of the path 'E:\ResposAxsis\API\Service.Catalog\wwwroot\layout\excel\PriceList\PackListado.xlsx'.
+
+12/05/2022 03:59:44 p. m. => Could not find a part of the path 'E:\ResposAxsis\API\Service.Catalog\wwwroot\layout\excel\PriceList\PackListado.xlsx'.

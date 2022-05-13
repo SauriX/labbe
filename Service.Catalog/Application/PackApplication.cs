@@ -87,44 +87,44 @@ namespace Service.Catalog.Application
         {
             var parameters = await GetAll(search);
 
-            var path = Assets.ParameterList;
+            var path = Assets.PackList;
 
             var template = new XLTemplate(path);
 
             template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
-            template.AddVariable("Titulo", "Parametros");
+            template.AddVariable("Titulo", "Paquetes");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
-            template.AddVariable("Parameters", parameters);
+            template.AddVariable("Paquetes", parameters);
 
             template.Generate();
 
-            var range = template.Workbook.Worksheet("Parameters").Range("Parameters");
-            var table = template.Workbook.Worksheet("Parameters").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
+            var range = template.Workbook.Worksheet("Paquetes").Range("Paquetes");
+            var table = template.Workbook.Worksheet("Paquetes").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
             table.Theme = XLTableTheme.TableStyleMedium2;
 
             template.Format();
 
-            return (template.ToByteArray(), "Catálogo de Parametros.xlsx");
+            return (template.ToByteArray(), "Catálogo de Paquetes.xlsx");
         }
         public async Task<(byte[] file, string fileName)> ExportForm(int id)
         {
             var parameter = await GetById(id);
-            var path = Assets.ParameterForm;
+            var path = Assets.PackForm;
 
             var template = new XLTemplate(path);
 
             template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
-            template.AddVariable("Titulo", "Parametros");
+            template.AddVariable("Titulo", "Paquete");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
-            template.AddVariable("Parameter", parameter);
-            template.AddVariable("Estudios", parameter.Estudios);
+            template.AddVariable("Paquete", parameter);
+            template.AddVariable("Estudios", parameter.Estudio);
             template.Generate();
 
             template.Format();
 
-            return (template.ToByteArray(), $"Catálogo de Parametros ({parameter.Clave}).xlsx");
+            return (template.ToByteArray(), $"Catálogo de Paquetes ({parameter.Clave}).xlsx");
         }
         private async Task CheckDuplicate(Packet pack)
         {
