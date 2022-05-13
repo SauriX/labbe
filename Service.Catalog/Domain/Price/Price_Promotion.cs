@@ -4,9 +4,9 @@ namespace Service.Catalog.Domain.Price
 {
     public class Price_Promotion
     {
-        public int? PrecioId { get; set; }
+        public Guid PrecioId { get; set; }
         public virtual PriceList Precio { get; set; }
-        public int? PromocionId { get; set; }
+        public int PromocionId { get; set; }
         public virtual Promotion.Promotion Promocion { get; set; }
         public bool Activo { get; set; }
         public long UsuarioCreoId { get; set; }

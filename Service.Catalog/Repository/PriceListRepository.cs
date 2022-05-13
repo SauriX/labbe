@@ -39,7 +39,7 @@ namespace Service.Catalog.Repository
             return await indications.ToListAsync();
         }
 
-        public async Task<PriceList> GetById(int Id)
+        public async Task<PriceList> GetById(Guid Id)
         {
             var indication = await _context.CAT_ListaPrecio
                 .Include(x => x.Estudios).ThenInclude(x => x.Estudio).ThenInclude(x => x.Area)
@@ -89,38 +89,38 @@ namespace Service.Catalog.Repository
 
             return asignado;
         }
-        //public async Task<List<Price_Branch>> GetAllBranch(int branchId)
-        //{
-        //    var asignado = await
-        //        (from branch in _context.CAT_Sucursal
-        //         join priceList in _context.CAT_ListaP_Sucursal.Where(x => x.SucursalId == branchId) on branch.Id equals priceList.SucursalId into ljPriceList
-        //         from pList in ljPriceList.DefaultIfEmpty()
-        //         select new { branch, pList })
-        //         .Select(x => new Price_Branch
-        //         {
-        //             Sucursal = x.branch,
-        //             Precio = x.pList == null ? null : x.pList.Precio,
-        //         })
-        //        .ToListAsync();
+        public async Task<List<Price_Branch>> GetAllBranch(Guid branchId)
+        {
+            var asignado = await
+                (from branch in _context.CAT_Sucursal
+                 join priceList in _context.CAT_ListaP_Sucursal.Where(x => x.SucursalId == branchId) on branch.Id equals priceList.SucursalId into ljPriceList
+                 from pList in ljPriceList.DefaultIfEmpty()
+                 select new { branch, pList })
+                 .Select(x => new Price_Branch
+                 {
+                     Sucursal = x.branch,
+                     Precio = x.pList == null ? null : x.pList.Precio,
+                 })
+                .ToListAsync();
 
-        //    return asignado;
-        //}
+            return asignado;
+        }
 
-        //public async Task<List<Price_Medics>> GetAllMedics(int medicsId)
-        //{
-        //    var asignado = await
-        //        (from medics in _context.CAT_Medicos
-        //         join priceList in _context.CAT_ListaP_Sucursal.Where(x => x.SucursalId == medicsId) on medics.IdMedico equals priceList.SucursalId into ljPriceList
-        //         from pList in ljPriceList.DefaultIfEmpty()
-        //         select new { medics, pList })
-        //         .Select(x => new Price_Medics
-        //         {
-        //             Medico = x.medics,
-        //             Precio = x.pList == null ? null : x.pList.Precio,
-        //         })
-        //        .ToListAsync();
+        public async Task<List<Price_Medics>> GetAllMedics(int medicsId)
+        {
+            var asignado = await
+                (from medics in _context.CAT_Medicos
+                 join priceList in _context.CAT_ListaP_Medicos.Where(x => x.MedicoId == medicsId) on medics.IdMedico equals priceList.MedicoId into ljPriceList
+                 from pList in ljPriceList.DefaultIfEmpty()
+                 select new { medics, pList })
+                 .Select(x => new Price_Medics
+                 {
+                     Medico = x.medics,
+                     Precio = x.pList == null ? null : x.pList.Precio,
+                 })
+                .ToListAsync();
 
-        //    return asignado;
-        //}
+            return asignado;
+        }
     }
 }

@@ -1,13 +1,12 @@
 ﻿using Identidad.Api.Model.Medicos;
-using Identidad.Api.ViewModels.Menu;
 using Microsoft.EntityFrameworkCore;
-using Service.Catalog.Domain;
 using Service.Catalog.Domain.Branch;
 using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Domain.Company;
 using Service.Catalog.Domain.Constant;
 using Service.Catalog.Domain.Indication;
 using Service.Catalog.Domain.Maquila;
+using Service.Catalog.Domain.Medics;
 using Service.Catalog.Domain.Packet;
 using Service.Catalog.Domain.Parameter;
 using Service.Catalog.Domain.Price;
@@ -15,11 +14,7 @@ using Service.Catalog.Domain.Provenance;
 using Service.Catalog.Domain.Reagent;
 using Service.Catalog.Domain.Study;
 using Service.Catalog.Domain.Tapon;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace Service.Catalog.Context
 {
@@ -43,6 +38,8 @@ namespace Service.Catalog.Context
         public DbSet<WorkList> CAT_ListaTrabajo { get; set; }
         public DbSet<Reagent> CAT_Reactivo_Contpaq { get; set; }
         public DbSet<Medics> CAT_Medicos { get; set; }
+        public DbSet<Provenance> CAT_Procedencia { get; set; }
+        public DbSet<Contact> CAT_Contacto { get; set; }
         public DbSet<MedicClinic> CAT_Medicos_Clinica { get; set; }
         public DbSet<Indication> CAT_Indicacion { get; set; }
         public DbSet<State> CAT_Estado { get; set; }
@@ -62,8 +59,6 @@ namespace Service.Catalog.Context
         public DbSet<Price_Promotion> CAT_ListaP_Promocion { get; set; }
         public DbSet<Price_Branch> CAT_ListaP_Sucursal { get; set; }
         public DbSet<Price_Medics> CAT_ListaP_Medicos { get; set; }
-        public DbSet<Provenance> CAT_Procedencia { get; set; }
-        public DbSet<Contact> CAT_Contacto { get; set; }
         public DbSet<PriceList_Packet> Relacion_ListaP_Paquete { get; set; }
         public DbSet<PriceList_Study> Relacion_ListaP_Estudio { get; set; }
         //hasta aqui es zona de pruebas

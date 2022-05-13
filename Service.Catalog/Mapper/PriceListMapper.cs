@@ -46,20 +46,20 @@ namespace Service.Catalog.Mapper
                 Nombre = model.Nombre.Trim(),
                 Visibilidad = model?.Visibilidad,
                 Activo = model.Activo,
-               // Estudios = (ICollection<PriceList_Study>)model.Estudios.ToPriceListStudyDto(),
+                //Estudios = model.Estudios.ToPriceListStudyDto(),
             };
         }
 
         //private static IEnumerable<PriceListStudyDto> ToPriceListStudyDto(this IEnumerable<PriceList_Study> model)
         //{
-        //    //if (model == null) return null;
+        //    if (model == null) return null;
 
-        //    //return model.Select(x => x.Estudio).Select(x => new PriceListStudyDto
-        //    //{
-        //    //    Id = x.Id,
-        //    //    Nombre = x.Nombre,
-        //    //    Area = x.Area.Nombre,
-        //    //});
+        //    return model.Select(x => x.Estudio).Select(x => new PriceListStudyDto
+        //    {
+        //        Id = x.Id,
+        //        Nombre = x.Nombre,
+        //        Area = x.Area.Nombre,
+        //    });
         //}
 
         public static PriceList ToModel(this PriceListFormDto dto)

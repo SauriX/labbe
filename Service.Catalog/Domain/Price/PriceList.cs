@@ -6,7 +6,7 @@ namespace Service.Catalog.Domain.Price
 {
     public class PriceList
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Clave { get; set; }
         public string Nombre { get; set; }
         public bool? Visibilidad { get; set; }
