@@ -55,7 +55,7 @@ namespace Service.Catalog.Repository
         }
         public async Task<bool> IsDuplicate(PriceList price)
         {
-            var isDuplicate = await _context.CAT_ListaPrecio.AnyAsync(x => x.Id != price.Id && x.Clave == price.Clave);
+            var isDuplicate = await _context.CAT_ListaPrecio.AnyAsync(x => x.Id != price.Id && x.Clave == price.Clave || x.Nombre == price.Nombre);
 
             return isDuplicate;
         }
@@ -73,7 +73,7 @@ namespace Service.Catalog.Repository
 
             await _context.SaveChangesAsync();
         }
-        public async Task<List<Price_Company>> GetAllCompany(int companyId)
+        public async Task<List<Price_Company>> GetAllCompany(Guid companyId)
         {
             var asignado = await
                 (from company in _context.CAT_Compañia

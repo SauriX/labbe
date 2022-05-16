@@ -5,7 +5,7 @@ namespace Service.Catalog.Domain.Company
 {
     public class Company
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Clave { get; set; }
         public string Contrasena { get; set; }
         public string EmailEmpresarial { get; set; }

@@ -72,5 +72,23 @@ namespace Service.Catalog.Controllers
             var (file, fileName) = await _service.ExportForm(id);
             return File(file, MimeType.XLSX, fileName);
         }
+        //[HttpGet("branch")]
+        //[Authorize(Policies.Access)]
+        //public async Task<IEnumerable<PriceListListDto>> GetAllBranch(string search)
+        //{
+        //    return await _service.GetAllBranch(search);
+        //}
+        //[HttpGet("medics")]
+        //[Authorize(Policies.Access)]
+        //public async Task<IEnumerable<PriceListListDto>> GetAllMedics(string search)
+        //{
+        //    return await _service.GetAllMedics(search);
+        //}
+        //[HttpGet("company")]
+        //[Authorize(Policies.Access)]
+        //public async Task<IEnumerable<PriceListListDto>> GetAllCompany(string search)
+        //{
+        //    return await _service.GetAllCompany(search);
+        //}
     }
 }

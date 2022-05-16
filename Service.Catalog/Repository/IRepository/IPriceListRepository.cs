@@ -15,7 +15,7 @@ namespace Service.Catalog.Repository.IRepository
         Task Create(PriceList price);
         Task Update(PriceList price);
         Task<List<Price_Branch>> GetAllBranch(Guid branchId);
-        Task<List<Price_Company>> GetAllCompany(int companyId);
+        Task<List<Price_Company>> GetAllCompany(Guid companyId);
         Task<List<Price_Medics>> GetAllMedics(int medicsId);
     }
 }
