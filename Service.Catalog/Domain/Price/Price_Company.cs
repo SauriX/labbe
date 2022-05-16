@@ -6,7 +6,7 @@ namespace Service.Catalog.Domain.Company
     {
         public Guid PrecioId { get; set; }
         public virtual Price.PriceList Precio { get; set; }
-        public int CompañiaId { get; set; }
+        public Guid CompañiaId { get; set; }
         public virtual Company Compañia { get; set; }
         public bool Activo { get; set; }
         public long UsuarioCreoId { get; set; }

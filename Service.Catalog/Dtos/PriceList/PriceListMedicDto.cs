@@ -1,6 +1,6 @@
 ﻿namespace Service.Catalog.Dtos.PriceList
 {
-    public class PriceListMedic
+    public class PriceListMedicDto
     {
         public int Id { get; set; }
         public string Clave { get; set; }

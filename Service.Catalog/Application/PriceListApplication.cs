@@ -110,12 +110,12 @@ namespace Service.Catalog.Application
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
             template.AddVariable("Titulo", "Lista de Precios");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
-            template.AddVariable("prices", prices);
+            template.AddVariable("Precios", prices);
 
             template.Generate();
 
-            var range = template.Workbook.Worksheet("prices").Range("prices");
-            var table = template.Workbook.Worksheet("prices").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
+            var range = template.Workbook.Worksheet("Precios").Range("Precios");
+            var table = template.Workbook.Worksheet("Precios").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
             table.Theme = XLTableTheme.TableStyleMedium2;
 
             template.Format();

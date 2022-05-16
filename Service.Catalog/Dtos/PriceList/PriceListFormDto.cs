@@ -18,6 +18,8 @@ namespace Service.Catalog.Dtos
         public virtual ICollection<Price_Company> Compañia { get; set; }
         public virtual ICollection<PriceList_Study> Estudios { get; set; }
         public virtual ICollection<PriceList_Packet> Paquete { get; set; }
+        public virtual ICollection<Price_Branch> Sucursales { get; set; }
+        public virtual ICollection<Price_Medics> Medicos { get; set; }
     }
     public class PriceListFormDtoValidator : AbstractValidator<PriceListFormDto>
     {
