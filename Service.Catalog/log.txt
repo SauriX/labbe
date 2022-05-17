@@ -460,3 +460,6 @@ Could not drop constraint. See previous errors.
 16/05/2022 17:17:22 => Unable to cast object of type 'System.Collections.Generic.List`1[Service.Catalog.Dtos.PriceList.PriceListStudyDto]' to type 'System.Collections.Generic.ICollection`1[Service.Catalog.Domain.Price.PriceList_Study]'.
 
 16/05/2022 17:17:32 => Unable to cast object of type 'System.Collections.Generic.List`1[Service.Catalog.Dtos.PriceList.PriceListStudyDto]' to type 'System.Collections.Generic.ICollection`1[Service.Catalog.Domain.Price.PriceList_Study]'.
+13/05/2022 17:33:47 => The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.
+
+17/05/2022 02:42:15 p. m. => To change the IDENTITY property of a column, the column needs to be dropped and recreated.

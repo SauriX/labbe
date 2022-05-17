@@ -10,6 +10,7 @@ using Service.Catalog.Domain.Medics;
 using Service.Catalog.Domain.Packet;
 using Service.Catalog.Domain.Parameter;
 using Service.Catalog.Domain.Price;
+using Service.Catalog.Domain.Promotion;
 using Service.Catalog.Domain.Provenance;
 using Service.Catalog.Domain.Reagent;
 using Service.Catalog.Domain.Study;
@@ -65,6 +66,8 @@ namespace Service.Catalog.Context
         public DbSet<Maquila> CAT_Maquilador { get; set; }
         public DbSet<Tapon> CAT_Tipo_Tapon { get; set; }
         public DbSet<Packet> CAT_Paquete { get; set; }
+
+        public DbSet<Promotion> CAT_Promocion { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
