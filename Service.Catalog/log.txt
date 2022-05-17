@@ -463,3 +463,5 @@ Could not drop constraint. See previous errors.
 13/05/2022 17:33:47 => The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.
 
 17/05/2022 02:42:15 p. m. => To change the IDENTITY property of a column, the column needs to be dropped and recreated.
+
+17/05/2022 06:33:47 p. m. => To change the IDENTITY property of a column, the column needs to be dropped and recreated.
