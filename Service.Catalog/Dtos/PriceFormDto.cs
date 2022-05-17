@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Service.Catalog.Dtos.Promotion;
+using System;
 using System.Collections.Generic;
 
 namespace Service.Catalog.Dtos

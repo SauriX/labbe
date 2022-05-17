@@ -10,7 +10,7 @@ namespace Service.Catalog.Mapper
         public static PromotionListDto ToPromotionListDto(this Promotion model)
         {
             if (model == null) return null;
-            var listaDeprecios = model.prices.AsQueryable().Where(x => x.Activo == true).FirstOrDefault().Precio.Nombre;
+            var listaDeprecios = model.prices.AsQueryable().Where(x => x.Activo == true).FirstOrDefault().PrecioLista.Nombre;
             return new PromotionListDto
             {
                 Id = model.Id,
@@ -31,7 +31,7 @@ namespace Service.Catalog.Mapper
                 Clave = x.Clave,
                 Nombre = x.Nombre,
                 Periodo = $"{x.FechaInicio}-{x.FechaInicio}",
-                NombreListaPrecio = x.prices.AsQueryable().Where(x => x.Activo == true).FirstOrDefault().Precio.Nombre,
+                NombreListaPrecio = x.prices.AsQueryable().Where(x => x.Activo == true).FirstOrDefault().PrecioLista.Nombre,
                 Activo = x.Activo,
             });
         }

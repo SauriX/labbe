@@ -38,10 +38,10 @@ namespace Service.Catalog.Repository
         {
             var promotions = _context.CAT_Promocion
                  .Include(x => x.prices)
-                 .ThenInclude(x => x.Precio.Paquete)
+                 .ThenInclude(x => x.PrecioLista.Paquete)
                  .ThenInclude(x => x.Paquete.Area.Departamento)
                  .Include(x => x.prices)
-                 .ThenInclude(x => x.Precio.Estudios)
+                 .ThenInclude(x => x.PrecioLista.Estudios)
                  .ThenInclude(x => x.Estudio.Area.Departamento)
                  .Include(x => x.loyalities)
                  .ThenInclude(x => x.Loyality)
