@@ -16,8 +16,8 @@ namespace Service.Catalog.Application.IApplication
         Task<IEnumerable<PriceListListDto>> GetActive();
         Task<(byte[] file, string fileName)> ExportList(string search);
         Task<(byte[] file, string fileName)> ExportForm(string id);
-        Task<PriceListCompanyDto> GetAllCompany(Guid companyId);
-        Task<PriceListBranchDto> GetAllBranch(Guid branchId);
-        Task<PriceListMedicDto>GetAllMedics(Guid medicsId);
+        Task<IEnumerable<PriceListCompanyDto>> GetAllCompany(Guid companyId);
+        Task<IEnumerable<PriceListBranchDto>> GetAllBranch(Guid branchId);
+        Task<IEnumerable<PriceListMedicDto>> GetAllMedics(Guid medicsId);
     }
 }

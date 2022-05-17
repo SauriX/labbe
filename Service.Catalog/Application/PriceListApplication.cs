@@ -155,19 +155,19 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
             }
         }
-        public async Task<PriceListCompanyDto> GetAllCompany(Guid companyId)
+        public async Task<IEnumerable<PriceListCompanyDto>> GetAllCompany(Guid companyId)
         {
             var prices = await _repository.GetAllCompany(companyId);
             //prices.Select(x=>x.ToPriceListListComDto)
             return prices.ToPriceListListComDto();
         }
-        public async Task<PriceListBranchDto> GetAllBranch(Guid branchId)
+        public async Task<IEnumerable<PriceListBranchDto>> GetAllBranch(Guid branchId)
         {
             var prices = await _repository.GetAllBranch(branchId);
 
             return prices.ToPriceListListSucDto();
         }
-        public async Task<PriceListMedicDto> GetAllMedics(Guid medicsId)
+        public async Task<IEnumerable<PriceListMedicDto>> GetAllMedics(Guid medicsId)
         {
             var prices = await _repository.GetAllMedics(medicsId);
 

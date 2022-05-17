@@ -75,19 +75,19 @@ namespace Service.Catalog.Controllers
         }
         [HttpGet("branch")]
         [Authorize(Policies.Access)]
-        public async Task<PriceListBranchDto> GetAllBranch(Guid branchId)
+        public async Task<IEnumerable<PriceListBranchDto>> GetAllBranch(Guid branchId)
         {
             return await _service.GetAllBranch(branchId);
         }
         [HttpGet("medics")]
         [Authorize(Policies.Access)]
-        public async Task<PriceListMedicDto> GetAllMedics(Guid medicsId)
+        public async Task<IEnumerable<PriceListMedicDto>> GetAllMedics(Guid medicsId)
         {
             return await _service.GetAllMedics(medicsId);
         }
         [HttpGet("company")]
         [Authorize(Policies.Access)]
-        public async Task<PriceListCompanyDto> GetAllCompany(Guid companyId)
+        public async Task<IEnumerable<PriceListCompanyDto>> GetAllCompany(Guid companyId)
         {
             return await _service.GetAllCompany(companyId);
         }
