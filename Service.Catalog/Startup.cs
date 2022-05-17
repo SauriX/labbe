@@ -229,6 +229,7 @@ namespace Service.Catalog
             services.AddScoped<ITaponRepository, TaponRepository>();
             services.AddScoped<IPriceListRepository, PriceListRepository>();
             services.AddScoped<IPackRepository, PackRepository>();
+            services.AddScoped<IPromotionRepository, PromotionRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

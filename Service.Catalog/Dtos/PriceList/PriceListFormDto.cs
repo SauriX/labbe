@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Service.Catalog.Domain.Company;
 using Service.Catalog.Domain.Price;
+using Service.Catalog.Dtos.Promotion;
 using System;
 using System.Collections.Generic;
 
