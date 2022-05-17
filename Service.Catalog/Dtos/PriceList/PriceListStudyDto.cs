@@ -8,7 +8,7 @@
         public string Area { get; set; }
         public int DepartamentoId { get; set; }
         public bool Activo { get; set; }
-        public float Precio { get; set; }
+        public decimal Precio { get; set; }
 
     }
 }

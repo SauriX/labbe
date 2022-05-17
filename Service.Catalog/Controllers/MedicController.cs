@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Catalog.Dtos.Medicos;
 using Shared.Dictionary;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -28,7 +29,7 @@ namespace Identidad.Api.Controllers
 
         [HttpGet("{Id}")]
         [Authorize(Policies.Access)]
-        public async Task<MedicsFormDto> GetById(int Id)
+        public async Task<MedicsFormDto> GetById(Guid Id)
         {
             return await _Services.GetById(Id);
         }
@@ -57,7 +58,7 @@ namespace Identidad.Api.Controllers
 
         [HttpPost("export/form/{id}")]
         [Authorize(Policies.Download)]
-        public async Task<IActionResult> ExportForm(int id)
+        public async Task<IActionResult> ExportForm(Guid id)
         {
             var file = await _Services.ExportForm(id);
             return File(file, MimeType.XLSX);

@@ -83,7 +83,7 @@ namespace Service.Catalog.Repository
                  .Select(x => new Price_Company
                  {
                      Compañia = x.company,
-                     Precio = x.pList == null ? null : x.pList.Precio,
+                     PrecioLista = x.pList == null ? null : x.pList.PrecioLista,
                  })
                 .ToListAsync();
 
@@ -99,14 +99,14 @@ namespace Service.Catalog.Repository
                  .Select(x => new Price_Branch
                  {
                      Sucursal = x.branch,
-                     Precio = x.pList == null ? null : x.pList.Precio,
+                     PrecioLista = x.pList == null ? null : x.pList.PrecioLista,
                  })
                 .ToListAsync();
 
             return asignado;
         }
 
-        public async Task<List<Price_Medics>> GetAllMedics(int medicsId)
+        public async Task<List<Price_Medics>> GetAllMedics(Guid medicsId)
         {
             var asignado = await
                 (from medics in _context.CAT_Medicos
@@ -116,7 +116,7 @@ namespace Service.Catalog.Repository
                  .Select(x => new Price_Medics
                  {
                      Medico = x.medics,
-                     Precio = x.pList == null ? null : x.pList.Precio,
+                     PrecioLista = x.pList == null ? null : x.pList.PrecioLista,
                  })
                 .ToListAsync();
 

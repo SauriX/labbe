@@ -6,7 +6,7 @@ namespace Service.Catalog.Dtos.Medicos
 {
     public class MedicsListDto
     {
-        public int IdMedico { get; set; }
+        public Guid IdMedico { get; set; }
         public string Clave { get; set; }
         public string NombreCompleto { get; set; }
         public long EspecialidadId { get; set; }

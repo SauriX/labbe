@@ -8,6 +8,7 @@ using Service.Catalog.Dtos.Medicos;
 using Shared.Dictionary;
 using Shared.Error;
 using Shared.Extensions;
+using Shared.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -24,7 +25,7 @@ namespace Identidad.Api.Infraestructure.Services
             _repository = repository;
         }
 
-        public async Task<MedicsFormDto> GetById(int Id)
+        public async Task<MedicsFormDto> GetById(Guid Id)
         {
             var Medicos = await _repository.GetById(Id);
             if (Medicos == null)
@@ -35,10 +36,8 @@ namespace Identidad.Api.Infraestructure.Services
         }
         public async Task<MedicsFormDto> Create(MedicsFormDto medic)
         {
-            if (medic.IdMedico != 0)
-            {
-                throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
-            }
+            Helpers.ValidateGuid(medic.IdMedico.ToString(), out Guid guid);
+           
 
             var code = await GenerateCode(medic);
             medic.Clave = code;
@@ -61,6 +60,7 @@ namespace Identidad.Api.Infraestructure.Services
         }
         public async Task<MedicsFormDto> Update(MedicsFormDto medics)
         {
+            Helpers.ValidateGuid(medics.IdMedico.ToString(), out Guid guid);
             var existing = await _repository.GetById(medics.IdMedico);
 
             if (existing == null)
@@ -125,7 +125,7 @@ namespace Identidad.Api.Infraestructure.Services
             return template.ToByteArray();
         }
 
-        public async Task<byte[]> ExportForm(int id)
+        public async Task<byte[]> ExportForm(Guid id)
         {
             var medics = await GetById(id);
 

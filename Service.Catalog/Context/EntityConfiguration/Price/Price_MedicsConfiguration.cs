@@ -10,10 +10,10 @@ namespace Service.Catalog.Context.EntityConfiguration.Price
         {
             builder.ToTable("CAT_ListaP_Medicos");
 
-            builder.HasKey(x => new { x.PrecioId, x.MedicoId });
+            builder.HasKey(x => new { x.PrecioListaId, x.MedicoId });
 
             builder
-              .HasOne(x => x.Precio)
+              .HasOne(x => x.PrecioLista)
               .WithMany()
               .OnDelete(DeleteBehavior.Restrict);
 

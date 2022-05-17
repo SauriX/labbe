@@ -1,4 +1,5 @@
-﻿using Service.Catalog.Dtos;
+﻿using Service.Catalog.Domain.Price;
+using Service.Catalog.Dtos;
 using Service.Catalog.Dtos.PriceList;
 using System;
 using System.Collections.Generic;
@@ -15,8 +16,8 @@ namespace Service.Catalog.Application.IApplication
         Task<IEnumerable<PriceListListDto>> GetActive();
         Task<(byte[] file, string fileName)> ExportList(string search);
         Task<(byte[] file, string fileName)> ExportForm(string id);
-        //Task<IEnumerable<PriceListListDto>> GetAllCompany(int companyId);
-        //Task<IEnumerable<PriceListListDto>> GetAllBranch(Guid branchId);
-        //Task<IEnumerable<PriceListListDto>> GetAllMedics(int medicsId);
+        Task<PriceListCompanyDto> GetAllCompany(Guid companyId);
+        Task<PriceListBranchDto> GetAllBranch(Guid branchId);
+        Task<PriceListMedicDto>GetAllMedics(Guid medicsId);
     }
 }

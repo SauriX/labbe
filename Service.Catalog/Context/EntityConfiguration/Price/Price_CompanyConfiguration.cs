@@ -11,7 +11,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Company
         {
             builder.ToTable("CAT_ListaP_Compañia");
 
-            builder.HasKey(x => new { x.PrecioId, x.CompañiaId });
+            builder.HasKey(x => new { x.PrecioListaId, x.CompañiaId });
             
             builder
               .Property(x => x.Activo)

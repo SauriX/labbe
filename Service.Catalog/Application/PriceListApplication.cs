@@ -14,6 +14,8 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Service.Catalog.Domain.Price;
+using System.Linq;
 
 namespace Service.Catalog.Application
 {
@@ -133,9 +135,9 @@ namespace Service.Catalog.Application
 
             template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
-            template.AddVariable("Titulo", "Parametros");
+            template.AddVariable("Titulo", "Lista de Precios");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
-            template.AddVariable("price", price);
+            template.AddVariable("Precios", price);
             template.AddVariable("Estudios", price.Estudios);
             template.Generate();
 
@@ -153,23 +155,23 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
             }
         }
-        //public async Task<IEnumerable<PriceListListDto>> GetAllCompany(int companyId)
-        //{
-        //    var prices = await _repository.GetAllCompany(companyId);
+        public async Task<PriceListCompanyDto> GetAllCompany(Guid companyId)
+        {
+            var prices = await _repository.GetAllCompany(companyId);
+            //prices.Select(x=>x.ToPriceListListComDto)
+            return prices.ToPriceListListComDto();
+        }
+        public async Task<PriceListBranchDto> GetAllBranch(Guid branchId)
+        {
+            var prices = await _repository.GetAllBranch(branchId);
 
-        //    return prices.ToPriceListListDto();
-        //}
-        //public async Task<IEnumerable<PriceListListDto>> GetAllBranch(Guid branchId)
-        //{
-        //    var prices = await _repository.GetAllBranch(branchId);
+            return prices.ToPriceListListSucDto();
+        }
+        public async Task<PriceListMedicDto> GetAllMedics(Guid medicsId)
+        {
+            var prices = await _repository.GetAllMedics(medicsId);
 
-        //    return prices.ToPriceListListDto();
-        //}
-        //public async Task<IEnumerable<PriceListListDto>> GetAllMedics(int medicsId)
-        //{
-        //    var prices = await _repository.GetAllMedics(medicsId);
-
-        //    return prices.ToPriceListListDto();
-        //}
+            return prices.ToPriceListListMedDto();
+        }
     }
 }
