@@ -187,10 +187,12 @@ namespace Service.Catalog.Mapper
 
             return new PriceList
             {
-                Clave = dto.Clave.Trim(),
-                Nombre = dto.Nombre.Trim(),
+                Clave = dto.Clave?.Trim(),
+                Nombre = dto.Nombre?.Trim(),
                 Visibilidad = dto?.Visibilidad,
                 Activo = dto.Activo,
+                UsuarioCreoId = dto.UsuarioCreoId,
+                FechaCreo = dto.FechaCreo,
                 Estudios = dto?.Estudios.Select(x => new PriceList_Study
                 {
                     Id = x.EstudioId,
