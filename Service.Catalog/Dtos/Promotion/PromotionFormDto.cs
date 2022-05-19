@@ -16,7 +16,8 @@ namespace Service.Catalog.Dtos.Promotion
         public bool Activo { get; set; }
         public string IdListaPrecios { get; set; }
         public bool Lealtad { get; set; }
-        public List<PromotionEstudioListDto> Estudio {get; set;}
-        public List<PriceListMedicDto> SucMedCom { get; set; }
+        public Guid UsuarioId { get; set; }
+        public IEnumerable<PromotionEstudioListDto> Estudio {get; set;}
+        public List<PriceListBranchDto> Branchs { get; set; }
     }
 }
