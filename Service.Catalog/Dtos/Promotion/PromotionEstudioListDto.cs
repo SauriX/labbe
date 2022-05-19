@@ -14,6 +14,7 @@ namespace Service.Catalog.Dtos.Promotion
         public DateTime FechaFinal { get; set; }
         public bool Activo { get; set; }
         public decimal Precio { get; set; }
+        public decimal PrecioFinal { get; set; }
         public bool Paquete { get; set; }
     }
 }
