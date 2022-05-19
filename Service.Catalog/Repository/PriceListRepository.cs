@@ -43,6 +43,7 @@ namespace Service.Catalog.Repository
         {
             var indication = await _context.CAT_ListaPrecio
                 .Include(x => x.Estudios).ThenInclude(x => x.Estudio).ThenInclude(x => x.Area)
+                .Include(x => x.Sucursales).ThenInclude(x => x.Sucursal)
                 .FirstOrDefaultAsync(x => x.Id == Id);
 
             return indication;
