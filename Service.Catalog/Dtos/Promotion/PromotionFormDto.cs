@@ -19,5 +19,6 @@ namespace Service.Catalog.Dtos.Promotion
         public Guid UsuarioId { get; set; }
         public IEnumerable<PromotionEstudioListDto> Estudio {get; set;}
         public List<PriceListBranchDto> Branchs { get; set; }
+
     }
 }

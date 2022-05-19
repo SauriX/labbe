@@ -135,7 +135,7 @@ namespace Service.Catalog.Mapper
                     Precio = x.Precio,
                 }).ToList(),
             });
-        }
+        }   
 
         public static PriceListFormDto ToPriceListFormDto(this PriceList model)
         {
