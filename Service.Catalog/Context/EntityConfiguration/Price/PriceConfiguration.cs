@@ -37,21 +37,37 @@ namespace Service.Catalog.Context.EntityConfiguration
             builder
              .HasMany(x => x.Compañia)
              .WithOne(x => x.PrecioLista)
+             .HasForeignKey(x => x.PrecioListaId)
              .OnDelete(DeleteBehavior.Restrict);
 
             builder
              .HasMany(x => x.Promocion)
              .WithOne(x => x.PrecioLista)
+             .HasForeignKey(x => x.PrecioListaId)
              .OnDelete(DeleteBehavior.Restrict);
 
             builder
              .HasMany(x => x.Estudios)
              .WithOne(x => x.PrecioLista)
+             .HasForeignKey(x => x.PrecioListaId)
              .OnDelete(DeleteBehavior.Restrict);
 
             builder
              .HasMany(x => x.Paquete)
              .WithOne(x => x.PrecioLista)
+             .HasForeignKey(x => x.PrecioListaId)
+             .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+             .HasMany(x => x.Medicos)
+             .WithOne(x => x.PrecioLista)
+             .HasForeignKey(x => x.PrecioListaId)
+             .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+             .HasMany(x => x.Sucursales)
+             .WithOne(x => x.PrecioLista)
+             .HasForeignKey(x => x.PrecioListaId)
              .OnDelete(DeleteBehavior.Restrict);
         }
     }

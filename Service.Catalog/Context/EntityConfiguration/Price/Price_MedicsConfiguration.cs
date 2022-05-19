@@ -12,10 +12,10 @@ namespace Service.Catalog.Context.EntityConfiguration.Price
 
             builder.HasKey(x => new { x.PrecioListaId, x.MedicoId });
 
-            builder
-              .HasOne(x => x.PrecioLista)
-              .WithMany()
-              .OnDelete(DeleteBehavior.Restrict);
+            //builder
+            //  .HasOne(x => x.PrecioLista)
+            //  .WithMany()
+            //  .OnDelete(DeleteBehavior.Restrict);
 
 
             builder
