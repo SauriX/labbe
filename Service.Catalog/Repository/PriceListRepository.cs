@@ -24,7 +24,7 @@ namespace Service.Catalog.Repository
         {
             var indications = _context.CAT_ListaPrecio.AsQueryable()
                     .Include(x => x.Estudios)
-                    .ThenInclude(x => x.Estudio)
+                    .ThenInclude(x => x.Estudio).ThenInclude(x => x.Area)
                     .Include(x => x.Paquete)
                     .Include(x => x.Compañia)
                     .AsQueryable();

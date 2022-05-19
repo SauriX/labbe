@@ -13,7 +13,6 @@ namespace Service.Catalog.Domain.Price
         public string Nombre { get; set; }
         public string Area { get; set; }
         public decimal Precio { get; set; }
-        public string Departamento { get; set; }
         public bool Activo { get; set; }
         public long UsuarioCreoId { get; set; }
         public DateTime FechaCreo { get; set; }
