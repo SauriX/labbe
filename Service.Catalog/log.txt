@@ -465,3 +465,15 @@ Could not drop constraint. See previous errors.
 17/05/2022 02:42:15 p. m. => To change the IDENTITY property of a column, the column needs to be dropped and recreated.
 
 17/05/2022 06:33:47 p. m. => To change the IDENTITY property of a column, the column needs to be dropped and recreated.
+
+18/05/2022 11:31:25 => Value cannot be null. (Parameter 'source')
+
+18/05/2022 16:38:52 => Object reference not set to an instance of an object.
+
+18/05/2022 16:42:04 => Object reference not set to an instance of an object.
+
+18/05/2022 16:42:06 => Object reference not set to an instance of an object.
+
+18/05/2022 17:16:45 => Value cannot be null. (Parameter 'source')
+
+18/05/2022 17:57:28 => Value cannot be null. (Parameter 'input')
