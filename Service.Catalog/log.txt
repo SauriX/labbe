@@ -674,5 +674,24 @@ Could not drop constraint. See previous errors.
 
 19/05/2022 02:08:32 p. m. => Value cannot be null. (Parameter 'source')
 
-19/05/2022 04:36:33 p. m. => Invalid column name 'PriceListId'.
-Invalid column name 'PriceListId'.
+19/05/2022 16:17:14 => Object reference not set to an instance of an object.
+
+19/05/2022 16:17:28 => Object reference not set to an instance of an object.
+
+19/05/2022 16:17:38 => Object reference not set to an instance of an object.
+
+19/05/2022 18:49:38 => Operand type clash: bigint is incompatible with uniqueidentifier
+
+19/05/2022 18:53:36 => Operand type clash: bigint is incompatible with uniqueidentifier
+
+19/05/2022 19:59:37 => Operand type clash: bigint is incompatible with uniqueidentifier
+
+20/05/2022 8:55:22 => Operand type clash: bigint is incompatible with uniqueidentifier
+
+20/05/2022 9:02:33 => Operand type clash: bigint is incompatible with uniqueidentifier
+
+20/05/2022 16:01:23 => Invalid column name 'Area'.
+
+20/05/2022 16:01:29 => Invalid column name 'Area'.
+
+20/05/2022 16:01:31 => Invalid column name 'Area'.
