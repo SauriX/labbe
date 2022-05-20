@@ -689,3 +689,9 @@ Could not drop constraint. See previous errors.
 20/05/2022 8:55:22 => Operand type clash: bigint is incompatible with uniqueidentifier
 
 20/05/2022 9:02:33 => Operand type clash: bigint is incompatible with uniqueidentifier
+
+20/05/2022 16:01:23 => Invalid column name 'Area'.
+
+20/05/2022 16:01:29 => Invalid column name 'Area'.
+
+20/05/2022 16:01:31 => Invalid column name 'Area'.
