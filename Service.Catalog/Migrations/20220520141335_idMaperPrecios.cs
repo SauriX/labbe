@@ -1,9 +1,8 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Service.Catalog.Migrations
 {
-    public partial class Correcciones_Mapper_PriceList : Migration
+    public partial class idMaperPrecios : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -46,14 +45,6 @@ namespace Service.Catalog.Migrations
             migrationBuilder.DropColumn(
                 name: "Nombre",
                 table: "CAT_ListaP_Compañia");
-
-            migrationBuilder.AlterColumn<Guid>(
-                name: "UsuarioCreoId",
-                table: "CAT_ListaP_Sucursal",
-                type: "uniqueidentifier",
-                nullable: false,
-                oldClrType: typeof(long),
-                oldType: "bigint");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -81,14 +72,6 @@ namespace Service.Catalog.Migrations
                 table: "Relacion_ListaP_Estudio",
                 type: "nvarchar(max)",
                 nullable: true);
-
-            migrationBuilder.AlterColumn<long>(
-                name: "UsuarioCreoId",
-                table: "CAT_ListaP_Sucursal",
-                type: "bigint",
-                nullable: false,
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier");
 
             migrationBuilder.AddColumn<string>(
                 name: "Clave",

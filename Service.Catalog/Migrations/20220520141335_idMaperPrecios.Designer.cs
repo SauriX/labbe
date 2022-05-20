@@ -10,8 +10,8 @@ using Service.Catalog.Context;
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220519234907_Correcciones_Mapper_PriceList")]
-    partial class Correcciones_Mapper_PriceList
+    [Migration("20220520141335_idMaperPrecios")]
+    partial class idMaperPrecios
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -1594,8 +1594,8 @@ namespace Service.Catalog.Migrations
                     b.Property<decimal>("Precio")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<long>("UsuarioCreoId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("UsuarioModId")
                         .HasColumnType("nvarchar(max)");

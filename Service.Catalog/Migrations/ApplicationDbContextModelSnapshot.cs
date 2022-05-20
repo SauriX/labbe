@@ -1592,8 +1592,8 @@ namespace Service.Catalog.Migrations
                     b.Property<decimal>("Precio")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<long>("UsuarioCreoId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("UsuarioModId")
                         .HasColumnType("nvarchar(max)");

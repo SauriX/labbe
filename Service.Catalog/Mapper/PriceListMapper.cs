@@ -192,6 +192,7 @@ namespace Service.Catalog.Mapper
 
             return new PriceList
             {
+
                 Clave = dto.Clave?.Trim(),
                 Nombre = dto.Nombre?.Trim(),
                 Visibilidad = dto?.Visibilidad,
