@@ -1,6 +1,17 @@
 ﻿{
   "Routes": [
     {
+      "DownstreamPathTemplate": "/LabRamos/services/identity/api/scopes/pack",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/scopes/pack",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/LabRamos/services/identity/api/scopes/reagent",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [

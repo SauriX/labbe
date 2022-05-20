@@ -6,10 +6,12 @@
 
   <ItemGroup>
     <Content Remove="Development\ocelot.pack.json" />
+    <Content Remove="QA\ocelot.pack.json" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Development\ocelot.pack.json" />
+    <None Include="QA\ocelot.pack.json" />
   </ItemGroup>
 
   <ItemGroup>

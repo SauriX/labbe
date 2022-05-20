@@ -1,58 +1,58 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/study/all/{search}",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/pack/all/{search}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/study/all/{search}",
+      "UpstreamPathTemplate": "/api/pack/all/{search}",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/study/{id}",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/pack/{id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/study/{id}",
+      "UpstreamPathTemplate": "/api/pack/{id}",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/study",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/pack",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/study",
+      "UpstreamPathTemplate": "/api/pack",
       "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/api/study/export/list/{search}",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/pack/export/list/{search}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/study/export/list/{search}",
+      "UpstreamPathTemplate": "/api/pack/export/list/{search}",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/study/export/form/{id}",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/pack/export/form/{id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/study/export/form/{id}",
+      "UpstreamPathTemplate": "/api/pack/export/form/{id}",
       "UpstreamHttpMethod": [ "POST" ]
     }
   ]
