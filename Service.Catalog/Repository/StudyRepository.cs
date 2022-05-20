@@ -120,17 +120,9 @@ namespace Service.Catalog.Repository
 
         public async Task<bool> ValidateClaveNamne(string clave, string nombre)
         {
-            var validate = _context.CAT_Estudio.Where(x => x.Clave == clave || x.Nombre == nombre).Count();
+            return await   _context.CAT_Estudio.AnyAsync(x => x.Clave == clave || x.Nombre == nombre);
 
-            if (validate == 0)
-            {
-                return false;
-            }
-            else
-            {
 
-                return true;
-            }
 
         }
     }

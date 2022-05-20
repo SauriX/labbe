@@ -6,7 +6,7 @@ namespace Service.Catalog.Dtos.Company
 {
     public class CompanyFormDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Clave { get; set; }
         public string Contrasena { get; set; }
         public string EmailEmpresarial { get; set; }
@@ -38,7 +38,6 @@ namespace Service.Catalog.Dtos.Company
     {
         public CompanyFormDtoValidator()
         {
-            RuleFor(x => x.Id).GreaterThanOrEqualTo(0);
             RuleFor(x => x.Clave).NotEmpty().MaximumLength(100);
             RuleFor(x => x.Contrasena).NotEmpty().MaximumLength(100);
             RuleFor(x => x.NombreComercial).NotEmpty().MaximumLength(100);

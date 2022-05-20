@@ -4,6 +4,7 @@ using Service.Catalog.Context;
 using Service.Catalog.Domain.Company;
 using Service.Catalog.Repository.IRepository;
 using Shared.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,7 +26,7 @@ namespace Service.Catalog.Repository
             return await catalogs.ToListAsync();
         }
 
-        public async Task<Company> GetById(int Id)
+        public async Task<Company> GetById(Guid Id)
         {
             return await _context.CAT_Compañia
             .Include(x => x.Contacts)

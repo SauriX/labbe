@@ -4,10 +4,12 @@ namespace Service.Catalog.Domain.Price
 {
     public class Price_Branch
     {
-        public int? PrecioId { get; set; }
-        public virtual Price.PriceList Precio { get; set; }
-        public int? SucursalId { get; set; }
+        public Guid PrecioListaId { get; set; }
+        public virtual PriceList PrecioLista { get; set; }
+        public Guid SucursalId { get; set; }
         public virtual Branch.Branch Sucursal { get; set; }
+        public Guid Id { get; set; }
+        public decimal Precio { get; set; }
         public bool Activo { get; set; }
         public long UsuarioCreoId { get; set; }
         public DateTime FechaCreo { get; set; }

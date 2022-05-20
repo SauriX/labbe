@@ -35,7 +35,7 @@ namespace Service.Catalog.Application
         }
 
 
-        public async Task<CompanyFormDto> GetById(int Id)
+        public async Task<CompanyFormDto> GetById(Guid Id)
         {
             var Company = await _repository.GetById(Id);
             if (Company == null)
@@ -46,9 +46,10 @@ namespace Service.Catalog.Application
         }
         public async Task<CompanyFormDto> Create(CompanyFormDto company)
         {
+            Helpers.ValidateGuid(company.Id.ToString(), out Guid guid);
             var code = await ValidarClaveNombre(company);
 
-            if (company.Id != 0 || code != 0)
+            if (code != 0)
             {
                 throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
             }
@@ -70,12 +71,14 @@ namespace Service.Catalog.Application
         }
         public async Task<CompanyFormDto> Update(CompanyFormDto company)
         {
+            Helpers.ValidateGuid(company.Id.ToString(), out Guid guid);
+
             var existing = await _repository.GetById(company.Id);
 
             var code = await ValidarClaveNombre(company);
             if (existing.Clave != company.Clave || existing.NombreComercial != company.NombreComercial)
             {
-                if (company.Id != 0 || code != 0)
+                if ( code != 0)
                 {
                     throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
                 }
@@ -119,7 +122,7 @@ namespace Service.Catalog.Application
             return template.ToByteArray();
         }
 
-        public async Task<byte[]> ExportFormCompany(int id)
+        public async Task<byte[]> ExportFormCompany(Guid id)
         {
             var company = await GetById(id);
 

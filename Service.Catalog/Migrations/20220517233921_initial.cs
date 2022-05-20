@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Service.Catalog.Migrations
 {
-    public partial class Init : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -185,9 +185,9 @@ namespace Service.Catalog.Migrations
                     Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Activo = table.Column<bool>(type: "bit", nullable: false),
                     UsuarioCreoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    FechaCreo = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FechaCreo = table.Column<DateTime>(type: "smalldatetime", nullable: true),
                     UsuarioModificoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    FechaModifico = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    FechaModifico = table.Column<DateTime>(type: "smalldatetime", nullable: true),
                     Descripcion = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
@@ -219,15 +219,14 @@ namespace Service.Catalog.Migrations
                 name: "CAT_ListaPrecio",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Clave = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Visibilidad = table.Column<bool>(type: "bit", maxLength: 100, nullable: false),
                     Activo = table.Column<bool>(type: "bit", nullable: false),
-                    UsuarioCreoId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UsuarioCreoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FechaCreo = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UsuarioModificoId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UsuarioModificoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FechaModifico = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
@@ -331,6 +330,30 @@ namespace Service.Catalog.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CAT_Promocion",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Clave = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    TipoDeDescuento = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CantidadDescuento = table.Column<float>(type: "real", maxLength: 100, nullable: false),
+                    FechaInicio = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FechaFinal = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Visibilidad = table.Column<bool>(type: "bit", nullable: false),
+                    Activo = table.Column<bool>(type: "bit", nullable: false),
+                    UsuarioCreoId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FechaCreo = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UsuarioModificoId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FechaModifico = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CAT_Promocion", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CAT_Reactivo_Contpaq",
                 columns: table => new
                 {
@@ -348,6 +371,20 @@ namespace Service.Catalog.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CAT_Reactivo_Contpaq", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CAT_Tipo_Tapon",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Color = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CAT_Tipo_Tapon", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -370,27 +407,25 @@ namespace Service.Catalog.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Promotion",
+                name: "Loyality",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Clave = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TipoDeDescuento = table.Column<bool>(type: "bit", nullable: false),
-                    CantidadDescuento = table.Column<float>(type: "real", nullable: false),
-                    FechaInicio = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TipoDescuento = table.Column<bool>(type: "bit", nullable: false),
+                    CantidadDescuento = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    FechaInicial = table.Column<DateTime>(type: "datetime2", nullable: false),
                     FechaFinal = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Visibilidad = table.Column<bool>(type: "bit", nullable: false),
                     Activo = table.Column<bool>(type: "bit", nullable: false),
-                    UsuarioCreoId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UsuarioCreoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FechaCreo = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UsuarioModificoId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FechaModifico = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    UsuarioModId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FechaMod = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Promotion", x => x.Id);
+                    table.PrimaryKey("PK_Loyality", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -461,8 +496,7 @@ namespace Service.Catalog.Migrations
                 name: "CAT_Compañia",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Clave = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Contrasena = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     EmailEmpresarial = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -503,70 +537,91 @@ namespace Service.Catalog.Migrations
                 name: "CAT_ListaP_Promocion",
                 columns: table => new
                 {
-                    PrecioId = table.Column<int>(type: "int", nullable: false),
+                    PrecioListaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PromocionId = table.Column<int>(type: "int", nullable: false),
                     Activo = table.Column<bool>(type: "bit", nullable: false),
+                    Precio = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     UsuarioCreoId = table.Column<long>(type: "bigint", nullable: false),
                     FechaCreo = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UsuarioModId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FechaMod = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PriceId = table.Column<int>(type: "int", nullable: true)
+                    PriceListId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CAT_ListaP_Promocion", x => new { x.PrecioId, x.PromocionId });
+                    table.PrimaryKey("PK_CAT_ListaP_Promocion", x => new { x.PrecioListaId, x.PromocionId });
                     table.ForeignKey(
-                        name: "FK_CAT_ListaP_Promocion_CAT_ListaPrecio_PrecioId",
-                        column: x => x.PrecioId,
+                        name: "FK_CAT_ListaP_Promocion_CAT_ListaPrecio_PrecioListaId",
+                        column: x => x.PrecioListaId,
                         principalTable: "CAT_ListaPrecio",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_CAT_ListaP_Promocion_CAT_ListaPrecio_PriceId",
-                        column: x => x.PriceId,
+                        name: "FK_CAT_ListaP_Promocion_CAT_ListaPrecio_PriceListId",
+                        column: x => x.PriceListId,
                         principalTable: "CAT_ListaPrecio",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_CAT_ListaP_Promocion_Promotion_PromocionId",
+                        name: "FK_CAT_ListaP_Promocion_CAT_Promocion_PromocionId",
                         column: x => x.PromocionId,
-                        principalTable: "Promotion",
+                        principalTable: "CAT_Promocion",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "CAT_Estudio",
+                name: "Relacion_Promocion_Lealtad",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Clave = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Orden = table.Column<int>(type: "int", nullable: false),
-                    Titulo = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NombreCorto = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Visible = table.Column<bool>(type: "bit", nullable: false),
-                    DiasResultado = table.Column<int>(type: "int", nullable: false),
-                    AreaId = table.Column<int>(type: "int", nullable: false),
-                    DepartamentoId = table.Column<int>(type: "int", nullable: false),
-                    FormatoId = table.Column<int>(type: "int", nullable: false),
-                    MaquiladorId = table.Column<int>(type: "int", nullable: false),
-                    MetodoId = table.Column<int>(type: "int", nullable: false),
-                    TipoMuestraId = table.Column<int>(type: "int", nullable: false),
-                    TiempoRespuesta = table.Column<int>(type: "int", nullable: false),
-                    Prioridad = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PromotionId = table.Column<int>(type: "int", nullable: false),
+                    LoyalityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Activo = table.Column<bool>(type: "bit", nullable: false),
-                    UsuarioCreoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    FechaCreo = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    UsuarioModId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UsuarioCreoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FechaCreo = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UsuarioModId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FechaMod = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CAT_Estudio", x => x.Id);
+                    table.PrimaryKey("PK_Relacion_Promocion_Lealtad", x => new { x.PromotionId, x.LoyalityId });
                     table.ForeignKey(
-                        name: "FK_CAT_Estudio_CAT_Area_AreaId",
+                        name: "FK_Relacion_Promocion_Lealtad_CAT_Promocion_PromotionId",
+                        column: x => x.PromotionId,
+                        principalTable: "CAT_Promocion",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Relacion_Promocion_Lealtad_Loyality_LoyalityId",
+                        column: x => x.LoyalityId,
+                        principalTable: "Loyality",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CAT_Paquete",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AreaId = table.Column<int>(type: "int", nullable: false),
+                    DepartamentoId = table.Column<int>(type: "int", nullable: false),
+                    NombreLargo = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Visibilidad = table.Column<bool>(type: "bit", nullable: false),
+                    Clave = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Activo = table.Column<bool>(type: "bit", nullable: false),
+                    UsuarioCreoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    FechaCreo = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UsuarioModificoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    FechaModifico = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CAT_Paquete", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CAT_Paquete_CAT_Area_AreaId",
                         column: x => x.AreaId,
                         principalTable: "CAT_Area",
                         principalColumn: "Id",
@@ -577,31 +632,31 @@ namespace Service.Catalog.Migrations
                 name: "CAT_Parametro",
                 columns: table => new
                 {
-                    IdParametro = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Clave = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    ValorInicial = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    TipoValor = table.Column<int>(type: "int", maxLength: 100, nullable: false, defaultValue: 0),
+                    ValorInicial = table.Column<decimal>(type: "decimal(18,2)", maxLength: 100, nullable: false),
+                    TipoValor = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true, defaultValue: "0"),
                     NombreCorto = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Unidades = table.Column<double>(type: "float", nullable: false),
+                    Unidades = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Formula = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     Formato = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    DepartamentId = table.Column<int>(type: "int", nullable: false),
-                    DepartmentId = table.Column<int>(type: "int", nullable: true),
+                    DepartamentoId = table.Column<int>(type: "int", nullable: false),
+                    DepartmentoId = table.Column<int>(type: "int", nullable: true),
                     AreaId = table.Column<int>(type: "int", nullable: false),
-                    FormatId = table.Column<int>(type: "int", nullable: false),
-                    ReagentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FormatoImpresionId = table.Column<int>(type: "int", nullable: false),
+                    ReactivoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UnidadSi = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     FCSI = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Activo = table.Column<bool>(type: "bit", nullable: false),
                     UsuarioCreoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FechaCreo = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UsuarioModId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FechaMod = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    UsuarioModificoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FechaModifico = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CAT_Parametro", x => x.IdParametro);
+                    table.PrimaryKey("PK_CAT_Parametro", x => x.Id);
                     table.ForeignKey(
                         name: "FK_CAT_Parametro_CAT_Area_AreaId",
                         column: x => x.AreaId,
@@ -609,20 +664,20 @@ namespace Service.Catalog.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CAT_Parametro_CAT_Departamento_DepartmentId",
-                        column: x => x.DepartmentId,
+                        name: "FK_CAT_Parametro_CAT_Departamento_DepartmentoId",
+                        column: x => x.DepartmentoId,
                         principalTable: "CAT_Departamento",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_CAT_Parametro_Cat_Formato_FormatId",
-                        column: x => x.FormatId,
+                        name: "FK_CAT_Parametro_Cat_Formato_FormatoImpresionId",
+                        column: x => x.FormatoImpresionId,
                         principalTable: "Cat_Formato",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CAT_Parametro_CAT_Reactivo_Contpaq_ReagentId",
-                        column: x => x.ReagentId,
+                        name: "FK_CAT_Parametro_CAT_Reactivo_Contpaq_ReactivoId",
+                        column: x => x.ReactivoId,
                         principalTable: "CAT_Reactivo_Contpaq",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -653,8 +708,12 @@ namespace Service.Catalog.Migrations
                 name: "CAT_ListaP_Compañia",
                 columns: table => new
                 {
-                    PrecioId = table.Column<int>(type: "int", nullable: false),
-                    CompañiaId = table.Column<int>(type: "int", nullable: false),
+                    PrecioListaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CompañiaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Clave = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Precio = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Activo = table.Column<bool>(type: "bit", nullable: false),
                     UsuarioCreoId = table.Column<long>(type: "bigint", nullable: false),
                     FechaCreo = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -663,7 +722,7 @@ namespace Service.Catalog.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CAT_ListaP_Compañia", x => new { x.PrecioId, x.CompañiaId });
+                    table.PrimaryKey("PK_CAT_ListaP_Compañia", x => new { x.PrecioListaId, x.CompañiaId });
                     table.ForeignKey(
                         name: "FK_CAT_ListaP_Compañia_CAT_Compañia_CompañiaId",
                         column: x => x.CompañiaId,
@@ -671,8 +730,8 @@ namespace Service.Catalog.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CAT_ListaP_Compañia_CAT_ListaPrecio_PrecioId",
-                        column: x => x.PrecioId,
+                        name: "FK_CAT_ListaP_Compañia_CAT_ListaPrecio_PrecioListaId",
+                        column: x => x.PrecioListaId,
                         principalTable: "CAT_ListaPrecio",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -684,7 +743,7 @@ namespace Service.Catalog.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CompañiaId = table.Column<int>(type: "int", nullable: false),
+                    CompañiaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Apellidos = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Telefono = table.Column<long>(type: "bigint", nullable: true),
@@ -707,99 +766,114 @@ namespace Service.Catalog.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Relacion_Estudio_Indicacion",
+                name: "Relacion_ListaP_Paquete",
                 columns: table => new
                 {
-                    IndicacionId = table.Column<int>(type: "int", nullable: false),
-                    EstudioId = table.Column<int>(type: "int", nullable: false),
+                    PrecioListaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PaqueteId = table.Column<int>(type: "int", nullable: false),
                     Activo = table.Column<bool>(type: "bit", nullable: false),
-                    UsuarioCreoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Precio = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    UsuarioCreoId = table.Column<long>(type: "bigint", nullable: false),
                     FechaCreo = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UsuarioModId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    FechaMod = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    UsuarioModId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FechaMod = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PriceListId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Relacion_Estudio_Indicacion", x => new { x.EstudioId, x.IndicacionId });
+                    table.PrimaryKey("PK_Relacion_ListaP_Paquete", x => new { x.PrecioListaId, x.PaqueteId });
                     table.ForeignKey(
-                        name: "FK_Relacion_Estudio_Indicacion_CAT_Estudio_EstudioId",
-                        column: x => x.EstudioId,
-                        principalTable: "CAT_Estudio",
+                        name: "FK_Relacion_ListaP_Paquete_CAT_ListaPrecio_PrecioListaId",
+                        column: x => x.PrecioListaId,
+                        principalTable: "CAT_ListaPrecio",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Relacion_ListaP_Paquete_CAT_ListaPrecio_PriceListId",
+                        column: x => x.PriceListId,
+                        principalTable: "CAT_ListaPrecio",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Relacion_ListaP_Paquete_CAT_Paquete_PaqueteId",
+                        column: x => x.PaqueteId,
+                        principalTable: "CAT_Paquete",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Relacion_Promocion_Paquete",
+                columns: table => new
+                {
+                    PromotionId = table.Column<int>(type: "int", nullable: false),
+                    PackId = table.Column<int>(type: "int", nullable: false),
+                    Discountporcent = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    DiscountNumeric = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    FinalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Loyality = table.Column<bool>(type: "bit", nullable: false),
+                    FechaInicio = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FechaFinal = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Activo = table.Column<bool>(type: "bit", nullable: false),
+                    UsuarioCreoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FechaCreo = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UsuarioModId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FechaMod = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Relacion_Promocion_Paquete", x => new { x.PromotionId, x.PackId });
+                    table.ForeignKey(
+                        name: "FK_Relacion_Promocion_Paquete_CAT_Paquete_PackId",
+                        column: x => x.PackId,
+                        principalTable: "CAT_Paquete",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Relacion_Estudio_Indicacion_CAT_Indicacion_IndicacionId",
-                        column: x => x.IndicacionId,
-                        principalTable: "CAT_Indicacion",
+                        name: "FK_Relacion_Promocion_Paquete_CAT_Promocion_PromotionId",
+                        column: x => x.PromotionId,
+                        principalTable: "CAT_Promocion",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "CAT_Tipo_Valor",
                 columns: table => new
                 {
-                    IdTipo_Valor = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IdParametro = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ParametroId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ValorInicial = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ValorFinal = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ValorInicialNumerico = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ValorFinalNumerico = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RangoEdadInicial = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RangoEdadFinal = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    HombreValorInicial = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    HombreValorFinal = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    MujerValorInicial = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    MujerValorFinal = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    MedidaTiempo = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ValorInicial = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ValorFinal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ValorInicialNumerico = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ValorFinalNumerico = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    RangoEdadInicial = table.Column<int>(type: "int", nullable: false),
+                    RangoEdadFinal = table.Column<int>(type: "int", nullable: false),
+                    HombreValorInicial = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    HombreValorFinal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    MujerValorInicial = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    MujerValorFinal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    MedidaTiempoId = table.Column<byte>(type: "tinyint", nullable: false),
                     Opcion = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DescripcionTexto = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DescripcionParrafo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Activo = table.Column<bool>(type: "bit", nullable: false),
                     UsuarioCreoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FechaCreo = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UsuarioModId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FechaMod = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    UsuarioModificoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FechaModifico = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CAT_Tipo_Valor", x => x.IdTipo_Valor);
+                    table.PrimaryKey("PK_CAT_Tipo_Valor", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CAT_Tipo_Valor_CAT_Parametro_IdParametro",
-                        column: x => x.IdParametro,
-                        principalTable: "CAT_Parametro",
-                        principalColumn: "IdParametro",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Relacion_Estudio_Parametro",
-                columns: table => new
-                {
-                    ParametroId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    EstudioId = table.Column<int>(type: "int", nullable: false),
-                    Activo = table.Column<bool>(type: "bit", nullable: false),
-                    UsuarioCreoId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FechaCreo = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UsuarioModId = table.Column<int>(type: "int", nullable: true),
-                    FechaMod = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Relacion_Estudio_Parametro", x => new { x.EstudioId, x.ParametroId });
-                    table.ForeignKey(
-                        name: "FK_Relacion_Estudio_Parametro_CAT_Estudio_EstudioId",
-                        column: x => x.EstudioId,
-                        principalTable: "CAT_Estudio",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Relacion_Estudio_Parametro_CAT_Parametro_ParametroId",
+                        name: "FK_CAT_Tipo_Valor_CAT_Parametro_ParametroId",
                         column: x => x.ParametroId,
                         principalTable: "CAT_Parametro",
-                        principalColumn: "IdParametro",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -808,23 +882,20 @@ namespace Service.Catalog.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Clave = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    Nombre = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Clave = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Correo = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Telefono = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PaginaWeb = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    CodigoPostal = table.Column<int>(type: "int", nullable: false),
-                    NumeroExterior = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NumeroInterior = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Calle = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Telefono = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: true),
+                    PaginaWeb = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    NumeroExterior = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    NumeroInterior = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
+                    Calle = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     ColoniaId = table.Column<int>(type: "int", nullable: false),
-                    Estado = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Ciudad = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Activo = table.Column<bool>(type: "bit", nullable: false),
-                    UsuarioCreoId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UsuarioCreoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FechaCreo = table.Column<DateTime>(type: "smalldatetime", nullable: false),
-                    UsuarioModId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FechaMod = table.Column<DateTime>(type: "smalldatetime", nullable: true)
+                    UsuarioModificoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    FechaModifico = table.Column<DateTime>(type: "smalldatetime", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -841,8 +912,7 @@ namespace Service.Catalog.Migrations
                 name: "CAT_Medico",
                 columns: table => new
                 {
-                    IdMedico = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IdMedico = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Clave = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
                     Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     PrimerApellido = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
@@ -920,10 +990,122 @@ namespace Service.Catalog.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CAT_Estudio",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Clave = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Orden = table.Column<int>(type: "int", nullable: false),
+                    Titulo = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    NombreCorto = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Visible = table.Column<bool>(type: "bit", nullable: false),
+                    DiasResultado = table.Column<int>(type: "int", nullable: false),
+                    Dias = table.Column<int>(type: "int", nullable: false),
+                    TiempoResultado = table.Column<int>(type: "int", nullable: false),
+                    AreaId = table.Column<int>(type: "int", nullable: false),
+                    DepartamentoId = table.Column<int>(type: "int", nullable: false),
+                    FormatoId = table.Column<int>(type: "int", nullable: false),
+                    MaquiladorId = table.Column<int>(type: "int", nullable: false),
+                    MetodoId = table.Column<int>(type: "int", nullable: false),
+                    SampleTypeId = table.Column<int>(type: "int", nullable: false),
+                    TaponId = table.Column<int>(type: "int", nullable: false),
+                    Cantidad = table.Column<int>(type: "int", nullable: false),
+                    Prioridad = table.Column<bool>(type: "bit", nullable: false),
+                    Urgencia = table.Column<bool>(type: "bit", nullable: false),
+                    Activo = table.Column<bool>(type: "bit", nullable: false),
+                    UsuarioCreoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FechaCreo = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UsuarioModId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FechaMod = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CAT_Estudio", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CAT_Estudio_CAT_Area_AreaId",
+                        column: x => x.AreaId,
+                        principalTable: "CAT_Area",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CAT_Estudio_Cat_Formato_FormatoId",
+                        column: x => x.FormatoId,
+                        principalTable: "Cat_Formato",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CAT_Estudio_CAT_Maquilador_MaquiladorId",
+                        column: x => x.MaquiladorId,
+                        principalTable: "CAT_Maquilador",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CAT_Estudio_CAT_Metodo_MetodoId",
+                        column: x => x.MetodoId,
+                        principalTable: "CAT_Metodo",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CAT_Estudio_CAT_Tipo_Tapon_TaponId",
+                        column: x => x.TaponId,
+                        principalTable: "CAT_Tipo_Tapon",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CAT_Estudio_CAT_TipoMuestra_SampleTypeId",
+                        column: x => x.SampleTypeId,
+                        principalTable: "CAT_TipoMuestra",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CAT_ListaP_Medicos",
+                columns: table => new
+                {
+                    PrecioListaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MedicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Clave = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Precio = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Activo = table.Column<bool>(type: "bit", nullable: false),
+                    UsuarioCreoId = table.Column<long>(type: "bigint", nullable: false),
+                    FechaCreo = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UsuarioModId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FechaMod = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PriceListId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CAT_ListaP_Medicos", x => new { x.PrecioListaId, x.MedicoId });
+                    table.ForeignKey(
+                        name: "FK_CAT_ListaP_Medicos_CAT_ListaPrecio_PrecioListaId",
+                        column: x => x.PrecioListaId,
+                        principalTable: "CAT_ListaPrecio",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_CAT_ListaP_Medicos_CAT_ListaPrecio_PriceListId",
+                        column: x => x.PriceListId,
+                        principalTable: "CAT_ListaPrecio",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_CAT_ListaP_Medicos_CAT_Medico_MedicoId",
+                        column: x => x.MedicoId,
+                        principalTable: "CAT_Medico",
+                        principalColumn: "IdMedico",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CAT_Medico_Clinica",
                 columns: table => new
                 {
-                    MedicoId = table.Column<int>(type: "int", nullable: false),
+                    MedicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ClinicaId = table.Column<int>(type: "int", nullable: false),
                     Activo = table.Column<bool>(type: "bit", nullable: false),
                     UsuarioCreoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -946,6 +1128,46 @@ namespace Service.Catalog.Migrations
                         principalTable: "CAT_Medico",
                         principalColumn: "IdMedico",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CAT_ListaP_Sucursal",
+                columns: table => new
+                {
+                    PrecioListaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SucursalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Clave = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Precio = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Activo = table.Column<bool>(type: "bit", nullable: false),
+                    UsuarioCreoId = table.Column<long>(type: "bigint", nullable: false),
+                    FechaCreo = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UsuarioModId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FechaMod = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PriceListId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CAT_ListaP_Sucursal", x => new { x.PrecioListaId, x.SucursalId });
+                    table.ForeignKey(
+                        name: "FK_CAT_ListaP_Sucursal_CAT_ListaPrecio_PrecioListaId",
+                        column: x => x.PrecioListaId,
+                        principalTable: "CAT_ListaPrecio",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_CAT_ListaP_Sucursal_CAT_ListaPrecio_PriceListId",
+                        column: x => x.PriceListId,
+                        principalTable: "CAT_ListaPrecio",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_CAT_ListaP_Sucursal_CAT_Sucursal_SucursalId",
+                        column: x => x.SucursalId,
+                        principalTable: "CAT_Sucursal",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -974,6 +1196,258 @@ namespace Service.Catalog.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Relacion_Promocion_Sucursal",
+                columns: table => new
+                {
+                    PromotionId = table.Column<int>(type: "int", nullable: false),
+                    BranchId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Activo = table.Column<bool>(type: "bit", nullable: false),
+                    UsuarioCreoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FechaCreo = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UsuarioModId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FechaMod = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Relacion_Promocion_Sucursal", x => new { x.PromotionId, x.BranchId });
+                    table.ForeignKey(
+                        name: "FK_Relacion_Promocion_Sucursal_CAT_Promocion_PromotionId",
+                        column: x => x.PromotionId,
+                        principalTable: "CAT_Promocion",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Relacion_Promocion_Sucursal_CAT_Sucursal_BranchId",
+                        column: x => x.BranchId,
+                        principalTable: "CAT_Sucursal",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Relacion_Estudio_Indicacion",
+                columns: table => new
+                {
+                    IndicacionId = table.Column<int>(type: "int", nullable: false),
+                    EstudioId = table.Column<int>(type: "int", nullable: false),
+                    Activo = table.Column<bool>(type: "bit", nullable: false),
+                    UsuarioCreoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    FechaCreo = table.Column<DateTime>(type: "smalldatetime", nullable: true),
+                    UsuarioModId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    FechaMod = table.Column<DateTime>(type: "smalldatetime", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Relacion_Estudio_Indicacion", x => new { x.EstudioId, x.IndicacionId });
+                    table.ForeignKey(
+                        name: "FK_Relacion_Estudio_Indicacion_CAT_Estudio_EstudioId",
+                        column: x => x.EstudioId,
+                        principalTable: "CAT_Estudio",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Relacion_Estudio_Indicacion_CAT_Indicacion_IndicacionId",
+                        column: x => x.IndicacionId,
+                        principalTable: "CAT_Indicacion",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Relacion_Estudio_Paquete",
+                columns: table => new
+                {
+                    PacketId = table.Column<int>(type: "int", nullable: false),
+                    EstudioId = table.Column<int>(type: "int", nullable: false),
+                    Activo = table.Column<bool>(type: "bit", nullable: false),
+                    UsuarioCreoId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FechaCreo = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UsuarioModId = table.Column<int>(type: "int", nullable: true),
+                    FechaMod = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Relacion_Estudio_Paquete", x => new { x.EstudioId, x.PacketId });
+                    table.ForeignKey(
+                        name: "FK_Relacion_Estudio_Paquete_CAT_Estudio_EstudioId",
+                        column: x => x.EstudioId,
+                        principalTable: "CAT_Estudio",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Relacion_Estudio_Paquete_CAT_Paquete_PacketId",
+                        column: x => x.PacketId,
+                        principalTable: "CAT_Paquete",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Relacion_Estudio_Parametro",
+                columns: table => new
+                {
+                    ParametroId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EstudioId = table.Column<int>(type: "int", nullable: false),
+                    Activo = table.Column<bool>(type: "bit", nullable: false),
+                    UsuarioCreoId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FechaCreo = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UsuarioModId = table.Column<int>(type: "int", nullable: true),
+                    FechaMod = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Relacion_Estudio_Parametro", x => new { x.EstudioId, x.ParametroId });
+                    table.ForeignKey(
+                        name: "FK_Relacion_Estudio_Parametro_CAT_Estudio_EstudioId",
+                        column: x => x.EstudioId,
+                        principalTable: "CAT_Estudio",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Relacion_Estudio_Parametro_CAT_Parametro_ParametroId",
+                        column: x => x.ParametroId,
+                        principalTable: "CAT_Parametro",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Relacion_Estudio_Reactivo",
+                columns: table => new
+                {
+                    ReagentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EstudioId = table.Column<int>(type: "int", nullable: false),
+                    Activo = table.Column<bool>(type: "bit", nullable: false),
+                    UsuarioCreoId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FechaCreo = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UsuarioModId = table.Column<int>(type: "int", nullable: true),
+                    FechaMod = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Relacion_Estudio_Reactivo", x => new { x.EstudioId, x.ReagentId });
+                    table.ForeignKey(
+                        name: "FK_Relacion_Estudio_Reactivo_CAT_Estudio_EstudioId",
+                        column: x => x.EstudioId,
+                        principalTable: "CAT_Estudio",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Relacion_Estudio_Reactivo_CAT_Reactivo_Contpaq_ReagentId",
+                        column: x => x.ReagentId,
+                        principalTable: "CAT_Reactivo_Contpaq",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Relacion_Estudio_WorkList",
+                columns: table => new
+                {
+                    WorkListId = table.Column<int>(type: "int", nullable: false),
+                    EstudioId = table.Column<int>(type: "int", nullable: false),
+                    Activo = table.Column<bool>(type: "bit", nullable: false),
+                    UsuarioCreoId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FechaCreo = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UsuarioModId = table.Column<int>(type: "int", nullable: true),
+                    FechaMod = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Relacion_Estudio_WorkList", x => new { x.EstudioId, x.WorkListId });
+                    table.ForeignKey(
+                        name: "FK_Relacion_Estudio_WorkList_CAT_Estudio_EstudioId",
+                        column: x => x.EstudioId,
+                        principalTable: "CAT_Estudio",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Relacion_Estudio_WorkList_CAT_ListaTrabajo_WorkListId",
+                        column: x => x.WorkListId,
+                        principalTable: "CAT_ListaTrabajo",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Relacion_ListaP_Estudio",
+                columns: table => new
+                {
+                    PrecioListaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EstudioId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    Clave = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Area = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Precio = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Departamento = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Activo = table.Column<bool>(type: "bit", nullable: false),
+                    UsuarioCreoId = table.Column<long>(type: "bigint", nullable: false),
+                    FechaCreo = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UsuarioModId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FechaMod = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PriceListId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Relacion_ListaP_Estudio", x => new { x.PrecioListaId, x.EstudioId });
+                    table.ForeignKey(
+                        name: "FK_Relacion_ListaP_Estudio_CAT_Estudio_EstudioId",
+                        column: x => x.EstudioId,
+                        principalTable: "CAT_Estudio",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Relacion_ListaP_Estudio_CAT_ListaPrecio_PrecioListaId",
+                        column: x => x.PrecioListaId,
+                        principalTable: "CAT_ListaPrecio",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Relacion_ListaP_Estudio_CAT_ListaPrecio_PriceListId",
+                        column: x => x.PriceListId,
+                        principalTable: "CAT_ListaPrecio",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Relacion_Promocion_Estudio",
+                columns: table => new
+                {
+                    PromotionId = table.Column<int>(type: "int", nullable: false),
+                    StudyId = table.Column<int>(type: "int", nullable: false),
+                    Discountporcent = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    DiscountNumeric = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    FinalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Loyality = table.Column<bool>(type: "bit", nullable: false),
+                    FechaInicio = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FechaFinal = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Activo = table.Column<bool>(type: "bit", nullable: false),
+                    UsuarioCreoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FechaCreo = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UsuarioModId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FechaMod = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Relacion_Promocion_Estudio", x => new { x.PromotionId, x.StudyId });
+                    table.ForeignKey(
+                        name: "FK_Relacion_Promocion_Estudio_CAT_Estudio_StudyId",
+                        column: x => x.StudyId,
+                        principalTable: "CAT_Estudio",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Relacion_Promocion_Estudio_CAT_Promocion_PromotionId",
+                        column: x => x.PromotionId,
+                        principalTable: "CAT_Promocion",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_CAT_Area_DepartamentoId",
                 table: "CAT_Area",
@@ -1000,19 +1474,64 @@ namespace Service.Catalog.Migrations
                 column: "AreaId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CAT_Estudio_FormatoId",
+                table: "CAT_Estudio",
+                column: "FormatoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CAT_Estudio_MaquiladorId",
+                table: "CAT_Estudio",
+                column: "MaquiladorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CAT_Estudio_MetodoId",
+                table: "CAT_Estudio",
+                column: "MetodoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CAT_Estudio_SampleTypeId",
+                table: "CAT_Estudio",
+                column: "SampleTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CAT_Estudio_TaponId",
+                table: "CAT_Estudio",
+                column: "TaponId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CAT_ListaP_Compañia_CompañiaId",
                 table: "CAT_ListaP_Compañia",
                 column: "CompañiaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CAT_ListaP_Promocion_PriceId",
+                name: "IX_CAT_ListaP_Medicos_MedicoId",
+                table: "CAT_ListaP_Medicos",
+                column: "MedicoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CAT_ListaP_Medicos_PriceListId",
+                table: "CAT_ListaP_Medicos",
+                column: "PriceListId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CAT_ListaP_Promocion_PriceListId",
                 table: "CAT_ListaP_Promocion",
-                column: "PriceId");
+                column: "PriceListId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CAT_ListaP_Promocion_PromocionId",
                 table: "CAT_ListaP_Promocion",
                 column: "PromocionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CAT_ListaP_Sucursal_PriceListId",
+                table: "CAT_ListaP_Sucursal",
+                column: "PriceListId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CAT_ListaP_Sucursal_SucursalId",
+                table: "CAT_ListaP_Sucursal",
+                column: "SucursalId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CAT_Maquilador_ColoniaId",
@@ -1035,24 +1554,29 @@ namespace Service.Catalog.Migrations
                 column: "ClinicaId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CAT_Paquete_AreaId",
+                table: "CAT_Paquete",
+                column: "AreaId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CAT_Parametro_AreaId",
                 table: "CAT_Parametro",
                 column: "AreaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CAT_Parametro_DepartmentId",
+                name: "IX_CAT_Parametro_DepartmentoId",
                 table: "CAT_Parametro",
-                column: "DepartmentId");
+                column: "DepartmentoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CAT_Parametro_FormatId",
+                name: "IX_CAT_Parametro_FormatoImpresionId",
                 table: "CAT_Parametro",
-                column: "FormatId");
+                column: "FormatoImpresionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CAT_Parametro_ReagentId",
+                name: "IX_CAT_Parametro_ReactivoId",
                 table: "CAT_Parametro",
-                column: "ReagentId");
+                column: "ReactivoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CAT_Sucursal_ColoniaId",
@@ -1065,9 +1589,9 @@ namespace Service.Catalog.Migrations
                 column: "DepartamentoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CAT_Tipo_Valor_IdParametro",
+                name: "IX_CAT_Tipo_Valor_ParametroId",
                 table: "CAT_Tipo_Valor",
-                column: "IdParametro");
+                column: "ParametroId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Contact_CompañiaId",
@@ -1080,9 +1604,64 @@ namespace Service.Catalog.Migrations
                 column: "IndicacionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Relacion_Estudio_Paquete_PacketId",
+                table: "Relacion_Estudio_Paquete",
+                column: "PacketId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Relacion_Estudio_Parametro_ParametroId",
                 table: "Relacion_Estudio_Parametro",
                 column: "ParametroId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Relacion_Estudio_Reactivo_ReagentId",
+                table: "Relacion_Estudio_Reactivo",
+                column: "ReagentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Relacion_Estudio_WorkList_WorkListId",
+                table: "Relacion_Estudio_WorkList",
+                column: "WorkListId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Relacion_ListaP_Estudio_EstudioId",
+                table: "Relacion_ListaP_Estudio",
+                column: "EstudioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Relacion_ListaP_Estudio_PriceListId",
+                table: "Relacion_ListaP_Estudio",
+                column: "PriceListId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Relacion_ListaP_Paquete_PaqueteId",
+                table: "Relacion_ListaP_Paquete",
+                column: "PaqueteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Relacion_ListaP_Paquete_PriceListId",
+                table: "Relacion_ListaP_Paquete",
+                column: "PriceListId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Relacion_Promocion_Estudio_StudyId",
+                table: "Relacion_Promocion_Estudio",
+                column: "StudyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Relacion_Promocion_Lealtad_LoyalityId",
+                table: "Relacion_Promocion_Lealtad",
+                column: "LoyalityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Relacion_Promocion_Paquete_PackId",
+                table: "Relacion_Promocion_Paquete",
+                column: "PackId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Relacion_Promocion_Sucursal_BranchId",
+                table: "Relacion_Promocion_Sucursal",
+                column: "BranchId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -1106,19 +1685,16 @@ namespace Service.Catalog.Migrations
                 name: "CAT_ListaP_Compañia");
 
             migrationBuilder.DropTable(
+                name: "CAT_ListaP_Medicos");
+
+            migrationBuilder.DropTable(
                 name: "CAT_ListaP_Promocion");
 
             migrationBuilder.DropTable(
-                name: "CAT_ListaTrabajo");
-
-            migrationBuilder.DropTable(
-                name: "CAT_Maquilador");
+                name: "CAT_ListaP_Sucursal");
 
             migrationBuilder.DropTable(
                 name: "CAT_Medico_Clinica");
-
-            migrationBuilder.DropTable(
-                name: "CAT_Metodo");
 
             migrationBuilder.DropTable(
                 name: "CAT_MetodoPago");
@@ -1133,25 +1709,43 @@ namespace Service.Catalog.Migrations
                 name: "CAT_Tipo_Valor");
 
             migrationBuilder.DropTable(
-                name: "CAT_TipoMuestra");
-
-            migrationBuilder.DropTable(
                 name: "Contact");
 
             migrationBuilder.DropTable(
                 name: "Relacion_Estudio_Indicacion");
 
             migrationBuilder.DropTable(
+                name: "Relacion_Estudio_Paquete");
+
+            migrationBuilder.DropTable(
                 name: "Relacion_Estudio_Parametro");
+
+            migrationBuilder.DropTable(
+                name: "Relacion_Estudio_Reactivo");
 
             migrationBuilder.DropTable(
                 name: "Relacion_Estudio_Sucursal");
 
             migrationBuilder.DropTable(
-                name: "CAT_ListaPrecio");
+                name: "Relacion_Estudio_WorkList");
 
             migrationBuilder.DropTable(
-                name: "Promotion");
+                name: "Relacion_ListaP_Estudio");
+
+            migrationBuilder.DropTable(
+                name: "Relacion_ListaP_Paquete");
+
+            migrationBuilder.DropTable(
+                name: "Relacion_Promocion_Estudio");
+
+            migrationBuilder.DropTable(
+                name: "Relacion_Promocion_Lealtad");
+
+            migrationBuilder.DropTable(
+                name: "Relacion_Promocion_Paquete");
+
+            migrationBuilder.DropTable(
+                name: "Relacion_Promocion_Sucursal");
 
             migrationBuilder.DropTable(
                 name: "CAT_Clinica");
@@ -1160,43 +1754,70 @@ namespace Service.Catalog.Migrations
                 name: "CAT_Medico");
 
             migrationBuilder.DropTable(
-                name: "CAT_Sucursal");
-
-            migrationBuilder.DropTable(
                 name: "CAT_Compañia");
 
             migrationBuilder.DropTable(
                 name: "CAT_Indicacion");
 
             migrationBuilder.DropTable(
+                name: "CAT_Parametro");
+
+            migrationBuilder.DropTable(
+                name: "CAT_ListaTrabajo");
+
+            migrationBuilder.DropTable(
+                name: "CAT_ListaPrecio");
+
+            migrationBuilder.DropTable(
                 name: "CAT_Estudio");
 
             migrationBuilder.DropTable(
-                name: "CAT_Parametro");
+                name: "Loyality");
+
+            migrationBuilder.DropTable(
+                name: "CAT_Paquete");
+
+            migrationBuilder.DropTable(
+                name: "CAT_Promocion");
+
+            migrationBuilder.DropTable(
+                name: "CAT_Sucursal");
 
             migrationBuilder.DropTable(
                 name: "CAT_Especialidad");
 
             migrationBuilder.DropTable(
-                name: "CAT_Colonia");
-
-            migrationBuilder.DropTable(
                 name: "CAT_Procedencia");
-
-            migrationBuilder.DropTable(
-                name: "CAT_Area");
-
-            migrationBuilder.DropTable(
-                name: "Cat_Formato");
 
             migrationBuilder.DropTable(
                 name: "CAT_Reactivo_Contpaq");
 
             migrationBuilder.DropTable(
-                name: "CAT_Ciudad");
+                name: "Cat_Formato");
+
+            migrationBuilder.DropTable(
+                name: "CAT_Maquilador");
+
+            migrationBuilder.DropTable(
+                name: "CAT_Metodo");
+
+            migrationBuilder.DropTable(
+                name: "CAT_Tipo_Tapon");
+
+            migrationBuilder.DropTable(
+                name: "CAT_TipoMuestra");
+
+            migrationBuilder.DropTable(
+                name: "CAT_Area");
+
+            migrationBuilder.DropTable(
+                name: "CAT_Colonia");
 
             migrationBuilder.DropTable(
                 name: "CAT_Departamento");
+
+            migrationBuilder.DropTable(
+                name: "CAT_Ciudad");
 
             migrationBuilder.DropTable(
                 name: "CAT_Estado");

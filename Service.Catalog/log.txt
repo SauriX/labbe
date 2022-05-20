@@ -428,30 +428,264 @@ The statement has been terminated.
 
 12/05/2022 15:06:49 => 'FK_CAT_ListaP_Promocion_CAT_ListaPrecio_PriceId' is not a constraint.
 Could not drop constraint. See previous errors.
-12/05/2022 11:10:37 a. m. => Value cannot be null. (Parameter 'input')
 
-12/05/2022 11:23:59 a. m. => Connection Timeout Expired.  The timeout period elapsed while attempting to consume the pre-login handshake acknowledgement.  This could be because the pre-login handshake failed or the server was unable to respond back in time.  The duration spent while attempting to connect to this server was - [Pre-Login] initialization=39646; handshake=17; 
+13/05/2022 12:52:52 => Unable to cast object of type 'System.Int32' to type 'System.Guid'.
 
-12/05/2022 11:23:59 a. m. => Connection Timeout Expired.  The timeout period elapsed while attempting to consume the pre-login handshake acknowledgement.  This could be because the pre-login handshake failed or the server was unable to respond back in time.  The duration spent while attempting to connect to this server was - [Pre-Login] initialization=39646; handshake=17; 
+13/05/2022 12:52:57 => Unable to cast object of type 'System.Int32' to type 'System.Guid'.
 
-12/05/2022 11:23:59 a. m. => Connection Timeout Expired.  The timeout period elapsed while attempting to consume the pre-login handshake acknowledgement.  This could be because the pre-login handshake failed or the server was unable to respond back in time.  The duration spent while attempting to connect to this server was - [Pre-Login] initialization=39646; handshake=17; 
+13/05/2022 12:53:59 => Unable to cast object of type 'System.Int32' to type 'System.Guid'.
 
-12/05/2022 11:39:25 a. m. => Value cannot be null. (Parameter 'input')
+13/05/2022 12:54:02 => Unable to cast object of type 'System.Int32' to type 'System.Guid'.
 
-12/05/2022 03:20:35 p. m. => Value cannot be null. (Parameter 'source')
+13/05/2022 12:56:51 => Unable to cast object of type 'System.Int32' to type 'System.Guid'.
 
-12/05/2022 03:22:22 p. m. => Value cannot be null. (Parameter 'source')
+13/05/2022 12:59:15 => Unable to cast object of type 'System.Int32' to type 'System.Guid'.
 
-12/05/2022 03:24:53 p. m. => Value cannot be null. (Parameter 'source')
+13/05/2022 13:01:18 => Unable to cast object of type 'System.Int32' to type 'System.Guid'.
 
-12/05/2022 03:25:43 p. m. => Value cannot be null. (Parameter 'source')
+13/05/2022 13:02:15 => Unable to cast object of type 'System.Int32' to type 'System.Guid'.
 
-12/05/2022 03:27:06 p. m. => Value cannot be null. (Parameter 'source')
+13/05/2022 13:20:55 => Unable to cast object of type 'System.Int32' to type 'System.Guid'.
 
-12/05/2022 03:27:53 p. m. => Value cannot be null. (Parameter 'source')
+13/05/2022 13:23:39 => Unable to cast object of type 'System.Int32' to type 'System.Guid'.
 
-12/05/2022 03:58:35 p. m. => Could not find a part of the path 'E:\ResposAxsis\API\Service.Catalog\wwwroot\layout\excel\PriceList\PackListado.xlsx'.
+13/05/2022 13:52:24 => Unable to cast object of type 'System.Int32' to type 'System.Guid'.
 
-12/05/2022 03:58:54 p. m. => Could not find a part of the path 'E:\ResposAxsis\API\Service.Catalog\wwwroot\layout\excel\PriceList\PackListado.xlsx'.
+13/05/2022 13:57:40 => Unable to cast object of type 'System.Int32' to type 'System.Guid'.
 
-12/05/2022 03:59:44 p. m. => Could not find a part of the path 'E:\ResposAxsis\API\Service.Catalog\wwwroot\layout\excel\PriceList\PackListado.xlsx'.
+13/05/2022 13:58:29 => Unable to cast object of type 'System.Int32' to type 'System.Guid'.
+
+13/05/2022 17:33:47 => The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.
+
+16/05/2022 17:17:22 => Unable to cast object of type 'System.Collections.Generic.List`1[Service.Catalog.Dtos.PriceList.PriceListStudyDto]' to type 'System.Collections.Generic.ICollection`1[Service.Catalog.Domain.Price.PriceList_Study]'.
+
+16/05/2022 17:17:32 => Unable to cast object of type 'System.Collections.Generic.List`1[Service.Catalog.Dtos.PriceList.PriceListStudyDto]' to type 'System.Collections.Generic.ICollection`1[Service.Catalog.Domain.Price.PriceList_Study]'.
+13/05/2022 17:33:47 => The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.
+
+17/05/2022 02:42:15 p. m. => To change the IDENTITY property of a column, the column needs to be dropped and recreated.
+
+17/05/2022 06:33:47 p. m. => To change the IDENTITY property of a column, the column needs to be dropped and recreated.
+
+18/05/2022 11:31:25 => Value cannot be null. (Parameter 'source')
+
+18/05/2022 16:38:52 => Object reference not set to an instance of an object.
+
+18/05/2022 16:42:04 => Object reference not set to an instance of an object.
+
+18/05/2022 16:42:06 => Object reference not set to an instance of an object.
+
+18/05/2022 17:16:45 => Value cannot be null. (Parameter 'source')
+
+18/05/2022 17:57:28 => Value cannot be null. (Parameter 'input')
+
+19/05/2022 11:57:13 a. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 11:57:14 a. m. => The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.
+
+19/05/2022 11:58:02 a. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 11:58:02 a. m. => A connection was successfully established with the server, but then an error occurred during the pre-login handshake. (provider: SSL Provider, error: 0 - Tiempo de espera de la operación de espera agotado.)
+
+19/05/2022 12:01:50 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:01:50 p. m. => The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.
+
+19/05/2022 12:01:52 p. m. => The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.
+
+19/05/2022 12:01:52 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:02:51 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:03:21 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:03:24 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:09:46 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:09:46 p. m. => The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.
+
+19/05/2022 12:09:48 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:09:48 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:09:48 p. m. => The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.
+
+19/05/2022 12:09:49 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:09:51 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:09:52 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:09:53 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:10:08 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:11:07 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:11:08 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:11:09 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:12:11 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:12:13 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:12:13 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:12:34 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:12:48 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:12:51 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:13:06 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:22:27 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:22:28 p. m. => The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.
+
+19/05/2022 12:22:28 p. m. => The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.
+
+19/05/2022 12:22:34 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:22:36 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:22:38 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:22:39 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:22:40 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:22:43 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:22:44 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:22:48 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:22:49 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:41:29 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:41:29 p. m. => The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.
+
+19/05/2022 12:41:33 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:41:35 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:41:37 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:41:39 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:41:45 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:51:34 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:51:35 p. m. => The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.
+
+19/05/2022 12:51:35 p. m. => The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.
+
+19/05/2022 12:51:37 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:51:40 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:51:41 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:51:43 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:51:45 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:52:30 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:54:06 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:54:58 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 12:55:02 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 01:31:35 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 01:31:35 p. m. => The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.
+
+19/05/2022 01:31:35 p. m. => The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.
+
+19/05/2022 01:31:37 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 01:31:39 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 01:31:40 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 01:31:43 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 01:31:47 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 01:31:48 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 01:31:49 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 01:31:50 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 01:31:51 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 01:31:53 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 01:31:53 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 01:31:55 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 01:31:58 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 01:31:59 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 01:32:01 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 01:32:01 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 01:32:02 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 01:32:04 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 02:04:53 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 02:04:54 p. m. => An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseSqlServer' call.
+
+19/05/2022 02:04:54 p. m. => An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseSqlServer' call.
+
+19/05/2022 02:04:54 p. m. => An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseSqlServer' call.
+
+19/05/2022 02:04:55 p. m. => An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseSqlServer' call.
+
+19/05/2022 02:04:55 p. m. => An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseSqlServer' call.
+
+19/05/2022 02:04:55 p. m. => An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseSqlServer' call.
+
+19/05/2022 02:04:56 p. m. => An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseSqlServer' call.
+
+19/05/2022 02:04:56 p. m. => An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseSqlServer' call.
+
+19/05/2022 02:04:57 p. m. => An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseSqlServer' call.
+
+19/05/2022 02:04:57 p. m. => An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseSqlServer' call.
+
+19/05/2022 02:04:57 p. m. => An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseSqlServer' call.
+
+19/05/2022 02:04:58 p. m. => An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseSqlServer' call.
+
+19/05/2022 02:04:58 p. m. => An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseSqlServer' call.
+
+19/05/2022 02:08:32 p. m. => Value cannot be null. (Parameter 'source')
+
+19/05/2022 16:17:14 => Object reference not set to an instance of an object.
+
+19/05/2022 16:17:28 => Object reference not set to an instance of an object.
+
+19/05/2022 16:17:38 => Object reference not set to an instance of an object.
+
+19/05/2022 18:49:38 => Operand type clash: bigint is incompatible with uniqueidentifier
+
+19/05/2022 18:53:36 => Operand type clash: bigint is incompatible with uniqueidentifier
+
+19/05/2022 19:59:37 => Operand type clash: bigint is incompatible with uniqueidentifier
+
+20/05/2022 8:55:22 => Operand type clash: bigint is incompatible with uniqueidentifier
+
+20/05/2022 9:02:33 => Operand type clash: bigint is incompatible with uniqueidentifier

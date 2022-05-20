@@ -4,10 +4,12 @@ namespace Service.Catalog.Domain.Company
 {
     public class Price_Company
     {
-        public int? PrecioId { get; set; }
-        public virtual Price.PriceList Precio { get; set; }
-        public int? CompañiaId { get; set; }
+        public Guid PrecioListaId { get; set; }
+        public virtual Price.PriceList PrecioLista { get; set; }
+        public Guid CompañiaId { get; set; }
         public virtual Company Compañia { get; set; }
+        public Guid Id { get; set; }
+        public decimal Precio { get; set; }
         public bool Activo { get; set; }
         public long UsuarioCreoId { get; set; }
         public DateTime FechaCreo { get; set; }

@@ -1,4 +1,5 @@
-﻿using Service.Catalog.Domain.Price;
+﻿using Service.Catalog.Domain.Company;
+using Service.Catalog.Domain.Price;
 using Service.Catalog.Dtos;
 using Service.Catalog.Dtos.PriceList;
 using System;
@@ -15,25 +16,130 @@ namespace Service.Catalog.Mapper
 
             return new PriceListListDto
             {
-                Id = model.Id.ToString(),
-                Clave = model.Clave,
-                Nombre = model.Nombre,
-                Activo = model.Activo
+                Id = model.Id,
+                Clave = model.Clave.Trim(),
+                Nombre = model.Nombre.Trim(),
+                Visibilidad = model?.Visibilidad,
+                Activo = model.Activo,
+                Estudios = model?.Estudios?.Select(x => new PriceListStudyDto
+                {
+                    Id = x.EstudioId,
+                    Clave = x.Estudio.Clave,
+                    Nombre = x.Estudio.Nombre.Trim(),
+                    Area = x.Area.Trim(),
+                    Departamento = x.Estudio.Area.Departamento.Nombre,
+                    Precio = x.Precio,
+                    Activo = true,
+                })?.ToList(),
+                Compañia = model?.Compañia?.Select(x => new PriceListCompanyDto
+                {
+                    Id = x.Id,
+                    Clave = x.Compañia.Clave.Trim(),
+                    Nombre = x.Compañia.NombreComercial.Trim(),
+                    Precio = x.Precio,
+                })?.ToList(),
+                Medicos = model?.Medicos?.Select(x => new PriceListMedicDto
+                {
+                    Id = x.MedicoId,
+                    Clave = x.Medico.Clave.Trim(),
+                    Nombre = x.Medico.Nombre.Trim(),
+                    Precio = x.Precio,
+                })?.ToList(),
+                Sucursales = model?.Sucursales?.Select(x => new PriceListBranchDto
+                {
+                    Id = x.SucursalId,
+                    Clave = x.Sucursal.Clave.Trim(),
+                    Nombre = x.Sucursal.Nombre.Trim(),
+                    Precio = x.Precio,
+                })?.ToList(),
             };
         }
+        ///ToPriceList companymedicssucursal Aplication
+        public static IEnumerable<PriceListCompanyDto> ToPriceListListComDto(this List<Price_Company> model)
+        {
+            if (model == null) return null;
 
+            return model.Select(x => new PriceListCompanyDto
+            {
+                    Id = x.Compañia.Id,
+                    Clave = x.Compañia.Clave,
+                    Nombre = x.Compañia.NombreComercial,
+                    Precio = x.Precio,
+
+
+            });
+        }
+        public static IEnumerable<PriceListMedicDto> ToPriceListListMedDto(this List<Price_Medics> model)
+        {
+            if (model == null) return null;
+
+            return model.Select(x => new PriceListMedicDto
+            {
+                Id = x.MedicoId,
+                Clave = x.Medico.Clave,
+                Nombre = x.Medico.Nombre,
+                Precio = x.Precio,
+
+            });
+        }
+        public static IEnumerable<PriceListBranchDto> ToPriceListListSucDto(this List<Price_Branch> model)
+        {
+            if (model == null) return null;
+
+            return model.Select(x => new PriceListBranchDto
+            {
+                Id = x.SucursalId,
+                Clave = x.Sucursal.Clave,
+                Nombre = x.Sucursal.Nombre,
+                Precio = x.Precio,
+
+            });
+        }
+        ///ToPriceList companymedicssucursal Aplication arriba
         public static IEnumerable<PriceListListDto> ToPriceListListDto(this List<PriceList> model)
         {
             if (model == null) return null;
 
             return model.Select(x => new PriceListListDto
             {
-                Id = x.Id.ToString(),
+                Id = x.Id,
                 Clave = x.Clave,
                 Nombre = x.Nombre,
-                Activo = x.Activo
+                Visibilidad = x?.Visibilidad,
+                Activo = x.Activo,
+                Estudios = x?.Estudios?.Select(x => new PriceListStudyDto
+                {
+                    Id = x.EstudioId,
+                    Clave = x.Estudio.Clave,
+                    Nombre = x.Estudio.Nombre,
+                    Area = x.Area.Trim(),
+                    Departamento = x.Estudio.Area.Departamento.Nombre,
+                    Precio = x.Precio,
+                    Activo = true,
+                })?.ToList(),
+                Compañia = x?.Compañia?.Select(x => new PriceListCompanyDto
+                {
+                    Id = x.CompañiaId,
+                    Clave = x.Compañia.Clave,
+                    Nombre = x.Compañia.NombreComercial,
+                    Precio = x.Precio,
+                })?.ToList(),
+                Medicos = x?.Medicos?.Select(x => new PriceListMedicDto
+                {
+                    Id = x.MedicoId,
+                    Clave = x.Medico.Clave,
+                    Nombre = x.Medico.Nombre,
+                    Precio = x.Precio,
+                })?.ToList(),
+                Sucursales = x?.Sucursales?.Select(x => new PriceListBranchDto
+                {
+                    Id = x.SucursalId,
+                    Clave = x.Sucursal.Clave,
+                    Nombre = x.Sucursal.Nombre,
+                    Precio = x.Precio,
+                })?.ToList(),
             });
-        }
+        }   
 
         public static PriceListFormDto ToPriceListFormDto(this PriceList model)
         {
@@ -46,21 +152,41 @@ namespace Service.Catalog.Mapper
                 Nombre = model.Nombre.Trim(),
                 Visibilidad = model?.Visibilidad,
                 Activo = model.Activo,
-               // Estudios = (ICollection<PriceList_Study>)model.Estudios.ToPriceListStudyDto(),
+                UsuarioCreoId = model.UsuarioCreoId,
+                FechaCreo = DateTime.Now,
+                Estudios = model?.Estudios?.Select(x => new PriceListStudyDto
+                {
+                    Id = x.EstudioId,
+                    Clave = x.Estudio.Clave.Trim(),
+                    Nombre = x.Estudio.Nombre.Trim(),
+                    Area = x.Area.Trim(),
+                    Departamento = x.Estudio.Area.Departamento.Nombre,
+                    Precio = x.Precio,
+                    Activo = true,
+                })?.ToList(),
+                Compañia = model?.Compañia?.Select(x => new PriceListCompanyDto
+                {
+                    Id = x.CompañiaId,
+                    Clave = x.Compañia.Clave.Trim(),
+                    Nombre = x.Compañia.NombreComercial.Trim(),
+                    Precio = x.Precio,
+                })?.ToList(),
+                Medicos = model?.Medicos?.Select(x => new PriceListMedicDto
+                {
+                    Id = x.MedicoId,
+                    Clave = x.Medico.Clave.Trim(),
+                    Nombre = x.Medico.Nombre.Trim(),
+                    Precio = x.Precio,
+                })?.ToList(),
+                Sucursales = model?.Sucursales?.Select(x => new PriceListBranchDto
+                {
+                    Id = x.SucursalId,
+                    Clave = x.Sucursal.Clave.Trim(),
+                    Nombre = x.Sucursal.Nombre.Trim(),
+                    Precio = x.Precio,
+                })?.ToList(),
             };
         }
-
-        //private static IEnumerable<PriceListStudyDto> ToPriceListStudyDto(this IEnumerable<PriceList_Study> model)
-        //{
-        //    //if (model == null) return null;
-
-        //    //return model.Select(x => x.Estudio).Select(x => new PriceListStudyDto
-        //    //{
-        //    //    Id = x.Id,
-        //    //    Nombre = x.Nombre,
-        //    //    Area = x.Area.Nombre,
-        //    //});
-        //}
 
         public static PriceList ToModel(this PriceListFormDto dto)
         {
@@ -68,12 +194,36 @@ namespace Service.Catalog.Mapper
 
             return new PriceList
             {
-                Clave = dto.Clave.Trim(),
-                Nombre = dto.Nombre.Trim(),
+
+                Clave = dto.Clave?.Trim(),
+                Nombre = dto.Nombre?.Trim(),
                 Visibilidad = dto?.Visibilidad,
                 Activo = dto.Activo,
-                UsuarioCreoId = dto.UsuarioId,
+                UsuarioCreoId = dto.UsuarioCreoId,
                 FechaCreo = DateTime.Now,
+                Estudios = dto?.Estudios?.Select(x => new PriceList_Study
+                {
+                    
+                    EstudioId = x.Id,
+                    Precio = x.Precio,
+                    Activo = true,
+                })?.ToList(),
+                Compañia = dto?.Compañia?.Select(x => new Price_Company
+                {
+                    CompañiaId = x.Id,
+                    Precio = x.Precio,
+                })?.ToList(),
+                Medicos = dto?.Medicos?.Select(x => new Price_Medics
+                {
+                    MedicoId = x.Id,
+                    Precio = x.Precio,
+                })?.ToList(),
+                Sucursales = dto?.Sucursales?.Select(x => new Price_Branch
+                {
+                    SucursalId = x.Id,
+                    Precio = x.Precio,
+                })?.ToList(),
+
             };
         }
 
@@ -89,9 +239,31 @@ namespace Service.Catalog.Mapper
                 Visibilidad = dto?.Visibilidad,
                 Activo = dto.Activo,
                 UsuarioCreoId = model.UsuarioCreoId,
-                FechaCreo = model.FechaCreo,
+                FechaCreo = DateTime.Now,
                 UsuarioModificoId = dto.UsuarioId,
                 FechaModifico = DateTime.Now,
+                Estudios = model?.Estudios?.Select(x => new PriceList_Study
+                {
+                    EstudioId = x.Id,
+                    Precio = x.Precio,
+                    Activo = true,
+                })?.ToList(),
+                Compañia = model?.Compañia?.Select(x => new Price_Company
+                {
+                    Id = x.CompañiaId,
+                    Precio = x.Precio,
+                })?.ToList(),
+                Medicos = model?.Medicos?.Select(x => new Price_Medics
+                {
+                    Id = x.MedicoId,
+                    Precio = x.Precio,
+                })?.ToList(),
+                Sucursales = model?.Sucursales?.Select(x => new Price_Branch
+                {
+                    Id = x.SucursalId,
+                    Precio = x.Precio,
+                })?.ToList(),
+
             };
         }
     }

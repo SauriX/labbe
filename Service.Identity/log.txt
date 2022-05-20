@@ -87,3 +87,21 @@ The statement has been terminated.
 12/05/2022 9:21:26 => A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: Named Pipes Provider, error: 40 - Could not open a connection to SQL Server)
 
 12/05/2022 10:18:40 => A connection was successfully established with the server, but then an error occurred during the pre-login handshake. (provider: SSL Provider, error: 0 - Tiempo de espera de la operación de espera agotado.)
+
+19/05/2022 12:22:28 p. m. => Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding.
+
+19/05/2022 12:41:34 p. m. => An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseSqlServer' call.
+
+19/05/2022 12:41:35 p. m. => An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseSqlServer' call.
+
+19/05/2022 12:41:36 p. m. => An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseSqlServer' call.
+
+19/05/2022 12:41:37 p. m. => An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseSqlServer' call.
+
+19/05/2022 12:41:37 p. m. => An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseSqlServer' call.
+
+19/05/2022 12:41:37 p. m. => An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseSqlServer' call.
+
+19/05/2022 12:51:35 p. m. => Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding.
+
+19/05/2022 02:16:10 p. m. => Connection Timeout Expired.  The timeout period elapsed while attempting to consume the pre-login handshake acknowledgement.  This could be because the pre-login handshake failed or the server was unable to respond back in time.  The duration spent while attempting to connect to this server was - [Pre-Login] initialization=15141; handshake=1; 

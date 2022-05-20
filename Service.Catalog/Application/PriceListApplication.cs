@@ -14,6 +14,8 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Service.Catalog.Domain.Price;
+using System.Linq;
 
 namespace Service.Catalog.Application
 {
@@ -42,7 +44,7 @@ namespace Service.Catalog.Application
 
         public async Task<PriceListFormDto> GetById(string id)
         {
-            Helpers.Validateint(id, out int guid);
+            Helpers.ValidateGuid(id, out Guid guid);
 
             var price = await _repository.GetById(guid);
 
@@ -77,7 +79,7 @@ namespace Service.Catalog.Application
 
         public async Task<PriceListListDto> Update(PriceListFormDto price)
         {
-            Helpers.Validateint(price.Id, out int guid);
+            Helpers.ValidateGuid(price.Id, out Guid guid);
 
             var existing = await _repository.GetById(guid);
 
@@ -110,12 +112,12 @@ namespace Service.Catalog.Application
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
             template.AddVariable("Titulo", "Lista de Precios");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
-            template.AddVariable("prices", prices);
+            template.AddVariable("Precios", prices);
 
             template.Generate();
 
-            var range = template.Workbook.Worksheet("prices").Range("prices");
-            var table = template.Workbook.Worksheet("prices").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
+            var range = template.Workbook.Worksheet("Precios").Range("Precios");
+            var table = template.Workbook.Worksheet("Precios").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
             table.Theme = XLTableTheme.TableStyleMedium2;
 
             template.Format();
@@ -133,9 +135,9 @@ namespace Service.Catalog.Application
 
             template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
-            template.AddVariable("Titulo", "Parametros");
+            template.AddVariable("Titulo", "Lista de Precios");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
-            template.AddVariable("price", price);
+            template.AddVariable("Precios", price);
             template.AddVariable("Estudios", price.Estudios);
             template.Generate();
 
@@ -152,6 +154,24 @@ namespace Service.Catalog.Application
             {
                 throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
             }
+        }
+        public async Task<IEnumerable<PriceListCompanyDto>> GetAllCompany(Guid companyId)
+        {
+            var prices = await _repository.GetAllCompany(companyId);
+            //prices.Select(x=>x.ToPriceListListComDto)
+            return prices.ToPriceListListComDto();
+        }
+        public async Task<IEnumerable<PriceListBranchDto>> GetAllBranch(Guid branchId)
+        {
+            var prices = await _repository.GetAllBranch(branchId);
+
+            return prices.ToPriceListListSucDto();
+        }
+        public async Task<IEnumerable<PriceListMedicDto>> GetAllMedics(Guid medicsId)
+        {
+            var prices = await _repository.GetAllMedics(medicsId);
+
+            return prices.ToPriceListListMedDto();
         }
     }
 }

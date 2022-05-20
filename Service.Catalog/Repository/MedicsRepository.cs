@@ -1,14 +1,12 @@
 ﻿using EFCore.BulkExtensions;
 using Identidad.Api.Infraestructure.Repository.IRepository;
 using Identidad.Api.Model.Medicos;
-using Identidad.Api.ViewModels.Medicos;
-using Identidad.Api.ViewModels.Menu;
 using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Context;
 using Service.Catalog.Domain.Medics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Service.Catalog.Repository
@@ -22,7 +20,7 @@ namespace Service.Catalog.Repository
             _context = context;
         }
 
-        public async Task<Medics> GetById(int Id)
+        public async Task<Medics> GetById(Guid Id)
         {
             return await _context.CAT_Medicos
                 .Include(x => x.Clinicas)

@@ -4,11 +4,12 @@ using Service.Catalog.Domain.Constant;
 using System;
 using System.Collections.Generic;
 
-namespace Identidad.Api.ViewModels.Menu
+namespace Service.Catalog.Domain.Medics
+
 {
     public class Medics
     {
-        public int IdMedico { get; set; }
+        public Guid IdMedico { get; set; }
         public string Clave { get; set; }
         public string Nombre { get; set; }
         public string PrimerApellido { get; set; }

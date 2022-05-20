@@ -3,11 +3,11 @@ using Service.Catalog.Dtos.Catalog;
 using System;
 using System.Collections.Generic;
 
-namespace Identidad.Api.ViewModels.Medicos
+namespace Service.Catalog.Dtos.Medicos
 {
     public class MedicsFormDto
     {
-        public int IdMedico { get; set; }
+        public Guid IdMedico { get; set; }
         public string Clave { get; set; }
         public bool ClaveCambio { get; set; }
         public string Nombre { get; set; }
@@ -34,7 +34,6 @@ namespace Identidad.Api.ViewModels.Medicos
     {
         public MedicosFormDtoValidator()
         {
-            RuleFor(x => x.IdMedico).GreaterThanOrEqualTo(0);
             RuleFor(x => x.Clave).NotEmpty().MaximumLength(15);//.NotEqual();
             RuleFor(x => x.Nombre).NotEmpty().MaximumLength(50);
             RuleFor(x => x.PrimerApellido).NotEmpty().MaximumLength(50);

@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Service.Catalog.Dtos.Company
 {
     public class CompanyListDto
     {
-        public int? Id { get; set; }
+        public Guid Id { get; set; }
         public string Clave { get; set; }
         public string Contrasena { get; set; }
         public string NombreComercial { get; set; }

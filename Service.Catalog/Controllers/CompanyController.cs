@@ -4,6 +4,7 @@ using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dtos.Catalog;
 using Service.Catalog.Dtos.Company;
 using Shared.Dictionary;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -41,7 +42,7 @@ namespace Identidad.Api.Controllers
 
         [HttpGet("{Id}")]
         [Authorize(Policies.Access)]
-        public async Task<CompanyFormDto> GetById(int Id)
+        public async Task<CompanyFormDto> GetById(Guid Id)
         {
             return await _Services.GetById(Id);
         }
@@ -71,7 +72,7 @@ namespace Identidad.Api.Controllers
 
         [HttpPost("export/form/{id}")]
         [Authorize(Policies.Download)]
-        public async Task<IActionResult> ExportForm(int id)
+        public async Task<IActionResult> ExportForm(Guid id)
         {
             var file = await _Services.ExportFormCompany(id);
             return File(file, MimeType.XLSX);
