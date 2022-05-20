@@ -24,7 +24,7 @@ namespace Service.Catalog.Repository
         {
             var indications = _context.CAT_ListaPrecio.AsQueryable()
                     .Include(x => x.Estudios)
-                    .ThenInclude(x => x.Estudio).ThenInclude(x => x.Area)
+                    .ThenInclude(x => x.Estudio).ThenInclude(x => x.Area).ThenInclude(x => x.Departamento)
                     .Include(x => x.Paquete)
                     .Include(x => x.Compañia)
                     .AsQueryable();
@@ -42,7 +42,7 @@ namespace Service.Catalog.Repository
         public async Task<PriceList> GetById(Guid Id)
         {
             var indication = await _context.CAT_ListaPrecio
-                .Include(x => x.Estudios).ThenInclude(x => x.Estudio).ThenInclude(x => x.Area)
+                .Include(x => x.Estudios).ThenInclude(x => x.Estudio).ThenInclude(x => x.Area).ThenInclude(x => x.Departamento)
                 .Include(x => x.Sucursales).ThenInclude(x => x.Sucursal)
                 .FirstOrDefaultAsync(x => x.Id == Id);
 
