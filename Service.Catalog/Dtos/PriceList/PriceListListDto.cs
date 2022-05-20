@@ -10,6 +10,7 @@ namespace Service.Catalog.Dtos.PriceList
         public Guid Id { get; set; }
         public string Clave { get; set; }
         public string Nombre { get; set; }
+        public bool? Visibilidad { get; set; }
         public bool Activo { get; set; }
         public virtual ICollection<Price_Promotion> Promocion { get; set; }
         public virtual ICollection<PriceListCompanyDto> Compañia { get; set; }
