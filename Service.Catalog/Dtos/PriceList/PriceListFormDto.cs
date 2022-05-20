@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Service.Catalog.Domain.Company;
 using Service.Catalog.Domain.Price;
+using Service.Catalog.Dtos.PriceList;
 using Service.Catalog.Dtos.Promotion;
 using System;
 using System.Collections.Generic;
@@ -20,11 +21,11 @@ namespace Service.Catalog.Dtos
         public Guid UsuarioModificoId { get; set; }
         public DateTime? FechaModifico { get; set; }
         public virtual IEnumerable<PromotionFormDto> Promocion { get; set; }
-        public virtual ICollection<Price_Company> Compañia { get; set; }
-        public virtual ICollection<PriceList_Study> Estudios { get; set; }
+        public virtual ICollection<PriceListCompanyDto> Compañia { get; set; }
+        public virtual ICollection<PriceListStudyDto> Estudios { get; set; }
         public virtual ICollection<PriceList_Packet> Paquete { get; set; }
-        public virtual ICollection<Price_Branch> Sucursales { get; set; }
-        public virtual ICollection<Price_Medics> Medicos { get; set; }
+        public virtual ICollection<PriceListBranchDto> Sucursales { get; set; }
+        public virtual ICollection<PriceListMedicDto> Medicos { get; set; }
     }
     public class PriceListFormDtoValidator : AbstractValidator<PriceListFormDto>
     {

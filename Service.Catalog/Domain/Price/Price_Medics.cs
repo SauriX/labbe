@@ -9,8 +9,6 @@ namespace Service.Catalog.Domain.Price
         public Guid MedicoId { get; set; }
         public virtual Medics.Medics Medico { get; set; }
         public Guid Id { get; set; }
-        public string Clave { get; set; }
-        public string Nombre { get; set; }
         public decimal Precio { get; set; }
         public bool Activo { get; set; }
         public long UsuarioCreoId { get; set; }

@@ -25,13 +25,14 @@ namespace Service.Catalog.Mapper
                     Id = x.EstudioId,
                     Clave = x.Estudio.Clave,
                     Nombre = x.Estudio.Nombre.Trim(),
-                    Area = x.Estudio.Area.Nombre.Trim(),
+                    Area = x.Estudio.Area,
+                    Departamento = x.Estudio.Area.Departamento.Nombre,
                     Precio = x.Precio,
                     Activo = true,
                 })?.ToList(),
                 Compañia = model?.Compañia?.Select(x => new PriceListCompanyDto
                 {
-                    Id = x.CompañiaId,
+                    Id = x.Id,
                     Clave = x.Compañia.Clave.Trim(),
                     Nombre = x.Compañia.NombreComercial.Trim(),
                     Precio = x.Precio,
@@ -59,9 +60,9 @@ namespace Service.Catalog.Mapper
 
             return model.Select(x => new PriceListCompanyDto
             {
-                    Id = x.CompañiaId,
-                    Clave = x.Clave,
-                    Nombre = x.Nombre,
+                    Id = x.Compañia.Id,
+                    Clave = x.Compañia.Clave,
+                    Nombre = x.Compañia.NombreComercial,
                     Precio = x.Precio,
 
 
@@ -74,8 +75,8 @@ namespace Service.Catalog.Mapper
             return model.Select(x => new PriceListMedicDto
             {
                 Id = x.MedicoId,
-                Clave = x.Clave,
-                Nombre = x.Nombre,
+                Clave = x.Medico.Clave,
+                Nombre = x.Medico.Nombre,
                 Precio = x.Precio,
 
             });
@@ -87,8 +88,8 @@ namespace Service.Catalog.Mapper
             return model.Select(x => new PriceListBranchDto
             {
                 Id = x.SucursalId,
-                Clave = x.Clave,
-                Nombre = x.Nombre,
+                Clave = x.Sucursal.Clave,
+                Nombre = x.Sucursal.Nombre,
                 Precio = x.Precio,
 
             });
@@ -109,7 +110,8 @@ namespace Service.Catalog.Mapper
                     Id = x.EstudioId,
                     Clave = x.Estudio.Clave,
                     Nombre = x.Estudio.Nombre,
-                    Area = x.Estudio.Area.Nombre,
+                    Area = x.Estudio.Area,
+                    Departamento = x.Estudio.Area.Departamento.Nombre,
                     Precio = x.Precio,
                     Activo = true,
                 })?.ToList(),
@@ -150,30 +152,31 @@ namespace Service.Catalog.Mapper
                 Activo = model.Activo,
                 UsuarioCreoId = model.UsuarioCreoId,
                 FechaCreo = DateTime.Now,
-                Estudios = model?.Estudios?.Select(x => new PriceList_Study
+                Estudios = model?.Estudios?.Select(x => new PriceListStudyDto
                 {
                     Id = x.EstudioId,
                     Clave = x.Estudio.Clave.Trim(),
                     Nombre = x.Estudio.Nombre.Trim(),
-                    Area = x.Estudio.Area.Nombre.Trim(),
+                    Area = x.Estudio.Area,
+                    Departamento = x.Estudio.Area.Departamento.Nombre,
                     Precio = x.Precio,
                     Activo = true,
                 })?.ToList(),
-                Compañia = model?.Compañia?.Select(x => new Price_Company
+                Compañia = model?.Compañia?.Select(x => new PriceListCompanyDto
                 {
                     Id = x.CompañiaId,
                     Clave = x.Compañia.Clave.Trim(),
                     Nombre = x.Compañia.NombreComercial.Trim(),
                     Precio = x.Precio,
                 })?.ToList(),
-                Medicos = model?.Medicos?.Select(x => new Price_Medics
+                Medicos = model?.Medicos?.Select(x => new PriceListMedicDto
                 {
                     Id = x.MedicoId,
                     Clave = x.Medico.Clave.Trim(),
                     Nombre = x.Medico.Nombre.Trim(),
                     Precio = x.Precio,
                 })?.ToList(),
-                Sucursales = model?.Sucursales?.Select(x => new Price_Branch
+                Sucursales = model?.Sucursales?.Select(x => new PriceListBranchDto
                 {
                     Id = x.SucursalId,
                     Clave = x.Sucursal.Clave.Trim(),
@@ -189,6 +192,7 @@ namespace Service.Catalog.Mapper
 
             return new PriceList
             {
+
                 Clave = dto.Clave?.Trim(),
                 Nombre = dto.Nombre?.Trim(),
                 Visibilidad = dto?.Visibilidad,
@@ -197,32 +201,24 @@ namespace Service.Catalog.Mapper
                 FechaCreo = DateTime.Now,
                 Estudios = dto?.Estudios?.Select(x => new PriceList_Study
                 {
-                    Id = x.EstudioId,
-                    Clave = x.Estudio.Clave.Trim(),
-                    Nombre = x.Estudio.Nombre.Trim(),
-                    Area = x.Estudio.Area.Nombre,
+                    
+                    EstudioId = x.Id,
                     Precio = x.Precio,
                     Activo = true,
                 })?.ToList(),
                 Compañia = dto?.Compañia?.Select(x => new Price_Company
                 {
-                    Id = x.CompañiaId,
-                    Clave = x.Compañia.Clave.Trim(),
-                    Nombre = x.Compañia.NombreComercial.Trim(),
+                    CompañiaId = x.Id,
                     Precio = x.Precio,
                 })?.ToList(),
                 Medicos = dto?.Medicos?.Select(x => new Price_Medics
                 {
-                    Id = x.MedicoId,
-                    Clave = x.Medico.Clave.Trim(),
-                    Nombre = x.Medico.Nombre.Trim(),
+                    MedicoId = x.Id,
                     Precio = x.Precio,
                 })?.ToList(),
                 Sucursales = dto?.Sucursales?.Select(x => new Price_Branch
                 {
-                    Id = x.SucursalId,
-                    Clave = x.Sucursal.Clave.Trim(),
-                    Nombre = x.Sucursal.Nombre.Trim(),
+                    SucursalId = x.Id,
                     Precio = x.Precio,
                 })?.ToList(),
 
@@ -246,32 +242,23 @@ namespace Service.Catalog.Mapper
                 FechaModifico = DateTime.Now,
                 Estudios = model?.Estudios?.Select(x => new PriceList_Study
                 {
-                    Id = x.EstudioId,
-                    Clave = x.Estudio.Clave.Trim(),
-                    Nombre = x.Estudio.Nombre.Trim(),
-                    Area = x.Estudio.Area.Nombre.Trim(),
+                    EstudioId = x.Id,
                     Precio = x.Precio,
                     Activo = true,
                 })?.ToList(),
                 Compañia = model?.Compañia?.Select(x => new Price_Company
                 {
                     Id = x.CompañiaId,
-                    Clave = x.Compañia.Clave.Trim(),
-                    Nombre = x.Compañia.NombreComercial.Trim(),
                     Precio = x.Precio,
                 })?.ToList(),
                 Medicos = model?.Medicos?.Select(x => new Price_Medics
                 {
                     Id = x.MedicoId,
-                    Clave = x.Medico.Clave.Trim(),
-                    Nombre = x.Medico.Nombre.Trim(),
                     Precio = x.Precio,
                 })?.ToList(),
                 Sucursales = model?.Sucursales?.Select(x => new Price_Branch
                 {
                     Id = x.SucursalId,
-                    Clave = x.Sucursal.Clave.Trim(),
-                    Nombre = x.Sucursal.Nombre.Trim(),
                     Precio = x.Precio,
                 })?.ToList(),
 
