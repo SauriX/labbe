@@ -56,7 +56,7 @@ namespace Service.Catalog.Repository
         }
         public async Task<bool> IsDuplicate(PriceList price)
         {
-            var isDuplicate = await _context.CAT_ListaPrecio.AnyAsync(x => x.Id != price.Id && x.Clave == price.Clave || x.Nombre == price.Nombre);
+            var isDuplicate = await _context.CAT_ListaPrecio.AnyAsync(x => x.Id != price.Id && (x.Clave == price.Clave || x.Nombre == price.Nombre));
 
             return isDuplicate;
         }
