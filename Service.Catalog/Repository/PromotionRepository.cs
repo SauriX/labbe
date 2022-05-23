@@ -23,14 +23,14 @@ namespace Service.Catalog.Repository
         {
             var promotions = _context.CAT_Promocion
                     .Include(x => x.prices)
-                    .ThenInclude(x => x.Precio)
+                    .ThenInclude(x => x.PrecioLista)
                     .AsQueryable();
             if (!string.IsNullOrWhiteSpace(search) && search != "all")
             {
                 search = search.Trim().ToLower();
                 promotions= promotions.Where(x => x.Clave.ToLower().Contains(search) || x.Nombre.ToLower().Contains(search));
             }
-
+            var listas = _context.CAT_ListaPrecio.AsQueryable();
             return await promotions.ToListAsync();
         }
 
@@ -60,10 +60,26 @@ namespace Service.Catalog.Repository
 
         public async Task Create(Promotion promotion)
         {
+
+            var lista = _context.CAT_ListaPrecio.Where(x=>x.Id == promotion.PrecioListaId);
+            promotion.prices = lista.Select(x=> new Price_Promotion {
+
+
+                    PrecioListaId = x.Id,
+                    PromocionId = promotion.Id,
+                    Activo=true,
+                    Precio =0,
+                    UsuarioCreoId=2,
+                    FechaCreo=System.DateTime.Now,
+                    UsuarioModId = promotion.UsuarioCreoId.ToString(),
+                    FechaMod= System.DateTime.Now,
+
+                }).ToList();
             using var transaction = _context.Database.BeginTransaction();
             try
             {
                 _context.CAT_Promocion.Add(promotion);
+
                 await _context.SaveChangesAsync();
                 transaction.Commit();
 

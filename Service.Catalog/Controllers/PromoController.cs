@@ -11,12 +11,12 @@ namespace Service.Catalog.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PromotionController : ControllerBase
+    public class PromoController : ControllerBase
     {
 
         private readonly IPromotionApplication _Service;
 
-        public PromotionController(IPromotionApplication indicationService)
+        public PromoController(IPromotionApplication indicationService)
         {
             _Service = indicationService;
         }

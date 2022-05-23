@@ -13,6 +13,13 @@ namespace Service.Catalog.Domain.Promotion
         public decimal Price { get; set; }
         public decimal FinalPrice { get; set; }
         public bool Loyality { get; set; }
+        public bool Lunes { get; set; }
+        public bool Martes { get; set; }
+        public bool Miercoles { get; set; }
+        public bool Jueves { get; set; }
+        public bool Viernes { get; set; }
+        public bool Sabado { get; set; }
+        public bool Domingo { get; set; }
         public DateTime FechaInicio { get; set; }
         public DateTime FechaFinal { get; set; }
         public bool Activo { get; set; }
