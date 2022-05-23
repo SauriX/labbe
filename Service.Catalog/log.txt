@@ -695,3 +695,15 @@ Could not drop constraint. See previous errors.
 20/05/2022 16:01:29 => Invalid column name 'Area'.
 
 20/05/2022 16:01:31 => Invalid column name 'Area'.
+
+21/05/2022 10:12:08 => Value cannot be null. (Parameter 'input')
+
+21/05/2022 11:39:23 => The value of 'Price_Branch.SucursalId' is unknown when attempting to save changes. This is because the property is also part of a foreign key for which the principal entity in the relationship is not known.
+
+21/05/2022 11:40:07 => The value of 'Price_Branch.SucursalId' is unknown when attempting to save changes. This is because the property is also part of a foreign key for which the principal entity in the relationship is not known.
+
+23/05/2022 11:29:22 => The value of 'Price_Branch.SucursalId' is unknown when attempting to save changes. This is because the property is also part of a foreign key for which the principal entity in the relationship is not known.
+
+23/05/2022 13:08:12 => The value of 'Price_Branch.SucursalId' is unknown when attempting to save changes. This is because the property is also part of a foreign key for which the principal entity in the relationship is not known.
+
+23/05/2022 13:08:39 => The value of 'Price_Branch.SucursalId' is unknown when attempting to save changes. This is because the property is also part of a foreign key for which the principal entity in the relationship is not known.
