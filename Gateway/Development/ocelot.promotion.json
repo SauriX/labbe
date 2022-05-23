@@ -1,7 +1,7 @@
 ﻿{
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/promotion/all/{search}",
+      "DownstreamPathTemplate": "/api/promo/all/{search}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -13,7 +13,7 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/promotion/{id}",
+      "DownstreamPathTemplate": "/api/promo/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -25,7 +25,7 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/promotion",
+      "DownstreamPathTemplate": "/api/promo",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -37,7 +37,7 @@
       "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/api/promotion/export/list/{search}",
+      "DownstreamPathTemplate": "/api/promo/export/list/{search}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -49,7 +49,7 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/promotion/export/form/{id}",
+      "DownstreamPathTemplate": "/api/promo/export/form/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {

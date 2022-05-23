@@ -20,6 +20,13 @@ namespace Service.Catalog.Domain.Promotion
         public string UsuarioModificoId { get; set; }
         public DateTime? FechaModifico { get; set; }
         public Guid PrecioListaId { get; set; }
+        public bool Lunes { get; set; }
+        public bool Martes { get; set; }
+        public bool Miercoles { get; set; }
+        public bool Jueves { get; set; }
+        public bool Viernes { get; set; }
+        public bool Sabado { get; set; }  
+        public bool Domingo { get; set; }
         public ICollection<PromotionBranch> branches { get; set; }
         public ICollection<PromotionLoyality> loyalities { get; set; }
         public ICollection<PromotionPack> packs { get; set; }

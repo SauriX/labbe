@@ -39,7 +39,7 @@ namespace Service.Catalog.Mapper
         }
         public static IEnumerable<PromotionEstudioListDto> TopromotionEstudioListDto(this Promotion model)
         { var estudios = model.prices.AsQueryable().Where(y => y.PromocionId == model.Id && y.Activo == true).FirstOrDefault().PrecioLista.Estudios;
-            var listaEstudios = model.studies.Select(x => new PromotionEstudioListDto
+            var listaEstudios = model.studies.Select(x =>  new PromotionEstudioListDto
             {
 
                 Id = x.Study.Id,
@@ -51,9 +51,9 @@ namespace Service.Catalog.Mapper
                 FechaInicial = x.FechaInicio,
                 FechaFinal = x.FechaFinal,
                 Activo = x.Activo,
-                Precio = estudios.AsQueryable().Where(m=>m.EstudioId==x.StudyId).FirstOrDefault().Precio,
-                Paquete = false
-
+                Precio = estudios.AsQueryable().Where(m => m.EstudioId == x.StudyId).FirstOrDefault().Precio,
+                Paquete = false,
+                
             }).ToList();
             var paquetes = model.prices.AsQueryable().Where(y => y.PromocionId == model.Id && y.Activo == true).FirstOrDefault().PrecioLista.Paquete;
             var listaPaquetes = model.packs.Select(x => new PromotionEstudioListDto
@@ -80,6 +80,34 @@ namespace Service.Catalog.Mapper
         public static PromotionFormDto ToPromotionFormDto(this Promotion model)
         {
             if (model == null) return null;
+            var dias = new List<DiasDto>();
+            if (model.Lunes) {
+                dias.Add(new DiasDto{ Id =1, Dias="L" });
+            }
+            if (model.Martes)
+            {
+                dias.Add(new DiasDto { Id = 2, Dias = "M" });
+            }
+            if (model.Miercoles)
+            {
+                dias.Add(new DiasDto { Id = 3, Dias = "M" });
+            }
+            if (model.Jueves)
+            {
+                dias.Add(new DiasDto { Id = 4, Dias = "J" });
+            }
+            if (model.Viernes)
+            {
+                dias.Add(new DiasDto { Id = 5, Dias = "V" });
+            }
+            if (model.Sabado)
+            {
+                dias.Add(new DiasDto { Id = 6, Dias = "S" });
+            }
+            if (model.Domingo)
+            {
+                dias.Add(new DiasDto { Id = 7, Dias = "D" });
+            }
 
             return new PromotionFormDto
             {
@@ -90,7 +118,7 @@ namespace Service.Catalog.Mapper
                 FechaInicial = model.FechaInicio,
                 FechaFinal = model.FechaFinal,
                 Activo = model.Activo,
-                IdListaPrecios = model.prices.AsQueryable().Where(x => x.Activo == true).FirstOrDefault().PrecioLista.Id.ToString(),
+                IdListaPrecios = model.PrecioListaId.ToString(),
                 Lealtad = model.Visibilidad,
                 Estudio = model.TopromotionEstudioListDto(),
                 Branchs = model.branches.Select(x=>new PriceListBranchDto

@@ -707,3 +707,44 @@ Could not drop constraint. See previous errors.
 23/05/2022 13:08:12 => The value of 'Price_Branch.SucursalId' is unknown when attempting to save changes. This is because the property is also part of a foreign key for which the principal entity in the relationship is not known.
 
 23/05/2022 13:08:39 => The value of 'Price_Branch.SucursalId' is unknown when attempting to save changes. This is because the property is also part of a foreign key for which the principal entity in the relationship is not known.
+20/05/2022 16:01:31 => Invalid column name 'Area'.
+
+20/05/2022 04:50:57 p. m. => Value cannot be null. (Parameter 'input')
+
+23/05/2022 09:41:54 a. m. => Value cannot be null. (Parameter 'input')
+
+23/05/2022 09:43:09 a. m. => Value cannot be null. (Parameter 'input')
+
+23/05/2022 09:43:27 a. m. => Value cannot be null. (Parameter 'input')
+
+23/05/2022 09:44:01 a. m. => Value cannot be null. (Parameter 'input')
+
+23/05/2022 09:44:19 a. m. => Value cannot be null. (Parameter 'input')
+
+23/05/2022 09:44:54 a. m. => Value cannot be null. (Parameter 'input')
+
+23/05/2022 09:45:02 a. m. => Value cannot be null. (Parameter 'input')
+
+23/05/2022 09:45:19 a. m. => Value cannot be null. (Parameter 'input')
+
+23/05/2022 09:45:49 a. m. => Value cannot be null. (Parameter 'input')
+
+23/05/2022 09:59:08 a. m. => The expression 'x.Precio' is invalid inside an 'Include' operation, since it does not represent a property access: 't => t.MyProperty'. To target navigations declared on derived types, use casting ('t => ((Derived)t).MyProperty') or the 'as' operator ('t => (t as Derived).MyProperty'). Collection navigation access can be filtered by composing Where, OrderBy(Descending), ThenBy(Descending), Skip or Take operations. For more information on including related data, see http://go.microsoft.com/fwlink/?LinkID=746393.
+
+23/05/2022 10:00:02 a. m. => Guid should contain 32 digits with 4 dashes (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx).
+
+23/05/2022 10:04:50 a. m. => The expression 'x.Precio' is invalid inside an 'Include' operation, since it does not represent a property access: 't => t.MyProperty'. To target navigations declared on derived types, use casting ('t => ((Derived)t).MyProperty') or the 'as' operator ('t => (t as Derived).MyProperty'). Collection navigation access can be filtered by composing Where, OrderBy(Descending), ThenBy(Descending), Skip or Take operations. For more information on including related data, see http://go.microsoft.com/fwlink/?LinkID=746393.
+
+23/05/2022 10:04:56 a. m. => The expression 'x.Precio' is invalid inside an 'Include' operation, since it does not represent a property access: 't => t.MyProperty'. To target navigations declared on derived types, use casting ('t => ((Derived)t).MyProperty') or the 'as' operator ('t => (t as Derived).MyProperty'). Collection navigation access can be filtered by composing Where, OrderBy(Descending), ThenBy(Descending), Skip or Take operations. For more information on including related data, see http://go.microsoft.com/fwlink/?LinkID=746393.
+
+23/05/2022 10:05:19 a. m. => The expression 'x.Precio' is invalid inside an 'Include' operation, since it does not represent a property access: 't => t.MyProperty'. To target navigations declared on derived types, use casting ('t => ((Derived)t).MyProperty') or the 'as' operator ('t => (t as Derived).MyProperty'). Collection navigation access can be filtered by composing Where, OrderBy(Descending), ThenBy(Descending), Skip or Take operations. For more information on including related data, see http://go.microsoft.com/fwlink/?LinkID=746393.
+
+23/05/2022 10:10:06 a. m. => The expression 'x.Precio' is invalid inside an 'Include' operation, since it does not represent a property access: 't => t.MyProperty'. To target navigations declared on derived types, use casting ('t => ((Derived)t).MyProperty') or the 'as' operator ('t => (t as Derived).MyProperty'). Collection navigation access can be filtered by composing Where, OrderBy(Descending), ThenBy(Descending), Skip or Take operations. For more information on including related data, see http://go.microsoft.com/fwlink/?LinkID=746393.
+
+23/05/2022 10:12:48 a. m. => The expression 'x.Precio' is invalid inside an 'Include' operation, since it does not represent a property access: 't => t.MyProperty'. To target navigations declared on derived types, use casting ('t => ((Derived)t).MyProperty') or the 'as' operator ('t => (t as Derived).MyProperty'). Collection navigation access can be filtered by composing Where, OrderBy(Descending), ThenBy(Descending), Skip or Take operations. For more information on including related data, see http://go.microsoft.com/fwlink/?LinkID=746393.
+
+23/05/2022 10:16:07 a. m. => The expression 'x.Precio' is invalid inside an 'Include' operation, since it does not represent a property access: 't => t.MyProperty'. To target navigations declared on derived types, use casting ('t => ((Derived)t).MyProperty') or the 'as' operator ('t => (t as Derived).MyProperty'). Collection navigation access can be filtered by composing Where, OrderBy(Descending), ThenBy(Descending), Skip or Take operations. For more information on including related data, see http://go.microsoft.com/fwlink/?LinkID=746393.
+
+23/05/2022 10:22:02 a. m. => Object reference not set to an instance of an object.
+
+23/05/2022 10:44:57 a. m. => Object reference not set to an instance of an object.

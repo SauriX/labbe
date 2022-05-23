@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Service.Catalog.Dtos.Promotion
 {
@@ -16,5 +17,6 @@ namespace Service.Catalog.Dtos.Promotion
         public decimal Precio { get; set; }
         public decimal PrecioFinal { get; set; }
         public bool Paquete { get; set; }
+        public IEnumerable<DiasDto> selectedTags { get; set; }
     }
 }
