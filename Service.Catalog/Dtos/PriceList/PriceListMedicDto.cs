@@ -8,5 +8,6 @@ namespace Service.Catalog.Dtos.PriceList
         public string Clave { get; set; }
         public string Nombre { get; set; }
         public decimal Precio { get; set; }
+        public bool Activo { get; set; }
     }
 }

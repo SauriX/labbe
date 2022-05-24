@@ -151,7 +151,7 @@ namespace Service.Catalog.Mapper
                 branches = dto.Branchs.Select(x=>new PromotionBranch {
                     PromotionId = dto.Id,
                     BranchId = x.Id,
-                    Activo = x.Active,
+                    Activo = x.Activo,
                     UsuarioCreoId = dto.UsuarioId,
                     FechaCreo = DateTime.Now,
                     UsuarioModId = dto.UsuarioId,
@@ -215,7 +215,7 @@ namespace Service.Catalog.Mapper
                 {
                     PromotionId = dto.Id,
                     BranchId = x.Id,
-                    Activo = x.Active,
+                    Activo = x.Activo,
                     UsuarioCreoId = dto.UsuarioId,
                     FechaCreo = DateTime.Now,
                     UsuarioModId = dto.UsuarioId,

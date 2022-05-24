@@ -748,3 +748,27 @@ Could not drop constraint. See previous errors.
 23/05/2022 10:22:02 a. m. => Object reference not set to an instance of an object.
 
 23/05/2022 10:44:57 a. m. => Object reference not set to an instance of an object.
+
+23/05/2022 14:07:13 => The value of 'Price_Branch.SucursalId' is unknown when attempting to save changes. This is because the property is also part of a foreign key for which the principal entity in the relationship is not known.
+
+23/05/2022 14:17:02 => The value of 'Price_Branch.SucursalId' is unknown when attempting to save changes. This is because the property is also part of a foreign key for which the principal entity in the relationship is not known.
+
+23/05/2022 14:33:07 => The value of 'Price_Branch.SucursalId' is unknown when attempting to save changes. This is because the property is also part of a foreign key for which the principal entity in the relationship is not known.
+
+23/05/2022 14:34:44 => The value of 'Price_Branch.SucursalId' is unknown when attempting to save changes. This is because the property is also part of a foreign key for which the principal entity in the relationship is not known.
+
+23/05/2022 14:36:11 => The value of 'Price_Branch.SucursalId' is unknown when attempting to save changes. This is because the property is also part of a foreign key for which the principal entity in the relationship is not known.
+
+23/05/2022 14:41:23 => The value of 'Price_Branch.SucursalId' is unknown when attempting to save changes. This is because the property is also part of a foreign key for which the principal entity in the relationship is not known.
+
+23/05/2022 14:50:11 => An error occurred while updating the entries. See the inner exception for details.
+
+23/05/2022 14:54:52 => An error occurred while updating the entries. See the inner exception for details.
+
+24/05/2022 13:49:21 => The value of 'PriceList_Study.EstudioId' is unknown when attempting to save changes. This is because the property is also part of a foreign key for which the principal entity in the relationship is not known.
+
+24/05/2022 13:53:21 => The value of 'PriceList_Study.EstudioId' is unknown when attempting to save changes. This is because the property is also part of a foreign key for which the principal entity in the relationship is not known.
+
+24/05/2022 14:16:52 => Database operation expected to affect 1 row(s) but actually affected 0 row(s). Data may have been modified or deleted since entities were loaded. See http://go.microsoft.com/fwlink/?LinkId=527962 for information on understanding and handling optimistic concurrency exceptions.
+
+24/05/2022 14:30:44 => Database operation expected to affect 1 row(s) but actually affected 0 row(s). Data may have been modified or deleted since entities were loaded. See http://go.microsoft.com/fwlink/?LinkId=527962 for information on understanding and handling optimistic concurrency exceptions.
