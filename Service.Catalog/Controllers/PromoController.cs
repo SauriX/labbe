@@ -36,7 +36,7 @@ namespace Service.Catalog.Controllers
 
         [HttpPost]
         [Authorize(Policies.Create)]
-        public async Task<PromotionFormDto> Create(PromotionFormDto branch)
+        public async Task<PromotionListDto> Create(PromotionFormDto branch)
         {
             branch.UsuarioId = (Guid)HttpContext.Items["userId"];
             return await _Service.Create(branch);

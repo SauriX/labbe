@@ -735,3 +735,37 @@ Could not drop constraint. See previous errors.
 23/05/2022 10:22:02 a. m. => Object reference not set to an instance of an object.
 
 23/05/2022 10:44:57 a. m. => Object reference not set to an instance of an object.
+
+23/05/2022 03:10:12 p. m. => A connection was successfully established with the server, but then an error occurred during the pre-login handshake. (provider: SSL Provider, error: 0 - Tiempo de espera de la operación de espera agotado.)
+
+23/05/2022 04:38:12 p. m. => There isn't a worksheet named 'Promotion'.
+
+23/05/2022 04:38:56 p. m. => There isn't a worksheet named 'Promotion'.
+
+23/05/2022 05:22:48 p. m. => Unable to set cell value to 01/01/0001 00:00:00
+
+23/05/2022 05:25:24 p. m. => Value cannot be null. (Parameter 'source')
+
+23/05/2022 05:25:53 p. m. => Value cannot be null. (Parameter 'source')
+
+23/05/2022 05:27:45 p. m. => Value cannot be null. (Parameter 'source')
+
+23/05/2022 05:27:48 p. m. => Unable to set cell value to 01/01/0001 00:00:00
+
+23/05/2022 06:33:50 p. m. => Value cannot be null. (Parameter 'source')
+
+23/05/2022 06:34:36 p. m. => Value cannot be null. (Parameter 'source')
+
+23/05/2022 06:35:23 p. m. => Value cannot be null. (Parameter 'source')
+
+23/05/2022 06:36:27 p. m. => Value cannot be null. (Parameter 'source')
+
+23/05/2022 06:52:36 p. m. => Unable to set cell value to 01/01/0001 00:00:00
+
+23/05/2022 06:53:21 p. m. => Unable to set cell value to 01/01/0001 00:00:00
+
+23/05/2022 06:53:49 p. m. => Value cannot be null. (Parameter 'input')
+
+23/05/2022 06:54:12 p. m. => Unable to set cell value to 01/01/0001 00:00:00
+
+23/05/2022 07:04:31 p. m. => The process cannot access the file 'E:\ResposAxsis\API\Service.Catalog\wwwroot\layout\excel\promotion\PromotionFormulario.xlsx' because it is being used by another process.

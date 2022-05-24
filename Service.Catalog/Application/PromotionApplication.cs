@@ -49,7 +49,7 @@ namespace Service.Catalog.Application
 
 
 
-        public async Task<PromotionFormDto> Create(PromotionFormDto parameter)
+        public async Task<PromotionListDto> Create(PromotionFormDto parameter)
         {
 
 
@@ -61,7 +61,7 @@ namespace Service.Catalog.Application
 
             newParameter = await _repository.GetById(newParameter.Id);
 
-            return newParameter.ToPromotionFormDto();
+            return newParameter.ToPromotionListDto();
         }
 
 
@@ -91,49 +91,54 @@ namespace Service.Catalog.Application
 
         public async Task<(byte[] file, string fileName)> ExportList(string search)
         {
-            var parameters = await GetAll(search);
+            var promotions = await GetAll(search);
 
-            var path = Assets.ParameterList;
+            var path = Assets.PromotionList;
 
             var template = new XLTemplate(path);
 
             template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
-            template.AddVariable("Titulo", "Parametros");
+            template.AddVariable("Titulo", "Promociones");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
-            template.AddVariable("Parameters", parameters);
+            template.AddVariable("Promotions", promotions);
 
             template.Generate();
 
-            var range = template.Workbook.Worksheet("Parameters").Range("Parameters");
-            var table = template.Workbook.Worksheet("Parameters").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
+            var range = template.Workbook.Worksheet("Promotions").Range("Promotions");
+            var table = template.Workbook.Worksheet("Promotions").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
             table.Theme = XLTableTheme.TableStyleMedium2;
 
             template.Format();
 
-            return (template.ToByteArray(), "Catálogo de Parametros.xlsx");
+            return (template.ToByteArray(), "Catálogo de Promosiones.xlsx");
         }
 
         public async Task<(byte[] file, string fileName)> ExportForm(int id)
         {
-            var parameter = await GetById(id);
-
+            var promotion = await GetById(id);
+            var dias = promotion.Dias;
+            var sucursales = promotion.Branchs;
+            var estudios = promotion.Estudio;
  
 
-            var path = Assets.ParameterForm;
+            var path = Assets.PromotionForm;
 
             var template = new XLTemplate(path);
 
             template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
-            template.AddVariable("Titulo", "Parametros");
+            template.AddVariable("Titulo", "Promociones");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
-            template.AddVariable("Parameter", parameter);
+            template.AddVariable("Promotion", promotion);
+            template.AddVariable("Dias", dias);
+            template.AddVariable("Estudios", estudios);
+            template.AddVariable("Sucursales", sucursales);
             template.Generate();
 
             template.Format();
 
-            return (template.ToByteArray(), $"Catálogo de Parametros ({parameter.Clave}).xlsx");
+            return (template.ToByteArray(), $"Catálogo de Promociones ({promotion.Clave}).xlsx");
         }
 
         private async Task CheckDuplicate(Promotion parameter)
