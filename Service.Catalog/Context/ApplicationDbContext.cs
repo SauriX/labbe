@@ -5,6 +5,7 @@ using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Domain.Company;
 using Service.Catalog.Domain.Constant;
 using Service.Catalog.Domain.Indication;
+using Service.Catalog.Domain.Loyalty;
 using Service.Catalog.Domain.Maquila;
 using Service.Catalog.Domain.Medics;
 using Service.Catalog.Domain.Packet;
@@ -66,7 +67,7 @@ namespace Service.Catalog.Context
         public DbSet<Maquila> CAT_Maquilador { get; set; }
         public DbSet<Tapon> CAT_Tipo_Tapon { get; set; }
         public DbSet<Packet> CAT_Paquete { get; set; }
-
+        public DbSet<Loyalty> CAT_Lealtad { get; set; }
         public DbSet<Promotion> CAT_Promocion { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
