@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220523175954_dias")]
+    partial class dias
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -964,7 +966,7 @@ namespace Service.Catalog.Migrations
                     b.ToTable("Relacion_Estudio_Indicacion");
                 });
 
-            modelBuilder.Entity("Service.Catalog.Domain.Loyalty.Loyalty", b =>
+            modelBuilder.Entity("Service.Catalog.Domain.Loyality.Loyality", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -977,12 +979,10 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Clave")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("smalldatetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("FechaFinal")
                         .HasColumnType("datetime2");
@@ -990,26 +990,24 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaInicial")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("FechaMod")
-                        .HasColumnType("smalldatetime");
+                    b.Property<DateTime>("FechaMod")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TipoDescuento")
                         .HasColumnType("bit");
 
-                    b.Property<long>("UsuarioCreoId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("UsuarioCreoId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<long?>("UsuarioModId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("UsuarioModId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.ToTable("CAT_Lealtad");
+                    b.ToTable("Loyality");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Maquila.Maquila", b =>
@@ -1790,7 +1788,7 @@ namespace Service.Catalog.Migrations
                     b.Property<int>("PromotionId")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("LoyaltyId")
+                    b.Property<Guid>("LoyalityId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Activo")
@@ -1808,9 +1806,9 @@ namespace Service.Catalog.Migrations
                     b.Property<Guid>("UsuarioModId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("PromotionId", "LoyaltyId");
+                    b.HasKey("PromotionId", "LoyalityId");
 
-                    b.HasIndex("LoyaltyId");
+                    b.HasIndex("LoyalityId");
 
                     b.ToTable("Relacion_Promocion_Lealtad");
                 });
@@ -2613,9 +2611,9 @@ namespace Service.Catalog.Migrations
 
             modelBuilder.Entity("Service.Catalog.Domain.Promotion.PromotionLoyality", b =>
                 {
-                    b.HasOne("Service.Catalog.Domain.Loyalty.Loyalty", "loyalities")
+                    b.HasOne("Service.Catalog.Domain.Loyality.Loyality", "Loyality")
                         .WithMany()
-                        .HasForeignKey("LoyaltyId")
+                        .HasForeignKey("LoyalityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2625,7 +2623,7 @@ namespace Service.Catalog.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("loyalities");
+                    b.Navigation("Loyality");
 
                     b.Navigation("Promotion");
                 });

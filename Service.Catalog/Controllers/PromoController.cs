@@ -11,12 +11,12 @@ namespace Service.Catalog.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PromotionController : ControllerBase
+    public class PromoController : ControllerBase
     {
 
         private readonly IPromotionApplication _Service;
 
-        public PromotionController(IPromotionApplication indicationService)
+        public PromoController(IPromotionApplication indicationService)
         {
             _Service = indicationService;
         }
@@ -36,7 +36,7 @@ namespace Service.Catalog.Controllers
 
         [HttpPost]
         [Authorize(Policies.Create)]
-        public async Task<PromotionFormDto> Create(PromotionFormDto branch)
+        public async Task<PromotionListDto> Create(PromotionFormDto branch)
         {
             branch.UsuarioId = (Guid)HttpContext.Items["userId"];
             return await _Service.Create(branch);

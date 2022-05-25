@@ -53,7 +53,6 @@ namespace Service.Catalog.Dtos.Study
         public StudyFormDtoValidator()
         {
             RuleFor(x => x.Clave).NotEmpty().MaximumLength(100);//.NotEqual();
-            RuleFor(x => x.Nombre).NotEmpty().MaximumLength(100);
             RuleFor(x => x.Orden).NotEmpty();
             RuleFor(x => x.Nombre).NotEmpty().MaximumLength(100);
 

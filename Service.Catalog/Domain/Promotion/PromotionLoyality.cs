@@ -6,8 +6,8 @@ namespace Service.Catalog.Domain.Promotion
     {
         public int PromotionId { get; set; }
         public virtual Promotion Promotion { get; set; }
-        public Guid LoyalityId { get; set; }
-        public virtual Loyality.Loyality Loyality { get; set; }
+        public Guid LoyaltyId { get; set; }
+        public virtual Loyalty.Loyalty loyalities { get; set;}
         public bool Activo { get; set; }
         public Guid UsuarioCreoId { get; set; }
         public DateTime FechaCreo { get; set; }

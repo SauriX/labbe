@@ -29,5 +29,7 @@ namespace Service.Catalog.Dictionary
         public const string PriceListForm = "wwwroot/layout/excel/PriceList/ListadePrecioFormulario.xlsx";
         public const string PackList = "wwwroot/layout/excel/pack/PackListado.xlsx";
         public const string PackForm = "wwwroot/layout/excel/pack/PackFormulario.xlsx";
+        public const string PromotionList = "wwwroot/layout/excel/promotion/PromotionListado.xlsx";
+        public const string PromotionForm = "wwwroot/layout/excel/promotion/PromotionFormulario.xlsx";
     }
 }

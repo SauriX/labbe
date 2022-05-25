@@ -12,7 +12,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Promotion
 
             builder.HasKey(x => new {
                 x.PromotionId,
-                x.LoyalityId
+                x.LoyaltyId
             });
         }
     }
