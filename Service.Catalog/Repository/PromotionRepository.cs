@@ -44,7 +44,7 @@ namespace Service.Catalog.Repository
                  .ThenInclude(x => x.PrecioLista.Estudios)
                  .ThenInclude(x => x.Estudio.Area.Departamento)
                  .Include(x => x.loyalities)
-                 .ThenInclude(x => x.Loyality)
+                 .ThenInclude(x => x.loyalities)
                  .Include(x => x.branches)
                  .ThenInclude(x => x.Branch.Departamentos)
                  .ThenInclude(x => x.Departamento)
