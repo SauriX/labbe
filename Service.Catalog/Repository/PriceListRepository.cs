@@ -101,6 +101,7 @@ namespace Service.Catalog.Repository
                  {
                      Sucursal = x.branch,
                      PrecioLista = x.pList == null ? null : x.pList.PrecioLista,
+                     SucursalId = x.branch.Id
                  })
                 .ToListAsync();
 

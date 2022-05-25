@@ -11,6 +11,6 @@ namespace Service.Catalog.Repository.IRepository
         Task<Study> GetById(int id);
         Task Create(Study study);
         Task Update(Study study);
-        Task<bool> ValidateClaveNamne(string clave, string nombre);
+        Task<bool> ValidateClaveNamne(string clave, string nombre,int id);
     }
 }

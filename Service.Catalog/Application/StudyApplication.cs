@@ -33,7 +33,7 @@ namespace Service.Catalog.Application
         }
         public async Task<StudyFormDto> Create(StudyFormDto study)
         {
-            var code = await ValidarClaveNombre(study,true,true);
+            var code = await ValidarClaveNombre(study,true,true,study.Id);
 
             if (code != 0)
             {
@@ -63,7 +63,7 @@ namespace Service.Catalog.Application
             
             if (existing.Clave != study.Clave || existing.Nombre != study.Nombre)
             {
-                var code = await ValidarClaveNombre(study, existing.Clave != study.Clave, existing.Nombre != study.Nombre);
+                var code = await ValidarClaveNombre(study, existing.Clave != study.Clave, existing.Nombre != study.Nombre,study.Id);
                 if (code != 0)
                 {
                     throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
@@ -131,7 +131,7 @@ namespace Service.Catalog.Application
             return (template.ToByteArray(), $"Catálogo de Estudios ({study.Clave}).xlsx");
         }
 
-        private async Task<int> ValidarClaveNombre(StudyFormDto study,bool claveCheck,bool nombreCheck)
+        private async Task<int> ValidarClaveNombre(StudyFormDto study,bool claveCheck,bool nombreCheck,int id)
         {
             var name = "";
             var clave = "";
@@ -143,7 +143,7 @@ namespace Service.Catalog.Application
             }
             
 
-            var exists = await _repository.ValidateClaveNamne(clave, name);
+            var exists = await _repository.ValidateClaveNamne(clave, name,id);
 
             if (exists)
             {
