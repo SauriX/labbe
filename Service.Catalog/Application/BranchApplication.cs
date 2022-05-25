@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Service.Catalog.Application
 {
-    public class BranchApplication:IBranchApplication
+    public class BranchApplication : IBranchApplication
     {
         public readonly IBranchRepository _repository;
         public BranchApplication(IBranchRepository repository)
@@ -29,10 +29,10 @@ namespace Service.Catalog.Application
             {
                 throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
             }
-            
+
             var newBranch = branch.ToModel();
 
-            var (isDuplicate,code) = await _repository.IsDuplicate(newBranch);
+            var (isDuplicate, code) = await _repository.IsDuplicate(newBranch);
 
             if (isDuplicate)
             {
@@ -65,7 +65,7 @@ namespace Service.Catalog.Application
 
             var updatedAgent = branch.ToModel(existing);
 
-            var (isDuplicate,code) = await _repository.IsDuplicate(updatedAgent);
+            var (isDuplicate, code) = await _repository.IsDuplicate(updatedAgent);
 
             if (isDuplicate)
             {
@@ -83,7 +83,7 @@ namespace Service.Catalog.Application
             return branch.ToBranchListDto();
         }
 
-        public async Task<byte[]> ExportListBranch(string search = null)
+        public async Task<(byte[] file, string fileName)> ExportListBranch(string search = null)
         {
             var indication = await GetAll(search);
 
@@ -105,10 +105,10 @@ namespace Service.Catalog.Application
 
             template.Format();
 
-            return template.ToByteArray();
+            return (template.ToByteArray(), "Catálogo de Sucursales.xlsx");
         }
 
-        public async Task<byte[]> ExportFormBranch(string id)
+        public async Task<(byte[] file, string fileName)> ExportFormBranch(string id)
         {
             var indication = await GetById(id);
 
@@ -126,7 +126,7 @@ namespace Service.Catalog.Application
 
             template.Format();
 
-            return template.ToByteArray();
+            return (template.ToByteArray(), $"Catálogo de Sucursales ({indication.clave}).xlsx");
         }
     }
 }

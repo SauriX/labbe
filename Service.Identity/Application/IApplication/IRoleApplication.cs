@@ -14,7 +14,7 @@ namespace Service.Identity.Application.IApplication
         Task<IEnumerable<RolePermissionDto>> GetPermission(string id = null);
         Task<RoleListDto> Create(RoleFormDto role);
         Task<RoleListDto> Update(RoleFormDto role);
-        Task<byte[]> ExportForm(string id);
-        Task<byte[]> ExportList(string search = null);
+        Task<(byte[] file, string fileName)> ExportForm(string id);
+        Task<(byte[] file, string fileName)> ExportList(string search = null);
     }
 }

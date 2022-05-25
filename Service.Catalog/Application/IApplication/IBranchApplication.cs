@@ -6,8 +6,8 @@ namespace Service.Catalog.Application.IApplication
 {
     public interface IBranchApplication
     {
-        Task<byte[]> ExportListBranch(string search = null);
-        Task<byte[]> ExportFormBranch(string id);
+        Task<(byte[] file, string fileName)> ExportListBranch(string search = null);
+        Task<(byte[] file, string fileName)> ExportFormBranch(string id);
         Task<IEnumerable<BranchInfoDto>> GetAll(string search = null);
         Task<BranchFormDto> GetById(string Id);
         Task<bool> Create(BranchFormDto branch);

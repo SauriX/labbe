@@ -132,7 +132,7 @@ namespace Service.Identity.Application
             return updatedRole.ToRoleListDto();
         }
 
-        public async Task<byte[]> ExportList(string search = null)
+        public async Task<(byte[] file, string fileName)> ExportList(string search = null)
         {
             var rol = await GetAll(search);
 
@@ -154,10 +154,10 @@ namespace Service.Identity.Application
 
             template.Format();
 
-            return template.ToByteArray();
+            return (template.ToByteArray(), "Catálogo de Roles.xlsx");
         }
 
-        public async Task<byte[]> ExportForm(string id)
+        public async Task<(byte[] file, string fileName)> ExportForm(string id)
         {
             var rol = await GetById(id);
 
@@ -173,7 +173,7 @@ namespace Service.Identity.Application
             template.AddVariable("Permisos", rol.Permisos);
             template.Generate();
 
-            return template.ToByteArray();
+            return (template.ToByteArray(), $"Catálogo de Roles ({rol.Nombre}).xlsx");
         }
     }
 }

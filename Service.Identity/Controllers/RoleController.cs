@@ -78,16 +78,16 @@ namespace Service.Identity.Controllers
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportList(string search = null)
         {
-            var file = await _service.ExportList(search);
-            return File(file, MimeType.XLSX);
+            var (file, fileName) = await _service.ExportList(search);
+            return File(file, MimeType.XLSX, fileName);
         }
 
         [HttpPost("export/form/{id}")]
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportForm(string id)
         {
-            var file = await _service.ExportForm(id);
-            return File(file, MimeType.XLSX);
+            var (file, fileName) = await _service.ExportForm(id);
+            return File(file, MimeType.XLSX, fileName);
         }
     }
 }

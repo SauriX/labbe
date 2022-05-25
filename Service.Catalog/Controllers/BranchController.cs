@@ -54,16 +54,16 @@ namespace Service.Catalog.Controllers
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportListBranch(string search = null)
         {
-            var file = await _branchService.ExportListBranch(search);
-            return File(file, MimeType.XLSX);
+            var (file, fileName) = await _branchService.ExportListBranch(search);
+            return File(file, MimeType.XLSX, fileName);
         }
 
         [HttpPost("export/form/{id}")]
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportFormBranch(string id)
         {
-            var file = await _branchService.ExportFormBranch(id);
-            return File(file, MimeType.XLSX);
+            var (file, fileName) = await _branchService.ExportFormBranch(id);
+            return File(file, MimeType.XLSX, fileName);
         }
     }
 }
