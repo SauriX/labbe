@@ -1,6 +1,8 @@
 ﻿using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Context;
+using Service.Catalog.Domain.Indication;
+using Service.Catalog.Domain.Parameter;
 using Service.Catalog.Domain.Study;
 using Service.Catalog.Repository.IRepository;
 using System.Collections.Generic;
@@ -74,13 +76,20 @@ namespace Service.Catalog.Repository
                 study.Indications = null;
                 _context.CAT_Estudio.Add(study);
                 await _context.SaveChangesAsync();
-
+                var config = new BulkConfig();
+                config.SetSynchronizeFilter<Domain.Study.ReagentStudy>(x => x.EstudioId == study.Id);
                 reagents.ForEach(x => x.EstudioId = study.Id);
                 await _context.BulkInsertOrUpdateOrDeleteAsync(reagents);
+
+                config.SetSynchronizeFilter<Domain.Study.WorkListStudy>(x => x.EstudioId == study.Id);
                 workList.ForEach(x => x.EstudioId = study.Id);
                 await _context.BulkInsertOrUpdateOrDeleteAsync(workList);
+
+                config.SetSynchronizeFilter<ParameterStudy>(x => x.EstudioId == study.Id);
                 parameters.ForEach(x => x.EstudioId = study.Id);
                 await _context.BulkInsertOrUpdateOrDeleteAsync(parameters);
+
+                config.SetSynchronizeFilter<IndicationStudy>(x => x.EstudioId == study.Id);
                 indications.ForEach(x => x.EstudioId = study.Id);
                 await _context.BulkInsertOrUpdateOrDeleteAsync(indications);
                 transaction.Commit();
