@@ -39,11 +39,15 @@ namespace Service.Catalog.Context.EntityConfiguration.Loyalty
 
             builder
               .Property(x => x.FechaCreo)
-              .HasColumnType("smalldatetime");
+              .HasColumnType("date");
 
             builder
               .Property(x => x.FechaMod)
-              .HasColumnType("smalldatetime");
+              .HasColumnType("date");
+
+            builder
+                .HasMany(x => x.PrecioLista)
+                .WithOne(x => x.Loyalty);
 
         }
     }

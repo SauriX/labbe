@@ -33,11 +33,11 @@ namespace Service.Catalog.Application
         }
         public async Task<StudyFormDto> Create(StudyFormDto study)
         {
-            var code = await ValidarClaveNombre(study,true,true,study.Id);
+            var code = await ValidarClaveNombre(study,true,true,study.Id,study.Orden);
 
             if (code != 0)
             {
-                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave , el nombre o el orden"));
             }
             if (study.Id != 0)
             {
@@ -61,12 +61,12 @@ namespace Service.Catalog.Application
         {
             var existing = await _repository.GetById(study.Id);
             
-            if (existing.Clave != study.Clave || existing.Nombre != study.Nombre)
+            if (existing.Clave != study.Clave || existing.Nombre != study.Nombre || existing.Orden != study.Orden)
             {
-                var code = await ValidarClaveNombre(study, existing.Clave != study.Clave, existing.Nombre != study.Nombre,study.Id);
+                var code = await ValidarClaveNombre(study, existing.Clave != study.Clave, existing.Nombre != study.Nombre,study.Id,study.Orden);
                 if (code != 0)
                 {
-                    throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
+                    throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave , el nombre o el orden"));
                 }
             }
 
@@ -131,7 +131,7 @@ namespace Service.Catalog.Application
             return (template.ToByteArray(), $"Catálogo de Estudios ({study.Clave}).xlsx");
         }
 
-        private async Task<int> ValidarClaveNombre(StudyFormDto study,bool claveCheck,bool nombreCheck,int id)
+        private async Task<int> ValidarClaveNombre(StudyFormDto study,bool claveCheck,bool nombreCheck,int id,int orden)
         {
             var name = "";
             var clave = "";
@@ -143,7 +143,7 @@ namespace Service.Catalog.Application
             }
             
 
-            var exists = await _repository.ValidateClaveNamne(clave, name,id);
+            var exists = await _repository.ValidateClaveNamne(clave, name,id,orden);
 
             if (exists)
             {

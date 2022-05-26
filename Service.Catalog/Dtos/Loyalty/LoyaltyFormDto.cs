@@ -5,17 +5,18 @@ namespace Service.Catalog.Dtos.Loyalty
 {
     public class LoyaltyFormDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Clave { get; set; }
         public string Nombre { get; set; }
-        public bool TipoDescuento { get; set; }
+        public string TipoDescuento { get; set; }
         public decimal CantidadDescuento { get; set; }
         public DateTime FechaInicial { get; set; }
         public DateTime FechaFinal { get; set; }
         public bool Activo { get; set; }
-        public long UsuarioCreoId { get; set; }
+        public Guid UsuarioId { get; set; }
+        public Guid UsuarioCreoId { get; set; }
         public DateTime FechaCreo { get; set; }
-        public long? UsuarioModId { get; set; }
+        public Guid? UsuarioModId { get; set; }
         public DateTime? FechaMod { get; set; }
     }
 

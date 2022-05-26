@@ -20,7 +20,9 @@ namespace Service.Catalog.Repository
 
         public async Task<List<Loyalty>> GetAll(string search)
         {
-            var loyaltys = _context.CAT_Lealtad.AsQueryable();
+            var loyaltys = _context.CAT_Lealtad.Include(x => x.PrecioLista)
+                    .ThenInclude(x => x.PrecioLista)
+                    .AsQueryable();
 
             search = search.Trim().ToLower();
 
@@ -30,6 +32,13 @@ namespace Service.Catalog.Repository
             }
 
             return await loyaltys.ToListAsync();
+        }
+
+        public async Task<List<Loyalty>> GetActive()
+        {
+            var loyalty = await _context.CAT_Lealtad.Where(x => x.Activo).ToListAsync();
+
+            return loyalty;
         }
 
         public async Task<Loyalty> GetById(Guid Id)
