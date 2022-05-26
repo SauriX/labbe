@@ -776,3 +776,43 @@ Could not drop constraint. See previous errors.
 24/05/2022 14:55:01 => Database operation expected to affect 1 row(s) but actually affected 0 row(s). Data may have been modified or deleted since entities were loaded. See http://go.microsoft.com/fwlink/?LinkId=527962 for information on understanding and handling optimistic concurrency exceptions.
 
 24/05/2022 14:56:17 => Database operation expected to affect 1 row(s) but actually affected 0 row(s). Data may have been modified or deleted since entities were loaded. See http://go.microsoft.com/fwlink/?LinkId=527962 for information on understanding and handling optimistic concurrency exceptions.
+
+25/05/2022 13:52:05 => Unable to resolve service for type 'Service.Catalog.Application.IApplication.ILoyaltyApplication' while attempting to activate 'Identidad.Api.Controllers.LoyaltyController'.
+
+25/05/2022 14:38:09 => Unable to resolve service for type 'Service.Catalog.Application.IApplication.ILoyaltyApplication' while attempting to activate 'Identidad.Api.Controllers.LoyaltyController'.
+
+25/05/2022 14:38:17 => Unable to resolve service for type 'Service.Catalog.Application.IApplication.ILoyaltyApplication' while attempting to activate 'Identidad.Api.Controllers.LoyaltyController'.
+
+25/05/2022 14:42:47 => Unable to resolve service for type 'Service.Catalog.Application.IApplication.ILoyaltyApplication' while attempting to activate 'Identidad.Api.Controllers.LoyaltyController'.
+
+25/05/2022 15:10:04 => Unable to resolve service for type 'Service.Catalog.Application.IApplication.ILoyaltyApplication' while attempting to activate 'Identidad.Api.Controllers.LoyaltyController'.
+
+25/05/2022 15:10:43 => Unable to resolve service for type 'Service.Catalog.Application.IApplication.ILoyaltyApplication' while attempting to activate 'Identidad.Api.Controllers.LoyaltyController'.
+
+25/05/2022 17:17:05 => Value cannot be null. (Parameter 'source')
+
+25/05/2022 17:18:39 => Value cannot be null. (Parameter 'source')
+
+25/05/2022 17:20:09 => Value cannot be null. (Parameter 'source')
+
+25/05/2022 17:21:38 => Value cannot be null. (Parameter 'source')
+
+25/05/2022 17:21:45 => Value cannot be null. (Parameter 'source')
+
+25/05/2022 17:47:15 => Value cannot be null. (Parameter 'source')
+
+25/05/2022 17:47:18 => Value cannot be null. (Parameter 'source')
+
+25/05/2022 17:48:48 => Value cannot be null. (Parameter 'source')
+
+26/05/2022 11:30:58 => Could not find file 'C:\Users\Lapaxsis-00\source\repos\Nueva carpeta\Service.Catalog\wwwroot\layout\excel\loyalty\LoyaltyListado.xlsx'.
+
+26/05/2022 12:38:48 => Unable to cast object of type 'System.Guid' to type 'System.Int64'.
+
+26/05/2022 12:42:29 => Unable to cast object of type 'System.Guid' to type 'System.Int64'.
+
+26/05/2022 12:50:50 => Operand type clash: bigint is incompatible with uniqueidentifier
+
+26/05/2022 12:55:31 => Operand type clash: bigint is incompatible with uniqueidentifier
+
+26/05/2022 13:06:54 => Operand type clash: bigint is incompatible with uniqueidentifier
