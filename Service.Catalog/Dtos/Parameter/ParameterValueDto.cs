@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FluentValidation;
+using System;
 
 namespace Service.Catalog.Dtos.Parameters
 {
@@ -22,5 +23,22 @@ namespace Service.Catalog.Dtos.Parameters
         public string DescripcionTexto { get; set; }
         public string DescripcionParrafo { get; set; }
         public Guid UsuarioId { get; set; }
+    }
+    public class ParametervalueDtoValidator : AbstractValidator<ParameterValueDto>
+    {
+        public ParametervalueDtoValidator()
+        {
+            RuleFor(x => x.ValorInicial).GreaterThanOrEqualTo(0);
+            RuleFor(x => x.ValorFinal).GreaterThanOrEqualTo(0);
+            RuleFor(x => x.ValorInicialNumerico).GreaterThanOrEqualTo(0);
+            RuleFor(x => x.ValorFinalNumerico).GreaterThanOrEqualTo(0);
+            RuleFor(x => x.RangoEdadInicial).GreaterThanOrEqualTo(0);
+            RuleFor(x => x.RangoEdadFinal).GreaterThanOrEqualTo(0);
+            RuleFor(x => x.HombreValorInicial).GreaterThanOrEqualTo(0);
+            RuleFor(x => x.HombreValorFinal).GreaterThanOrEqualTo(0);
+            RuleFor(x => x.MujerValorInicial).GreaterThanOrEqualTo(0);
+            RuleFor(x => x.MujerValorFinal).GreaterThanOrEqualTo(0);
+
+        }
     }
 }

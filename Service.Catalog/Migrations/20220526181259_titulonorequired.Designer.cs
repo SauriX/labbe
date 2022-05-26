@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220526181259_titulonorequired")]
+    partial class titulonorequired
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -998,8 +1000,8 @@ namespace Service.Catalog.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("TipoDescuento")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("TipoDescuento")
+                        .HasColumnType("bit");
 
                     b.Property<long>("UsuarioCreoId")
                         .HasColumnType("bigint");
@@ -1010,36 +1012,6 @@ namespace Service.Catalog.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CAT_Lealtad");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Loyalty.LoyaltyPriceList", b =>
-                {
-                    b.Property<Guid>("LoyaltyId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("PrecioListaId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaMod")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UsuarioModId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("LoyaltyId", "PrecioListaId");
-
-                    b.HasIndex("PrecioListaId");
-
-                    b.ToTable("Relacion_Loyalty_PrecioLista");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Maquila.Maquila", b =>
@@ -2422,25 +2394,6 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Indicacion");
                 });
 
-            modelBuilder.Entity("Service.Catalog.Domain.Loyalty.LoyaltyPriceList", b =>
-                {
-                    b.HasOne("Service.Catalog.Domain.Loyalty.Loyalty", "Loyalty")
-                        .WithMany("PrecioLista")
-                        .HasForeignKey("LoyaltyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Service.Catalog.Domain.Price.PriceList", "PrecioLista")
-                        .WithMany()
-                        .HasForeignKey("PrecioListaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Loyalty");
-
-                    b.Navigation("PrecioLista");
-                });
-
             modelBuilder.Entity("Service.Catalog.Domain.Maquila.Maquila", b =>
                 {
                     b.HasOne("Service.Catalog.Domain.Constant.Colony", "Colonia")
@@ -2839,11 +2792,6 @@ namespace Service.Catalog.Migrations
             modelBuilder.Entity("Service.Catalog.Domain.Indication.Indication", b =>
                 {
                     b.Navigation("Estudios");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Loyalty.Loyalty", b =>
-                {
-                    b.Navigation("PrecioLista");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Medics.Medics", b =>

@@ -54,6 +54,7 @@ namespace Service.Catalog.Dtos.Parameters
             RuleFor(x => x.Formula).MaximumLength(200);
             RuleFor(x => x.UnidadSi).NotEmpty().MaximumLength(50);
             RuleFor(x => x.Fcsi).NotEmpty().MaximumLength(50);
+
         }
     }
 }

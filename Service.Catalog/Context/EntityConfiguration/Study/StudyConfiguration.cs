@@ -26,7 +26,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Study
 
             builder
                 .Property(x=>x.Titulo)
-                .IsRequired(true)
+                .IsRequired(false)
                 .HasMaxLength(100);
 
             builder

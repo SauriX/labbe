@@ -36,7 +36,7 @@ namespace Service.Catalog.Repository
 
         public async Task<Promotion> GetById(int id)
         {
-            var promotions = _context.CAT_Promocion
+                var promotions = _context.CAT_Promocion
                  .Include(x => x.prices)
                  .ThenInclude(x => x.PrecioLista.Paquete)
                  .ThenInclude(x => x.Paquete.Area.Departamento)
@@ -94,8 +94,22 @@ namespace Service.Catalog.Repository
 
         public async Task Update(Promotion promotion)
         {
+            var lista = _context.CAT_ListaPrecio.Where(x => x.Id == promotion.PrecioListaId);
+            promotion.prices = lista.Select(x => new Price_Promotion
+            {
+
+
+                PrecioListaId = x.Id,
+                PromocionId = promotion.Id,
+                Activo = true,
+                Precio = 0,
+                UsuarioCreoId = 2,
+                FechaCreo = System.DateTime.Now,
+                UsuarioModId = promotion.UsuarioCreoId.ToString(),
+                FechaMod = System.DateTime.Now,
+
+            }).ToList();
             var branches = promotion.branches.ToList();
-            var loyalitys = promotion.loyalities.ToList();
             var packs = promotion.packs.ToList();
             var studies = promotion.studies.ToList();
             var prices = promotion.prices.ToList();
@@ -110,10 +124,6 @@ namespace Service.Catalog.Repository
             config.SetSynchronizeFilter<PromotionBranch>(x => x.PromotionId == promotion.Id);
             branches.ForEach(x => x.PromotionId = promotion.Id);
             await _context.BulkInsertOrUpdateOrDeleteAsync(branches,config);
-
-            config.SetSynchronizeFilter<PromotionLoyality>(x => x.PromotionId == promotion.Id);
-            loyalitys.ForEach(x => x.PromotionId = promotion.Id);
-            await _context.BulkInsertOrUpdateOrDeleteAsync(loyalitys,config);
 
             config.SetSynchronizeFilter<PromotionPack>(x => x.PromotionId == promotion.Id);
             packs.ForEach(x => x.PromotionId = promotion.Id);
