@@ -128,9 +128,9 @@ namespace Service.Catalog.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> ValidateClaveNamne(string clave, string nombre,int id)
+        public async Task<bool> ValidateClaveNamne(string clave, string nombre,int id,int orden)
         {
-            return await   _context.CAT_Estudio.AnyAsync(x => x.Clave == clave || x.Nombre == nombre && x.Id != id);
+            return await   _context.CAT_Estudio.AnyAsync(x => x.Clave == clave || x.Nombre == nombre || x.Orden == orden && x.Id != id);
 
 
 
