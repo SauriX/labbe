@@ -769,3 +769,15 @@ Could not drop constraint. See previous errors.
 23/05/2022 06:54:12 p. m. => Unable to set cell value to 01/01/0001 00:00:00
 
 23/05/2022 07:04:31 p. m. => The process cannot access the file 'E:\ResposAxsis\API\Service.Catalog\wwwroot\layout\excel\promotion\PromotionFormulario.xlsx' because it is being used by another process.
+
+25/05/2022 04:45:01 p. m. => Guid should contain 32 digits with 4 dashes (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx).
+
+25/05/2022 04:46:13 p. m. => Guid should contain 32 digits with 4 dashes (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx).
+
+25/05/2022 04:48:40 p. m. => Guid should contain 32 digits with 4 dashes (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx).
+
+25/05/2022 04:55:06 p. m. => Guid should contain 32 digits with 4 dashes (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx).
+
+25/05/2022 04:55:54 p. m. => Guid should contain 32 digits with 4 dashes (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx).
+
+25/05/2022 04:59:02 p. m. => Guid should contain 32 digits with 4 dashes (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx).

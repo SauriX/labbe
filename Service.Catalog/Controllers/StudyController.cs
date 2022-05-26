@@ -45,7 +45,7 @@ namespace Service.Catalog.Controllers
         public async Task<StudyFormDto> Update(StudyFormDto study)
         {
             study.UsuarioId = (Guid)HttpContext.Items["userId"];
-            return await _Service.Update(study);
+                return await _Service.Update(study);
         }
 
 
