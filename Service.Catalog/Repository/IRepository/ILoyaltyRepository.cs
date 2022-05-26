@@ -9,6 +9,7 @@ namespace Service.Catalog.Repository.IRepository
     {
         Task<List<Loyalty>> GetAll(string search);
         Task<Loyalty> GetById(Guid Id);
+        Task<List<Loyalty>> GetActive();
         Task<bool> IsDuplicate(Loyalty loyalty);
         Task Create(Loyalty loyalty);
         Task Update(Loyalty loyalty);

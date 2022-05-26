@@ -200,6 +200,7 @@ namespace Service.Catalog
             services.AddScoped<IPriceListApplication, PriceListApplication>();
             services.AddScoped<IPackApplication, PackApplication>();
             services.AddScoped<IPromotionApplication,PromotionApplication>();
+            services.AddScoped<ILoyaltyApplication,LoyaltyApplication>();
 
             services.AddScoped<ICatalogRepository<Delivery>, CatalogRepository<Delivery>>();
             services.AddScoped<ICatalogRepository<Area>, CatalogRepository<Area>>();
@@ -231,6 +232,7 @@ namespace Service.Catalog
             services.AddScoped<IPriceListRepository, PriceListRepository>();
             services.AddScoped<IPackRepository, PackRepository>();
             services.AddScoped<IPromotionRepository, PromotionRepository>();
+            services.AddScoped<ILoyaltyRepository, LoyaltyRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
