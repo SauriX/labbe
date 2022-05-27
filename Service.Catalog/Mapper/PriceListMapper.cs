@@ -95,6 +95,7 @@ namespace Service.Catalog.Mapper
 
             });
         }
+        
         ///ToPriceList companymedicssucursal Aplication arriba
         public static IEnumerable<PriceListListDto> ToPriceListListDto(this List<PriceList> model)
         {
@@ -115,7 +116,7 @@ namespace Service.Catalog.Mapper
                     Area = x.Estudio.Area.Nombre.Trim(),
                     Departamento = x.Estudio.Area.Departamento.Nombre,
                     Precio = x.Precio,
-                    Activo = true,
+                    Activo = x.Activo,
                 })?.ToList(),
                 Compañia = x?.Compañia?.Select(x => new PriceListCompanyDto
                 {
@@ -162,7 +163,17 @@ namespace Service.Catalog.Mapper
                     Area = x.Estudio.Area.Nombre.Trim(),
                     Departamento = x.Estudio.Area.Departamento.Nombre,
                     Precio = x.Precio,
-                    Activo = true,
+                    Activo = x.Activo,
+                })?.ToList(),
+                Paquete = model?.Paquete?.Select(x => new PriceListStudyDto
+                {
+                    Id = x.PaqueteId,
+                    Clave = x.Paquete.Clave.Trim(),
+                    Nombre = x.Paquete.Nombre.Trim(),
+                    Area = x.Paquete.Area.Nombre.Trim(),
+                    Departamento = x.Paquete.Area.Departamento.Nombre,
+                    Precio = x.Precio,
+                    Activo = x.Activo,
                 })?.ToList(),
                 Compañia = model?.Compañia?.Select(x => new PriceListCompanyDto
                 {
@@ -207,6 +218,12 @@ namespace Service.Catalog.Mapper
                 Estudios = dto?.Estudios?.Select(x => new PriceList_Study
                 {
                     EstudioId = x.Id,
+                    Precio = x.Precio,
+                    Activo = true,
+                })?.ToList(),
+                Paquete = dto?.Estudios?.Select(x => new PriceList_Packet
+                {
+                    PaqueteId = x.Id,
                     Precio = x.Precio,
                     Activo = true,
                 })?.ToList(),

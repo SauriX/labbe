@@ -48,11 +48,9 @@ namespace Service.Catalog.Repository
             return loyalty;
         }
 
-        public async Task<bool> IsDuplicate(Loyalty loyalty)
+        public async Task<bool> IsDuplicate(string clave, string nombre, Guid id)
         {
-            var isDuplicate = await _context.CAT_Lealtad.AnyAsync(x => x.Id != loyalty.Id && x.Clave == loyalty.Clave || x.Nombre == loyalty.Nombre);
-
-            return isDuplicate;
+            return await _context.CAT_Lealtad.AnyAsync(x => x.Clave == clave || x.Nombre == nombre && x.Id != id);      
         }
 
         public async Task Create(Loyalty loyalty)

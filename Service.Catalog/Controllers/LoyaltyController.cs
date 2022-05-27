@@ -44,7 +44,7 @@ namespace Identidad.Api.Controllers
         [Authorize(Policies.Create)]
         public async Task<LoyaltyListDto> Create(LoyaltyFormDto loyalty)
         {
-            loyalty.UsuarioCreoId = (Guid)HttpContext.Items["userId"];
+            loyalty.UsuarioId = (Guid)HttpContext.Items["userId"];
             return await _service.Create(loyalty);
         }
 
@@ -52,7 +52,7 @@ namespace Identidad.Api.Controllers
         [Authorize(Policies.Update)]
         public async Task<LoyaltyListDto> Update(LoyaltyFormDto loyalty)
         {
-            loyalty.UsuarioCreoId = (Guid)HttpContext.Items["userId"];
+            loyalty.UsuarioId = (Guid)HttpContext.Items["userId"];
             return await _service.Update(loyalty);
         }
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFCore.BulkExtensions;
+using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Context;
 using Service.Catalog.Domain.Branch;
 using Service.Catalog.Domain.Company;
@@ -73,8 +74,31 @@ namespace Service.Catalog.Repository
 
         public async Task Update(PriceList price)
         {
+            var branches = price.Sucursales.ToList();
+            var packs = price.Paquete.ToList();
+            var studies = price.Estudios.ToList();
+            var medic= price.Medicos.ToList();
+           price.Sucursales = null;
+           price.Paquete = null;
+           price.Estudios = null;
+           price.Medicos = null;
             _context.CAT_ListaPrecio.Update(price);
+            var config = new BulkConfig();
+            config.SetSynchronizeFilter<Price_Branch>(x => x.PrecioListaId ==price.Id);
+            branches.ForEach(x => x.PrecioListaId =price.Id);
+            await _context.BulkInsertOrUpdateOrDeleteAsync(branches, config);
 
+            config.SetSynchronizeFilter<PriceList_Packet>(x => x.PrecioListaId == price.Id);
+            packs.ForEach(x => x.PrecioListaId = price.Id);
+            await _context.BulkInsertOrUpdateOrDeleteAsync(packs, config);
+
+            config.SetSynchronizeFilter<PriceList_Study>(x => x.PrecioListaId == price.Id);
+            studies.ForEach(x => x.PrecioListaId =price.Id);
+            await _context.BulkInsertOrUpdateOrDeleteAsync(studies, config);
+
+            config.SetSynchronizeFilter<Price_Promotion>(x => x.PrecioListaId == price.Id);
+            medic.ForEach(x => x.PrecioListaId = price.Id);
+            await _context.BulkInsertOrUpdateOrDeleteAsync(medic, config);
             await _context.SaveChangesAsync();
         }
         public async Task<List<Price_Company>> GetAllCompany(Guid companyId)
