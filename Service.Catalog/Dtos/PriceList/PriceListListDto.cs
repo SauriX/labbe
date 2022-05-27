@@ -17,6 +17,6 @@ namespace Service.Catalog.Dtos.PriceList
         public virtual ICollection<PriceListBranchDto> Sucursales { get; set; }
         public virtual ICollection<PriceListMedicDto> Medicos { get; set; }
         public virtual ICollection<PriceListStudyDto> Estudios { get; set; }
-        public virtual ICollection<PriceList_Packet> Paquete { get; set; }
+        public virtual ICollection<PriceListStudyDto> Paquete { get; set; }
     }
 }
