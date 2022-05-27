@@ -11,16 +11,16 @@ namespace Service.Catalog.Mapper
         public static LoyaltyListDto ToLoyaltyListDto(this Loyalty model)
         {
             if (model == null) return null;
-            var listaDeprecios = model?.PrecioLista.AsQueryable().Where(x => x.Activo == true).FirstOrDefault().PrecioLista.Nombre;
+            //var listaDeprecios = model?.PrecioLista.AsQueryable().Where(x => x.Activo == true).FirstOrDefault().PrecioLista.Nombre;
             return new LoyaltyListDto
             {
                 Id = model.Id,
                 Clave = model.Clave,
                 Nombre = model.Nombre,
-                BeneficioAplicado = model.CantidadDescuento,
-                Vigencia = $"{model.FechaInicial}-{model.FechaFinal}",
-                Promocion = model.TipoDescuento.Trim(),
-                NombreListaPrecio = listaDeprecios,
+                CantidadDescuento = model.CantidadDescuento,
+                Fecha = $"{model.FechaInicial.ToShortDateString()}-{model.FechaFinal.ToShortDateString()}",
+                TipoDescuento = model.TipoDescuento.Trim(),
+                //NombreListaPrecio = listaDeprecios,
                 Activo = model.Activo
             };
         }
@@ -34,10 +34,10 @@ namespace Service.Catalog.Mapper
                 Id = x.Id,
                 Clave = x.Clave,
                 Nombre = x.Nombre,
-                BeneficioAplicado = x.CantidadDescuento,
-                Vigencia = $"{x.FechaInicial}-{x.FechaFinal}",
-                Promocion = x.TipoDescuento.Trim(),
-                NombreListaPrecio = x?.PrecioLista.AsQueryable().Where(x => x.Activo == true).FirstOrDefault().PrecioLista.Nombre.Trim(),
+                CantidadDescuento = x.CantidadDescuento,
+                Fecha = $"{x.FechaInicial.ToShortDateString()}-{x.FechaFinal.ToShortDateString()}",
+                TipoDescuento = x.TipoDescuento.Trim(),
+                //NombreListaPrecio = x?.PrecioLista.AsQueryable().Where(x => x.Activo == true).FirstOrDefault().PrecioLista.Nombre.Trim(),
                 Activo = x.Activo
             });
         }
@@ -72,7 +72,7 @@ namespace Service.Catalog.Mapper
                 FechaInicial = dto.FechaInicial,
                 FechaFinal = dto.FechaFinal,
                 Activo = dto.Activo,
-                //UsuarioCreoId = dto.UsuarioCreoId,
+                UsuarioCreoId = dto.UsuarioId,
                 FechaCreo = DateTime.Now,
             };
         }
@@ -91,9 +91,9 @@ namespace Service.Catalog.Mapper
                 FechaInicial = dto.FechaInicial,
                 FechaFinal = dto.FechaFinal,
                 Activo = dto.Activo,
-                //UsuarioCreoId = model.UsuarioCreoId,
+                UsuarioCreoId = model.UsuarioCreoId,
                 FechaCreo = model.FechaCreo,
-                //UsuarioModId = dto.UsuarioModId,
+                UsuarioModId = dto.UsuarioId,
                 FechaMod = DateTime.Now,
             };
         }

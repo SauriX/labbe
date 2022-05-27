@@ -816,3 +816,47 @@ Could not drop constraint. See previous errors.
 26/05/2022 12:55:31 => Operand type clash: bigint is incompatible with uniqueidentifier
 
 26/05/2022 13:06:54 => Operand type clash: bigint is incompatible with uniqueidentifier
+
+26/05/2022 13:25:29 => Value cannot be null. (Parameter 'source')
+
+26/05/2022 13:29:33 => Value cannot be null. (Parameter 'source')
+
+26/05/2022 17:40:14 => Value cannot be null. (Parameter 'source')
+
+26/05/2022 17:43:12 => Value cannot be null. (Parameter 'source')
+
+27/05/2022 11:49:07 => Invalid column name 'UsuarioCreoId'.
+Invalid column name 'UsuarioModId'.
+
+27/05/2022 11:53:07 => Invalid column name 'UsuarioCreoId'.
+Invalid column name 'UsuarioModId'.
+
+27/05/2022 11:53:10 => Invalid column name 'UsuarioCreoId'.
+Invalid column name 'UsuarioModId'.
+
+27/05/2022 11:53:56 => Invalid column name 'UsuarioCreoId'.
+Invalid column name 'UsuarioModId'.
+
+27/05/2022 11:54:16 => Invalid column name 'UsuarioCreoId'.
+Invalid column name 'UsuarioModId'.
+
+27/05/2022 11:54:24 => Invalid column name 'UsuarioCreoId'.
+Invalid column name 'UsuarioModId'.
+
+27/05/2022 11:55:45 => Invalid column name 'UsuarioCreoId'.
+Invalid column name 'UsuarioModId'.
+
+27/05/2022 11:57:46 => Invalid column name 'UsuarioCreoId'.
+Invalid column name 'UsuarioModId'.
+
+27/05/2022 11:58:34 => Invalid column name 'UsuarioCreoId'.
+Invalid column name 'UsuarioModId'.
+
+27/05/2022 12:03:25 => Invalid column name 'UsuarioCreoId'.
+Invalid column name 'UsuarioModId'.
+
+27/05/2022 12:04:39 => Invalid column name 'UsuarioCreoId'.
+Invalid column name 'UsuarioModId'.
+
+27/05/2022 12:10:14 => Invalid column name 'UsuarioCreoId'.
+Invalid column name 'UsuarioModId'.
