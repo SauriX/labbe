@@ -14,9 +14,9 @@ namespace Service.Catalog.Dtos.Loyalty
         public DateTime FechaFinal { get; set; }
         public bool Activo { get; set; }
         public Guid UsuarioId { get; set; }
-        public Guid UsuarioCreoId { get; set; }
+        public string UsuarioCreoId { get; set; }
         public DateTime FechaCreo { get; set; }
-        public Guid? UsuarioModId { get; set; }
+        public string UsuarioModId { get; set; }
         public DateTime? FechaMod { get; set; }
     }
 

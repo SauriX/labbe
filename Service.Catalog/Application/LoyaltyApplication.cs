@@ -58,7 +58,16 @@ namespace Service.Catalog.Application
 
             var newloyalty = loyalty.ToModel();
 
-            await CheckDuplicate(newloyalty);
+            var code = await CheckDuplicate(loyalty, true, true, loyalty.Id);
+
+            if (code != 0)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
+            }
+            if (loyalty.Id != Guid.Empty)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
+            }
 
             await _repository.Create(newloyalty);
 
@@ -70,14 +79,20 @@ namespace Service.Catalog.Application
         {
             var existing = await _repository.GetById(loyalty.Id);
 
+            if (existing.Clave != loyalty.Clave || existing.Nombre != loyalty.Nombre)
+            {
+                var code = await CheckDuplicate(loyalty, existing.Clave != loyalty.Clave, existing.Nombre != loyalty.Nombre, loyalty.Id);
+                if (code != 0)
+                {
+                    throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
+                }
+            }
             if (existing == null)
             {
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
 
             var updatedLoyalty = loyalty.ToModel(existing);
-
-            await CheckDuplicate(updatedLoyalty);
 
             await _repository.Update(updatedLoyalty);
 
@@ -130,14 +145,28 @@ namespace Service.Catalog.Application
             return (template.ToByteArray(), $"Catálogo de Lealtades (${loyalty.Clave}).xlsx");
         }
 
-        private async Task CheckDuplicate(Loyalty loyalty)
+        private async Task<int> CheckDuplicate(LoyaltyFormDto loyalty, bool claveCheck, bool nombreCheck, Guid id)
         {
-            var isDuplicate = await _repository.IsDuplicate(loyalty);
-
-            if (isDuplicate)
+            var name = "";
+            var clave = "";
+            if (claveCheck)
             {
-                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
+                clave = loyalty.Clave;
             }
+            if (nombreCheck)
+            {
+                name = loyalty.Nombre;
+            }
+
+
+            var exists = await _repository.IsDuplicate(clave, name, id);
+
+            if (exists)
+            {
+                return 1;
+            }
+
+            return 0;
         }
     }
 }

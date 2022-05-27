@@ -13,9 +13,9 @@ namespace Service.Catalog.Domain.Loyalty
         public DateTime FechaInicial { get; set; }
         public DateTime FechaFinal { get; set; }
         public bool Activo { get; set; }
-        //public Guid UsuarioCreoId { get; set; }
+        public Guid UsuarioCreoId { get; set; }
         public DateTime FechaCreo { get; set; }
-        //public Guid? UsuarioModId { get; set; }
+        public Guid? UsuarioModId { get; set; }
         public DateTime? FechaMod { get; set; }
         public ICollection<LoyaltyPriceList> PrecioLista { get; set; }
     }
