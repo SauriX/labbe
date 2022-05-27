@@ -122,7 +122,7 @@ namespace Service.Catalog.Mapper
                     Id = x.CompañiaId,
                     Clave = x.Compañia.Clave,
                     Nombre = x.Compañia.NombreComercial,
-                    Precio = x.Precio,
+                   // Precio = x.Precio,
                 })?.ToList(),
                 Medicos = x?.Medicos?.Select(x => new PriceListMedicDto
                 {
@@ -170,6 +170,7 @@ namespace Service.Catalog.Mapper
                     Clave = x.Compañia.Clave.Trim(),
                     Nombre = x.Compañia.NombreComercial.Trim(),
                     Precio = x.Precio,
+                    Activo = x.Activo
                 })?.ToList(),
                 Medicos = model?.Medicos?.Select(x => new PriceListMedicDto
                 {
@@ -177,6 +178,7 @@ namespace Service.Catalog.Mapper
                     Clave = x.Medico.Clave.Trim(),
                     Nombre = x.Medico.Nombre.Trim(),
                     Precio = x.Precio,
+                    Activo = x.Activo
                 })?.ToList(),
                 Sucursales = model?.Sucursales?.Select(x => new PriceListBranchDto
                 {
@@ -184,6 +186,7 @@ namespace Service.Catalog.Mapper
                     Clave = x.Sucursal.Clave.Trim(),
                     Nombre = x.Sucursal.Nombre.Trim(),
                     Precio = x.Precio,
+                    Activo = x.Activo
                 })?.ToList(),
             };
         }
