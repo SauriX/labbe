@@ -72,7 +72,7 @@ namespace Service.Catalog.Mapper
                 Clave = x.Pack.Clave,
                 Nombre = x.Pack.Nombre,
                 Area = x.Pack.Area.Nombre,
-                Departamento= x.Pack.Area.Departamento.Clave,
+                Departamento= x.Pack.Area.Departamento.Nombre,
                 DescuentoPorcentaje = x.Discountporcent,
                 DescuentoCantidad = x.DiscountNumeric,
                 Lealtad = x.Loyality,

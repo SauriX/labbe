@@ -25,8 +25,9 @@ namespace Service.Catalog.Repository
             var indications = _context.CAT_ListaPrecio.AsQueryable()
                     .Include(x => x.Estudios)
                     .ThenInclude(x => x.Estudio).ThenInclude(x => x.Area).ThenInclude(x => x.Departamento)
-                    .Include(x => x.Paquete)
-                    .Include(x => x.Compañia)
+                    .Include(x => x.Sucursales).ThenInclude(x => x.Sucursal)
+                    .Include(x => x.Compañia).ThenInclude(x => x.Compañia)
+                    .Include(x => x.Medicos).ThenInclude(x => x.Medico)
                     .AsQueryable();
 
             search = search.Trim().ToLower();
@@ -44,6 +45,8 @@ namespace Service.Catalog.Repository
             var indication = await _context.CAT_ListaPrecio
                 .Include(x => x.Estudios).ThenInclude(x => x.Estudio).ThenInclude(x => x.Area).ThenInclude(x => x.Departamento)
                 .Include(x => x.Sucursales).ThenInclude(x => x.Sucursal)
+                .Include(x=>x.Compañia).ThenInclude(x=>x.Compañia)
+                .Include(x=>x.Medicos).ThenInclude(x=>x.Medico)
                 .FirstOrDefaultAsync(x => x.Id == Id);
 
             return indication;
@@ -117,6 +120,7 @@ namespace Service.Catalog.Repository
                  select new { medics, pList })
                  .Select(x => new Price_Medics
                  {
+                     MedicoId = x.medics.IdMedico,
                      Medico = x.medics,
                      PrecioLista = x.pList == null ? null : x.pList.PrecioLista,
                  })
