@@ -48,6 +48,8 @@ namespace Service.Catalog.Repository
                 .Include(x => x.Sucursales).ThenInclude(x => x.Sucursal)
                 .Include(x=>x.Compañia).ThenInclude(x=>x.Compañia)
                 .Include(x=>x.Medicos).ThenInclude(x=>x.Medico)
+                .Include(x=>x.Paquete).ThenInclude(x=>x.Paquete.studies).ThenInclude(x=>x.Estudio.Area.Departamento)
+                .Include(x=>x.Paquete).ThenInclude(x=>x.Paquete.Area.Departamento)
                 .FirstOrDefaultAsync(x => x.Id == Id);
 
             return indication;
@@ -96,7 +98,7 @@ namespace Service.Catalog.Repository
             studies.ForEach(x => x.PrecioListaId =price.Id);
             await _context.BulkInsertOrUpdateOrDeleteAsync(studies, config);
 
-            config.SetSynchronizeFilter<Price_Promotion>(x => x.PrecioListaId == price.Id);
+            config.SetSynchronizeFilter<Price_Medics>(x => x.PrecioListaId == price.Id);
             medic.ForEach(x => x.PrecioListaId = price.Id);
             await _context.BulkInsertOrUpdateOrDeleteAsync(medic, config);
             await _context.SaveChangesAsync();

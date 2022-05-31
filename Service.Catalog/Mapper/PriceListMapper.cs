@@ -1,6 +1,7 @@
 ﻿using Service.Catalog.Domain.Company;
 using Service.Catalog.Domain.Price;
 using Service.Catalog.Dtos;
+using Service.Catalog.Dtos.Pack;
 using Service.Catalog.Dtos.PriceList;
 using System;
 using System.Collections.Generic;
@@ -174,6 +175,14 @@ namespace Service.Catalog.Mapper
                     Departamento = x.Paquete.Area.Departamento.Nombre,
                     Precio = x.Precio,
                     Activo = x.Activo,
+                    Pack = x.Paquete.studies.Select(x => new PackStudyDto
+                    {
+                        Id = x.EstudioId,
+                        Clave = x.Estudio.Clave,
+                        Nombre = x.Estudio.Nombre,
+                        Area = x.Estudio.Area.Nombre,
+                        Activo = true,
+                    }).ToList(),
                 })?.ToList(),
                 Compañia = model?.Compañia?.Select(x => new PriceListCompanyDto
                 {
@@ -221,11 +230,11 @@ namespace Service.Catalog.Mapper
                     Precio = x.Precio,
                     Activo = true,
                 })?.ToList(),
-                Paquete = dto?.Estudios?.Select(x => new PriceList_Packet
+                Paquete = dto?.Paquete?.Select(x => new PriceList_Packet
                 {
                     PaqueteId = x.Id,
                     Precio = x.Precio,
-                    Activo = true,
+                    Activo = x.Activo,
                 })?.ToList(),
                 Compañia = dto?.Compañia?.Select(x => new Price_Company
                 {
@@ -268,7 +277,14 @@ namespace Service.Catalog.Mapper
                 {
                     PrecioListaId = model.Id,
                     Id = x.Id,
-                    EstudioId = x.EstudioId,
+                    EstudioId = x.Id,
+                    Precio = x.Precio,
+                    Activo = x.Activo,
+                })?.ToList(),
+                Paquete = dto?.Paquete?.Select(x => new PriceList_Packet
+                {
+                    PrecioListaId = model.Id,
+                    PaqueteId = x.Id,
                     Precio = x.Precio,
                     Activo = x.Activo,
                 })?.ToList(),
