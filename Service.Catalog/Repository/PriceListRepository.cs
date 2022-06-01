@@ -80,10 +80,12 @@ namespace Service.Catalog.Repository
             var packs = price.Paquete.ToList();
             var studies = price.Estudios.ToList();
             var medic= price.Medicos.ToList();
+            var company = price.Compañia.ToList();
            price.Sucursales = null;
            price.Paquete = null;
            price.Estudios = null;
            price.Medicos = null;
+            price.Compañia = null;
             _context.CAT_ListaPrecio.Update(price);
             var config = new BulkConfig();
             config.SetSynchronizeFilter<Price_Branch>(x => x.PrecioListaId ==price.Id);
@@ -102,12 +104,17 @@ namespace Service.Catalog.Repository
             medic.ForEach(x => x.PrecioListaId = price.Id);
             await _context.BulkInsertOrUpdateOrDeleteAsync(medic, config);
             await _context.SaveChangesAsync();
+
+            config.SetSynchronizeFilter<Price_Company>(x => x.PrecioListaId == price.Id);
+            company.ForEach(x => x.PrecioListaId = price.Id);
+            await _context.BulkInsertOrUpdateOrDeleteAsync(company, config);
+            await _context.SaveChangesAsync();
         }
         public async Task<List<Price_Company>> GetAllCompany(Guid companyId)
         {
             var asignado = await
                 (from company in _context.CAT_Compañia
-                 join priceList in _context.CAT_ListaP_Compañia.Where(x => x.CompañiaId == companyId) on company.Id equals priceList.CompañiaId into ljPriceList
+                 join priceList in _context.CAT_ListaP_Compañia.Include(x=>x.PrecioLista) on company.Id equals priceList.CompañiaId into ljPriceList
                  from pList in ljPriceList.DefaultIfEmpty()
                  select new { company, pList })
                  .Select(x => new Price_Company
@@ -123,7 +130,7 @@ namespace Service.Catalog.Repository
         {
             var asignado = await
                 (from branch in _context.CAT_Sucursal
-                 join priceList in _context.CAT_ListaP_Sucursal.Where(x => x.SucursalId == branchId) on branch.Id equals priceList.SucursalId into ljPriceList
+                 join priceList in _context.CAT_ListaP_Sucursal.Include(x => x.PrecioLista)on branch.Id equals priceList.SucursalId into ljPriceList
                  from pList in ljPriceList.DefaultIfEmpty()
                  select new { branch, pList })
                  .Select(x => new Price_Branch
@@ -141,7 +148,7 @@ namespace Service.Catalog.Repository
         {
             var asignado = await
                 (from medics in _context.CAT_Medicos
-                 join priceList in _context.CAT_ListaP_Medicos.Where(x => x.MedicoId == medicsId) on medics.IdMedico equals priceList.MedicoId into ljPriceList
+                 join priceList in _context.CAT_ListaP_Medicos.Include(x => x.PrecioLista) on medics.IdMedico equals priceList.MedicoId into ljPriceList
                  from pList in ljPriceList.DefaultIfEmpty()
                  select new { medics, pList })
                  .Select(x => new Price_Medics
@@ -153,6 +160,32 @@ namespace Service.Catalog.Repository
                 .ToListAsync();
 
             return asignado;
+        }
+
+        public async Task<bool> DuplicateSMC(PriceList price) {
+            foreach (var compañia in price.Compañia) {
+                var compañias = await _context.CAT_ListaP_Compañia.AnyAsync(x=>x.CompañiaId==compañia.CompañiaId && x.PrecioListaId != price.Id);
+                if (compañias) {
+                    return true;
+                }
+            }
+            foreach (var sucursal in price.Sucursales)
+            {
+                var sucursales = await _context.CAT_ListaP_Sucursal.AnyAsync(x => x.SucursalId == sucursal.SucursalId && x.PrecioListaId != price.Id);
+                if (sucursales)
+                {
+                    return true;
+                }
+            }
+            foreach (var medico in price.Medicos)
+            {
+                var medicos= await _context.CAT_ListaP_Medicos.AnyAsync(x => x.MedicoId == medico.MedicoId && x.PrecioListaId != price.Id);
+                if (medicos)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

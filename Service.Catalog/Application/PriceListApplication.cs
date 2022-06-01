@@ -150,9 +150,16 @@ namespace Service.Catalog.Application
         {
             var isDuplicate = await _repository.IsDuplicate(price);
 
+            var isCSMDuoplicate = await _repository.DuplicateSMC(price);
+
             if (isDuplicate)
             {
                 throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
+            }
+
+            if (isCSMDuoplicate)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La Sucursal , La compañia o el  medico"));
             }
         }
         public async Task<IEnumerable<PriceListCompanyDto>> GetAllCompany(Guid companyId)
