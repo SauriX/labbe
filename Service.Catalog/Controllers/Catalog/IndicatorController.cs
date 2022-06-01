@@ -17,6 +17,12 @@ namespace Service.Catalog.Controllers.Catalog
             return await _indicatorService.GetAll(search);
         }
 
+        [HttpGet("indicator/active")]
+        public async Task<IEnumerable<CatalogListDto>> GetActiveIndicator()
+        {
+            return await _indicatorService.GetActive();
+        }
+
         [HttpGet("indicator/{id}")]
         [Authorize(Policies.Access)]
         public async Task<CatalogDescriptionFormDto> GetindIcatorById(int id)
@@ -38,6 +44,22 @@ namespace Service.Catalog.Controllers.Catalog
         {
             catalog.UsuarioId = (Guid)HttpContext.Items["userId"];
             return await _indicatorService.Update(catalog);
+        }
+
+        [HttpPost("indicator/export/list/{search}")]
+        [Authorize(Policies.Download)]
+        public async Task<IActionResult> ExportListIndicator(string search)
+        {
+            var file = await _indicatorService.ExportList(search);
+            return File(file, MimeType.XLSX, "Catálogo de Indicadores.xlsx");
+        }
+
+        [HttpPost("indicator/export/form/{id}")]
+        [Authorize(Policies.Download)]
+        public async Task<IActionResult> ExportFormIndicator(int id)
+        {
+            var (file, code) = await _indicatorService.ExportForm(id);
+            return File(file, MimeType.XLSX, $"Catálogo de Indicadores ({code}).xlsx");
         }
     }
 }

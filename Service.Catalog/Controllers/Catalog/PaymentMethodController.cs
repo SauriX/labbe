@@ -10,15 +10,15 @@ namespace Service.Catalog.Controllers.Catalog
 {
     public partial class CatalogController : ControllerBase
     {
-        [HttpGet("paymentMethod/all/{search?}")]
+        [HttpGet("paymentMethod/all/{search}")]
         [Authorize(Policies.Access)]
-        public async Task<IEnumerable<CatalogListDto>> GetAllPaymentMethod(string search = null)
+        public async Task<IEnumerable<CatalogListDto>> GetAllPaymentMethod(string search)
         {
             return await _paymentMethodService.GetAll(search);
         }
 
         [HttpGet("paymentMethod/active")]
-        public async Task<IEnumerable<CatalogListDto>> GetActivePaymentMethod(int id)
+        public async Task<IEnumerable<CatalogListDto>> GetActivePaymentMethod()
         {
             return await _paymentMethodService.GetActive();
         }
@@ -44,6 +44,22 @@ namespace Service.Catalog.Controllers.Catalog
         {
             catalog.UsuarioId = (Guid)HttpContext.Items["userId"];
             return await _paymentMethodService.Update(catalog);
+        }
+
+        [HttpPost("paymentMethod/export/list/{search}")]
+        [Authorize(Policies.Download)]
+        public async Task<IActionResult> ExportListPaymentMethod(string search)
+        {
+            var file = await _paymentMethodService.ExportList(search);
+            return File(file, MimeType.XLSX, "Catálogo de Método de pago.xlsx");
+        }
+
+        [HttpPost("paymentMethod/export/form/{id}")]
+        [Authorize(Policies.Download)]
+        public async Task<IActionResult> ExportFormPaymentMethod(int id)
+        {
+            var (file, code) = await _paymentMethodService.ExportForm(id);
+            return File(file, MimeType.XLSX, $"Catálogo de Método de pago ({code}).xlsx");
         }
     }
 }

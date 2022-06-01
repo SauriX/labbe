@@ -10,9 +10,9 @@ namespace Service.Catalog.Controllers.Catalog
 {
     public partial class CatalogController : ControllerBase
     {
-        [HttpGet("bank/all/{search?}")]
+        [HttpGet("bank/all/{search}")]
         [Authorize(Policies.Access)]
-        public async Task<IEnumerable<CatalogListDto>> GetAllBank(string search = null)
+        public async Task<IEnumerable<CatalogListDto>> GetAllBank(string search)
         {
             return await _bankService.GetAll(search);
 
@@ -45,6 +45,22 @@ namespace Service.Catalog.Controllers.Catalog
         {
             catalog.UsuarioId = (Guid)HttpContext.Items["userId"];
             return await _bankService.Update(catalog);
+        }
+
+        [HttpPost("bank/export/list/{search}")]
+        [Authorize(Policies.Download)]
+        public async Task<IActionResult> ExportListBank(string search)
+        {
+            var file = await _bankService.ExportList(search);
+            return File(file, MimeType.XLSX, "Catálogo de Bancos.xlsx");
+        }
+
+        [HttpPost("bank/export/form/{id}")]
+        [Authorize(Policies.Download)]
+        public async Task<IActionResult> ExportFormBank(int id)
+        {
+            var (file, code) = await _bankService.ExportForm(id);
+            return File(file, MimeType.XLSX, $"Catálogo de Bancos ({code}).xlsx");
         }
     }
 }

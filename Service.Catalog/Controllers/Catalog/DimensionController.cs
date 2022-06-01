@@ -17,6 +17,12 @@ namespace Service.Catalog.Controllers.Catalog
             return await _dimensionService.GetAll(search);
         }
 
+        [HttpGet("dimension/active")]
+        public async Task<IEnumerable<DimensionListDto>> GetActiveDimension()
+        {
+            return await _dimensionService.GetActive();
+        }
+
         [HttpGet("dimension/{id}")]
         [Authorize(Policies.Access)]
         public async Task<DimensionFormDto> GetDimensionById(int id)
@@ -38,6 +44,22 @@ namespace Service.Catalog.Controllers.Catalog
         {
             catalog.UsuarioId = (Guid)HttpContext.Items["userId"];
             return await _dimensionService.Update(catalog);
+        }
+
+        [HttpPost("dimension/export/list/{search}")]
+        [Authorize(Policies.Download)]
+        public async Task<IActionResult> ExportListDimension(string search)
+        {
+            var file = await _dimensionService.ExportList(search);
+            return File(file, MimeType.XLSX, "Catálogo de Dimensiones.xlsx");
+        }
+
+        [HttpPost("dimension/export/form/{id}")]
+        [Authorize(Policies.Download)]
+        public async Task<IActionResult> ExportFormDimension(int id)
+        {
+            var (file, code) = await _dimensionService.ExportForm(id);
+            return File(file, MimeType.XLSX, $"Catálogo de Dimensiones ({code}).xlsx");
         }
     }
 }

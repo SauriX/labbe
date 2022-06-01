@@ -47,10 +47,10 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/area",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/api/catalog/area",
+      "DownstreamPathTemplate": "/api/catalog/area/export/list/{search}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -58,8 +58,20 @@
           "Port": 20347
         }
       ],
-      "UpstreamPathTemplate": "/api/catalog/area",
-      "UpstreamHttpMethod": [ "PUT" ]
+      "UpstreamPathTemplate": "/api/catalog/area/export/list/{search}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/area/export/form/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/area/export/form/{id}",
+      "UpstreamHttpMethod": [ "POST" ]
     },
     //Bank
     {
@@ -72,6 +84,18 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/bank/all/{search}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/bank/active",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/bank/active",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
@@ -96,10 +120,10 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/bank",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/api/catalog/bank",
+      "DownstreamPathTemplate": "/api/catalog/bank/export/list/{search}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -107,8 +131,20 @@
           "Port": 20347
         }
       ],
-      "UpstreamPathTemplate": "/api/catalog/bank",
-      "UpstreamHttpMethod": [ "PUT" ]
+      "UpstreamPathTemplate": "/api/catalog/bank/export/list/{search}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/bank/export/form/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/bank/export/form/{id}",
+      "UpstreamHttpMethod": [ "POST" ]
     },
     //Clinic
     {
@@ -157,10 +193,10 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/clinic",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/api/catalog/clinic",
+      "DownstreamPathTemplate": "/api/catalog/clinic/export/list/{search}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -168,8 +204,93 @@
           "Port": 20347
         }
       ],
-      "UpstreamPathTemplate": "/api/catalog/clinic",
-      "UpstreamHttpMethod": [ "PUT" ]
+      "UpstreamPathTemplate": "/api/catalog/clinic/export/list/{search}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/clinic/export/form/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/clinic/export/form/{id}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    //Delivery
+    {
+      "DownstreamPathTemplate": "/api/catalog/delivery/all/{search}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/delivery/all/{search}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/delivery/active",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/delivery/active",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/delivery/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/delivery/{id}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/delivery",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/delivery",
+      "UpstreamHttpMethod": [ "POST", "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/delivery/export/list/{search}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/delivery/export/list/{search}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/delivery/export/form/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/delivery/export/form/{id}",
+      "UpstreamHttpMethod": [ "POST" ]
     },
     //Department
     {
@@ -218,10 +339,10 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/department",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/api/catalog/department",
+      "DownstreamPathTemplate": "/api/catalog/department/export/list/{search}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -229,8 +350,20 @@
           "Port": 20347
         }
       ],
-      "UpstreamPathTemplate": "/api/catalog/department",
-      "UpstreamHttpMethod": [ "PUT" ]
+      "UpstreamPathTemplate": "/api/catalog/department/export/list/{search}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/department/export/form/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/department/export/form/{id}",
+      "UpstreamHttpMethod": [ "POST" ]
     },
     //Dimension
     {
@@ -243,6 +376,18 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/dimension/all/{search}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/dimension/active",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/dimension/active",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
@@ -267,10 +412,10 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/dimension",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/api/catalog/dimension",
+      "DownstreamPathTemplate": "/api/catalog/dimension/export/list/{search}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -278,8 +423,20 @@
           "Port": 20347
         }
       ],
-      "UpstreamPathTemplate": "/api/catalog/dimension",
-      "UpstreamHttpMethod": [ "PUT" ]
+      "UpstreamPathTemplate": "/api/catalog/dimension/export/list/{search}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/dimension/export/form/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/dimension/export/form/{id}",
+      "UpstreamHttpMethod": [ "POST" ]
     },
     //Field
     {
@@ -292,6 +449,18 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/field/all/{search}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/field/active",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/field/active",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
@@ -316,10 +485,22 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/field",
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/field/export/list/{search}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/field/export/list/{search}",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/catalog/field/active",
+      "DownstreamPathTemplate": "/api/catalog/field/export/form/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -327,69 +508,8 @@
           "Port": 20347
         }
       ],
-      "UpstreamPathTemplate": "/api/catalog/field/active",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/catalog/field",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 20347
-        }
-      ],
-      "UpstreamPathTemplate": "/api/catalog/field",
-      "UpstreamHttpMethod": [ "PUT" ]
-    },
-    //Payment
-    {
-      "DownstreamPathTemplate": "/api/catalog/payment/all/{search}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 20347
-        }
-      ],
-      "UpstreamPathTemplate": "/api/catalog/payment/all/{search}",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/catalog/payment/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 20347
-        }
-      ],
-      "UpstreamPathTemplate": "/api/catalog/payment/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/catalog/payment",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 20347
-        }
-      ],
-      "UpstreamPathTemplate": "/api/catalog/payment",
+      "UpstreamPathTemplate": "/api/catalog/field/export/form/{id}",
       "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/catalog/payment",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 20347
-        }
-      ],
-      "UpstreamPathTemplate": "/api/catalog/payment",
-      "UpstreamHttpMethod": [ "PUT" ]
     },
     //Indicator
     {
@@ -402,6 +522,18 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/indicator/all/{search}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/indicator/active",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/indicator/active",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
@@ -426,10 +558,22 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/indicator",
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/indicator/export/list/{search}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/indicator/export/list/{search}",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/catalog/indicator",
+      "DownstreamPathTemplate": "/api/catalog/indicator/export/form/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -437,118 +581,8 @@
           "Port": 20347
         }
       ],
-      "UpstreamPathTemplate": "/api/catalog/indicator",
-      "UpstreamHttpMethod": [ "PUT" ]
-    },
-    //WorkList
-    {
-      "DownstreamPathTemplate": "/api/catalog/workList/all/{search}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 20347
-        }
-      ],
-      "UpstreamPathTemplate": "/api/catalog/workList/all/{search}",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/catalog/workList/active",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 20347
-        }
-      ],
-      "UpstreamPathTemplate": "/api/catalog/workList/active",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/catalog/workList/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 20347
-        }
-      ],
-      "UpstreamPathTemplate": "/api/catalog/workList/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/catalog/workList",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 20347
-        }
-      ],
-      "UpstreamPathTemplate": "/api/catalog/workList",
+      "UpstreamPathTemplate": "/api/catalog/indicator/export/form/{id}",
       "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/catalog/workList",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 20347
-        }
-      ],
-      "UpstreamPathTemplate": "/api/catalog/workList",
-      "UpstreamHttpMethod": [ "PUT" ]
-    },
-    //Delivery
-    {
-      "DownstreamPathTemplate": "/api/catalog/delivery/all/{search}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 20347
-        }
-      ],
-      "UpstreamPathTemplate": "/api/catalog/delivery/all/{search}",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/catalog/delivery/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 20347
-        }
-      ],
-      "UpstreamPathTemplate": "/api/catalog/delivery/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/catalog/delivery",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 20347
-        }
-      ],
-      "UpstreamPathTemplate": "/api/catalog/delivery",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/catalog/delivery",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 20347
-        }
-      ],
-      "UpstreamPathTemplate": "/api/catalog/delivery",
-      "UpstreamHttpMethod": [ "PUT" ]
     },
     //Method
     {
@@ -597,10 +631,10 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/method",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/api/catalog/method",
+      "DownstreamPathTemplate": "/api/catalog/method/export/list/{search}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -608,8 +642,93 @@
           "Port": 20347
         }
       ],
-      "UpstreamPathTemplate": "/api/catalog/method",
-      "UpstreamHttpMethod": [ "PUT" ]
+      "UpstreamPathTemplate": "/api/catalog/method/export/list/{search}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/method/export/form/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/method/export/form/{id}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    //Payment
+    {
+      "DownstreamPathTemplate": "/api/catalog/payment/all/{search}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/payment/all/{search}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/payment/active",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/payment/active",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/payment/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/payment/{id}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/payment",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/payment",
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/payment/export/list/{search}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/payment/export/list/{search}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/payment/export/form/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/payment/export/form/{id}",
+      "UpstreamHttpMethod": [ "POST" ]
     },
     //PaymentMethod
     {
@@ -622,6 +741,18 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/paymentMethod/all/{search}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/paymentMethod/active",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/paymentMethod/active",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
@@ -646,10 +777,10 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/paymentMethod",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/api/catalog/paymentMethod",
+      "DownstreamPathTemplate": "/api/catalog/paymentMethod/export/list/{search}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -657,8 +788,20 @@
           "Port": 20347
         }
       ],
-      "UpstreamPathTemplate": "/api/catalog/paymentMethod",
-      "UpstreamHttpMethod": [ "PUT" ]
+      "UpstreamPathTemplate": "/api/catalog/paymentMethod/export/list/{search}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/paymentMethod/export/form/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/paymentMethod/export/form/{id}",
+      "UpstreamHttpMethod": [ "POST" ]
     },
     //SampleType
     {
@@ -707,10 +850,10 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/sampleType",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/api/catalog/sampleType",
+      "DownstreamPathTemplate": "/api/catalog/sampleType/export/list/{search}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -718,8 +861,20 @@
           "Port": 20347
         }
       ],
-      "UpstreamPathTemplate": "/api/catalog/sampleType",
-      "UpstreamHttpMethod": [ "PUT" ]
+      "UpstreamPathTemplate": "/api/catalog/sampleType/export/list/{search}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/sampleType/export/form/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/sampleType/export/form/{id}",
+      "UpstreamHttpMethod": [ "POST" ]
     },
     //UseOfCFDI
     {
@@ -732,6 +887,18 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/useOfCFDI/all/{search}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/useOfCFDI/active",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/useOfCFDI/active",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
@@ -756,10 +923,10 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/useOfCFDI",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/api/catalog/useOfCFDI",
+      "DownstreamPathTemplate": "/api/catalog/useOfCFDI/export/list/{search}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -767,8 +934,93 @@
           "Port": 20347
         }
       ],
-      "UpstreamPathTemplate": "/api/catalog/useOfCFDI",
-      "UpstreamHttpMethod": [ "PUT" ]
+      "UpstreamPathTemplate": "/api/catalog/useOfCFDI/export/list/{search}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/useOfCFDI/export/form/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/useOfCFDI/export/form/{id}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    //WorkList
+    {
+      "DownstreamPathTemplate": "/api/catalog/workList/all/{search}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/workList/all/{search}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/workList/active",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/workList/active",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/workList/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/workList/{id}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/workList",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/workList",
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/workList/export/list/{search}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/workList/export/list/{search}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/workList/export/form/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/workList/export/form/{id}",
+      "UpstreamHttpMethod": [ "POST" ]
     },
     //Format
     {

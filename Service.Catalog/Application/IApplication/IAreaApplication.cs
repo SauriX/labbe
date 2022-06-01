@@ -15,6 +15,6 @@ namespace Service.Catalog.Application.IApplication
         Task<AreaListDto> Create(AreaFormDto Catalog);
         Task<AreaListDto> Update(AreaFormDto Catalog);
         Task<byte[]> ExportList(string search);
-        Task<byte[]> ExportForm(int id);
+        Task<(byte[] file, string code)> ExportForm(int id);
     }
 }

@@ -10,18 +10,11 @@ namespace Service.Catalog.Controllers.Catalog
 {
     public partial class CatalogController : ControllerBase
     {
-        [HttpGet("area/all/{search?}")]
+        [HttpGet("area/all/{search}")]
         [Authorize(Policies.Access)]
-        public async Task<IEnumerable<AreaListDto>> GetAllArea(string search = null)
+        public async Task<IEnumerable<AreaListDto>> GetAllArea(string search)
         {
             return await _areaService.GetAll(search);
-        }
-        
-        [HttpGet("area/active")]
-        [Authorize(Policies.Access)]
-        public async Task<IEnumerable<AreaListDto>> GetActiveArea()
-        {
-            return await _areaService.GetActive();
         }
 
         [HttpGet("area/department/{departmentId}/active")]
@@ -54,20 +47,20 @@ namespace Service.Catalog.Controllers.Catalog
             return await _areaService.Update(catalog);
         }
 
-        [HttpPost("area/export/list/{search?}")]
+        [HttpPost("area/export/list/{search}")]
         [Authorize(Policies.Download)]
-        public async Task<IActionResult> ExportList(string search = null)
+        public async Task<IActionResult> ExportListArea(string search)
         {
             var file = await _areaService.ExportList(search);
-            return File(file, MimeType.XLSX);
+            return File(file, MimeType.XLSX, "Catálogo de Áreas.xlsx");
         }
 
         [HttpPost("area/export/form/{id}")]
         [Authorize(Policies.Download)]
-        public async Task<IActionResult> ExportForm(int id)
+        public async Task<IActionResult> ExportFormArea(int id)
         {
-            var file = await _areaService.ExportForm(id);
-            return File(file, MimeType.XLSX);
+            var (file, code) = await _areaService.ExportForm(id);
+            return File(file, MimeType.XLSX, $"Catálogo de Áreas ({code}).xlsx");
         }
     }
 }

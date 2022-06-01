@@ -15,6 +15,6 @@ namespace Service.Catalog.Application.IApplication
         Task<CatalogDescriptionListDto> Create(CatalogDescriptionFormDto Catalog);
         Task<CatalogDescriptionListDto> Update(CatalogDescriptionFormDto Catalog);
         Task<byte[]> ExportList(string search);
-        Task<byte[]> ExportForm(int id);
+        Task<(byte[] file, string code)> ExportForm(int id);
     }
 }
