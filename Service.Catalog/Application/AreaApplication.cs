@@ -49,8 +49,8 @@ namespace Service.Catalog.Application
             var areas = await _repository.GetActive();
 
             return areas.ToAreaListDto();
-        }     
-        
+        }
+
         public async Task<IEnumerable<AreaListDto>> GetAreaByDepartment(int departmentId)
         {
             var areas = await _repository.GetAreaByDepartment(departmentId);
@@ -73,12 +73,14 @@ namespace Service.Catalog.Application
 
             return newArea.ToAreaListDto();
         }
+
         public async Task<IEnumerable<CatalogListDto>> GetAreaByDépartament(int id)
         {
             var catalogs = await _repository.GetAreas(id);
 
             return catalogs.ToAreaDto();
         }
+
         public async Task<AreaListDto> Update(AreaFormDto area)
         {
             var existing = await _repository.GetById(area.Id);
@@ -122,7 +124,7 @@ namespace Service.Catalog.Application
             return template.ToByteArray();
         }
 
-        public async Task<byte[]> ExportForm(int id)
+        public async Task<(byte[] file, string code)> ExportForm(int id)
         {
             var catalog = await GetById(id);
 
@@ -140,7 +142,7 @@ namespace Service.Catalog.Application
 
             template.Format();
 
-            return template.ToByteArray();
+            return (template.ToByteArray(), catalog.Clave);
         }
     }
 }

@@ -107,7 +107,7 @@ namespace Service.Catalog.Application
             return template.ToByteArray();
         }
 
-        public async Task<byte[]> ExportForm(int id)
+        public async Task<(byte[] file, string code)> ExportForm(int id)
         {
             var catalog = await GetById(id);
 
@@ -125,7 +125,7 @@ namespace Service.Catalog.Application
 
             template.Format();
 
-            return template.ToByteArray();
+            return (template.ToByteArray(), catalog.Clave);
         }
     }
 }

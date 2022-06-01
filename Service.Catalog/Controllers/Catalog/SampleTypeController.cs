@@ -10,17 +10,19 @@ namespace Service.Catalog.Controllers.Catalog
 {
     public partial class CatalogController : ControllerBase
     {
-        [HttpGet("sampleType/all/{search?}")]
+        [HttpGet("sampleType/all/{search}")]
         [Authorize(Policies.Access)]
-        public async Task<IEnumerable<CatalogListDto>> GetAllSampleType(string search = null)
+        public async Task<IEnumerable<CatalogListDto>> GetAllSampleType(string search)
         {
             return await _sampleTypeService.GetAll(search);
         }
+
         [HttpGet("sampleType/active")]
-        public async Task<IEnumerable<CatalogListDto>> GetAllSampleTypeActive(string search = null)
+        public async Task<IEnumerable<CatalogListDto>> GetActiveSampleType()
         {
-            return await _sampleTypeService.GetAll("all");
+            return await _sampleTypeService.GetActive();
         }
+
         [HttpGet("sampleType/{id}")]
         [Authorize(Policies.Access)]
         public async Task<CatalogFormDto> GetSampleTypeById(int id)
@@ -42,6 +44,22 @@ namespace Service.Catalog.Controllers.Catalog
         {
             catalog.UsuarioId = (Guid)HttpContext.Items["userId"];
             return await _sampleTypeService.Update(catalog);
+        }
+
+        [HttpPost("sampleType/export/list/{search}")]
+        [Authorize(Policies.Download)]
+        public async Task<IActionResult> ExportListSampleType(string search)
+        {
+            var file = await _sampleTypeService.ExportList(search);
+            return File(file, MimeType.XLSX, "Catálogo de Tipo de muestra.xlsx");
+        }
+
+        [HttpPost("sampleType/export/form/{id}")]
+        [Authorize(Policies.Download)]
+        public async Task<IActionResult> ExportFormSampleType(int id)
+        {
+            var (file, code) = await _sampleTypeService.ExportForm(id);
+            return File(file, MimeType.XLSX, $"Catálogo de Tipo de muestra ({code}).xlsx");
         }
     }
 }
