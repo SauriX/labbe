@@ -48,9 +48,17 @@ namespace Service.Catalog.Repository
             return loyalty;
         }
 
-        public async Task<bool> IsDuplicate(string clave, string nombre, Guid id)
+        //public async Task<bool> IsDuplicate(string clave, string nombre, Guid id)
+        //{
+        //    return await _context.CAT_Lealtad.AnyAsync(x => x.Clave == clave || x.Nombre == nombre && x.Id != id);      
+        //}
+        public async Task<bool> IsDuplicateDate(DateTime fechainicial, DateTime fechafinal, Guid id)
         {
-            return await _context.CAT_Lealtad.AnyAsync(x => x.Clave == clave || x.Nombre == nombre && x.Id != id);      
+            return await _context.CAT_Lealtad.AnyAsync
+                (x => (((x.FechaInicial.Date >= fechainicial.Date) && (x.FechaInicial.Date <= fechafinal.Date))
+                || ((x.FechaFinal.Date >= fechainicial.Date) && (x.FechaFinal.Date <= fechafinal.Date))
+                ||x.FechaInicial.Date == fechafinal.Date || x.FechaFinal.Date == fechainicial.Date)
+                && x.Id != id);
         }
 
         public async Task Create(Loyalty loyalty)

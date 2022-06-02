@@ -11,7 +11,6 @@ namespace Service.Catalog.Mapper
         public static LoyaltyListDto ToLoyaltyListDto(this Loyalty model)
         {
             if (model == null) return null;
-            //var listaDeprecios = model?.PrecioLista.AsQueryable().Where(x => x.Activo == true).FirstOrDefault().PrecioLista.Nombre;
             return new LoyaltyListDto
             {
                 Id = model.Id,
@@ -20,7 +19,7 @@ namespace Service.Catalog.Mapper
                 CantidadDescuento = model.CantidadDescuento,
                 Fecha = $"{model.FechaInicial.ToShortDateString()}-{model.FechaFinal.ToShortDateString()}",
                 TipoDescuento = model.TipoDescuento.Trim(),
-                //NombreListaPrecio = listaDeprecios,
+                IdListaPrecios = model?.PrecioListaStg?.Trim(),
                 Activo = model.Activo
             };
         }
@@ -37,7 +36,7 @@ namespace Service.Catalog.Mapper
                 CantidadDescuento = x.CantidadDescuento,
                 Fecha = $"{x.FechaInicial.ToShortDateString()}-{x.FechaFinal.ToShortDateString()}",
                 TipoDescuento = x.TipoDescuento.Trim(),
-                //NombreListaPrecio = x?.PrecioLista.AsQueryable().Where(x => x.Activo == true).FirstOrDefault().PrecioLista.Nombre.Trim(),
+                IdListaPrecios = x?.PrecioListaStg?.Trim(),
                 Activo = x.Activo
             });
         }
@@ -52,7 +51,8 @@ namespace Service.Catalog.Mapper
                 Clave = model.Clave.Trim(),
                 Nombre = model.Nombre.Trim(),
                 TipoDescuento = model.TipoDescuento.Trim(),
-                CantidadDescuento= model.CantidadDescuento,
+                IdListaPrecios = model?.PrecioListaStg?.Trim(),
+                CantidadDescuento = model.CantidadDescuento,
                 FechaInicial = model.FechaInicial,
                 FechaFinal = model.FechaFinal,
                 Activo = model.Activo,
@@ -68,6 +68,7 @@ namespace Service.Catalog.Mapper
                 Clave = dto.Clave.Trim(),
                 Nombre = dto.Nombre.Trim(),
                 TipoDescuento = dto.TipoDescuento.Trim(),
+                PrecioListaStg = dto?.IdListaPrecios?.Trim(),
                 CantidadDescuento = dto.CantidadDescuento,
                 FechaInicial = dto.FechaInicial,
                 FechaFinal = dto.FechaFinal,
@@ -87,6 +88,7 @@ namespace Service.Catalog.Mapper
                 Clave = dto.Clave.Trim(),
                 Nombre = dto.Nombre.Trim(),
                 TipoDescuento = dto.TipoDescuento.Trim(),
+                PrecioListaStg = dto?.IdListaPrecios?.Trim(),
                 CantidadDescuento = dto.CantidadDescuento,
                 FechaInicial = dto.FechaInicial,
                 FechaFinal = dto.FechaFinal,

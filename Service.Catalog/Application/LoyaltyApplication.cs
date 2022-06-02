@@ -58,12 +58,18 @@ namespace Service.Catalog.Application
 
             var newloyalty = loyalty.ToModel();
 
-            var code = await CheckDuplicate(loyalty, true, true, loyalty.Id);
+            //var code = await CheckDuplicate(loyalty, true, true, loyalty.Id);
+            var fecha = await CheckDuplicateDate(loyalty, loyalty.Id);
 
-            if (code != 0)
+            //if (code != 0)
+            //{
+            //    throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
+            //}
+            if (fecha != 0)
             {
-                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
+                throw new CustomException(HttpStatusCode.Conflict, Responses.DuplicatedDate("La Fecha Inicial o La Fecha Final"));
             }
+
             if (loyalty.Id != Guid.Empty)
             {
                 throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
@@ -79,12 +85,20 @@ namespace Service.Catalog.Application
         {
             var existing = await _repository.GetById(loyalty.Id);
 
-            if (existing.Clave != loyalty.Clave || existing.Nombre != loyalty.Nombre)
+            //if (existing.Clave != loyalty.Clave || existing.Nombre != loyalty.Nombre)
+            //{
+            //    var code = await CheckDuplicate(loyalty, existing.Clave != loyalty.Clave, existing.Nombre != loyalty.Nombre, loyalty.Id);
+            //    if (code != 0)
+            //    {
+            //        throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
+            //    }
+            //}
+            if (existing.FechaInicial != loyalty.FechaInicial || existing.FechaFinal != loyalty.FechaFinal)
             {
-                var code = await CheckDuplicate(loyalty, existing.Clave != loyalty.Clave, existing.Nombre != loyalty.Nombre, loyalty.Id);
+                var code = await CheckDuplicateDate(loyalty, loyalty.Id);
                 if (code != 0)
                 {
-                    throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
+                    throw new CustomException(HttpStatusCode.Conflict, Responses.DuplicatedDate("La Fecha Inicial o la Fecha Final"));
                 }
             }
             if (existing == null)
@@ -145,21 +159,34 @@ namespace Service.Catalog.Application
             return (template.ToByteArray(), $"Catálogo de Lealtades (${loyalty.Clave}).xlsx");
         }
 
-        private async Task<int> CheckDuplicate(LoyaltyFormDto loyalty, bool claveCheck, bool nombreCheck, Guid id)
+        //private async Task<int> CheckDuplicate(LoyaltyFormDto loyalty, bool claveCheck, bool nombreCheck, Guid id)
+        //{
+        //    var name = "";
+        //    var clave = "";
+        //    if (claveCheck)
+        //    {
+        //        clave = loyalty.Clave;
+        //    }
+        //    if (nombreCheck)
+        //    {
+        //        name = loyalty.Nombre;
+        //    }
+        //    var exists = await _repository.IsDuplicate(clave, name, id);
+
+        //    if (exists)
+        //    {
+        //        return 1;
+        //    }
+
+        //    return 0;
+        //}
+
+        private async Task<int> CheckDuplicateDate(LoyaltyFormDto loyalty, Guid id)
         {
-            var name = "";
-            var clave = "";
-            if (claveCheck)
-            {
-                clave = loyalty.Clave;
-            }
-            if (nombreCheck)
-            {
-                name = loyalty.Nombre;
-            }
+            DateTime fechainicial = loyalty.FechaInicial;
+            DateTime fechafinal = loyalty.FechaFinal;
 
-
-            var exists = await _repository.IsDuplicate(clave, name, id);
+            var exists = await _repository.IsDuplicateDate(fechainicial, fechafinal, id);
 
             if (exists)
             {
@@ -167,6 +194,17 @@ namespace Service.Catalog.Application
             }
 
             return 0;
+        }
+
+        public async Task<LoyaltyListDto> CreateReschedule(LoyaltyFormDto loyalty)
+        {
+            Helpers.ValidateGuid(loyalty.Id.ToString(), out Guid guid);
+
+            var newloyalty = loyalty.ToModel();
+
+            await _repository.Create(newloyalty);
+
+            return newloyalty.ToLoyaltyListDto();
         }
     }
 }

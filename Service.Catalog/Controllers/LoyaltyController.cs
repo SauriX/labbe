@@ -71,5 +71,12 @@ namespace Identidad.Api.Controllers
             var (file, fileName) = await _service.ExportForm(id);
             return File(file, MimeType.XLSX, fileName);
         }
+        [HttpPost("crearReagendado")]
+        [Authorize(Policies.Create)]
+        public async Task<LoyaltyListDto> CreateReschedule(LoyaltyFormDto loyalty)
+        {
+            loyalty.UsuarioId = (Guid)HttpContext.Items["userId"];
+            return await _service.CreateReschedule(loyalty);
+        }
     }
 }
