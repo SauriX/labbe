@@ -26,6 +26,18 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
+      "DownstreamPathTemplate": "/api/catalog/area/active",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/area/active",
+      "UpstreamHttpMethod": [ "GET" ]
+    },  
+    {
       "DownstreamPathTemplate": "/api/catalog/area/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

@@ -17,6 +17,13 @@ namespace Service.Catalog.Controllers.Catalog
             return await _areaService.GetAll(search);
         }
 
+        [HttpGet("area/active")]
+        [Authorize(Policies.Access)]
+        public async Task<IEnumerable<AreaListDto>> GetActiveArea(int departmentId)
+        {
+            return await _areaService.GetAreaByDepartment(departmentId);
+        }     
+        
         [HttpGet("area/department/{departmentId}/active")]
         [Authorize(Policies.Access)]
         public async Task<IEnumerable<AreaListDto>> GetAreaByDepartment(int departmentId)
