@@ -1,5 +1,7 @@
 ﻿using Service.Catalog.Domain.Catalog;
+using Service.Catalog.Dtos.Pack;
 using System;
+using System.Collections.Generic;
 
 namespace Service.Catalog.Dtos.PriceList
 {
@@ -14,6 +16,7 @@ namespace Service.Catalog.Dtos.PriceList
         public string Departamento { get; set; }
         public bool Activo { get; set; }
         public decimal Precio { get; set; }
+        public IEnumerable<PackStudyDto> Pack { get; set; }
 
     }
 }

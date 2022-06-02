@@ -14,6 +14,6 @@ namespace Service.Catalog.Application.IApplication
         Task<DimensionListDto> Create(DimensionFormDto Catalog);
         Task<DimensionListDto> Update(DimensionFormDto Catalog);
         Task<byte[]> ExportList(string search);
-        Task<byte[]> ExportForm(int id);
+        Task<(byte[] file, string code)> ExportForm(int id);
     }
 }

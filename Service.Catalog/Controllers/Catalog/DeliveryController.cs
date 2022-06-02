@@ -12,9 +12,16 @@ namespace Service.Catalog.Controllers.Catalog
     {
         [HttpGet("delivery/all/{search?}")]
         [Authorize(Policies.Access)]
-        public async Task<IEnumerable<CatalogListDto>> GetAllDelivery(string search = null)
+        public async Task<IEnumerable<CatalogListDto>> GetAllDelivery(string search)
         {
             return await _deliveryService.GetAll(search);
+        }
+
+        [HttpGet("delivery/active")]
+        [Authorize(Policies.Access)]
+        public async Task<IEnumerable<CatalogListDto>> GetActiveDelivery()
+        {
+            return await _deliveryService.GetActive();
         }
 
         [HttpGet("delivery/{id}")]
@@ -38,6 +45,22 @@ namespace Service.Catalog.Controllers.Catalog
         {
             catalog.UsuarioId = (Guid)HttpContext.Items["userId"];
             return await _deliveryService.Update(catalog);
+        }
+
+        [HttpPost("delivery/export/list/{search}")]
+        [Authorize(Policies.Download)]
+        public async Task<IActionResult> ExportListDelivery(string search)
+        {
+            var file = await _deliveryService.ExportList(search);
+            return File(file, MimeType.XLSX, "Catálogo de Paqueterías.xlsx");
+        }
+
+        [HttpPost("delivery/export/form/{id}")]
+        [Authorize(Policies.Download)]
+        public async Task<IActionResult> ExportFormDelivery(int id)
+        {
+            var (file, code) = await _deliveryService.ExportForm(id);
+            return File(file, MimeType.XLSX, $"Catálogo de Paqueterías ({code}).xlsx");
         }
     }
 }

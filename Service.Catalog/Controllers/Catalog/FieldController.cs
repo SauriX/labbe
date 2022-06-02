@@ -17,18 +17,17 @@ namespace Service.Catalog.Controllers.Catalog
             return await _fieldService.GetAll(search);
         }
 
+        [HttpGet("field/active")]
+        public async Task<IEnumerable<CatalogListDto>> GetActiveField()
+        {
+            return await _fieldService.GetActive();
+        }
+
         [HttpGet("field/{id}")]
         [Authorize(Policies.Access)]
         public async Task<CatalogFormDto> GetFieldById(int id)
         {
             return await _fieldService.GetById(id);
-        }
-
-        [HttpGet("field/active")]
-        [Authorize(Policies.Access)]
-        public async Task<IEnumerable<CatalogListDto>> GetActiveField(int id)
-        {
-            return await _fieldService.GetActive();
         }
 
         [HttpPost("field")]
@@ -45,6 +44,22 @@ namespace Service.Catalog.Controllers.Catalog
         {
             catalog.UsuarioId = (Guid)HttpContext.Items["userId"];
             return await _fieldService.Update(catalog);
+        }
+
+        [HttpPost("field/export/list/{search}")]
+        [Authorize(Policies.Download)]
+        public async Task<IActionResult> ExportListField(string search)
+        {
+            var file = await _fieldService.ExportList(search);
+            return File(file, MimeType.XLSX, "Catálogo de Especialidad.xlsx");
+        }
+
+        [HttpPost("field/export/form/{id}")]
+        [Authorize(Policies.Download)]
+        public async Task<IActionResult> ExportFormField(int id)
+        {
+            var (file, code) = await _fieldService.ExportForm(id);
+            return File(file, MimeType.XLSX, $"Catálogo de Especialidad ({code}).xlsx");
         }
     }
 }

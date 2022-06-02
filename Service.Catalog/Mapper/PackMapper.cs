@@ -33,7 +33,18 @@ namespace Service.Catalog.Mapper
                 Clave = x.Clave,
                 Nombre = x.Nombre,
                 NombreLargo = x.NombreLargo,
-                Activo =x.Activo
+                Pack = x.studies.Select(x => new PackStudyDto
+                {
+                    Id = x.EstudioId,
+                    Clave = x.Estudio.Clave,
+                    Nombre = x.Estudio.Nombre,
+                    Area = x.Estudio.Area.Nombre,
+                    Activo = true,
+                }).ToList(),
+                Activo =x.Activo,
+                Departamento= x.Area.Departamento.Nombre,
+                Area=x.Area.Nombre
+                
             });
         }
 

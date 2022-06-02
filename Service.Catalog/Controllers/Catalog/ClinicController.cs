@@ -10,9 +10,9 @@ namespace Service.Catalog.Controllers.Catalog
 {
     public partial class CatalogController : ControllerBase
     {
-        [HttpGet("clinic/all/{search?}")]
+        [HttpGet("clinic/all/{search}")]
         [Authorize(Policies.Access)]
-        public async Task<IEnumerable<CatalogListDto>> GetAllClinic(string search = null)
+        public async Task<IEnumerable<CatalogListDto>> GetAllClinic(string search)
         {
             return await _clinicService.GetAll(search);
         }
@@ -45,6 +45,22 @@ namespace Service.Catalog.Controllers.Catalog
         {
             catalog.UsuarioId = (Guid)HttpContext.Items["userId"];
             return await _clinicService.Update(catalog);
+        }
+
+        [HttpPost("clinic/export/list/{search}")]
+        [Authorize(Policies.Download)]
+        public async Task<IActionResult> ExportListClinic(string search)
+        {
+            var file = await _clinicService.ExportList(search);
+            return File(file, MimeType.XLSX, "Catálogo de Clínicas.xlsx");
+        }
+
+        [HttpPost("clinic/export/form/{id}")]
+        [Authorize(Policies.Download)]
+        public async Task<IActionResult> ExportFormClinic(int id)
+        {
+            var (file, code) = await _clinicService.ExportForm(id);
+            return File(file, MimeType.XLSX, $"Catálogo de Clínicas ({code}).xlsx");
         }
     }
 }

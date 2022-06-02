@@ -12,16 +12,16 @@ namespace Service.Catalog.Controllers.Catalog
     {
         [HttpGet("method/all/{search?}")]
         [Authorize(Policies.Access)]
-        public async Task<IEnumerable<CatalogListDto>> GetAllMethod(string search = null)
+        public async Task<IEnumerable<CatalogListDto>> GetAllMethod(string search)
         {
             return await _methodService.GetAll(search);
         }
-        [HttpGet("method/active")]
-        public async Task<IEnumerable<CatalogListDto>> GetAllMethod()
-        {
-            return await _methodService.GetAll("all");
-        }
 
+        [HttpGet("method/active")]
+        public async Task<IEnumerable<CatalogListDto>> GetActiveMethod()
+        {
+            return await _methodService.GetActive();
+        }
 
         [HttpGet("method/{id}")]
         [Authorize(Policies.Access)]
@@ -44,6 +44,22 @@ namespace Service.Catalog.Controllers.Catalog
         {
             catalog.UsuarioId = (Guid)HttpContext.Items["userId"];
             return await _methodService.Update(catalog);
+        }
+
+        [HttpPost("method/export/list/{search}")]
+        [Authorize(Policies.Download)]
+        public async Task<IActionResult> ExportListMethod(string search)
+        {
+            var file = await _methodService.ExportList(search);
+            return File(file, MimeType.XLSX, "Catálogo de Método.xlsx");
+        }
+
+        [HttpPost("method/export/form/{id}")]
+        [Authorize(Policies.Download)]
+        public async Task<IActionResult> ExportFormMethod(int id)
+        {
+            var (file, code) = await _methodService.ExportForm(id);
+            return File(file, MimeType.XLSX, $"Catálogo de Método ({code}).xlsx");
         }
     }
 }

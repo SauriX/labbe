@@ -17,5 +17,6 @@ namespace Service.Catalog.Repository.IRepository
         Task<List<Price_Branch>> GetAllBranch(Guid branchId);
         Task<List<Price_Company>> GetAllCompany(Guid companyId);
         Task<List<Price_Medics>> GetAllMedics(Guid medicsId);
+        Task<bool> DuplicateSMC(PriceList price);
     }
 }
