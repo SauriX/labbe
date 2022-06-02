@@ -105,6 +105,17 @@ namespace Service.Catalog.Application
 
             await _repository.AddValue(newValue);
         }
+        public async Task AddValues(List<ParameterValueDto> value,string id)
+        {
+            if (value == null)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
+            }
+
+            var newValue = value.ToModel();
+
+            await _repository.AddValues(newValue,id);
+        }
 
         public async Task<ParameterListDto> Update(ParameterFormDto parameter)
         {
@@ -144,19 +155,7 @@ namespace Service.Catalog.Application
             await _repository.UpdateValue(updatedValue);
         }
 
-        public async Task DeleteValue(string id)
-        {
-            Helpers.ValidateGuid(id, out Guid guid);
 
-            //var existing = await _repository.GetById(guid);
-
-            //if (existing == null)
-            //{
-            //    throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
-            //}
-
-            await _repository.DeleteValue(guid);
-        }
 
         public async Task<(byte[] file, string fileName)> ExportList(string search)
         {

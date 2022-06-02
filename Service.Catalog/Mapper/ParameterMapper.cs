@@ -53,7 +53,6 @@ namespace Service.Catalog.Mapper
                 NombreCorto = model.NombreCorto,
                 Unidades = model.Unidades,
                 Formula = model.Formula,
-                Formato = model.Formato,
                 ValorInicial = model.ValorInicial,
                 DepartamentoId = model.DepartamentoId,
                 AreaId = model.AreaId,
@@ -162,7 +161,34 @@ namespace Service.Catalog.Mapper
                 FechaCreo = DateTime.Now,
             };
         }
+        public static List<ParameterValue> ToModel(this List<ParameterValueDto> dto)
+        {
+            if (dto == null) return null;
 
+            return dto.Select (x=>new ParameterValue
+            {
+                Id = x.Id == null ? Guid.NewGuid() : Guid.Parse(x.Id),
+                ParametroId = Guid.Parse(x.ParametroId),
+                Nombre = x.Nombre,
+                ValorInicial = x.ValorInicial,
+                ValorFinal = x.ValorFinal,
+                ValorInicialNumerico = x.ValorInicialNumerico,
+                ValorFinalNumerico = x.ValorFinalNumerico,
+                RangoEdadInicial = x.RangoEdadInicial,
+                RangoEdadFinal = x.RangoEdadFinal,
+                HombreValorInicial = x.HombreValorInicial,
+                HombreValorFinal = x.HombreValorFinal,
+                MujerValorInicial = x.MujerValorInicial,
+                MujerValorFinal = x.MujerValorFinal,
+                MedidaTiempoId = x.MedidaTiempoId,
+                Opcion = x.Opcion?.ToString(),
+                DescripcionTexto = x.DescripcionTexto?.ToString(),
+                DescripcionParrafo = x.DescripcionParrafo?.ToString(),
+                Activo = true,
+                UsuarioCreoId = x.UsuarioId,
+                FechaCreo = DateTime.Now,
+            }).ToList();
+        }
         public static ParameterValue ToModel(this ParameterValueDto dto, ParameterValue model)
         {
             if (dto == null || model == null) return null;
@@ -207,7 +233,6 @@ namespace Service.Catalog.Mapper
                 NombreCorto = dto.NombreCorto,
                 Unidades = dto.Unidades,
                 Formula = dto.Formula,
-                Formato = dto.Formato,
                 DepartamentoId = dto.DepartamentoId,
                 AreaId = dto.AreaId,
                 FormatoImpresionId = dto.FormatoImpresionId,
@@ -234,7 +259,6 @@ namespace Service.Catalog.Mapper
                 NombreCorto = dto.NombreCorto,
                 Unidades = dto.Unidades,
                 Formula = dto.Formula,
-                Formato = dto.Formato,
                 DepartamentoId = dto.DepartamentoId,
                 AreaId = dto.AreaId,
                 FormatoImpresionId = dto.FormatoImpresionId,

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFCore.BulkExtensions;
+using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Context;
 using Service.Catalog.Domain.Parameter;
 using Service.Catalog.Repository.IRepository;
@@ -91,6 +92,14 @@ namespace Service.Catalog.Repository
             await _context.SaveChangesAsync();
         }
 
+        public async Task AddValues(List<ParameterValue> value,string id)
+        {
+            var config = new BulkConfig();
+            config.SetSynchronizeFilter<ParameterValue>(x => x.ParametroId == Guid.Parse(id));
+            await _context.BulkInsertOrUpdateOrDeleteAsync(value, config);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task Update(Parameter parameter)
         {
             _context.CAT_Parametro.Update(parameter);
@@ -105,11 +114,6 @@ namespace Service.Catalog.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteValue(Guid id)
-        {
-            _context.CAT_Tipo_Valor.Where(p => p.ParametroId == id).ToList().ForEach(p => _context.CAT_Tipo_Valor.Remove(p));
 
-            await _context.SaveChangesAsync();
-        }
     }
 }
