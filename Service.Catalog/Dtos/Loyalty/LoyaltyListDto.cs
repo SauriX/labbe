@@ -10,7 +10,7 @@ namespace Service.Catalog.Dtos.Loyalty
         public  decimal CantidadDescuento { get; set; }
         public string TipoDescuento { get; set; }
         public string Fecha { get; set; }
-        public string NombreListaPrecio { get; set; }
+        public string IdListaPrecios { get; set; }
         public bool Activo { get; set; }
     }
 }
