@@ -1,24 +1,22 @@
 ﻿{
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/scopes/catalog",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos/services/identity/api/scopes/catalog",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 45216
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/scopes/catalog",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/scopes/price",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos/services/identity/api/scopes/price",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 45216
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/scopes/price",

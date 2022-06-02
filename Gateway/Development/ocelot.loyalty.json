@@ -95,6 +95,18 @@
       ],
       "UpstreamPathTemplate": "/api/loyalty/export/form/{id}",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/loyalty/crearReagendado",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/loyalty/crearReagendado",
+      "UpstreamHttpMethod": [ "POST" ]
     }
   ]
 }
