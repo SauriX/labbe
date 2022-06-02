@@ -85,6 +85,18 @@
       "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
     {
+      "DownstreamPathTemplate": "/api/Parameter/values",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Parameter/values",
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/Parameter/export/list/{search}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

@@ -20,7 +20,6 @@ namespace Service.Catalog.Dtos.Parameters
         public decimal Unidades { get; set; }
         public string TipoValor { get; set; }
         public string Formula { get; set; }
-        public string Formato { get; set; }
         public decimal ValorInicial { get; set; }
         public int DepartamentoId { get; set; }
         public int AreaId { get; set; }

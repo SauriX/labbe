@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Catalog.Application.IApplication;
+using Service.Catalog.Dtos.Parameter;
 using Service.Catalog.Dtos.Parameters;
 using Shared.Dictionary;
 using System;
@@ -69,7 +70,12 @@ namespace Service.Catalog.Controllers
         {
             await _service.AddValue(value);
         }
-
+        [HttpPost("values")]
+        [Authorize(Policies.Create)]
+        public async Task AddValues(ParameterValuesDto values)
+        {
+            await _service.AddValues(values.Values,values.IdParameter);
+        }
         [HttpPut]
         [Authorize(Policies.Update)]
         public async Task<ParameterListDto> Update(ParameterFormDto parameter)
@@ -85,12 +91,7 @@ namespace Service.Catalog.Controllers
             await _service.UpdateValue(value);
         }
 
-        [HttpDelete("{id}")]
-        [Authorize(Policies.Update)]
-        public async Task DeleteValue(string id)
-        {
-            await _service.DeleteValue(id);
-        }
+
 
         [HttpPost("export/list/{search}")]
         public async Task<IActionResult> ExportList(string search)

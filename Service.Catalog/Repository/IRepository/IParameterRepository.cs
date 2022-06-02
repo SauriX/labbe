@@ -17,6 +17,6 @@ namespace Service.Catalog.Repository.IRepository
         Task AddValue(ParameterValue value);
         Task Update(Parameter parameter);
         Task UpdateValue(ParameterValue value);
-        Task DeleteValue(Guid id);
+        Task AddValues(List<ParameterValue> value, string id);
     }
 }

@@ -16,7 +16,7 @@ namespace Service.Catalog.Application.IApplication
         Task AddValue(ParameterValueDto value);
         Task<ParameterListDto> Update(ParameterFormDto parameter);
         Task UpdateValue(ParameterValueDto value);
-        Task DeleteValue(string id);
+        Task AddValues(List<ParameterValueDto> value, string id);
         Task<(byte[] file, string fileName)> ExportList(string search);
         Task<(byte[] file, string fileName)> ExportForm(string id);
     }

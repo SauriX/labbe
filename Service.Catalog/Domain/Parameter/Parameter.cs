@@ -14,7 +14,6 @@ namespace Service.Catalog.Domain.Parameter
         public string NombreCorto { get; set; }
         public decimal Unidades { get; set; }
         public string Formula { get; set; }
-        public string Formato { get; set; }
         public int DepartamentoId { get; set; }
         public virtual Department Departmento { get; set; }
         public int AreaId { get; set; }

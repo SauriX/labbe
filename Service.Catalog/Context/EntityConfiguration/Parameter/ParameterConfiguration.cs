@@ -42,10 +42,6 @@ namespace Service.Catalog.Context.EntityConfiguration.Parameter
                 .HasMaxLength(200);
 
             builder
-                .Property(x => x.Formato)
-                .IsRequired(true)
-                .HasMaxLength(100);
-            builder
                 .Property(x => x.TipoValor)
                 .HasDefaultValue(0)
                 .HasMaxLength(100);
