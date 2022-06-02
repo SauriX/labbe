@@ -1,108 +1,99 @@
 ﻿{
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/price/all/{search}",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/price/all/{search}",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 20347
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/price/all/{search}",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/price/active",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/price/active",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 20347
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/price/active",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/price/{id}",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/price/{id}",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 20347
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/price/{id}",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/price",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/price",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 20347
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/price",
       "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/api/price/export/list/{search}",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/price/export/list/{search}",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 20347
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/price/export/list/{search}",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/price/export/form/{id}",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/price/export/form/{id}",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 20347
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/price/export/form/{id}",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/price/branch",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/price/branch",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 20347
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/price/branch",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/price/medics",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/price/medics",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 20347
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/price/medics",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/price/company",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/price/company",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 20347
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/price/company",
