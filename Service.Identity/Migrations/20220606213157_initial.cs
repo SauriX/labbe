@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Service.Identity.Migrations
 {
-    public partial class Init : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -94,7 +94,7 @@ namespace Service.Identity.Migrations
                     PrimerApellido = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SegundoApellido = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RolId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SucursalId = table.Column<int>(type: "int", nullable: true),
+                    SucursalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Contraseña = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Activo = table.Column<bool>(type: "bit", nullable: false),
                     FlagPassword = table.Column<bool>(type: "bit", nullable: false),

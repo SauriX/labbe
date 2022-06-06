@@ -10,8 +10,8 @@ using Service.Identity.Context;
 namespace Service.Identity.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220503014932_Init")]
-    partial class Init
+    [Migration("20220606213157_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -169,8 +169,8 @@ namespace Service.Identity.Migrations
                     b.Property<string>("SegundoApellido")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("SucursalId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("SucursalId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");

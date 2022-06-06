@@ -153,6 +153,7 @@ namespace Service.Identity.Context
                         FlagPassword = true,
                         Activo = true,
                         FechaCreo = DateTime.Now,
+                     
                     };
 
                     context.CAT_Usuario.Add(user);

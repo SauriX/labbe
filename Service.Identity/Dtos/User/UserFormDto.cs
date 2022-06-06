@@ -12,7 +12,7 @@ namespace Service.Identity.Dtos.User
         public string SegundoApellido { get; set; }
         public Guid RolId { get; set; }
         public string Rol { get; set; }
-        public int? SucursalId { get; set; }
+        public Guid SucursalId { get; set; }
         public string Contraseña { get; set; }
         public string ConfirmaContraseña { get; set; }
         public bool Activo { get; set; }

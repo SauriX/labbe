@@ -18,7 +18,7 @@ namespace Service.Identity.Domain.User
         public string NombreCompleto => Nombre + " " + PrimerApellido + " " + SegundoApellido;
         public Guid RolId { get; set; }
         public virtual Role.Role Rol { get; set; }
-        public int? SucursalId { get; set; }
+        public Guid SucursalId { get; set; }
         public string Contraseña { get; set; }
         public bool Activo { get; set; }
         public bool FlagPassword { get; set; }

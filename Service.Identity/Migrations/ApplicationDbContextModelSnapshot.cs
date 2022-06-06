@@ -167,8 +167,8 @@ namespace Service.Identity.Migrations
                     b.Property<string>("SegundoApellido")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("SucursalId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("SucursalId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");
