@@ -19,7 +19,7 @@ namespace Service.Catalog
         {
             var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
-            new ConfigurationBuilder()
+            var config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: false)
                 .AddJsonFile($"appsettings.{environmentName}.json", optional: false)
                 .AddEnvironmentVariables()
@@ -34,10 +34,12 @@ namespace Service.Catalog
             {
                 var context = services.GetRequiredService<ApplicationDbContext>();
                 await context.Database.MigrateAsync();
+                var key = config.GetValue<string>("PasswordKey");
+                await Seed.SeedData(context, key);
             }
             catch (Exception e)
             {
-                File.AppendAllText(Path.Combine(Directory.GetCurrentDirectory(), "log.txt"), Environment.NewLine + Environment.NewLine + DateTime.Now.ToString() + " => " + e.Message);
+                File.AppendAllText(Path.Combine(Directory.GetCurrentDirectory(), "log.txt"), Environment.NewLine + Environment.NewLine + DateTime.Now.ToString() + " => " + e.Message + ":" + e.InnerException);
                 return;
             }
 
@@ -47,7 +49,7 @@ namespace Service.Catalog
             }
             catch (Exception e)
             {
-                File.AppendAllText(Path.Combine(Directory.GetCurrentDirectory(), "log.txt"), Environment.NewLine + Environment.NewLine + DateTime.Now.ToString() + " => " + e.Message);
+                File.AppendAllText(Path.Combine(Directory.GetCurrentDirectory(), "log.txt"), Environment.NewLine + Environment.NewLine + DateTime.Now.ToString() + " => " + e.Message + ":" + e.InnerException);
                 return;
             }
         }
