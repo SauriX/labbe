@@ -70,7 +70,7 @@ namespace Service.Catalog.Context
         public DbSet<Packet> CAT_Paquete { get; set; }
         public DbSet<Loyalty> CAT_Lealtad { get; set; }
         public DbSet<Promotion> CAT_Promocion { get; set; }
-
+        public DbSet<PromotionPack> Relaciion_Promocion_Paquetes { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             

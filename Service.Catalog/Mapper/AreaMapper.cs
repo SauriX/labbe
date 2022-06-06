@@ -47,6 +47,7 @@ namespace Service.Catalog.Mapper
                 Clave = model.Clave,
                 Nombre = model.Nombre,
                 DepartamentoId = model.DepartamentoId,
+                Departamento = model.Departamento.Nombre,
                 Activo = model.Activo,
             };
         }

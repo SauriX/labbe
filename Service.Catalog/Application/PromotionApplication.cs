@@ -13,6 +13,7 @@ using Service.Catalog.Dictionary;
 using ClosedXML.Report;
 using Shared.Extensions;
 using Service.Catalog.Domain.Promotion;
+using System.Linq;
 
 namespace Service.Catalog.Application
 {
@@ -56,7 +57,7 @@ namespace Service.Catalog.Application
             var newParameter = parameter.ToModel();
 
             await CheckDuplicate(newParameter);
-
+            await CheckPromotionPackActive(newParameter);
             await _repository.Create(newParameter);
 
             newParameter = await _repository.GetById(newParameter.Id);
@@ -79,7 +80,7 @@ namespace Service.Catalog.Application
             var updatedParameter = parameter.ToModel(existing);
 
             await CheckDuplicate(updatedParameter);
-
+            await CheckPromotionPackActive(updatedParameter);
             await _repository.Update(updatedParameter);
 
             updatedParameter = await _repository.GetById(updatedParameter.Id);
@@ -150,5 +151,25 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
             }
         }
+
+        private async  Task CheckPromotionPackActive(Promotion promotion) 
+        {
+
+            var packs = await _repository.packsIsPriceList(promotion.PrecioListaId);
+            var packassigned = promotion.packs.ToList();
+            foreach (var pack in packs) {
+                
+                var (isInPromotion, nombre) = await _repository.PackIsOnPromotrtion(pack.PaqueteId);
+
+                var (isOnvalidPromotion,nombre2) = await _repository.PackIsOnInvalidPromotion(pack.PaqueteId);
+                var isAssigned = packassigned.Any(x => x.PackId == pack.PaqueteId);
+                if ((!isInPromotion || isOnvalidPromotion) &&  !isAssigned) {
+                    throw new CustomException(HttpStatusCode.Conflict, $"El paquete {nombre} No tiene una promoción asignada");
+                }
+               
+            }
+        }
+
+
     }
 }

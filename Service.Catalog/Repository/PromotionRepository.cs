@@ -4,6 +4,7 @@ using Service.Catalog.Context;
 using Service.Catalog.Domain.Price;
 using Service.Catalog.Domain.Promotion;
 using Service.Catalog.Repository.IRepository;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -145,6 +146,25 @@ namespace Service.Catalog.Repository
             var isDuplicate = await _context.CAT_Promocion.AnyAsync(x => x.Id != promotion.Id && (x.Clave == promotion.Clave || x.Nombre == promotion.Nombre));
 
             return isDuplicate;
+        }
+
+        public async Task<(bool existe, string nombre)> PackIsOnPromotrtion(int id) {
+            var paquetePromotion = _context.Relaciion_Promocion_Paquetes.Include(x => x.Pack).Include(x=>x.Promotion).AsQueryable();
+            var paquetes = _context.CAT_Paquete.AsQueryable();
+            var IsOnPromotrtion = await _context.Relaciion_Promocion_Paquetes.AnyAsync(x=>x.PackId== id);
+            var nombrePaquete = paquetes.Where(x => x.Id == id).First();
+            return (IsOnPromotrtion, nombrePaquete.Nombre);
+        }
+        public async Task<List<PriceList_Packet>> packsIsPriceList(Guid id) {
+            return _context.Relacion_ListaP_Paquete.AsQueryable().Where(x=> x.PrecioListaId==id).ToList();
+        }
+        public async Task<(bool existe ,string nombre)> PackIsOnInvalidPromotion(int PackId) {
+            var paquetePromotion =   _context.Relaciion_Promocion_Paquetes.Include(x=>x.Pack).AsQueryable();
+            var paquete = await  paquetePromotion.AnyAsync(x=>x.PackId == PackId && x.FechaFinal < DateTime.Now);
+            var paquetes = _context.CAT_Paquete.AsQueryable();
+            var nombrePaquete = paquetes.Where(x => x.Id == PackId).First();
+
+            return (paquete,nombrePaquete.Nombre);
         }
     }
 }
