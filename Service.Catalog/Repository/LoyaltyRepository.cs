@@ -55,10 +55,19 @@ namespace Service.Catalog.Repository
         public async Task<bool> IsDuplicateDate(DateTime fechainicial, DateTime fechafinal, Guid id)
         {
             return await _context.CAT_Lealtad.AnyAsync
-                (x => (((x.FechaInicial.Date >= fechainicial.Date) && (x.FechaInicial.Date <= fechafinal.Date))
+                (x =>
+                (((x.FechaInicial.Date >= fechainicial.Date) && (x.FechaInicial.Date <= fechafinal.Date))
                 || ((x.FechaFinal.Date >= fechainicial.Date) && (x.FechaFinal.Date <= fechafinal.Date))
-                ||x.FechaInicial.Date == fechafinal.Date || x.FechaFinal.Date == fechainicial.Date)
-                && x.Id != id);
+                || x.FechaInicial.Date == fechafinal.Date || x.FechaFinal.Date == fechainicial.Date
+                ||
+                (fechainicial.Date >= x.FechaInicial.Date && fechainicial.Date <= x.FechaFinal.Date)
+                && (fechafinal.Date >= x.FechaInicial.Date && fechafinal.Date <= x.FechaFinal.Date)
+                && x.Id != id));
+            //return await _context.CAT_Lealtad.AnyAsync
+            //    (x => (((fechainicial.Date > x.FechaFinal.Date) && (fechainicial.Date <=  x.FechaInicial.Date))
+            //    || ((x.FechaFinal.Date >= fechainicial.Date) && (x.FechaFinal.Date <= fechafinal.Date))
+            //    || x.FechaInicial.Date == fechafinal.Date || x.FechaFinal.Date == fechainicial.Date)
+            //    && x.Id != id);
         }
 
         public async Task Create(Loyalty loyalty)

@@ -1,96 +1,88 @@
 ﻿{
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/scopes/loyalty",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos/services/identity/api/scopes/loyalty",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 45216
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/scopes/loyalty",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/loyalty/all/{search}",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/loyalty/all/{search}",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 20347
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/loyalty/all/{search}",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/loyalty/active",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/loyalty/active",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 20347
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/loyalty/active",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/loyalty/{id}",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/loyalty/{id}",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 20347
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/loyalty/{id}",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/loyalty",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/loyalty",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 20347
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/loyalty",
       "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/api/loyalty/export/list/{search}",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/loyalty/export/list/{search}",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 20347
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/loyalty/export/list/{search}",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/loyalty/export/form/{id}",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/loyalty/export/form/{id}",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 20347
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/loyalty/export/form/{id}",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/loyalty/crearReagendado",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/loyalty/crearReagendado",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 20347
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/loyalty/crearReagendado",

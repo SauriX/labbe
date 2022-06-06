@@ -11,6 +11,7 @@ namespace Service.Catalog.Dtos.Loyalty
         public string TipoDescuento { get; set; }
         public decimal CantidadDescuento { get; set; }
         public DateTime FechaInicial { get; set; }
+        public string Fecha2 { get; set; }
         public DateTime FechaFinal { get; set; }
         public bool Activo { get; set; }
         public Guid UsuarioId { get; set; }

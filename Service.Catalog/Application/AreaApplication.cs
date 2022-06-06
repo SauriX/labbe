@@ -115,8 +115,8 @@ namespace Service.Catalog.Application
 
             template.Generate();
 
-            var range = template.Workbook.Worksheet("Catalogos").Range("Catalogos");
-            var table = template.Workbook.Worksheet("Catalogos").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
+            var range = template.Workbook.Worksheet("Catálogos").Range("Catalogos");
+            var table = template.Workbook.Worksheet("Catálogos").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
             table.Theme = XLTableTheme.TableStyleMedium2;
 
             template.Format();

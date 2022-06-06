@@ -9,7 +9,7 @@ namespace Service.Catalog.Dtos.PriceList
         public string Nombre { get; set; }
         public decimal Precio { get; set; }
         public bool Activo { get; set; }
-        public string? ListaPrecio { get; set; }
+        public string ListaPrecio { get; set; }
 
     }
 }
