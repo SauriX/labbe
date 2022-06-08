@@ -90,21 +90,12 @@ namespace Service.Catalog.Repository
 
             return PasswordGenerator.GenerarPassword(8);
         }
-
-        public async Task<bool> ValidateClaveNamne(string clave, string nombre)
+        public async Task<bool> IsDuplicate(Company company)
         {
-            var validate = await _context.CAT_Compañia.Where(x => x.Clave == clave || x.NombreComercial == nombre).CountAsync();
+            var isDuplicate = await _context.CAT_Compañia.AnyAsync(x => x.Id != company.Id && (x.Clave == company.Clave || x.NombreComercial == company.NombreComercial));
 
-            if (validate == 0)
-            {
-                return false;
-            }
-            else
-            {
-
-                return true;
-            }
-
+            return isDuplicate;
         }
+       
     }
 }

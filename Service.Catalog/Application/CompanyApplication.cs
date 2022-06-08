@@ -15,6 +15,7 @@ using Shared.Extensions;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dictionary.Company;
 using Shared.Helpers;
+using Service.Catalog.Domain.Company;
 
 namespace Service.Catalog.Application
 {
@@ -47,14 +48,10 @@ namespace Service.Catalog.Application
         public async Task<CompanyFormDto> Create(CompanyFormDto company)
         {
             Helpers.ValidateGuid(company.Id.ToString(), out Guid guid);
-            var code = await ValidarClaveNombre(company);
-
-            if (code != 0)
-            {
-                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
-            }
 
             var newIndication = company.ToModel();
+
+            await CheckDuplicate(newIndication);
 
             await _repository.Create(newIndication);
 
@@ -75,22 +72,13 @@ namespace Service.Catalog.Application
 
             var existing = await _repository.GetById(company.Id);
 
-            var code = await ValidarClaveNombre(company);
-            if (existing.Clave != company.Clave || existing.NombreComercial != company.NombreComercial)
-            {
-                if ( code != 0)
-                {
-                    throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
-                }
-
-            }
-
             if (existing == null)
             {
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
 
             var updatedAgent = company.ToModel(existing);
+            await CheckDuplicate(updatedAgent);
 
             await _repository.Update(updatedAgent);
 
@@ -154,20 +142,14 @@ namespace Service.Catalog.Application
             return PasswordGenerator.GenerarPassword(8);
         }
 
-        private async Task<int> ValidarClaveNombre(CompanyFormDto company)
+        private async Task CheckDuplicate(Company company)
         {
+            var isDuplicate = await _repository.IsDuplicate(company);
 
-            var clave = company.Clave;
-            var name = company.NombreComercial;
-
-            var exists = await _repository.ValidateClaveNamne(clave, name);
-
-            if (exists)
+            if (isDuplicate)
             {
-                return 1;
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La Clave o el Nombre Comercial"));
             }
-
-            return 0;
         }
     }
 }
