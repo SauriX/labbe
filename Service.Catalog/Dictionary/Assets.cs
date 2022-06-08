@@ -33,5 +33,7 @@ namespace Service.Catalog.Dictionary
         public const string PromotionForm = "wwwroot/layout/excel/promotion/PromotionFormulario.xlsx";
         public const string LoyaltyList = "wwwroot/layout/excel/loyalty/LealtadesListado.xlsx";
         public const string LoyaltyForm = "wwwroot/layout/excel/loyalty/LealtadesFormulario.xlsx";
+        public const string RouteList = "wwwroot/layout/excel/Route/RutasListado.xlsx";
+        public const string RouteForm = "wwwroot/layout/excel/Route/RutasFormulario.xlsx";
     }
 }

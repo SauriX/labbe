@@ -13,6 +13,6 @@ namespace Service.Catalog.Repository.IRepository
         Task Update(Company company);
         Task<List<Company>> GetAll(string search = null);
         string GeneratePassword();
-        Task<bool> ValidateClaveNamne(string clave, string nombre);
+        Task<bool> IsDuplicate(Company company);
     }
 }
