@@ -36,7 +36,7 @@
       ],
       "UpstreamPathTemplate": "/api/catalog/area/active",
       "UpstreamHttpMethod": [ "GET" ]
-    },  
+    },
     {
       "DownstreamPathTemplate": "/api/catalog/area/{id}",
       "DownstreamScheme": "http",
@@ -1167,6 +1167,19 @@
       ],
       "UpstreamPathTemplate": "/api/catalog/provenance",
       "UpstreamHttpMethod": [ "PUT" ]
+    },
+    //unidades
+    {
+      "DownstreamPathTemplate": "/api/catalog/units/active",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/units/active",
+      "UpstreamHttpMethod": [ "GET" ]
     }
   ]
 }

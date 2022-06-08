@@ -12,7 +12,7 @@ namespace Service.Catalog.Domain.Parameter
         public decimal ValorInicial { get; set; }
         public string TipoValor { get; set; }
         public string NombreCorto { get; set; }
-        public decimal Unidades { get; set; }
+       public int Unidades { get; set; }
         public string Formula { get; set; }
         public int DepartamentoId { get; set; }
         public virtual Department Departmento { get; set; }
@@ -22,7 +22,7 @@ namespace Service.Catalog.Domain.Parameter
         public virtual Format FormatoImpresion { get; set; }
         public Guid ReactivoId { get; set; }
         public virtual Reagent.Reagent Reactivo { get; set; }
-        public string UnidadSi { get; set; } 
+        public int UnidadSi { get; set; } 
         public string FCSI { get; set; }
         public bool Activo { get; set; }
         public Guid UsuarioCreoId { get; set; }

@@ -71,6 +71,7 @@ namespace Service.Catalog.Context
         public DbSet<Loyalty> CAT_Lealtad { get; set; }
         public DbSet<Promotion> CAT_Promocion { get; set; }
         public DbSet<PromotionPack> Relaciion_Promocion_Paquetes { get; set; }
+        public DbSet<Units> CAT_Units { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             

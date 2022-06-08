@@ -138,7 +138,10 @@ namespace Service.Catalog.Application
             template.AddVariable("Titulo", "Lista de Precios");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
             template.AddVariable("Precios", price);
-            template.AddVariable("Estudios", price.Estudios);
+            template.AddVariable("Estudios", price.Estudios.Concat(price.Paquete));
+            template.AddVariable("Sucursales", price.Sucursales);
+            template.AddVariable("Medicos", price.Medicos);
+            template.AddVariable("Compañias", price.Compañia);
             template.Generate();
 
             template.Format();

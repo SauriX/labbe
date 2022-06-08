@@ -65,6 +65,7 @@ namespace Service.Identity.Context
                     var menus = new List<Menu>
                     {
                         new Menu(18, 1, "Maquilador", "maquila", "maquila", 1017),
+                        new Menu(19, 1, "Expedientes", "expedientes", "expedientes", 1018),
                     };
 
                     context.CAT_Menu.AddRange(menus);

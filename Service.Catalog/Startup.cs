@@ -181,6 +181,7 @@ namespace Service.Catalog
             services.AddScoped<ICatalogApplication<PaymentMethod>, CatalogApplication<PaymentMethod>>();
             services.AddScoped<ICatalogApplication<SampleType>, CatalogApplication<SampleType>>();
             services.AddScoped<ICatalogApplication<Field>, CatalogApplication<Field>>();
+            services.AddScoped<ICatalogApplication<Units>, CatalogApplication<Units>>();
             services.AddScoped<ICatalogApplication<WorkList>, CatalogApplication<WorkList>>();
             services.AddScoped<ICatalogDescriptionApplication<UseOfCFDI>, CatalogDescriptionApplication<UseOfCFDI>>();
             services.AddScoped<ICatalogDescriptionApplication<Payment>, CatalogDescriptionApplication<Payment>>();
@@ -210,6 +211,7 @@ namespace Service.Catalog
             services.AddScoped<ICatalogRepository<Clinic>, CatalogRepository<Clinic>>();
             services.AddScoped<ICatalogRepository<Department>, CatalogRepository<Department>>();
             services.AddScoped<ICatalogRepository<Method>, CatalogRepository<Method>>();
+            services.AddScoped<ICatalogRepository<Units>, CatalogRepository<Units>>();
             services.AddScoped<ICatalogRepository<PaymentMethod>, CatalogRepository<PaymentMethod>>();
             services.AddScoped<ICatalogRepository<SampleType>, CatalogRepository<SampleType>>();
             services.AddScoped<ICatalogRepository<Field>, CatalogRepository<Field>>();
