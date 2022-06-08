@@ -14,6 +14,7 @@ using Service.Catalog.Domain.Price;
 using Service.Catalog.Domain.Promotion;
 using Service.Catalog.Domain.Provenance;
 using Service.Catalog.Domain.Reagent;
+using Service.Catalog.Domain.Route;
 using Service.Catalog.Domain.Study;
 using Service.Catalog.Domain.Tapon;
 using System.Reflection;
@@ -71,6 +72,7 @@ namespace Service.Catalog.Context
         public DbSet<Loyalty> CAT_Lealtad { get; set; }
         public DbSet<Promotion> CAT_Promocion { get; set; }
         public DbSet<PromotionPack> Relaciion_Promocion_Paquetes { get; set; }
+        public DbSet<Route> CAT_Rutas { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             
