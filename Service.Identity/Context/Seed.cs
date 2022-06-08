@@ -149,11 +149,11 @@ namespace Service.Identity.Context
                         Nombre = "Administrador",
                         PrimerApellido = "Sistema",
                         RolId = roleId,
+                        SucursalId = Guid.Empty,
                         Contraseña = Crypto.EncryptString("12345678", key),
                         FlagPassword = true,
                         Activo = true,
                         FechaCreo = DateTime.Now,
-                     
                     };
 
                     context.CAT_Usuario.Add(user);
