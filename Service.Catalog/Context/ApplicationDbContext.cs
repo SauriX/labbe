@@ -73,6 +73,7 @@ namespace Service.Catalog.Context
         public DbSet<Promotion> CAT_Promocion { get; set; }
         public DbSet<PromotionPack> Relaciion_Promocion_Paquetes { get; set; }
         public DbSet<Route> CAT_Rutas { get; set; }
+        public DbSet<Units> CAT_Units { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             

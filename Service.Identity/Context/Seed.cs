@@ -65,6 +65,7 @@ namespace Service.Identity.Context
                     var menus = new List<Menu>
                     {
                         new Menu(18, 1, "Maquilador", "maquila", "maquila", 1017),
+                        new Menu(19, 1, "Expedientes", "expedientes", "expedientes", 1018),
                     };
 
                     context.CAT_Menu.AddRange(menus);
@@ -149,11 +150,11 @@ namespace Service.Identity.Context
                         Nombre = "Administrador",
                         PrimerApellido = "Sistema",
                         RolId = roleId,
+                        SucursalId = Guid.Empty,
                         Contraseña = Crypto.EncryptString("12345678", key),
                         FlagPassword = true,
                         Activo = true,
                         FechaCreo = DateTime.Now,
-                     
                     };
 
                     context.CAT_Usuario.Add(user);

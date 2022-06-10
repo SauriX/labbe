@@ -32,9 +32,9 @@ namespace Service.Catalog.Context.EntityConfiguration.Parameter
                 .IsRequired(true)
                 .HasMaxLength(50);
 
-            builder
+            /*builder
                 .Property(x => x.Unidades)
-                .IsRequired(true);
+                .IsRequired(true);*/
 
             builder
                 .Property(x => x.Formula)
@@ -54,10 +54,10 @@ namespace Service.Catalog.Context.EntityConfiguration.Parameter
                 .HasOne(x => x.Reactivo)
                 .WithMany();
 
-            builder
+            /*builder
                 .Property(x => x.UnidadSi)
                 .IsRequired(true)
-                .HasMaxLength(50);
+                .HasMaxLength(50);*/
 
             builder
                 .Property(x => x.FCSI)

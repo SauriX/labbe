@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220608175013_unidades")]
+    partial class unidades
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -749,9 +751,8 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("LimiteDeCredito")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ListaPrecioId")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<int?>("ListaPrecioId")
+                        .HasColumnType("int");
 
                     b.Property<int>("MetodoDePagoId")
                         .HasColumnType("int");
@@ -1388,12 +1389,6 @@ namespace Service.Catalog.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasDefaultValue("0");
-
-                    b.Property<int>("UnidadSi")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Unidades")
-                        .HasColumnType("int");
 
                     b.Property<Guid>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");
@@ -2103,147 +2098,6 @@ namespace Service.Catalog.Migrations
                     b.ToTable("CAT_Reactivo_Contpaq");
                 });
 
-            modelBuilder.Entity("Service.Catalog.Domain.Route.Route", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Clave")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Comentarios")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("DiasDeEntrega")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Domingo")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("EstudioId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("FechaCreo")
-                        .HasColumnType("smalldatetime");
-
-                    b.Property<DateTime?>("FechaFinal")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaInicial")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaModifico")
-                        .HasColumnType("smalldatetime");
-
-                    b.Property<decimal>("FormatoDeTiempoId")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime?>("HoraDeEntrega")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("HoraDeEntregaEstimada")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("HoraDeRecoleccion")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("IdResponsableEnvio")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("IdResponsableRecepcion")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Jueves")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Lunes")
-                        .HasColumnType("bit");
-
-                    b.Property<bool?>("Maquilador")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("MaquiladorId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Martes")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Miercoles")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("PaqueteriaId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool?>("RequierePaqueteria")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Sabado")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("SeguimientoPaqueteria")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SucursalDestinoId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SucursalOrigenId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TiempoDeEntrega")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UsuarioCreoId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UsuarioModificoId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Viernes")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CAT_Rutas");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Route.Route_Study", b =>
-                {
-                    b.Property<Guid>("RouteId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("EstudioId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaMod")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("UsuarioCreoId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("UsuarioModId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("RouteId", "EstudioId");
-
-                    b.HasIndex("EstudioId");
-
-                    b.ToTable("Relacion_Ruta_Estudio");
-                });
-
             modelBuilder.Entity("Service.Catalog.Domain.Study.PacketStudy", b =>
                 {
                     b.Property<int>("EstudioId")
@@ -2285,23 +2139,11 @@ namespace Service.Catalog.Migrations
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Area")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Clave")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Departamento")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("FechaMod")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UsuarioCreoId")
                         .HasColumnType("nvarchar(max)");
@@ -2902,25 +2744,6 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Study");
                 });
 
-            modelBuilder.Entity("Service.Catalog.Domain.Route.Route_Study", b =>
-                {
-                    b.HasOne("Service.Catalog.Domain.Study.Study", "Estudio")
-                        .WithMany()
-                        .HasForeignKey("EstudioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Service.Catalog.Domain.Route.Route", "Ruta")
-                        .WithMany("Estudios")
-                        .HasForeignKey("RouteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Estudio");
-
-                    b.Navigation("Ruta");
-                });
-
             modelBuilder.Entity("Service.Catalog.Domain.Study.PacketStudy", b =>
                 {
                     b.HasOne("Service.Catalog.Domain.Study.Study", "Estudio")
@@ -3092,11 +2915,6 @@ namespace Service.Catalog.Migrations
                     b.Navigation("prices");
 
                     b.Navigation("studies");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Route.Route", b =>
-                {
-                    b.Navigation("Estudios");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Study.Study", b =>
