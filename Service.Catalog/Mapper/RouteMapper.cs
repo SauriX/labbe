@@ -12,7 +12,7 @@ namespace Service.Catalog.Mapper
         public static RouteListDto ToRouteListDto(this Route model)
         {
             if (model == null) return null;
-          
+
             return new RouteListDto
             {
                 Id = model.Id,
@@ -21,15 +21,15 @@ namespace Service.Catalog.Mapper
                 SucursalOrigenId = model.SucursalOrigenId,
                 SucursalDestinoId = model.SucursalDestinoId,
                 Activo = model.Activo,
-                Estudios = model?.Estudios?.Select(x => new Route_StudyListDto
-                {
-                    Id = x.EstudioId,
-                    Clave = x.Estudio.Clave,
-                    Nombre = x.Estudio.Nombre.Trim(),
-                    Area = x.Estudio.Area.Nombre.Trim(),
-                    Departamento = x.Estudio.Area.Departamento.Nombre,
-                    Activo = true,
-                })?.ToList()
+                //Estudios = model?.Estudios?.Select(x => new Route_StudyListDto
+                //{
+                //    Id = x.EstudioId,
+                //    Clave = x.Estudio.Clave.Trim(),
+                //    Nombre = x.Estudio.Nombre.Trim(),
+                //    Area = x.Estudio.Area.Nombre.Trim(),
+                //    Departamento = x.Estudio.Area.Departamento.Nombre.Trim(),
+                //    Activo = true,
+                //})?.ToList()
             };
         }
         public static IEnumerable<RouteListDto> ToRouteListDto(this List<Route> model)
@@ -44,18 +44,18 @@ namespace Service.Catalog.Mapper
                 SucursalOrigenId = x.SucursalOrigenId,
                 SucursalDestinoId = x.SucursalDestinoId,
                 Activo = x.Activo,
-                Estudios = x?.Estudios?.Select(x => new Route_StudyListDto
-                {
-                    Id = x.EstudioId,
-                    Clave = x.Estudio.Clave,
-                    Nombre = x.Estudio.Nombre.Trim(),
-                    Area = x.Estudio.Area.Nombre.Trim(),
-                    Departamento = x.Estudio.Area.Departamento.Nombre,
-                    Activo = true,
-                })?.ToList()
+                //Estudios = x?.Estudios?.Select(x => new Route_StudyListDto
+                //{
+                //    Id = x.EstudioId,
+                //    Clave = x.Estudio.Clave,
+                //    Nombre = x.Estudio.Nombre,
+                //    Area = x.Estudio.Area.Nombre,
+                //    Departamento = x.Estudio.Area.Departamento.Nombre,
+                //    Activo = true,
+                //})?.ToList()
             });
         }
-        
+
         public static RouteFormDto ToRouteFormDto(this Route model)
         {
             if (model == null) return null;
@@ -99,17 +99,18 @@ namespace Service.Catalog.Mapper
                 PaqueteriaId = model.PaqueteriaId,
                 Activo = model.Activo,
                 Comentarios = model.Comentarios.ToString(),
+                HoraDeRecoleccion = model.HoraDeRecoleccion,
                 TiempoDeEntrega = model.TiempoDeEntrega,
                 FormatoDeTiempoId = model.FormatoDeTiempoId,
                 Estudio = model?.Estudios?.Select(x => new Route_StudyListDto
                 {
                     Id = x.EstudioId,
-                    Clave = x.Estudio.Clave.Trim(),
-                    Nombre = x.Estudio.Nombre.Trim(),
-                    Area = x.Estudio.Area.Nombre.Trim(),
+                    Clave = x.Estudio.Clave,
+                    Nombre = x.Estudio.Nombre,
+                    Area = x.Estudio.Area.Nombre,
                     Departamento = x.Estudio.Area.Departamento.Nombre,
-                    Activo = x.Activo,
                 })?.ToList(),
+                Dias = dias
             };
         }
 
@@ -126,12 +127,14 @@ namespace Service.Catalog.Mapper
                 PaqueteriaId = dto.PaqueteriaId,
                 Activo = dto.Activo,
                 Comentarios = dto.Comentarios.ToString(),
+                HoraDeRecoleccion = dto.HoraDeRecoleccion,
                 TiempoDeEntrega = dto.TiempoDeEntrega,
                 FormatoDeTiempoId = dto.FormatoDeTiempoId,
                 Estudios = dto?.Estudio?.Select(x => new Route_Study
                 {
                     EstudioId = x.Id,
-                    Activo = true,
+                    FechaCreo = DateTime.Now,
+                    FechaMod = DateTime.Now,
                 })?.ToList(),
                 Lunes = dto.Dias.Any(x => x.Id == 1),
                 Martes = dto.Dias.Any(x => x.Id == 2),
@@ -157,6 +160,7 @@ namespace Service.Catalog.Mapper
                 PaqueteriaId = dto.PaqueteriaId,
                 Activo = dto.Activo,
                 Comentarios = dto.Comentarios.ToString(),
+                HoraDeRecoleccion = model.HoraDeRecoleccion,
                 TiempoDeEntrega = dto.TiempoDeEntrega,
                 FormatoDeTiempoId = dto.FormatoDeTiempoId,
                 UsuarioCreoId = dto.UsuarioId.ToString(),
@@ -164,7 +168,8 @@ namespace Service.Catalog.Mapper
                 Estudios = dto?.Estudio?.Select(x => new Route_Study
                 {
                     EstudioId = x.Id,
-                    Activo = true,
+                    FechaCreo = DateTime.Now,
+                    FechaMod = DateTime.Now,
                 })?.ToList(),
                 Lunes = dto.Dias.Any(x => x.Id == 1),
                 Martes = dto.Dias.Any(x => x.Id == 2),

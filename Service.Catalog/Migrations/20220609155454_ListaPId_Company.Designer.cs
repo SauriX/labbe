@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220609155454_ListaPId_Company")]
+    partial class ListaPId_Company
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2185,10 +2187,18 @@ namespace Service.Catalog.Migrations
 
             modelBuilder.Entity("Service.Catalog.Domain.Route.Route_Study", b =>
                 {
-                    b.Property<Guid>("RouteId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("EstudioId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("EstudioId")
+                    b.Property<int?>("EstudioId1")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("FechaCreo")
@@ -2197,17 +2207,25 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaMod")
                         .HasColumnType("datetime2");
 
+                    b.Property<decimal>("Precio")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("RouteId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<long>("UsuarioCreoId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("UsuarioModId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("RouteId", "EstudioId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("EstudioId");
+                    b.HasIndex("EstudioId1");
 
-                    b.ToTable("Relacion_Ruta_Estudio");
+                    b.HasIndex("RouteId");
+
+                    b.ToTable("Route_Study");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Study.PacketStudy", b =>
@@ -2251,23 +2269,11 @@ namespace Service.Catalog.Migrations
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Area")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Clave")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Departamento")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("FechaMod")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UsuarioCreoId")
                         .HasColumnType("nvarchar(max)");
@@ -2872,9 +2878,7 @@ namespace Service.Catalog.Migrations
                 {
                     b.HasOne("Service.Catalog.Domain.Study.Study", "Estudio")
                         .WithMany()
-                        .HasForeignKey("EstudioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EstudioId1");
 
                     b.HasOne("Service.Catalog.Domain.Route.Route", "Ruta")
                         .WithMany("Estudios")

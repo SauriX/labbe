@@ -50,18 +50,18 @@ namespace Identidad.Api.Controllers
 
         [HttpPost("export/list/{search?}")]
         [Authorize(Policies.Download)]
-        public async Task<IActionResult> ExportList(string search = null)
+        public async Task<IActionResult> ExportList(string search)
         {
-            var file = await _Services.ExportList(search);
-            return File(file, MimeType.XLSX);
+            var (file, fileName) = await _Services.ExportList(search);
+            return File(file, MimeType.XLSX, fileName);
         }
 
         [HttpPost("export/form/{id}")]
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportForm(Guid id)
         {
-            var file = await _Services.ExportForm(id);
-            return File(file, MimeType.XLSX);
+            var (file, fileName) = await _Services.ExportForm(id);
+            return File(file, MimeType.XLSX, fileName);
         }
 
     }

@@ -65,6 +65,8 @@ namespace Service.Catalog.Application
 
             await CheckDuplicate(newRoute);
 
+            //await CheckDestino(newRoute);
+
             await _repository.Create(newRoute);
 
             return newRoute.ToRouteListDto();
@@ -85,6 +87,8 @@ namespace Service.Catalog.Application
 
             await CheckDuplicate(updatedRoute);
 
+            //await CheckDestino(updatedRoute);
+
             await _repository.Update(updatedRoute);
 
             return updatedRoute.ToRouteListDto();
@@ -100,14 +104,14 @@ namespace Service.Catalog.Application
 
             template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
-            template.AddVariable("Titulo", "Reactivos");
+            template.AddVariable("Titulo", "Rutas");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
             template.AddVariable("Rutas", routes);
 
             template.Generate();
 
-            var range = template.Workbook.Worksheet("Reactivos").Range("Reactivos");
-            var table = template.Workbook.Worksheet("Reactivos").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
+            var range = template.Workbook.Worksheet("Rutas").Range("Rutas");
+            var table = template.Workbook.Worksheet("Rutas").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
             table.Theme = XLTableTheme.TableStyleMedium2;
 
             template.Format();
@@ -127,13 +131,14 @@ namespace Service.Catalog.Application
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
             template.AddVariable("Titulo", "Rutas");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
-            template.AddVariable("Ruta", routes);
+            template.AddVariable("Rutas", routes);
+            template.AddVariable("Estudios", routes.Estudio);
 
             template.Generate();
 
             template.Format();
 
-            return (template.ToByteArray(), $"Catálogo de Reactivos ({routes.Clave}).xlsx");
+            return (template.ToByteArray(), $"Catálogo de Rutas ({routes.Clave}).xlsx");
         }
 
         private async Task CheckDuplicate(Route routes)
@@ -145,5 +150,14 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
             }
         }
+        //private async Task CheckDestino(Route routes)
+        //{
+        //    var isDuplicate = await _repository.IsDestinoIgualAlOrigen(routes);
+
+        //    if (isDuplicate)
+        //    {
+        //        throw new CustomException(HttpStatusCode.Conflict, Responses.DuplicatedDestiny("El Destino"));
+        //    }
+        //}
     }
 }

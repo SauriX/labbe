@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220608164017_CAT_Ruta")]
+    partial class CAT_Ruta
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -713,9 +715,8 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("LimiteDeCredito")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ListaPrecioId")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<int?>("ListaPrecioId")
+                        .HasColumnType("int");
 
                     b.Property<int>("MetodoDePagoId")
                         .HasColumnType("int");
@@ -2107,8 +2108,8 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("smalldatetime");
 
-                    b.Property<decimal>("FormatoDeTiempoId")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("FormatoDeTiempoId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("HoraDeEntrega")
                         .HasColumnType("datetime2");
@@ -2116,8 +2117,8 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime?>("HoraDeEntregaEstimada")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("HoraDeRecoleccion")
-                        .HasColumnType("int");
+                    b.Property<DateTime?>("HoraDeRecoleccion")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid?>("IdResponsableEnvio")
                         .HasColumnType("uniqueidentifier");
@@ -2185,17 +2186,29 @@ namespace Service.Catalog.Migrations
 
             modelBuilder.Entity("Service.Catalog.Domain.Route.Route_Study", b =>
                 {
-                    b.Property<Guid>("RouteId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("RouteId")
+                        .HasColumnType("int");
 
                     b.Property<int>("EstudioId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("FechaMod")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Precio")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid?>("RutaId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<long>("UsuarioCreoId")
                         .HasColumnType("bigint");
@@ -2206,6 +2219,8 @@ namespace Service.Catalog.Migrations
                     b.HasKey("RouteId", "EstudioId");
 
                     b.HasIndex("EstudioId");
+
+                    b.HasIndex("RutaId");
 
                     b.ToTable("Relacion_Ruta_Estudio");
                 });
@@ -2251,23 +2266,11 @@ namespace Service.Catalog.Migrations
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Area")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Clave")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Departamento")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("FechaMod")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UsuarioCreoId")
                         .HasColumnType("nvarchar(max)");
@@ -2878,9 +2881,7 @@ namespace Service.Catalog.Migrations
 
                     b.HasOne("Service.Catalog.Domain.Route.Route", "Ruta")
                         .WithMany("Estudios")
-                        .HasForeignKey("RouteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RutaId");
 
                     b.Navigation("Estudio");
 

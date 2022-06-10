@@ -12,7 +12,7 @@ namespace Service.Catalog.Domain.Company
         public string NombreComercial { get; set; }
         public int ProcedenciaId { get; set; }
         public virtual Provenance.Provenance Procedencia { get; set; }
-        public int? ListaPrecioId { get; set; }
+        public string ListaPrecioId { get; set; }
         public long? PromocionesId { get; set; }
         public string RFC { get; set; }
         public string CodigoPostal { get; set; }

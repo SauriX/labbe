@@ -85,7 +85,7 @@ namespace Service.Catalog.Application
             return existing.ToCompanyFormDto();
         }
 
-        public async Task<byte[]> ExportListCompany(string search = null)
+        public async Task<(byte[] file, string fileName)> ExportList(string search)
         {
             var company = await GetAll(search);
 
@@ -107,10 +107,10 @@ namespace Service.Catalog.Application
 
             template.Format();
 
-            return template.ToByteArray();
+            return (template.ToByteArray(), "Catálogo de Compañias.xlsx");
         }
 
-        public async Task<byte[]> ExportFormCompany(Guid id)
+        public async Task<(byte[] file, string fileName)> ExportForm(Guid id)
         {
             var company = await GetById(id);
 
@@ -131,9 +131,9 @@ namespace Service.Catalog.Application
             //var table = template.Workbook.Worksheet("Compañias").Range("$A$28:" + range.RangeAddress.LastAddress).CreateTable();
             //table.Theme = XLTableTheme.TableStyleMedium2; 
 
-            //template.Format();
+            template.Format();
 
-            return template.ToByteArray();
+            return (template.ToByteArray(), $"Catálogo de Compañias (${company.Clave}).xlsx");
         }
 
         public string GeneratePassword()

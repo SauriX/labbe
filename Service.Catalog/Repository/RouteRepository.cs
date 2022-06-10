@@ -20,7 +20,10 @@ namespace Service.Catalog.Repository
 
         public async Task<List<Route>> GetAll(string search)
         {
-            var routes = _context.CAT_Rutas.AsQueryable();
+            var routes = _context.CAT_Rutas
+                .Include(x => x.Estudios)
+                .ThenInclude(x => x.Estudio).ThenInclude(x => x.Area).ThenInclude(x => x.Departamento)
+                .AsQueryable();
 
             search = search.Trim().ToLower();
 
@@ -41,7 +44,9 @@ namespace Service.Catalog.Repository
 
         public async Task<Route> GetById(Guid id)
         {
-            var routes = await _context.CAT_Rutas.FindAsync(id);
+            var routes = await _context.CAT_Rutas
+                .Include(x => x.Estudios).ThenInclude(x => x.Estudio).ThenInclude(x => x.Area).ThenInclude(x => x.Departamento)
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             return routes;
         }
@@ -52,6 +57,12 @@ namespace Service.Catalog.Repository
 
             return isDuplicate;
         }
+        //public async Task<bool> IsDestinoIgualAlOrigen(Route routes)
+        //{
+        //    var isDuplicate = await _context.CAT_Rutas.AnyAsync(x => x.Id == routes.Id && (x.SucursalDestinoId == x.SucursalOrigenId));
+
+        //    return isDuplicate;
+        //}
 
         public async Task Create(Route routes)
         {

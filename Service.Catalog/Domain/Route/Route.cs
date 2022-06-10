@@ -19,9 +19,9 @@ namespace Service.Catalog.Domain.Route
         public int DiasDeEntrega { get; set; }
         public DateTime? HoraDeEntregaEstimada { get; set; }
         public DateTime? HoraDeEntrega { get; set; }
-        public DateTime? HoraDeRecoleccion { get; set; }
+        public int? HoraDeRecoleccion { get; set; }
         public int TiempoDeEntrega { get; set; }
-        public int FormatoDeTiempoId { get; set; }
+        public Decimal FormatoDeTiempoId { get; set; }
         public string EstudioId { get; set; }
         public DateTime? FechaInicial { get; set; }
         public DateTime? FechaFinal { get; set; }

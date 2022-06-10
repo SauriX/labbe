@@ -10,7 +10,7 @@ namespace Service.Catalog.Dtos.Company
         public string Contrasena { get; set; }
         public string NombreComercial { get; set; }
         public string Procedencia { get; set; }
-        public int? ListaPrecioId { get; set; }
+        public string ListaPrecioId { get; set; }
         public bool Activo { get; set; }
         public IEnumerable<ContactListDto> Contacts { get; set; }
 

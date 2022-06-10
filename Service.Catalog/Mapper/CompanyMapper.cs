@@ -18,7 +18,7 @@ namespace Service.Catalog.Mapper
                 Clave = model.Clave.Trim(),
                 Contrasena = model.Contrasena.Trim(),
                 Procedencia = model.Procedencia.Nombre.Trim(),
-                ListaPrecioId = model.ListaPrecioId,
+                ListaPrecioId = model.ListaPrecioId.Trim(),
                 Activo = model.Activo
 
             };
@@ -33,7 +33,7 @@ namespace Service.Catalog.Mapper
                 Contrasena = x.Contrasena.Trim(),
                 NombreComercial = x.NombreComercial.Trim(),
                 Procedencia = x.Procedencia.Nombre.Trim(),
-                ListaPrecioId = x.ListaPrecioId,
+                ListaPrecioId = x.ListaPrecioId.Trim(),
                 Activo = x.Activo,
                 Contacts = x.Contacts?.ToList()?.ToContactListDto()
             });
