@@ -81,7 +81,7 @@ namespace Service.Catalog.Repository
 
         public async Task<bool> IsPorcentaje(Loyalty loyalty)
         {
-            var isDuplicate = await _context.CAT_Rutas.AnyAsync(x => x.Id != loyalty.Id && (loyalty.TipoDescuento == "Porcentaje"));
+            var isDuplicate = await _context.CAT_Rutas.AnyAsync(x => x.Id != loyalty.Id && (loyalty.TipoDescuento == "Porcentaje" && loyalty.CantidadDescuento > 100));
 
             return isDuplicate;
         }
