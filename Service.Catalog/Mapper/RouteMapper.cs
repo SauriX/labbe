@@ -167,6 +167,7 @@ namespace Service.Catalog.Mapper
                 FechaCreo = DateTime.Now,
                 Estudios = dto?.Estudio?.Select(x => new Route_Study
                 {
+                    RouteId = model.Id,
                     EstudioId = x.Id,
                     FechaCreo = DateTime.Now,
                     FechaMod = DateTime.Now,

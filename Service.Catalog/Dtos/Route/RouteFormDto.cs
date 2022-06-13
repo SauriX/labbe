@@ -33,7 +33,7 @@ namespace Service.Catalog.Dtos.Route
             RuleFor(x => x.SucursalOrigenId).NotEmpty().MaximumLength(50);
             RuleFor(x => x.SucursalDestinoId).NotEmpty().MaximumLength(50);
             RuleFor(x => x.TiempoDeEntrega).NotEmpty();
-            RuleFor(x => x.FormatoDeTiempoId).NotEmpty();
+            //RuleFor(x => x.FormatoDeTiempoId).NotEmpty();
             RuleFor(x => x.Comentarios).MaximumLength(500);
         }
     }

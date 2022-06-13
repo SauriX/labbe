@@ -56,18 +56,13 @@ namespace Service.Catalog.Repository
         {
             return await _context.CAT_Lealtad.AnyAsync
                 (x =>
-                (((x.FechaInicial.Date >= fechainicial.Date) && (x.FechaInicial.Date <= fechafinal.Date))
-                || ((x.FechaFinal.Date >= fechainicial.Date) && (x.FechaFinal.Date <= fechafinal.Date))
+                ((x.FechaInicial.Date >= fechainicial.Date && x.FechaInicial.Date <= fechafinal.Date)
+                || (x.FechaFinal.Date >= fechainicial.Date && x.FechaFinal.Date <= fechafinal.Date)
                 || x.FechaInicial.Date == fechafinal.Date || x.FechaFinal.Date == fechainicial.Date
                 ||
                 (fechainicial.Date >= x.FechaInicial.Date && fechainicial.Date <= x.FechaFinal.Date)
-                && (fechafinal.Date >= x.FechaInicial.Date && fechafinal.Date <= x.FechaFinal.Date)
-                && x.Id != id));
-            //return await _context.CAT_Lealtad.AnyAsync
-            //    (x => (((fechainicial.Date > x.FechaFinal.Date) && (fechainicial.Date <=  x.FechaInicial.Date))
-            //    || ((x.FechaFinal.Date >= fechainicial.Date) && (x.FechaFinal.Date <= fechafinal.Date))
-            //    || x.FechaInicial.Date == fechafinal.Date || x.FechaFinal.Date == fechainicial.Date)
-            //    && x.Id != id);
+                && (fechafinal.Date >= x.FechaInicial.Date && fechafinal.Date <= x.FechaFinal.Date))
+                && x.Id != id);
         }
 
         public async Task Create(Loyalty loyalty)
@@ -82,6 +77,13 @@ namespace Service.Catalog.Repository
             _context.CAT_Lealtad.Update(loyalty);
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> IsPorcentaje(Loyalty loyalty)
+        {
+            var isDuplicate = await _context.CAT_Rutas.AnyAsync(x => x.Id != loyalty.Id && (loyalty.TipoDescuento == "Porcentaje"));
+
+            return isDuplicate;
         }
     }
 }

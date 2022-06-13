@@ -12,6 +12,7 @@ namespace Shared.Dictionary
         public const string Forbidden = "No tiene permisos para realizar esta acción";
         public const string NotPossible = "No es posible realizar esta acción";
         public static string Duplicated(string name) => $"{name} ya se encuentra asignado(a) a un registro, favor de ingresar otro valor";
+        public static string TipoDescuento(string name) => $"{name} No puede ser mayor a 100 si el tipo de descuento es por porcentaje, favor de ingresar otro valor";
         public static string DuplicatedDestiny(string name) => $"{name} no puede ser el mismo que la sucursal de origen, favor de ingresar otro valor";
         public static string DuplicatedDate(string name) => $"{name} ya se encuentra asignado(a) a otra lealtad, favor de ingresar otro valor";
         public const string Unregistered = "El usuario no se encuentra registrado";

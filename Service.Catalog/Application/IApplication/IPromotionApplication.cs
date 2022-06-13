@@ -8,6 +8,7 @@ namespace Service.Catalog.Application.IApplication
     {
         Task<IEnumerable<PromotionListDto>> GetAll(string search);
         Task<PromotionFormDto> GetById(int id);
+        Task<IEnumerable<PromotionListDto>> GetActive();
         Task<PromotionListDto> Create(PromotionFormDto parameter);
         Task<PromotionListDto> Update(PromotionFormDto parameter);
         Task<(byte[] file, string fileName)> ExportList(string search);

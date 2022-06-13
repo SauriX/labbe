@@ -58,7 +58,8 @@ namespace Service.Catalog.Application
 
             var newloyalty = loyalty.ToModel();
 
-            //var code = await CheckDuplicate(loyalty, true, true, loyalty.Id);
+
+            await CheckTipoDescuento(newloyalty);
             var fecha = await CheckDuplicateDate(loyalty, loyalty.Id);
 
             //if (code != 0)
@@ -85,14 +86,6 @@ namespace Service.Catalog.Application
         {
             var existing = await _repository.GetById(loyalty.Id);
 
-            //if (existing.Clave != loyalty.Clave || existing.Nombre != loyalty.Nombre)
-            //{
-            //    var code = await CheckDuplicate(loyalty, existing.Clave != loyalty.Clave, existing.Nombre != loyalty.Nombre, loyalty.Id);
-            //    if (code != 0)
-            //    {
-            //        throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
-            //    }
-            //}
             if (existing.FechaInicial != loyalty.FechaInicial || existing.FechaFinal != loyalty.FechaFinal)
             {
                 var code = await CheckDuplicateDate(loyalty, loyalty.Id);
@@ -107,6 +100,7 @@ namespace Service.Catalog.Application
             }
 
             var updatedLoyalty = loyalty.ToModel(existing);
+            await CheckTipoDescuento(updatedLoyalty);
 
             await _repository.Update(updatedLoyalty);
 
@@ -159,27 +153,15 @@ namespace Service.Catalog.Application
             return (template.ToByteArray(), $"Catálogo de Lealtades (${loyalty.Clave}).xlsx");
         }
 
-        //private async Task<int> CheckDuplicate(LoyaltyFormDto loyalty, bool claveCheck, bool nombreCheck, Guid id)
-        //{
-        //    var name = "";
-        //    var clave = "";
-        //    if (claveCheck)
-        //    {
-        //        clave = loyalty.Clave;
-        //    }
-        //    if (nombreCheck)
-        //    {
-        //        name = loyalty.Nombre;
-        //    }
-        //    var exists = await _repository.IsDuplicate(clave, name, id);
+        private async Task CheckTipoDescuento(Loyalty loyalty)
+        {
+            var isDuplicate = await _repository.IsPorcentaje(loyalty);
 
-        //    if (exists)
-        //    {
-        //        return 1;
-        //    }
-
-        //    return 0;
-        //}
+            if (isDuplicate)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.TipoDescuento("El Descuento/Cantidad"));
+            }
+        }
 
         private async Task<int> CheckDuplicateDate(LoyaltyFormDto loyalty, Guid id)
         {

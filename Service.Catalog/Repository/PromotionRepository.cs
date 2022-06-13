@@ -58,7 +58,12 @@ namespace Service.Catalog.Repository
 
             return await promotions;
         }
+        public async Task<List<Promotion>> GetActive()
+        {
+            var promotions = await _context.CAT_Promocion.Where(x => x.Activo).ToListAsync();
 
+            return promotions;
+        }
         public async Task Create(Promotion promotion)
         {
 
