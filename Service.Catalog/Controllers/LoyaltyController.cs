@@ -58,7 +58,7 @@ namespace Identidad.Api.Controllers
 
         [HttpPost("export/list/{search}")]
         [Authorize(Policies.Download)]
-        public async Task<IActionResult> ExportListLoyalty(string search)
+        public async Task<IActionResult> ExportList(string search)
         {
             var (file, fileName) = await _service.ExportList(search);
             return File(file, MimeType.XLSX, fileName);
@@ -66,7 +66,7 @@ namespace Identidad.Api.Controllers
 
         [HttpPost("export/form/{id}")]
         [Authorize(Policies.Download)]
-        public async Task<IActionResult> ExportFormLoyalty(Guid id)
+        public async Task<IActionResult> ExportForm(Guid id)
         {
             var (file, fileName) = await _service.ExportForm(id);
             return File(file, MimeType.XLSX, fileName);

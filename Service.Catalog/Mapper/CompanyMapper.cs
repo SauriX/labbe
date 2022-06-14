@@ -18,7 +18,7 @@ namespace Service.Catalog.Mapper
                 Clave = model.Clave.Trim(),
                 Contrasena = model.Contrasena.Trim(),
                 Procedencia = model.Procedencia.Nombre.Trim(),
-                ListaPrecioId = model.ListaPrecioId,
+                ListaPrecioId = model.ListaPrecioId.Trim(),
                 Activo = model.Activo
 
             };
@@ -33,7 +33,7 @@ namespace Service.Catalog.Mapper
                 Contrasena = x.Contrasena.Trim(),
                 NombreComercial = x.NombreComercial.Trim(),
                 Procedencia = x.Procedencia.Nombre.Trim(),
-                ListaPrecioId = x.ListaPrecioId,
+                ListaPrecioId = x.ListaPrecioId.Trim(),
                 Activo = x.Activo,
                 Contacts = x.Contacts?.ToList()?.ToContactListDto()
             });
@@ -50,7 +50,7 @@ namespace Service.Catalog.Mapper
                 NombreComercial = model.NombreComercial.Trim(),
                 ProcedenciaId = model.ProcedenciaId ,
                 ListaPrecioId = model.ListaPrecioId,
-                PromocionesId = model.PromocionesId,
+                PromocionesId = model.PromocionesId.Trim(),
                 RFC = model.RFC.Trim(),
                 CodigoPostal = model.CodigoPostal,
                 Estado = model.Estado,
@@ -81,7 +81,7 @@ namespace Service.Catalog.Mapper
                 NombreComercial = dto.NombreComercial.Trim(),
                 ProcedenciaId = dto.ProcedenciaId,
                 ListaPrecioId = dto.ListaPrecioId,
-                PromocionesId = dto.PromocionesId,
+                PromocionesId = dto.PromocionesId.Trim(),
                 RFC = dto.RFC.Trim(),
                 CodigoPostal = dto.CodigoPostal,
                 Estado = dto.Estado,
@@ -124,7 +124,7 @@ namespace Service.Catalog.Mapper
                 NombreComercial = dto.NombreComercial.Trim(),
                 ProcedenciaId = dto.ProcedenciaId,
                 ListaPrecioId = dto.ListaPrecioId,
-                PromocionesId = dto.PromocionesId,
+                PromocionesId = dto.PromocionesId.Trim(),
                 RFC = dto.RFC.Trim(),
                 CodigoPostal = dto.CodigoPostal,
                 Estado = dto.Estado,

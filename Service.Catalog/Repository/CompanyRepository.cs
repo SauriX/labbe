@@ -35,7 +35,9 @@ namespace Service.Catalog.Repository
 
         public async Task<List<Company>> GetAll(string search)
         {
-            var Company = _context.CAT_Compañia.Include(x => x.Procedencia).AsQueryable();
+            var Company = _context.CAT_Compañia.Include(x => x.Procedencia)
+                //.Include(x => x.ListaPrecio)
+                .AsQueryable();
             search = search.Trim().ToLower();
 
             if (!string.IsNullOrWhiteSpace(search) && search != "all")

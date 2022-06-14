@@ -100,7 +100,7 @@ namespace Identidad.Api.Infraestructure.Services
             return code;
         }
 
-        public async Task<byte[]> ExportList(string search = null)
+        public async Task<(byte[]file, string fileName)> ExportList(string search)
         {
             var medics = await GetAll(search);
 
@@ -122,10 +122,10 @@ namespace Identidad.Api.Infraestructure.Services
 
             template.Format();
 
-            return template.ToByteArray();
+            return (template.ToByteArray(), "Catálogo de Médicos.xlsx");
         }
 
-        public async Task<byte[]> ExportForm(Guid id)
+        public async Task<(byte[] file, string fileName)> ExportForm(Guid id)
         {
             var medics = await GetById(id);
 
@@ -144,7 +144,7 @@ namespace Identidad.Api.Infraestructure.Services
 
             template.Format();
 
-            return template.ToByteArray();
+            return (template.ToByteArray(), $"Catálogo de Médicos ({medics.Clave}).xlsx");
         }
     }
 }

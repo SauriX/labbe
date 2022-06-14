@@ -12,8 +12,8 @@ namespace Service.Catalog.Application.IApplication
         Task<CompanyFormDto> Create(CompanyFormDto company);
         Task<CompanyFormDto> Update(CompanyFormDto company);
         Task<IEnumerable<CompanyListDto>> GetAll(string search = null);
-        Task<byte[]> ExportListCompany(string search = null);
-        Task<byte[]> ExportFormCompany(Guid id);
+        Task<(byte[] file, string fileName)> ExportList(string search);
+        Task<(byte[] file, string fileName)> ExportForm(Guid id);
         string GeneratePassword();
     }
 }

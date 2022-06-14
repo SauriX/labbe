@@ -11,8 +11,8 @@ namespace Identidad.Api.Infraestructure.Services.IServices
         Task<MedicsFormDto> Create(MedicsFormDto Medics);
         Task<MedicsFormDto> Update(MedicsFormDto medics);
         Task<IEnumerable<MedicsListDto>> GetAll(string search);
-        Task<byte[]> ExportList(string search = null);
-        Task<byte[]> ExportForm(Guid id);
+        Task<(byte[] file, string fileName)> ExportList(string search);
+        Task<(byte[] file, string fileName)> ExportForm(Guid id);
         //Task<string> GenerateCode(MedicsClaveDto medics, string suffix = null);
 
     }

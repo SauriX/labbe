@@ -47,7 +47,12 @@ namespace Service.Catalog.Application
             return parameter.ToPromotionFormDto();
         }
 
+        public async Task<IEnumerable<PromotionListDto>> GetActive()
+        {
+            var promotions = await _repository.GetActive();
 
+            return promotions.ToPromotionListDto();
+        }
 
 
         public async Task<PromotionListDto> Create(PromotionFormDto parameter)
