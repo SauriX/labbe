@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{F8D542
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{A6377A7D-DFFF-4D7D-9115-2A7B1E47D4B6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.MedicalRecord", "Service.MedicalRecord\Service.MedicalRecord.csproj", "{7D271C7D-EA6E-4F10-9CB2-ADAC5A139E88}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{A6377A7D-DFFF-4D7D-9115-2A7B1E47D4B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6377A7D-DFFF-4D7D-9115-2A7B1E47D4B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6377A7D-DFFF-4D7D-9115-2A7B1E47D4B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D271C7D-EA6E-4F10-9CB2-ADAC5A139E88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D271C7D-EA6E-4F10-9CB2-ADAC5A139E88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D271C7D-EA6E-4F10-9CB2-ADAC5A139E88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D271C7D-EA6E-4F10-9CB2-ADAC5A139E88}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +54,7 @@ Global
 		{A60A473C-B591-4580-9E0C-EF95CECD67F9} = {C7C144B8-70CD-45A2-9900-B1FBC8DD4008}
 		{0F2ED1B5-C462-40E2-A6A8-6233BB9D3F8A} = {C7C144B8-70CD-45A2-9900-B1FBC8DD4008}
 		{A6377A7D-DFFF-4D7D-9115-2A7B1E47D4B6} = {F8D5429E-0D93-47C1-88FC-5E663BBCDD7B}
+		{7D271C7D-EA6E-4F10-9CB2-ADAC5A139E88} = {C7C144B8-70CD-45A2-9900-B1FBC8DD4008}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F389A348-AA84-40EA-ACB9-C8E4728CD0AA}

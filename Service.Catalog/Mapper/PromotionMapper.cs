@@ -80,12 +80,14 @@ namespace Service.Catalog.Mapper
                 FechaFinal = x.FechaFinal,
                 Activo = x.Activo,
                 Precio = paquetes.AsQueryable().Where(m => m.PaqueteId == x.PackId).FirstOrDefault().Precio,
+                PrecioFinal=x.FinalPrice,
                 Paquete = true,
                 Lunes = x.Lunes,
                 Martes = x.Martes,
                 Miercoles = x.Miercoles,
                 Jueves = x.Jueves,
                 Viernes = x.Viernes,
+
 
             }).ToList();
 
