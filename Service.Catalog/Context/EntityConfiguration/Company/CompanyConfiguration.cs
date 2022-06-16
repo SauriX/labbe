@@ -28,7 +28,8 @@ namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
               .HasMaxLength(100);
             builder
               .Property(x => x.ListaPrecioId)
-              .HasMaxLength(50);
+              .HasMaxLength(50)
+              .IsRequired(false);
 
             builder
              .Property(x => x.PromocionesId)

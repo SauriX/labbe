@@ -16,6 +16,7 @@ using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dictionary.Company;
 using Shared.Helpers;
 using Service.Catalog.Domain.Company;
+using System.Linq;
 
 namespace Service.Catalog.Application
 {
@@ -53,6 +54,8 @@ namespace Service.Catalog.Application
 
             await CheckDuplicate(newIndication);
 
+             CheckDuplicateContact(newIndication.Contacts);
+
             await _repository.Create(newIndication);
 
             company = await GetById(newIndication.Id);
@@ -78,7 +81,10 @@ namespace Service.Catalog.Application
             }
 
             var updatedAgent = company.ToModel(existing);
+
             await CheckDuplicate(updatedAgent);
+
+            CheckDuplicateContact(updatedAgent.Contacts);
 
             await _repository.Update(updatedAgent);
 
@@ -149,6 +155,16 @@ namespace Service.Catalog.Application
             if (isDuplicate)
             {
                 throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La Clave o el Nombre Comercial"));
+            }
+        }
+
+        private void CheckDuplicateContact( ICollection<Contact> contact)
+        {
+            var duplicates = contact.GroupBy(x => x.Nombre).Any(g => g.Count() > 1);
+
+            if (duplicates)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("El Nombre del contacto"));
             }
         }
     }
