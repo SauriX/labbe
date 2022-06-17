@@ -19,7 +19,8 @@ namespace Service.Catalog.Mapper
                 CantidadDescuento = model.CantidadDescuento,
                 Fecha = $"{model.FechaInicial.ToShortDateString()}-{model.FechaFinal.ToShortDateString()}",
                 TipoDescuento = model.TipoDescuento.Trim(),
-                IdListaPrecios = model?.PrecioListaStg?.Trim(),
+                PrecioListaId = model.PrecioListaId,
+                PrecioLista = model.PrecioLista.Nombre,
                 Activo = model.Activo
             };
         }
@@ -36,7 +37,8 @@ namespace Service.Catalog.Mapper
                 CantidadDescuento = x.CantidadDescuento,
                 Fecha = $"{x.FechaInicial.ToShortDateString()}-{x.FechaFinal.ToShortDateString()}",
                 TipoDescuento = x.TipoDescuento.Trim(),
-                IdListaPrecios = x?.PrecioListaStg?.Trim(),
+                PrecioListaId = x.PrecioListaId,
+                PrecioLista = x.PrecioLista.Nombre,
                 Activo = x.Activo
             });
         }
@@ -51,7 +53,7 @@ namespace Service.Catalog.Mapper
                 Clave = model.Clave.Trim(),
                 Nombre = model.Nombre.Trim(),
                 TipoDescuento = model.TipoDescuento.Trim(),
-                IdListaPrecios = model?.PrecioListaStg?.Trim(),
+                PrecioListaId = model.PrecioListaId,
                 CantidadDescuento = model.CantidadDescuento,
                 Fecha2 = $"{model?.FechaInicial.ToShortDateString()}-{model?.FechaFinal.ToShortDateString()}",
                 FechaInicial = model.FechaInicial.Date,
@@ -69,7 +71,7 @@ namespace Service.Catalog.Mapper
                 Clave = dto.Clave.Trim(),
                 Nombre = dto.Nombre.Trim(),
                 TipoDescuento = dto.TipoDescuento.Trim(),
-                PrecioListaStg = dto?.IdListaPrecios?.Trim(),
+                PrecioListaId = dto.PrecioListaId,
                 CantidadDescuento = dto.CantidadDescuento,
                 FechaInicial = dto.FechaInicial.Date,
                 FechaFinal = dto.FechaFinal.Date,
@@ -89,7 +91,7 @@ namespace Service.Catalog.Mapper
                 Clave = dto.Clave.Trim(),
                 Nombre = dto.Nombre.Trim(),
                 TipoDescuento = dto.TipoDescuento.Trim(),
-                PrecioListaStg = dto?.IdListaPrecios?.Trim(),
+                PrecioListaId = dto.PrecioListaId,
                 CantidadDescuento = dto.CantidadDescuento,
                 FechaInicial = dto.FechaInicial.Date,
                 FechaFinal = dto.FechaFinal.Date,

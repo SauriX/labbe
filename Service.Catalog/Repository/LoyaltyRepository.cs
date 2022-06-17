@@ -20,8 +20,8 @@ namespace Service.Catalog.Repository
 
         public async Task<List<Loyalty>> GetAll(string search)
         {
-            var loyaltys = _context.CAT_Lealtad.Include(x => x.PrecioLista)
-                    .ThenInclude(x => x.PrecioLista)
+            var loyaltys = _context.CAT_Lealtad
+                .Include(x => x.PrecioLista)
                     .AsQueryable();
 
             search = search.Trim().ToLower();
@@ -43,15 +43,13 @@ namespace Service.Catalog.Repository
 
         public async Task<Loyalty> GetById(Guid Id)
         {
-            var loyalty = await _context.CAT_Lealtad.FirstOrDefaultAsync(x => x.Id == Id);
+            var loyalty = await _context.CAT_Lealtad
+                .Include(x => x.PrecioLista)
+            .FirstOrDefaultAsync(x => x.Id == Id);
 
             return loyalty;
         }
 
-        //public async Task<bool> IsDuplicate(string clave, string nombre, Guid id)
-        //{
-        //    return await _context.CAT_Lealtad.AnyAsync(x => x.Clave == clave || x.Nombre == nombre && x.Id != id);      
-        //}
         public async Task<bool> IsDuplicateDate(DateTime fechainicial, DateTime fechafinal, Guid id)
         {
             return await _context.CAT_Lealtad.AnyAsync

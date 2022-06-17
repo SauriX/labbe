@@ -18,7 +18,7 @@ namespace Service.Catalog.Mapper
                 Clave = model.Clave.Trim(),
                 Contrasena = model.Contrasena.Trim(),
                 Procedencia = model.Procedencia.Nombre.Trim(),
-                ListaPrecioId = model.ListaPrecioId?.Trim(),
+                //ListaPrecioId = model.ListaPrecioId?.Trim(),
                 Activo = model.Activo
 
             };
@@ -33,7 +33,7 @@ namespace Service.Catalog.Mapper
                 Contrasena = x.Contrasena.Trim(),
                 NombreComercial = x.NombreComercial.Trim(),
                 Procedencia = x.Procedencia.Nombre.Trim(),
-                ListaPrecioId = x.ListaPrecioId?.Trim(),
+                //ListaPrecioId = x.ListaPrecioId?.Trim(),
                 Activo = x.Activo,
                 Contacts = x.Contacts?.ToList()?.ToContactListDto()
             });
@@ -49,8 +49,8 @@ namespace Service.Catalog.Mapper
                 EmailEmpresarial = model.EmailEmpresarial.Trim(),
                 NombreComercial = model.NombreComercial.Trim(),
                 ProcedenciaId = model.ProcedenciaId ,
-                ListaPrecioId = model.ListaPrecioId,
-                PromocionesId = model.PromocionesId.Trim(),
+                //ListaPrecioId = model.ListaPrecioId,
+                //PromocionesId = model.PromocionesId.Trim(),
                 RFC = model.RFC.Trim(),
                 CodigoPostal = model.CodigoPostal,
                 Estado = model.Estado,
@@ -80,8 +80,8 @@ namespace Service.Catalog.Mapper
                 EmailEmpresarial = dto.EmailEmpresarial.Trim(),
                 NombreComercial = dto.NombreComercial.Trim(),
                 ProcedenciaId = dto.ProcedenciaId,
-                ListaPrecioId = dto.ListaPrecioId,
-                PromocionesId = dto.PromocionesId.Trim(),
+                //ListaPrecioId = dto.ListaPrecioId,
+                //PromocionesId = dto.PromocionesId.Trim(),
                 RFC = dto.RFC.Trim(),
                 CodigoPostal = dto.CodigoPostal,
                 Estado = dto.Estado,
@@ -123,8 +123,8 @@ namespace Service.Catalog.Mapper
                 EmailEmpresarial = dto.EmailEmpresarial.Trim(),
                 NombreComercial = dto.NombreComercial.Trim(),
                 ProcedenciaId = dto.ProcedenciaId,
-                ListaPrecioId = dto.ListaPrecioId,
-                PromocionesId = dto.PromocionesId.Trim(),
+                //ListaPrecioId = dto.ListaPrecioId,
+                //PromocionesId = dto.PromocionesId.Trim(),
                 RFC = dto.RFC.Trim(),
                 CodigoPostal = dto.CodigoPostal,
                 Estado = dto.Estado,

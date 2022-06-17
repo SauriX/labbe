@@ -90,11 +90,6 @@ namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
                .WithOne(x => x.Compañia)
                .OnDelete(DeleteBehavior.Restrict);
 
-            //builder
-            //   .HasOne(x => x.ListaPrecio)
-            //   .WithMany()
-            //   .OnDelete(DeleteBehavior.Restrict);
-
             builder
                .HasOne(x => x.Procedencia)
                .WithMany()

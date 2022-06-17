@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220617181907_addPrecioListaIdEnLoyalty")]
+    partial class addPrecioListaIdEnLoyalty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1035,7 +1037,10 @@ namespace Service.Catalog.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<Guid>("PrecioListaId")
+                    b.Property<int>("PrecioListaId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("PrecioListaId1")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TipoDescuento")
@@ -1049,7 +1054,7 @@ namespace Service.Catalog.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PrecioListaId");
+                    b.HasIndex("PrecioListaId1");
 
                     b.ToTable("CAT_Lealtad");
                 });
@@ -2572,9 +2577,8 @@ namespace Service.Catalog.Migrations
                 {
                     b.HasOne("Service.Catalog.Domain.Price.PriceList", "PrecioLista")
                         .WithMany()
-                        .HasForeignKey("PrecioListaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("PrecioListaId1")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("PrecioLista");
                 });
