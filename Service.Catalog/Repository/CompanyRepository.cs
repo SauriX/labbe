@@ -98,6 +98,6 @@ namespace Service.Catalog.Repository
 
             return isDuplicate;
         }
-       
+
     }
 }
