@@ -142,6 +142,13 @@ namespace Service.Identity.Controllers
             return await _service.GetScopes(userId, ControllerNames.Maquila);
         }
 
+        [HttpGet(ControllerNames.Configuration)]
+        public async Task<ScopesDto> GetConfigurationScopes()
+        {
+            var userId = GetUserId();
+            return await _service.GetScopes(userId, ControllerNames.Configuration);
+        }
+
         private Guid GetUserId()
         {
             return Guid.Parse(User.Claims.SingleOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
