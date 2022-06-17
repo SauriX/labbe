@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220617184605_addPrecioListaIdEnLoyalty2")]
+    partial class addPrecioListaIdEnLoyalty2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1035,9 +1037,6 @@ namespace Service.Catalog.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<Guid>("PrecioListaId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("TipoDescuento")
                         .HasColumnType("nvarchar(max)");
 
@@ -1048,8 +1047,6 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PrecioListaId");
 
                     b.ToTable("CAT_Lealtad");
                 });
@@ -2566,17 +2563,6 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Estudio");
 
                     b.Navigation("Indicacion");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Loyalty.Loyalty", b =>
-                {
-                    b.HasOne("Service.Catalog.Domain.Price.PriceList", "PrecioLista")
-                        .WithMany()
-                        .HasForeignKey("PrecioListaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("PrecioLista");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Maquila.Maquila", b =>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Service.Catalog.Domain.Price;
+using System;
 using System.Collections.Generic;
 
 namespace Service.Catalog.Domain.Loyalty
@@ -17,7 +18,7 @@ namespace Service.Catalog.Domain.Loyalty
         public DateTime FechaCreo { get; set; }
         public Guid? UsuarioModId { get; set; }
         public DateTime? FechaMod { get; set; }
-        public string PrecioListaStg { get; set; }
-        public ICollection<LoyaltyPriceList> PrecioLista { get; set; }
+        public Guid PrecioListaId { get; set; }
+        public virtual Price.PriceList PrecioLista { get; set; }
     }
 }

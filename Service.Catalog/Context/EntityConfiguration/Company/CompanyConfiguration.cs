@@ -28,7 +28,8 @@ namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
               .HasMaxLength(100);
             builder
               .Property(x => x.ListaPrecioId)
-              .HasMaxLength(50);
+              .HasMaxLength(50)
+              .IsRequired(false);
 
             builder
              .Property(x => x.PromocionesId)
@@ -88,11 +89,6 @@ namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
                .HasMany(x => x.Contacts)
                .WithOne(x => x.Compañia)
                .OnDelete(DeleteBehavior.Restrict);
-
-            //builder
-            //   .HasOne(x => x.ListaPrecio)
-            //   .WithMany()
-            //   .OnDelete(DeleteBehavior.Restrict);
 
             builder
                .HasOne(x => x.Procedencia)
