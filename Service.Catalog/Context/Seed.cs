@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Domain.Catalog;
+using Service.Catalog.Domain.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,105 @@ namespace Service.Catalog.Context
 {
     public class Seed
     {
-        public static async Task SeedData(ApplicationDbContext context, string key) {
+        public static async Task SeedData(ApplicationDbContext context, string key)
+        {
+            if (!context.CAT_Configuracion.Any())
+            {
+                using var transaction = context.Database.BeginTransaction();
+                try
+                {
+                    var configuration = new List<Configuration>()
+                    {
+                        new Configuration()
+                        {
+                            Id = 1,
+                            Descripcion = "Correo",
+                        },
+                        new Configuration()
+                        {
+                            Id = 2,
+                            Descripcion = "Remitente",
+                        },
+                        new Configuration()
+                        {
+                            Id = 3,
+                            Descripcion = "SMTP",
+                        },
+                        new Configuration()
+                        {
+                            Id = 4,
+                            Descripcion = "Requiere Contraseña",
+                        },
+                        new Configuration()
+                        {
+                            Id = 5,
+                            Descripcion = "Contraseña",
+                        },
+                        new Configuration()
+                        {
+                            Id = 6,
+                            Descripcion = "Nombre Sistema",
+                        },
+                        new Configuration()
+                        {
+                            Id = 7,
+                            Descripcion = "Logo",
+                            Valor = "logo.png"
+                        },
+                        new Configuration()
+                        {
+                            Id = 8,
+                            Descripcion = "RFC",
+                        },
+                        new Configuration()
+                        {
+                            Id = 9,
+                            Descripcion = "Razón Social",
+                        },
+                        new Configuration()
+                        {
+                            Id = 10,
+                            Descripcion = "CP",
+                        },
+                        new Configuration()
+                        {
+                            Id = 11,
+                            Descripcion = "Estado",
+                        },
+                        new Configuration()
+                        {
+                            Id = 12,
+                            Descripcion = "Colonia",
+                        },
+                        new Configuration()
+                        {
+                            Id = 13,
+                            Descripcion = "Calle",
+                        },
+                        new Configuration()
+                        {
+                            Id = 14,
+                            Descripcion = "Número",
+                        }, 
+                        new Configuration()
+                        {
+                            Id = 15,
+                            Descripcion = "Teléfono",
+                        },
+                    };
+
+                    context.CAT_Configuracion.AddRange(configuration);
+
+                    await context.SaveChangesAsync();
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
 
             if (!context.CAT_Departamento.Any() || context.CAT_Departamento.Any(x => x.Id == 1 && x.Nombre != "Paquetes"))
             {
@@ -25,12 +124,13 @@ namespace Service.Catalog.Context
                     };
                     if (!context.CAT_Departamento.Any())
                     {
-                        context.CAT_Departamento.AddRange(departamento);
+                        context.CAT_Departamento.Add(departamento);
                     }
-                    else {
-                        context.CAT_Departamento.UpdateRange(departamento);
+                    else
+                    {
+                        context.CAT_Departamento.Update(departamento);
                     }
-                    
+
 
                     context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Departamento ON;");
                     await context.SaveChangesAsync();
@@ -45,7 +145,7 @@ namespace Service.Catalog.Context
                 }
             }
 
-            if (!context.CAT_Area.Any() || context.CAT_Area.Any(x=> x.Id==1 && x.Nombre!="Paquetes"))
+            if (!context.CAT_Area.Any() || context.CAT_Area.Any(x => x.Id == 1 && x.Nombre != "Paquetes"))
             {
 
                 using var transaction = context.Database.BeginTransaction();
@@ -60,12 +160,13 @@ namespace Service.Catalog.Context
                         DepartamentoId = 1
                     };
 
-                    if (!context.CAT_Departamento.Any())
+                    if (!context.CAT_Area.Any())
                     {
-                        context.CAT_Area.AddRange(area);
+                        context.CAT_Area.Add(area);
                     }
-                    else {
-                        context.CAT_Area.UpdateRange(area);
+                    else
+                    {
+                        context.CAT_Area.Update(area);
                     }
                     context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Area ON;");
                     await context.SaveChangesAsync();
@@ -91,14 +192,14 @@ namespace Service.Catalog.Context
                        new Units{
                         Clave = "g/24 hr",
                         Nombre = "g/24 hr",
-                        Activo = true, 
+                        Activo = true,
                        },
-                       new Units{ 
+                       new Units{
                         Clave = "0.2 µg/mL",
                         Nombre = "0.2 µg/mL",
                         Activo = true,
                        },
-                       new Units{ 
+                       new Units{
                         Clave = "2.0 µg/mL",
                         Nombre = "2.0 µg/mL",
                         Activo = true,
@@ -772,12 +873,12 @@ namespace Service.Catalog.Context
                         },
 
                     };
-            
-                        context.CAT_Units.AddRange(unidades);
 
-                    
+                    context.CAT_Units.AddRange(unidades);
+
+
                     await context.SaveChangesAsync();
-                 
+
 
                     transaction.Commit();
                 }

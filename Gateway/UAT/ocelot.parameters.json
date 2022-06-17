@@ -76,6 +76,17 @@
       ],
       "UpstreamPathTemplate": "/api/Parameter/value",
       "UpstreamHttpMethod": [ "POST", "PUT" ]
+    },   
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/Parameter/values",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Parameter/values",
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
     {
       "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/Parameter/export/list/{search}",

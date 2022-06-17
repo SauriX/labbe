@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Domain.Branch;
 using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Domain.Company;
+using Service.Catalog.Domain.Configuration;
 using Service.Catalog.Domain.Constant;
 using Service.Catalog.Domain.Indication;
 using Service.Catalog.Domain.Loyalty;
@@ -25,6 +26,7 @@ namespace Service.Catalog.Context
     {
         public ApplicationDbContext(DbContextOptions options) : base(options) { }
 
+        public DbSet<Configuration> CAT_Configuracion { get; set; }
         public DbSet<Area> CAT_Area { get; set; }
         public DbSet<Bank> CAT_Banco { get; set; }
         public DbSet<Clinic> CAT_Clinica { get; set; }
@@ -76,7 +78,7 @@ namespace Service.Catalog.Context
         public DbSet<Units> CAT_Units { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            
+
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
     }

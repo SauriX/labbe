@@ -14,6 +14,44 @@ namespace Shared.Extensions
 {
     public static class Extensions
     {
+        public static async Task SaveFileAsync(this IFormFile file, string path, string name)
+        {
+            if (file != null && !string.IsNullOrWhiteSpace(path) && !string.IsNullOrWhiteSpace(name))
+            {
+                using Stream stream = new FileStream(Path.Combine(path, name), FileMode.Create);
+                await file.CopyToAsync(stream);
+            }
+        }
+
+        public static void Format(this XLTemplate temp)
+        {
+            temp.Workbook.Worksheets.ToList().ForEach(x =>
+            {
+                x.Cells().Style.Alignment.SetWrapText(true);
+                x.Cells().Style.Alignment.SetVertical(XLAlignmentVerticalValues.Top);
+            });
+        }
+
+        public static byte[] ToByteArray(this XLTemplate temp)
+        {
+            MemoryStream stream = GetStream(temp);
+            return stream.ToArray();
+        }
+
+        private static MemoryStream GetStream<T>(this T workbook)
+        {
+            MemoryStream ms = new();
+
+            if (workbook is XLTemplate)
+            {
+                var book = workbook as XLTemplate;
+                book.SaveAs(ms);
+                ms.Position = 0;
+            }
+
+            return ms;
+        }
+
         public static DataTable ToTable<T>(this T data, string name = "table")
         {
             DataTable table = new(name);
@@ -56,35 +94,6 @@ namespace Shared.Extensions
             }
 
             return table;
-        }
-
-        public static void Format(this XLTemplate temp)
-        {
-            temp.Workbook.Worksheets.ToList().ForEach(x =>
-            {
-                x.Cells().Style.Alignment.SetWrapText(true);
-                x.Cells().Style.Alignment.SetVertical(XLAlignmentVerticalValues.Top);
-            });
-        }
-
-        public static byte[] ToByteArray(this XLTemplate temp)
-        {
-            MemoryStream stream = GetStream(temp);
-            return stream.ToArray();
-        }
-
-        private static MemoryStream GetStream<T>(this T workbook)
-        {
-            MemoryStream ms = new();
-
-            if (workbook is XLTemplate)
-            {
-                var book = workbook as XLTemplate;
-                book.SaveAs(ms);
-                ms.Position = 0;
-            }
-
-            return ms;
         }
     }
 }

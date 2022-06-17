@@ -141,11 +141,13 @@ namespace Service.Catalog
 
             services.AddAuthorization(opt =>
             {
-                opt.AddPolicy(Policies.Access, p => {
+                opt.AddPolicy(Policies.Access, p =>
+                {
                     p.RequireAuthenticatedUser();
                     p.AddRequirements(new AccessRequirement());
                 });
-                opt.AddPolicy(Policies.Create, p => {
+                opt.AddPolicy(Policies.Create, p =>
+                {
                     p.RequireAuthenticatedUser();
                     p.Requirements.Add(new CreateRequirement());
                 });
@@ -186,6 +188,7 @@ namespace Service.Catalog
             services.AddScoped<ICatalogDescriptionApplication<UseOfCFDI>, CatalogDescriptionApplication<UseOfCFDI>>();
             services.AddScoped<ICatalogDescriptionApplication<Payment>, CatalogDescriptionApplication<Payment>>();
             services.AddScoped<ICatalogDescriptionApplication<Indicator>, CatalogDescriptionApplication<Indicator>>();
+            services.AddScoped<IConfigurationApplication, ConfigurationApplication>();
             services.AddScoped<IAreaApplication, AreaApplication>();
             services.AddScoped<IDimensionApplication, DimensionApplication>();
             services.AddScoped<IReagentApplication, ReagentApplication>();
@@ -200,9 +203,9 @@ namespace Service.Catalog
             services.AddScoped<ITaponApplication, TaponApplication>();
             services.AddScoped<IPriceListApplication, PriceListApplication>();
             services.AddScoped<IPackApplication, PackApplication>();
-            services.AddScoped<IPromotionApplication,PromotionApplication>();
-            services.AddScoped<ILoyaltyApplication,LoyaltyApplication>();
-            services.AddScoped<IRouteApplication,RouteApplication>();
+            services.AddScoped<IPromotionApplication, PromotionApplication>();
+            services.AddScoped<ILoyaltyApplication, LoyaltyApplication>();
+            services.AddScoped<IRouteApplication, RouteApplication>();
 
             services.AddScoped<ICatalogRepository<Delivery>, CatalogRepository<Delivery>>();
             services.AddScoped<ICatalogRepository<Area>, CatalogRepository<Area>>();
@@ -220,6 +223,7 @@ namespace Service.Catalog
             services.AddScoped<ICatalogRepository<UseOfCFDI>, CatalogRepository<UseOfCFDI>>();
             services.AddScoped<ICatalogRepository<Payment>, CatalogRepository<Payment>>();
             services.AddScoped<ICatalogRepository<Indicator>, CatalogRepository<Indicator>>();
+            services.AddScoped<IConfigurationRepository, ConfigurationRepository>();
             services.AddScoped<IAreaRepository, AreaRepository>();
             services.AddScoped<IDimensionRepository, DimensionRepository>();
             services.AddScoped<IReagentRepository, ReagentRepository>();

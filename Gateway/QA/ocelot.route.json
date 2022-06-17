@@ -1,69 +1,80 @@
 ﻿{
   "Routes": [
     {
-      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/promo/all/{search}",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/scopes/route",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/promotion/all/{search}",
+      "UpstreamPathTemplate": "/api/scopes/route",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/promo/{id}",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/route/all/{search}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/promotion/{id}",
+      "UpstreamPathTemplate": "/api/route/all/{search}",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/promotion/active",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/route/active",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/promotion/active",
+      "UpstreamPathTemplate": "/api/route/active",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/promo",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/route/{id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/promotion",
+      "UpstreamPathTemplate": "/api/route/{id}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/route",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/route",
       "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/promo/export/list/{search}",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/route/export/list/{search}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/promotion/export/list/{search}",
+      "UpstreamPathTemplate": "/api/route/export/list/{search}",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/promo/export/form/{id}",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/route/export/form/{id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/promotion/export/form/{id}",
+      "UpstreamPathTemplate": "/api/route/export/form/{id}",
       "UpstreamHttpMethod": [ "POST" ]
     }
   ]

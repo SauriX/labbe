@@ -1,7 +1,7 @@
 ﻿{
   "Routes": [
     {
-      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/promo/all/{search}",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/promo/all/{search}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -12,7 +12,7 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/promo/{id}",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/promo/{id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -23,7 +23,7 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/promotion/active",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/promotion/active",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -34,7 +34,7 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/promo",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/promo",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -45,7 +45,7 @@
       "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/promo/export/list/{search}",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/promo/export/list/{search}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -56,7 +56,7 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/promo/export/form/{id}",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/promo/export/form/{id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
