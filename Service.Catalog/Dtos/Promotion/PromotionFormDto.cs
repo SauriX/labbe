@@ -1,4 +1,5 @@
-﻿using Service.Catalog.Dtos.PriceList;
+﻿using FluentValidation;
+using Service.Catalog.Dtos.PriceList;
 using System;
 using System.Collections.Generic;
 
@@ -22,5 +23,14 @@ namespace Service.Catalog.Dtos.Promotion
 
         public IEnumerable<DiasDto> Dias { get; set; }
 
+    }
+
+    public class PromotionFormDtoValidator : AbstractValidator<PromotionFormDto>
+    {
+        public PromotionFormDtoValidator()
+        {
+            RuleFor(x => x.Dias).NotEmpty(); ;
+            
+        }
     }
 }

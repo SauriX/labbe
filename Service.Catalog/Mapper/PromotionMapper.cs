@@ -62,6 +62,8 @@ namespace Service.Catalog.Mapper
                 Miercoles = x.Miercoles,
                 Jueves = x.Jueves,
                 Viernes = x.Viernes,
+                Sabado = x.Sabado,
+                Domingo= x.Domingo,
             }).ToList();
  
             var paquetes = model.prices.AsQueryable().Where(y => y.PromocionId == model.Id && y.Activo == true).FirstOrDefault().PrecioLista.Paquete;
@@ -87,7 +89,8 @@ namespace Service.Catalog.Mapper
                 Miercoles = x.Miercoles,
                 Jueves = x.Jueves,
                 Viernes = x.Viernes,
-
+                Sabado = x.Sabado,
+                Domingo= x.Domingo
 
             }).ToList();
 
