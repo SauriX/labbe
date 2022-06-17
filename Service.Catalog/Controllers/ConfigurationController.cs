@@ -57,7 +57,7 @@ namespace Service.Catalog.Controllers
             await _service.UpdateGeneral(general);
         }
 
-        [HttpPut("general")]
+        [HttpPut("fiscal")]
         [Authorize(Policies.Update)]
         public async Task UpdateFiscal(ConfigurationFiscalDto fiscal)
         {
