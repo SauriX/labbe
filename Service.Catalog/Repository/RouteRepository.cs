@@ -58,12 +58,12 @@ namespace Service.Catalog.Repository
 
             return isDuplicate;
         }
-        public async Task<bool> IsDestinoIgualAlOrigen(Route routes)
-        {
-            var isDuplicate = await _context.CAT_Rutas.AnyAsync(x => x.Id != routes.Id && (routes.SucursalDestinoId == routes.SucursalOrigenId));
+        //public async Task<bool> IsDestinoIgualAlOrigen(Route routes)
+        //{
+        //    var isDuplicate = await _context.CAT_Rutas.AnyAsync(x => x.Id != routes.Id && (routes.SucursalDestinoId == routes.SucursalOrigenId));
 
-            return isDuplicate;
-        }
+        //    return isDuplicate;
+        //}
 
         public async Task Create(Route routes)
         {

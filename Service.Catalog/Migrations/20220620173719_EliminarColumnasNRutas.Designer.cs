@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220620173719_EliminarColumnasNRutas")]
+    partial class EliminarColumnasNRutas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2157,9 +2159,6 @@ namespace Service.Catalog.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("PaqueteriaId")
-                        .HasColumnType("int");
-
                     b.Property<bool?>("RequierePaqueteria")
                         .HasColumnType("bit");
 
@@ -2168,12 +2167,6 @@ namespace Service.Catalog.Migrations
 
                     b.Property<int?>("SeguimientoPaqueteria")
                         .HasColumnType("int");
-
-                    b.Property<Guid?>("SucursalDestinoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("SucursalOrigenId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("TiempoDeEntrega")
                         .HasColumnType("int");
@@ -2188,12 +2181,6 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PaqueteriaId");
-
-                    b.HasIndex("SucursalDestinoId");
-
-                    b.HasIndex("SucursalOrigenId");
 
                     b.ToTable("CAT_Rutas");
                 });
@@ -2874,30 +2861,6 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Promotion");
 
                     b.Navigation("Study");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Route.Route", b =>
-                {
-                    b.HasOne("Service.Catalog.Domain.Catalog.Delivery", "Paqueteria")
-                        .WithMany()
-                        .HasForeignKey("PaqueteriaId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Service.Catalog.Domain.Branch.Branch", "SucursalDestino")
-                        .WithMany()
-                        .HasForeignKey("SucursalDestinoId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Service.Catalog.Domain.Branch.Branch", "SucursalOrigen")
-                        .WithMany()
-                        .HasForeignKey("SucursalOrigenId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Paqueteria");
-
-                    b.Navigation("SucursalDestino");
-
-                    b.Navigation("SucursalOrigen");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Route.Route_Study", b =>

@@ -18,18 +18,9 @@ namespace Service.Catalog.Mapper
                 Id = model.Id,
                 Clave = model.Clave,
                 Nombre = model.Nombre,
-                SucursalOrigenId = model.SucursalOrigenId,
-                SucursalDestinoId = model.SucursalDestinoId,
+                SucursalOrigenId = model.SucursalOrigen.Nombre,
+                SucursalDestinoId = model.SucursalDestino.Nombre,
                 Activo = model.Activo,
-                //Estudios = model?.Estudios?.Select(x => new Route_StudyListDto
-                //{
-                //    Id = x.EstudioId,
-                //    Clave = x.Estudio.Clave.Trim(),
-                //    Nombre = x.Estudio.Nombre.Trim(),
-                //    Area = x.Estudio.Area.Nombre.Trim(),
-                //    Departamento = x.Estudio.Area.Departamento.Nombre.Trim(),
-                //    Activo = true,
-                //})?.ToList()
             };
         }
         public static IEnumerable<RouteListDto> ToRouteListDto(this List<Route> model)
@@ -41,18 +32,9 @@ namespace Service.Catalog.Mapper
                 Id = x.Id,
                 Clave = x.Clave,
                 Nombre = x.Nombre,
-                SucursalOrigenId = x.SucursalOrigenId,
-                SucursalDestinoId = x.SucursalDestinoId,
+                SucursalOrigenId = x.SucursalOrigen.Nombre,
+                SucursalDestinoId = x.SucursalDestino.Nombre,
                 Activo = x.Activo,
-                //Estudios = x?.Estudios?.Select(x => new Route_StudyListDto
-                //{
-                //    Id = x.EstudioId,
-                //    Clave = x.Estudio.Clave,
-                //    Nombre = x.Estudio.Nombre,
-                //    Area = x.Estudio.Area.Nombre,
-                //    Departamento = x.Estudio.Area.Departamento.Nombre,
-                //    Activo = true,
-                //})?.ToList()
             });
         }
 

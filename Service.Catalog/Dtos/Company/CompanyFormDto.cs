@@ -12,8 +12,8 @@ namespace Service.Catalog.Dtos.Company
         public string EmailEmpresarial { get; set; }
         public string NombreComercial { get; set; }
         public int ProcedenciaId { get; set; }
-        public Guid PrecioListaId { get; set; }
-        public int PromocionesId { get; set; }
+        public Guid? PrecioListaId { get; set; }
+        public int? PromocionesId { get; set; }
         public string RFC { get; set; }
         public string CodigoPostal { get; set; }
         public string Estado { get; set; }
@@ -44,8 +44,6 @@ namespace Service.Catalog.Dtos.Company
             RuleFor(x => x.RFC).NotEmpty().MaximumLength(100);
             RuleFor(x => x.RazonSocial).NotEmpty().MaximumLength(500);
             RuleFor(x => x.MetodoDePagoId).NotEmpty();
-            //RuleFor(x => x.PrecioListaId).NotEmpty();
-            //RuleFor(x => x.PromocionesId).NotEmpty();
 
         }
 

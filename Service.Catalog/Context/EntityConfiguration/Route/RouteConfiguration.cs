@@ -55,6 +55,21 @@ namespace Service.Catalog.Context.EntityConfiguration.Route
             builder
                 .HasMany(x => x.Estudios)
                 .WithOne(x => x.Ruta);
+
+            builder
+               .HasOne(x => x.SucursalOrigen)
+               .WithMany()
+               .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+               .HasOne(x => x.SucursalDestino)
+               .WithMany()
+               .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+               .HasOne(x => x.Paqueteria)
+               .WithMany()
+               .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

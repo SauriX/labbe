@@ -65,5 +65,11 @@ namespace Service.Catalog.Controllers
             var (file, fileName) = await _Service.ExportForm(id);
             return File(file, MimeType.XLSX, fileName);
         }
+
+        [HttpGet("active")]
+        public async Task<IEnumerable<PromotionListDto>> GetActive()
+        {
+            return await _Service.GetActive();
+        }
     }
 }
