@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220617214113_BorrarLPPromoEnCompany")]
+    partial class BorrarLPPromoEnCompany
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -760,13 +762,7 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("NumeroDeCuenta")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("PrecioListaId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("ProcedenciaId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PromocionesId")
                         .HasColumnType("int");
 
                     b.Property<string>("RFC")
@@ -786,11 +782,7 @@ namespace Service.Catalog.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PrecioListaId");
-
                     b.HasIndex("ProcedenciaId");
-
-                    b.HasIndex("PromocionesId");
 
                     b.ToTable("CAT_Compañia");
                 });
@@ -2491,27 +2483,13 @@ namespace Service.Catalog.Migrations
 
             modelBuilder.Entity("Service.Catalog.Domain.Company.Company", b =>
                 {
-                    b.HasOne("Service.Catalog.Domain.Price.PriceList", "PrecioLista")
-                        .WithMany()
-                        .HasForeignKey("PrecioListaId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("Service.Catalog.Domain.Provenance.Provenance", "Procedencia")
                         .WithMany()
                         .HasForeignKey("ProcedenciaId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Service.Catalog.Domain.Promotion.Promotion", "Promociones")
-                        .WithMany()
-                        .HasForeignKey("PromocionesId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("PrecioLista");
-
                     b.Navigation("Procedencia");
-
-                    b.Navigation("Promociones");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Company.Contact", b =>
@@ -2528,7 +2506,7 @@ namespace Service.Catalog.Migrations
             modelBuilder.Entity("Service.Catalog.Domain.Company.Price_Company", b =>
                 {
                     b.HasOne("Service.Catalog.Domain.Company.Company", "Compañia")
-                        .WithMany("Precio")
+                        .WithMany()
                         .HasForeignKey("CompañiaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -3006,8 +2984,6 @@ namespace Service.Catalog.Migrations
             modelBuilder.Entity("Service.Catalog.Domain.Company.Company", b =>
                 {
                     b.Navigation("Contacts");
-
-                    b.Navigation("Precio");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Indication.Indication", b =>
