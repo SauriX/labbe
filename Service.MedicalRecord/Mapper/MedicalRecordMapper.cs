@@ -54,12 +54,12 @@ namespace Service.MedicalRecord.Mapper
                 Edad = model.Edad,
                 Telefono = model.Telefono,
                 Correo = model.Correo,
-                Cp = model.CodigoPostal.ToString(),
-                Estado = model.EstadoId.ToString(),
-                Municipio = model.CiudadId.ToString(),
+                //Cp = model.CodigoPostal.ToString(),
+                //Estado = model.EstadoId.ToString(),
+                //Municipio = model.CiudadId.ToString(),
                 Celular = model.Celular.ToString(),
                 Calle = model.Calle,
-                Colonia = model.ColoniaId.ToString()
+                //Colonia = model.ColoniaId
             };
         }
         public static MedicalRecord.Domain.MedicalRecord.MedicalRecord ToModel(this MedicalRecordsFormDto model)
@@ -103,12 +103,12 @@ namespace Service.MedicalRecord.Mapper
                 Edad = dto.Edad,
                 Telefono = dto.Telefono,
                 Correo = dto.Correo,
-                CodigoPostal = int.Parse(dto.Cp),
-                EstadoId = int.Parse(dto.Estado),
-                CiudadId = int.Parse(dto.Municipio),
+               // CodigoPostal = int.Parse(dto.Cp),
+               // EstadoId = int.Parse(dto.Estado),
+               // CiudadId = int.Parse(dto.Municipio),
                 Celular = int.Parse(dto.Celular),
                 Calle = model.Calle,
-                ColoniaId = int.Parse(dto.Colonia),
+               // ColoniaId = dto.Colonia,
                 UsuarioModId = dto.UserId,
                 FechaMod = DateTime.Now
             };

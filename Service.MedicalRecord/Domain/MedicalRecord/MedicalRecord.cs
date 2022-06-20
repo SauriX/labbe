@@ -9,16 +9,16 @@ namespace Service.MedicalRecord.Domain.MedicalRecord
         public string NombrePaciente { get; set; }
         public string PrimerApellido { get; set; }
         public string SegundoApellido { get; set; }
-     /*   public Guid IdSolicitud { get; set; }
-        public Guid IdCotizacion { get; set; }*/
+        /*   public Guid IdSolicitud { get; set; }
+           public Guid IdCotizacion { get; set; }*/
         public string Genero { get; set; }
         public DateTime FechaDeNacimiento { get; set; }
         public int Edad { get; set; }
         public string Telefono { get; set; }
         public string Correo { get; set; }
-        public int CodigoPostal { get; set; }
-        public int EstadoId { get; set; }
-        public int CiudadId { get; set; }
+        public string CodigoPostal { get; set; }
+        public string Estado { get; set; }
+        public string Ciudad { get; set; }
         public int Celular { get; set; }
         public string Calle { get; set; }
         public int ColoniaId { get; set; }

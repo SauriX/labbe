@@ -18,7 +18,8 @@ namespace Service.MedicalRecord.Dtos.MedicalRecords
         public string Municipio { get; set; }
         public string Celular { get; set; }
         public string Calle { get; set; }
-        public string Colonia { get; set; }
+        public int Colonia { get; set; }
+        
         public Guid UserId { get; set; }
     }
 }
