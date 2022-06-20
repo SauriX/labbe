@@ -29,6 +29,7 @@ namespace Service.Catalog.Mapper
         public const int FiscalCalle = 13;
         public const int FiscalNumero = 14;
         public const int FiscalTelefono = 15;
+        public const int FiscalCiudad = 16;
 
         public static ConfigurationEmailDto ToConfigurationEmailDto(this List<Configuration> model, bool pass = false)
         {
@@ -51,17 +52,19 @@ namespace Service.Catalog.Mapper
             };
         }
 
-        public static ConfigurationFiscalDto ToConfigurationFiscalDto(this List<Configuration> model, bool pass = false)
+        public static ConfigurationFiscalDto ToConfigurationFiscalDto(this List<Configuration> model)
         {
             return new ConfigurationFiscalDto
             {
                 Rfc = model.FirstOrDefault(x => x.Id == FiscalRFC).Valor,
                 RazonSocial = model.FirstOrDefault(x => x.Id == FiscalRazonSocial).Valor,
-                CP = model.FirstOrDefault(x => x.Id == FiscalCP).Valor,
+                CodigoPostal = model.FirstOrDefault(x => x.Id == FiscalCP).Valor,
                 Estado = model.FirstOrDefault(x => x.Id == FiscalEstado).Valor,
+                Ciudad = model.FirstOrDefault(x => x.Id == FiscalCiudad).Valor,
                 Colonia = model.FirstOrDefault(x => x.Id == FiscalColonia).Valor,
                 Calle = model.FirstOrDefault(x => x.Id == FiscalCalle).Valor,
                 Numero = model.FirstOrDefault(x => x.Id == FiscalNumero).Valor,
+                Telefono = model.FirstOrDefault(x => x.Id == FiscalTelefono).Valor,
             };
         }
 
@@ -140,13 +143,19 @@ namespace Service.Catalog.Mapper
                 {
                     Id = FiscalCP,
                     Descripcion = model.FirstOrDefault(x => x.Id == FiscalCP).Descripcion,
-                    Valor = dto.CP.Trim()
+                    Valor = dto.CodigoPostal.Trim()
                 },
                 new Configuration
                 {
                     Id = FiscalEstado,
                     Descripcion = model.FirstOrDefault(x => x.Id == FiscalEstado).Descripcion,
                     Valor = dto.Estado.Trim()
+                },
+                new Configuration
+                {
+                    Id = FiscalCiudad,
+                    Descripcion = model.FirstOrDefault(x => x.Id == FiscalCiudad).Descripcion,
+                    Valor = dto.Ciudad.Trim()
                 },
                 new Configuration
                 {
@@ -170,7 +179,7 @@ namespace Service.Catalog.Mapper
                 {
                     Id = FiscalTelefono,
                     Descripcion = model.FirstOrDefault(x => x.Id == FiscalTelefono).Descripcion,
-                    Valor = dto.Telefono.Trim()
+                    Valor = dto.Telefono?.Trim()
                 },
             };
 

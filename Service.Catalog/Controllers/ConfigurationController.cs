@@ -52,7 +52,7 @@ namespace Service.Catalog.Controllers
 
         [HttpPut("general")]
         [Authorize(Policies.Update)]
-        public async Task UpdateGeneral(ConfigurationGeneralDto general)
+        public async Task UpdateGeneral([FromForm] ConfigurationGeneralDto general)
         {
             await _service.UpdateGeneral(general);
         }

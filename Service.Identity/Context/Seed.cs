@@ -22,7 +22,7 @@ namespace Service.Identity.Context
                 {
                     var menus = new List<Menu>
                     {
-                        new Menu(id: 1, menuPadreId: null, descripcion: "Configuración", controlador: null, ruta: null, orden: 100),
+                        new Menu(id: 1, menuPadreId: null, descripcion: "Configuración", controlador: null, ruta: "", orden: 100),
                         new Menu(2, 1, "Roles", "role", "roles", 1001),
                         new Menu(3, 1, "Usuarios", "user", "users", 1002),
                         new Menu(4, 1, "Sucursales", "branch", "branches", 1003),

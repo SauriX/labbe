@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -133,24 +134,16 @@ namespace Service.Catalog
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
                 options.Filters.Add(new AuthorizeFilter(policy));
             })
-    .AddFluentValidation(config =>
-    {
-        config.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-        config.ValidatorOptions.LanguageManager.Culture = new CultureInfo("es");
-    });
+                .AddFluentValidation(config =>
+                {
+                    config.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+                    config.ValidatorOptions.LanguageManager.Culture = new CultureInfo("es");
+                });
 
             services.AddAuthorization(opt =>
             {
-                opt.AddPolicy(Policies.Access, p =>
-                {
-                    p.RequireAuthenticatedUser();
-                    p.AddRequirements(new AccessRequirement());
-                });
-                opt.AddPolicy(Policies.Create, p =>
-                {
-                    p.RequireAuthenticatedUser();
-                    p.Requirements.Add(new CreateRequirement());
-                });
+                opt.AddPolicy(Policies.Access, p => { p.AddRequirements(new AccessRequirement()); });
+                opt.AddPolicy(Policies.Create, p => { p.Requirements.Add(new CreateRequirement()); });
                 opt.AddPolicy(Policies.Update, p => { p.Requirements.Add(new UpdateRequirement()); });
                 opt.AddPolicy(Policies.Download, p => { p.Requirements.Add(new DownloadRequirement()); });
                 opt.AddPolicy(Policies.Mail, p => { p.Requirements.Add(new MailRequirement()); });
@@ -254,6 +247,18 @@ namespace Service.Catalog
             }
 
             app.UseCors("CorsPolicy");
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(System.IO.Path.Combine(env.ContentRootPath, "wwwroot/images")),
+                RequestPath = "/images",
+                OnPrepareResponse = (context) =>
+                {
+                    context.Context.Response.Headers["Cache-Control"] = "no-cache, no-store";
+                    context.Context.Response.Headers["Pragma"] = "no-cache";
+                    context.Context.Response.Headers["Expires"] = "-1";
+                }
+            });
 
             app.UseMiddleware<ErrorMiddleware>();
 

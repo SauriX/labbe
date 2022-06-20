@@ -94,6 +94,11 @@ namespace Service.Catalog.Context
                         {
                             Id = 15,
                             Descripcion = "Teléfono",
+                        },   
+                        new Configuration()
+                        {
+                            Id = 16,
+                            Descripcion = "Ciudad",
                         },
                     };
 
