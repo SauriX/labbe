@@ -24,6 +24,10 @@ namespace Service.Catalog.Repository
             var routes = _context.CAT_Rutas
                 .Include(x => x.Estudios)
                 .ThenInclude(x => x.Estudio).ThenInclude(x => x.Area).ThenInclude(x => x.Departamento)
+                .Include(x => x.SucursalOrigen)
+                .Include(x => x.SucursalDestino)
+                .Include(x => x.Paqueteria)
+                .Include(x => x.Maquilador)
                 .AsQueryable();
 
             search = search.Trim().ToLower();
@@ -47,6 +51,10 @@ namespace Service.Catalog.Repository
         {
             var routes = await _context.CAT_Rutas
                 .Include(x => x.Estudios).ThenInclude(x => x.Estudio).ThenInclude(x => x.Area).ThenInclude(x => x.Departamento)
+                .Include(x => x.SucursalOrigen)
+                .Include(x => x.SucursalDestino)
+                .Include(x => x.Paqueteria)
+                .Include(x => x.Maquilador)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             return routes;
@@ -58,12 +66,19 @@ namespace Service.Catalog.Repository
 
             return isDuplicate;
         }
-        //public async Task<bool> IsDestinoIgualAlOrigen(Route routes)
-        //{
-        //    var isDuplicate = await _context.CAT_Rutas.AnyAsync(x => x.Id != routes.Id && (routes.SucursalDestinoId == routes.SucursalOrigenId));
+        public async Task<bool> IsDestinoIgualAlOrigen(Route routes)
+        {
+            var isDuplicate = await _context.CAT_Rutas.AnyAsync(x => x.Id != routes.Id && (routes.SucursalDestinoId == routes.SucursalOrigenId));
 
-        //    return isDuplicate;
-        //}
+            return isDuplicate;
+        }
+
+        public async Task<bool> IsDestinoVacio(Route routes)
+        {
+            var isDuplicate = await _context.CAT_Rutas.AnyAsync(x => x.Id != routes.Id && (routes.SucursalDestinoId == null && routes.MaquiladorId == null));
+
+            return isDuplicate;
+        }
 
         public async Task Create(Route routes)
         {

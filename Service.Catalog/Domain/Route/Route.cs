@@ -11,10 +11,10 @@ namespace Service.Catalog.Domain.Route
         public string Nombre { get; set; }
         public Guid? SucursalOrigenId { get; set; }
         public virtual Branch.Branch SucursalOrigen { get; set; }
-        public bool? Maquilador { get; set; }
         public Guid? SucursalDestinoId { get; set; }
         public virtual Branch.Branch SucursalDestino { get; set; }
         public int? MaquiladorId { get; set; }
+        public virtual Maquila.Maquila Maquilador { get; set; }
         public bool? RequierePaqueteria { get; set; }
         public int? SeguimientoPaqueteria { get; set; }
         public int? PaqueteriaId { get; set; }

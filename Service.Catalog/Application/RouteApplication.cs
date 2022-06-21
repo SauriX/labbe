@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Service.Catalog.Application
 {
-    public class RouteApplication: IRouteApplication
+    public class RouteApplication : IRouteApplication
     {
         private readonly IRouteRepository _repository;
 
@@ -65,7 +65,9 @@ namespace Service.Catalog.Application
 
             await CheckDuplicate(newRoute);
 
-            //await CheckDestino(newRoute);
+            await CheckDestinoVacio(newRoute);
+
+            await CheckDestino(newRoute);
 
             await _repository.Create(newRoute);
 
@@ -87,7 +89,9 @@ namespace Service.Catalog.Application
 
             await CheckDuplicate(updatedRoute);
 
-            //await CheckDestino(updatedRoute);
+            await CheckDestinoVacio(updatedRoute);
+
+            await CheckDestino(updatedRoute);
 
             await _repository.Update(updatedRoute);
 
@@ -150,14 +154,24 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
             }
         }
-        //private async Task CheckDestino(Route routes)
-        //{
-        //    var isDuplicate = await _repository.IsDestinoIgualAlOrigen(routes);
+        private async Task CheckDestino(Route routes)
+        {
+            var isDuplicate = await _repository.IsDestinoIgualAlOrigen(routes);
 
-        //    if (isDuplicate)
-        //    {
-        //        throw new CustomException(HttpStatusCode.Conflict, Responses.DuplicatedDestiny("El Destino"));
-        //    }
-        //}
+            if (isDuplicate)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.DuplicatedDestiny("El Destino"));
+            }
+        }
+
+        private async Task CheckDestinoVacio(Route routes)
+        {
+            var isDuplicate = await _repository.IsDestinoVacio(routes);
+
+            if (isDuplicate)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.EmptyDestiny("El Destino"));
+            }
+        }
     }
 }

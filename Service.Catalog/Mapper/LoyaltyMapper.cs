@@ -20,7 +20,7 @@ namespace Service.Catalog.Mapper
                 Fecha = $"{model.FechaInicial.ToShortDateString()}-{model.FechaFinal.ToShortDateString()}",
                 TipoDescuento = model.TipoDescuento.Trim(),
                 PrecioListaId = model.PrecioListaId,
-                PrecioLista = model.PrecioLista.Nombre,
+                PrecioLista = model?.PrecioLista?.Nombre,
                 Activo = model.Activo
             };
         }
@@ -54,6 +54,7 @@ namespace Service.Catalog.Mapper
                 Nombre = model.Nombre.Trim(),
                 TipoDescuento = model.TipoDescuento.Trim(),
                 PrecioListaId = model.PrecioListaId,
+                PrecioLista = model.PrecioLista.Nombre,
                 CantidadDescuento = model.CantidadDescuento,
                 Fecha2 = $"{model?.FechaInicial.ToShortDateString()}-{model?.FechaFinal.ToShortDateString()}",
                 FechaInicial = model.FechaInicial.Date,

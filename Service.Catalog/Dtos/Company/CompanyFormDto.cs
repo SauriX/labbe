@@ -14,6 +14,9 @@ namespace Service.Catalog.Dtos.Company
         public int ProcedenciaId { get; set; }
         public Guid? PrecioListaId { get; set; }
         public int? PromocionesId { get; set; }
+        public string Procedencia { get; set; }
+        public string PrecioLista { get; set; }
+        public string Promociones { get; set; }
         public string RFC { get; set; }
         public string CodigoPostal { get; set; }
         public string Estado { get; set; }

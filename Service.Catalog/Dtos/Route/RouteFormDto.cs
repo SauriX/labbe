@@ -12,6 +12,9 @@ namespace Service.Catalog.Dtos.Route
         public string Nombre { get; set; }
         public Guid? SucursalOrigenId { get; set; }
         public Guid? SucursalDestinoId { get; set; }
+        public string SucursalOrigen { get; set; }
+        public string SucursalDestino { get; set; }
+        public int? MaquiladorId { get; set; }
         public int? PaqueteriaId { get; set; }
         public string Comentarios { get; set; }
         public int? HoraDeRecoleccion { get; set; }
@@ -31,7 +34,6 @@ namespace Service.Catalog.Dtos.Route
             RuleFor(x => x.Clave).NotEmpty().MaximumLength(100);
             RuleFor(x => x.Nombre).NotEmpty().MaximumLength(100);
             RuleFor(x => x.TiempoDeEntrega).NotEmpty();
-            //RuleFor(x => x.FormatoDeTiempoId).NotEmpty();
             RuleFor(x => x.Comentarios).MaximumLength(500);
         }
     }

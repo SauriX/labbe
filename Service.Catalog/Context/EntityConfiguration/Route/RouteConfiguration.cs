@@ -39,9 +39,9 @@ namespace Service.Catalog.Context.EntityConfiguration.Route
             builder
                 .Property(x => x.IdResponsableRecepcion)
                 .IsRequired(false);
-            builder
-                .Property(x => x.Maquilador)
-                .IsRequired(false);
+            //builder
+            //    .Property(x => x.Maquilador)
+            //    .IsRequired(false);
 
             builder
                 .Property(x => x.FechaCreo)
@@ -68,6 +68,10 @@ namespace Service.Catalog.Context.EntityConfiguration.Route
 
             builder
                .HasOne(x => x.Paqueteria)
+               .WithMany()
+               .OnDelete(DeleteBehavior.Restrict);
+            builder
+               .HasOne(x => x.Maquilador)
                .WithMany()
                .OnDelete(DeleteBehavior.Restrict);
         }
