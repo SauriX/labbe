@@ -21,6 +21,17 @@
       ],
       "UpstreamPathTemplate": "/api/scopes/price",
       "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/identity/api/scopes/configuration",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/scopes/configuration",
+      "UpstreamHttpMethod": [ "GET" ]
     }
   ]
 }
