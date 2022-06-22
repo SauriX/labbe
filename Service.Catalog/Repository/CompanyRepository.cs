@@ -30,13 +30,18 @@ namespace Service.Catalog.Repository
         {
             return await _context.CAT_Compañia
             .Include(x => x.Contacts)
+            .Include(x => x.PrecioLista)
+            .Include(x => x.Promociones)
+            .Include(x => x.Procedencia)
             .FirstOrDefaultAsync(x => x.Id == Id);
         }
 
         public async Task<List<Company>> GetAll(string search)
         {
             var Company = _context.CAT_Compañia.Include(x => x.Procedencia)
-                //.Include(x => x.ListaPrecio)
+                .Include(x => x.PrecioLista)
+                .Include(x => x.Promociones)
+                .Include(x => x.Procedencia)
                 .AsQueryable();
             search = search.Trim().ToLower();
 

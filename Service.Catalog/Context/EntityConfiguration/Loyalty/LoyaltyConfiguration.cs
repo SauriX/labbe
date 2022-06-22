@@ -46,8 +46,10 @@ namespace Service.Catalog.Context.EntityConfiguration.Loyalty
               .HasColumnType("date");
 
             builder
-                .HasMany(x => x.PrecioLista)
-                .WithOne(x => x.Loyalty);
+                .HasOne(x => x.PrecioLista)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
 
         }
     }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220620174740_CorregirColumnasNRutas")]
+    partial class CorregirColumnasNRutas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -873,25 +875,6 @@ namespace Service.Catalog.Migrations
                     b.HasIndex("CompañiaId");
 
                     b.ToTable("CAT_ListaP_Compañia");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Configuration.Configuration", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Descripcion")
-                        .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
-
-                    b.Property<string>("Valor")
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CAT_Configuracion");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Constant.City", b =>
@@ -2159,6 +2142,9 @@ namespace Service.Catalog.Migrations
                     b.Property<bool>("Lunes")
                         .HasColumnType("bit");
 
+                    b.Property<bool?>("Maquilador")
+                        .HasColumnType("bit");
+
                     b.Property<int?>("MaquiladorId")
                         .HasColumnType("int");
 
@@ -2204,8 +2190,6 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MaquiladorId");
 
                     b.HasIndex("PaqueteriaId");
 
@@ -2896,11 +2880,6 @@ namespace Service.Catalog.Migrations
 
             modelBuilder.Entity("Service.Catalog.Domain.Route.Route", b =>
                 {
-                    b.HasOne("Service.Catalog.Domain.Maquila.Maquila", "Maquilador")
-                        .WithMany()
-                        .HasForeignKey("MaquiladorId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("Service.Catalog.Domain.Catalog.Delivery", "Paqueteria")
                         .WithMany()
                         .HasForeignKey("PaqueteriaId")
@@ -2915,8 +2894,6 @@ namespace Service.Catalog.Migrations
                         .WithMany()
                         .HasForeignKey("SucursalOrigenId")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Maquilador");
 
                     b.Navigation("Paqueteria");
 

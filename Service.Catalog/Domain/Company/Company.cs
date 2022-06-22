@@ -12,8 +12,10 @@ namespace Service.Catalog.Domain.Company
         public string NombreComercial { get; set; }
         public int ProcedenciaId { get; set; }
         public virtual Provenance.Provenance Procedencia { get; set; }
-        public string ListaPrecioId { get; set; }
-        public string PromocionesId { get; set; }
+        public Guid? PrecioListaId { get; set; }
+        public virtual Price.PriceList PrecioLista { get; set; }
+        public int? PromocionesId { get; set; }
+        public virtual Promotion.Promotion Promociones { get; set; }
         public string RFC { get; set; }
         public string CodigoPostal { get; set; }
         public string Estado { get; set; }

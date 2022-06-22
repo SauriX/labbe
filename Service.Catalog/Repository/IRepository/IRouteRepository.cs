@@ -12,6 +12,7 @@ namespace Service.Catalog.Repository.IRepository
         Task<Route> GetById(Guid id);
         Task<bool> IsDuplicate(Route routes);
         Task<bool> IsDestinoIgualAlOrigen(Route routes);
+        Task<bool> IsDestinoVacio(Route routes);
         Task Create(Route routes);
         Task Update(Route routes);
     }

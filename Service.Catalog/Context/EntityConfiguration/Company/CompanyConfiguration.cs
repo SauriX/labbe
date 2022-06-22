@@ -26,14 +26,6 @@ namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
               .Property(x => x.NombreComercial)
               .IsRequired(true)
               .HasMaxLength(100);
-            builder
-              .Property(x => x.ListaPrecioId)
-              .HasMaxLength(50)
-              .IsRequired(false);
-
-            builder
-             .Property(x => x.PromocionesId)
-             .IsRequired(false);
 
             builder
              .Property(x => x.CodigoPostal)
@@ -90,16 +82,21 @@ namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
                .WithOne(x => x.Compañia)
                .OnDelete(DeleteBehavior.Restrict);
 
-            //builder
-            //   .HasOne(x => x.ListaPrecio)
-            //   .WithMany()
-            //   .OnDelete(DeleteBehavior.Restrict);
-
             builder
                .HasOne(x => x.Procedencia)
                .WithMany()
                .OnDelete(DeleteBehavior.Restrict);
-      
+
+            builder
+               .HasOne(x => x.PrecioLista)
+               .WithMany()
+               .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+               .HasOne(x => x.Promociones)
+               .WithMany()
+               .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }

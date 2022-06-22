@@ -66,7 +66,7 @@ namespace Service.Catalog.Context
         public DbSet<Price_Medics> CAT_ListaP_Medicos { get; set; }
         public DbSet<PriceList_Packet> Relacion_ListaP_Paquete { get; set; }
         public DbSet<PriceList_Study> Relacion_ListaP_Estudio { get; set; }
-        public DbSet<LoyaltyPriceList> Relacion_Loyalty_PrecioLista { get; set; }
+        //public DbSet<LoyaltyPriceList> Relacion_Loyalty_PrecioLista { get; set; }
         //hasta aqui es zona de pruebas
         public DbSet<Maquila> CAT_Maquilador { get; set; }
         public DbSet<Tapon> CAT_Tipo_Tapon { get; set; }

@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Service.Catalog.Application
 {
-    public class RouteApplication: IRouteApplication
+    public class RouteApplication : IRouteApplication
     {
         private readonly IRouteRepository _repository;
 
@@ -65,6 +65,8 @@ namespace Service.Catalog.Application
 
             await CheckDuplicate(newRoute);
 
+            await CheckDestinoVacio(newRoute);
+
             await CheckDestino(newRoute);
 
             await _repository.Create(newRoute);
@@ -86,6 +88,8 @@ namespace Service.Catalog.Application
             var updatedRoute = routes.ToModel(existing);
 
             await CheckDuplicate(updatedRoute);
+
+            await CheckDestinoVacio(updatedRoute);
 
             await CheckDestino(updatedRoute);
 
@@ -157,6 +161,16 @@ namespace Service.Catalog.Application
             if (isDuplicate)
             {
                 throw new CustomException(HttpStatusCode.Conflict, Responses.DuplicatedDestiny("El Destino"));
+            }
+        }
+
+        private async Task CheckDestinoVacio(Route routes)
+        {
+            var isDuplicate = await _repository.IsDestinoVacio(routes);
+
+            if (isDuplicate)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.EmptyDestiny("El Destino"));
             }
         }
     }
