@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Service.Catalog.Domain.Catalog;
+using System;
 using System.Collections.Generic;
 
 namespace Service.Catalog.Domain.Route
@@ -8,13 +9,16 @@ namespace Service.Catalog.Domain.Route
         public Guid Id { get; set; }
         public string Clave { get; set; }
         public string Nombre { get; set; }
-        public string SucursalOrigenId { get; set; }
-        public bool? Maquilador { get; set; }
-        public string SucursalDestinoId { get; set; }
+        public Guid? SucursalOrigenId { get; set; }
+        public virtual Branch.Branch SucursalOrigen { get; set; }
+        public Guid? SucursalDestinoId { get; set; }
+        public virtual Branch.Branch SucursalDestino { get; set; }
         public int? MaquiladorId { get; set; }
+        public virtual Maquila.Maquila Maquilador { get; set; }
         public bool? RequierePaqueteria { get; set; }
         public int? SeguimientoPaqueteria { get; set; }
-        public string PaqueteriaId { get; set; }
+        public int? PaqueteriaId { get; set; }
+        public virtual Delivery Paqueteria { get; set; }
         public string Comentarios { get; set; }
         public int DiasDeEntrega { get; set; }
         public DateTime? HoraDeEntregaEstimada { get; set; }

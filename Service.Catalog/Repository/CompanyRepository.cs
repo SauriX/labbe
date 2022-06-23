@@ -32,6 +32,7 @@ namespace Service.Catalog.Repository
             .Include(x => x.Contacts)
             .Include(x => x.PrecioLista)
             .Include(x => x.Promociones)
+            .Include(x => x.Procedencia)
             .FirstOrDefaultAsync(x => x.Id == Id);
         }
 
@@ -40,6 +41,7 @@ namespace Service.Catalog.Repository
             var Company = _context.CAT_Compañia.Include(x => x.Procedencia)
                 .Include(x => x.PrecioLista)
                 .Include(x => x.Promociones)
+                .Include(x => x.Procedencia)
                 .AsQueryable();
             search = search.Trim().ToLower();
 

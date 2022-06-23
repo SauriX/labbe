@@ -33,7 +33,7 @@ namespace Service.Catalog.Mapper
                 Clave = x.Clave,
                 Nombre = x.Nombre,
                 Periodo = $"{x.FechaInicio}-{x.FechaInicio}",
-                NombreListaPrecio = x.prices.AsQueryable().Where(x => x.Activo == true).FirstOrDefault().PrecioLista.Nombre,
+                NombreListaPrecio = x?.prices?.AsQueryable()?.Where(x => x.Activo == true)?.FirstOrDefault()?.PrecioLista.Nombre,
                 Activo = x.Activo,
             });
         }

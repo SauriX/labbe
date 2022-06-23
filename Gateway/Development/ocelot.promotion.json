@@ -13,6 +13,18 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
+      "DownstreamPathTemplate": "/api/promo/active",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/promotion/active",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/promo/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -24,18 +36,7 @@
       "UpstreamPathTemplate": "/api/promotion/{id}",
       "UpstreamHttpMethod": [ "GET" ]
     },
-    {
-      "DownstreamPathTemplate": "/api/promotion/active",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 20347
-        }
-      ],
-      "UpstreamPathTemplate": "/api/promotion/active",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
+
     {
       "DownstreamPathTemplate": "/api/promo",
       "DownstreamScheme": "http",

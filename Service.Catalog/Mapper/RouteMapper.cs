@@ -19,17 +19,12 @@ namespace Service.Catalog.Mapper
                 Clave = model.Clave,
                 Nombre = model.Nombre,
                 SucursalOrigenId = model.SucursalOrigenId,
+                SucursalOrigen = model?.SucursalOrigen?.Nombre,
                 SucursalDestinoId = model.SucursalDestinoId,
+                SucursalDestino = model?.SucursalDestino?.Nombre + " " + model?.Maquilador?.Nombre,
+                //MaquiladorId = model.MaquiladorId,
+                //Maquilador = model?.Maquilador?.Nombre,
                 Activo = model.Activo,
-                //Estudios = model?.Estudios?.Select(x => new Route_StudyListDto
-                //{
-                //    Id = x.EstudioId,
-                //    Clave = x.Estudio.Clave.Trim(),
-                //    Nombre = x.Estudio.Nombre.Trim(),
-                //    Area = x.Estudio.Area.Nombre.Trim(),
-                //    Departamento = x.Estudio.Area.Departamento.Nombre.Trim(),
-                //    Activo = true,
-                //})?.ToList()
             };
         }
         public static IEnumerable<RouteListDto> ToRouteListDto(this List<Route> model)
@@ -42,17 +37,12 @@ namespace Service.Catalog.Mapper
                 Clave = x.Clave,
                 Nombre = x.Nombre,
                 SucursalOrigenId = x.SucursalOrigenId,
-                SucursalDestinoId = x.SucursalDestinoId,
+                SucursalOrigen = x.SucursalOrigen.Nombre,
+                SucursalDestinoId = x?.SucursalDestinoId,
+                SucursalDestino = x?.SucursalDestino?.Nombre + " " + x?.Maquilador?.Nombre,
+                MaquiladorId = x?.MaquiladorId,
+                //Maquilador = x?.Maquilador?.Nombre,
                 Activo = x.Activo,
-                //Estudios = x?.Estudios?.Select(x => new Route_StudyListDto
-                //{
-                //    Id = x.EstudioId,
-                //    Clave = x.Estudio.Clave,
-                //    Nombre = x.Estudio.Nombre,
-                //    Area = x.Estudio.Area.Nombre,
-                //    Departamento = x.Estudio.Area.Departamento.Nombre,
-                //    Activo = true,
-                //})?.ToList()
             });
         }
 
@@ -95,7 +85,10 @@ namespace Service.Catalog.Mapper
                 Clave = model.Clave,
                 Nombre = model.Nombre,
                 SucursalOrigenId = model.SucursalOrigenId,
-                SucursalDestinoId = model.SucursalDestinoId,
+                SucursalDestinoId = model?.SucursalDestinoId,
+                MaquiladorId = model?.MaquiladorId,
+                SucursalOrigen = model?.SucursalOrigen?.Nombre,
+                SucursalDestino = model?.SucursalDestino?.Nombre + " " + model?.Maquilador?.Nombre,
                 PaqueteriaId = model.PaqueteriaId,
                 Activo = model.Activo,
                 Comentarios = model.Comentarios.ToString(),
@@ -123,7 +116,8 @@ namespace Service.Catalog.Mapper
                 Clave = dto.Clave,
                 Nombre = dto.Nombre,
                 SucursalOrigenId = dto.SucursalOrigenId,
-                SucursalDestinoId = dto.SucursalDestinoId,
+                SucursalDestinoId = dto?.SucursalDestinoId,
+                MaquiladorId = dto?.MaquiladorId,
                 PaqueteriaId = dto.PaqueteriaId,
                 Activo = dto.Activo,
                 Comentarios = dto.Comentarios.ToString(),
@@ -156,7 +150,8 @@ namespace Service.Catalog.Mapper
                 Clave = dto.Clave,
                 Nombre = dto.Nombre,
                 SucursalOrigenId = dto.SucursalOrigenId,
-                SucursalDestinoId = dto.SucursalDestinoId,
+                SucursalDestinoId = dto?.SucursalDestinoId,
+                MaquiladorId = dto?.MaquiladorId,
                 PaqueteriaId = dto.PaqueteriaId,
                 Activo = dto.Activo,
                 Comentarios = dto.Comentarios.ToString(),

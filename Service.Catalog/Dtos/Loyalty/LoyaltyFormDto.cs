@@ -19,7 +19,8 @@ namespace Service.Catalog.Dtos.Loyalty
         public DateTime FechaCreo { get; set; }
         public string UsuarioModId { get; set; }
         public DateTime? FechaMod { get; set; }
-        public Guid PrecioListaId { get; set; }
+        public Guid? PrecioListaId { get; set; }
+        public string PrecioLista { get; set; }
     }
 
     public class LoyaltyFormDtoValidator : AbstractValidator<LoyaltyFormDto>

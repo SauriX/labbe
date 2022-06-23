@@ -14,6 +14,7 @@ namespace Shared.Dictionary
         public static string Duplicated(string name) => $"{name} ya se encuentra asignado(a) a un registro, favor de ingresar otro valor";
         public static string TipoDescuento(string name) => $"{name} No puede ser mayor a 100 si el tipo de descuento es por porcentaje, favor de ingresar otro valor";
         public static string DuplicatedDestiny(string name) => $"{name} no puede ser el mismo que la sucursal de origen, favor de ingresar otro valor";
+        public static string EmptyDestiny(string name) => $"{name} no puede estar vacio, favor de ingresar un valor";
         public static string DuplicatedDate(string name) => $"{name} ya se encuentra asignado(a) a otra lealtad, favor de ingresar otro valor";
         public const string Unregistered = "El usuario no se encuentra registrado";
         public const string Blocked = "El usuario se encuentra bloqueado, contacte al administrador";
