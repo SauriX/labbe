@@ -1,4 +1,6 @@
-﻿using Service.MedicalRecord.Dtos.MedicalRecords;
+﻿using Service.MedicalRecord.Domain.TaxData;
+using Service.MedicalRecord.Dtos;
+using Service.MedicalRecord.Dtos.MedicalRecords;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,10 +41,15 @@ namespace Service.MedicalRecord.Mapper
                 Telefono = x.Telefono,
             }).ToList();
         }
+
         public static MedicalRecordsFormDto ToMedicalRecordsFormDto(this MedicalRecord.Domain.MedicalRecord.MedicalRecord model)
         {
             if (model == null) return null;
-
+            var taxdata =model.TaxData;
+            IEnumerable<TaxDataDto> data = null;
+            if (taxdata.Count() > 0) {
+               data= model.TaxData?.Select(x => x.Factura)?.ToTaxDataDto();
+            }
             return new MedicalRecordsFormDto
             {
                 Id = model.Id.ToString(),
@@ -54,13 +61,90 @@ namespace Service.MedicalRecord.Mapper
                 Edad = model.Edad,
                 Telefono = model.Telefono,
                 Correo = model.Correo,
-                //Cp = model.CodigoPostal.ToString(),
-                //Estado = model.EstadoId.ToString(),
-                //Municipio = model.CiudadId.ToString(),
+                Cp = model.CodigoPostal.ToString(),
+                Estado = model.Estado.ToString(),
+                Municipio = model.Ciudad.ToString(),
                 Celular = model.Celular.ToString(),
                 Calle = model.Calle,
-                //Colonia = model.ColoniaId
+                Colonia = model.ColoniaId,
+                TaxData = data,
+                sucursal = model.IdSucursal.ToString()
             };
+        }
+        public static List<TaxDataDto> ToTaxDataDto(this IEnumerable<TaxData> model)
+        {
+            if (model == null) return null;
+
+            return model.Select(x => new TaxDataDto
+            {
+                Id = x.Id,
+                Rfc = x.RFC,
+                RazonSocial = x.RazonSocial,
+                Cp = x.CodigoPostal,
+                Estado = x.Estado,
+                Municipio = x.Ciudad,
+                Calle = x.Calle,
+                colonia = x.ColoniaId,
+                Correo = x.Correo,
+            }).ToList();
+        }
+        public static List<TaxData> ToTaxData(this IEnumerable<TaxDataDto> model)
+        {
+            if (model == null) return null;
+
+            return model.Select(x => new TaxData
+            {
+                Id = Guid.NewGuid(),
+                RFC = x.Rfc,
+                RazonSocial = x.RazonSocial,
+                CodigoPostal = x.Cp,
+                Estado = x.Estado,
+                Ciudad = x.Municipio,
+                Calle = x.Calle,
+                ColoniaId = x.colonia,
+                Correo = x.Correo,
+                Activo = true,
+                UsuarioCreoId = System.Guid.Empty,
+                FechaCreo = System.DateTime.Now,
+                UsuarioModId = System.Guid.Empty,
+                FechaMod = System.DateTime.Now,
+            }).ToList();
+        }
+        public static List<TaxData> ToTaxDataUpdate(this IEnumerable<TaxDataDto> model)
+        {
+            if (model == null) return null;
+
+            return model.Select(x => new TaxData
+            {
+                Id = x.Id,
+                RFC = x.Rfc,
+                RazonSocial = x.RazonSocial,
+                CodigoPostal = x.Cp,
+                Estado = x.Estado,
+                Ciudad = x.Municipio,
+                Calle = x.Calle,
+                ColoniaId = x.colonia,
+                Correo = x.Correo,
+                Activo = true,
+                UsuarioCreoId = System.Guid.Empty,
+                FechaCreo = System.DateTime.Now,
+                UsuarioModId = System.Guid.Empty,
+                FechaMod = System.DateTime.Now,
+            }).ToList();
+        }
+        public static List<Domain.MedicalRecord.MedicalRecordTaxData> ToTaxDataMedicalrecord(this IEnumerable<TaxData> model)
+        {
+            if (model == null) return null;
+
+            return model.Select(x => new Domain.MedicalRecord.MedicalRecordTaxData
+            {
+                FacturaID = x.Id,
+                Activo = true,
+                UsuarioCreoId = System.Guid.Empty,
+                FechaCreo = System.DateTime.Now,
+                UsuarioModId = System.Guid.Empty,
+                FechaMod = System.DateTime.Now,
+            }).ToList();
         }
         public static MedicalRecord.Domain.MedicalRecord.MedicalRecord ToModel(this MedicalRecordsFormDto model)
         {
@@ -71,20 +155,21 @@ namespace Service.MedicalRecord.Mapper
                 Expediente = model.Expediente,
                 NombrePaciente = model.Nombre,
                 PrimerApellido = model.Apellido,
-                SegundoApellido ="" ,
+                SegundoApellido = "",
                 Genero = model.Sexo,
                 FechaDeNacimiento = model.FechaNacimiento,
                 Edad = model.Edad,
                 Telefono = model.Telefono,
                 Correo = model.Correo,
-             /*   CodigoPostal = int.Parse(model.Cp),
-                EstadoId = int.Parse(model.Estado),
-                CiudadId = int.Parse(model.Municipio),
-                Celular = int.Parse(model.Celular),*/
+                CodigoPostal = model.Cp,
+                Estado = model.Estado,
+                Ciudad = model.Municipio,
+                Celular = model.Celular,
                 Calle = model.Calle,
-               // ColoniaId = int.Parse(model.Colonia),
+                ColoniaId = model.Colonia,
                 UsuarioCreoId = model.UserId,
                 FechaCreo = DateTime.Now,
+                IdSucursal = Guid.Parse(model.sucursal)
             };
         }
         public static MedicalRecord.Domain.MedicalRecord.MedicalRecord ToModel(this MedicalRecordsFormDto dto, MedicalRecord.Domain.MedicalRecord.MedicalRecord model)
@@ -103,14 +188,18 @@ namespace Service.MedicalRecord.Mapper
                 Edad = dto.Edad,
                 Telefono = dto.Telefono,
                 Correo = dto.Correo,
-               // CodigoPostal = int.Parse(dto.Cp),
-               // EstadoId = int.Parse(dto.Estado),
-               // CiudadId = int.Parse(dto.Municipio),
-                Celular = int.Parse(dto.Celular),
+                CodigoPostal = dto.Cp,
+                Estado = dto.Estado,
+                Ciudad = dto.Municipio,
+                Celular = dto.Celular,
                 Calle = model.Calle,
-               // ColoniaId = dto.Colonia,
+                ColoniaId = dto.Colonia,
                 UsuarioModId = dto.UserId,
-                FechaMod = DateTime.Now
+                FechaMod = DateTime.Now,
+                FechaCreo=model.FechaCreo,
+                IdSucursal=Guid.Parse(dto.sucursal)
+               
+                
             };
         }
     }

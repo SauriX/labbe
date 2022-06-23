@@ -25,11 +25,15 @@ namespace Service.MedicalRecord.Controllers
             return await _Service.GetAll();
         }
 
-        [HttpGet("now")]
-        public async Task<List<MedicalRecordsListDto>> GetNow() {
-            return await _Service.GetNow();
+        [HttpPost("now")]
+        public async Task<List<MedicalRecordsListDto>> GetNow(MedicalRecordSearch search=null) {
+            return await _Service.GetNow(search);
         }
-
+        [HttpPost("coincidencias")]
+        public async Task<List<MedicalRecordsListDto>> GetCoincidencias(MedicalRecordsFormDto expediente)
+        {
+            return await _Service.Coincidencias(expediente);
+        }
         [HttpGet("active")]
         public async Task<List<MedicalRecordsListDto>> GetActive() {
             return await _Service.GetActive();
@@ -51,19 +55,19 @@ namespace Service.MedicalRecord.Controllers
         }
         [HttpPost("export/list")]
        
-        public async Task<IActionResult> ExportListPriceList(string search)
+        public async Task<IActionResult> ExportListPriceList(MedicalRecordSearch search = null)
         {
-            var (file, fileName) = await _Service.ExportList();
+            var (file, fileName) = await _Service.ExportList(search);
             return File(file, MimeType.XLSX, fileName);
         }
 
-    /*    [HttpPost("export/form/{id}")]
+        [HttpPost("export/form/{id}")]
         
         public async Task<IActionResult> ExportFormPriceList(string id)
         {
-            var (file, fileName) = await _Service.ExportForm(id);
+            var (file, fileName) = await _Service.ExportForm(Guid.Parse(id));
             return File(file, MimeType.XLSX, fileName);
         }
-    */
+    
     }
 }

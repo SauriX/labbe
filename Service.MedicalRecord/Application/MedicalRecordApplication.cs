@@ -30,9 +30,9 @@ namespace Service.MedicalRecord.Application
             return expedientes.ToMedicalRecordsListDto();
         }
 
-        public async Task<List<MedicalRecordsListDto>> GetNow()
+        public async Task<List<MedicalRecordsListDto>> GetNow(MedicalRecordSearch search)
         {
-            var expedientes = await _repository.GetNow();
+            var expedientes = await _repository.GetNow(search);
 
             return expedientes.ToMedicalRecordsListDto();
         }
@@ -53,7 +53,7 @@ namespace Service.MedicalRecord.Application
 
         public async Task<MedicalRecordsListDto> Create(MedicalRecordsFormDto expediente)
         {
-            if (!string.IsNullOrEmpty(expediente.Id))
+                if (!string.IsNullOrEmpty(expediente.Id))
             {
                 throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
             }
@@ -61,13 +61,16 @@ namespace Service.MedicalRecord.Application
             var newprice = expediente.ToModel();
 
 
-            await _repository.Create(newprice);
+            await _repository.Create(newprice,expediente.TaxData);
 
             newprice = await _repository.GetById(newprice.Id);
 
             return newprice.ToMedicalRecordsListDto();
         }
-
+        public async Task<List<MedicalRecordsListDto>> Coincidencias(MedicalRecordsFormDto expediente) {
+            var coincidencias = await _repository.Coincidencias(expediente.ToModel());
+            return coincidencias.ToMedicalRecordsListDto();
+        }
         public async Task<MedicalRecordsListDto> Update(MedicalRecordsFormDto expediente)
         {
             // Helpers.ValidateGuid(parameter.Id, out Guid guid);
@@ -83,16 +86,16 @@ namespace Service.MedicalRecord.Application
 
             
 
-            await _repository.Update(updatedPack);
+            await _repository.Update(updatedPack,expediente.TaxData);
 
             updatedPack = await _repository.GetById(updatedPack.Id);
 
             return updatedPack.ToMedicalRecordsListDto();
         }
 
-        public async Task<(byte[] file, string fileName)> ExportList(string search = null)
+        public async Task<(byte[] file, string fileName)> ExportList(MedicalRecordSearch search)
         {
-            var studys = await GetNow();
+            var studys = await GetNow(search);
 
             var path = Assets.ExpedientetList;
 
@@ -112,7 +115,7 @@ namespace Service.MedicalRecord.Application
 
             template.Format();
 
-            return (template.ToByteArray(), $"Catálogo de Estudios.xlsx");
+            return (template.ToByteArray(), $"Catálogo de Expedientes.xlsx");
         }
 
         public async Task<(byte[] file, string fileName)> ExportForm(Guid id)
@@ -124,7 +127,7 @@ namespace Service.MedicalRecord.Application
             var template = new XLTemplate(path);
             template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
-            template.AddVariable("Titulo", "Estudio");
+            template.AddVariable("Titulo", "Expediente");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
             template.AddVariable("Expediente", study);
 
@@ -132,7 +135,7 @@ namespace Service.MedicalRecord.Application
 
             template.Format();
 
-            return (template.ToByteArray(), $"Catálogo de Estudios ({study.Expediente}).xlsx");
+            return (template.ToByteArray(), $"Catálogo de Expedientes ({study.Expediente}).xlsx");
         }
     }
 }

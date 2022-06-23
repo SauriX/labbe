@@ -26,5 +26,10 @@ namespace Service.Catalog.Repository
 
             return colonies;
         }
+
+        public async Task<List<City>> GetCities() { 
+            var cities = await _context.CAT_Ciudad.ToListAsync();
+            return cities;
+        }
     }
 }

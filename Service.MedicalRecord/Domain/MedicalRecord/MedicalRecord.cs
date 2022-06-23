@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Service.MedicalRecord.Domain.MedicalRecord
 {
@@ -19,7 +20,7 @@ namespace Service.MedicalRecord.Domain.MedicalRecord
         public string CodigoPostal { get; set; }
         public string Estado { get; set; }
         public string Ciudad { get; set; }
-        public int Celular { get; set; }
+        public string Celular { get; set; }
         public string Calle { get; set; }
         public int ColoniaId { get; set; }
         public int Monedero { get; set; }
@@ -29,5 +30,7 @@ namespace Service.MedicalRecord.Domain.MedicalRecord
         public DateTime FechaCreo { get; set; }
         public Guid? UsuarioModId { get; set; }
         public DateTime? FechaMod { get; set; }
+
+        public IEnumerable<MedicalRecordTaxData> TaxData { get; set; }
     }
 }
