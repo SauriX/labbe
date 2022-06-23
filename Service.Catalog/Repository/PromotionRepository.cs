@@ -161,7 +161,7 @@ namespace Service.Catalog.Repository
             return (IsOnPromotrtion, nombrePaquete.Nombre);
         }
         public async Task<List<PriceList_Packet>> packsIsPriceList(Guid id) {
-            return _context.Relacion_ListaP_Paquete.AsQueryable().Where(x=> x.PrecioListaId==id).ToList();
+            return  _context.Relacion_ListaP_Paquete.AsQueryable().Where(x => x.PrecioListaId == id).ToList();
         }
         public async Task<(bool existe ,string nombre)> PackIsOnInvalidPromotion(int PackId) {
             var paquetePromotion =   _context.Relaciion_Promocion_Paquetes.Include(x=>x.Pack).AsQueryable();

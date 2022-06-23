@@ -1,4 +1,5 @@
-﻿using Service.Catalog.Domain.Catalog;
+﻿using FluentValidation;
+using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Dtos.Pack;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,17 @@ namespace Service.Catalog.Dtos.PriceList
         public bool Activo { get; set; }
         public decimal Precio { get; set; }
         public IEnumerable<PackStudyDto> Pack { get; set; }
+        public class PriceListStudyDtoValidator : AbstractValidator<PriceListStudyDto>
+        {
+            public PriceListStudyDtoValidator()
+            {
+                RuleFor(x => x.Precio).GreaterThan(0);
 
+
+
+
+            }
+
+        }
     }
 }

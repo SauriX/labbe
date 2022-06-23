@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿    using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Catalog.Application.IApplication;
+using Service.Catalog.Domain.Constant;
 using Service.Catalog.Dtos.Constant;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,11 @@ namespace Service.Catalog.Controllers
         public async Task<LocationDto> GetColoniesByZipCode(string zipCode)
         {
             return await _service.GetColoniesByZipCode(zipCode);
+        }
+        [HttpGet("getcity")]
+        public async Task<List<City>> Getcity()
+        {
+            return await _service.Getcity();
         }
     }
 }

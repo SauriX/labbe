@@ -116,14 +116,23 @@ namespace Service.Catalog.Repository
             study.Indications = null;
             _context.CAT_Estudio.Update(study);
 
+            var config = new BulkConfig();
+
+            config.SetSynchronizeFilter<Domain.Study.ReagentStudy>(x => x.EstudioId == study.Id);
             reagents.ForEach(x => x.EstudioId = study.Id);
-            await _context.BulkInsertOrUpdateOrDeleteAsync(reagents);
+            await _context.BulkInsertOrUpdateOrDeleteAsync(reagents,config);
+
+            config.SetSynchronizeFilter<Domain.Study.WorkListStudy>(x => x.EstudioId == study.Id);
             workList.ForEach(x => x.EstudioId = study.Id);
-            await _context.BulkInsertOrUpdateOrDeleteAsync(workList);
+            await _context.BulkInsertOrUpdateOrDeleteAsync(workList,config);
+
+            config.SetSynchronizeFilter<ParameterStudy>(x => x.EstudioId == study.Id);
             parameters.ForEach(x => x.EstudioId = study.Id);
-            await _context.BulkInsertOrUpdateOrDeleteAsync(parameters);
+            await _context.BulkInsertOrUpdateOrDeleteAsync(parameters, config);
+
+            config.SetSynchronizeFilter<IndicationStudy>(x => x.EstudioId == study.Id);
             indications.ForEach(x => x.EstudioId = study.Id);
-            await _context.BulkInsertOrUpdateOrDeleteAsync(indications);
+            await _context.BulkInsertOrUpdateOrDeleteAsync(indications, config);
 
             await _context.SaveChangesAsync();
         }

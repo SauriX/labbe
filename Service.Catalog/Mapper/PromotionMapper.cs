@@ -62,6 +62,8 @@ namespace Service.Catalog.Mapper
                 Miercoles = x.Miercoles,
                 Jueves = x.Jueves,
                 Viernes = x.Viernes,
+                Sabado = x.Sabado,
+                Domingo= x.Domingo,
             }).ToList();
  
             var paquetes = model.prices.AsQueryable().Where(y => y.PromocionId == model.Id && y.Activo == true).FirstOrDefault().PrecioLista.Paquete;
@@ -79,13 +81,16 @@ namespace Service.Catalog.Mapper
                 FechaInicial = x.FechaInicio,
                 FechaFinal = x.FechaFinal,
                 Activo = x.Activo,
-                Precio = paquetes.AsQueryable().Where(m => m.PaqueteId == x.PackId).FirstOrDefault().Precio,
+                Precio = paquetes.AsQueryable().Where(m => m.PaqueteId == x.PackId).FirstOrDefault()?.Precio,
+                PrecioFinal=x.FinalPrice,
                 Paquete = true,
                 Lunes = x.Lunes,
                 Martes = x.Martes,
                 Miercoles = x.Miercoles,
                 Jueves = x.Jueves,
                 Viernes = x.Viernes,
+                Sabado = x.Sabado,
+                Domingo= x.Domingo
 
             }).ToList();
 
@@ -145,7 +150,8 @@ namespace Service.Catalog.Mapper
                     Nombre = x.Branch.Nombre,
                     Precio=0
                 }).ToList(),
-                Dias = dias
+                Dias = dias,
+           
             };
         }
 
@@ -180,7 +186,7 @@ namespace Service.Catalog.Mapper
                     PackId =x.Id,
                     Discountporcent = x.DescuentoPorcentaje,
                     DiscountNumeric = x.DescuentoCantidad,
-                    Price = x.Precio,
+                    Price = x.Precio??0,
                     FinalPrice = x.PrecioFinal,
                     Loyality = x.Lealtad,
                     FechaInicio = x.FechaInicial,
@@ -204,7 +210,7 @@ namespace Service.Catalog.Mapper
                     StudyId = x.Id,
                     Discountporcent = x.DescuentoPorcentaje,
                     DiscountNumeric = x.DescuentoCantidad,
-                    Price = x.Precio,
+                    Price = x.Precio ?? 0,
                     FinalPrice = x.PrecioFinal,
                     Loyality = x.Lealtad,
                     FechaInicio = x.FechaInicial,
@@ -267,7 +273,7 @@ namespace Service.Catalog.Mapper
                     PackId = x.Id,
                     Discountporcent = x.DescuentoPorcentaje,
                     DiscountNumeric = x.DescuentoCantidad,
-                    Price = x.Precio,
+                    Price = x.Precio ?? 0,
                     FinalPrice = x.PrecioFinal,
                     Loyality = x.Lealtad,
                     FechaInicio = x.FechaInicial,
@@ -291,7 +297,7 @@ namespace Service.Catalog.Mapper
                     StudyId = x.Id,
                     Discountporcent = x.DescuentoPorcentaje,
                     DiscountNumeric = x.DescuentoCantidad,
-                    Price = x.Precio,
+                    Price = x.Precio ?? 0,
                     FinalPrice = x.PrecioFinal,
                     Loyality = x.Lealtad,
                     FechaInicio = x.FechaInicial,

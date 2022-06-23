@@ -11,6 +11,18 @@
       ],
       "UpstreamPathTemplate": "/api/location/getByZipCode/{zipCode}",
       "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/location/getcity",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/location/getcity",
+      "UpstreamHttpMethod": [ "GET" ]
     }
   ]
 }

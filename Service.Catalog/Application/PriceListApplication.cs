@@ -82,7 +82,7 @@ namespace Service.Catalog.Application
             Helpers.ValidateGuid(price.Id, out Guid guid);
 
             var existing = await _repository.GetById(guid);
-
+            CheckStudys(price);
             if (existing == null)
             {
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
@@ -182,6 +182,22 @@ namespace Service.Catalog.Application
             var prices = await _repository.GetAllMedics(medicsId);
 
             return prices.ToPriceListListMedDto();
+        }
+
+
+        private  static void CheckStudys(PriceListFormDto price)
+        {
+            var estudios = price.Estudios.AsQueryable();
+            foreach (var paquete in price.Paquete) {
+                foreach (var estudio in paquete.Pack) {
+                    var existe = estudios.Any(x=> x.Id == estudio.Id);
+                    if (!existe) {
+                        throw new CustomException(HttpStatusCode.Conflict, $"El estudio {estudio.Clave} No tiene un precio asignada");
+                    }
+                } 
+            }
+
+           
         }
     }
 }
