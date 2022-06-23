@@ -34,6 +34,12 @@ namespace Identidad.Api.Infraestructure.Services
             }
             return Medicos.ToMedicsFormDto();
         }
+        public async Task<IEnumerable<MedicsListDto>> GetActive()
+        {
+            var Medicos = await _repository.GetActive();
+
+            return Medicos.ToMedicsListDto();
+        }
         public async Task<MedicsFormDto> Create(MedicsFormDto medic)
         {
             Helpers.ValidateGuid(medic.IdMedico.ToString(), out Guid guid);

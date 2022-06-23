@@ -47,6 +47,13 @@ namespace Service.Catalog.Repository
             return await doctors.ToListAsync();
         }
 
+        public async Task<List<Medics>> GetActive()
+        {
+            var doctors = await _context.CAT_Medicos.Where(x => x.Activo).ToListAsync();
+
+            return doctors;
+        }
+
         public async Task<Medics> GetByCode(string code)
         {
             return await _context.CAT_Medicos.FirstOrDefaultAsync(x => x.Clave == code);

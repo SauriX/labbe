@@ -27,6 +27,12 @@ namespace Identidad.Api.Controllers
             return await _Services.GetAll(search);
         }
 
+        [HttpGet("active")]
+        public async Task<IEnumerable<MedicsListDto>> GetActive()
+        {
+            return await _Services.GetActive();
+        }
+
         [HttpGet("{Id}")]
         [Authorize(Policies.Access)]
         public async Task<MedicsFormDto> GetById(Guid Id)

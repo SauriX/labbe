@@ -52,7 +52,6 @@ namespace Service.Catalog.Repository
 
             return await Company.ToListAsync();
         }
-
         public async Task Create(Company company)
         {
             using var transaction = _context.Database.BeginTransaction();
