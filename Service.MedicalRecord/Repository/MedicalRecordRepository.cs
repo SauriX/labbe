@@ -38,7 +38,11 @@ namespace Service.MedicalRecord.Repository
 
             if (!string.IsNullOrEmpty(search.ciudad) || !string.IsNullOrEmpty(search.expediente) || search.fechaNacimiento.Date != DateTime.Now.Date || search.fechaAlta.Date != DateTime.Now.Date || !string.IsNullOrEmpty(search.sucursal))
             {
-                var expedientes = await _context.CAT_Expedientes.Where(x => x.Ciudad == search.ciudad || x.Expediente == search.expediente || search.expediente.Contains(x.NombrePaciente) || x.FechaDeNacimiento.Date == search.fechaNacimiento.Date || x.FechaCreo.Date == search.fechaAlta.Date || x.IdSucursal==Guid.Parse(search.sucursal)).ToListAsync();
+                var sucursal = Guid.Empty;
+                if (!string.IsNullOrEmpty(search.sucursal)) {
+                    sucursal = Guid.Parse(search.sucursal);
+                }
+                var expedientes = await _context.CAT_Expedientes.Where(x => x.Ciudad == search.ciudad || x.Expediente == search.expediente || search.expediente.Contains(x.NombrePaciente) || x.FechaDeNacimiento.Date == search.fechaNacimiento.Date || x.FechaCreo.Date == search.fechaAlta.Date || x.IdSucursal==sucursal).ToListAsync();
                
                 return expedientes;
             }
@@ -85,9 +89,10 @@ namespace Service.MedicalRecord.Repository
             
         }
 
-        public async Task Update(MedicalRecord.Domain.MedicalRecord.MedicalRecord expediente, IEnumerable<TaxDataDto> taxdata)
+        public async Task Update(MedicalRecord.Domain.MedicalRecord.MedicalRecord expediente, IEnumerable<TaxDataDto> taxdata )
         {
             expediente.TaxData = null;
+            if (taxdata == null) { taxdata = new List<TaxDataDto>(); }
             var newtaxdata = taxdata.Where(x => x.Id == Guid.Empty).ToTaxData();
             var oldtaxData = taxdata.Where(x=>x.Id!=Guid.Empty ).ToTaxDataUpdate();
             var finalTaxData = newtaxdata.Concat(oldtaxData).ToList();
