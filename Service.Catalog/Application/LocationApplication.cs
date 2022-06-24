@@ -1,4 +1,5 @@
 ﻿using Service.Catalog.Application.IApplication;
+using Service.Catalog.Domain.Constant;
 using Service.Catalog.Dtos.Constant;
 using Service.Catalog.Mapper;
 using Service.Catalog.Repository.IRepository;
@@ -23,6 +24,13 @@ namespace Service.Catalog.Application
             var colonies = await _repository.GetColoniesByZipCode(zipCode.Trim());
 
             return colonies.ToLocationDto(zipCode);
+        }
+
+        public async Task<List<City>> Getcity()
+                {
+            var colonies = await _repository.GetCities();
+
+            return colonies;
         }
     }
 }
