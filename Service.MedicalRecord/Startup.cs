@@ -100,7 +100,7 @@ namespace Service.MedicalRecord
             });
 
             var key = Configuration["SecretKey"];
-            var tokenKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));*/
+            var tokenKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
