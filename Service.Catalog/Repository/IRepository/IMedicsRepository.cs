@@ -12,6 +12,7 @@ namespace Identidad.Api.Infraestructure.Repository.IRepository
         Task Create(Medics doctors);
         Task Update(Medics Doctors);
         Task<List<Medics>> GetAll(string search = null);
+        Task<List<Medics>> GetActive();
         Task<Medics> GetByCode(string code);
 
     }

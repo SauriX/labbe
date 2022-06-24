@@ -34,12 +34,6 @@ namespace Identidad.Api.Controllers
             return await _Services.GetActive();
         }
 
-        //[HttpGet("provenance/active")]
-        //public async Task<IEnumerable<CatalogListDto>> GetActiveProvenance(int id)
-        //{
-        //    return await _Services.GetActive();
-        //}
-
         [HttpGet("{Id}")]
         [Authorize(Policies.Access)]
         public async Task<CompanyFormDto> GetById(Guid Id)
