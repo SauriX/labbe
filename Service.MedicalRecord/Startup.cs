@@ -181,9 +181,9 @@ namespace Service.MedicalRecord
 
             app.UseMiddleware<ErrorMiddleware>();
 
-
+            
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
