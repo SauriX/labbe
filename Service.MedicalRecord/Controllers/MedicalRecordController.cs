@@ -45,12 +45,12 @@ namespace Service.MedicalRecord.Controllers
         }
         [HttpPost]
         public async Task<MedicalRecordsListDto> Create(MedicalRecordsFormDto expediente) {
-            expediente.UserId = Guid.NewGuid(); //(Guid)HttpContext.Items["userId"];
+            expediente.UserId = (Guid)HttpContext.Items["userId"];
             return await _Service.Create(expediente);
         }
         [HttpPut]
         public async Task<MedicalRecordsListDto> Update(MedicalRecordsFormDto expediente) {
-            expediente.UserId = Guid.NewGuid(); // (Guid)HttpContext.Items["userId"];
+            expediente.UserId = (Guid)HttpContext.Items["userId"];
             return await _Service.Update(expediente);
         }
         [HttpPost("export/list")]
