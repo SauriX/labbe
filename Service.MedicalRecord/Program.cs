@@ -33,9 +33,9 @@ namespace Service.MedicalRecord
 
             try
             {
-                var context = services.GetRequiredService<ApplicationDbContext>();
+               /* var context = services.GetRequiredService<ApplicationDbContext>();
                 await context.Database.MigrateAsync();
-             /*   var key = config.GetValue<string>("PasswordKey");
+                var key = config.GetValue<string>("PasswordKey");
                 await Seed.SeedData(context, key);*/
             }
             catch (Exception e)

@@ -27,14 +27,14 @@ namespace Service.Catalog.Domain.Branch
         public string Telefono { get; set; }
         public Guid PresupuestosId { get; set; }
         public Guid FacturaciónId { get; set; }
-        public Guid ClinicosId { get; set; }
+        public string Clinicos { get; set; }
         public Guid ServicioId { get; set; }
         public bool Activo { get; set; }
         public Guid? UsuarioCreoId { get; set; }
         public DateTime? FechaCreo { get; set; }
         public Guid? UsuarioModificoId { get; set; }
         public DateTime? FechaModifico { get; set; }
-
+        public bool Matriz { get; set; }
         public virtual IEnumerable<BranchDepartment> Departamentos { get; set; }
     }
 }

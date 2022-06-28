@@ -26,7 +26,7 @@ namespace Service.Identity.Application
     {
         private readonly IConfiguration _configuration;
         private readonly IProfileRepository _repository;
-
+        private const string ADMIN = "Administrador";
         public ProfileApplication(IConfiguration configuration, IProfileRepository repository)
         {
             _configuration = configuration;
@@ -55,7 +55,9 @@ namespace Service.Identity.Application
             return new ProfileDto
             {
                 Nombre = user.NombreCompleto,
-                RequiereCambio = !user.FlagPassword
+                RequiereCambio = !user.FlagPassword,
+                Sucursal= user.SucursalId.ToString(),
+                Admin=user.Rol.Nombre==ADMIN,
             };
         }
 
@@ -92,7 +94,9 @@ namespace Service.Identity.Application
             {
                 Nombre = user.NombreCompleto,
                 Token = CreateToken(user),
-                RequiereCambio = !user.FlagPassword
+                RequiereCambio = !user.FlagPassword,
+                Sucursal = user.SucursalId.ToString(),
+                Admin = user.Rol.Nombre == ADMIN,
             };
         }
 

@@ -24,5 +24,7 @@ namespace Service.Identity.Dictionary
         public const string Tag = "tag";
         public const string Route = "route";
         public const string Maquila = "maquila";
+        public const string MedicalRecord = "MedicalRecord";
+
     }
 }

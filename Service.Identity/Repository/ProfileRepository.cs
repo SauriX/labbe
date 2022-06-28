@@ -30,12 +30,12 @@ namespace Service.Identity.Repository
 
         public async Task<User> GetById(Guid id)
         {
-            return await _context.CAT_Usuario.FindAsync(id);
+            return await _context.CAT_Usuario.Include(x => x.Rol).FirstOrDefaultAsync(x=>x.Id==id);
         }
 
         public async Task<User> GetByCode(string code)
         {
-            return await _context.CAT_Usuario.FirstOrDefaultAsync(x => x.Clave == code);
+            return await _context.CAT_Usuario.Include(x => x.Rol).FirstOrDefaultAsync(x => x.Clave == code);
         }
 
         public async Task<List<Menu>> GetMenu(Guid userId)

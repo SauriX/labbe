@@ -78,13 +78,36 @@ namespace Service.Catalog.Repository
         public async Task Create(Branch branch)
         {
             using var transaction = _context.Database.BeginTransaction();
-
             try
             {
+                var clincios = "";
+                if (branch.Matriz)
+                {
+                    var estado = _context.CAT_ciudadBranch.FirstOrDefaultAsync(x => x.Nombre == branch.Ciudad);
+                    var clinico_inicial = $"{estado.Id}0001";
+                    var clinico_final = Int32.Parse(clinico_inicial) + 998;
+                    clincios = $"{clinico_inicial}-{clinico_final}";
+                }
+                else {
+                    var sucursales =  _context.CAT_Sucursal.AsQueryable().Where(x => x.Ciudad == branch.Ciudad );
+                    if (sucursales.Count() > 1) {
+                        var sucursal = await _context.CAT_Sucursal.FirstOrDefaultAsync(x => x.Ciudad == branch.Ciudad && !x.Matriz);
+                        var clinicoIncial = Int32.Parse(sucursal.Clinicos.Split("-")[1]) + 1;
+                        var clinicoFinal = clinicoIncial + 299;
+                        clincios = $"{clinicoIncial}-{clinicoFinal}";
+                    } else {
+                        var sucursal = await _context.CAT_Sucursal.FirstOrDefaultAsync(x => x.Ciudad == branch.Ciudad && x.Matriz);
+                        var clinicoIncial = Int32.Parse(sucursal.Clinicos.Split("-")[1]) + 1;
+                        var clinicoFinal = clinicoIncial + 299;
+                        clincios = $"{clinicoIncial}-{clinicoFinal}";
+                    }
+;
+                }
+                
                 var departments = branch.Departamentos.ToList();
 
                 branch.Departamentos = null;
-
+                branch.Clinicos = clincios;
                 _context.CAT_Sucursal.Add(branch);
 
                 await _context.SaveChangesAsync();
@@ -151,6 +174,10 @@ namespace Service.Catalog.Repository
         }
 
 
+        public async Task<bool> isMatrizActive(Branch branch) {
+            var active = await _context.CAT_Sucursal.AsQueryable().AnyAsync(x=> x.Ciudad == branch.Ciudad && x.Matriz && x.Id != branch.Id);
+            return active;  
+        }
         //public async Task<IEnumerable<StudyListDto>> getservicios(string id)
         //{
         //    List<Study> studys = new List<Study>();

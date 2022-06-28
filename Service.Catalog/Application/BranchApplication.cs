@@ -2,6 +2,7 @@
 using ClosedXML.Report;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dictionary;
+using Service.Catalog.Domain.Branch;
 using Service.Catalog.Dtos.Branch;
 using Service.Catalog.Mapper;
 using Service.Catalog.Repository.IRepository;
@@ -73,6 +74,12 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated($"El {code}"));
             }
 
+            var isMAtrisActive = await _repository.isMatrizActive(updatedAgent);
+
+            if (isMAtrisActive)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated($"Ya exsite ubna matriz activa"));
+            }
             await _repository.Update(updatedAgent);
 
             return true;
