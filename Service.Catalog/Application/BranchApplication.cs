@@ -141,15 +141,18 @@ namespace Service.Catalog.Application
         {
             var branch = await _repository.GetBranchByCity();
             var results = from c in branch
-                          group c by c.Ciudad;
+                          group c by c.Ciudad into grupo
+                          select new
+                          {
+                              Ciudad = grupo.Key,
+                              Sucursales = grupo.Key
+                          };
 
 
-            foreach (var group in branch)
-            {
-                Console.WriteLine(group.Ciudad);
-            }
 
-            return (IEnumerable<BranchInfoDto>)results;
+            //branch = results;
+
+            return branch.ToBranchListDto(); ;
         }
     }
 
