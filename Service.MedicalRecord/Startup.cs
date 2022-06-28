@@ -99,9 +99,9 @@ namespace Service.MedicalRecord
                 });
             });
 
-           /* var key = Configuration["SecretKey"];
-            var tokenKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));*/
-          /*  services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            var key = Configuration["SecretKey"];
+            var tokenKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
                     options.IncludeErrorDetails = true;
@@ -128,9 +128,9 @@ namespace Service.MedicalRecord
                 {
                 config.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
                 config.ValidatorOptions.LanguageManager.Culture = new CultureInfo("es");
-                });*/
+                });
 
-            /*services.AddAuthorization(opt =>
+            services.AddAuthorization(opt =>
             {
                 opt.AddPolicy(Policies.Access, p => {
                     p.RequireAuthenticatedUser();
@@ -144,7 +144,7 @@ namespace Service.MedicalRecord
                 opt.AddPolicy(Policies.Download, p => { p.Requirements.Add(new DownloadRequirement()); });
                 opt.AddPolicy(Policies.Mail, p => { p.Requirements.Add(new MailRequirement()); });
                 opt.AddPolicy(Policies.Wapp, p => { p.Requirements.Add(new WappRequirement()); });
-            });*/
+            });
 
 
             services.AddTransient<IAuthorizationHandler, AccessRequirementHandler>();
@@ -181,9 +181,9 @@ namespace Service.MedicalRecord
 
             app.UseMiddleware<ErrorMiddleware>();
 
-
+            
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
