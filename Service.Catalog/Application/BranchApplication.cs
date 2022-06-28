@@ -10,6 +10,7 @@ using Shared.Error;
 using Shared.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -128,5 +129,21 @@ namespace Service.Catalog.Application
 
             return (template.ToByteArray(), $"Catálogo de Sucursales ({indication.clave}).xlsx");
         }
+
+        public async Task<IEnumerable<BranchInfoDto>> GetBranchByCity()
+        {
+            var branch = await _repository.GetBranchByCity();
+            var results = from c in branch
+                          group c by c.Ciudad;
+
+
+            foreach (var group in branch)
+            {
+                Console.WriteLine(group.Ciudad);
+            }
+
+            return (IEnumerable<BranchInfoDto>)results;
+        }
     }
+
 }

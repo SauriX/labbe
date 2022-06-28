@@ -142,6 +142,15 @@ namespace Service.Catalog.Repository
             return colonies;
         }
 
+        public async Task<List<Branch>> GetBranchByCity()
+        {
+            var colonies = await _context.CAT_Sucursal
+                .Include(x => x.Ciudad).ToListAsync();
+
+            return colonies;
+        }
+
+
         //public async Task<IEnumerable<StudyListDto>> getservicios(string id)
         //{
         //    List<Study> studys = new List<Study>();
