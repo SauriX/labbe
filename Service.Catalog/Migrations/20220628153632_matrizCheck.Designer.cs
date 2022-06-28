@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220628153632_matrizCheck")]
+    partial class matrizCheck
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -68,6 +70,9 @@ namespace Service.Catalog.Migrations
 
                     b.Property<string>("Clave")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ClinicosId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Codigopostal")
                         .HasColumnType("nvarchar(max)");
@@ -175,21 +180,6 @@ namespace Service.Catalog.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Relacion_Estudio_Sucursal");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Branch.CiudadBranch", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CAT_ciudadBranch");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Catalog.Area", b =>
