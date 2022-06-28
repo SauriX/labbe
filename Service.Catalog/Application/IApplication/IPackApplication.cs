@@ -7,6 +7,7 @@ namespace Service.Catalog.Application.IApplication
     public interface IPackApplication
     {
         Task<IEnumerable<PackListDto>> GetAll(string search);
+        Task<IEnumerable<PackListDto>> GetActive();
         Task<PackFormDto> GetById(int id);
         Task<PackListDto> Create(PackFormDto pack);
         Task<PackListDto> Update(PackFormDto pack);

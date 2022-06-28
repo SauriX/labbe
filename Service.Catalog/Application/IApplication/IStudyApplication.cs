@@ -8,6 +8,7 @@ namespace Service.Catalog.Application.IApplication
     {
         Task<StudyFormDto> GetById(int Id);
         Task<IEnumerable<StudyListDto>> GetAll(string search = null);
+        Task<IEnumerable<StudyListDto>> GetActive();
         Task<StudyFormDto> Create(StudyFormDto study);
         Task<StudyFormDto> Update(StudyFormDto study);
         Task<(byte[] file, string fileName)> ExportList(string search = null);

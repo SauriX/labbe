@@ -10,6 +10,17 @@
       ],
       "UpstreamPathTemplate": "/api/location/getByZipCode/{zipCode}",
       "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/location/getcity",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/location/getcity",
+      "UpstreamHttpMethod": [ "GET" ]
     }
   ]
 }

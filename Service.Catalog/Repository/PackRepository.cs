@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Service.Catalog.Repository
 {
-    public class PackRepository:IPackRepository
+    public class PackRepository : IPackRepository
     {
         private readonly ApplicationDbContext _context;
 
@@ -35,9 +35,9 @@ namespace Service.Catalog.Repository
                     .Include(x => x.Area)
                     .ThenInclude(x => x.Departamento)
                     .Include(x => x.studies)
-                    .ThenInclude(x=>x.Estudio)
-                    .ThenInclude(x=>x.Area)
-                    .ThenInclude(x=>x.Departamento)
+                    .ThenInclude(x => x.Estudio)
+                    .ThenInclude(x => x.Area)
+                    .ThenInclude(x => x.Departamento)
                     .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(search) && search != "all")
@@ -49,20 +49,34 @@ namespace Service.Catalog.Repository
             return await Packs.ToListAsync();
         }
 
+        public async Task<List<Packet>> GetActive()
+        {
+            var Packs = _context.CAT_Paquete
+                    .Include(x => x.Area)
+                    .ThenInclude(x => x.Departamento)
+                    .Include(x => x.studies)
+                    .ThenInclude(x => x.Estudio)
+                    .ThenInclude(x => x.Area)
+                    .ThenInclude(x => x.Departamento)
+                    .Where(x => x.Activo);
+
+            return await Packs.ToListAsync();
+        }
+
         public async Task Create(Packet pack)
         {
             using var transaction = _context.Database.BeginTransaction();
 
             try
             {
-                var studies= pack.studies.ToList();
+                var studies = pack.studies.ToList();
 
                 pack.studies = null;
                 _context.CAT_Paquete.Add(pack);
 
                 await _context.SaveChangesAsync();
 
-                   studies.ForEach(x => x.PacketId = pack.Id);
+                studies.ForEach(x => x.PacketId = pack.Id);
 
                 var config = new BulkConfig();
                 config.SetSynchronizeFilter<PacketStudy>(x => x.PacketId == pack.Id);

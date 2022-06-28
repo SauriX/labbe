@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Service.Catalog.Application
 {
-    public class StudyApplication:IStudyApplication
+    public class StudyApplication : IStudyApplication
     {
         public readonly IStudyRepository _repository;
         public StudyApplication(IStudyRepository repository)
@@ -33,7 +33,7 @@ namespace Service.Catalog.Application
         }
         public async Task<StudyFormDto> Create(StudyFormDto study)
         {
-            var code = await ValidarClaveNombre(study,true,true,study.Id,study.Orden);
+            var code = await ValidarClaveNombre(study, true, true, study.Id, study.Orden);
 
             if (code != 0)
             {
@@ -47,7 +47,7 @@ namespace Service.Catalog.Application
 
             await _repository.Create(newestudio);
 
-            study = await GetById(newestudio.Id);;
+            study = await GetById(newestudio.Id); ;
 
             return study;
         }
@@ -57,13 +57,21 @@ namespace Service.Catalog.Application
             var estudios = await _repository.GetAll(search);
             return estudios.ToStudyListDto();
         }
+
+        public async Task<IEnumerable<StudyListDto>> GetActive()
+        {
+            var studies = await _repository.GetActive();
+
+            return studies.ToStudyListDto();
+        }
+
         public async Task<StudyFormDto> Update(StudyFormDto study)
         {
             var existing = await _repository.GetById(study.Id);
-            
+
             if (existing.Clave != study.Clave || existing.Nombre != study.Nombre || existing.Orden != study.Orden)
             {
-                var code = await ValidarClaveNombre(study, existing.Clave != study.Clave, existing.Nombre != study.Nombre,study.Id,study.Orden);
+                var code = await ValidarClaveNombre(study, existing.Clave != study.Clave, existing.Nombre != study.Nombre, study.Id, study.Orden);
                 if (code != 0)
                 {
                     throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave , el nombre o el orden"));
@@ -103,7 +111,7 @@ namespace Service.Catalog.Application
 
             template.Format();
 
-           return (template.ToByteArray(), $"Catálogo de Estudios.xlsx");
+            return (template.ToByteArray(), $"Catálogo de Estudios.xlsx");
         }
 
         public async Task<(byte[] file, string fileName)> ExportForm(int id)
@@ -120,7 +128,7 @@ namespace Service.Catalog.Application
             template.AddVariable("Estudio", study);
             template.AddVariable("Indication", study.Indicaciones);
             template.AddVariable("paquete", study.Paquete);
-            template.AddVariable("Parameter",study.Parameters);
+            template.AddVariable("Parameter", study.Parameters);
             template.AddVariable("Reagent", study.Reactivos);
             template.AddVariable("WorkList", study.WorkList);
 
@@ -131,19 +139,21 @@ namespace Service.Catalog.Application
             return (template.ToByteArray(), $"Catálogo de Estudios ({study.Clave}).xlsx");
         }
 
-        private async Task<int> ValidarClaveNombre(StudyFormDto study,bool claveCheck,bool nombreCheck,int id,int orden)
+        private async Task<int> ValidarClaveNombre(StudyFormDto study, bool claveCheck, bool nombreCheck, int id, int orden)
         {
             var name = "";
             var clave = "";
-            if (claveCheck) {
-                 clave = study.Clave;
+            if (claveCheck)
+            {
+                clave = study.Clave;
             }
-            if (nombreCheck) {
-                 name = study.Nombre;
+            if (nombreCheck)
+            {
+                name = study.Nombre;
             }
-            
 
-            var exists = await _repository.ValidateClaveNamne(clave, name,id,orden);
+
+            var exists = await _repository.ValidateClaveNamne(clave, name, id, orden);
 
             if (exists)
             {

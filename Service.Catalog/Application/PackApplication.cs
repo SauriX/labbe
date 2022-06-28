@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Service.Catalog.Application
 {
-    public class PackApplication: IPackApplication
+    public class PackApplication : IPackApplication
     {
         private readonly IPackRepository _repository;
         public PackApplication(IPackRepository repository)
@@ -30,6 +30,14 @@ namespace Service.Catalog.Application
 
             return packs.ToPackListDto();
         }
+
+        public async Task<IEnumerable<PackListDto>> GetActive()
+        {
+            var packs = await _repository.GetActive();
+
+            return packs.ToPackListDto();
+        }
+
         public async Task<PackFormDto> GetById(int id)
         {
             //Helpers.ValidateGuid(id, out Guid guid);
@@ -64,7 +72,7 @@ namespace Service.Catalog.Application
 
         public async Task<PackListDto> Update(PackFormDto pack)
         {
-           // Helpers.ValidateGuid(parameter.Id, out Guid guid);
+            // Helpers.ValidateGuid(parameter.Id, out Guid guid);
 
             var existing = await _repository.GetById(pack.Id);
 

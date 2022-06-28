@@ -27,12 +27,41 @@ namespace Service.Catalog.Application
         {
             _repository = repository;
         }
-     
+
         public async Task<IEnumerable<PriceListListDto>> GetAll(string search)
         {
             var prices = await _repository.GetAll(search);
 
             return prices.ToPriceListListDto();
+        }
+
+        public async Task<IEnumerable<object>> GetAllInfo(string search)
+        {
+            if (search == null) search = "";
+
+            var prices = await _repository.GetAllInfo(search);
+
+            return prices.Select(x => new
+            {
+                x.PrecioListaId,
+                x.EstudioId,
+                x.Estudio.Clave,
+                x.Estudio.Nombre,
+                PrecioListaPrecio = x.Precio,
+                Parametros = x.Estudio.Parameters.Select(y => new
+                {
+                    Id = y.ParametroId,
+                    y.Parametro.Clave,
+                    y.Parametro.Nombre,
+                }),
+                Indicaciones = x.Estudio.Indications.Select(y => new
+                {
+                    Id = y.IndicacionId,
+                    y.Indicacion.Clave,
+                    y.Indicacion.Nombre,
+                    y.Indicacion.Descripcion
+                })
+            });
         }
 
         public async Task<IEnumerable<PriceListListDto>> GetActive()
@@ -185,19 +214,22 @@ namespace Service.Catalog.Application
         }
 
 
-        private  static void CheckStudys(PriceListFormDto price)
+        private static void CheckStudys(PriceListFormDto price)
         {
             var estudios = price.Estudios.AsQueryable();
-            foreach (var paquete in price.Paquete) {
-                foreach (var estudio in paquete.Pack) {
-                    var existe = estudios.Any(x=> x.Id == estudio.Id);
-                    if (!existe) {
+            foreach (var paquete in price.Paquete)
+            {
+                foreach (var estudio in paquete.Pack)
+                {
+                    var existe = estudios.Any(x => x.Id == estudio.Id);
+                    if (!existe)
+                    {
                         throw new CustomException(HttpStatusCode.Conflict, $"El estudio {estudio.Clave} No tiene un precio asignada");
                     }
-                } 
+                }
             }
 
-           
+
         }
     }
 }

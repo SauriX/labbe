@@ -17,7 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{F8D542
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{A6377A7D-DFFF-4D7D-9115-2A7B1E47D4B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.MedicalRecord", "Service.MedicalRecord\Service.MedicalRecord.csproj", "{7D271C7D-EA6E-4F10-9CB2-ADAC5A139E88}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.MedicalRecord", "Service.MedicalRecord\Service.MedicalRecord.csproj", "{7D271C7D-EA6E-4F10-9CB2-ADAC5A139E88}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

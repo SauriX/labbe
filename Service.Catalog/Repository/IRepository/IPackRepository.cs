@@ -8,6 +8,7 @@ namespace Service.Catalog.Repository.IRepository
     {
         Task<Packet> GetById(int Id);
         Task<List<Packet>> GetAll(string search);
+        Task<List<Packet>> GetActive();
         Task Create(Packet pack);
         Task Update(Packet pack);
         Task<bool> IsDuplicate(Packet pack);

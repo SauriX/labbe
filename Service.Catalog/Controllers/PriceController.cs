@@ -33,6 +33,13 @@ namespace Service.Catalog.Controllers
         public async Task<IEnumerable<PriceListListDto>> GetAll(string search)
         {
             return await _service.GetAll(search);
+        }    
+        
+        [HttpGet("list/info/{search}")]
+        [AllowAnonymous]
+        public async Task<IEnumerable<object>> GetAllInfo(string search)
+        {
+            return await _service.GetAllInfo(search);
         }
 
         [HttpGet("{id}")]

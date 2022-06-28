@@ -32,13 +32,24 @@ namespace Service.Catalog.Repository
                     .Include(x => x.Metodo)
                     .AsQueryable();
 
-
-
             if (!string.IsNullOrWhiteSpace(search) && search != "all")
             {
                 search = search.Trim().ToLower();
                 studyes = studyes.Where(x => x.Clave.ToLower().Contains(search) || x.Nombre.ToLower().Contains(search));
             }
+
+            return await studyes.ToListAsync();
+        }
+
+        public async Task<List<Study>> GetActive()
+        {
+            var studyes = _context.CAT_Estudio
+                .Include(x => x.Area)
+                .ThenInclude(x => x.Departamento)
+                .Include(x => x.Formato)
+                .Include(x => x.Maquilador)
+                .Include(x => x.Metodo)
+                .Where(x => x.Activo);
 
             return await studyes.ToListAsync();
         }
@@ -120,11 +131,11 @@ namespace Service.Catalog.Repository
 
             config.SetSynchronizeFilter<Domain.Study.ReagentStudy>(x => x.EstudioId == study.Id);
             reagents.ForEach(x => x.EstudioId = study.Id);
-            await _context.BulkInsertOrUpdateOrDeleteAsync(reagents,config);
+            await _context.BulkInsertOrUpdateOrDeleteAsync(reagents, config);
 
             config.SetSynchronizeFilter<Domain.Study.WorkListStudy>(x => x.EstudioId == study.Id);
             workList.ForEach(x => x.EstudioId = study.Id);
-            await _context.BulkInsertOrUpdateOrDeleteAsync(workList,config);
+            await _context.BulkInsertOrUpdateOrDeleteAsync(workList, config);
 
             config.SetSynchronizeFilter<ParameterStudy>(x => x.EstudioId == study.Id);
             parameters.ForEach(x => x.EstudioId = study.Id);
@@ -137,9 +148,9 @@ namespace Service.Catalog.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> ValidateClaveNamne(string clave, string nombre,int id,int orden)
+        public async Task<bool> ValidateClaveNamne(string clave, string nombre, int id, int orden)
         {
-            return await   _context.CAT_Estudio.AnyAsync(x => x.Clave == clave || x.Nombre == nombre || x.Orden == orden && x.Id != id);
+            return await _context.CAT_Estudio.AnyAsync(x => x.Clave == clave || x.Nombre == nombre || x.Orden == orden && x.Id != id);
 
 
 

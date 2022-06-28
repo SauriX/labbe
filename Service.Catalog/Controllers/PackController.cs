@@ -34,6 +34,13 @@ namespace Service.Catalog.Controllers
             return await _Service.GetAll(search);
         }
 
+        [HttpGet("active")]
+        [Authorize(Policies.Access)]
+        public async Task<IEnumerable<PackListDto>> GetActive()
+        {
+            return await _Service.GetActive();
+        }
+
         [HttpPost]
         [Authorize(Policies.Create)]
         public async Task<PackListDto> Create(PackFormDto pack)

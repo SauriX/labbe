@@ -30,7 +30,6 @@ namespace Service.Catalog.Controllers
         }
 
         [HttpGet("general")]
-        [Authorize(Policies.Access)]
         public async Task<ConfigurationGeneralDto> GetGeneral()
         {
             return await _service.GetGeneral();

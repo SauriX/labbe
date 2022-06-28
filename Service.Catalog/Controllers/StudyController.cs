@@ -32,7 +32,14 @@ namespace Service.Catalog.Controllers
         public async Task<IEnumerable<StudyListDto>> GetAll(string search = null)
         {
             return await _Service.GetAll(search);
+        }     
+        
+        [HttpGet("active")]
+        public async Task<IEnumerable<StudyListDto>> GetActive()
+        {
+            return await _Service.GetActive();
         }
+
         [HttpPost]
         [Authorize(Policies.Create)]
         public async Task<StudyFormDto> Create(StudyFormDto study)
