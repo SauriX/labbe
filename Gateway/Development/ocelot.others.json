@@ -278,7 +278,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/delivery",
-      "UpstreamHttpMethod": [ "POST", "POST" ]
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/delivery/export/list/{search}",

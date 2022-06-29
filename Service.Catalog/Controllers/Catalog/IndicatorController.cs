@@ -50,7 +50,7 @@ namespace Service.Catalog.Controllers.Catalog
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportListIndicator(string search)
         {
-            var file = await _indicatorService.ExportList(search);
+            var file = await _indicatorService.ExportList(search, "Indicadores");
             return File(file, MimeType.XLSX, "Catálogo de Indicadores.xlsx");
         }
 
@@ -58,7 +58,7 @@ namespace Service.Catalog.Controllers.Catalog
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportFormIndicator(int id)
         {
-            var (file, code) = await _indicatorService.ExportForm(id);
+            var (file, code) = await _indicatorService.ExportForm(id, "Indicadores");
             return File(file, MimeType.XLSX, $"Catálogo de Indicadores ({code}).xlsx");
         }
     }

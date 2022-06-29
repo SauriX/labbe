@@ -255,7 +255,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/delivery",
-      "UpstreamHttpMethod": [ "POST", "POST" ]
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
     {
       "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/catalog/delivery/export/list/{search}",

@@ -50,7 +50,7 @@ namespace Service.Catalog.Controllers.Catalog
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportListMethod(string search)
         {
-            var file = await _methodService.ExportList(search);
+            var file = await _methodService.ExportList(search, "Métodos");
             return File(file, MimeType.XLSX, "Catálogo de Método.xlsx");
         }
 
@@ -58,7 +58,7 @@ namespace Service.Catalog.Controllers.Catalog
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportFormMethod(int id)
         {
-            var (file, code) = await _methodService.ExportForm(id);
+            var (file, code) = await _methodService.ExportForm(id, "Métodos");
             return File(file, MimeType.XLSX, $"Catálogo de Método ({code}).xlsx");
         }
     }
