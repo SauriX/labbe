@@ -145,7 +145,7 @@ namespace Service.Catalog.Application
                           select new
                           {
                               Ciudad = grupo.Key,
-                              Sucursales = grupo.Key
+                              Sucursales = grupo.Key,
                           };
 
 

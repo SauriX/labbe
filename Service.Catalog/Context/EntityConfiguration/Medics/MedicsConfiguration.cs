@@ -53,12 +53,12 @@ namespace Identidad.Api.Infraestructure.EntityConfiguration.CatalogoMedicosConfi
             builder
               .Property(x => x.CiudadId)
               .IsRequired(false)
-              .HasMaxLength(15);
+              .HasMaxLength(50);
 
             builder
               .Property(x => x.EstadoId)
               .IsRequired(false)
-              .HasMaxLength(15);
+              .HasMaxLength(50);
 
             builder
               .Property(x => x.Telefono)
