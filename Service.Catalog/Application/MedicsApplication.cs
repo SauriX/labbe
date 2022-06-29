@@ -116,7 +116,7 @@ namespace Identidad.Api.Infraestructure.Services
 
             template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
-            template.AddVariable("Titulo", "Medicos");
+            template.AddVariable("Titulo", "Médicos");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
             template.AddVariable("Medicos", medics);
 
@@ -141,7 +141,7 @@ namespace Identidad.Api.Infraestructure.Services
 
             template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
-            template.AddVariable("Titulo", "Medicos");
+            template.AddVariable("Titulo", "Médicos");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
             template.AddVariable("Medico", medics);
             //template.AddVariable("Medico", medics);

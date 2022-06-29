@@ -11,6 +11,7 @@ using Shared.Error;
 using Shared.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -136,7 +137,23 @@ namespace Service.Catalog.Application
             return (template.ToByteArray(), $"Catálogo de Sucursales ({indication.clave}).xlsx");
         }
 
+        public async Task<IEnumerable<BranchInfoDto>> GetBranchByCity()
+        {
+            var branch = await _repository.GetBranchByCity();
+            var results = from c in branch
+                          group c by c.Ciudad into grupo
+                          select new
+                          {
+                              Ciudad = grupo.Key,
+                              Sucursales = grupo.Key
+                          };
 
 
+
+            //branch = results;
+
+            return branch.ToBranchListDto(); ;
+        }
     }
+
 }

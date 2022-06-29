@@ -1,6 +1,18 @@
 {
   "Routes": [
     {
+      "DownstreamPathTemplate": "/api/branch/getSucursalByCity",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/branch/getSucursalByCity",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/branch/export/list/{search}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
