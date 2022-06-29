@@ -18,8 +18,8 @@ namespace Service.Identity.Application.IApplication
         Task<UserListDto> Create(UserFormDto user);
         Task<UserListDto> Update(UserFormDto user);
         Task UpdatePassword(ChangePasswordFormDto data);
-        Task<byte[]> ExportForm(string id);
-        Task<byte[]> ExportList(string search = null);
+        Task<(byte[] file, string fileName)> ExportForm(string id);
+        Task<(byte[] file, string fileName)> ExportList(string search = null);
     }
 }
 

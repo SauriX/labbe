@@ -91,14 +91,14 @@ namespace Service.Catalog.Repository
                 else {
                     var sucursales =  _context.CAT_Sucursal.AsQueryable().Where(x => x.Ciudad == branch.Ciudad );
                     if (sucursales.Count() > 1) {
-                        var sucursal = await _context.CAT_Sucursal.FirstOrDefaultAsync(x => x.Ciudad == branch.Ciudad && !x.Matriz);
+                        var sucursal =  _context.CAT_Sucursal.OrderBy(x=>x.FechaCreo).Last(x => x.Ciudad == branch.Ciudad && !x.Matriz);
                         var clinicoIncial = Int32.Parse(sucursal.Clinicos.Split("-")[1]) + 1;
                         var clinicoFinal = clinicoIncial + 299;
                         clincios = $"{clinicoIncial}-{clinicoFinal}";
                     } else {
                         var sucursal = await _context.CAT_Sucursal.FirstOrDefaultAsync(x => x.Ciudad == branch.Ciudad && x.Matriz);
                         var clinicoIncial = Int32.Parse(sucursal.Clinicos.Split("-")[1]) + 1;
-                        var clinicoFinal = clinicoIncial + 299;
+                        var clinicoFinal =   clinicoIncial + 299;
                         clincios = $"{clinicoIncial}-{clinicoFinal}";
                     }
 ;
