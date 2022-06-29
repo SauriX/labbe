@@ -14,7 +14,5 @@ namespace Service.Catalog.Domain.Price
         public DateTime FechaCreo { get; set; }
         public string UsuarioModId { get; set; }
         public DateTime FechaMod { get; set; }
-
-
     }
 }

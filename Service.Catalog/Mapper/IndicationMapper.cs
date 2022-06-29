@@ -22,7 +22,7 @@ namespace Service.Catalog.Mapper
             };
         }
 
-        public static IEnumerable<IndicationListDto> ToIndicationListDto(this List<Indication> model)
+        public static IEnumerable<IndicationListDto> ToIndicationListDto(this IEnumerable<Indication> model)
         {
             if (model == null) return null;
 

@@ -41,16 +41,24 @@ namespace Service.Catalog.Repository
             return await indications.ToListAsync();
         }
 
-        public async Task<List<PriceList_Study>> GetAllInfo(string search)
+        public async Task<PriceList_Study> GetPriceStudyById(int studyId)
         {
-            search = search.Trim().ToLower();
-
             var prices = _context.Relacion_ListaP_Estudio
-                .Include(x => x.Estudio.Parameters).ThenInclude(x => x.Parametro)
+                .Include(x => x.Estudio.Parameters).ThenInclude(x => x.Parametro.Area.Departamento)
                 .Include(x => x.Estudio.Indications).ThenInclude(x => x.Indicacion)
-                .Where(x => x.Estudio.Clave.ToLower().Contains(search) || x.Estudio.Nombre.ToLower().Contains(search));
+                .Where(x => x.EstudioId == studyId);
 
-            return await prices.ToListAsync();
+            return await prices.FirstOrDefaultAsync();
+        }
+
+        public async Task<PriceList_Packet> GetPricePackById(int packId)
+        {
+            var prices = _context.Relacion_ListaP_Paquete
+                .Include(x => x.Paquete.studies).ThenInclude(x => x.Estudio.Parameters).ThenInclude(x => x.Parametro.Area.Departamento)
+                .Include(x => x.Paquete.studies).ThenInclude(x => x.Estudio.Indications).ThenInclude(x => x.Indicacion)
+                .Where(x => x.PaqueteId == packId);
+
+            return await prices.FirstOrDefaultAsync();
         }
 
         public async Task<PriceList> GetById(Guid Id)

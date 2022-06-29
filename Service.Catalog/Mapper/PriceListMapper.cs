@@ -1,5 +1,6 @@
 ﻿using Service.Catalog.Domain.Company;
 using Service.Catalog.Domain.Price;
+using Service.Catalog.Domain.Study;
 using Service.Catalog.Dtos;
 using Service.Catalog.Dtos.Pack;
 using Service.Catalog.Dtos.PriceList;
@@ -58,15 +59,15 @@ namespace Service.Catalog.Mapper
         ///ToPriceList companymedicssucursal Aplication
         public static IEnumerable<PriceListCompanyDto> ToPriceListListComDto(this List<Price_Company> model)
         {
-                if (model == null) return null;
+            if (model == null) return null;
 
             return model.Select(x => new PriceListCompanyDto
             {
-                    Id = x.Compañia.Id,
-                    Clave = x.Compañia.Clave,
-                    Nombre = x.Compañia.NombreComercial,
-                    Precio = x.Precio,
-                    ListaPrecio = x.PrecioLista?.Nombre
+                Id = x.Compañia.Id,
+                Clave = x.Compañia.Clave,
+                Nombre = x.Compañia.NombreComercial,
+                Precio = x.Precio,
+                ListaPrecio = x.PrecioLista?.Nombre
 
 
             });
@@ -97,7 +98,7 @@ namespace Service.Catalog.Mapper
                 ListaPrecio = x.PrecioLista?.Nombre
             });
         }
-        
+
         ///ToPriceList companymedicssucursal Aplication arriba
         public static IEnumerable<PriceListListDto> ToPriceListListDto(this List<PriceList> model)
         {
@@ -125,8 +126,8 @@ namespace Service.Catalog.Mapper
                     Id = y.CompañiaId,
                     Clave = y.Compañia.Clave,
                     Nombre = y.Compañia.NombreComercial,
-                   // Precio = x.Precio,
-                   ListaPrecio = x.Nombre
+                    // Precio = x.Precio,
+                    ListaPrecio = x.Nombre
                 })?.ToList(),
                 Medicos = x?.Medicos?.Select(x => new PriceListMedicDto
                 {
@@ -143,7 +144,7 @@ namespace Service.Catalog.Mapper
                     Precio = x.Precio,
                 })?.ToList(),
             });
-        }   
+        }
 
         public static PriceListFormDto ToPriceListFormDto(this PriceList model)
         {
@@ -213,6 +214,46 @@ namespace Service.Catalog.Mapper
                     Activo = x.Activo,
                     ListaPrecio = model.Nombre
                 })?.ToList(),
+            };
+        }
+
+        public static PriceListInfoStudyDto ToPriceListInfoStudyDto(this PriceList_Study model)
+        {
+            if (model == null) return null;
+
+            return new PriceListInfoStudyDto
+            {
+                PrecioListaId = model.PrecioListaId.ToString(),
+                EstudioId = model.EstudioId,
+                Clave = model.Estudio.Clave,
+                Nombre = model.Estudio.Nombre,
+                PrecioListaPrecio = model.Precio,
+                Parametros = model.Estudio.Parameters.Select(x => x.Parametro).ToParameterListDto(),
+                Indicaciones = model.Estudio.Indications.Select(x => x.Indicacion).ToIndicationListDto(),
+            };
+        }
+
+        public static PriceListInfoPackDto ToPriceListInfoPackDto(this PriceList_Packet model)
+        {
+            if (model == null) return null;
+
+            return new PriceListInfoPackDto
+            {
+                PrecioListaId = model.PrecioListaId.ToString(),
+                PaqueteId = model.PaqueteId,
+                Clave = model.Paquete.Clave,
+                Nombre = model.Paquete.Nombre,
+                PrecioListaPrecio = model.Precio,
+                Estudios = model.Paquete.studies.Select(x => new PriceListInfoStudyDto
+                {
+                    PrecioListaId = model.PrecioListaId.ToString(),
+                    EstudioId = x.EstudioId,
+                    Clave = x.Estudio.Clave,
+                    Nombre = x.Estudio.Nombre,
+                    //PrecioListaPrecio = x.Precio,
+                    Parametros = x.Estudio.Parameters.Select(x => x.Parametro).ToParameterListDto(),
+                    Indicaciones = x.Estudio.Indications.Select(x => x.Indicacion).ToIndicationListDto(),
+                }),
             };
         }
 
@@ -299,12 +340,12 @@ namespace Service.Catalog.Mapper
                     Activo = x.Activo,
                     CompañiaId = x.Id,
                 })?.ToList(),
-                Medicos =dto?.Medicos?.Select(x => new Price_Medics
+                Medicos = dto?.Medicos?.Select(x => new Price_Medics
                 {
                     PrecioListaId = model.Id,
                     Activo = x.Activo,
                     MedicoId = x.Id,
-                    
+
                 })?.ToList(),
                 Sucursales = dto?.Sucursales?.Select(x => new Price_Branch
                 {

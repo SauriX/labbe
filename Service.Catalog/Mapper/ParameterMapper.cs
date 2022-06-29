@@ -25,7 +25,7 @@ namespace Service.Catalog.Mapper
             };
         }
 
-        public static IEnumerable<ParameterListDto> ToParameterListDto(this List<Parameter> model)
+        public static IEnumerable<ParameterListDto> ToParameterListDto(this IEnumerable<Parameter> model)
         {
             if (model == null) return null;
 

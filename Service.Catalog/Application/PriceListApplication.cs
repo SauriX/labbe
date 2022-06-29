@@ -35,35 +35,6 @@ namespace Service.Catalog.Application
             return prices.ToPriceListListDto();
         }
 
-        public async Task<IEnumerable<object>> GetAllInfo(string search)
-        {
-            if (search == null) search = "";
-
-            var prices = await _repository.GetAllInfo(search);
-
-            return prices.Select(x => new
-            {
-                x.PrecioListaId,
-                x.EstudioId,
-                x.Estudio.Clave,
-                x.Estudio.Nombre,
-                PrecioListaPrecio = x.Precio,
-                Parametros = x.Estudio.Parameters.Select(y => new
-                {
-                    Id = y.ParametroId,
-                    y.Parametro.Clave,
-                    y.Parametro.Nombre,
-                }),
-                Indicaciones = x.Estudio.Indications.Select(y => new
-                {
-                    Id = y.IndicacionId,
-                    y.Indicacion.Clave,
-                    y.Indicacion.Nombre,
-                    y.Indicacion.Descripcion
-                })
-            });
-        }
-
         public async Task<IEnumerable<PriceListListDto>> GetActive()
         {
             var prices = await _repository.GetActive();
@@ -85,7 +56,29 @@ namespace Service.Catalog.Application
             return price.ToPriceListFormDto();
         }
 
+        public async Task<PriceListInfoStudyDto> GetPriceStudyById(int id)
+        {
+            var prices = await _repository.GetPriceStudyById(id);
 
+            if (prices == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, "Lista de precios no configurada");
+            }
+
+            return prices.ToPriceListInfoStudyDto();
+        }
+
+        public async Task<PriceListInfoPackDto> GetPricePackById(int id)
+        {
+            var prices = await _repository.GetPricePackById(id);
+
+            if (prices == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, "Lista de precios no configurada");
+            }
+
+            return prices.ToPriceListInfoPackDto();
+        }
 
         public async Task<PriceListListDto> Create(PriceListFormDto price)
         {

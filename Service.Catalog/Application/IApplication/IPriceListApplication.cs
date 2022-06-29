@@ -10,8 +10,9 @@ namespace Service.Catalog.Application.IApplication
     public interface IPriceListApplication
     {
         Task<IEnumerable<PriceListListDto>> GetAll(string search);
-        Task<IEnumerable<object>> GetAllInfo(string search);
         Task<PriceListFormDto> GetById(string Id);
+        Task<PriceListInfoStudyDto> GetPriceStudyById(int id);
+        Task<PriceListInfoPackDto> GetPricePackById(int id);
         Task<PriceListListDto> Create(PriceListFormDto indicacion);
         Task<PriceListListDto> Update(PriceListFormDto indication);
         Task<IEnumerable<PriceListListDto>> GetActive();

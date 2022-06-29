@@ -9,8 +9,9 @@ namespace Service.Catalog.Repository.IRepository
     public interface IPriceListRepository
     {
         Task<List<PriceList>> GetAll(string search);
-        Task<List<PriceList_Study>> GetAllInfo(string search);
         Task<PriceList> GetById(Guid Id);
+        Task<PriceList_Study> GetPriceStudyById(int studyId);
+        Task<PriceList_Packet> GetPricePackById(int packId);
         Task<List<PriceList>> GetActive();
         Task<bool> IsDuplicate(PriceList price);
         Task Create(PriceList price);
