@@ -49,7 +49,7 @@ namespace Service.Catalog.Controllers.Catalog
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportListPayment(string search)
         {
-            var file = await _paymentService.ExportList(search);
+            var file = await _paymentService.ExportList(search, "Formas de pago");
             return File(file, MimeType.XLSX, "Catálogo de Forma de pago.xlsx");
         }
 
@@ -57,7 +57,7 @@ namespace Service.Catalog.Controllers.Catalog
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportFormPayment(int id)
         {
-            var (file, code) = await _paymentService.ExportForm(id);
+            var (file, code) = await _paymentService.ExportForm(id, "Formas de pago");
             return File(file, MimeType.XLSX, $"Catálogo de Forma de pago ({code}).xlsx");
         }
     }

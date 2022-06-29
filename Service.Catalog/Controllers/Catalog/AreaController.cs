@@ -67,6 +67,7 @@ namespace Service.Catalog.Controllers.Catalog
         public async Task<IActionResult> ExportFormArea(int id)
         {
             var (file, code) = await _areaService.ExportForm(id);
+
             return File(file, MimeType.XLSX, $"Catálogo de Áreas ({code}).xlsx");
         }
     }

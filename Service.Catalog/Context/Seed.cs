@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Service.Catalog.Domain.Branch;
 using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Domain.Configuration;
 using System;
@@ -114,8 +115,58 @@ namespace Service.Catalog.Context
                     throw;
                 }
             }
+            if (!context.CAT_ciudadBranch.Any())
+            {
+                using var transaction = context.Database.BeginTransaction();
+                try
+                {
+                    var ciudades = new List<CiudadBranch>(){ 
+                        new CiudadBranch {
+                            Id = 1,
+                            Nombre = "Ciudad Obregón"
+                        },
+                        new CiudadBranch {
+                            Id = 2,
+                            Nombre = "Navojoa"
+                        },
+                        new CiudadBranch {
+                            Id = 3,
+                            Nombre = "Hermosillo"
+                        },
+                        new CiudadBranch {
+                            Id = 4,
+                            Nombre = "Nogales"
+                        },
+                        new CiudadBranch {
+                            Id = 5,
+                            Nombre = "Guaymas"
+                        },
+                        new CiudadBranch {
+                            Id = 6,
+                            Nombre = "Monterrey"
+                        },
+                        new CiudadBranch {
+                            Id = 7,
+                            Nombre = "San Pedro Garza García"
+                        },
+                    };
 
-            if (!context.CAT_Departamento.Any() || context.CAT_Departamento.Any(x => x.Id == 1 && x.Nombre != "Paquetes"))
+                    context.CAT_ciudadBranch.AddRange(ciudades);
+                    context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_ciudadBranch ON;");
+                    await context.SaveChangesAsync();
+                    context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_ciudadBranch OFF;");
+
+                    transaction.Commit();
+
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+
+                if (!context.CAT_Departamento.Any() || context.CAT_Departamento.Any(x => x.Id == 1 && x.Nombre != "Paquetes"))
             {
                 using var transaction = context.Database.BeginTransaction();
                 try

@@ -50,7 +50,7 @@ namespace Service.Catalog.Controllers.Catalog
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportListSampleType(string search)
         {
-            var file = await _sampleTypeService.ExportList(search);
+            var file = await _sampleTypeService.ExportList(search, "Tipos de muestra");
             return File(file, MimeType.XLSX, "Catálogo de Tipo de muestra.xlsx");
         }
 
@@ -58,7 +58,7 @@ namespace Service.Catalog.Controllers.Catalog
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportFormSampleType(int id)
         {
-            var (file, code) = await _sampleTypeService.ExportForm(id);
+            var (file, code) = await _sampleTypeService.ExportForm(id, "Tipos de muestra");
             return File(file, MimeType.XLSX, $"Catálogo de Tipo de muestra ({code}).xlsx");
         }
     }
