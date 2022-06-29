@@ -16,5 +16,7 @@ namespace Service.Catalog.Repository.IRepository
         Task<(bool, string)> IsDuplicate(Branch branch);
         Task Create(Branch reagent);
         Task Update(Branch reagent);
+        Task<List<Branch>> GetBranchByCity();
+        Task<bool> isMatrizActive(Branch branch);
     }
 }

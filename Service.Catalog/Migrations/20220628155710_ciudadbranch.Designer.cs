@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220628155710_ciudadbranch")]
+    partial class ciudadbranch
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,8 +71,8 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("Clave")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Clinicos")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("ClinicosId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Codigopostal")
                         .HasColumnType("nvarchar(max)");
@@ -891,25 +893,6 @@ namespace Service.Catalog.Migrations
                     b.HasIndex("CompañiaId");
 
                     b.ToTable("CAT_ListaP_Compañia");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Configuration.Configuration", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Descripcion")
-                        .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
-
-                    b.Property<string>("Valor")
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CAT_Configuracion");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Constant.City", b =>

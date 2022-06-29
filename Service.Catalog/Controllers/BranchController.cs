@@ -65,5 +65,12 @@ namespace Service.Catalog.Controllers
             var (file, fileName) = await _branchService.ExportFormBranch(id);
             return File(file, MimeType.XLSX, fileName);
         }
+
+        [HttpPost("getSucursalByCity")]
+        [Authorize(Policies.Download)]
+        public async Task<IEnumerable<BranchInfoDto>> GetSucursalByCity()
+        {
+            return await _branchService.GetBranchByCity();
+        }
     }
 }

@@ -38,7 +38,7 @@ namespace Service.Catalog.Mapper
                 Nombre = dto.nombre.Trim(),
                 Activo = dto.activo,
                 Calle = dto.calle.Trim(),
-                ClinicosId = Guid.NewGuid(),
+              
                 ColoniaId = dto.coloniaId,
                 Correo = dto.correo,
                 FechaCreo = DateTime.Now,
@@ -60,6 +60,7 @@ namespace Service.Catalog.Mapper
                     UsuarioCreoId = dto.UsuarioId,
                     FechaCreo = DateTime.Now
                 }).ToList(),
+                Matriz = dto.Matriz
             };
         }
 
@@ -75,18 +76,20 @@ namespace Service.Catalog.Mapper
                 calle = model.Calle,
                 clave = model.Clave,
                 ciudad = model.Ciudad,
-                clinicosId = "test",
+                clinicosId = model.Clinicos ,
                 codigoPostal = model.Codigopostal,
                 coloniaId = model.ColoniaId,
                 correo = model.Correo,
                 estado = model.Estado,
-                facturaciónId = "test",
+                facturaciónId = model.Clinicos,
                 nombre = model.Nombre,
                 numeroExt = model.NumeroExterior,
                 numeroInt = model.NumeroInterior,
-                presupuestosId = "test",
+                presupuestosId = model.Clinicos,
                 telefono = model.Telefono,
-                departamentos = model.Departamentos.ToBranchDepartmentDto()
+                departamentos = model.Departamentos.ToBranchDepartmentDto(),
+                Matriz = model.Matriz,
+               
             };
         }
 
@@ -117,7 +120,7 @@ namespace Service.Catalog.Mapper
                 Nombre = dto.nombre.Trim(),
                 Activo = dto.activo,
                 Calle = dto.calle.Trim(),
-                ClinicosId = model.ClinicosId,
+                
                 ColoniaId = dto.coloniaId,
                 Correo = dto.correo,
                 FechaCreo = model.FechaCreo,
@@ -133,6 +136,7 @@ namespace Service.Catalog.Mapper
                 Ciudad = dto.ciudad,
                 Estado = dto.estado,
                 Codigopostal = dto.codigoPostal,
+                Matriz = dto.Matriz,
                 Departamentos = dto.departamentos.Select(x => new BranchDepartment
                 {
                     SucursalId = model.Id,

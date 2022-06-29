@@ -194,7 +194,7 @@ namespace Service.Identity.Application
             await _repository.Update(existing, false);
         }
 
-        public async Task<byte[]> ExportList(string search = null)
+        public async Task<(byte[] file, string fileName)> ExportList(string search = null)
         {
             var users = await GetAll(search);
 
@@ -216,10 +216,10 @@ namespace Service.Identity.Application
 
             template.Format();
 
-            return template.ToByteArray();
+            return (template.ToByteArray(), "Catálogo de Usuarios.xlsx");
         }
 
-        public async Task<byte[]> ExportForm(string id)
+        public async Task<(byte[] file, string fileName)> ExportForm(string id)
         {
             var user = await GetById(id);
 
@@ -235,7 +235,7 @@ namespace Service.Identity.Application
             template.AddVariable("Permisos", user.Permisos);
             template.Generate();
 
-            return template.ToByteArray();
+            return (template.ToByteArray(), $"Catálogo de Usuarios ({user.Clave}).xlsx");
         }
 
         private static string GeneratePass(int lenght)
