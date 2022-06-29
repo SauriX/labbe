@@ -10,8 +10,8 @@ using Service.Identity.Context;
 namespace Service.Identity.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220606213157_initial")]
-    partial class initial
+    [Migration("20220629130004_Inicial [Restaurada]")]
+    partial class InicialRestaurada
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

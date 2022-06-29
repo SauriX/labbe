@@ -109,7 +109,7 @@ namespace Service.Identity.Mapper
             return new User
             {
                 Id = model.Id,
-                Clave = dto.Clave,
+                Clave = model.Clave,
                 Nombre = dto.Nombre,
                 PrimerApellido = dto.PrimerApellido,
                 SegundoApellido = dto.SegundoApellido,

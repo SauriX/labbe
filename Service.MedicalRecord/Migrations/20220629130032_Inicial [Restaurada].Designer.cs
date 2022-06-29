@@ -10,8 +10,8 @@ using Service.MedicalRecord.Context;
 namespace Service.MedicalRecord.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220615171234_expediente")]
-    partial class expediente
+    [Migration("20220629130032_Inicial [Restaurada]")]
+    partial class InicialRestaurada
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,14 +33,14 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("Calle")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Celular")
-                        .HasColumnType("int");
+                    b.Property<string>("Celular")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CiudadId")
-                        .HasColumnType("int");
+                    b.Property<string>("Ciudad")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CodigoPostal")
-                        .HasColumnType("int");
+                    b.Property<string>("CodigoPostal")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ColoniaId")
                         .HasColumnType("int");
@@ -51,8 +51,8 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<int>("Edad")
                         .HasColumnType("int");
 
-                    b.Property<int>("EstadoId")
-                        .HasColumnType("int");
+                    b.Property<string>("Estado")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Expediente")
                         .HasColumnType("nvarchar(max)");
@@ -78,20 +78,14 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("NombrePaciente")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("NumeroExterior")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NumeroInterior")
-                        .HasColumnType("int");
-
                     b.Property<string>("PrimerApellido")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SegundoApellido")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Telefono")
-                        .HasColumnType("int");
+                    b.Property<string>("Telefono")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");
@@ -102,6 +96,36 @@ namespace Service.MedicalRecord.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CAT_Expedientes");
+                });
+
+            modelBuilder.Entity("Service.MedicalRecord.Domain.MedicalRecord.MedicalRecordTaxData", b =>
+                {
+                    b.Property<Guid>("FacturaID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ExpedienteID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaMod")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UsuarioCreoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UsuarioModId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("FacturaID", "ExpedienteID");
+
+                    b.HasIndex("ExpedienteID");
+
+                    b.ToTable("Relacion_Expediente_Factura");
                 });
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.TaxData.TaxData", b =>
@@ -116,11 +140,11 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("Calle")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CiudadId")
-                        .HasColumnType("int");
+                    b.Property<string>("Ciudad")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CodigoPostal")
-                        .HasColumnType("int");
+                    b.Property<string>("CodigoPostal")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ColoniaId")
                         .HasColumnType("int");
@@ -128,17 +152,14 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("Correo")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("EstadoId")
-                        .HasColumnType("int");
+                    b.Property<string>("Estado")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("FechaMod")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("Numero")
-                        .HasColumnType("int");
 
                     b.Property<string>("RFC")
                         .HasColumnType("nvarchar(max)");
@@ -155,6 +176,30 @@ namespace Service.MedicalRecord.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CAT_Datos_Fiscales");
+                });
+
+            modelBuilder.Entity("Service.MedicalRecord.Domain.MedicalRecord.MedicalRecordTaxData", b =>
+                {
+                    b.HasOne("Service.MedicalRecord.Domain.MedicalRecord.MedicalRecord", "Expediente")
+                        .WithMany("TaxData")
+                        .HasForeignKey("ExpedienteID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Service.MedicalRecord.Domain.TaxData.TaxData", "Factura")
+                        .WithMany()
+                        .HasForeignKey("FacturaID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Expediente");
+
+                    b.Navigation("Factura");
+                });
+
+            modelBuilder.Entity("Service.MedicalRecord.Domain.MedicalRecord.MedicalRecord", b =>
+                {
+                    b.Navigation("TaxData");
                 });
 #pragma warning restore 612, 618
         }

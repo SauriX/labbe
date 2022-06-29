@@ -124,7 +124,7 @@ namespace Service.Catalog.Context
                     {
                         Id = 1,
                         Clave = "Paquetes",
-                        Nombre = "paquetes",
+                        Nombre = "Paquetes",
                         Activo = true,
                     };
                     if (!context.CAT_Departamento.Any())
