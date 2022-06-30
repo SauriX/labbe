@@ -1,5 +1,4 @@
-﻿using Identidad.Api.Model.Medicos;
-using Service.Catalog.Domain.Medics;
+﻿using Service.Catalog.Domain.Medics;
 using Service.Catalog.Dtos.Medicos;
 using Service.Catalog.Mapper;
 using System;

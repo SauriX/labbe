@@ -1,6 +1,5 @@
 ﻿using EFCore.BulkExtensions;
 using Identidad.Api.Infraestructure.Repository.IRepository;
-using Identidad.Api.Model.Medicos;
 using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Context;
 using Service.Catalog.Domain.Medics;

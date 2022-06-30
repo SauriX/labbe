@@ -1,5 +1,4 @@
-﻿using Identidad.Api.Model.Medicos;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Domain.Branch;
 using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Domain.Company;
