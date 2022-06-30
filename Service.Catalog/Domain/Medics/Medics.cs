@@ -1,5 +1,4 @@
-﻿using Identidad.Api.Model.Medicos;
-using Service.Catalog.Domain.Catalog;
+﻿using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Domain.Constant;
 using System;
 using System.Collections.Generic;

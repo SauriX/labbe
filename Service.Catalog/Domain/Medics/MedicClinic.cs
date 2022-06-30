@@ -1,8 +1,7 @@
 ﻿using Service.Catalog.Domain.Catalog;
-using Service.Catalog.Domain.Medics;
 using System;
 
-namespace Identidad.Api.Model.Medicos
+namespace Service.Catalog.Domain.Medics
 {
     public class MedicClinic
     {
