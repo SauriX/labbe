@@ -89,6 +89,7 @@ namespace Service.Catalog.Mapper
                 telefono = model.Telefono,
                 departamentos = model.Departamentos.ToBranchDepartmentDto(),
                 Matriz = model.Matriz,
+                colonia = model.Colonia.Colonia
                
             };
         }

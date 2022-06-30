@@ -15,7 +15,7 @@ namespace Service.Catalog.Domain.Study
         public string Titulo { get; set; }
         public string NombreCorto { get; set; }
         public bool Visible { get; set; }
-        public int DiasResultado { get; set; }
+        public decimal DiasResultado { get; set; }
         public int Dias { get; set; }
         public int TiempoResultado { get; set; }
         public int AreaId { get; set; }

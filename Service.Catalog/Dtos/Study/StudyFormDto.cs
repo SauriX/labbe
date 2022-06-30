@@ -29,7 +29,7 @@ namespace Service.Catalog.Dtos.Study
           public  int Metodo {get; set;}
           public  int Tipomuestra {get; set;}
           public  int Tiemporespuesta {get; set;}
-          public  int Diasrespuesta {get; set;}
+          public  decimal Diasrespuesta {get; set;}
           public  int Tapon {get; set;}
           public  int Cantidad {get; set;}
           public bool Prioridad {get; set;}
