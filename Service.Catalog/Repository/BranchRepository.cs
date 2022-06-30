@@ -168,7 +168,8 @@ namespace Service.Catalog.Repository
         public async Task<List<Branch>> GetBranchByCity()
         {
             var colonies = await _context.CAT_Sucursal
-                .Include(x => x.Ciudad).ToListAsync();
+                .Include(x => x.Colonia).ThenInclude(x => x.Ciudad).ThenInclude(x => x.Estado)
+                .ToListAsync();
 
             return colonies;
         }

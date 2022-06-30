@@ -137,22 +137,19 @@ namespace Service.Catalog.Application
             return (template.ToByteArray(), $"Catálogo de Sucursales ({indication.clave}).xlsx");
         }
 
-        public async Task<IEnumerable<BranchInfoDto>> GetBranchByCity()
+        public async Task<IEnumerable<BranchCityDto>> GetBranchByCity()
         {
             var branch = await _repository.GetBranchByCity();
             var results = from c in branch
                           group c by c.Ciudad into grupo
-                          select new
+                          select new BranchCityDto
                           {
                               Ciudad = grupo.Key,
-                              Sucursales = grupo.Key,
+                              Sucursales = grupo.ToList().ToBranchListDto(),
                           };
 
 
-
-            //branch = results;
-
-            return branch.ToBranchListDto(); ;
+            return results; 
         }
     }
 
