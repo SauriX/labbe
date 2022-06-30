@@ -1,5 +1,4 @@
-﻿using Identidad.Api.Model.Medicos;
-using Service.Catalog.Domain.Catalog;
+﻿using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Domain.Constant;
 using System;
 using System.Collections.Generic;
@@ -17,9 +16,9 @@ namespace Service.Catalog.Domain.Medics
         public int EspecialidadId { get; set; }
         public virtual Field Especialidad { get; set; }
         public string Observaciones { get; set; }
-        public int CodigoPostal { get; set; }
-        public long? EstadoId { get; set; }
-        public long? CiudadId { get; set; }
+        public string CodigoPostal { get; set; }
+        public string EstadoId { get; set; }
+        public string CiudadId { get; set; }
         public string NumeroExterior { get; set; }
         public string NumeroInterior { get; set; }
         public string Calle { get; set; }

@@ -1,5 +1,4 @@
-﻿using Identidad.Api.Model.Medicos;
-using Service.Catalog.Domain.Medics;
+﻿using Service.Catalog.Domain.Medics;
 using Service.Catalog.Dtos.Medicos;
 using Service.Catalog.Mapper;
 using System;
@@ -63,9 +62,9 @@ namespace Identidad.Api.mapper
                 Telefono = model.Telefono,
                 Celular = model.Celular,
                 Calle = model.Calle.Trim(),
-                CodigoPostal = model.CodigoPostal,
-                EstadoId = model.EstadoId,
-                CiudadId = model.CiudadId,
+                CodigoPostal = model.CodigoPostal.Trim(),
+                EstadoId = model.EstadoId.Trim(),
+                CiudadId = model.CiudadId.Trim(),
                 ColoniaId = model.ColoniaId,
                 NumeroExterior = model.NumeroExterior,
                 NumeroInterior = model.NumeroInterior,
@@ -88,9 +87,9 @@ namespace Identidad.Api.mapper
                 SegundoApellido = dto.SegundoApellido.Trim(),
                 EspecialidadId = dto.EspecialidadId,
                 Observaciones = dto.Observaciones.Trim(),
-                CodigoPostal = dto.CodigoPostal,
-                EstadoId = dto.EstadoId,
-                CiudadId = dto.CiudadId,
+                CodigoPostal = dto.CodigoPostal.Trim(),
+                EstadoId = dto.EstadoId.Trim(),
+                CiudadId = dto.CiudadId.Trim(),
                 NumeroExterior = dto.NumeroExterior,
                 NumeroInterior = dto.NumeroInterior,
                 Calle = dto.Calle.Trim(),
@@ -123,9 +122,9 @@ namespace Identidad.Api.mapper
                 SegundoApellido = dto.SegundoApellido.Trim(),
                 EspecialidadId = dto.EspecialidadId,
                 Observaciones = dto.Observaciones.Trim(),
-                CodigoPostal = dto.CodigoPostal,
-                EstadoId = dto.EstadoId,
-                CiudadId = dto.CiudadId,
+                CodigoPostal = dto.CodigoPostal.Trim(),
+                EstadoId = dto.EstadoId.Trim(),
+                CiudadId = dto.CiudadId.Trim(),
                 NumeroExterior = dto.NumeroExterior,
                 NumeroInterior = dto.NumeroInterior,
                 Calle = dto.Calle.Trim(),

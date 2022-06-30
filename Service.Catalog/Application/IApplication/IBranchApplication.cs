@@ -12,6 +12,6 @@ namespace Service.Catalog.Application.IApplication
         Task<BranchFormDto> GetById(string Id);
         Task<bool> Create(BranchFormDto branch);
         Task<bool> Update(BranchFormDto branch);
-        Task<IEnumerable<BranchInfoDto>> GetBranchByCity();
+        Task<IEnumerable<BranchCityDto>> GetBranchByCity();
     }
 }

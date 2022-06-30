@@ -1179,18 +1179,19 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("Celular")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("CiudadId")
-                        .HasMaxLength(15)
-                        .HasColumnType("bigint");
+                    b.Property<string>("CiudadId")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Clave")
                         .IsRequired()
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
-                    b.Property<int>("CodigoPostal")
+                    b.Property<string>("CodigoPostal")
+                        .IsRequired()
                         .HasMaxLength(15)
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(15)");
 
                     b.Property<int>("ColoniaId")
                         .HasColumnType("int");
@@ -1202,9 +1203,9 @@ namespace Service.Catalog.Migrations
                     b.Property<int>("EspecialidadId")
                         .HasColumnType("int");
 
-                    b.Property<long?>("EstadoId")
-                        .HasMaxLength(15)
-                        .HasColumnType("bigint");
+                    b.Property<string>("EstadoId")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime?>("FechaCreo")
                         .HasColumnType("datetime2");

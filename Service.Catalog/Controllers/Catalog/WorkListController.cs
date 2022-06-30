@@ -50,7 +50,7 @@ namespace Service.Catalog.Controllers.Catalog
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportListWorkList(string search)
         {
-            var file = await _workListService.ExportList(search);
+            var file = await _workListService.ExportList(search, "Listas de trabajo");
             return File(file, MimeType.XLSX, "Catálogo de Listas de trabajo.xlsx");
         }
 
@@ -58,7 +58,7 @@ namespace Service.Catalog.Controllers.Catalog
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportFormWorkList(int id)
         {
-            var (file, code) = await _workListService.ExportForm(id);
+            var (file, code) = await _workListService.ExportForm(id, "Listas de trabajo");
             return File(file, MimeType.XLSX, $"Catálogo de Listas de trabajo ({code}).xlsx");
         }
     }

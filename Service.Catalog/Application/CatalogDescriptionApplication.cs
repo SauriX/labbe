@@ -96,7 +96,7 @@ namespace Service.Catalog.Application
             return updatedAgent.ToCatalogDescriptionListDto();
         }
 
-        public async Task<byte[]> ExportList(string search)
+        public async Task<byte[]> ExportList(string search, string catalogName)
         {
             var catalogs = await GetAll(search);
 
@@ -121,7 +121,7 @@ namespace Service.Catalog.Application
             return template.ToByteArray();
         }
 
-        public async Task<(byte[] file, string code)> ExportForm(int id)
+        public async Task<(byte[] file, string code)> ExportForm(int id, string catalogName)
         {
             var catalog = await GetById(id);
 
