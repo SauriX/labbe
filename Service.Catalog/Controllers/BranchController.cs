@@ -66,9 +66,8 @@ namespace Service.Catalog.Controllers
             return File(file, MimeType.XLSX, fileName);
         }
 
-        [HttpPost("getSucursalByCity")]
-        [Authorize(Policies.Download)]
-        public async Task<IEnumerable<BranchInfoDto>> GetSucursalByCity()
+        [HttpGet("getSucursalByCity")]
+        public async Task<IEnumerable<BranchCityDto>> GetSucursalByCity()
         {
             return await _branchService.GetBranchByCity();
         }

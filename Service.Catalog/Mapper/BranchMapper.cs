@@ -22,7 +22,7 @@ namespace Service.Catalog.Mapper
                 correo = x.Correo,
                 telefono = x.Telefono,
                 //ubicacion = $"{x.Calle} {x.NumeroExterior} {x.Ciudad}",
-                ubicacion = x.Calle.Trim() + " " + x.NumeroExterior.Trim() + ", " + x.Colonia.Colonia.Trim() + ", " + x.Colonia.Ciudad.Ciudad.Trim() + ", " + x.Colonia.Ciudad.Estado.Estado.Trim(),
+                ubicacion = x.Calle.Trim() + " " + x.NumeroExterior.Trim() + ", " + x.Colonia?.Colonia?.Trim() + ", " + x.Colonia.Ciudad.Ciudad.Trim() + ", " + x.Colonia.Ciudad.Estado.Estado.Trim(),
                 clinico = "test",
                 activo = x.Activo,
                 codigoPostal = x.Codigopostal
@@ -89,6 +89,7 @@ namespace Service.Catalog.Mapper
                 telefono = model.Telefono,
                 departamentos = model.Departamentos.ToBranchDepartmentDto(),
                 Matriz = model.Matriz,
+                colonia = model.Colonia.Colonia
                
             };
         }
