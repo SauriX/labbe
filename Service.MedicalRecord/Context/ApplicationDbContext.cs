@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Service.MedicalRecord.Domain.TaxData;
+using Shared.Error;
 using System.Reflection;
 
 namespace Service.MedicalRecord.Context

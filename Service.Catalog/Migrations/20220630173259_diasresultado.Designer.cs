@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220630173259_diasresultado")]
+    partial class diasresultado
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1179,19 +1181,18 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("Celular")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CiudadId")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<long?>("CiudadId")
+                        .HasMaxLength(15)
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Clave")
                         .IsRequired()
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
-                    b.Property<string>("CodigoPostal")
-                        .IsRequired()
+                    b.Property<int>("CodigoPostal")
                         .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasColumnType("int");
 
                     b.Property<int>("ColoniaId")
                         .HasColumnType("int");
@@ -1203,9 +1204,9 @@ namespace Service.Catalog.Migrations
                     b.Property<int>("EspecialidadId")
                         .HasColumnType("int");
 
-                    b.Property<string>("EstadoId")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<long?>("EstadoId")
+                        .HasMaxLength(15)
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("FechaCreo")
                         .HasColumnType("datetime2");

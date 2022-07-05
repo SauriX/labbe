@@ -17,7 +17,7 @@ namespace Service.Catalog.Dtos.Parameters
         public string Clave { get; set; }
         public string Nombre { get; set; }
         public string NombreCorto { get; set; }
-        public decimal Unidades { get; set; }
+        public int Unidades { get; set; }
         public string TipoValor { get; set; }
         public string Formula { get; set; }
         public decimal ValorInicial { get; set; }
@@ -25,7 +25,7 @@ namespace Service.Catalog.Dtos.Parameters
         public int AreaId { get; set; }
         public int FormatoImpresionId { get; set; }
         public string ReactivoId { get; set; }
-        public string UnidadSi { get; set; }
+        public int UnidadSi { get; set; }
         public string Fcsi { get; set; }
         public bool Activo { get; set; }
         public Guid UsuarioId { get; set; }
@@ -51,7 +51,6 @@ namespace Service.Catalog.Dtos.Parameters
             RuleFor(x => x.FormatoImpresionId).GreaterThan(0);
             RuleFor(x => x.ReactivoId).Guid();
             RuleFor(x => x.Formula).MaximumLength(200);
-            RuleFor(x => x.UnidadSi).NotEmpty().MaximumLength(50);
             RuleFor(x => x.Fcsi).NotEmpty().MaximumLength(50);
 
         }
