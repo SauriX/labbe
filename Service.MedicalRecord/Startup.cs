@@ -162,8 +162,10 @@ namespace Service.MedicalRecord
                 });
             });
             services.AddScoped<IMedicalRecordRepository, MedicalRecordRepository>();
+            services.AddScoped<IPriceQuoteRepository, PriceQuoteRepository>();
 
             services.AddScoped<IMedicalRecordApplication, MedicalRecordApplication>();
+            services.AddScoped<IPriceQuoteApplication, PriceQuoteApplication>();
         }
 
 

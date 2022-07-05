@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.MedicalRecord.Context;
 
 namespace Service.MedicalRecord.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220630220320_cotizaciones")]
+    partial class cotizaciones
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -147,9 +149,6 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("Estatus")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("ExpedienteId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
@@ -185,8 +184,6 @@ namespace Service.MedicalRecord.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ExpedienteId");
 
                     b.ToTable("CAT_Cotizaciones");
                 });
@@ -258,17 +255,6 @@ namespace Service.MedicalRecord.Migrations
                     b.Navigation("Expediente");
 
                     b.Navigation("Factura");
-                });
-
-            modelBuilder.Entity("Service.MedicalRecord.Domain.PriceQuote.PriceQuote", b =>
-                {
-                    b.HasOne("Service.MedicalRecord.Domain.MedicalRecord.MedicalRecord", "Expediente")
-                        .WithMany()
-                        .HasForeignKey("ExpedienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Expediente");
                 });
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.MedicalRecord.MedicalRecord", b =>
