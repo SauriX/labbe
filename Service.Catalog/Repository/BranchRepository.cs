@@ -175,6 +175,7 @@ namespace Service.Catalog.Repository
         }
 
 
+
         public async Task<bool> isMatrizActive(Branch branch) {
             var active = await _context.CAT_Sucursal.AsQueryable().AnyAsync(x=> x.Ciudad == branch.Ciudad && x.Matriz && x.Id != branch.Id);
             return active;  
