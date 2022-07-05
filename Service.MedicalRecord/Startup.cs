@@ -48,7 +48,7 @@ namespace Service.MedicalRecord
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-                
+
                 options.UseSqlServer(Configuration.GetConnectionString("Default"));
                 options.EnableSensitiveDataLogging();
             }, ServiceLifetime.Scoped);
@@ -61,12 +61,27 @@ namespace Service.MedicalRecord
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddScoped<IIdentityClient, IdentityClient>();
+            services.AddScoped<IPdfClient, PdfClient>();
 
             services.AddHttpClient<IIdentityClient, IdentityClient>(client =>
             {
                 var token = new HttpContextAccessor().HttpContext.Request.Headers["Authorization"].ToString();
 
                 client.BaseAddress = new Uri(Configuration["ClientUrls:Identity"]);
+
+                if (!string.IsNullOrWhiteSpace(token))
+                {
+                    client.DefaultRequestHeaders.Add("Authorization", token);
+                }
+
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            });
+
+            services.AddHttpClient<IPdfClient, PdfClient>(client =>
+            {
+                var token = new HttpContextAccessor().HttpContext.Request.Headers["Authorization"].ToString();
+
+                client.BaseAddress = new Uri(Configuration["ClientUrls:Pdf"]);
 
                 if (!string.IsNullOrWhiteSpace(token))
                 {
@@ -126,17 +141,19 @@ namespace Service.MedicalRecord
             })
                 .AddFluentValidation(config =>
                 {
-                config.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-                config.ValidatorOptions.LanguageManager.Culture = new CultureInfo("es");
+                    config.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+                    config.ValidatorOptions.LanguageManager.Culture = new CultureInfo("es");
                 });
 
             services.AddAuthorization(opt =>
             {
-                opt.AddPolicy(Policies.Access, p => {
+                opt.AddPolicy(Policies.Access, p =>
+                {
                     p.RequireAuthenticatedUser();
                     p.AddRequirements(new AccessRequirement());
                 });
-                opt.AddPolicy(Policies.Create, p => {
+                opt.AddPolicy(Policies.Create, p =>
+                {
                     p.RequireAuthenticatedUser();
                     p.Requirements.Add(new CreateRequirement());
                 });
@@ -183,7 +200,7 @@ namespace Service.MedicalRecord
 
             app.UseMiddleware<ErrorMiddleware>();
 
-            
+
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();

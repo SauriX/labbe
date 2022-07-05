@@ -31,6 +31,5 @@ namespace Service.MedicalRecord.Client
 
             throw new CustomException(response.StatusCode, response.ReasonPhrase);
         }
-    
     }
 }

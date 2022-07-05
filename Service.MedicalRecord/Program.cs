@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using Service.MedicalRecord.Context;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,8 @@ namespace Service.MedicalRecord
                 .AddEnvironmentVariables()
                 .Build();
 
+            Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(config).CreateLogger();
+
             var host = CreateHostBuilder(args).Build();
 
             using var scope = host.Services.CreateScope();
@@ -35,8 +38,6 @@ namespace Service.MedicalRecord
             {
                 var context = services.GetRequiredService<ApplicationDbContext>();
                 await context.Database.MigrateAsync();
-                /*var key = config.GetValue<string>("PasswordKey");
-                await Seed.SeedData(context, key);*/
             }
             catch (Exception e)
             {
@@ -57,6 +58,7 @@ namespace Service.MedicalRecord
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
