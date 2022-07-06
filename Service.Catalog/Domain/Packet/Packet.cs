@@ -12,6 +12,5 @@ namespace Service.Catalog.Domain.Packet
         public string NombreLargo { get; set; }
         public bool Visibilidad { get; set; }
         public ICollection<PacketStudy> studies { get; set;}
-
     }
 }

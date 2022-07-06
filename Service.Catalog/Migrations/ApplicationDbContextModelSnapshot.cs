@@ -19,38 +19,6 @@ namespace Service.Catalog.Migrations
                 .HasAnnotation("ProductVersion", "5.0.15")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Identidad.Api.Model.Medicos.MedicClinic", b =>
-                {
-                    b.Property<Guid>("MedicoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("ClinicaId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("FechaCreo")
-                        .IsRequired()
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaMod")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("UsuarioCreoId")
-                        .IsRequired()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("UsuarioModId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("MedicoId", "ClinicaId");
-
-                    b.HasIndex("ClinicaId");
-
-                    b.ToTable("CAT_Medico_Clinica");
-                });
-
             modelBuilder.Entity("Service.Catalog.Domain.Branch.Branch", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1160,6 +1128,38 @@ namespace Service.Catalog.Migrations
                     b.HasIndex("ColoniaId");
 
                     b.ToTable("CAT_Maquilador");
+                });
+
+            modelBuilder.Entity("Service.Catalog.Domain.Medics.MedicClinic", b =>
+                {
+                    b.Property<Guid>("MedicoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ClinicaId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("FechaCreo")
+                        .IsRequired()
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaMod")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UsuarioCreoId")
+                        .IsRequired()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UsuarioModId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("MedicoId", "ClinicaId");
+
+                    b.HasIndex("ClinicaId");
+
+                    b.ToTable("CAT_Medico_Clinica");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Medics.Medics", b =>
@@ -2472,25 +2472,6 @@ namespace Service.Catalog.Migrations
                     b.ToTable("CAT_Tipo_Tapon");
                 });
 
-            modelBuilder.Entity("Identidad.Api.Model.Medicos.MedicClinic", b =>
-                {
-                    b.HasOne("Service.Catalog.Domain.Catalog.Clinic", "Clinica")
-                        .WithMany()
-                        .HasForeignKey("ClinicaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Service.Catalog.Domain.Medics.Medics", "Medico")
-                        .WithMany("Clinicas")
-                        .HasForeignKey("MedicoId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Clinica");
-
-                    b.Navigation("Medico");
-                });
-
             modelBuilder.Entity("Service.Catalog.Domain.Branch.Branch", b =>
                 {
                     b.HasOne("Service.Catalog.Domain.Constant.Colony", "Colonia")
@@ -2647,6 +2628,25 @@ namespace Service.Catalog.Migrations
                         .IsRequired();
 
                     b.Navigation("Colonia");
+                });
+
+            modelBuilder.Entity("Service.Catalog.Domain.Medics.MedicClinic", b =>
+                {
+                    b.HasOne("Service.Catalog.Domain.Catalog.Clinic", "Clinica")
+                        .WithMany()
+                        .HasForeignKey("ClinicaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Service.Catalog.Domain.Medics.Medics", "Medico")
+                        .WithMany("Clinicas")
+                        .HasForeignKey("MedicoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Clinica");
+
+                    b.Navigation("Medico");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Medics.Medics", b =>

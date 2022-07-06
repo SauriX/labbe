@@ -50,15 +50,23 @@ namespace Service.Catalog.Repository
             return branch;
         }
 
-        public async Task<(bool,string)> IsDuplicate(Branch branch)
+        public async Task<string> GetCodeRange(Guid id)
+        {
+            var branch = await _context.CAT_Sucursal.FindAsync(id);
+
+            return branch?.Clinicos;
+        }
+
+        public async Task<(bool, string)> IsDuplicate(Branch branch)
         {
             var isDuplicate = false;
             var code = "";
-            var isDuplicateName = await _context.CAT_Sucursal.AnyAsync(x =>x.Id != branch.Id && x.Nombre == branch.Nombre);
+            var isDuplicateName = await _context.CAT_Sucursal.AnyAsync(x => x.Id != branch.Id && x.Nombre == branch.Nombre);
             var isDuplicateClave = await _context.CAT_Sucursal.AnyAsync(x => x.Id != branch.Id && x.Clave == branch.Clave);
             var isDuplicateEmail = await _context.CAT_Sucursal.AnyAsync(x => x.Id != branch.Id && x.Correo == branch.Correo);
-            if (isDuplicateName) { 
-                isDuplicate=isDuplicateName;
+            if (isDuplicateName)
+            {
+                isDuplicate = isDuplicateName;
                 code = DuplicateCodesEnum.Nombre.ToString();
             }
             if (isDuplicateClave)
@@ -72,7 +80,7 @@ namespace Service.Catalog.Repository
                 code = DuplicateCodesEnum.Email.ToString();
             }
 
-            return (isDuplicate,code);
+            return (isDuplicate, code);
         }
 
         public async Task Create(Branch branch)
@@ -88,22 +96,26 @@ namespace Service.Catalog.Repository
                     var clinico_final = Int32.Parse(clinico_inicial) + 998;
                     clincios = $"{clinico_inicial}-{clinico_final}";
                 }
-                else {
-                    var sucursales =  _context.CAT_Sucursal.AsQueryable().Where(x => x.Ciudad == branch.Ciudad );
-                    if (sucursales.Count() > 1) {
-                        var sucursal =  _context.CAT_Sucursal.OrderBy(x=>x.FechaCreo).Last(x => x.Ciudad == branch.Ciudad && !x.Matriz);
+                else
+                {
+                    var sucursales = _context.CAT_Sucursal.AsQueryable().Where(x => x.Ciudad == branch.Ciudad);
+                    if (sucursales.Count() > 1)
+                    {
+                        var sucursal = _context.CAT_Sucursal.OrderBy(x => x.FechaCreo).Last(x => x.Ciudad == branch.Ciudad && !x.Matriz);
                         var clinicoIncial = Int32.Parse(sucursal.Clinicos.Split("-")[1]) + 1;
                         var clinicoFinal = clinicoIncial + 299;
                         clincios = $"{clinicoIncial}-{clinicoFinal}";
-                    } else {
+                    }
+                    else
+                    {
                         var sucursal = await _context.CAT_Sucursal.FirstOrDefaultAsync(x => x.Ciudad == branch.Ciudad && x.Matriz);
                         var clinicoIncial = Int32.Parse(sucursal.Clinicos.Split("-")[1]) + 1;
-                        var clinicoFinal =   clinicoIncial + 299;
+                        var clinicoFinal = clinicoIncial + 299;
                         clincios = $"{clinicoIncial}-{clinicoFinal}";
                     }
 ;
                 }
-                
+
                 var departments = branch.Departamentos.ToList();
 
                 branch.Departamentos = null;
@@ -175,10 +187,10 @@ namespace Service.Catalog.Repository
         }
 
 
-
-        public async Task<bool> isMatrizActive(Branch branch) {
-            var active = await _context.CAT_Sucursal.AsQueryable().AnyAsync(x=> x.Ciudad == branch.Ciudad && x.Matriz && x.Id != branch.Id);
-            return active;  
+        public async Task<bool> isMatrizActive(Branch branch)
+        {
+            var active = await _context.CAT_Sucursal.AsQueryable().AnyAsync(x => x.Ciudad == branch.Ciudad && x.Matriz && x.Id != branch.Id);
+            return active;
         }
         //public async Task<IEnumerable<StudyListDto>> getservicios(string id)
         //{

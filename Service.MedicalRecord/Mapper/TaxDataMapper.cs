@@ -13,21 +13,21 @@ namespace Service.MedicalRecord.Mapper
 
             return model.Select(x => new TaxData
             {
-                Id  = x.Id,
-                RFC  = x.Rfc,
-                RazonSocial  = x.RazonSocial,
-                CodigoPostal  = x.Cp,
-                Estado  = x.Estado,
-                Ciudad  = x.Municipio,
-                Calle  = x.Calle,
-                ColoniaId  = x.colonia,
-                Correo  = x.Correo,
-                Activo  = true,
-                UsuarioCreoId  = System.Guid.Empty,
-                FechaCreo  = System.DateTime.Now,
-                UsuarioModId  = System.Guid.Empty,
-                FechaMod  = System.DateTime.Now,
-             }).ToList();
+                Id = (System.Guid)(x.Id == null ? System.Guid.Empty : x.Id),
+                RFC = x.Rfc,
+                RazonSocial = x.RazonSocial,
+                CodigoPostal = x.Cp,
+                Estado = x.Estado,
+                Ciudad = x.Municipio,
+                Calle = x.Calle,
+                ColoniaId = x.Colonia,
+                Correo = x.Correo,
+                Activo = true,
+                UsuarioCreoId = System.Guid.Empty,
+                FechaCreo = System.DateTime.Now,
+                UsuarioModId = System.Guid.Empty,
+                FechaMod = System.DateTime.Now,
+            }).ToList();
         }
     }
 }

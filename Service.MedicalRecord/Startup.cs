@@ -16,6 +16,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Service.Catalog.Middleware;
 using Service.Catalog.Requirements;
+using Service.Catalog.Transactions;
 using Service.MedicalRecord.Application;
 using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Client;
@@ -48,10 +49,11 @@ namespace Service.MedicalRecord
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-
                 options.UseSqlServer(Configuration.GetConnectionString("Default"));
                 options.EnableSensitiveDataLogging();
             }, ServiceLifetime.Scoped);
+
+            services.AddScoped<ITransactionProvider, TransactionProvider>();
 
             services.AddHealthChecks()
                 .AddSqlServer(Configuration.GetConnectionString("Default"));
@@ -61,6 +63,7 @@ namespace Service.MedicalRecord
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddScoped<IIdentityClient, IdentityClient>();
+            services.AddScoped<ICatalogClient, CatalogClient>();
             services.AddScoped<IPdfClient, PdfClient>();
 
             services.AddHttpClient<IIdentityClient, IdentityClient>(client =>
@@ -68,6 +71,20 @@ namespace Service.MedicalRecord
                 var token = new HttpContextAccessor().HttpContext.Request.Headers["Authorization"].ToString();
 
                 client.BaseAddress = new Uri(Configuration["ClientUrls:Identity"]);
+
+                if (!string.IsNullOrWhiteSpace(token))
+                {
+                    client.DefaultRequestHeaders.Add("Authorization", token);
+                }
+
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            });
+
+            services.AddHttpClient<ICatalogClient, CatalogClient>(client =>
+            {
+                var token = new HttpContextAccessor().HttpContext.Request.Headers["Authorization"].ToString();
+
+                client.BaseAddress = new Uri(Configuration["ClientUrls:Catalog"]);
 
                 if (!string.IsNullOrWhiteSpace(token))
                 {
@@ -178,9 +195,14 @@ namespace Service.MedicalRecord
                     policy.AllowAnyHeader().AllowAnyMethod().WithExposedHeaders("WWW-Authenticate", "Content-Disposition").AllowAnyOrigin();
                 });
             });
-            services.AddScoped<IMedicalRecordRepository, MedicalRecordRepository>();
 
             services.AddScoped<IMedicalRecordApplication, MedicalRecordApplication>();
+            services.AddScoped<IPriceQuoteApplication, PriceQuoteApplication>();
+            services.AddScoped<IRequestApplication, RequestApplication>();
+
+            services.AddScoped<IMedicalRecordRepository, MedicalRecordRepository>();
+            services.AddScoped<IRequestRepository, RequestRepository>();
+            services.AddScoped<IPriceQuoteRepository, PriceQuoteRepository>();
         }
 
 

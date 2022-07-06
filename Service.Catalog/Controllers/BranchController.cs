@@ -34,6 +34,12 @@ namespace Service.Catalog.Controllers
             return await _branchService.GetById(id);
         }
 
+        [HttpGet("getCodeRange/{id}")]
+        public async Task<string> GetCodeRange(Guid id)
+        {
+            return await _branchService.GetCodeRange(id);
+        }
+
         [HttpPost]
         [Authorize(Policies.Create)]
         public async Task<bool> Create(BranchFormDto branch)
