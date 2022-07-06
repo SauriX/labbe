@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Service.Catalog.Dictionary
+namespace Service.MedicalRecord.Dictionary
 {
     public class Assets
     {

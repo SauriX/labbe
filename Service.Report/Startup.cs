@@ -16,7 +16,11 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Service.Catalog.Context;
+using Service.Report.Application;
+using Service.Report.Application.IApplication;
 using Service.Report.Middleware;
+using Service.Report.Repository;
+using Service.Report.Repository.IRepository;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -115,6 +119,10 @@ namespace Service.Report
                     policy.AllowAnyHeader().AllowAnyMethod().WithExposedHeaders("WWW-Authenticate", "Content-Disposition").AllowAnyOrigin();
                 });
             });
+
+            services.AddScoped<IRequestApplication, RequestApplication>();
+
+            services.AddScoped<IRequestRepository, RequestRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -124,7 +132,7 @@ namespace Service.Report
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Service.Catalog v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Service.Report v1"));
             }
 
             app.UseCors("CorsPolicy");

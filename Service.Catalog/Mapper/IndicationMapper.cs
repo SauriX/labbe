@@ -58,6 +58,7 @@ namespace Service.Catalog.Mapper
             return model.Select(x => x.Estudio).Select(x => new IndicationStudyDto
             {
                 Id = x.Id,
+                Clave = x.Clave.Trim(),
                 Nombre = x.Nombre,
                 Area = x.Area.Nombre,
             });

@@ -15,6 +15,7 @@ using Shared.Extensions;
 using Service.MedicalRecord.Dtos;
 using Shared.Helpers;
 using Service.MedicalRecord.Domain.MedicalRecord;
+using Service.MedicalRecord.Dictionary;
 
 namespace Service.MedicalRecord.Application
 {
