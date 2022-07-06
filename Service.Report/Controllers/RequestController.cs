@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Report.Application.IApplication;
-using Service.Report.Domain.Request;
 using Service.Report.Dtos.Request;
 using Shared.Dictionary;
 using System.Collections.Generic;
@@ -21,12 +20,14 @@ namespace Service.Report.Controllers
         }
          
         [HttpGet("getBranchByCount")]
+        //[Authorize(Policies.Access)]
         public async Task<IEnumerable<RequestFiltroDto>> GetBranchByCount()
         {
             return await _requestService.GetBranchByCount();
         }
         [HttpPost("filter")]
-        public async Task<List<RequestFiltroDto>> GetNow(RequestSearchDto search )
+        //[Authorize(Policies.Access)]
+        public async Task<IEnumerable<RequestFiltroDto>> GetNow(RequestSearchDto search )
         {
             return await _requestService.GetFilter(search);
         }

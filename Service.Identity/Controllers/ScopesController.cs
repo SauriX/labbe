@@ -155,6 +155,13 @@ namespace Service.Identity.Controllers
             return await _service.GetScopes(userId, ControllerNames.Configuration);
         }
 
+        [HttpGet(ControllerNames.Request)]
+        public async Task<ScopesDto> GetRequestScopes()
+        {
+            var userId = GetUserId();
+            return await _service.GetScopes(userId, ControllerNames.Request);
+        }
+
         private Guid GetUserId()
         {
             return Guid.Parse(User.Claims.SingleOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);

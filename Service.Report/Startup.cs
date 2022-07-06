@@ -18,9 +18,13 @@ using Microsoft.OpenApi.Models;
 using Service.Catalog.Context;
 using Service.Report.Application;
 using Service.Report.Application.IApplication;
+using Service.Report.Client;
+using Service.Report.Client.IClient;
 using Service.Report.Middleware;
 using Service.Report.Repository;
 using Service.Report.Repository.IRepository;
+using Service.Report.Requirements;
+using Shared.Dictionary;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -54,6 +58,22 @@ namespace Service.Report
                 .AddSqlServer(Configuration.GetConnectionString("Default"));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.AddScoped<IIdentityClient, IdentityClient>();
+
+            services.AddHttpClient<IIdentityClient, IdentityClient>(client =>
+            {
+                var token = new HttpContextAccessor().HttpContext.Request.Headers["Authorization"].ToString();
+
+                client.BaseAddress = new Uri(Configuration["ClientUrls:Identity"]);
+
+                if (!string.IsNullOrWhiteSpace(token))
+                {
+                    client.DefaultRequestHeaders.Add("Authorization", token);
+                }
+
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            });
 
             services.AddSwaggerGen(c =>
             {
@@ -112,6 +132,32 @@ namespace Service.Report
                     config.ValidatorOptions.LanguageManager.Culture = new CultureInfo("es");
                 });
 
+            services.AddAuthorization(opt =>
+            {
+                opt.AddPolicy(Policies.Access, p =>
+                {
+                    p.RequireAuthenticatedUser();
+                    p.AddRequirements(new AccessRequirement());
+                });
+                opt.AddPolicy(Policies.Create, p =>
+                {
+                    p.RequireAuthenticatedUser();
+                    p.Requirements.Add(new CreateRequirement());
+                });
+                opt.AddPolicy(Policies.Update, p => { p.Requirements.Add(new UpdateRequirement()); });
+                opt.AddPolicy(Policies.Download, p => { p.Requirements.Add(new DownloadRequirement()); });
+                opt.AddPolicy(Policies.Mail, p => { p.Requirements.Add(new MailRequirement()); });
+                opt.AddPolicy(Policies.Wapp, p => { p.Requirements.Add(new WappRequirement()); });
+            });
+
+
+            services.AddTransient<IAuthorizationHandler, AccessRequirementHandler>();
+            services.AddTransient<IAuthorizationHandler, CreateRequirementHandler>();
+            services.AddTransient<IAuthorizationHandler, UpdateRequirementHandler>();
+            services.AddTransient<IAuthorizationHandler, DownloadRequirementHandler>();
+            services.AddTransient<IAuthorizationHandler, MailRequirementHandler>();
+            services.AddTransient<IAuthorizationHandler, WappRequirementHandler>();
+
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", policy =>
@@ -140,9 +186,7 @@ namespace Service.Report
             app.UseMiddleware<ErrorMiddleware>();
 
             app.UseRouting();
-
             app.UseAuthentication();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Service.Report.Dtos.Request
 {
     public class RequestSearchDto
     {
-        public string ciudad { get; set; }
-        public string sucursal { get; set; }
+        public string CiudadId { get; set; }
+        public string SucursalId { get; set; }
         public DateTime? FechaInicial { get; set; }
         public DateTime? FechaFinal { get; set; }
-        public DateTime Fecha { get; set; }
+        public List<DateTime> Fecha { get; set; }
     }
 }
