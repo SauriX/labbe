@@ -60,11 +60,6 @@ namespace Service.Catalog.Application
         {
             var codeRange = await _repository.GetCodeRange(id);
 
-            if (codeRange == null)
-            {
-                throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
-            }
-
             return codeRange;
         }
 

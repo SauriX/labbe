@@ -22,10 +22,10 @@ namespace Service.MedicalRecord.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policies.Create)]
+        //[Authorize(Policies.Create)]
         public async Task<string> Create(RequestDto request)
         {
-            request.UsuarioId = (Guid)HttpContext.Items["userId"];
+            //request.UsuarioId = (Guid)HttpContext.Items["userId"];
             return await _service.Create(request);
         }
     }
