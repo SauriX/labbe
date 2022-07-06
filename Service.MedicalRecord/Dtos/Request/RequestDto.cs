@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Service.MedicalRecord.Dtos.Request
 {
@@ -11,5 +12,6 @@ namespace Service.MedicalRecord.Dtos.Request
         public string ClavePatologica { get; set; }
         public Guid UsuarioId { get; set; }
         public RequestGeneralDto General { get; set; }
+        public List<RequestStudyDto> Estudios { get; set; }
     }
 }
