@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFCore.BulkExtensions;
+using Microsoft.EntityFrameworkCore;
+using MoreLinq;
 using Service.MedicalRecord.Context;
 using Service.MedicalRecord.Domain.PriceQuote;
 using Service.MedicalRecord.Dtos.PriceQuote;
@@ -47,7 +49,7 @@ namespace Service.MedicalRecord.Repository
                 {
                     sucursal = Guid.Parse(search.Sucursal);
                 }
-                var expedientes = await _context.CAT_Cotizaciones.Include(x=>x.Expediente).Where(x => x.Expediente.Ciudad == search.Ciudad ||  search.Presupuesto.Contains(x.NombrePaciente) || x.FechaCreo.Date == search.FechaAlta.Date || x.Expediente.IdSucursal == sucursal).ToListAsync();
+                var expedientes = await _context.CAT_Cotizaciones.Include(x=>x.Expediente).Where(x => x.Expediente.Ciudad == search.Ciudad || x.NombrePaciente.Contains(search.Presupuesto) || x.FechaCreo.Date == search.FechaAlta.Date || x.Expediente.IdSucursal == sucursal).ToListAsync();
 
                 return expedientes;
             }
@@ -62,13 +64,27 @@ namespace Service.MedicalRecord.Repository
         }
         public async Task Create(PriceQuote expediente)
         {
+            var estudios = expediente.Estudios.ToList();
+            expediente.Estudios = null;
             _context.CAT_Cotizaciones.Add(expediente);
             await _context.SaveChangesAsync();
+
+            var config = new BulkConfig();
+            config.SetSynchronizeFilter<CotizacionStudy>(x => x.CotizacionId == expediente.Id);
+            estudios.ForEach(x => x.CotizacionId = expediente.Id);
+            await _context.BulkInsertOrUpdateOrDeleteAsync(estudios,config);
         }
         public async Task Update(PriceQuote expediente)
         {
+            var estudios = expediente.Estudios.ToList();
+            expediente.Estudios = null;
             _context.CAT_Cotizaciones.Update(expediente);
             await _context.SaveChangesAsync();
+
+            var config = new BulkConfig();
+            config.SetSynchronizeFilter<CotizacionStudy>(x => x.CotizacionId == expediente.Id);
+            estudios.ForEach(x => x.CotizacionId = expediente.Id);
+            await _context.BulkInsertOrUpdateOrDeleteAsync(estudios, config);
         }
         public async Task<List<PriceQuote>> GetActive()
         {
@@ -80,7 +96,8 @@ namespace Service.MedicalRecord.Repository
         public async Task<PriceQuote> GetById(Guid id)
         {
             var expedientes = await _context.CAT_Cotizaciones.Include(x => x.Expediente).FirstOrDefaultAsync(x => x.Id == id);
-
+            var estudios =  _context.cotizacionStudies.Where(x => x.CotizacionId == expedientes.Id);
+            expedientes.Estudios = estudios;
             return expedientes;
         }
     }

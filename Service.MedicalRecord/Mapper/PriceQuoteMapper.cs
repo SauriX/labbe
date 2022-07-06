@@ -52,8 +52,8 @@ namespace Service.MedicalRecord.Mapper
                 Id = model.Id.ToString(),
                 expediente = model.Expediente.Expediente,
                 nomprePaciente = model.NombrePaciente,
-                Genero = "",    
-                //edad = model.ed,
+                Genero = model.Genero,    
+                edad = model.Edad,
                 fechaNacimiento = model.FechaNac,
                 generales = new PriceQuoteGeneralDto {
                     Procedencia = model.Procedencia,
@@ -67,6 +67,19 @@ namespace Service.MedicalRecord.Mapper
                     Whatssap = model.Whatsapp,
                     Activo = model.Activo,
                 },
+                estudy= model.Estudios.Select(x=> new QuotetPrice {
+                    PrecioListaId = x.CotizacionId,
+                    ListaPrecioId = x.ListaPrecioId,
+                    PromocionId = x.PromocionId,
+                    EstudioId = x.EstudioId,
+                    PaqueteId = x.PaqueteId,
+                    EstatusId = x.EstatusId,
+                    Descuento = x.Descuento,
+                    Cargo = x.Cargo,
+                    Copago = x.Copago,
+                    Precio = x.Precio,
+                    PrecioFinal = x.PrecioFinal,
+                }).ToList()
             };
         }
 
@@ -87,8 +100,21 @@ namespace Service.MedicalRecord.Mapper
                 Estatus = "",
                 ExpedienteId = Guid.Parse(priceQuoteForm.expedienteid),
                 FechaCreo = DateTime.Now,
-
-                    
+                Genero = priceQuoteForm.Genero,
+                Edad = priceQuoteForm.edad,
+                Estudios = priceQuoteForm.estudy.Select(x=> new CotizacionStudy {
+                            CotizacionId = x.PrecioListaId,
+                        ListaPrecioId = x.ListaPrecioId,
+                        PromocionId =x.PromocionId,
+                       EstudioId =x.EstudioId,
+                        PaqueteId =x.PaqueteId,
+                        EstatusId =x.EstatusId,
+                        Descuento =x.Descuento,
+                        Cargo =x.Cargo,
+                        Copago =x.Copago,
+                        Precio =x.Precio,
+                        PrecioFinal =x.PrecioFinal,
+                })   
 
             };
 
@@ -112,7 +138,23 @@ namespace Service.MedicalRecord.Mapper
                 FechaPropuesta = DateTime.Now,
                 Activo = priceQuoteForm.generales.Activo,
                 Estatus = "",
-                ExpedienteId = Guid.Parse(priceQuoteForm.expedienteid)
+                ExpedienteId = Guid.Parse(priceQuoteForm.expedienteid),
+                Genero = priceQuoteForm.Genero,
+                Edad = priceQuoteForm.edad,
+                Estudios = priceQuoteForm.estudy.Select(x => new CotizacionStudy
+                {
+                    CotizacionId = x.PrecioListaId,
+                    ListaPrecioId = x.ListaPrecioId,
+                    PromocionId = x.PromocionId,
+                    EstudioId = x.EstudioId,
+                    PaqueteId = x.PaqueteId,
+                    EstatusId = x.EstatusId,
+                    Descuento = x.Descuento,
+                    Cargo = x.Cargo,
+                    Copago = x.Copago,
+                    Precio = x.Precio,
+                    PrecioFinal = x.PrecioFinal,
+                })
             };
 
             return priceQuote;

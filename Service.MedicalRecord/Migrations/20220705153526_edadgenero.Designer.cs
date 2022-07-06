@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.MedicalRecord.Context;
 
 namespace Service.MedicalRecord.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220705153526_edadgenero")]
+    partial class edadgenero
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -126,52 +128,6 @@ namespace Service.MedicalRecord.Migrations
                     b.ToTable("Relacion_Expediente_Factura");
                 });
 
-            modelBuilder.Entity("Service.MedicalRecord.Domain.PriceQuote.CotizacionStudy", b =>
-                {
-                    b.Property<Guid>("CotizacionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Cargo")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Copago")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Descuento")
-                        .HasColumnType("bit");
-
-                    b.Property<byte>("EstatusId")
-                        .HasColumnType("tinyint");
-
-                    b.Property<int?>("EstudioId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("ListaPrecioId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int?>("PaqueteId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Precio")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("PrecioFinal")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid?>("PriceQuoteId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int?>("PromocionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CotizacionId");
-
-                    b.HasIndex("PriceQuoteId");
-
-                    b.ToTable("cotizacionStudies");
-                });
-
             modelBuilder.Entity("Service.MedicalRecord.Domain.PriceQuote.PriceQuote", b =>
                 {
                     b.Property<Guid>("Id")
@@ -196,7 +152,7 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("Estatus")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("ExpedienteId")
+                    b.Property<Guid>("ExpedienteId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("FechaCreo")
@@ -312,18 +268,13 @@ namespace Service.MedicalRecord.Migrations
                     b.Navigation("Factura");
                 });
 
-            modelBuilder.Entity("Service.MedicalRecord.Domain.PriceQuote.CotizacionStudy", b =>
-                {
-                    b.HasOne("Service.MedicalRecord.Domain.PriceQuote.PriceQuote", null)
-                        .WithMany("Estudios")
-                        .HasForeignKey("PriceQuoteId");
-                });
-
             modelBuilder.Entity("Service.MedicalRecord.Domain.PriceQuote.PriceQuote", b =>
                 {
                     b.HasOne("Service.MedicalRecord.Domain.MedicalRecord.MedicalRecord", "Expediente")
                         .WithMany()
-                        .HasForeignKey("ExpedienteId");
+                        .HasForeignKey("ExpedienteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Expediente");
                 });
@@ -331,11 +282,6 @@ namespace Service.MedicalRecord.Migrations
             modelBuilder.Entity("Service.MedicalRecord.Domain.MedicalRecord.MedicalRecord", b =>
                 {
                     b.Navigation("TaxData");
-                });
-
-            modelBuilder.Entity("Service.MedicalRecord.Domain.PriceQuote.PriceQuote", b =>
-                {
-                    b.Navigation("Estudios");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Service.MedicalRecord.Domain.PriceQuote
 {
@@ -21,9 +22,11 @@ namespace Service.MedicalRecord.Domain.PriceQuote
         public DateTime FechaCreo { get; set; }
         public Guid? UsuarioModId { get; set; }
         public DateTime? FechaMod { get; set; }
-        public Guid ExpedienteId { get; set; }
-
-        public virtual MedicalRecord.MedicalRecord Expediente { get; set; }
+        public Guid? ExpedienteId { get; set; }
+        public string Genero { get; set; }
+        public int Edad { get; set; }
+        public virtual MedicalRecord.MedicalRecord? Expediente { get; set; }
+        public IEnumerable<CotizacionStudy>? Estudios { get; set; }
 
     }
 }

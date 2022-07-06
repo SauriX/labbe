@@ -14,10 +14,11 @@ namespace Service.MedicalRecord.Context.EntityConfiguration.PriceQuote
             builder
                 .Property(x => x.NombrePaciente)
                 .IsRequired(true);
+
             builder
-                .HasOne(x => x.Expediente)
-                .WithMany()
-                .HasForeignKey(x=>x.ExpedienteId);
+                .HasMany(x => x.Estudios)
+                .WithOne();
+   
         }
     }
 }

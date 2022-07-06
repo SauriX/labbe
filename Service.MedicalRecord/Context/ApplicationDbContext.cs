@@ -13,6 +13,7 @@ namespace Service.MedicalRecord.Context
         public DbSet<TaxData> CAT_Datos_Fiscales { get; set; }
 
         public DbSet<PriceQuote> CAT_Cotizaciones { get; set; }
+        public DbSet<CotizacionStudy> cotizacionStudies { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
 
