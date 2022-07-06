@@ -33,9 +33,9 @@ namespace Service.Catalog.Mapper
                 Clave = x.Clave.Trim(),
                 Contrasena = x.Contrasena.Trim(),
                 NombreComercial = x.NombreComercial.Trim(),
-                Procedencia = x?.Procedencia.Nombre?.Trim(),
-                PrecioListaId = x?.PrecioListaId,
-                PrecioLista = x?.PrecioLista.Nombre,
+                Procedencia = x.Procedencia?.Nombre?.Trim(),
+                PrecioListaId = x.PrecioListaId,
+                PrecioLista = x.PrecioLista?.Nombre,
                 Activo = x.Activo,
                 Contacts = x.Contacts?.ToList()?.ToContactListDto()
             });

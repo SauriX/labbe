@@ -49,6 +49,18 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
+      "DownstreamPathTemplate": "/api/MedicalRecord/taxData/{recordId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/MedicalRecord/taxData/{recordId}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/MedicalRecord/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -70,6 +82,18 @@
         }
       ],
       "UpstreamPathTemplate": "/api/MedicalRecord",
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/MedicalRecord/taxData",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/MedicalRecord/taxData",
       "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
     {

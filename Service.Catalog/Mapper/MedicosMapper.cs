@@ -40,9 +40,9 @@ namespace Identidad.Api.mapper
                 Correo = x.Correo?.Trim(),
                 Telefono = x.Telefono,
                 Celular = x.Celular,
-                Direccion = x.Calle.Trim() + " " + x.NumeroExterior.Trim() + ", " + x.Colonia.Colonia.Trim() + ", " + x.Colonia.Ciudad.Ciudad.Trim() + ", " + x.Colonia.Ciudad.Estado.Estado.Trim(),
+                Direccion = x.Calle.Trim() + " " + x.NumeroExterior.Trim() + ", " + x.Colonia?.Colonia?.Trim() + ", " + x.Colonia?.Ciudad?.Ciudad?.Trim() + ", " + x.Colonia?.Ciudad?.Estado?.Estado?.Trim(),
                 EspecialidadId = x.EspecialidadId,
-                Especialidad = x.Especialidad.Nombre,
+                Especialidad = x.Especialidad?.Nombre,
                 Observaciones = x.Observaciones?.Trim(),
                 Activo = x.Activo,
                 Clinicas = x.Clinicas?.Select(y => y.Clinica)?.ToList()?.ToCatalogListDto()

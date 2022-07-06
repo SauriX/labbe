@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Helpers\Exceptions.cs~RF818e4c4.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.95.4" />
     <PackageReference Include="ClosedXML.Report" Version="0.2.4" />
     <PackageReference Include="FluentValidation" Version="10.4.0" />

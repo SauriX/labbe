@@ -1,14 +1,9 @@
 ﻿using System;
 
-namespace Service.MedicalRecord.Domain.Request
+namespace Service.MedicalRecord.Dtos.Request
 {
-    public class Request : BaseModel
+    public class RequestGeneralDto
     {
-        public Guid Id { get; set; }
-        public Guid ExpedienteId { get; set; }
-        public Guid SucursalId { get; set; }
-        public string Clave { get; set; }
-        public string ClavePatologica { get; set; }
         public byte Procedencia { get; set; }
         public string Afiliacion { get; set; }
         public Guid CompañiaId { get; set; }
