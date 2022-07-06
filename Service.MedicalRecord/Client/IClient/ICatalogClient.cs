@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace Service.MedicalRecord.Client.IClient
 {
     public interface ICatalogClient
     {
-        Task<string> GetCodeRange(string branchId);
+        Task<string> GetCodeRange(Guid branchId);
     }
 }

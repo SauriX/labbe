@@ -13,6 +13,7 @@ namespace Service.Catalog.Repository.IRepository
         //Task<IEnumerable<StudyListDto>> getservicios(string id);
         Task<List<Branch>> GetAll(string search = null);
         Task<Branch> GetById(string id);
+        Task<string> GetCodeRange(Guid id);
         Task<(bool, string)> IsDuplicate(Branch branch);
         Task Create(Branch reagent);
         Task Update(Branch reagent);

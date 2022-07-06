@@ -56,6 +56,18 @@ namespace Service.Catalog.Application
             return branch.ToBranchFormDto();
         }
 
+        public async Task<string> GetCodeRange(Guid id)
+        {
+            var codeRange = await _repository.GetCodeRange(id);
+
+            if (codeRange == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
+            }
+
+            return codeRange;
+        }
+
         public async Task<bool> Update(BranchFormDto branch)
         {
             var existing = await _repository.GetById(branch.idSucursal);
@@ -149,7 +161,7 @@ namespace Service.Catalog.Application
                           };
 
 
-            return results; 
+            return results;
         }
     }
 

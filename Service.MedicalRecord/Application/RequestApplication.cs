@@ -39,7 +39,7 @@ namespace Service.MedicalRecord.Application
             {
                 var date = DateTime.Now.ToString("ddMMyy");
 
-                var codeRange = await _catalogCliente.GetCodeRange(request.SucursalId.ToString());
+                var codeRange = await _catalogCliente.GetCodeRange(request.SucursalId);
                 var lastCode = await _repository.GetLastCode(request.SucursalId, date);
 
                 var consecutive = Code.GetCode(codeRange, lastCode);
@@ -47,7 +47,7 @@ namespace Service.MedicalRecord.Application
 
                 var newRequest = request.ToModel();
 
-                await _repository.Create(newRequest);
+                //await _repository.Create(newRequest);
 
                 //if (request.General != null)
                 //{
