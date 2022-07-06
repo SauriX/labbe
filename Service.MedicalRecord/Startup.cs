@@ -195,15 +195,14 @@ namespace Service.MedicalRecord
                     policy.AllowAnyHeader().AllowAnyMethod().WithExposedHeaders("WWW-Authenticate", "Content-Disposition").AllowAnyOrigin();
                 });
             });
-            services.AddScoped<IMedicalRecordRepository, MedicalRecordRepository>();
-            services.AddScoped<IPriceQuoteRepository, PriceQuoteRepository>();
 
             services.AddScoped<IMedicalRecordApplication, MedicalRecordApplication>();
+            services.AddScoped<IPriceQuoteApplication, PriceQuoteApplication>();
             services.AddScoped<IRequestApplication, RequestApplication>();
 
             services.AddScoped<IMedicalRecordRepository, MedicalRecordRepository>();
             services.AddScoped<IRequestRepository, RequestRepository>();
-            services.AddScoped<IPriceQuoteApplication, PriceQuoteApplication>();
+            services.AddScoped<IPriceQuoteRepository, PriceQuoteRepository>();
         }
 
 
