@@ -11,12 +11,12 @@ namespace Service.MedicalRecord.Utils
             var date = DateTime.Now.ToString("ddMMyy");
             var ranges = codeRange?.Split("-");
 
-            if (ranges.Length != 2)
+            if (ranges == null || ranges.Length != 2)
             {
                 throw new CustomException(HttpStatusCode.BadRequest, "Sucursal no configurada");
             }
 
-            var initOk = int.TryParse(ranges[1], out int init);
+            var initOk = int.TryParse(ranges[0], out int init);
             var limitOk = int.TryParse(ranges[1], out int limit);
 
             if (!initOk || !limitOk)

@@ -1,7 +1,9 @@
-﻿using Service.MedicalRecord.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using Service.MedicalRecord.Context;
 using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Repository.IRepository;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Service.MedicalRecord.Repository
@@ -15,9 +17,13 @@ namespace Service.MedicalRecord.Repository
             _context = context;
         }
 
-        public Task<string> GetLastCode(Guid branchId, string date)
+        public async Task<string> GetLastCode(Guid branchId, string date)
         {
-            throw new NotImplementedException();
+            var lastRequest = await _context.CAT_Solicitud
+                .OrderBy(x => x.FechaCreo)
+                .LastOrDefaultAsync(x => x.SucursalId == branchId && x.Clave.EndsWith(date));
+
+            return lastRequest?.Clave;
         }
 
         public async Task Create(Request request)

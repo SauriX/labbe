@@ -27,9 +27,14 @@ namespace Service.MedicalRecord.Client
             {
                 var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/branch/getCodeRange/{branchId}");
 
-                if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+                if (response.IsSuccessStatusCode && (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.NoContent))
                 {
-                    return await response.Content.ReadAsStringAsync();
+                    if (response.StatusCode == HttpStatusCode.NoContent)
+                    {
+                        return null;
+                    }
+
+                    return await response.Content.ReadFromJsonAsync<string>();
                 }
 
                 var error = await response.Content.ReadFromJsonAsync<ServerException>();
