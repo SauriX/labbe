@@ -19,7 +19,7 @@ namespace Api.PDF.Extensions
             p.Format.SpaceAfter = Unit.FromPoint(5);
         }
 
-        public static void AddText(this Section section, Col col, bool partialBold = false)
+        public static void AddText(this Section section, Col col, bool partialBold = false, bool inverted = false)
         {
             Paragraph paragraph = section.AddParagraph();
             paragraph.Format.Alignment = col.Horizontal;
@@ -34,6 +34,12 @@ namespace Api.PDF.Extensions
             else
             {
                 paragraph.AddFormattedText(col.Texto, col.Fuente);
+            }
+
+            if (inverted)
+            {
+                paragraph.Format.Font.Color = Colors.White;
+                paragraph.Format.Shading.Color = Colors.Gray;
             }
 
             Paragraph p = section.AddParagraph();

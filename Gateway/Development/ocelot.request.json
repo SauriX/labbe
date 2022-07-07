@@ -6,7 +6,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 18934
+          "Port": 24048
         }
       ],
       "UpstreamPathTemplate": "/api/request/ticket",

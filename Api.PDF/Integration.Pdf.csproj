@@ -107,6 +107,7 @@
     </Compile>
     <Compile Include="Models\Col.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\QuotationService.cs" />
     <Compile Include="Service\TicketService.cs" />
   </ItemGroup>
   <ItemGroup>
