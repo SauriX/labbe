@@ -47,6 +47,18 @@
       ],
       "UpstreamPathTemplate": "/api/scopes/MedicalRecord",
       "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/scopes/request",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 45216
+        }
+      ],
+      "UpstreamPathTemplate": "/api/scopes/request",
+      "UpstreamHttpMethod": [ "GET" ]
     }
   ]
 }

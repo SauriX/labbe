@@ -48,7 +48,7 @@ namespace Service.Report.Mapper
             {
                 Id = x.Id,
                 Nombre = x.Nombre,
-                Clave = x.Expediente.Expediente,
+                Clave = x?.Expediente?.Expediente,
             }).ToList();
         }
     }

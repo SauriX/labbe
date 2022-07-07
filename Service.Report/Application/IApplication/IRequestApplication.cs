@@ -8,7 +8,7 @@ namespace Service.Report.Application.IApplication
     public interface IRequestApplication
     {
         Task<IEnumerable<RequestFiltroDto>> GetBranchByCount();
-        Task<List<RequestFiltroDto>> GetFilter(RequestSearchDto search);
+        Task<IEnumerable<RequestFiltroDto>> GetFilter(RequestSearchDto search);
         Task<(byte[] file, string fileName)> ExportTableBranch(string search = null);
         Task<(byte[] file, string fileName)> ExportGraphicBranch(string search = null);
     }

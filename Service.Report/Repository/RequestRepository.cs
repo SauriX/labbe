@@ -30,20 +30,20 @@ namespace Service.Report.Repository
         public async Task<List<Report.Domain.Request.Request>> GetFilter(RequestSearchDto search)
         {
             var report = _context.Request
-                .AsQueryable();
+                .ToList();
 
-            if (!string.IsNullOrEmpty(search.ciudad))
-            {
-                report = report.Where(x => x.Ciudad.ToString() == search.ciudad);
-            }
-            if (!string.IsNullOrEmpty(search.sucursal))
-            {
-                report = report.Where(x => x.SucursalId == Guid.Parse(search.sucursal));
-            }
-            //if (search.Fecha != )
+            //if (!string.IsNullOrEmpty(search.CiudadId))
             //{
-            //   report = report.Where(x => x.Fecha == search.Fecha);
+            //    report = report.Where(x => x.Ciudad == search.CiudadId).ToList();
             //}
+            if (!string.IsNullOrEmpty(search.SucursalId))
+            {
+                report = report.Where(x => x.SucursalId == Guid.Parse(search.SucursalId)).ToList();
+            }
+            if (search.Fecha != null)
+            {
+                report = report.Where(x => x.FechaInicial.Date >= search.Fecha.First().Date && x.FechaFinal.Date <= search.Fecha.Last().Date).ToList();
+            }
             return report.ToList();
 
         }
