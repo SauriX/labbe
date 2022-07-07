@@ -4,6 +4,7 @@ namespace Service.MedicalRecord.Domain.PriceQuote
 {
     public class CotizacionStudy
     {
+        public Guid id { get; set; }
         public Guid CotizacionId { get; set; }
         public Guid ListaPrecioId { get; set; }
         public int? PromocionId { get; set; }
@@ -15,6 +16,7 @@ namespace Service.MedicalRecord.Domain.PriceQuote
         public bool Copago { get; set; }
         public decimal Precio { get; set; }
         public decimal PrecioFinal { get; set; }
+        public string Clave { get; set; }
     }
 }
 

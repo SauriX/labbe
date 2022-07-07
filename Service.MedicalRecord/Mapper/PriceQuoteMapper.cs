@@ -3,6 +3,7 @@ using Service.MedicalRecord.Dtos.PriceQuote;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Service.MedicalRecord.Mapper
 {
@@ -11,13 +12,17 @@ namespace Service.MedicalRecord.Mapper
         public static PriceQuoteListDto ToPriceQuoteListDto(this PriceQuote x)
         {
             if (x == null) return null;
-
+            StringBuilder sb = new StringBuilder();
+            foreach (var estudio in x.Estudios) {
+                sb.Append(estudio.Clave);
+                sb.Append(", ");
+            }
             return new PriceQuoteListDto
             {
                 Id = x.Id.ToString(),
-                 //Presupuesto = x. 
-                 NomprePaciente = x.NombrePaciente,
-                 //Estudios 
+                Presupuesto = x.Afiliacion,
+                NomprePaciente = x.NombrePaciente,
+                Estudios = sb.ToString(), 
                  Email = x.Correo, 
                  Whatsapp = x.Whatsapp,
                  Fecha  = x.FechaCreo,
@@ -28,18 +33,43 @@ namespace Service.MedicalRecord.Mapper
         public static List<PriceQuoteListDto> ToPriceQuoteListDto(this List<PriceQuote> model)
         {
             if (model == null) return null;
+ 
+            return model.Select(x => {
+                StringBuilder sb = new StringBuilder();
 
-            return model.Select(x => new PriceQuoteListDto
-            {
-                Id = x.Id.ToString(),
-                //Presupuesto = x. 
-                NomprePaciente = x.NombrePaciente,
-                //Estudios 
-                Email = x.Correo,
-                Whatsapp = x.Whatsapp,
-                Fecha = x.FechaCreo,
-                Expediente = x.Expediente.Expediente,
-                Activo = x.Activo
+                if (x.Estudios != null) {
+                    if (x.Estudios.Count() > 0)
+                    {
+                        foreach (var estudio in x.Estudios)
+                        {
+                            sb.Append(estudio.Clave);
+                            sb.Append(", ");
+                        }
+                    }
+                    else
+                    {
+                        sb.Append("");
+                    }
+                }
+                else
+                {
+                    sb.Append("");
+                }
+
+
+
+                return new PriceQuoteListDto
+                {
+                    Id = x.Id.ToString(),
+                    Presupuesto = x.Afiliacion,
+                    NomprePaciente = x.NombrePaciente,
+                    Estudios = sb.ToString(),
+                    Email = x.Correo,
+                    Whatsapp = x.Whatsapp,
+                    Fecha = x.FechaCreo,
+                    Expediente = x.Expediente.Expediente,
+                    Activo = x.Activo
+                };
             }).ToList();
         }
 
@@ -55,6 +85,9 @@ namespace Service.MedicalRecord.Mapper
                 Genero = model.Genero,    
                 edad = model.Edad,
                 fechaNacimiento = model.FechaNac,
+                expedienteid= model.Expediente.Id.ToString(),
+                typo= model.Tipo,
+                cargo= model.Cargo,
                 generales = new PriceQuoteGeneralDto {
                     Procedencia = model.Procedencia,
                     Compañia = model.CompaniaId.ToString(),
@@ -79,6 +112,8 @@ namespace Service.MedicalRecord.Mapper
                     Copago = x.Copago,
                     Precio = x.Precio,
                     PrecioFinal = x.PrecioFinal,
+                    Nombre = x.Clave,
+                    
                 }).ToList()
             };
         }
@@ -92,6 +127,8 @@ namespace Service.MedicalRecord.Mapper
                 CompaniaId = Guid.Parse(priceQuoteForm.generales.Compañia),
                 MedicoId = Guid.Parse(priceQuoteForm.generales.Medico),
                 Afiliacion = "",
+                Tipo = priceQuoteForm.typo,
+                Cargo = priceQuoteForm.cargo,
                 Correo = priceQuoteForm.generales.Email,
                 Whatsapp = priceQuoteForm.generales.Whatssap,
                 Observaciones = priceQuoteForm.generales.Observaciones,
@@ -114,6 +151,7 @@ namespace Service.MedicalRecord.Mapper
                         Copago =x.Copago,
                         Precio =x.Precio,
                         PrecioFinal =x.PrecioFinal,
+                        Clave = x.Nombre
                 })   
 
             };
@@ -132,6 +170,8 @@ namespace Service.MedicalRecord.Mapper
                 CompaniaId = Guid.Parse(priceQuoteForm.generales.Compañia),
                 MedicoId = Guid.Parse(priceQuoteForm.generales.Medico),
                 Afiliacion = "",
+                Tipo = priceQuoteForm.typo,
+                Cargo = priceQuoteForm.cargo,
                 Correo = priceQuoteForm.generales.Email,
                 Whatsapp = priceQuoteForm.generales.Whatssap,
                 Observaciones = priceQuoteForm.generales.Observaciones,
@@ -154,7 +194,10 @@ namespace Service.MedicalRecord.Mapper
                     Copago = x.Copago,
                     Precio = x.Precio,
                     PrecioFinal = x.PrecioFinal,
-                })
+                    Clave = x.Nombre,
+                }),
+                FechaCreo=model.FechaCreo,
+                
             };
 
             return priceQuote;

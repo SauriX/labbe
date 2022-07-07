@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Dtos.MedicalRecords;
 using Service.MedicalRecord.Dtos.PriceQuote;
+using Service.MedicalRecord.Dtos.Request;
 using Shared.Dictionary;
 using System;
 using System.Collections.Generic;
@@ -16,10 +17,11 @@ namespace Service.MedicalRecord.Controllers
     public class PriceQuoteController : ControllerBase
     {
         private readonly IPriceQuoteApplication _Service;
-
-        public PriceQuoteController(IPriceQuoteApplication Service)
+        private readonly IRequestApplication _ServiceRequest;
+        public PriceQuoteController(IPriceQuoteApplication Service, IRequestApplication request )
         {
             _Service = Service;
+            _ServiceRequest = request;
         }
 
 
@@ -31,6 +33,8 @@ namespace Service.MedicalRecord.Controllers
         {
             return await _Service.GetNow(search);
         }
+
+
 
         [HttpGet("active")]
         //[Authorize(Policies.Access)]
@@ -51,6 +55,15 @@ namespace Service.MedicalRecord.Controllers
         {
             expediente.UserId = Guid.NewGuid();//(Guid)HttpContext.Items["userId"];
             return await _Service.Create(expediente);
+        }
+
+        [HttpPost("solicitud")]
+        //[Authorize(Policies.Create)]
+        public async Task<string> CreateSolicitud(RequestDto request)
+        {
+            //request.UsuarioId = (Guid)HttpContext.Items["userId"];
+            
+            return await _ServiceRequest.Create(request);
         }
         [HttpPut]
         //[Authorize(Policies.Update)]

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.MedicalRecord.Context;
 
 namespace Service.MedicalRecord.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220706234930_faltantes")]
+    partial class faltantes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -128,21 +130,15 @@ namespace Service.MedicalRecord.Migrations
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.PriceQuote.CotizacionStudy", b =>
                 {
-                    b.Property<Guid>("id")
+                    b.Property<Guid>("CotizacionId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Cargo")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Clave")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("Copago")
                         .HasColumnType("bit");
-
-                    b.Property<Guid>("CotizacionId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Descuento")
                         .HasColumnType("bit");
@@ -171,7 +167,7 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<int?>("PromocionId")
                         .HasColumnType("int");
 
-                    b.HasKey("id");
+                    b.HasKey("CotizacionId");
 
                     b.HasIndex("PriceQuoteId");
 

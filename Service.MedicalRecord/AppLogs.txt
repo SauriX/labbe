@@ -1,3 +1,88 @@
 05/07/2022 16:40:58
 Exception: Value cannot be null. (Parameter 'source')
 
+06/07/2022 18:18:40
+Exception: Value cannot be null. (Parameter 'input')
+
+06/07/2022 18:21:21
+Exception: Value cannot be null. (Parameter 'input')
+
+06/07/2022 18:22:10
+Exception: Value cannot be null. (Parameter 'input')
+
+06/07/2022 18:22:45
+Exception: Value cannot be null. (Parameter 'input')
+
+06/07/2022 18:23:02
+Exception: Value cannot be null. (Parameter 'input')
+
+06/07/2022 18:24:17
+Exception: Value cannot be null. (Parameter 'input')
+
+06/07/2022 19:20:44
+Exception: Object reference not set to an instance of an object.
+
+06/07/2022 20:03:13
+Exception: Value cannot be null. (Parameter 'source')
+
+06/07/2022 20:11:17
+Exception: Value cannot be null. (Parameter 'source')
+
+06/07/2022 20:11:27
+Exception: Value cannot be null. (Parameter 'source')
+
+06/07/2022 20:17:15
+Exception: Value cannot be null. (Parameter 'source')
+
+07/07/2022 09:54:18
+Failed executing DbCommand ("237"ms) [Parameters=["@__expediente_Id_0='0ec94430-3f56-464d-dff1-08da60289054'"], CommandType='Text', CommandTimeout='30']"
+""MERGE [dbo].[cotizacionStudies] WITH (HOLDLOCK) AS T USING (SELECT TOP 3 * FROM [dbo].[cotizacionStudiesTempa9c27ea7] ORDER BY [CotizacionId]) AS S ON T.[CotizacionId] = S.[CotizacionId] WHEN NOT MATCHED BY TARGET THEN INSERT ([CotizacionId], [Cargo], [Clave], [Copago], [Descuento], [EstatusId], [EstudioId], [ListaPrecioId], [PaqueteId], [Precio], [PrecioFinal], [PriceQuoteId], [PromocionId]) VALUES (S.[CotizacionId], S.[Cargo], S.[Clave], S.[Copago], S.[Descuento], S.[EstatusId], S.[EstudioId], S.[ListaPrecioId], S.[PaqueteId], S.[Precio], S.[PrecioFinal], S.[PriceQuoteId], S.[PromocionId]) WHEN MATCHED AND EXISTS (SELECT S.[CotizacionId], S.[Cargo], S.[Clave], S.[Copago], S.[Descuento], S.[EstatusId], S.[EstudioId], S.[ListaPrecioId], S.[PaqueteId], S.[Precio], S.[PrecioFinal], S.[PriceQuoteId], S.[PromocionId] EXCEPT SELECT T.[CotizacionId], T.[Cargo], T.[Clave], T.[Copago], T.[Descuento], T.[EstatusId], T.[EstudioId], T.[ListaPrecioId], T.[PaqueteId], T.[Precio], T.[PrecioFinal], T.[PriceQuoteId], T.[PromocionId]) THEN UPDATE SET T.[Cargo] = S.[Cargo], T.[Clave] = S.[Clave], T.[Copago] = S.[Copago], T.[Descuento] = S.[Descuento], T.[EstatusId] = S.[EstatusId], T.[EstudioId] = S.[EstudioId], T.[ListaPrecioId] = S.[ListaPrecioId], T.[PaqueteId] = S.[PaqueteId], T.[Precio] = S.[Precio], T.[PrecioFinal] = S.[PrecioFinal], T.[PriceQuoteId] = S.[PriceQuoteId], T.[PromocionId] = S.[PromocionId] WHEN NOT MATCHED BY SOURCE AND [CotizacionId] = @__expediente_Id_0 THEN DELETE;"
+
+07/07/2022 09:54:19
+Exception: Violation of PRIMARY KEY constraint 'PK_cotizacionStudies'. Cannot insert duplicate key in object 'dbo.cotizacionStudies'. The duplicate key value is (0ec94430-3f56-464d-dff1-08da60289054).
+The statement has been terminated.
+
+07/07/2022 10:01:48
+Exception: Value cannot be null. (Parameter 'source')
+
+07/07/2022 10:03:04
+Exception: Value cannot be null. (Parameter 'source')
+
+07/07/2022 10:03:51
+Exception: Value cannot be null. (Parameter 'source')
+
+07/07/2022 10:05:44
+Exception: Value cannot be null. (Parameter 'source')
+
+07/07/2022 10:07:27
+Failed executing DbCommand ("291"ms) [Parameters=["@__expediente_Id_0='f52cb8f2-739b-44ed-dff2-08da60289054'"], CommandType='Text', CommandTimeout='30']"
+""MERGE [dbo].[cotizacionStudies] WITH (HOLDLOCK) AS T USING (SELECT TOP 2 * FROM [dbo].[cotizacionStudiesTemp2031f9a0] ORDER BY [CotizacionId]) AS S ON T.[CotizacionId] = S.[CotizacionId] WHEN NOT MATCHED BY TARGET THEN INSERT ([CotizacionId], [Cargo], [Clave], [Copago], [Descuento], [EstatusId], [EstudioId], [ListaPrecioId], [PaqueteId], [Precio], [PrecioFinal], [PriceQuoteId], [PromocionId]) VALUES (S.[CotizacionId], S.[Cargo], S.[Clave], S.[Copago], S.[Descuento], S.[EstatusId], S.[EstudioId], S.[ListaPrecioId], S.[PaqueteId], S.[Precio], S.[PrecioFinal], S.[PriceQuoteId], S.[PromocionId]) WHEN MATCHED AND EXISTS (SELECT S.[CotizacionId], S.[Cargo], S.[Clave], S.[Copago], S.[Descuento], S.[EstatusId], S.[EstudioId], S.[ListaPrecioId], S.[PaqueteId], S.[Precio], S.[PrecioFinal], S.[PriceQuoteId], S.[PromocionId] EXCEPT SELECT T.[CotizacionId], T.[Cargo], T.[Clave], T.[Copago], T.[Descuento], T.[EstatusId], T.[EstudioId], T.[ListaPrecioId], T.[PaqueteId], T.[Precio], T.[PrecioFinal], T.[PriceQuoteId], T.[PromocionId]) THEN UPDATE SET T.[Cargo] = S.[Cargo], T.[Clave] = S.[Clave], T.[Copago] = S.[Copago], T.[Descuento] = S.[Descuento], T.[EstatusId] = S.[EstatusId], T.[EstudioId] = S.[EstudioId], T.[ListaPrecioId] = S.[ListaPrecioId], T.[PaqueteId] = S.[PaqueteId], T.[Precio] = S.[Precio], T.[PrecioFinal] = S.[PrecioFinal], T.[PriceQuoteId] = S.[PriceQuoteId], T.[PromocionId] = S.[PromocionId] WHEN NOT MATCHED BY SOURCE AND [CotizacionId] = @__expediente_Id_0 THEN DELETE;"
+
+07/07/2022 10:07:27
+Exception: Violation of PRIMARY KEY constraint 'PK_cotizacionStudies'. Cannot insert duplicate key in object 'dbo.cotizacionStudies'. The duplicate key value is (f52cb8f2-739b-44ed-dff2-08da60289054).
+The statement has been terminated.
+
+07/07/2022 10:21:59
+Failed executing DbCommand ("133"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""ALTER TABLE [cotizacionStudies] ADD CONSTRAINT [PK_cotizacionStudies] PRIMARY KEY ([id]);"
+
+07/07/2022 10:25:03
+Failed executing DbCommand ("184"ms) [Parameters=["@__expediente_Id_0='31b32622-5848-468d-1247-08da602cdc30'"], CommandType='Text', CommandTimeout='30']"
+""MERGE [dbo].[cotizacionStudies] WITH (HOLDLOCK) AS T USING (SELECT TOP 2 * FROM [dbo].[cotizacionStudiesTemp34c962f4] ORDER BY [id]) AS S ON T.[id] = S.[id] WHEN NOT MATCHED BY TARGET THEN INSERT ([id], [Cargo], [Clave], [Copago], [CotizacionId], [Descuento], [EstatusId], [EstudioId], [ListaPrecioId], [PaqueteId], [Precio], [PrecioFinal], [PriceQuoteId], [PromocionId]) VALUES (S.[id], S.[Cargo], S.[Clave], S.[Copago], S.[CotizacionId], S.[Descuento], S.[EstatusId], S.[EstudioId], S.[ListaPrecioId], S.[PaqueteId], S.[Precio], S.[PrecioFinal], S.[PriceQuoteId], S.[PromocionId]) WHEN MATCHED AND EXISTS (SELECT S.[id], S.[Cargo], S.[Clave], S.[Copago], S.[CotizacionId], S.[Descuento], S.[EstatusId], S.[EstudioId], S.[ListaPrecioId], S.[PaqueteId], S.[Precio], S.[PrecioFinal], S.[PriceQuoteId], S.[PromocionId] EXCEPT SELECT T.[id], T.[Cargo], T.[Clave], T.[Copago], T.[CotizacionId], T.[Descuento], T.[EstatusId], T.[EstudioId], T.[ListaPrecioId], T.[PaqueteId], T.[Precio], T.[PrecioFinal], T.[PriceQuoteId], T.[PromocionId]) THEN UPDATE SET T.[Cargo] = S.[Cargo], T.[Clave] = S.[Clave], T.[Copago] = S.[Copago], T.[CotizacionId] = S.[CotizacionId], T.[Descuento] = S.[Descuento], T.[EstatusId] = S.[EstatusId], T.[EstudioId] = S.[EstudioId], T.[ListaPrecioId] = S.[ListaPrecioId], T.[PaqueteId] = S.[PaqueteId], T.[Precio] = S.[Precio], T.[PrecioFinal] = S.[PrecioFinal], T.[PriceQuoteId] = S.[PriceQuoteId], T.[PromocionId] = S.[PromocionId] WHEN NOT MATCHED BY SOURCE AND [CotizacionId] = @__expediente_Id_0 THEN DELETE;"
+
+07/07/2022 10:25:04
+Exception: Violation of PRIMARY KEY constraint 'PK_cotizacionStudies'. Cannot insert duplicate key in object 'dbo.cotizacionStudies'. The duplicate key value is (00000000-0000-0000-0000-000000000000).
+The statement has been terminated.
+
+07/07/2022 10:28:43
+Exception: Value cannot be null. (Parameter 'source')
+
+07/07/2022 10:28:58
+Exception: Value cannot be null. (Parameter 'source')
+
+07/07/2022 10:32:41
+Exception: Value cannot be null. (Parameter 'source')
+
+07/07/2022 10:34:44
+Exception: Value cannot be null. (Parameter 'source')
+

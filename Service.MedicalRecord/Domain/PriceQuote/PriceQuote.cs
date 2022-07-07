@@ -25,6 +25,8 @@ namespace Service.MedicalRecord.Domain.PriceQuote
         public Guid? ExpedienteId { get; set; }
         public string Genero { get; set; }
         public int Edad { get; set; }
+        public int Cargo { get; set; }
+        public int Tipo { get; set; }
         public virtual MedicalRecord.MedicalRecord? Expediente { get; set; }
         public IEnumerable<CotizacionStudy>? Estudios { get; set; }
 
