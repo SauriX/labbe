@@ -1,7 +1,7 @@
 ﻿{
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/request/getBranchByCount",
+      "DownstreamPathTemplate": "/api/request/ticket",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -9,47 +9,8 @@
           "Port": 18934
         }
       ],
-      "UpstreamPathTemplate": "/api/request/getBranchByCount",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/request/export/table/{search}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 18934
-        }
-      ],
-      "UpstreamPathTemplate": "/api/request/export/table/{search}",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/request/export/graphic/{search}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 18934
-        }
-      ],
-      "UpstreamPathTemplate": "/api/request/export/graphic/{search}",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-
-    {
-      "DownstreamPathTemplate": "/api/request/filter",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 18934
-        }
-      ],
-      "UpstreamPathTemplate": "/api/request/filter",
+      "UpstreamPathTemplate": "/api/request/ticket",
       "UpstreamHttpMethod": [ "POST" ]
     }
-
   ]
-
 }

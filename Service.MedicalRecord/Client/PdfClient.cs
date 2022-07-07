@@ -21,7 +21,7 @@ namespace Service.MedicalRecord.Client
             _configuration = configuration;
         }
 
-        public async Task<byte[]> GenerarTicket()
+        public async Task<byte[]> GenerateTicket()
         {
             try
             {

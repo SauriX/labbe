@@ -4,6 +4,6 @@ namespace Service.MedicalRecord.Client.IClient
 {
     public interface IPdfClient
     {
-        Task<byte[]> GenerarTicket();
+        Task<byte[]> GenerateTicket();
     }
 }
