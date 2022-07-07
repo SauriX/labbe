@@ -1,3 +1,18 @@
 05/07/2022 16:40:58
 Exception: Value cannot be null. (Parameter 'source')
 
+07/07/2022 08:03:34
+Exception: No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión. (localhost:55381)
+StackTrace: at Service.MedicalRecord.Client.PdfClient.GenerateTicket() in C:\Users\LAPAXSIS-00\source\repos\LaboratorioRamos\Service.MedicalRecord\Client\PdfClient.cs:line 28
+InnerException: No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión.
+
+07/07/2022 08:04:34
+Exception: No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión. (localhost:55381)
+StackTrace: at Service.MedicalRecord.Client.PdfClient.GenerateTicket() in C:\Users\LAPAXSIS-00\source\repos\LaboratorioRamos\Service.MedicalRecord\Client\PdfClient.cs:line 28
+InnerException: No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión.
+
+07/07/2022 08:26:41
+Exception: El proceso no puede obtener acceso al archivo 'C:\Users\LAPAXSIS-00\source\repos\LaboratorioRamos\Api.PDF\test.pdf' porque está siendo utilizado en otro proceso.
+en Api.PDF.Service.TicketService.Generate() en C:\Users\LAPAXSIS-00\source\repos\LaboratorioRamos\Api.PDF\Service\TicketService.cs:línea 43
+StackTrace: at Service.MedicalRecord.Client.PdfClient.GenerateTicket() in C:\Users\LAPAXSIS-00\source\repos\LaboratorioRamos\Service.MedicalRecord\Client\PdfClient.cs:line 39
+

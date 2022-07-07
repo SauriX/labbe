@@ -21,11 +21,20 @@ namespace Service.MedicalRecord.Controllers
             _service = service;
         }
 
+        [HttpPost("ticket")]
+        public async Task<IActionResult> GetTicket()
+        {
+            var file = await _service.GetTicket();
+
+            return File(file, MimeType.PDF, "ticket.pdf");
+        }
+
         [HttpPost]
         //[Authorize(Policies.Create)]
         public async Task<string> Create(RequestDto request)
         {
             //request.UsuarioId = (Guid)HttpContext.Items["userId"];
+
             return await _service.Create(request);
         }
     }
