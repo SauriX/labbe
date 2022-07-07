@@ -19,11 +19,28 @@ namespace Api.PDF.Extensions
             p.Format.SpaceAfter = Unit.FromPoint(5);
         }
 
-        public static void AddText(this Section section, Col col)
+        public static void AddText(this Section section, Col col, bool partialBold = false, bool inverted = false)
         {
             Paragraph paragraph = section.AddParagraph();
             paragraph.Format.Alignment = col.Horizontal;
-            paragraph.AddFormattedText(col.Texto, col.Fuente);
+
+            string[] split = col.Texto.Split(new[] { ':' }, 2);
+
+            if (partialBold && split.Length == 2)
+            {
+                paragraph.AddFormattedText(split[0] + ": ", Col.FONT_BOLD);
+                paragraph.AddFormattedText(split[1], Col.FONT_DEFAULT);
+            }
+            else
+            {
+                paragraph.AddFormattedText(col.Texto, col.Fuente);
+            }
+
+            if (inverted)
+            {
+                paragraph.Format.Font.Color = Colors.White;
+                paragraph.Format.Shading.Color = Colors.Gray;
+            }
 
             Paragraph p = section.AddParagraph();
             p.Format.LineSpacingRule = LineSpacingRule.Exactly;
@@ -34,20 +51,20 @@ namespace Api.PDF.Extensions
         public static void AddText(this Section section, Col[] cols, bool partialBold = false)
         {
             Table table = section.AddTable();
-            table.Borders.Visible = true;
+            table.Borders.Visible = false;
             table.TopPadding = 0;
             table.BottomPadding = 0;
 
             float sectionWidth = section.PageSetup.PageWidth - section.PageSetup.LeftMargin - section.PageSetup.RightMargin;
-            float columnWidth = sectionWidth / cols.Length;
+            float columnWidth = sectionWidth / cols.Sum(x => x.Tamaño);
 
             for (int i = 0; i < cols.Length; i++)
             {
                 Column column = table.AddColumn();
                 column.LeftPadding = 0;
                 column.RightPadding = 0;
-                column.Width = columnWidth;
-                column.Format.Alignment = cols[0].Horizontal;
+                column.Width = columnWidth * cols[i].Tamaño;
+                column.Format.Alignment = cols[i].Horizontal;
             }
 
             Row row = table.AddRow();

@@ -26,6 +26,7 @@ namespace Service.Identity.Dictionary
         public const string Maquila = "maquila";
         public const string Configuration = "configuration";
         public const string MedicalRecord = "MedicalRecord";
+        public const string Request = "request";
 
     }
 }

@@ -21,11 +21,34 @@ namespace Service.MedicalRecord.Client
             _configuration = configuration;
         }
 
-        public async Task<byte[]> GenerarTicket()
+        public async Task<byte[]> GenerateTicket()
         {
             try
             {
                 var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Pdf")}/api/pdf/ticket");
+
+                if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+                {
+                    return await response.Content.ReadAsByteArrayAsync();
+                }
+
+                var error = await response.Content.ReadFromJsonAsync<ServerException>();
+
+                var ex = Exceptions.GetException(error);
+
+                throw ex;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<byte[]> GenerateQuotation()
+        {
+            try
+            {
+                var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Pdf")}/api/pdf/quotation");
 
                 if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
                 {

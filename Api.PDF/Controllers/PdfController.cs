@@ -35,5 +35,28 @@ namespace Api.PDF.Controllers
 
             return result;
         }
+
+        [HttpGet]
+        [Route("quotation")]
+        public HttpResponseMessage Quotation()
+        {
+            var file = QuotationService.Generate();
+
+            var result = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new ByteArrayContent(file)
+            };
+
+            result.Content.Headers.ContentDisposition =
+                new ContentDispositionHeaderValue("attachment")
+                {
+                    FileName = "quotation.pdf"
+                };
+
+            result.Content.Headers.ContentType =
+                new MediaTypeHeaderValue("application/pdf");
+
+            return result;
+        }
     }
 }

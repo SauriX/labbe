@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Report.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220705174419_FechaReport")]
+    partial class FechaReport
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,11 +47,11 @@ namespace Service.Report.Migrations
                     b.Property<string>("Ciudad")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Clave")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("ExpedienteId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ExpedienteNombre")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("FechaFinal")
                         .HasColumnType("datetime2");
@@ -57,7 +59,7 @@ namespace Service.Report.Migrations
                     b.Property<DateTime>("FechaInicial")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Sucursal")
+                    b.Property<string>("Nombre")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("SucursalId")

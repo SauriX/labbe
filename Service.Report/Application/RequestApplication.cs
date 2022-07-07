@@ -26,23 +26,40 @@ namespace Service.Report.Application
         {
             var req = await _repository.GetRequestByCount();
             var results = from c in req
-                          group c by new { c.Id, c.Nombre, c.Clave } into grupo
+                          group c by new { c.Id, c.Sucursal, c.ExpedienteNombre } into grupo
                           select new RequestFiltroDto
                           {
                               Id = grupo.Key.Id,
                               Visitas = grupo.Count(),
-                              Nombre = grupo.Key.Nombre,
-                              Clave = grupo.Key.Clave
+                              Nombre = grupo.Key.Sucursal,
+                              Clave = grupo.Key.ExpedienteNombre
 
                           };
 
 
             return results;
         }
-        public async Task<List<RequestFiltroDto>> GetFilter(RequestSearchDto search)
+        //public async Task<List<RequestFiltroDto>> GetFilter(RequestSearchDto search)
+        //{
+        //    var doctors = await _repository.GetFilter(search);
+        //    return doctors.ToRequestRecordsListDto();
+        //}
+        public async Task<IEnumerable<RequestFiltroDto>> GetFilter(RequestSearchDto search)
         {
             var doctors = await _repository.GetFilter(search);
-            return doctors.ToRequestRecordsListDto();
+            var results = from c in doctors
+                          group c by new { c.Id, c.Sucursal, c.ExpedienteNombre } into grupo
+                          select new RequestFiltroDto
+                          {
+                              Id = grupo.Key.Id,
+                              Visitas = grupo.Count(),
+                              Nombre = grupo.Key.Sucursal,
+                              Clave = grupo.Key.ExpedienteNombre
+
+                          };
+
+
+            return results;
         }
 
         public async Task<(byte[] file, string fileName)> ExportTableBranch(string search = null)

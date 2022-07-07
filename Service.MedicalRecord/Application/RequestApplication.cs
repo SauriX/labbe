@@ -16,14 +16,25 @@ namespace Service.MedicalRecord.Application
     public class RequestApplication : IRequestApplication
     {
         private readonly IRequestRepository _repository;
-        private readonly ICatalogClient _catalogCliente;
+        private readonly ICatalogClient _catalogClient;
+        private readonly IPdfClient _pdfClient;
         private readonly ITransactionProvider _transaction;
 
-        public RequestApplication(IRequestRepository repository, ICatalogClient catalogClient, ITransactionProvider transaction)
+        public RequestApplication(
+            IRequestRepository repository,
+            ICatalogClient catalogClient,
+            ITransactionProvider transaction,
+            IPdfClient pdfClient)
         {
             _repository = repository;
-            _catalogCliente = catalogClient;
+            _catalogClient = catalogClient;
             _transaction = transaction;
+            _pdfClient = pdfClient;
+        }
+
+        public async Task<byte[]> GetTicket()
+        {
+            return await _pdfClient.GenerateTicket();
         }
 
         public async Task<string> Create(RequestDto request)
@@ -39,7 +50,7 @@ namespace Service.MedicalRecord.Application
             {
                 var date = DateTime.Now.ToString("ddMMyy");
 
-                var codeRange = await _catalogCliente.GetCodeRange(request.SucursalId);
+                var codeRange = await _catalogClient.GetCodeRange(request.SucursalId);
                 var lastCode = await _repository.GetLastCode(request.SucursalId, date);
 
                 var consecutive = Code.GetCode(codeRange, lastCode);

@@ -8,8 +8,8 @@ namespace Api.PDF.Models
 {
     public class Col
     {
-        public readonly static Font FONT_DEFAULT = new Font("Calibri", 8);
-        public readonly static Font FONT_BOLD = new Font("Calibri", 8)
+        public readonly static Font FONT_DEFAULT = new Font("Calibri", 9);
+        public readonly static Font FONT_BOLD = new Font("Calibri", 9)
         {
             Bold = true
         };
