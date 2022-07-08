@@ -86,3 +86,43 @@ Exception: Value cannot be null. (Parameter 'source')
 07/07/2022 10:34:44
 Exception: Value cannot be null. (Parameter 'source')
 
+07/07/2022 17:11:29
+Exception: No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión. (localhost:55381)
+InnerException: No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión.
+
+07/07/2022 17:11:29
+Exception: No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión. (localhost:55381)
+InnerException: No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión.
+
+07/07/2022 17:11:29
+Exception: No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión. (localhost:55381)
+InnerException: No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión.
+
+07/07/2022 17:11:29
+Exception: No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión. (localhost:55381)
+InnerException: No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión.
+
+07/07/2022 17:11:29
+Exception: No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión. (localhost:55381)
+InnerException: No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión.
+
+07/07/2022 17:11:29
+Exception: No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión. (localhost:55381)
+InnerException: No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión.
+
+07/07/2022 17:11:34
+Exception: No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión. (localhost:55381)
+InnerException: No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión.
+
+07/07/2022 17:11:36
+Exception: No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión. (localhost:55381)
+InnerException: No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión.
+
+07/07/2022 17:11:36
+Exception: No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión. (localhost:55381)
+InnerException: No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión.
+
+07/07/2022 17:11:36
+Exception: No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión. (localhost:55381)
+InnerException: No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión.
+

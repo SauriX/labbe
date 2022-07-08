@@ -22,10 +22,12 @@ namespace Service.MedicalRecord.Application
     {
         public readonly  IPriceQuoteRepository _repository;
         private readonly ICatalogClient _catalogCliente;
-        public PriceQuoteApplication(IPriceQuoteRepository repository,ICatalogClient catalogClient)
+        private readonly IPdfClient _pdfClient;
+        public PriceQuoteApplication(IPriceQuoteRepository repository,ICatalogClient catalogClient, IPdfClient pdfClient)
         {
             _repository = repository;
             _catalogCliente = catalogClient;
+            _pdfClient = pdfClient;
         }
         public async Task<List<PriceQuoteListDto>> GetNow(PriceQuoteSearchDto search)
         {
@@ -95,6 +97,11 @@ namespace Service.MedicalRecord.Application
             var record = await _repository.GetMedicalRecord(search);
             return record.ToMedicalRecordsListDto();
         }
+        public async Task<byte[]> GetTicket()
+        {
+            return await _pdfClient.GenerateTicket();
+        }
+
         public async Task<(byte[] file, string fileName)> ExportList(PriceQuoteSearchDto search)
         {
             var studys = await GetNow(search);

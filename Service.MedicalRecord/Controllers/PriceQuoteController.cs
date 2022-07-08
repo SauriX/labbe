@@ -92,5 +92,13 @@ namespace Service.MedicalRecord.Controllers
         public async Task<List<MedicalRecordsListDto>> GetMedicalRecord(PriceQuoteExpedienteSearch search) { 
                 return await _Service.GetMedicalRecord(search);
         }
+
+        [HttpPost("ticket")]
+        public async Task<IActionResult> GetTicket()
+        {
+            var file = await _Service.GetTicket();
+
+            return File(file, MimeType.PDF, "ticket.pdf");
+        }
     }
 }
