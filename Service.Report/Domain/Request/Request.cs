@@ -9,6 +9,7 @@ namespace Service.Report.Domain.Request
         public string Sucursal { get; set; }
         public DateTime FechaInicial { get; set; }
         public DateTime FechaFinal { get; set; }
+        public decimal Precio { get; set; }
         public string Ciudad { get; set; }
         public Guid SucursalId { get; set; }
         public Guid ExpedienteId { get; set; }

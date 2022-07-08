@@ -23,12 +23,12 @@ namespace Api.PDF.Service
             DocumentRenderer renderer = new DocumentRenderer(document);
             renderer.PrepareDocument();
 
-            RenderInfo[] info = renderer.GetRenderInfoFromPage(1);
-            int index = info.Length - 1;
+            //RenderInfo[] info = renderer.GetRenderInfoFromPage(1);
+            //int index = info.Length - 1;
 
-            double stop = info[index].LayoutInfo.ContentArea.Y.Millimeter + info[index].LayoutInfo.ContentArea.Height.Millimeter + 10;
-            var section = document.LastSection;
-            section.PageSetup.PageHeight = Unit.FromMillimeter(stop);
+            //double stop = info[index].LayoutInfo.ContentArea.Y.Millimeter + info[index].LayoutInfo.ContentArea.Height.Millimeter + 10;
+            //var section = document.LastSection;
+            //section.PageSetup.PageHeight = Unit.FromMillimeter(stop);
 
             PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer(unicode)
             {

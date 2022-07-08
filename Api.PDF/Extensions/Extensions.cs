@@ -10,6 +10,14 @@ namespace Api.PDF.Extensions
 {
     public static class Extensions
     {
+        public static void AddSpace(this Section section, double space = 5)
+        {
+            Paragraph p = section.AddParagraph();
+            p.Format.LineSpacingRule = LineSpacingRule.Exactly;
+            p.Format.LineSpacing = "0mm";
+            p.Format.SpaceAfter = Unit.FromPoint(space);
+        }
+
         public static void AddDivider(this Section section)
         {
             Paragraph p = section.AddParagraph();
@@ -19,7 +27,7 @@ namespace Api.PDF.Extensions
             p.Format.SpaceAfter = Unit.FromPoint(5);
         }
 
-        public static void AddText(this Section section, Col col, bool partialBold = false, bool inverted = false)
+        public static void AddText(this Section section, Models.Col col, bool partialBold = false, bool inverted = false)
         {
             Paragraph paragraph = section.AddParagraph();
             paragraph.Format.Alignment = col.Horizontal;
@@ -28,8 +36,8 @@ namespace Api.PDF.Extensions
 
             if (partialBold && split.Length == 2)
             {
-                paragraph.AddFormattedText(split[0] + ": ", Col.FONT_BOLD);
-                paragraph.AddFormattedText(split[1], Col.FONT_DEFAULT);
+                paragraph.AddFormattedText(split[0] + ": ", Models.Col.FONT_BOLD);
+                paragraph.AddFormattedText(split[1], Models.Col.FONT_DEFAULT);
             }
             else
             {
@@ -48,7 +56,7 @@ namespace Api.PDF.Extensions
             p.Format.SpaceBefore = Unit.FromPoint(5);
         }
 
-        public static void AddText(this Section section, Col[] cols, bool partialBold = false)
+        public static void AddText(this Section section, Models.Col[] cols, bool partialBold = false)
         {
             Table table = section.AddTable();
             table.Borders.Visible = false;
@@ -60,7 +68,7 @@ namespace Api.PDF.Extensions
 
             for (int i = 0; i < cols.Length; i++)
             {
-                Column column = table.AddColumn();
+                MigraDoc.DocumentObjectModel.Tables.Column column = table.AddColumn();
                 column.LeftPadding = 0;
                 column.RightPadding = 0;
                 column.Width = columnWidth * cols[i].Tamaño;
@@ -72,15 +80,15 @@ namespace Api.PDF.Extensions
 
             for (int i = 0; i < cols.Length; i++)
             {
-                Col col = cols[i];
+                Models.Col col = cols[i];
 
                 Paragraph paragraph = row.Cells[i].AddParagraph();
                 string[] split = col.Texto.Split(new[] { ':' }, 2);
 
                 if (partialBold && split.Length == 2)
                 {
-                    paragraph.AddFormattedText(split[0] + ": ", Col.FONT_BOLD);
-                    paragraph.AddFormattedText(split[1], Col.FONT_DEFAULT);
+                    paragraph.AddFormattedText(split[0] + ": ", Models.Col.FONT_BOLD);
+                    paragraph.AddFormattedText(split[1], Models.Col.FONT_DEFAULT);
                 }
                 else
                 {
