@@ -16,5 +16,6 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<(byte[] file, string fileName)> ExportList(PriceQuoteSearchDto search);
         Task<(byte[] file, string fileName)> ExportForm(Guid id);
         Task<List<MedicalRecordsListDto>> GetMedicalRecord(PriceQuoteExpedienteSearch search);
+        Task<byte[]> GetTicket();
     }
 }

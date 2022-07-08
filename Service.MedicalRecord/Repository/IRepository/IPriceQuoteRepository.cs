@@ -14,5 +14,6 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task Update(PriceQuote expediente);
         Task<List<PriceQuote>> GetNow(PriceQuoteSearchDto search);
         Task<List<MedicalRecord.Domain.MedicalRecord.MedicalRecord>> GetMedicalRecord(PriceQuoteExpedienteSearch search);
+        Task<string> GetLastCode(string date);
     }
 }
