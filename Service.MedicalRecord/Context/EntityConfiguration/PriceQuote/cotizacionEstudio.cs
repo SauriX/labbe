@@ -9,7 +9,7 @@ namespace Service.MedicalRecord.Context.EntityConfiguration.PriceQuote
         public void Configure(EntityTypeBuilder<CotizacionStudy> builder)
         {
             builder.ToTable("cotizacionStudies");
-            builder.HasKey(x=>x.CotizacionId);
+            builder.HasKey(x=>x.id);
 
 
         }

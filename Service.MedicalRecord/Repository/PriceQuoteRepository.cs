@@ -21,7 +21,7 @@ namespace Service.MedicalRecord.Repository
             _context = context;
         }
         public async Task<List<MedicalRecord.Domain.MedicalRecord.MedicalRecord>> GetMedicalRecord(PriceQuoteExpedienteSearch search)
-        {
+            {
 
             if (!string.IsNullOrEmpty(search.Buscar) || !string.IsNullOrEmpty(search.Telefono) || search.FechaInicial.Date != DateTime.Now.Date || search.FechaFinal.Date != DateTime.Now.Date || !string.IsNullOrEmpty(search.Email))
             {
@@ -39,6 +39,14 @@ namespace Service.MedicalRecord.Repository
                 return expedientes;
             }
         }
+        public async Task<string> GetLastCode( string date)
+        {
+            var lastRequest = await _context.CAT_Cotizaciones
+                .OrderBy(x => x.FechaCreo)
+                .LastOrDefaultAsync(x =>  x.Afiliacion.EndsWith(date));
+
+            return lastRequest?.Afiliacion;
+        }
         public async Task<List<PriceQuote>> GetNow(PriceQuoteSearchDto search)
         {
 
@@ -51,7 +59,12 @@ namespace Service.MedicalRecord.Repository
                 }
                 var expedientes = await _context.CAT_Cotizaciones.Include(x=>x.Expediente).Where(x => x.Expediente.Ciudad == search.Ciudad || x.NombrePaciente.Contains(search.Presupuesto) || x.FechaCreo.Date == search.FechaAlta.Date || x.Expediente.IdSucursal == sucursal).ToListAsync();
 
-                return expedientes;
+                return expedientes.Select(x =>
+                {
+                    var estudios = _context.cotizacionStudies.Where(y => y.CotizacionId == x.Id);
+                    x.Estudios = estudios;
+                    return x;
+                }).ToList() ;
             }
             else
             {
@@ -59,7 +72,12 @@ namespace Service.MedicalRecord.Repository
 
                 var expedientes = await _context.CAT_Cotizaciones.Include(x => x.Expediente).Where(x => x.FechaCreo.Date <= DateTime.Now.Date && x.FechaCreo.Date > DateTime.Now.AddDays(-1).Date).ToListAsync();
 
-                return expedientes;
+                return expedientes.Select(x =>
+                {
+                    var estudios = _context.cotizacionStudies.Where(y => y.CotizacionId == x.Id);
+                    x.Estudios = estudios;
+                    return x;
+                }).ToList();
             }
         }
         public async Task Create(PriceQuote expediente)
@@ -72,6 +90,7 @@ namespace Service.MedicalRecord.Repository
             var config = new BulkConfig();
             config.SetSynchronizeFilter<CotizacionStudy>(x => x.CotizacionId == expediente.Id);
             estudios.ForEach(x => x.CotizacionId = expediente.Id);
+            estudios.ForEach(x => x.id = Guid.NewGuid());
             await _context.BulkInsertOrUpdateOrDeleteAsync(estudios,config);
         }
         public async Task Update(PriceQuote expediente)
@@ -84,6 +103,7 @@ namespace Service.MedicalRecord.Repository
             var config = new BulkConfig();
             config.SetSynchronizeFilter<CotizacionStudy>(x => x.CotizacionId == expediente.Id);
             estudios.ForEach(x => x.CotizacionId = expediente.Id);
+            estudios.ForEach(x => x.id = Guid.NewGuid());
             await _context.BulkInsertOrUpdateOrDeleteAsync(estudios, config);
         }
         public async Task<List<PriceQuote>> GetActive()
