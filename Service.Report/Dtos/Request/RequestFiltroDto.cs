@@ -5,8 +5,8 @@ namespace Service.Report.Dtos.Request
     public class RequestFiltroDto
     {
         public Guid Id { get; set; }
-        public string Clave { get; set; }
-        public string Nombre { get; set; }
+        public string NombrePaciente { get; set; }
+        public string Sucursal { get; set; }
         public int Visitas { get; set;}
     }
 }

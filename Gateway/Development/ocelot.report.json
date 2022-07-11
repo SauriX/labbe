@@ -24,6 +24,19 @@
       "UpstreamPathTemplate": "/api/request/getBranchByCount",
       "UpstreamHttpMethod": [ "GET" ]
     },
+
+    {
+      "DownstreamPathTemplate": "/api/request/download/pdf",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 18934
+        }
+      ],
+      "UpstreamPathTemplate": "/api/request/download/pdf",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
     {
       "DownstreamPathTemplate": "/api/request/export/table/{search}",
       "DownstreamScheme": "http",
