@@ -87,6 +87,14 @@ namespace Api.PDF.Models
             Horizontal = ParagraphAlignment.Center;
         }
 
+        public Col(string texto, int tamaño, Font fuente, ParagraphAlignment horizontal)
+        {
+            Texto = texto;
+            Tamaño = tamaño;
+            Fuente = fuente;
+            Horizontal = horizontal;
+        }
+
         public Col(string texto, int tamaño, ParagraphAlignment horizontal, string formato)
         {
             Texto = texto;

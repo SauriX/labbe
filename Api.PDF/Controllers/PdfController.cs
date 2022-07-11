@@ -57,6 +57,29 @@ namespace Api.PDF.Controllers
                 new MediaTypeHeaderValue("application/pdf");
 
             return result;
+        } 
+        
+        [HttpGet]
+        [Route("order")]
+        public HttpResponseMessage Order()
+        {
+            var file = OrderService.Generate();
+
+            var result = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new ByteArrayContent(file)
+            };
+
+            result.Content.Headers.ContentDisposition =
+                new ContentDispositionHeaderValue("attachment")
+                {
+                    FileName = "order.pdf"
+                };
+
+            result.Content.Headers.ContentType =
+                new MediaTypeHeaderValue("application/pdf");
+
+            return result;
         }
     }
 }

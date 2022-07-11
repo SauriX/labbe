@@ -76,8 +76,9 @@ namespace Api.PDF.Service.Report
 
             Table table = new Table();
             table.Borders.Width = 0.75;
-            table.TopPadding = 1;
-            table.BottomPadding = 1;
+            table.Borders.Color = Colors.LightGray;
+            table.TopPadding = 3;
+            table.BottomPadding = 3;
 
             var colWidth = contentWidth / columns.Sum(x => x.Tamaño);
 
@@ -97,10 +98,12 @@ namespace Api.PDF.Service.Report
 
             for (int i = 0; i < columns.Count; i++)
             {
-                row.Shading.Color = Colors.DodgerBlue;
+                row.Shading.Color = Colors.Gray;
                 row.Format.Font.Color = Colors.White;
 
                 Cell cell = row.Cells[i];
+                cell.Borders.Left.Visible = false;
+                cell.Borders.Right.Visible = false;
                 cell.AddParagraph(columns[i].Texto);
             }
 
@@ -119,6 +122,8 @@ namespace Api.PDF.Service.Report
                     if (item.ContainsKey(key))
                     {
                         Cell cell = row.Cells[i];
+                        cell.Borders.Left.Visible = false;
+                        cell.Borders.Right.Visible = false;
                         var format = columns[i].Formato;
 
                         if (!string.IsNullOrWhiteSpace(format))
@@ -165,7 +170,7 @@ namespace Api.PDF.Service.Report
                 }
                 else
                 {
-                    series.FillFormat.Color = Colors.LightBlue;
+                    series.FillFormat.Color = Color.FromRgb(Convert.ToByte("18", 16), Convert.ToByte("90", 16), Convert.ToByte("FF", 16));
                 }
                 series.Add(data.Select(x => Convert.ToDouble(x[serie.Serie])).ToArray());
                 series.HasDataLabel = true;

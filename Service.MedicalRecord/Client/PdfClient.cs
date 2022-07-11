@@ -66,5 +66,28 @@ namespace Service.MedicalRecord.Client
                 throw;
             }
         }
+
+        public async Task<byte[]> GenerateOrder()
+        {
+            try
+            {
+                var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Pdf")}/api/pdf/order");
+
+                if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+                {
+                    return await response.Content.ReadAsByteArrayAsync();
+                }
+
+                var error = await response.Content.ReadFromJsonAsync<ServerException>();
+
+                var ex = Exceptions.GetException(error);
+
+                throw ex;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
