@@ -133,7 +133,7 @@ namespace Service.Report.Application
 
             List<Col> columns = new()
             {
-                new Col("Clave", 5, ParagraphAlignment.Left),
+                new Col("Clave", ParagraphAlignment.Left),
                 new Col("Sucursal", ParagraphAlignment.Left),
                 new Col("Visitas"),
             };
