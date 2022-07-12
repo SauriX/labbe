@@ -8,7 +8,8 @@ namespace Service.Report.Application.IApplication
     {
         Task<IEnumerable<PatientStatsFiltroDto>> GetBranchByCount();
         Task<IEnumerable<PatientStatsFiltroDto>> GetFilter(PatientStatsSearchDto search);
-        Task<(byte[] file, string fileName)> ExportTableBranch(string search = null);
-        Task<(byte[] file, string fileName)> ExportGraphicBranch(string search = null);
+        Task<(byte[] file, string fileName)> ExportTableStats(string search = null);
+        Task<(byte[] file, string fileName)> ExportChartStats(string search = null);
+        Task<byte[]> GenerateReportPDF();
     }
 }

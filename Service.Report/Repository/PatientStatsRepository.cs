@@ -36,8 +36,7 @@ namespace Service.Report.Repository
             }
             if(search.Fecha != null)
             {
-                report = report.Where(x => x.FechaInicial.Date >= search.Fecha.First().Date &&
-                x.FechaFinal.Date <= search.Fecha.Last().Date).ToList();
+                report = report.Where(x => x.Fecha.Date >= search.Fecha.First().Date).ToList();
             }
 
             return report.ToList();
