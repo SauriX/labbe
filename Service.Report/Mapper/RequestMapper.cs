@@ -14,13 +14,13 @@ namespace Service.Report.Mapper
             if (model == null) return null;
 
             var results = from c in model
-                          group c by new { c.Id, c.Sucursal, c.ExpedienteNombre} into grupo
+                          group c by new { c.Id, c.PacienteNombre, c.ExpedienteNombre} into grupo
                           select new RequestFiltroDto
                           {
                               Id = grupo.Key.Id,
                               Visitas = grupo.Count(),
-                              Sucursal = grupo.Key.Sucursal,
-                              NombrePaciente = grupo.Key.ExpedienteNombre,
+                              PacienteNombre = grupo.Key.PacienteNombre,
+                              ExpedienteNombre = grupo.Key.ExpedienteNombre,
                           };
             return results;
         }
@@ -33,8 +33,8 @@ namespace Service.Report.Mapper
             return new RequestFiltroDto
             {
                Id = model.Id,
-               NombrePaciente = model.Expediente.Expediente,
-               Sucursal = model.Sucursal,
+               ExpedienteNombre = model.Expediente.Expediente,
+               PacienteNombre = model.PacienteNombre,
 
             };
         }
@@ -46,8 +46,8 @@ namespace Service.Report.Mapper
             return model.Select(x => new RequestFiltroDto
             {
                 Id = x.Id,
-                Sucursal = x.Sucursal,
-                NombrePaciente = x?.Expediente?.Expediente,
+                PacienteNombre = x.PacienteNombre,
+                ExpedienteNombre = x?.Expediente?.Expediente,
             }).ToList();
         }
     }
