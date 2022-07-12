@@ -41,6 +41,7 @@ namespace Service.Catalog.Repository
             return await indications.ToListAsync();
         }
 
+        //public async Task<PriceList_Study> GetPriceStudyById(int studyId, Guid? companyId, Guid? doctorId, Guid branchId)       
         public async Task<PriceList_Study> GetPriceStudyById(int studyId)
         {
             var prices = _context.Relacion_ListaP_Estudio
@@ -51,6 +52,7 @@ namespace Service.Catalog.Repository
             return await prices.FirstOrDefaultAsync();
         }
 
+        //public async Task<PriceList_Packet> GetPricePackById(int packId, Guid? companyId, Guid? doctorId, Guid branchId)
         public async Task<PriceList_Packet> GetPricePackById(int packId)
         {
             var prices = _context.Relacion_ListaP_Paquete
