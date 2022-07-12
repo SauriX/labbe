@@ -39,8 +39,8 @@ namespace Shared.Helpers
             var message = string.Concat("Exception: ", ex.Message);
             if (!string.IsNullOrWhiteSpace(ex.StackTrace))
             {
-                var stackList = ex.StackTrace.Split(Environment.NewLine);
-                var stackMessage = stackList.FirstOrDefault(x => x.Contains("LaboratorioRamos"));
+                var stackList = ex.StackTrace; //.Split(Environment.NewLine);
+                var stackMessage = stackList; //.FirstOrDefault(x => x.Contains("LaboratorioRamos"));
                 if (!string.IsNullOrWhiteSpace(stackMessage))
                 {
                     message = string.Concat(message, Environment.NewLine, "StackTrace: ", stackMessage.Trim());
@@ -54,8 +54,8 @@ namespace Shared.Helpers
 
                 if (!string.IsNullOrWhiteSpace(ex.InnerException.StackTrace))
                 {
-                    var stackList = ex.InnerException.StackTrace.Split(Environment.NewLine);
-                    var stackMessage = stackList.FirstOrDefault(x => x.Contains("LaboratorioRamos"));
+                    var stackList = ex.InnerException.StackTrace; //.Split(Environment.NewLine);
+                    var stackMessage = stackList; //.FirstOrDefault(x => x.Contains("LaboratorioRamos"));
                     if (!string.IsNullOrWhiteSpace(stackMessage))
                     {
                         innerMessage = string.Concat(innerMessage, Environment.NewLine, "StackTrace: ", stackMessage.Trim());

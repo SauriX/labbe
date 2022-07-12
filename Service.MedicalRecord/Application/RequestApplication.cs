@@ -35,6 +35,11 @@ namespace Service.MedicalRecord.Application
         public async Task<byte[]> GetTicket()
         {
             return await _pdfClient.GenerateTicket();
+        }  
+        
+        public async Task<byte[]> GetOrder()
+        {
+            return await _pdfClient.GenerateOrder();
         }
 
         public async Task<string> Create(RequestDto request)

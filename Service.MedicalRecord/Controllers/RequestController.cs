@@ -29,6 +29,14 @@ namespace Service.MedicalRecord.Controllers
             return File(file, MimeType.PDF, "ticket.pdf");
         }
 
+        [HttpPost("order")]
+        public async Task<IActionResult> GetOrder()
+        {
+            var file = await _service.GetOrder();
+
+            return File(file, MimeType.PDF, "order.pdf");
+        }
+
         [HttpPost]
         //[Authorize(Policies.Create)]
         public async Task<string> Create(RequestDto request)

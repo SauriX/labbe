@@ -36,6 +36,40 @@ namespace Service.Report.Migrations
                     b.ToTable("MedicalRecord");
                 });
 
+            modelBuilder.Entity("Service.Report.Domain.PatientStats.PatientStats", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ExpendienteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NombrePaciente")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Solicitudes")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Sucursal")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("SucursalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExpendienteId");
+
+                    b.ToTable("PatientStats");
+                });
+
             modelBuilder.Entity("Service.Report.Domain.Request.Request", b =>
                 {
                     b.Property<Guid>("Id")
@@ -71,6 +105,17 @@ namespace Service.Report.Migrations
                     b.HasIndex("ExpedienteId");
 
                     b.ToTable("Request");
+                });
+
+            modelBuilder.Entity("Service.Report.Domain.PatientStats.PatientStats", b =>
+                {
+                    b.HasOne("Service.Report.Domain.MedicalRecord.MedicalRecord", "Expendiente")
+                        .WithMany()
+                        .HasForeignKey("ExpendienteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Expendiente");
                 });
 
             modelBuilder.Entity("Service.Report.Domain.Request.Request", b =>
