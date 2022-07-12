@@ -1,5 +1,6 @@
 ﻿using Service.Report.Domain.Request;
 using Service.Report.Dtos.Request;
+using Service.Report.PdfModel;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

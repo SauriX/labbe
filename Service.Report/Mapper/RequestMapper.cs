@@ -19,8 +19,8 @@ namespace Service.Report.Mapper
                           {
                               Id = grupo.Key.Id,
                               Visitas = grupo.Count(),
-                              Nombre = grupo.Key.Sucursal,
-                              Clave = grupo.Key.ExpedienteNombre,
+                              Sucursal = grupo.Key.Sucursal,
+                              NombrePaciente = grupo.Key.ExpedienteNombre,
                           };
             return results;
         }
@@ -33,8 +33,8 @@ namespace Service.Report.Mapper
             return new RequestFiltroDto
             {
                Id = model.Id,
-               Clave = model.Expediente.Expediente,
-               Nombre = model.Sucursal,
+               NombrePaciente = model.Expediente.Expediente,
+               Sucursal = model.Sucursal,
 
             };
         }
@@ -46,8 +46,8 @@ namespace Service.Report.Mapper
             return model.Select(x => new RequestFiltroDto
             {
                 Id = x.Id,
-                Nombre = x.Sucursal,
-                Clave = x?.Expediente?.Expediente,
+                Sucursal = x.Sucursal,
+                NombrePaciente = x?.Expediente?.Expediente,
             }).ToList();
         }
     }
