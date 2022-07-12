@@ -50,7 +50,7 @@ namespace Service.Report.Controllers
             return File(file, MimeType.XLSX, fileName);
         }
 
-        [HttpGet("download/pdf")]
+        [HttpPost("download/pdf")]
         [AllowAnonymous]
         public async Task<IActionResult> ExpedientePDF()
         {

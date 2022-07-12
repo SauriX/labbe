@@ -23,7 +23,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/request/download/pdf",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": [ "POST" ]
     },
     {
       "DownstreamPathTemplate": "/api/request/export/table/{search}",
