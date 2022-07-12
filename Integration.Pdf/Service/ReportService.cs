@@ -108,7 +108,7 @@ namespace Integration.Pdf.Service
             }
 
             if (data.Count > 0)
-            { 
+            {
                 foreach (var item in data)
                 {
                     row = table.AddRow();
@@ -137,10 +137,22 @@ namespace Integration.Pdf.Service
 
                 table.Rows.Alignment = RowAlignment.Center;
             }
+            else
+            {
+                row = table.AddRow();
+
+                Cell cell = row.Cells[0];
+                cell.MergeRight = columns.Count - 1;
+                cell.Borders.Left.Visible = false;
+                cell.Borders.Right.Visible = false;
+                cell.Format.Alignment = ParagraphAlignment.Center;
+
+                cell.AddParagraph("No hay registros");
+            }
 
             section.Add(table);
 
-            if (!seriesInfo.Any(x => x.SerieX))
+            if (!seriesInfo.Any(x => x.SerieX) || data.Count == 0)
             {
                 return;
             }
