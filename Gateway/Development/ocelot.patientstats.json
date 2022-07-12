@@ -1,0 +1,65 @@
+﻿{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/patientstats/download/pdf",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 18934
+        }
+      ],
+      "UpstreamPathTemplate": "/api/patientstats/download/pdf",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/patientstats/export/table",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 18934
+        }
+      ],
+      "UpstreamPathTemplate": "/api/patientstats/export/table",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/patientstats/export/graphic",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 18934
+        }
+      ],
+      "UpstreamPathTemplate": "/api/patientstats/export/graphic",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/patientstats/filter",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 18934
+        }
+      ],
+      "UpstreamPathTemplate": "/api/patientstats/filter",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    //{
+    //  "DownstreamPathTemplate": "/api/test",
+    //  "DownstreamScheme": "http",
+    //  "DownstreamHostAndPorts": [
+    //    {
+    //      "Host": "localhost",
+    //      "Port": 18934
+    //    }
+    //  ],
+    //  "UpstreamPathTemplate": "/api/test",
+    //  "UpstreamHttpMethod": [ "POST" ]
+    //}
+  ]
+}
