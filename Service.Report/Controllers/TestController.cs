@@ -41,7 +41,7 @@ namespace Service.Report.Controllers
             {
                 new RequestFiltroDto()
                 {
-                    NombrePaciente= "Clave 1",
+                    NombrePaciente = "Clave 1",
                     Visitas = 5,
                 },
                 new RequestFiltroDto()
