@@ -1,11 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Service.Catalog.Context;
 using Service.Report.Domain.Request;
 using Service.Report.Dtos.Request;
+using Service.Report.PdfModel;
 using Service.Report.Repository.IRepository;
+using Shared.Error;
+using Shared.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Service.Report.Repository
@@ -43,12 +53,13 @@ namespace Service.Report.Repository
             if (search.Fecha != null)
             {
                 report = report.
-                    Where(x => x.FechaInicial.Date >= search.Fecha.First().Date && 
+                    Where(x => x.Fecha.Date >= search.Fecha.First().Date && 
                     x.FechaFinal.Date <= search.Fecha.Last().Date).ToList();
             }
             return report.ToList();
 
         }
+        
 
     }
 }
