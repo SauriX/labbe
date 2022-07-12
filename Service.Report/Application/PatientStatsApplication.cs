@@ -23,6 +23,7 @@ using Shared.Helpers;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http.Json;
 using Service.Report.Client.IClient;
+using Service.Report.Mapper;
 
 namespace Service.Report.Application
 {
@@ -37,39 +38,25 @@ namespace Service.Report.Application
             _pdfClient = pdfClient;
         }
 
-        public async Task<IEnumerable<PatientStatsFiltroDto>> GetBranchByCount()
-        {
-            var req = await _repository.GetRequestByCount();
-            var results = from c in req
-                          group c by c.NombrePaciente into grupo
-                          select new PatientStatsFiltroDto
-                          {
-                              NombrePaciente = grupo.Key,
-                              Solicitudes = grupo.Count(),
-                              Total = grupo.Sum(x => x.Total),
-                          };
-
-            return results;
-        }
-
         public async Task<IEnumerable<PatientStatsFiltroDto>> GetFilter(PatientStatsSearchDto search)
         {
             var req = await _repository.GetFilter(search);
-            var results = from c in req
+            /* var results = from c in req
                           group c by c.NombrePaciente into grupo
                           select new PatientStatsFiltroDto
                           {
                               NombrePaciente = grupo.Key,
                               Solicitudes = grupo.Count(),
                               Total = grupo.Sum(x => x.Total),
-                          };
+                          };*/
+            var results = req.ToPatientStatsListDto();
 
             return results;
         }
 
-        public async Task<(byte[] file, string fileName)> ExportTableStats(string search = null)
+        public async Task<(byte[] file, string fileName)> ExportTableStats(PatientStatsSearchDto search)
         {
-            var indication = await GetBranchByCount();
+            var indication = await GetFilter(search);
             var path = Assets.PatientStatsTable;
             var template = new XLTemplate(path);
 
@@ -90,9 +77,9 @@ namespace Service.Report.Application
             return (template.ToByteArray(), "Estadística de Pacientes.xlsx");
         }
 
-        public async Task<(byte[] file, string fileName)> ExportChartStats(string search = null)
+        public async Task<(byte[] file, string fileName)> ExportChartStats(PatientStatsSearchDto search)
         {
-            var indication = await GetBranchByCount();
+            var indication = await GetFilter(search);
 
             var path = Assets.PatientStatsChart;
 
@@ -115,9 +102,9 @@ namespace Service.Report.Application
             return (template.ToByteArray(), "Estadística de Pacientes.xlsx");
         }
 
-        public async Task<byte[]> GenerateReportPDF()
+        public async Task<byte[]> GenerateReportPDF(PatientStatsSearchDto search)
         {
-            var requestData = await GetBranchByCount();
+            var requestData = await GetFilter(search);
 
             List<Col> columns = new()
             {

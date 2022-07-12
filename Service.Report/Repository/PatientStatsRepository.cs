@@ -19,27 +19,21 @@ namespace Service.Report.Repository
             _context = context;
         }
 
-        public async Task<List<PatientStats>> GetRequestByCount()
-        {
-            var report = await _context.PatientStats.ToListAsync();
-
-            return report;
-        }
-
         public async Task<List<Report.Domain.PatientStats.PatientStats>> GetFilter(PatientStatsSearchDto search)
         {
-            var report = _context.PatientStats.ToList();
+            var report = _context.PatientStats.AsQueryable();
 
-            if (!String.IsNullOrEmpty(search.SucursalId))
+            if (search.SucursalId != Guid.Empty)
             {
-                report = report.Where(x => x.SucursalId == Guid.Parse(search.SucursalId)).ToList();
+                report = report.Where(x => x.SucursalId == search.SucursalId);
             }
             if(search.Fecha != null)
             {
-                report = report.Where(x => x.Fecha.Date >= search.Fecha.First().Date).ToList();
+                report = report.Where(x => x.Fecha.Date >= search.Fecha.First().Date &&
+                x.Fecha.Date <= search.Fecha.Last().Date);
             }
 
-            return report.ToList();
+            return await report.ToListAsync();
         }
     }
 }

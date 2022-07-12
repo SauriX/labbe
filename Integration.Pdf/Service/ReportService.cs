@@ -107,38 +107,36 @@ namespace Integration.Pdf.Service
                 cell.AddParagraph(columns[i].Texto);
             }
 
-            if (data.Count == 0)
-            {
-                return;
-            }
-
-            foreach (var item in data)
-            {
-                row = table.AddRow();
-                for (int i = 0; i < columns.Count; i++)
+            if (data.Count > 0)
+            { 
+                foreach (var item in data)
                 {
-                    var key = columns[i].Texto;
-
-                    if (item.ContainsKey(key))
+                    row = table.AddRow();
+                    for (int i = 0; i < columns.Count; i++)
                     {
-                        Cell cell = row.Cells[i];
-                        cell.Borders.Left.Visible = false;
-                        cell.Borders.Right.Visible = false;
-                        var format = columns[i].Formato;
+                        var key = columns[i].Texto;
 
-                        if (!string.IsNullOrWhiteSpace(format))
+                        if (item.ContainsKey(key))
                         {
-                            cell.AddParagraph(Convert.ToDouble(item[key]).ToString(format));
-                        }
-                        else
-                        {
-                            cell.AddParagraph(item[key].ToString());
+                            Cell cell = row.Cells[i];
+                            cell.Borders.Left.Visible = false;
+                            cell.Borders.Right.Visible = false;
+                            var format = columns[i].Formato;
+
+                            if (!string.IsNullOrWhiteSpace(format))
+                            {
+                                cell.AddParagraph(Convert.ToDouble(item[key]).ToString(format));
+                            }
+                            else
+                            {
+                                cell.AddParagraph(item[key].ToString());
+                            }
                         }
                     }
                 }
-            }
 
-            table.Rows.Alignment = RowAlignment.Center;
+                table.Rows.Alignment = RowAlignment.Center;
+            }
 
             section.Add(table);
 

@@ -7,7 +7,6 @@ namespace Service.Report.Repository.IRepository
 {
     public interface IPatientStatsRepository
     {
-        Task<List<PatientStats>> GetRequestByCount();
         Task<List<Report.Domain.PatientStats.PatientStats>> GetFilter(PatientStatsSearchDto search);
     }
 }

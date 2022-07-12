@@ -16,17 +16,13 @@ namespace Service.Report.Mapper
             var results = from c in model
                           group c by new
                           {
-                              c.Id,
                               c.NombrePaciente,
-                              c.Solicitudes,
-                              c.Total
                           } into grupo
                           select new PatientStatsFiltroDto
                           {
-                              Id = grupo.Key.Id,
                               NombrePaciente = grupo.Key.NombrePaciente,
-                              Solicitudes = grupo.Key.Solicitudes,
-                              Total = grupo.Key.Total,
+                              Solicitudes = grupo.Count(),
+                              Total = grupo.Sum(x => x.Total)
                           };
             return results;
         }
@@ -37,10 +33,7 @@ namespace Service.Report.Mapper
 
             return new PatientStatsFiltroDto
             {
-                Id = model.Id,
                 NombrePaciente = model.NombrePaciente,
-                Solicitudes = model.Solicitudes,
-                Total = model.Total
             };
         }
 
@@ -50,10 +43,7 @@ namespace Service.Report.Mapper
 
             return model.Select(x => new PatientStatsFiltroDto
             {
-                Id = x.Id,
                 NombrePaciente = x.NombrePaciente,
-                Solicitudes = x.Solicitudes,
-                Total = x.Total,
             }).ToList();
         }
     }
