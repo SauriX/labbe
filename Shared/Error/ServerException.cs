@@ -37,7 +37,8 @@ namespace Shared.Error
         public string StackTrace
         {
             get { return stackTrace; }
-            set { stackTrace = value?.Split(Environment.NewLine)?.FirstOrDefault(x => x.Contains("LaboratorioRamos"))?.Trim(); }
+            set { stackTrace = value; }
+            //set { stackTrace = value?.Split(Environment.NewLine)?.FirstOrDefault(x => x.Contains("LaboratorioRamos"))?.Trim(); }
         }
 
         public ServerException InnerException { get; set; }
