@@ -39,14 +39,14 @@ namespace Service.Catalog.Controllers
         [AllowAnonymous]
         public async Task<PriceListInfoStudyDto> GetPriceStudyById(int id)
         {
-            return await _service.GetPriceStudyById(id);
+            return await _service.GetPriceStudyById(id, null, null, null);
         }
 
         [HttpGet("info/pack/{id}")]
         [AllowAnonymous]
         public async Task<PriceListInfoPackDto> GetPricePackById(int id)
         {
-            return await _service.GetPricePackById(id);
+            return await _service.GetPricePackById(id, null, null, null);
         }
 
         [HttpGet("{id}")]

@@ -58,9 +58,9 @@ namespace Service.Catalog.Application
             return price.ToPriceListFormDto();
         }
 
-        public async Task<PriceListInfoStudyDto> GetPriceStudyById(int id, Guid? companyId, Guid? doctorId, Guid branchId)
+        public async Task<PriceListInfoStudyDto> GetPriceStudyById(int id, Guid? companyId, Guid? doctorId, Guid? branchId)
         {
-            var prices = await _repository.GetPriceStudyById(id, companyId, doctorId, branchId);
+            var prices = await _repository.GetPriceStudyById(id, companyId, doctorId, Guid.Empty);
 
             if (prices == null)
             {
@@ -72,9 +72,9 @@ namespace Service.Catalog.Application
             return prices.ToPriceListInfoStudyDto();
         }
 
-        public async Task<PriceListInfoPackDto> GetPricePackById(int id, Guid? companyId, Guid? doctorId, Guid branchId)
+        public async Task<PriceListInfoPackDto> GetPricePackById(int id, Guid? companyId, Guid? doctorId, Guid? branchId)
         {
-            var prices = await _repository.GetPricePackById(id, companyId, doctorId, branchId);
+            var prices = await _repository.GetPricePackById(id, companyId, doctorId, Guid.Empty);
 
             if (prices == null)
             {
