@@ -123,12 +123,12 @@ namespace Service.Report.Application
             {
                 new Col("Nombre de Paciente", 3, ParagraphAlignment.Left),
                 new Col("Solicitudes", ParagraphAlignment.Left),
-                new Col("Total Sol.", ParagraphAlignment.Right ,"C"),
+                new Col("Total", ParagraphAlignment.Right ,"C"),
             };
 
             List<ChartSeries> series = new()
             {
-                new ChartSeries("Nombre de Paciente", true),
+                new ChartSeries("Iniciales Paciente", true),
                 new ChartSeries("Solicitudes"),
                 new ChartSeries("Total"),
             };
@@ -137,7 +137,8 @@ namespace Service.Report.Application
             {
                 { "Nombre de Paciente", x.NombrePaciente},
                 { "Solicitudes", x.Solicitudes },
-                { "Total", x.Total }
+                { "Total", x.Total },
+                {"Iniciales Paciente", string.Join(" ", x.NombrePaciente.Split(" ").Select(x => x[0]))}
             }).ToList();
 
             var reportData = new ReportData()
