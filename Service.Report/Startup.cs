@@ -205,8 +205,8 @@ namespace Service.Report
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("/v1/swagger.json", "Service.Report v1");
-                    c.RoutePrefix = "";
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Service.Report v1");
+                    c.RoutePrefix = "report";
                 });
             }
 
