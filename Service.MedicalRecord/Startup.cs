@@ -214,12 +214,23 @@ namespace Service.MedicalRecord
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Service.MedicalRecord v1"));
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Service.Report v1");
+                });
             }
+            else if (env.IsEnvironment("QA"))
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/LabRamos/services/records/swagger/v1/swagger.json", "Service.Report v1");
+                });
+            }
+
             app.UseCors("CorsPolicy");
 
             app.UseMiddleware<ErrorMiddleware>();
-
 
             app.UseRouting();
             app.UseAuthentication();

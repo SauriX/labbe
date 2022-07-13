@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 using Service.Identity.Context;
 using System;
 using System.IO;
@@ -21,6 +22,8 @@ namespace Service.Identity
                 .AddJsonFile($"appsettings.{environmentName}.json", optional: false)
                 .AddEnvironmentVariables()
                 .Build();
+
+            Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(config).CreateLogger();
 
             var host = CreateHostBuilder(args).Build();
 
@@ -54,6 +57,7 @@ namespace Service.Identity
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
