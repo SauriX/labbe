@@ -6,5 +6,6 @@ namespace Service.MedicalRecord.Client.IClient
     {
         Task<byte[]> GenerateTicket();
         Task<byte[]> GenerateQuotation();
+        Task<byte[]> GenerateOrder();
     }
 }

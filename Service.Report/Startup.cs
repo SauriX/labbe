@@ -60,12 +60,27 @@ namespace Service.Report
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddScoped<IIdentityClient, IdentityClient>();
+            services.AddScoped<IPdfClient, PdfClient>();
 
             services.AddHttpClient<IIdentityClient, IdentityClient>(client =>
             {
                 var token = new HttpContextAccessor().HttpContext.Request.Headers["Authorization"].ToString();
 
                 client.BaseAddress = new Uri(Configuration["ClientUrls:Identity"]);
+
+                if (!string.IsNullOrWhiteSpace(token))
+                {
+                    client.DefaultRequestHeaders.Add("Authorization", token);
+                }
+
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            });
+
+            services.AddHttpClient<IPdfClient, PdfClient>(client =>
+            {
+                var token = new HttpContextAccessor().HttpContext.Request.Headers["Authorization"].ToString();
+
+                client.BaseAddress = new Uri(Configuration["ClientUrls:Pdf"]);
 
                 if (!string.IsNullOrWhiteSpace(token))
                 {
@@ -167,8 +182,10 @@ namespace Service.Report
             });
 
             services.AddScoped<IRequestApplication, RequestApplication>();
+            services.AddScoped<IPatientStatsApplication, PatientStatsApplication>();
 
             services.AddScoped<IRequestRepository, RequestRepository>();
+            services.AddScoped<IPatientStatsRepository, PatientStatsRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -178,7 +195,19 @@ namespace Service.Report
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Service.Report v1"));
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Service.Report v1");
+                });
+            }
+            else if (env.IsEnvironment("QA"))
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("swagger/v1/swagger.json", "Service.Report v1");
+                    c.RoutePrefix = "";
+                });
             }
 
             app.UseCors("CorsPolicy");

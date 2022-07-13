@@ -243,7 +243,19 @@ namespace Service.Catalog
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Service.Catalog v1"));
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Service.Report v1");
+                });
+            }
+            else if (env.IsEnvironment("QA"))
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("swagger/v1/swagger.json", "Service.Report v1");
+                    c.RoutePrefix = "";
+                });
             }
 
             app.UseCors("CorsPolicy");

@@ -107,7 +107,7 @@ namespace Service.Catalog.Mapper
                     Id = x.Id,
                     CompañiaId = dto.Id,
                     Nombre = x.Nombre.Trim(),
-                    Telefono = x.Id,
+                    Telefono = x.Telefono,
                     Correo = x.Correo,
                     Activo = x.Activo,
                     FechaCreo = DateTime.Now,

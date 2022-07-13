@@ -22,10 +22,12 @@ namespace Service.Catalog.Application
     public class PriceListApplication : IPriceListApplication
     {
         private readonly IPriceListRepository _repository;
+        private readonly IPromotionRepository _promotionRepository;
 
-        public PriceListApplication(IPriceListRepository repository)
+        public PriceListApplication(IPriceListRepository repository, IPromotionRepository promotionRepository)
         {
             _repository = repository;
+            _promotionRepository = promotionRepository;
         }
 
         public async Task<IEnumerable<PriceListListDto>> GetAll(string search)
@@ -56,21 +58,23 @@ namespace Service.Catalog.Application
             return price.ToPriceListFormDto();
         }
 
-        public async Task<PriceListInfoStudyDto> GetPriceStudyById(int id)
+        public async Task<PriceListInfoStudyDto> GetPriceStudyById(int id, Guid? companyId, Guid? doctorId, Guid? branchId)
         {
-            var prices = await _repository.GetPriceStudyById(id);
+            var prices = await _repository.GetPriceStudyById(id, companyId, doctorId, Guid.Empty);
 
             if (prices == null)
             {
                 throw new CustomException(HttpStatusCode.NotFound, "Lista de precios no configurada");
             }
 
+
+
             return prices.ToPriceListInfoStudyDto();
         }
 
-        public async Task<PriceListInfoPackDto> GetPricePackById(int id)
+        public async Task<PriceListInfoPackDto> GetPricePackById(int id, Guid? companyId, Guid? doctorId, Guid? branchId)
         {
-            var prices = await _repository.GetPricePackById(id);
+            var prices = await _repository.GetPricePackById(id, companyId, doctorId, Guid.Empty);
 
             if (prices == null)
             {

@@ -41,24 +41,92 @@ namespace Service.Catalog.Repository
             return await indications.ToListAsync();
         }
 
-        public async Task<PriceList_Study> GetPriceStudyById(int studyId)
+        public async Task<PriceList_Study> GetPriceStudyById(int studyId, Guid? companyId, Guid? doctorId, Guid branchId)
         {
             var prices = _context.Relacion_ListaP_Estudio
                 .Include(x => x.Estudio.Parameters).ThenInclude(x => x.Parametro.Area.Departamento)
                 .Include(x => x.Estudio.Indications).ThenInclude(x => x.Indicacion)
                 .Where(x => x.EstudioId == studyId);
 
-            return await prices.FirstOrDefaultAsync();
+            if (companyId != null && companyId != Guid.Empty)
+            {
+                var companyPrice = await
+                    (from p in prices
+                     join cp in _context.CAT_ListaP_Compañia.Where(x => x.CompañiaId == companyId) on p.PrecioListaId equals cp.PrecioListaId
+                     where cp.Activo
+                     select p).FirstOrDefaultAsync();
+
+                if (companyPrice != null)
+                {
+                    return companyPrice;
+                }
+            }
+
+            if (doctorId != null && doctorId != Guid.Empty)
+            {
+                var doctorPrice = await
+                    (from p in prices
+                     join dp in _context.CAT_ListaP_Medicos.Where(x => x.MedicoId == doctorId) on p.PrecioListaId equals dp.PrecioListaId
+                     where dp.Activo
+                     select p).FirstOrDefaultAsync();
+
+                if (doctorPrice != null)
+                {
+                    return doctorPrice;
+                }
+            }
+
+            var branchPrice = await
+                (from p in prices
+                 join dp in _context.CAT_ListaP_Sucursal.Where(x => x.SucursalId == branchId) on p.PrecioListaId equals dp.PrecioListaId
+                 where dp.Activo
+                 select p).FirstOrDefaultAsync();
+
+            return branchPrice;
         }
 
-        public async Task<PriceList_Packet> GetPricePackById(int packId)
+        public async Task<PriceList_Packet> GetPricePackById(int packId, Guid? companyId, Guid? doctorId, Guid branchId)
         {
             var prices = _context.Relacion_ListaP_Paquete
                 .Include(x => x.Paquete.studies).ThenInclude(x => x.Estudio.Parameters).ThenInclude(x => x.Parametro.Area.Departamento)
                 .Include(x => x.Paquete.studies).ThenInclude(x => x.Estudio.Indications).ThenInclude(x => x.Indicacion)
                 .Where(x => x.PaqueteId == packId);
 
-            return await prices.FirstOrDefaultAsync();
+            if (companyId != null && companyId != Guid.Empty)
+            {
+                var companyPrice = await
+                    (from p in prices
+                     join cp in _context.CAT_ListaP_Compañia.Where(x => x.CompañiaId == companyId) on p.PrecioListaId equals cp.PrecioListaId
+                     where cp.Activo
+                     select p).FirstOrDefaultAsync();
+
+                if (companyPrice != null)
+                {
+                    return companyPrice;
+                }
+            }
+
+            if (doctorId != null && doctorId != Guid.Empty)
+            {
+                var doctorPrice = await
+                    (from p in prices
+                     join dp in _context.CAT_ListaP_Medicos.Where(x => x.MedicoId == doctorId) on p.PrecioListaId equals dp.PrecioListaId
+                     where dp.Activo
+                     select p).FirstOrDefaultAsync();
+
+                if (doctorPrice != null)
+                {
+                    return doctorPrice;
+                }
+            }
+
+            var branchPrice = await
+                (from p in prices
+                 join dp in _context.CAT_ListaP_Sucursal.Where(x => x.SucursalId == branchId) on p.PrecioListaId equals dp.PrecioListaId
+                 where dp.Activo
+                 select p).FirstOrDefaultAsync();
+
+            return branchPrice;
         }
 
         public async Task<PriceList> GetById(Guid Id)

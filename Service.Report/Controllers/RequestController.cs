@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Service.Report.Application.IApplication;
 using Service.Report.Dtos.Request;
+using Service.Report.PdfModel;
 using Shared.Dictionary;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Service.Report.Controllers
@@ -46,6 +48,15 @@ namespace Service.Report.Controllers
         {
             var (file, fileName) = await _requestService.ExportGraphicBranch(search);
             return File(file, MimeType.XLSX, fileName);
+        }
+
+        [HttpPost("download/pdf")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ExpedientePDF()
+        {
+            var file = await _requestService.GenerateReportPDF();
+
+            return File(file, MimeType.PDF, "reporte.pdf");
         }
     }
 }

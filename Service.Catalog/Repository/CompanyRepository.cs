@@ -68,7 +68,11 @@ namespace Service.Catalog.Repository
                 contacts ??= new List<Contact>();
 
                 contacts.ForEach(x => x.CompañiaId = company.Id);
-                await _context.BulkInsertOrUpdateOrDeleteAsync(contacts);
+
+                var config = new BulkConfig();
+                config.SetSynchronizeFilter<Contact>(x => x.CompañiaId == company.Id);
+
+                await _context.BulkInsertOrUpdateOrDeleteAsync(contacts, config);
 
                 transaction.Commit();
             }
@@ -86,7 +90,10 @@ namespace Service.Catalog.Repository
             company.Contacts = null;
             _context.CAT_Compañia.Update(company);
 
-            await _context.BulkInsertOrUpdateOrDeleteAsync(contact);
+            var config = new BulkConfig();
+            config.SetSynchronizeFilter<Contact>(x => x.CompañiaId == company.Id);
+
+            await _context.BulkInsertOrUpdateOrDeleteAsync(contact, config);
 
             await _context.SaveChangesAsync();
         }

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using Service.Catalog.Context;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,8 @@ namespace Service.Catalog
                 .AddJsonFile($"appsettings.{environmentName}.json", optional: false)
                 .AddEnvironmentVariables()
                 .Build();
+
+            Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(config).CreateLogger();
 
             var host = CreateHostBuilder(args).Build();
 
@@ -56,6 +59,7 @@ namespace Service.Catalog
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
