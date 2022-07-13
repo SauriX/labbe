@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Context;
-using Service.Report.Domain.PatientStats;
+using Service.Report.Domain.Request;
 using Service.Report.Dtos.PatientStats;
 using Service.Report.Repository.IRepository;
 using System;
@@ -19,9 +19,9 @@ namespace Service.Report.Repository
             _context = context;
         }
 
-        public async Task<List<Report.Domain.PatientStats.PatientStats>> GetFilter(PatientStatsSearchDto search)
+        public async Task<List<Report.Domain.Request.Request>> GetFilter(PatientStatsSearchDto search)
         {
-            var report = _context.PatientStats.AsQueryable();
+            var report = _context.Request.AsQueryable();
 
             if (search.SucursalId != Guid.Empty)
             {

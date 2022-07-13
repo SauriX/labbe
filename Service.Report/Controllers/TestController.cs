@@ -41,19 +41,19 @@ namespace Service.Report.Controllers
             {
                 new RequestFiltroDto()
                 {
-                    NombrePaciente = "Clave 1",
+                    ExpedienteNombre = "Clave 1",
                     Visitas = 5,
                 },
                 new RequestFiltroDto()
                 {
-                    NombrePaciente= "Clave 2",
+                    ExpedienteNombre= "Clave 2",
                     Visitas = 7,
                 }
             };
 
             var data = list.Select(x => new Dictionary<string, object>
             {
-                { "Clave", x.NombrePaciente },
+                { "Clave", x.ExpedienteNombre },
                 { "Visitas", x.Visitas }
             }).ToList();
 

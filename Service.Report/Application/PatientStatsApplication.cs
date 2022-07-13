@@ -23,7 +23,6 @@ using Shared.Helpers;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http.Json;
 using Service.Report.Client.IClient;
-using Service.Report.Mapper;
 
 namespace Service.Report.Application
 {
@@ -41,15 +40,14 @@ namespace Service.Report.Application
         public async Task<IEnumerable<PatientStatsFiltroDto>> GetFilter(PatientStatsSearchDto search)
         {
             var req = await _repository.GetFilter(search);
-            /* var results = from c in req
-                          group c by c.NombrePaciente into grupo
+            var results = from c in req
+                          group c by c.Expediente into grupo
                           select new PatientStatsFiltroDto
                           {
-                              NombrePaciente = grupo.Key,
+                              NombrePaciente = grupo.Key.Nombre,
                               Solicitudes = grupo.Count(),
-                              Total = grupo.Sum(x => x.Total),
-                          };*/
-            var results = req.ToPatientStatsListDto();
+                              Total = grupo.Sum(x => x.PrecioFinal),
+                          };
 
             return results;
         }

@@ -41,14 +41,12 @@ namespace Service.Report.Application
         {
             var req = await _repository.GetRequestByCount();
             var results = from c in req
-                          group c by new { c.Id, c.Sucursal, c.ExpedienteNombre } into grupo
+                          group c by c.Expediente into grupo
                           select new RequestFiltroDto
                           {
-                              Id = grupo.Key.Id,
                               Visitas = grupo.Count(),
-                              Sucursal = grupo.Key.Sucursal,
-                              NombrePaciente = grupo.Key.ExpedienteNombre
-
+                              PacienteNombre = grupo.Key.Nombre,
+                              ExpedienteNombre = grupo.Key.Expediente
                           };
 
 
@@ -62,15 +60,14 @@ namespace Service.Report.Application
         public async Task<IEnumerable<RequestFiltroDto>> GetFilter(RequestSearchDto search)
         {
             var doctors = await _repository.GetFilter(search);
-            var results = from c in doctors
-                          group c by new { c.Id, c.Sucursal, c.ExpedienteNombre } into grupo
+            var req = await _repository.GetRequestByCount();
+            var results = from c in req
+                          group c by c.Expediente into grupo
                           select new RequestFiltroDto
                           {
-                              Id = grupo.Key.Id,
                               Visitas = grupo.Count(),
-                              Sucursal = grupo.Key.Sucursal,
-                              NombrePaciente = grupo.Key.ExpedienteNombre
-
+                              PacienteNombre = grupo.Key.Nombre,
+                              ExpedienteNombre = grupo.Key.Expediente
                           };
 
 
@@ -134,7 +131,7 @@ namespace Service.Report.Application
             List<Col> columns = new()
             {
                 new Col("Clave", ParagraphAlignment.Left),
-                new Col("Sucursal", ParagraphAlignment.Left),
+                new Col("Paciente", ParagraphAlignment.Left),
                 new Col("Visitas"),
             };
 
@@ -146,9 +143,9 @@ namespace Service.Report.Application
 
             var data = requestsData.Select(x => new Dictionary<string, object>
             {
-                { "Clave", x.NombrePaciente },
+                { "Clave", x.ExpedienteNombre },
                 { "Visitas", x.Visitas },
-                {"Sucursal", x.Sucursal }
+                {"Paciente", x.PacienteNombre }
             }).ToList();
 
             var reportData = new ReportData()
