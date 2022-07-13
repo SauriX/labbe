@@ -117,7 +117,7 @@ namespace Service.Catalog.Application
 
             template.Format();
 
-            return (template.ToByteArray(), "Catálogo de Promosiones.xlsx");
+            return (template.ToByteArray(), "Catálogo de Promociones.xlsx");
         }
 
         public async Task<(byte[] file, string fileName)> ExportForm(int id)
