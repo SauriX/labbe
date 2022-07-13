@@ -29,7 +29,7 @@ namespace Service.Catalog.Repository
             if (!string.IsNullOrWhiteSpace(search) && search != "all")
             {
                 search = search.Trim().ToLower();
-                promotions= promotions.Where(x => x.Clave.ToLower().Contains(search) || x.Nombre.ToLower().Contains(search));
+                promotions = promotions.Where(x => x.Clave.ToLower().Contains(search) || x.Nombre.ToLower().Contains(search));
             }
             var listas = _context.CAT_ListaPrecio.AsQueryable();
             return await promotions.ToListAsync();
@@ -37,24 +37,24 @@ namespace Service.Catalog.Repository
 
         public async Task<Promotion> GetById(int id)
         {
-                var promotions = _context.CAT_Promocion
-                 .Include(x => x.prices)
-                 .ThenInclude(x => x.PrecioLista.Paquete)
-                 .ThenInclude(x => x.Paquete.Area.Departamento)
-                 .Include(x => x.prices)
-                 .ThenInclude(x => x.PrecioLista.Estudios)
-                 .ThenInclude(x => x.Estudio.Area.Departamento)
-                 .Include(x => x.loyalities)
-                 .ThenInclude(x => x.loyalities)
-                 .Include(x => x.branches)
-                 .ThenInclude(x => x.Branch.Departamentos)
-                 .ThenInclude(x => x.Departamento)
-                 .Include(x => x.packs)
-                 .ThenInclude(x => x.Pack.Area.Departamento)
-                 .Include(x => x.studies)
-                 .ThenInclude(x => x.Study.Area.Departamento)
-                 .AsQueryable()
-                .FirstOrDefaultAsync(x => x.Id == id);
+            var promotions = _context.CAT_Promocion
+             .Include(x => x.prices)
+             .ThenInclude(x => x.PrecioLista.Paquete)
+             .ThenInclude(x => x.Paquete.Area.Departamento)
+             .Include(x => x.prices)
+             .ThenInclude(x => x.PrecioLista.Estudios)
+             .ThenInclude(x => x.Estudio.Area.Departamento)
+             .Include(x => x.loyalities)
+             .ThenInclude(x => x.loyalities)
+             .Include(x => x.branches)
+             .ThenInclude(x => x.Branch.Departamentos)
+             .ThenInclude(x => x.Departamento)
+             .Include(x => x.packs)
+             .ThenInclude(x => x.Pack.Area.Departamento)
+             .Include(x => x.studies)
+             .ThenInclude(x => x.Study.Area.Departamento)
+             .AsQueryable()
+            .FirstOrDefaultAsync(x => x.Id == id);
 
             return await promotions;
         }
@@ -64,23 +64,63 @@ namespace Service.Catalog.Repository
 
             return promotions;
         }
+
+        public async Task<PromotionStudy> GetPriceStudyById(Guid priceListId, int studyId, Guid branchId)
+        {
+            var branchPrice = await
+                (from p in _context.CAT_ListaP_Promocion.Include(x => x.Promocion).Where(x => x.PrecioListaId == priceListId)
+                 join ps in _context.Relacion_Promocion_Estudio.Include(x => x.Study).Where(x => x.StudyId == studyId) on p.PromocionId equals ps.PromotionId
+                 join pb in _context.Relacion_Promocion_Sucursal.Where(x => x.BranchId == branchId) on p.PromocionId equals pb.PromotionId
+                 where p.Activo && p.Promocion.FechaInicio.Date >= DateTime.Now.Date && p.Promocion.FechaFinal.Date <= DateTime.Now.Date
+                 select ps).FirstOrDefaultAsync();
+
+            return branchPrice;
+        }
+
+        public async Task<PromotionPack> GetPricePackById(int packId, Guid branchId)
+        {
+            //        var prices = _context.Relacion_ListaP_Paquete
+            //            .Include(x => x.Paquete.studies).ThenInclude(x => x.Estudio.Parameters).ThenInclude(x => x.Parametro.Area.Departamento)
+            //            .Include(x => x.Paquete.studies).ThenInclude(x => x.Estudio.Indications).ThenInclude(x => x.Indicacion)
+            //            .Where(x => x.PaqueteId == packId);
+
+            //        var branchPrice = await
+            //            (from p in prices
+            //             join dp in _context.CAT_ListaP_Sucursal.Where(x => x.SucursalId == branchId) on p.PrecioListaId equals dp.PrecioListaId
+            //             where dp.Activo
+            //             select p).FirstOrDefaultAsync();
+
+            //        return branchPrice;
+
+            ////        var branchPrice = await
+            ////(from p in _context.CAT_ListaP_Promocion.Include(x => x.Promocion).Where(x => x.PrecioListaId == priceListId)
+            //// join ps in _context.Relacion_Promocion_Estudio.Where(x => x.StudyId == studyId) on p.PromocionId equals ps.PromotionId
+            //// join pb in _context.Relacion_Promocion_Sucursal.Where(x => x.BranchId == branchId) on p.PromocionId equals pb.PromotionId
+            //// where p.Activo && p.Promocion.FechaInicio.Date >= DateTime.Now.Date && p.Promocion.FechaFinal.Date <= DateTime.Now.Date
+            //// select ps).FirstOrDefaultAsync();
+
+            ////        return branchPrice;
+            return new PromotionPack();
+        }
+
         public async Task Create(Promotion promotion)
         {
 
-            var lista = _context.CAT_ListaPrecio.Where(x=>x.Id == promotion.PrecioListaId);
-            promotion.prices = lista.Select(x=> new Price_Promotion {
+            var lista = _context.CAT_ListaPrecio.Where(x => x.Id == promotion.PrecioListaId);
+            promotion.prices = lista.Select(x => new Price_Promotion
+            {
 
 
-                    PrecioListaId = x.Id,
-                    PromocionId = promotion.Id,
-                    Activo=true,
-                    Precio =0,
-                    UsuarioCreoId=2,
-                    FechaCreo=System.DateTime.Now,
-                    UsuarioModId = promotion.UsuarioCreoId.ToString(),
-                    FechaMod= System.DateTime.Now,
+                PrecioListaId = x.Id,
+                PromocionId = promotion.Id,
+                Activo = true,
+                Precio = 0,
+                UsuarioCreoId = 2,
+                FechaCreo = System.DateTime.Now,
+                UsuarioModId = promotion.UsuarioCreoId.ToString(),
+                FechaMod = System.DateTime.Now,
 
-                }).ToList();
+            }).ToList();
             using var transaction = _context.Database.BeginTransaction();
             try
             {
@@ -129,19 +169,19 @@ namespace Service.Catalog.Repository
             var config = new BulkConfig();
             config.SetSynchronizeFilter<PromotionBranch>(x => x.PromotionId == promotion.Id);
             branches.ForEach(x => x.PromotionId = promotion.Id);
-            await _context.BulkInsertOrUpdateOrDeleteAsync(branches,config);
+            await _context.BulkInsertOrUpdateOrDeleteAsync(branches, config);
 
             config.SetSynchronizeFilter<PromotionPack>(x => x.PromotionId == promotion.Id);
             packs.ForEach(x => x.PromotionId = promotion.Id);
-            await _context.BulkInsertOrUpdateOrDeleteAsync(packs,config);
+            await _context.BulkInsertOrUpdateOrDeleteAsync(packs, config);
 
             config.SetSynchronizeFilter<PromotionStudy>(x => x.PromotionId == promotion.Id);
             studies.ForEach(x => x.PromotionId = promotion.Id);
-            await _context.BulkInsertOrUpdateOrDeleteAsync(studies,config);
+            await _context.BulkInsertOrUpdateOrDeleteAsync(studies, config);
 
             config.SetSynchronizeFilter<Price_Promotion>(x => x.PromocionId == promotion.Id);
             prices.ForEach(x => x.PromocionId = promotion.Id);
-            await _context.BulkInsertOrUpdateOrDeleteAsync(prices,config);
+            await _context.BulkInsertOrUpdateOrDeleteAsync(prices, config);
 
             await _context.SaveChangesAsync();
         }
@@ -153,23 +193,26 @@ namespace Service.Catalog.Repository
             return isDuplicate;
         }
 
-        public async Task<(bool existe, string nombre)> PackIsOnPromotrtion(int id) {
-            var paquetePromotion = _context.Relaciion_Promocion_Paquetes.Include(x => x.Pack).Include(x=>x.Promotion).AsQueryable();
+        public async Task<(bool existe, string nombre)> PackIsOnPromotrtion(int id)
+        {
+            var paquetePromotion = _context.Relacion_Promocion_Paquete.Include(x => x.Pack).Include(x => x.Promotion).AsQueryable();
             var paquetes = _context.CAT_Paquete.AsQueryable();
-            var IsOnPromotrtion = await _context.Relaciion_Promocion_Paquetes.AnyAsync(x=>x.PackId== id);
+            var IsOnPromotrtion = await _context.Relacion_Promocion_Paquete.AnyAsync(x => x.PackId == id);
             var nombrePaquete = paquetes.Where(x => x.Id == id).First();
             return (IsOnPromotrtion, nombrePaquete.Nombre);
         }
-        public async Task<List<PriceList_Packet>> packsIsPriceList(Guid id) {
-            return  _context.Relacion_ListaP_Paquete.AsQueryable().Where(x => x.PrecioListaId == id).ToList();
+        public async Task<List<PriceList_Packet>> packsIsPriceList(Guid id)
+        {
+            return _context.Relacion_ListaP_Paquete.AsQueryable().Where(x => x.PrecioListaId == id).ToList();
         }
-        public async Task<(bool existe ,string nombre)> PackIsOnInvalidPromotion(int PackId) {
-            var paquetePromotion =   _context.Relaciion_Promocion_Paquetes.Include(x=>x.Pack).AsQueryable();
-            var paquete = await  paquetePromotion.AnyAsync(x=>x.PackId == PackId && x.FechaFinal < DateTime.Now);
+        public async Task<(bool existe, string nombre)> PackIsOnInvalidPromotion(int PackId)
+        {
+            var paquetePromotion = _context.Relacion_Promocion_Paquete.Include(x => x.Pack).AsQueryable();
+            var paquete = await paquetePromotion.AnyAsync(x => x.PackId == PackId && x.FechaFinal < DateTime.Now);
             var paquetes = _context.CAT_Paquete.AsQueryable();
             var nombrePaquete = paquetes.Where(x => x.Id == PackId).First();
 
-            return (paquete,nombrePaquete.Nombre);
+            return (paquete, nombrePaquete.Nombre);
         }
     }
 }
