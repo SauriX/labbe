@@ -72,7 +72,9 @@ namespace Service.Catalog.Context
         public DbSet<Packet> CAT_Paquete { get; set; }
         public DbSet<Loyalty> CAT_Lealtad { get; set; }
         public DbSet<Promotion> CAT_Promocion { get; set; }
-        public DbSet<PromotionPack> Relaciion_Promocion_Paquetes { get; set; }
+        public DbSet<PromotionBranch> Relacion_Promocion_Sucursal { get; set; }
+        public DbSet<PromotionStudy> Relacion_Promocion_Estudio { get; set; }
+        public DbSet<PromotionPack> Relacion_Promocion_Paquete { get; set; }
         public DbSet<Route> CAT_Rutas { get; set; }
         public DbSet<Units> CAT_Units { get; set; }
         public DbSet<CiudadBranch> CAT_ciudadBranch { get; set; }

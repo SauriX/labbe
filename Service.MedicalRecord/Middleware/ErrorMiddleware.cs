@@ -46,7 +46,7 @@ namespace Service.Catalog.Middleware
                     context.Response.StatusCode = (int)re.Code;
                     break;
                 case Exception ex:
-                    errors = string.IsNullOrWhiteSpace(ex.Message) ? "Error" : ex.Message;
+                    errors = "Ha ocurrido un error en el servidor, por favor contacta a tu administrador de sistemas";
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     var message = Exceptions.GetMessage(ex);
                     _logger.LogError(message);

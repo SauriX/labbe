@@ -37,9 +37,24 @@ namespace Service.Report.Application
             _pdfClient = pdfClient;
         }
 
+        public async Task<IEnumerable<PatientStatsFiltroDto>> GetByName()
+        {
+            var req = await _repository.GetByName();
+            var results = from c in req
+                         group c by c.Expediente into grupo
+                         select new PatientStatsFiltroDto
+                         {
+                             NombrePaciente = grupo.Key.Nombre,
+                             Solicitudes = grupo.Count(),
+                             Total = grupo.Sum(x => x.PrecioFinal),
+                         };
+
+            return results;
+        }
+
         public async Task<IEnumerable<PatientStatsFiltroDto>> GetFilter(PatientStatsSearchDto search)
         {
-            var req = await _repository.GetFilter(search);
+            var req = await _repository.GetByName();
             var results = from c in req
                           group c by c.Expediente into grupo
                           select new PatientStatsFiltroDto
@@ -52,9 +67,9 @@ namespace Service.Report.Application
             return results;
         }
 
-        public async Task<(byte[] file, string fileName)> ExportTableStats(PatientStatsSearchDto search)
+        public async Task<(byte[] file, string fileName)> ExportTableStats(string search = null)
         {
-            var indication = await GetFilter(search);
+            var indication = await GetByName();
             var path = Assets.PatientStatsTable;
             var template = new XLTemplate(path);
 
@@ -75,9 +90,9 @@ namespace Service.Report.Application
             return (template.ToByteArray(), "Estadística de Pacientes.xlsx");
         }
 
-        public async Task<(byte[] file, string fileName)> ExportChartStats(PatientStatsSearchDto search)
+        public async Task<(byte[] file, string fileName)> ExportChartStats(string search = null)
         {
-            var indication = await GetFilter(search);
+            var indication = await GetByName();
 
             var path = Assets.PatientStatsChart;
 
@@ -100,13 +115,13 @@ namespace Service.Report.Application
             return (template.ToByteArray(), "Estadística de Pacientes.xlsx");
         }
 
-        public async Task<byte[]> GenerateReportPDF(PatientStatsSearchDto search)
+        public async Task<byte[]> GenerateReportPDF()
         {
-            var requestData = await GetFilter(search);
+            var requestData = await GetByName();
 
             List<Col> columns = new()
             {
-                new Col("Nombre de Paciente", 4, ParagraphAlignment.Left),
+                new Col("Nombre de Paciente", 3, ParagraphAlignment.Left),
                 new Col("Solicitudes", ParagraphAlignment.Left),
                 new Col("Total Sol.", ParagraphAlignment.Right ,"C"),
             };

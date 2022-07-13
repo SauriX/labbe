@@ -6,9 +6,10 @@ namespace Service.Report.Application.IApplication
 {
     public interface IPatientStatsApplication
     {
+        Task<IEnumerable<PatientStatsFiltroDto>> GetByName();
         Task<IEnumerable<PatientStatsFiltroDto>> GetFilter(PatientStatsSearchDto search);
-        Task<(byte[] file, string fileName)> ExportTableStats(PatientStatsSearchDto search);
-        Task<(byte[] file, string fileName)> ExportChartStats(PatientStatsSearchDto search);
-        Task<byte[]> GenerateReportPDF(PatientStatsSearchDto search);
+        Task<(byte[] file, string fileName)> ExportTableStats(string search = null);
+        Task<(byte[] file, string fileName)> ExportChartStats(string search = null);
+        Task<byte[]> GenerateReportPDF();
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Shared.Error;
+using Shared.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,10 +15,12 @@ namespace Service.Report.Middleware
     public class ErrorMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly ILogger<ErrorMiddleware> _logger;
 
-        public ErrorMiddleware(RequestDelegate next)
+        public ErrorMiddleware(RequestDelegate next, ILogger<ErrorMiddleware> logger)
         {
             _next = next;
+            _logger = logger;
         }
 
         public async Task Invoke(HttpContext context)
@@ -31,7 +35,7 @@ namespace Service.Report.Middleware
             }
         }
 
-        private static async Task HandleExceptionAsync(HttpContext context, Exception e)
+        private async Task HandleExceptionAsync(HttpContext context, Exception e)
         {
             object errors = null;
 
@@ -42,13 +46,10 @@ namespace Service.Report.Middleware
                     context.Response.StatusCode = (int)re.Code;
                     break;
                 case Exception ex:
-                    errors = string.IsNullOrWhiteSpace(ex.Message) ? "Error" : ex.Message;
+                    errors = "Ha ocurrido un error en el servidor, por favor contacta a tu administrador de sistemas";
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    File.AppendAllText(Path.Combine(Directory.GetCurrentDirectory(), "log.txt"), Environment.NewLine + Environment.NewLine + DateTime.Now.ToString() + " => " + e.Message);
-                    if (e.InnerException != null)
-                    {
-                        File.AppendAllText(Path.Combine(Directory.GetCurrentDirectory(), "log.txt"), Environment.NewLine + Environment.NewLine + DateTime.Now.ToString() + " => InnerException: " + e.InnerException.Message);
-                    }
+                    var message = Exceptions.GetMessage(ex);
+                    _logger.LogError(message);
                     break;
             }
 
