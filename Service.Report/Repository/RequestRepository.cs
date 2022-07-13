@@ -54,7 +54,7 @@ namespace Service.Report.Repository
             {
                 report = report.
                     Where(x => x.Fecha.Date >= search.Fecha.First().Date && 
-                    x.FechaFinal.Date <= search.Fecha.Last().Date).ToList();
+                    x.Fecha.Date <= search.Fecha.Last().Date).ToList();
             }
             return report.ToList();
 

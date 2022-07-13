@@ -41,14 +41,12 @@ namespace Service.Report.Application
         {
             var req = await _repository.GetRequestByCount();
             var results = from c in req
-                          group c by new { c.Id, c.PacienteNombre, c.ExpedienteNombre } into grupo
+                          group c by c.Expediente into grupo
                           select new RequestFiltroDto
                           {
-                              Id = grupo.Key.Id,
                               Visitas = grupo.Count(),
-                              PacienteNombre = grupo.Key.PacienteNombre,
-                              ExpedienteNombre = grupo.Key.ExpedienteNombre
-
+                              PacienteNombre = grupo.Key.Nombre,
+                              ExpedienteNombre = grupo.Key.Expediente
                           };
 
 
@@ -62,15 +60,14 @@ namespace Service.Report.Application
         public async Task<IEnumerable<RequestFiltroDto>> GetFilter(RequestSearchDto search)
         {
             var doctors = await _repository.GetFilter(search);
-            var results = from c in doctors
-                          group c by new { c.Id, c.PacienteNombre, c.ExpedienteNombre } into grupo
+            var req = await _repository.GetRequestByCount();
+            var results = from c in req
+                          group c by c.Expediente into grupo
                           select new RequestFiltroDto
                           {
-                              Id = grupo.Key.Id,
                               Visitas = grupo.Count(),
-                              PacienteNombre = grupo.Key.PacienteNombre,
-                              ExpedienteNombre = grupo.Key.ExpedienteNombre
-
+                              PacienteNombre = grupo.Key.Nombre,
+                              ExpedienteNombre = grupo.Key.Expediente
                           };
 
 
