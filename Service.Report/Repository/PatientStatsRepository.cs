@@ -19,6 +19,13 @@ namespace Service.Report.Repository
             _context = context;
         }
 
+        public async Task<List<Request>> GetByName()
+        {
+            var report = await _context.Request.ToListAsync();
+
+            return report;
+        }
+
         public async Task<List<Report.Domain.Request.Request>> GetFilter(PatientStatsSearchDto search)
         {
             var report = _context.Request.AsQueryable();
