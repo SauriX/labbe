@@ -239,11 +239,23 @@ namespace Service.Catalog
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment() || env.IsEnvironment("QA"))
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Service.Catalog v1"));
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Service.Report v1");
+                });
+            }
+            else if (env.IsEnvironment("QA"))
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("swagger/v1/swagger.json", "Service.Report v1");
+                    c.RoutePrefix = "";
+                });
             }
 
             app.UseCors("CorsPolicy");
