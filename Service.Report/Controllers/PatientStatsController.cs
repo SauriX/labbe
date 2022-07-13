@@ -21,23 +21,29 @@ namespace Service.Report.Controllers
             _patientstatsService = indicationService;
         }
 
+        [HttpGet("getByName")]
+        public async Task<IEnumerable<PatientStatsFiltroDto>> GetByName()
+        {
+            return await _patientstatsService.GetByName();
+        }
+
         [HttpPost("filter")]
         public async Task<IEnumerable<PatientStatsFiltroDto>> GetNow(PatientStatsSearchDto search)
         {
             return await _patientstatsService.GetFilter(search);
         }
 
-        [HttpPost("export/table")]
+        [HttpPost("export/table/{search?}")]
         [Authorize(Policies.Download)]
-        public async Task<IActionResult> ExportTableStats(PatientStatsSearchDto search)
+        public async Task<IActionResult> ExportTableStats(string search = null)
         {
             var (file, fileName) = await _patientstatsService.ExportTableStats(search);
             return File(file, MimeType.XLSX, fileName);
         }
 
-        [HttpPost("export/graphic")]
+        [HttpPost("export/graphic/{search?}")]
         [Authorize(Policies.Download)]
-        public async Task<IActionResult> ExportChartStats(PatientStatsSearchDto search)
+        public async Task<IActionResult> ExportChartStats(string search = null)
         {
             var (file, fileName) = await _patientstatsService.ExportChartStats(search);
             return File(file, MimeType.XLSX, fileName);
@@ -45,9 +51,9 @@ namespace Service.Report.Controllers
 
         [HttpPost("download/pdf")]
         [AllowAnonymous]
-        public async Task<IActionResult> StatsPDF(PatientStatsSearchDto search)
+        public async Task<IActionResult> StatsPDF()
         {
-            var file = await _patientstatsService.GenerateReportPDF(search);
+            var file = await _patientstatsService.GenerateReportPDF();
             return File(file, MimeType.PDF, "EstadisticaPaciente.pdf");
         }
     }
