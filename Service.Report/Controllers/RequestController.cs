@@ -56,7 +56,7 @@ namespace Service.Report.Controllers
         {
             var file = await _requestService.GenerateReportPDF();
 
-            return File(file, MimeType.PDF, "reporte.pdf");
+            return File(file, MimeType.PDF, "EstadísticaExpediente.pdf");
         }
     }
 }

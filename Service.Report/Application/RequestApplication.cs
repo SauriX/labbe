@@ -41,7 +41,7 @@ namespace Service.Report.Application
         {
             var req = await _repository.GetRequestByCount();
             var results = from c in req
-                          group c by c.Expediente into grupo
+                          group c by new { c.Expediente.Nombre, c.Expediente.Expediente } into grupo
                           select new RequestFiltroDto
                           {
                               Visitas = grupo.Count(),
@@ -59,10 +59,9 @@ namespace Service.Report.Application
         //}
         public async Task<IEnumerable<RequestFiltroDto>> GetFilter(RequestSearchDto search)
         {
-            var doctors = await _repository.GetFilter(search);
-            var req = await _repository.GetRequestByCount();
+            var req = await _repository.GetFilter(search);
             var results = from c in req
-                          group c by c.Expediente into grupo
+                          group c by new { c.Expediente.Nombre, c.Expediente.Expediente } into grupo
                           select new RequestFiltroDto
                           {
                               Visitas = grupo.Count(),
