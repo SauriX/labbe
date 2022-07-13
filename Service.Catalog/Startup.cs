@@ -253,8 +253,7 @@ namespace Service.Catalog
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("swagger/v1/swagger.json", "Service.Report v1");
-                    c.RoutePrefix = "";
+                    c.SwaggerEndpoint("/LabRamos/services/catalogo/swagger/v1/swagger.json", "Service.Report v1");
                 });
             }
 
