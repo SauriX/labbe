@@ -46,7 +46,7 @@ namespace Service.Report.Application
                          {
                              NombrePaciente = grupo.Key.Nombre,
                              Solicitudes = grupo.Count(),
-                             Total = grupo.Sum(x => x.PrecioFinal),
+                             Total = grupo.Sum(x => x.PrecioFinal), 
                          };
 
             return results;
@@ -129,8 +129,8 @@ namespace Service.Report.Application
             List<ChartSeries> series = new()
             {
                 new ChartSeries("Iniciales Paciente", true),
-                new ChartSeries("Solicitudes"),
-                new ChartSeries("Total"),
+                new ChartSeries("Solicitudes", "#c4c4c4"),
+                new ChartSeries("Total", null, "C"),
             };
 
             var data = requestData.Select(x => new Dictionary<string, object>
