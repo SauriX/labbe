@@ -123,16 +123,21 @@ namespace Service.Report.Application
             return (template.ToByteArray(), "Estadística de Expedientes.xlsx");
         }
 
-        public async Task<byte[]> GenerateReportPDF()
+        public async Task<byte[]> GenerateReportPDF(RequestSearchDto search)
         {
-            var requestsData = await GetBranchByCount();
+            var requestsData = await GetFilter(search);
 
             List<Col> columns = new()
             {
                 new Col("Clave", ParagraphAlignment.Left),
                 new Col("Paciente", ParagraphAlignment.Left),
                 new Col("Visitas"),
+               
             };
+            //Col column = new();
+            //{
+            //    new Col("TotalVisitas")
+            //};
 
             List<ChartSeries> series = new()
             {
@@ -151,9 +156,9 @@ namespace Service.Report.Application
             {
                 Columnas = columns,
                 Series = series,
-                Datos = data
+                Datos = data,
+                //ColumnaFinal = column,
             };
-
             var file = await _pdfClient.GenerateReport(reportData);
 
             return file;
