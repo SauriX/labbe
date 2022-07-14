@@ -79,7 +79,7 @@ namespace Integration.Pdf.Service
             var period = new Col(Header.Fecha, fontSubtitle);
             var logo = new Col("https://i.imgur.com/aVrYugy.png", null, ParagraphAlignment.Left);
 
-            section.AddImage("./LabRamosLogo.png");
+            section.AddImage(@"C:\Users\JuanDanielGonzalezAl\Documents\Projects\API\Integration.Pdf\Service\LabRamosLogo.png");
             section.AddText(title);
             section.AddSpace(10);
             section.AddText(branch);
