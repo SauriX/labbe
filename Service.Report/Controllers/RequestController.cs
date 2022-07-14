@@ -52,11 +52,11 @@ namespace Service.Report.Controllers
 
         [HttpPost("download/pdf")]
         [AllowAnonymous]
-        public async Task<IActionResult> ExpedientePDF()
+        public async Task<IActionResult> ExpedientePDF(RequestSearchDto search)
         {
-            var file = await _requestService.GenerateReportPDF();
+            var file = await _requestService.GenerateReportPDF(search);
 
-            return File(file, MimeType.PDF, "reporte.pdf");
+            return File(file, MimeType.PDF, "EstadísticaExpediente.pdf");
         }
     }
 }

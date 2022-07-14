@@ -21,14 +21,14 @@ namespace Service.Report.Repository
 
         public async Task<List<Request>> GetByName()
         {
-            var report = await _context.Request.ToListAsync();
+            var report = await _context.Request.Include(x => x.Expediente).ToListAsync();
 
             return report;
         }
 
         public async Task<List<Report.Domain.Request.Request>> GetFilter(PatientStatsSearchDto search)
         {
-            var report = _context.Request.AsQueryable();
+            var report = _context.Request.Include(x => x.Expediente).AsQueryable();
 
             if (search.SucursalId != Guid.Empty)
             {

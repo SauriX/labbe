@@ -65,13 +65,27 @@ namespace Integration.Pdf.Service
             section.PageSetup.LeftMargin = Unit.FromCentimeter(1);
             section.PageSetup.RightMargin = Unit.FromCentimeter(1);
 
-            Format(section, reportData.Columnas, reportData.Series, reportData.Datos);
+            Format(section, reportData.Columnas, reportData.Series, reportData.Datos, reportData.Header);
 
             return document;
         }
 
-        static void Format(Section section, List<Models.Col> columns, List<ChartSeries> seriesInfo, List<Dictionary<string, object>> data)
+        static void Format(Section section, List<Models.Col> columns, List<ChartSeries> seriesInfo, List<Dictionary<string, object>> data, HeaderData Header)
         {
+            var fontTitle = new Font("calibri", 20);
+            var fontSubtitle = new Font("calibri", 14);
+            var title = new Col(Header.NombreReporte, fontTitle);
+            var branch = new Col(Header.Sucursal, fontSubtitle);
+            var period = new Col(Header.Fecha, fontSubtitle);
+            var logo = new Col("https://i.imgur.com/aVrYugy.png", null, ParagraphAlignment.Left);
+
+            section.AddImage(@"C:\Users\JuanDanielGonzalezAl\Documents\Projects\API\Integration.Pdf\Service\LabRamosLogo.png");
+            section.AddText(title);
+            section.AddSpace(10);
+            section.AddText(branch);
+            section.AddText(period);
+            section.AddSpace(20);
+
             var contentWidth = section.PageSetup.PageWidth - section.PageSetup.LeftMargin - section.PageSetup.RightMargin;
 
             Table table = new Table();
