@@ -8,5 +8,7 @@ namespace Service.Report.Dtos.PatientStats
         public string NombrePaciente { get; set; }
         public int Solicitudes { get; set; }
         public decimal Total { get; set; }
+        public int TotalSolicitud { get; set; }
+        public decimal MontoTotal { get; set; }
     }
 }

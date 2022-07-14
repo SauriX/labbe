@@ -12,6 +12,6 @@ namespace Service.Report.Application.IApplication
         Task<IEnumerable<RequestFiltroDto>> GetFilter(RequestSearchDto search);
         Task<(byte[] file, string fileName)> ExportTableBranch(string search = null);
         Task<(byte[] file, string fileName)> ExportGraphicBranch(string search = null);
-        Task<byte[]> GenerateReportPDF();
+        Task<byte[]> GenerateReportPDF(RequestSearchDto search);
     }
 }

@@ -31,7 +31,9 @@ namespace Service.Report.Repository
 
         public async Task<List<Request>> GetRequestByCount()
         {
-            var report = await _context.Request.ToListAsync();
+            var report = await _context.Request
+                .Include(x => x.Expediente)
+                .ToListAsync();
 
             return report;
         }
@@ -40,12 +42,9 @@ namespace Service.Report.Repository
         public async Task<List<Report.Domain.Request.Request>> GetFilter(RequestSearchDto search)
         {
             var report = _context.Request
+                .Include(x => x.Expediente)
                 .ToList();
 
-            //if (!string.IsNullOrEmpty(search.CiudadId))
-            //{
-            //    report = report.Where(x => x.Ciudad == search.CiudadId).ToList();
-            //}
             if (!string.IsNullOrEmpty(search.SucursalId))
             {
                 report = report.Where(x => x.SucursalId == Guid.Parse(search.SucursalId)).ToList();

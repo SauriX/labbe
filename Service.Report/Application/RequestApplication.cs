@@ -41,7 +41,7 @@ namespace Service.Report.Application
         {
             var req = await _repository.GetRequestByCount();
             var results = from c in req
-                          group c by c.Expediente into grupo
+                          group c by new { c.Expediente.Nombre, c.Expediente.Expediente } into grupo
                           select new RequestFiltroDto
                           {
                               Visitas = grupo.Count(),
@@ -59,10 +59,9 @@ namespace Service.Report.Application
         //}
         public async Task<IEnumerable<RequestFiltroDto>> GetFilter(RequestSearchDto search)
         {
-            var doctors = await _repository.GetFilter(search);
-            var req = await _repository.GetRequestByCount();
+            var req = await _repository.GetFilter(search);
             var results = from c in req
-                          group c by c.Expediente into grupo
+                          group c by new { c.Expediente.Nombre, c.Expediente.Expediente } into grupo
                           select new RequestFiltroDto
                           {
                               Visitas = grupo.Count(),
@@ -124,16 +123,21 @@ namespace Service.Report.Application
             return (template.ToByteArray(), "Estadística de Expedientes.xlsx");
         }
 
-        public async Task<byte[]> GenerateReportPDF()
+        public async Task<byte[]> GenerateReportPDF(RequestSearchDto search)
         {
-            var requestsData = await GetBranchByCount();
+            var requestsData = await GetFilter(search);
 
             List<Col> columns = new()
             {
                 new Col("Clave", ParagraphAlignment.Left),
                 new Col("Paciente", ParagraphAlignment.Left),
                 new Col("Visitas"),
+               
             };
+            //Col column = new();
+            //{
+            //    new Col("TotalVisitas")
+            //};
 
             List<ChartSeries> series = new()
             {
@@ -152,9 +156,9 @@ namespace Service.Report.Application
             {
                 Columnas = columns,
                 Series = series,
-                Datos = data
+                Datos = data,
+                //ColumnaFinal = column,
             };
-
             var file = await _pdfClient.GenerateReport(reportData);
 
             return file;
