@@ -40,14 +40,21 @@ namespace Service.Report.Application
         public async Task<IEnumerable<PatientStatsFiltroDto>> GetByName()
         {
             var req = await _repository.GetByName();
-            var results = from c in req
-                          group c by new { c.Expediente.Nombre, c.ExpedienteId } into grupo
+            var results = (from c in req
+                           group c by new { c.Expediente.Nombre, c.ExpedienteId } into grupo
                            select new PatientStatsFiltroDto
-                         {
-                             NombrePaciente = grupo.Key.Nombre,
-                             Solicitudes = grupo.Count(),
-                             Total = grupo.Sum(x => x.PrecioFinal), 
-                         };
+                           {
+                               NombrePaciente = grupo.Key.Nombre,
+                               Solicitudes = grupo.Count(),
+                               Total = grupo.Sum(x => x.PrecioFinal),
+                           }).ToList();
+
+            results.Add(new PatientStatsFiltroDto
+            {
+                NombrePaciente = "Total",
+                Solicitudes = results.Sum(x => x.Solicitudes),
+                Total = results.Sum(x => x.Total)
+            });
 
             return results;
         }
@@ -55,14 +62,21 @@ namespace Service.Report.Application
         public async Task<IEnumerable<PatientStatsFiltroDto>> GetFilter(PatientStatsSearchDto search)
         {
             var req = await _repository.GetFilter(search);
-            var results = from c in req
+            var results = (from c in req
                           group c by new { c.Expediente.Nombre, c.ExpedienteId } into grupo
                           select new PatientStatsFiltroDto
                           {
                               NombrePaciente = grupo.Key.Nombre,
                               Solicitudes = grupo.Count(),
                               Total = grupo.Sum(x => x.PrecioFinal),
-                          };
+                          }).ToList();
+
+            results.Add(new PatientStatsFiltroDto
+            {
+                NombrePaciente = "Total",
+                Solicitudes = results.Sum(x => x.Solicitudes),
+                Total = results.Sum(x => x.Total)
+            });
 
             return results;
         }
@@ -141,12 +155,21 @@ namespace Service.Report.Application
                 {"Iniciales Paciente", string.Join(" ", x.NombrePaciente.Split(" ").Select(x => x[0]))}
             }).ToList();
 
+            var headerData = new HeaderData()
+            {
+                NombreReporte = "Estadística de Solicitudes por Paciente",
+                Sucursal = "Sucursal Gonzalitos",
+                Fecha = "14/07/2022 - 15/07/2022",
+            };
+
             var reportData = new ReportData()
             {
                 Columnas = columns,
                 Series = series,
-                Datos = data
+                Datos = data,
+                Header = headerData,
             };
+
 
             var file = await _pdfClient.GenerateReport(reportData);
 
