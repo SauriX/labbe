@@ -15,6 +15,7 @@ namespace Service.Identity
     {
         public static async Task Main(string[] args)
         {
+            try{
             var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
             var config = new ConfigurationBuilder()
@@ -51,6 +52,10 @@ namespace Service.Identity
             catch (Exception e)
             {
                 File.AppendAllText(Path.Combine(Directory.GetCurrentDirectory(), "log.txt"), Environment.NewLine + Environment.NewLine + DateTime.Now.ToString() + " => " + e.Message);
+                return;
+            }            }
+            catch(Exception e){
+                File.AppendAllText(Path.Combine(Directory.GetCurrentDirectory(), "log.txt"), Environment.NewLine + Environment.NewLine + DateTime.Now.ToString() + " => " + e.Message +":"+e.InnerException);
                 return;
             }
         }
