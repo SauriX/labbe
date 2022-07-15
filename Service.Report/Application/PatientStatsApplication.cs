@@ -158,8 +158,8 @@ namespace Service.Report.Application
             var headerData = new HeaderData()
             {
                 NombreReporte = "Estadística de Solicitudes por Paciente",
-                Sucursal = "Sucursal Gonzalitos",
-                Fecha = "14/07/2022 - 15/07/2022",
+                Sucursal = "Gonzalitos",
+                Fecha = "14/07/2022 - 15/072022"
             };
 
             var reportData = new ReportData()

@@ -9,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Mail;
+using System.Reflection;
 using System.Web;
 
 namespace Integration.Pdf.Service
@@ -77,9 +79,9 @@ namespace Integration.Pdf.Service
             var title = new Col(Header.NombreReporte, fontTitle);
             var branch = new Col(Header.Sucursal, fontSubtitle);
             var period = new Col(Header.Fecha, fontSubtitle);
-            var logo = new Col("https://i.imgur.com/aVrYugy.png", null, ParagraphAlignment.Left);
-
-            section.AddImage(@"C:\Users\JuanDanielGonzalezAl\Documents\Projects\API\Integration.Pdf\Service\LabRamosLogo.png");
+            var logo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets\\LabRamosLogo.png");
+         
+            section.AddImage(logo);
             section.AddText(title);
             section.AddSpace(10);
             section.AddText(branch);
