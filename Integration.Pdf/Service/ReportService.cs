@@ -77,7 +77,14 @@ namespace Integration.Pdf.Service
             var fontTitle = new Font("calibri", 20);
             var fontSubtitle = new Font("calibri", 16);
             var title = new Col(Header.NombreReporte, fontTitle);
-            var branch = new Col("Sucursal " + Header.Sucursal, fontSubtitle);
+            var branchType = "Sucursal" + Header.Sucursal;
+
+            if(Header.Sucursal == string.Empty || Header.Sucursal == "string")
+            {
+                branchType = Header.Sucursal = "Reporte General";
+            }
+
+            var branch = new Col(branchType, fontSubtitle);
             var period = new Col(Header.Fecha, fontSubtitle);
             var logo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets\\LabRamosLogo.png");
          
