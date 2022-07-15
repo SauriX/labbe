@@ -9,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Mail;
+using System.Reflection;
 using System.Web;
 
 namespace Integration.Pdf.Service
@@ -73,13 +75,20 @@ namespace Integration.Pdf.Service
         static void Format(Section section, List<Models.Col> columns, List<ChartSeries> seriesInfo, List<Dictionary<string, object>> data, HeaderData Header)
         {
             var fontTitle = new Font("calibri", 20);
-            var fontSubtitle = new Font("calibri", 14);
+            var fontSubtitle = new Font("calibri", 16);
             var title = new Col(Header.NombreReporte, fontTitle);
-            var branch = new Col(Header.Sucursal, fontSubtitle);
-            var period = new Col(Header.Fecha, fontSubtitle);
-            var logo = new Col("https://i.imgur.com/aVrYugy.png", null, ParagraphAlignment.Left);
+            var branchType = "Sucursal" + Header.Sucursal;
 
-            section.AddImage(@"C:\Users\JuanDanielGonzalezAl\Documents\Projects\API\Integration.Pdf\Service\LabRamosLogo.png");
+            if(Header.Sucursal == string.Empty || Header.Sucursal == "string")
+            {
+                branchType = Header.Sucursal = "Reporte General";
+            }
+
+            var branch = new Col(branchType, fontSubtitle);
+            var period = new Col(Header.Fecha, fontSubtitle);
+            var logo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets\\LabRamosLogo.png");
+         
+            section.AddImage(logo);
             section.AddText(title);
             section.AddSpace(10);
             section.AddText(branch);

@@ -129,9 +129,9 @@ namespace Service.Report.Application
             return (template.ToByteArray(), "Estadística de Pacientes.xlsx");
         }
 
-        public async Task<byte[]> GenerateReportPDF()
+        public async Task<byte[]> GenerateReportPDF(PatientStatsSearchDto search)
         {
-            var requestData = await GetByName();
+            var requestData = await GetFilter(search);
 
             List<Col> columns = new()
             {
@@ -158,8 +158,8 @@ namespace Service.Report.Application
             var headerData = new HeaderData()
             {
                 NombreReporte = "Estadística de Solicitudes por Paciente",
-                Sucursal = "Sucursal Gonzalitos",
-                Fecha = "14/07/2022 - 15/07/2022",
+                Sucursal = search.Sucursal,
+                Fecha = $"{ search.Fecha.Min():dd/MM/yyyy} - {search.Fecha.Max().ToString("dd/MM/yyyy")}"
             };
 
             var reportData = new ReportData()

@@ -28,19 +28,21 @@ namespace Service.Report.Repository
 
         public async Task<List<Report.Domain.Request.Request>> GetFilter(PatientStatsSearchDto search)
         {
-            var report = _context.Request.Include(x => x.Expediente).AsQueryable();
+            var report = _context.Request
+                .Include(x => x.Expediente)
+                .ToList();
 
-            if (search.SucursalId != Guid.Empty)
+            if (!string.IsNullOrEmpty (search.SucursalId)&& Guid.TryParse(search.SucursalId, out Guid seguir))
             {
-                report = report.Where(x => x.SucursalId == search.SucursalId);
+                report = report.Where(x => x.SucursalId == Guid.Parse(search.SucursalId)).ToList();
             }
-            if(search.Fecha != null)
+            if (search.Fecha != null)
             {
-                report = report.Where(x => x.Fecha.Date >= search.Fecha.First().Date &&
-                x.Fecha.Date <= search.Fecha.Last().Date);
+                report = report.
+                    Where(x => x.Fecha.Date >= search.Fecha.First().Date && 
+                    x.Fecha.Date <= search.Fecha.Last().Date).ToList();
             }
-
-            return await report.ToListAsync();
+            return report.ToList();
         }
     }
 }

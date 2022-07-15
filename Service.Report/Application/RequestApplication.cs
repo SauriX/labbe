@@ -69,7 +69,6 @@ namespace Service.Report.Application
                               ExpedienteNombre = grupo.Key.Expediente
                           };
 
-
             return results;
         }
 
@@ -134,10 +133,6 @@ namespace Service.Report.Application
                 new Col("Visitas"),
                
             };
-            //Col column = new();
-            //{
-            //    new Col("TotalVisitas")
-            //};
 
             List<ChartSeries> series = new()
             {
@@ -152,11 +147,19 @@ namespace Service.Report.Application
                 {"Paciente", x.PacienteNombre }
             }).ToList();
 
+            var headerData = new HeaderData()
+            {
+                NombreReporte = "Estadística de Solicitudes por Paciente",
+                Sucursal = search.Sucursal,
+                Fecha = $"{ search.Fecha.Min():dd/MM/yyyy} - {search.Fecha.Max().ToString("dd/MM/yyyy")}"
+            };
+
             var reportData = new ReportData()
             {
                 Columnas = columns,
                 Series = series,
                 Datos = data,
+                Header = headerData,
                 //ColumnaFinal = column,
             };
             var file = await _pdfClient.GenerateReport(reportData);
