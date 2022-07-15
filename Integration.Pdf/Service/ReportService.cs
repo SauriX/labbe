@@ -75,9 +75,9 @@ namespace Integration.Pdf.Service
         static void Format(Section section, List<Models.Col> columns, List<ChartSeries> seriesInfo, List<Dictionary<string, object>> data, HeaderData Header)
         {
             var fontTitle = new Font("calibri", 20);
-            var fontSubtitle = new Font("calibri", 14);
+            var fontSubtitle = new Font("calibri", 16);
             var title = new Col(Header.NombreReporte, fontTitle);
-            var branch = new Col(Header.Sucursal, fontSubtitle);
+            var branch = new Col("Sucursal " + Header.Sucursal, fontSubtitle);
             var period = new Col(Header.Fecha, fontSubtitle);
             var logo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets\\LabRamosLogo.png");
          
