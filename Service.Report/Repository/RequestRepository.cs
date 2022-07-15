@@ -45,7 +45,7 @@ namespace Service.Report.Repository
                 .Include(x => x.Expediente)
                 .ToList();
 
-            if (!string.IsNullOrEmpty(search.SucursalId))
+            if (!string.IsNullOrEmpty (search.SucursalId)&& Guid.TryParse(search.SucursalId, out Guid seguir))
             {
                 report = report.Where(x => x.SucursalId == Guid.Parse(search.SucursalId)).ToList();
             }

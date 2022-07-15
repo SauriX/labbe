@@ -51,9 +51,9 @@ namespace Service.Report.Controllers
 
         [HttpPost("download/pdf")]
         [AllowAnonymous]
-        public async Task<IActionResult> StatsPDF()
+        public async Task<IActionResult> StatsPDF(PatientStatsSearchDto search)
         {
-            var file = await _patientstatsService.GenerateReportPDF();
+            var file = await _patientstatsService.GenerateReportPDF(search);
             return File(file, MimeType.PDF, "EstadisticaPaciente.pdf");
         }
     }
