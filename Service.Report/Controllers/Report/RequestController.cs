@@ -8,33 +8,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Service.Report.Controllers
+namespace Service.Report.Controllers.Report
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class RequestController: ControllerBase
-    {
-        private readonly IRequestApplication _requestService;
-
-        public RequestController(IRequestApplication indicationService)
-        {
-            _requestService = indicationService;
-        }
-         
-        [HttpGet("getBranchByCount")]
+    public partial class ReportController : ControllerBase
+    {    
+        [HttpGet("expediente/getBranchByCount")]
         //[Authorize(Policies.Access)]
-        public async Task<IEnumerable<RequestFiltroDto>> GetBranchByCount()
+        public async Task<IEnumerable<RequestFiltroDto>> GetBranchByCount() 
         {
             return await _requestService.GetBranchByCount();
         }
-        [HttpPost("filter")]
+        [HttpPost("expediente/filter")]
         //[Authorize(Policies.Access)]
         public async Task<IEnumerable<RequestFiltroDto>> GetNow(RequestSearchDto search )
         {
             return await _requestService.GetFilter(search);
         }
 
-        [HttpPost("export/table/{search?}")]
+        [HttpPost("expediente/export/table/{search?}")]
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportTableBranch(string search = null)
         {
@@ -42,7 +33,7 @@ namespace Service.Report.Controllers
             return File(file, MimeType.XLSX, fileName);
         }
 
-        [HttpPost("export/graphic/{search?}")]
+        [HttpPost("expediente/export/graphic/{search?}")]
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportGraphicBranch(string search = null)
         {
@@ -50,7 +41,7 @@ namespace Service.Report.Controllers
             return File(file, MimeType.XLSX, fileName);
         }
 
-        [HttpPost("download/pdf")]
+        [HttpPost("expediente/download/pdf")]
         [AllowAnonymous]
         public async Task<IActionResult> ExpedientePDF(RequestSearchDto search)
         {

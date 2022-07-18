@@ -133,6 +133,28 @@ namespace Service.Identity.Context
                     throw;
                 }
             }
+            if (context.CAT_Menu.Count() == 21)
+            {
+                using var transaction = context.Database.BeginTransaction();
+                try
+                {
+                    var menus = new List<Menu>
+                    {
+                        new Menu(22, 1, "Reportes" , "reports", "reports", 1020),
+                    };
+                    context.CAT_Menu.AddRange(menus);
+                    context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Menu ON;");
+                    await context.SaveChangesAsync();
+                    context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Menu OFF;");
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
 
             var roleId = Guid.NewGuid();
 
