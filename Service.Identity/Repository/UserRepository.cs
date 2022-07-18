@@ -128,6 +128,7 @@ namespace Service.Identity.Repository
                 (from menu in _context.CAT_Menu
                  join lPer in _context.CAT_Usuario_Permiso.Where(x => x.UsuarioId == id) on menu.Id equals lPer.MenuId into ljPer
                  from p in ljPer.DefaultIfEmpty()
+                 where menu.MenuPadreId != null || (menu.MenuPadreId == null && menu.Controlador != null)
                  orderby menu.Orden
                  select new { menu, permission = p ?? new UserPermission() })
                  .Select(x => new UserPermission
@@ -142,7 +143,7 @@ namespace Service.Identity.Repository
                      EnviarCorreo = x.permission.EnviarCorreo,
                      EnviarWapp = x.permission.EnviarWapp,
                  })
-                 .ToListAsync();
+                 .ToListAsync(); 
 
             return permissions;
         }
