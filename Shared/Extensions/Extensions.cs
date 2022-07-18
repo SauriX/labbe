@@ -14,13 +14,29 @@ namespace Shared.Extensions
 {
     public static class Extensions
     {
-        public static async Task SaveFileAsync(this IFormFile file, string path, string name)
+        public static async Task<bool> SaveFileAsync(this IFormFile file, string path, string name)
         {
-            if (file != null && !string.IsNullOrWhiteSpace(path) && !string.IsNullOrWhiteSpace(name))
+            try
             {
-                using Stream stream = new FileStream(Path.Combine(path, name), FileMode.Create);
-                await file.CopyToAsync(stream);
+                if (file != null && !string.IsNullOrWhiteSpace(path) && !string.IsNullOrWhiteSpace(name))
+                {
+                    using Stream stream = new FileStream(Path.Combine(path, name), FileMode.Create);
+                    await file.CopyToAsync(stream);
+
+                    return true;
+                }
+
+                return false;
             }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public static bool In<T>(this T obj, params T[] args)
+        {
+            return args.Contains(obj);
         }
 
         public static void Format(this XLTemplate temp)
@@ -94,6 +110,67 @@ namespace Shared.Extensions
             }
 
             return table;
+        }
+
+        public static bool IsImage(this IFormFile postedFile)
+        {
+            //-------------------------------------------
+            //  Check the image mime types
+            //-------------------------------------------
+            if (postedFile.ContentType.ToLower() != "image/jpg" &&
+                        postedFile.ContentType.ToLower() != "image/jpeg" &&
+                        postedFile.ContentType.ToLower() != "image/pjpeg" &&
+                        postedFile.ContentType.ToLower() != "image/gif" &&
+                        postedFile.ContentType.ToLower() != "image/x-png" &&
+                        postedFile.ContentType.ToLower() != "image/png")
+            {
+                return false;
+            }
+
+            //-------------------------------------------
+            //  Check the image extension
+            //-------------------------------------------
+            if (Path.GetExtension(postedFile.FileName).ToLower() != ".jpg"
+                && Path.GetExtension(postedFile.FileName).ToLower() != ".png"
+                && Path.GetExtension(postedFile.FileName).ToLower() != ".gif"
+                && Path.GetExtension(postedFile.FileName).ToLower() != ".jpeg")
+            {
+                return false;
+            }
+
+            //-------------------------------------------
+            //  Attempt to read the file and check the first bytes
+            //-------------------------------------------
+            try
+            {
+                if (!postedFile.OpenReadStream().CanRead)
+                {
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            //-------------------------------------------
+            //  Try to instantiate new Bitmap, if .NET will throw exception
+            //  we can assume that it's not a valid image
+            //-------------------------------------------
+            try
+            {
+                using var bitmap = new System.Drawing.Bitmap(postedFile.OpenReadStream());
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            finally
+            {
+                postedFile.OpenReadStream().Position = 0;
+            }
+
+            return true;
         }
     }
 }

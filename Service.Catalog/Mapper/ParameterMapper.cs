@@ -1,6 +1,5 @@
 ﻿using Service.Catalog.Domain.Parameter;
 using Service.Catalog.Dtos.Parameter;
-using Service.Catalog.Dtos.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;

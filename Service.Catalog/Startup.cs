@@ -1,8 +1,4 @@
 using FluentValidation.AspNetCore;
-using Identidad.Api.Infraestructure.Repository;
-using Identidad.Api.Infraestructure.Repository.IRepository;
-using Identidad.Api.Infraestructure.Services;
-using Identidad.Api.Infraestructure.Services.IServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;

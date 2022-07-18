@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Service.Catalog.Context.EntityConfiguration.Reagent
+namespace Service.Catalog.Context.EntityConfiguration.Maquila
 {
     public class MaquilaConfiguration : IEntityTypeConfiguration<Domain.Maquila.Maquila>
     {
@@ -29,13 +29,13 @@ namespace Service.Catalog.Context.EntityConfiguration.Reagent
             builder
                 .Property(x => x.Correo)
                 .IsRequired(false)
-                .HasMaxLength(100);  
-            
+                .HasMaxLength(100);
+
             builder
                 .Property(x => x.NumeroExterior)
                 .IsRequired()
-                .HasMaxLength(10);         
-            
+                .HasMaxLength(10);
+
             builder
                 .Property(x => x.NumeroInterior)
                 .IsRequired(false)
@@ -44,8 +44,8 @@ namespace Service.Catalog.Context.EntityConfiguration.Reagent
             builder
                 .Property(x => x.Calle)
                 .IsRequired()
-                .HasMaxLength(100);        
-            
+                .HasMaxLength(100);
+
             builder
                 .Property(x => x.Telefono)
                 .IsRequired(false)

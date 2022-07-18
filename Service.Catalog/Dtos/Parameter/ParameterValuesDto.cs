@@ -1,5 +1,4 @@
-﻿using Service.Catalog.Dtos.Parameters;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Service.Catalog.Dtos.Parameter
 {

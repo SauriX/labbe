@@ -18,7 +18,7 @@ using Microsoft.Extensions.Configuration;
 using System.Text;
 using Service.Identity.Dtos.Profile;
 using System.Text.RegularExpressions;
-using Service.Identity.Utils;
+using Shared.Utils;
 
 namespace Service.Identity.Application
 {

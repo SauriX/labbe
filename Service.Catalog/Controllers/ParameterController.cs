@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dtos.Parameter;
-using Service.Catalog.Dtos.Parameters;
 using Shared.Dictionary;
 using System;
 using System.Collections.Generic;

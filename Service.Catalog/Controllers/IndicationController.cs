@@ -7,7 +7,7 @@ using Service.Catalog.Dtos.Indication;
 using Microsoft.AspNetCore.Authorization;
 using System;
 
-namespace Identidad.Api.Controllers
+namespace Service.Catalog.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

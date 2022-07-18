@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using Service.Catalog.Context;
+using Service.Report.Context;
 using Service.Report.Domain.Request;
 using Service.Report.Dtos.Request;
 using Service.Report.PdfModel;

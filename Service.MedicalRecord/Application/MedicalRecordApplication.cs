@@ -8,7 +8,6 @@ using Shared.Error;
 using System.Net;
 using Shared.Dictionary;
 using Service.MedicalRecord.Application.IApplication;
-using Service.Catalog.Dictionary;
 using ClosedXML.Report;
 using ClosedXML.Excel;
 using Shared.Extensions;

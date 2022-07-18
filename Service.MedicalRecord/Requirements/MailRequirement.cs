@@ -7,7 +7,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Service.Catalog.Requirements
+namespace Service.MedicalRecord.Requirements
 {
     public class MailRequirement : IAuthorizationRequirement
     {

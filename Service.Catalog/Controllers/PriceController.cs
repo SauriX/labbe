@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Domain.Price;
-using Service.Catalog.Dtos;
 using Service.Catalog.Dtos.PriceList;
 using Shared.Dictionary;
 using System;

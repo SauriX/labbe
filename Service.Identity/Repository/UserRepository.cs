@@ -23,7 +23,6 @@ using Service.Identity.Dictionary;
 using ClosedXML.Report;
 using Shared.Extensions;
 using ClosedXML.Excel;
-using Service.Identity.Domain.permissions;
 using System.Linq.Dynamic.Core;
 using Service.Identity.Domain.User;
 using EFCore.BulkExtensions;

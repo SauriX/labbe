@@ -1,5 +1,5 @@
 ﻿using Service.Catalog.Domain.Constant;
-using Service.Catalog.Dtos.Constant;
+using Service.Catalog.Dtos.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;

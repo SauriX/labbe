@@ -3,7 +3,7 @@ using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Domain.Parameter;
 using Service.Catalog.Dtos.Catalog;
 using Service.Catalog.Dtos.Indication;
-using Service.Catalog.Dtos.Parameters;
+using Service.Catalog.Dtos.Parameter;
 using Service.Catalog.Dtos.Reagent;
 using System;
 using System.Collections;

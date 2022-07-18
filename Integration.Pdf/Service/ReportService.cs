@@ -82,7 +82,7 @@ namespace Integration.Pdf.Service
 
             var colWidth = contentWidth / columns.Sum(x => x.Tamaño);
 
-            if (columns.Count == 0)
+            if (columns == null || columns.Count == 0)
             {
                 return;
             }
@@ -107,7 +107,7 @@ namespace Integration.Pdf.Service
                 cell.AddParagraph(columns[i].Texto);
             }
 
-            if (data.Count > 0)
+            if (data != null && data.Count > 0)
             {
                 foreach (var item in data)
                 {
@@ -152,7 +152,7 @@ namespace Integration.Pdf.Service
 
             section.Add(table);
 
-            if (!seriesInfo.Any(x => x.SerieX) || data.Count == 0)
+            if (seriesInfo == null || !seriesInfo.Any(x => x.SerieX) || data.Count == 0)
             {
                 return;
             }

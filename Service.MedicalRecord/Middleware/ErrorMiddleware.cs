@@ -10,7 +10,7 @@ using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Service.Catalog.Middleware
+namespace Service.MedicalRecord.Middleware
 {
     public class ErrorMiddleware
     {

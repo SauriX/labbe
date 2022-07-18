@@ -2,7 +2,6 @@
 using ClosedXML.Report;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dictionary;
-using Service.Catalog.Dtos;
 using Service.Catalog.Dtos.PriceList;
 using Service.Catalog.Mapper;
 using Service.Catalog.Repository.IRepository;

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Service.Catalog.Domain.Indication;
 
-namespace Service.Catalog.Context.EntityConfiguration.Medics
+namespace Service.Catalog.Context.EntityConfiguration.Indication
 {
     public class IndicationStudyConfiguration : IEntityTypeConfiguration<IndicationStudy>
     {
@@ -10,7 +10,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Medics
         {
             builder.ToTable("Relacion_Estudio_Indicacion");
 
-            builder.HasKey(x => new { x.EstudioId, x.IndicacionId});   
+            builder.HasKey(x => new { x.EstudioId, x.IndicacionId });
 
             builder
               .Property(x => x.FechaCreo)

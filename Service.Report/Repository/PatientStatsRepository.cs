@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Service.Catalog.Context;
+using Service.Report.Context;
 using Service.Report.Domain.Request;
 using Service.Report.Dtos.PatientStats;
 using Service.Report.Repository.IRepository;

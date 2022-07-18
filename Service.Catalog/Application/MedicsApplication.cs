@@ -1,10 +1,10 @@
 ﻿using ClosedXML.Excel;
 using ClosedXML.Report;
-using Identidad.Api.Infraestructure.Repository.IRepository;
-using Identidad.Api.Infraestructure.Services.IServices;
-using Identidad.Api.mapper;
-using Service.Catalog.Dictionary;
+using Service.Catalog.Application.IApplication;
+using Service.Catalog.Dictionary.Medic;
 using Service.Catalog.Dtos.Medicos;
+using Service.Catalog.Mapper;
+using Service.Catalog.Repository.IRepository;
 using Shared.Dictionary;
 using Shared.Error;
 using Shared.Extensions;
@@ -14,7 +14,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace Identidad.Api.Infraestructure.Services
+namespace Service.Catalog.Application
 {
     public class MedicsApplication : IMedicsApplication
     {
@@ -43,7 +43,7 @@ namespace Identidad.Api.Infraestructure.Services
         public async Task<MedicsFormDto> Create(MedicsFormDto medic)
         {
             Helpers.ValidateGuid(medic.IdMedico.ToString(), out Guid guid);
-           
+
 
             var code = await GenerateCode(medic);
             medic.Clave = code;
@@ -98,7 +98,7 @@ namespace Identidad.Api.Infraestructure.Services
                 }
 
                 var last = code[^1];
-                var next = (char)((int)last + 1);
+                var next = (char)(last + 1);
 
                 return await GenerateCode(medics, next.ToString());
             }
@@ -106,7 +106,7 @@ namespace Identidad.Api.Infraestructure.Services
             return code;
         }
 
-        public async Task<(byte[]file, string fileName)> ExportList(string search)
+        public async Task<(byte[] file, string fileName)> ExportList(string search)
         {
             var medics = await GetAll(search);
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Service.Catalog.Dtos.Constant
+namespace Service.Catalog.Dtos.Common
 {
     public class LocationDto
     {

@@ -1,7 +1,6 @@
 ﻿using Service.Catalog.Dtos.Company;
 using Service.Catalog.Repository.IRepository;
 using Shared.Dictionary;
-using Identidad.Api.Infraestructure.Services.IServices;
 using Shared.Error;
 using Service.Catalog.Mapper;
 using System.Net;

@@ -11,7 +11,7 @@ namespace Service.Catalog.Dtos.Loyalty
         public string TipoDescuento { get; set; }
         public string Fecha { get; set; }
         public Guid? PrecioListaId { get; set; }
-        public string? PrecioLista { get; set; }
+        public string PrecioLista { get; set; }
         public bool Activo { get; set; }
     }
 }

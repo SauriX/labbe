@@ -2,7 +2,7 @@
 using ClosedXML.Report;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dictionary;
-using Service.Catalog.Dtos.Parameters;
+using Service.Catalog.Dtos.Parameter;
 using Service.Catalog.Mapper;
 using Service.Catalog.Repository.IRepository;
 using Shared.Dictionary;

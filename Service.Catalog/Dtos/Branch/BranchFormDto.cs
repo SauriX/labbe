@@ -24,7 +24,7 @@ namespace Service.Catalog.Dtos.Branch
         public string ciudad { get; set; }
         public int coloniaId { get; set; }
         public string codigoPostal { get; set; }
-        public string? colonia { get; set; }
+        public string colonia { get; set; }
         public Guid UsuarioId { get; set; }
         public bool Matriz { get; set; }
         public IEnumerable<BranchDepartmentDto> departamentos { get; set; }

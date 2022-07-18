@@ -32,5 +32,15 @@ namespace Service.MedicalRecord.Repository
 
             await _context.SaveChangesAsync();
         }
+
+        public Task<Request> GetById(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Update(Request request)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

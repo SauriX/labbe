@@ -1,12 +1,11 @@
 ﻿using FluentValidation;
 using Service.Catalog.Domain.Company;
 using Service.Catalog.Domain.Price;
-using Service.Catalog.Dtos.PriceList;
 using Service.Catalog.Dtos.Promotion;
 using System;
 using System.Collections.Generic;
 
-namespace Service.Catalog.Dtos
+namespace Service.Catalog.Dtos.PriceList
 {
     public class PriceListFormDto
     {
@@ -14,7 +13,7 @@ namespace Service.Catalog.Dtos
         public string Clave { get; set; }
         public string Nombre { get; set; }
         public bool? Visibilidad { get; set; }
-        public bool Activo { get; set; }        
+        public bool Activo { get; set; }
         public Guid UsuarioCreoId { get; set; }
         public DateTime FechaCreo { get; set; }
         public Guid UsuarioId { get; set; }

@@ -12,7 +12,6 @@ using ClosedXML.Report;
 using Shared.Extensions;
 using ClosedXML.Excel;
 using Service.Identity.Dictionary;
-using Service.Identity.Domain.permissions;
 using Service.Identity.Domain.Role;
 using Microsoft.EntityFrameworkCore;
 using EFCore.BulkExtensions;

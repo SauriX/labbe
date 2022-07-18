@@ -1,7 +1,5 @@
-﻿using Service.Catalog.Domain.Company;
-using Service.Catalog.Domain.Price;
+﻿using Service.Catalog.Domain.Price;
 using Service.Catalog.Domain.Study;
-using Service.Catalog.Dtos;
 using Service.Catalog.Dtos.Pack;
 using Service.Catalog.Dtos.PriceList;
 using System;

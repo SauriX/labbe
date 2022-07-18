@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using Service.Catalog.Context;
+using Service.Report.Context;
 using System;
 using System.Collections.Generic;
 using System.IO;

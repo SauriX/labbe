@@ -1,8 +1,8 @@
 ﻿using EFCore.BulkExtensions;
-using Identidad.Api.Infraestructure.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Context;
 using Service.Catalog.Domain.Medics;
+using Service.Catalog.Repository.IRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;

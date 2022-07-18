@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Service.Catalog.Domain.Price;
 
-namespace Service.Catalog.Context.EntityConfiguration.Company
+namespace Service.Catalog.Context.EntityConfiguration.Price
 {
-  
+
     public class Price_PromotionConfiguration : IEntityTypeConfiguration<Price_Promotion>
     {
         public void Configure(EntityTypeBuilder<Price_Promotion> builder)
@@ -38,7 +38,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Company
             builder
               .Property(x => x.FechaMod)
               .IsRequired(true);
-           
+
 
         }
 
