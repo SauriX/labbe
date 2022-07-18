@@ -83,6 +83,8 @@ namespace Service.Identity.Repository
 
         public async Task Create(User user)
         {
+            var permisos = await returnMenupadre(user);
+            user.Permisos = permisos;
             _context.CAT_Usuario.Add(user);
 
             await _context.SaveChangesAsync();
@@ -94,8 +96,10 @@ namespace Service.Identity.Repository
 
             try
             {
+                               var permisos = await returnMenupadre(user);
+                user.Permisos = permisos;
                 var permissions = user.Permisos.ToList();
-
+ 
                 user.Permisos = null;
                 _context.CAT_Usuario.Update(user);
 
@@ -103,6 +107,7 @@ namespace Service.Identity.Repository
 
                 if (updatePermission)
                 {
+                    
                     var config = new BulkConfig();
                     config.SetSynchronizeFilter<UserPermission>(x => x.UsuarioId == user.Id);
 
@@ -117,7 +122,36 @@ namespace Service.Identity.Repository
                 throw;
             }
         }
+        private async Task<List<UserPermission>>returnMenupadre(User user)
+        {
+            var permisos =  _context.CAT_Menu.AsQueryable();
+            List<UserPermission> permisosPadre = new List<UserPermission>();
+            
+            foreach (var permiso in user.Permisos) {
+                var permision = permisos.FirstOrDefault(x=>x.Id == permiso.MenuId); 
+                var permisopadre = permisos.FirstOrDefault(x => x.Id == permision.MenuPadreId);
+                if (permisopadre != null) {
+                    var permis = new UserPermission
+                    {
 
+                        UsuarioId = user.Id,
+                        MenuId = permisopadre.Id,
+                        Acceder = permiso.Acceder,
+                        Crear = permiso.Crear,
+                        Modificar = permiso.Modificar,
+                        Imprimir = permiso.Imprimir,
+                        Descargar = permiso.Descargar,
+                        EnviarCorreo = permiso.EnviarCorreo,
+                        EnviarWapp = permiso.EnviarWapp,
+                    };
+                    permisosPadre.Add(permis);
+                }
+
+                
+            }
+            
+            return permisosPadre.Distinct().ToList().Concat(user.Permisos).ToList();
+        }
         private async Task<List<UserPermission>> GetPermissions(Guid? id = null)
         {
             var permissions = await

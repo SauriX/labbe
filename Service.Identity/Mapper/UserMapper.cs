@@ -157,11 +157,11 @@ namespace Service.Identity.Mapper
                 .GroupBy(x => x.MenuId)
                 .Select(x =>
                 {
-                    var permission = model.FirstOrDefault(m => m.MenuId == x.Key);
+                    var permission = model.FirstOrDefault(m => m.MenuId == (x.Key+1));
 
                     return new UserPermission
                     {
-                        MenuId = x.Key,
+                        MenuId = (short)(x.Key+1),
                         UsuarioId = userId,
                         Acceder = x.FirstOrDefault(p => p.Tipo == PP.AccessType).Asignado,
                         Crear = x.FirstOrDefault(p => p.Tipo == PP.CreateType).Asignado,
