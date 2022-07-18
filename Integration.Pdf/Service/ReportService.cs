@@ -76,16 +76,18 @@ namespace Integration.Pdf.Service
         {
             var fontTitle = new Font("calibri", 20);
             var fontSubtitle = new Font("calibri", 16);
+            var fontText = new Font("calibri", 12);
             var title = new Col(Header.NombreReporte, fontTitle);
             var branchType = "Sucursal" + Header.Sucursal;
 
             if(Header.Sucursal == string.Empty || Header.Sucursal == "string")
             {
-                branchType = Header.Sucursal = "Reporte General";
+                branchType = Header.Sucursal = "Todas las Sucursales";
             }
 
             var branch = new Col(branchType, fontSubtitle);
-            var period = new Col(Header.Fecha, fontSubtitle);
+            var period = new Col("Periodo: " + Header.Fecha, fontSubtitle);
+            var printDate = new Col("Fecha de impresión: " + DateTime.Now.ToString("dd/MM/yyyy"), fontText, ParagraphAlignment.Right);
             var logo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets\\LabRamosLogo.png");
          
             section.AddImage(logo);
@@ -93,7 +95,9 @@ namespace Integration.Pdf.Service
             section.AddSpace(10);
             section.AddText(branch);
             section.AddText(period);
-            section.AddSpace(20);
+            section.AddSpace(5);
+            section.AddText(printDate);
+            section.AddSpace(10);
 
             var contentWidth = section.PageSetup.PageWidth - section.PageSetup.LeftMargin - section.PageSetup.RightMargin;
 
