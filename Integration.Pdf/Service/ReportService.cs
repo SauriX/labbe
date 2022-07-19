@@ -78,7 +78,7 @@ namespace Integration.Pdf.Service
             var fontSubtitle = new Font("calibri", 16);
             var fontText = new Font("calibri", 12);
             var title = new Col(Header.NombreReporte, fontTitle);
-            var branchType = "Sucursal" + Header.Sucursal;
+            var branchType = "Sucursal " + Header.Sucursal;
 
             if(Header.Sucursal == string.Empty || Header.Sucursal == "string")
             {

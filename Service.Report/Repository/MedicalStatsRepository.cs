@@ -32,9 +32,9 @@ namespace Service.Report.Repository
                 .Include(x => x.Expediente).Include(x=>x.Medico)
                 .ToList();
 
-            if (!string.IsNullOrEmpty(search.SucursalId) && Guid.TryParse(search.SucursalId, out Guid seguir))
+            if (search.SucursalId != null && search.SucursalId.Count > 0)
             {
-                report = report.Where(x => x.SucursalId == Guid.Parse(search.SucursalId)).ToList();
+                report = report.Where(x => search.SucursalId.Contains(x.SucursalId.ToString())).ToList();
             }
             if (search.Fecha != null)
             {
