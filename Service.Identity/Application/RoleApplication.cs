@@ -73,7 +73,7 @@ namespace Service.Identity.Application
             {
                 permissions = await _repository.GetPermission();
             }
-
+            
             return permissions.ToRolePermissionDto();
         }
 
