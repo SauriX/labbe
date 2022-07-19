@@ -49,8 +49,9 @@ namespace Service.Report.Application
                                NombreMedico = grupo.Key.NombreMedico,
                                Total = grupo.Sum(x => x.PrecioFinal),
                                Solicitudes = grupo.Count(),
-                               Pacientes = grupo.Count(),
+                               Pacientes = grupo.Select(x => x.ExpedienteId).Distinct().Count(),
                            }).ToList();
+
             results.Add(new MedicalStatsFiltroDto
             {
                 ClaveMedico = "Total",
@@ -65,7 +66,7 @@ namespace Service.Report.Application
 
         public async Task<IEnumerable<MedicalStatsFiltroDto>> GetFilter(MedicalStatsSearchDto search)
         {
-            var req = await _repository.GetByDoctor();
+            var req = await _repository.GetFilter(search);
             var results = (from c in req
                            group c by new { c.Medico.NombreMedico, c.Medico.ClaveMedico, c.MedicoId } into grupo
                            select new MedicalStatsFiltroDto
@@ -74,8 +75,9 @@ namespace Service.Report.Application
                                NombreMedico = grupo.Key.NombreMedico,
                                Total = grupo.Sum(x => x.PrecioFinal),
                                Solicitudes = grupo.Count(),
-                               Pacientes = grupo.Count(),
+                               Pacientes = grupo.Select(x => x.ExpedienteId).Distinct().Count(),
                            }).ToList();
+
             results.Add(new MedicalStatsFiltroDto
             {
                 ClaveMedico = "Total",
