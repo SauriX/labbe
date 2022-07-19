@@ -50,12 +50,17 @@ namespace Service.Identity.Repository
             foreach (var menu in menus) {
                 if (menu.MenuPadreId != null) {
                     var menupadre = _context.CAT_Menu.FirstOrDefault(x => x.Id == menu.MenuPadreId);
-                    foreach (var x in menuspadres) {
-                        if (x.Id == menupadre.Id) {
+                    if (menuspadres.Count() != 0)
+                    {
+                           var menpad= menuspadres.Where(x => x.Id == menu.MenuPadreId);
+                        if (menpad.Count() == 0) {
                             menuspadres.Add(menupadre);
                         }
-                        
                     }
+                    else {
+                        menuspadres.Add(menupadre);
+                    }
+
                     
                 }
                 
