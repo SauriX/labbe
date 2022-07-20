@@ -1,7 +1,7 @@
 ﻿{
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/report/expediente/getBranchByCount",
+      "DownstreamPathTemplate": "/api/report/expediente/getAll",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -9,7 +9,7 @@
           "Port": 18934
         }
       ],
-      "UpstreamPathTemplate": "/api/report/expediente/getBranchByCount",
+      "UpstreamPathTemplate": "/api/report/expediente/getAll",
       "UpstreamHttpMethod": [ "GET" ]
     },
 
@@ -63,7 +63,7 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/report/estadistica/getByName",
+      "DownstreamPathTemplate": "/api/report/estadistica/getAll",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -71,7 +71,7 @@
           "Port": 18934
         }
       ],
-      "UpstreamPathTemplate": "/api/report/estadistica/getByName",
+      "UpstreamPathTemplate": "/api/report/estadistica/getAll",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
@@ -123,7 +123,7 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/report/medicos/getByDoctor",
+      "DownstreamPathTemplate": "/api/report/medicos/getAll",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -131,7 +131,7 @@
           "Port": 18934
         }
       ],
-      "UpstreamPathTemplate": "/api/report/medicos/getByDoctor",
+      "UpstreamPathTemplate": "/api/report/medicos/getAll",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {

@@ -67,12 +67,12 @@ namespace Integration.Pdf.Service
             section.PageSetup.LeftMargin = Unit.FromCentimeter(1);
             section.PageSetup.RightMargin = Unit.FromCentimeter(1);
 
-            Format(section, reportData.Columnas, reportData.Series, reportData.Datos, reportData.Header);
+            Format(section, reportData.Columnas, reportData.Series, reportData.Datos, reportData.DatosGrafica, reportData.Header);
 
             return document;
         }
 
-        static void Format(Section section, List<Models.Col> columns, List<ChartSeries> seriesInfo, List<Dictionary<string, object>> data, HeaderData Header)
+        static void Format(Section section, List<Models.Col> columns, List<ChartSeries> seriesInfo, List<Dictionary<string, object>> data, List<Dictionary<string, object>> datachart, HeaderData Header)
         {
             var fontTitle = new Font("calibri", 20);
             var fontSubtitle = new Font("calibri", 16);
@@ -209,7 +209,14 @@ namespace Integration.Pdf.Service
                 {
                     series.FillFormat.Color = Color.FromRgb(Convert.ToByte("18", 16), Convert.ToByte("90", 16), Convert.ToByte("FF", 16));
                 }
-                series.Add(data.Select(x => Convert.ToDouble(x[serie.Serie])).ToArray());
+                if(datachart != null && datachart.Count > 0)
+                {
+                    series.Add(datachart.Select(x => Convert.ToDouble(x[serie.Serie])).ToArray());
+                }
+                else
+                {
+                    series.Add(data.Select(x => Convert.ToDouble(x[serie.Serie])).ToArray());
+                }
                 series.HasDataLabel = true;
                 series.DataLabel.Format = serie.Formato;
                 series.DataLabel.Position = DataLabelPosition.OutsideEnd;
@@ -219,7 +226,14 @@ namespace Integration.Pdf.Service
             var serieX = seriesInfo.FirstOrDefault(s => s.SerieX)?.Serie;
 
             XSeries xseries = chart.XValues.AddXSeries();
-            xseries.Add(data.Select((x, i) => x[serieX].ToString() ?? "S-" + i).ToArray());
+            if(datachart != null && datachart.Count > 0)
+            {
+                xseries.Add(datachart.Select((x, i) => x[serieX].ToString() ?? "S-" + i).ToArray());
+            }
+            else
+            {
+                xseries.Add(data.Select((x, i) => x[serieX].ToString() ?? "S-" + i).ToArray());
+            }
 
             chart.XAxis.MajorTickMark = TickMarkType.Outside;
             chart.XAxis.Title.Caption = serieX ?? "Serie X";

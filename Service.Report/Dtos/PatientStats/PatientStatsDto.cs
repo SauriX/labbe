@@ -2,7 +2,7 @@
 
 namespace Service.Report.Dtos.PatientStats
 {
-    public class PatientStatsFiltroDto
+    public class PatientStatsDto
     {
         public Guid Id { get; set; } 
         public string NombrePaciente { get; set; }

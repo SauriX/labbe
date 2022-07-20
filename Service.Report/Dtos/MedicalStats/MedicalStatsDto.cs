@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Service.Report.Dtos.MedicalStats
 {
-    public class MedicalStatsFiltroDto
+    public class MedicalStatsDto
     {
         public Guid Id { get; set; }
         public string ClaveMedico { get; set; }

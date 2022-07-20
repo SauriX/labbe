@@ -23,26 +23,27 @@ using Shared.Helpers;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http.Json;
 using Service.Report.Client.IClient;
+using Service.Report.Dtos;
 
 namespace Service.Report.Application
 {
     public class RequestApplication : IRequestApplication
     {
-        public readonly IRequestRepository _repository;
+        public readonly IReportRepository _repository;
         private readonly IPdfClient _pdfClient;
 
-        public RequestApplication(IRequestRepository repository, IPdfClient pdfClient)
+        public RequestApplication(IReportRepository repository, IPdfClient pdfClient)
         {
             _repository = repository;
             _pdfClient = pdfClient;
         }
 
-        public async Task<IEnumerable<RequestFiltroDto>> GetBranchByCount()
+        public async Task<IEnumerable<RequestDto>> GetBranchByCount()
         {
-            var req = await _repository.GetRequestByCount();
+            var req = await _repository.GetAll();
             var results = from c in req
                           group c by new { c.Expediente.Nombre, c.Expediente.Expediente } into grupo
-                          select new RequestFiltroDto
+                          select new RequestDto
                           {
                               Visitas = grupo.Count(),
                               PacienteNombre = grupo.Key.Nombre,
@@ -52,17 +53,13 @@ namespace Service.Report.Application
 
             return results;
         }
-        //public async Task<List<RequestFiltroDto>> GetFilter(RequestSearchDto search)
-        //{
-        //    var doctors = await _repository.GetFilter(search);
-        //    return doctors.ToRequestRecordsListDto();
-        //}
-        public async Task<IEnumerable<RequestFiltroDto>> GetFilter(RequestSearchDto search)
+
+        public async Task<IEnumerable<RequestDto>> GetFilter(ReportFiltroDto search)
         {
             var req = await _repository.GetFilter(search);
             var results = from c in req
                           group c by new { c.Expediente.Nombre, c.Expediente.Expediente } into grupo
-                          select new RequestFiltroDto
+                          select new RequestDto
                           {
                               Visitas = grupo.Count(),
                               PacienteNombre = grupo.Key.Nombre,
@@ -122,7 +119,7 @@ namespace Service.Report.Application
             return (template.ToByteArray(), "Estadística de Expedientes.xlsx");
         }
 
-        public async Task<byte[]> GenerateReportPDF(RequestSearchDto search)
+        public async Task<byte[]> GenerateReportPDF(ReportFiltroDto search)
         {
             var requestsData = await GetFilter(search);
 
