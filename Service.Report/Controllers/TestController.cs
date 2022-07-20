@@ -37,14 +37,14 @@ namespace Service.Report.Controllers
                new Col("Visitas"),
             };
 
-            var list = new List<RequestFiltroDto>()
+            var list = new List<RequestDto>()
             {
-                new RequestFiltroDto()
+                new RequestDto()
                 {
                     ExpedienteNombre = "Clave 1",
                     Visitas = 5,
                 },
-                new RequestFiltroDto()
+                new RequestDto()
                 {
                     ExpedienteNombre= "Clave 2",
                     Visitas = 7,

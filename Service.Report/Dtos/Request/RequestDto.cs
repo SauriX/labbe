@@ -2,7 +2,7 @@
 
 namespace Service.Report.Dtos.Request
 {
-    public class RequestFiltroDto
+    public class RequestDto
     {
         public Guid Id { get; set; }
         public string ExpedienteNombre { get; set; }

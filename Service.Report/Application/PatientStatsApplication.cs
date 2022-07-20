@@ -23,33 +23,34 @@ using Shared.Helpers;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http.Json;
 using Service.Report.Client.IClient;
+using Service.Report.Dtos;
 
 namespace Service.Report.Application
 {
     public class PatientStatsApplication : IPatientStatsApplication
     {
-        public readonly IPatientStatsRepository _repository;
+        public readonly IReportRepository _repository;
         private readonly IPdfClient _pdfClient;
 
-        public PatientStatsApplication(IPatientStatsRepository repository, IPdfClient pdfClient)
+        public PatientStatsApplication(IReportRepository repository, IPdfClient pdfClient)
         {
             _repository = repository;
             _pdfClient = pdfClient;
         }
 
-        public async Task<IEnumerable<PatientStatsFiltroDto>> GetByName()
+        public async Task<IEnumerable<PatientStatsDto>> GetByName()
         {
-            var req = await _repository.GetByName();
+            var req = await _repository.GetAll();
             var results = (from c in req
                            group c by new { c.Expediente.Nombre, c.ExpedienteId } into grupo
-                           select new PatientStatsFiltroDto
+                           select new PatientStatsDto
                            {
                                NombrePaciente = grupo.Key.Nombre,
                                Solicitudes = grupo.Count(),
                                Total = grupo.Sum(x => x.PrecioFinal),
                            }).ToList();
 
-            results.Add(new PatientStatsFiltroDto
+            results.Add(new PatientStatsDto
             {
                 NombrePaciente = "Total",
                 Solicitudes = results.Sum(x => x.Solicitudes),
@@ -59,19 +60,19 @@ namespace Service.Report.Application
             return results;
         }
 
-        public async Task<IEnumerable<PatientStatsFiltroDto>> GetFilter(PatientStatsSearchDto search)
+        public async Task<IEnumerable<PatientStatsDto>> GetFilter(ReportFiltroDto search)
         {
             var req = await _repository.GetFilter(search);
             var results = (from c in req
                           group c by new { c.Expediente.Nombre, c.ExpedienteId } into grupo
-                          select new PatientStatsFiltroDto
+                          select new PatientStatsDto
                           {
                               NombrePaciente = grupo.Key.Nombre,
                               Solicitudes = grupo.Count(),
                               Total = grupo.Sum(x => x.PrecioFinal),
                           }).ToList();
 
-            results.Add(new PatientStatsFiltroDto
+            results.Add(new PatientStatsDto
             {
                 NombrePaciente = "Total",
                 Solicitudes = results.Sum(x => x.Solicitudes),
@@ -129,7 +130,7 @@ namespace Service.Report.Application
             return (template.ToByteArray(), "Estadística de Pacientes.xlsx");
         }
 
-        public async Task<byte[]> GenerateReportPDF(PatientStatsSearchDto search)
+        public async Task<byte[]> GenerateReportPDF(ReportFiltroDto search)
         {
             var requestData = await GetFilter(search);
 

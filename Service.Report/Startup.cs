@@ -20,6 +20,7 @@ using Service.Report.Application;
 using Service.Report.Application.IApplication;
 using Service.Report.Client;
 using Service.Report.Client.IClient;
+using Service.Report.Domain.Request;
 using Service.Report.Middleware;
 using Service.Report.Repository;
 using Service.Report.Repository.IRepository;
@@ -184,10 +185,9 @@ namespace Service.Report
             services.AddScoped<IRequestApplication, RequestApplication>();
             services.AddScoped<IPatientStatsApplication, PatientStatsApplication>();
             services.AddScoped<IMedicalStatsApplication, MedicalStatsApplication>();
+            services.AddScoped<IContactStatsApplication, ContactStatsApplication>();
 
-            services.AddScoped<IRequestRepository, RequestRepository>();
-            services.AddScoped<IPatientStatsRepository, PatientStatsRepository>();
-            services.AddScoped<IMedicalStatsRepository, MedicalStatsRepository>();
+            services.AddScoped<IReportRepository, ReportRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

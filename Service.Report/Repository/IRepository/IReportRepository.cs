@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Service.Report.Repository.IRepository
 {
-    public interface IReportRepository<T> where T : Request
+    public interface IReportRepository
     {
         Task<List<Request>> GetAll();
-        Task<List<Request>> GetFilter(ReportSearchDto search);
+        Task<List<Request>> GetFilter(ReportFiltroDto search);
     }
 }

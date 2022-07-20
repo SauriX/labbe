@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Report.Application.IApplication;
+using Service.Report.Dtos;
 using Service.Report.Dtos.Request;
 using Service.Report.PdfModel;
 using Shared.Dictionary;
@@ -12,15 +13,15 @@ namespace Service.Report.Controllers.Report
 {
     public partial class ReportController : ControllerBase
     {    
-        [HttpGet("expediente/getBranchByCount")]
+        [HttpGet("expediente/getAll")]
         //[Authorize(Policies.Access)]
-        public async Task<IEnumerable<RequestFiltroDto>> GetBranchByCount() 
+        public async Task<IEnumerable<RequestDto>> GetBranchByCount() 
         {
             return await _requestService.GetBranchByCount();
         }
         [HttpPost("expediente/filter")]
         //[Authorize(Policies.Access)]
-        public async Task<IEnumerable<RequestFiltroDto>> GetNow(RequestSearchDto search )
+        public async Task<IEnumerable<RequestDto>> GetBranchNow(ReportFiltroDto search )
         {
             return await _requestService.GetFilter(search);
         }
@@ -43,7 +44,7 @@ namespace Service.Report.Controllers.Report
 
         [HttpPost("expediente/download/pdf")]
         [AllowAnonymous]
-        public async Task<IActionResult> ExpedientePDF(RequestSearchDto search)
+        public async Task<IActionResult> ExpedientePDF(ReportFiltroDto search)
         {
             var file = await _requestService.GenerateReportPDF(search);
 

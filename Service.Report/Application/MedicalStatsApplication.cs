@@ -24,26 +24,27 @@ using Microsoft.Extensions.Configuration;
 using System.Net.Http.Json;
 using Service.Report.Client.IClient;
 using Service.Report.Dtos.MedicalStats;
+using Service.Report.Dtos;
 
 namespace Service.Report.Application
 {
     public class MedicalStatsApplication : IMedicalStatsApplication
     {
-        public readonly IMedicalStatsRepository _repository;
+        public readonly IReportRepository _repository;
         private readonly IPdfClient _pdfClient;
 
-        public MedicalStatsApplication(IMedicalStatsRepository repository, IPdfClient pdfClient)
+        public MedicalStatsApplication(IReportRepository repository, IPdfClient pdfClient)
         {
             _repository = repository;
             _pdfClient = pdfClient;
         }
 
-        public async Task<IEnumerable<MedicalStatsFiltroDto>> GetByDoctor()
+        public async Task<IEnumerable<MedicalStatsDto>> GetByDoctor ()
         {
-            var req = await _repository.GetByDoctor();
+            var req = await _repository.GetAll();
             var results = (from c in req
-                           group c by new { c.Medico.NombreMedico, c.Medico.ClaveMedico, c.MedicoId } into grupo
-                           select new MedicalStatsFiltroDto
+                           group c by new { c.Medico.NombreMedico, c.Medico.ClaveMedico, c.MedicoId, c.Fecha.Year, c.Fecha.Month } into grupo
+                           select new MedicalStatsDto
                            {
                                ClaveMedico = grupo.Key.ClaveMedico,
                                NombreMedico = grupo.Key.NombreMedico,
@@ -52,7 +53,7 @@ namespace Service.Report.Application
                                Pacientes = grupo.Select(x => x.ExpedienteId).Distinct().Count(),
                            }).ToList();
 
-            results.Add(new MedicalStatsFiltroDto
+            results.Add(new MedicalStatsDto
             {
                 ClaveMedico = "Total",
                 NombreMedico = " ",
@@ -64,12 +65,12 @@ namespace Service.Report.Application
             return results;
         }
 
-        public async Task<IEnumerable<MedicalStatsFiltroDto>> GetFilter(MedicalStatsSearchDto search)
+        public async Task<IEnumerable<MedicalStatsDto>> GetFilter(ReportFiltroDto search)
         {
             var req = await _repository.GetFilter(search);
             var results = (from c in req
                            group c by new { c.Medico.NombreMedico, c.Medico.ClaveMedico, c.MedicoId } into grupo
-                           select new MedicalStatsFiltroDto
+                           select new MedicalStatsDto
                            {
                                ClaveMedico = grupo.Key.ClaveMedico,
                                NombreMedico = grupo.Key.NombreMedico,
@@ -78,7 +79,7 @@ namespace Service.Report.Application
                                Pacientes = grupo.Select(x => x.ExpedienteId).Distinct().Count(),
                            }).ToList();
 
-            results.Add(new MedicalStatsFiltroDto
+            results.Add(new MedicalStatsDto
             {
                 ClaveMedico = "Total",
                 NombreMedico = " ",
@@ -90,7 +91,7 @@ namespace Service.Report.Application
             return results;
         }
 
-        public async Task<byte[]> GenerateReportPDF(MedicalStatsSearchDto search)
+        public async Task<byte[]> GenerateReportPDF(ReportFiltroDto search)
         {
             var requestData = await GetFilter(search);
 
