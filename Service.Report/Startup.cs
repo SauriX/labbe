@@ -185,6 +185,7 @@ namespace Service.Report
             services.AddScoped<IRequestApplication, RequestApplication>();
             services.AddScoped<IPatientStatsApplication, PatientStatsApplication>();
             services.AddScoped<IMedicalStatsApplication, MedicalStatsApplication>();
+            services.AddScoped<IContactStatsApplication, ContactStatsApplication>();
 
             services.AddScoped<IReportRepository, ReportRepository>();
         }
