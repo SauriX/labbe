@@ -32,9 +32,9 @@ namespace Service.Report.Repository
 
             var query = report.ToQueryString();
 
-            if (!string.IsNullOrEmpty(search.SucursalId) && Guid.TryParse(search.SucursalId, out Guid seguir))
+            if (search.SucursalId != null && search.SucursalId.Count > 0)
             {
-                report = report.Where(x => x.SucursalId == Guid.Parse(search.SucursalId));
+                report = report.Where(x => search.SucursalId.Contains(x.SucursalId.ToString()));
                 query = report.ToQueryString();
             }
             if (search.Fecha != null)

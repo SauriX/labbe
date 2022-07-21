@@ -5,7 +5,9 @@ using MigraDoc.DocumentObjectModel.Shapes;
 using MigraDoc.DocumentObjectModel.Shapes.Charts;
 using MigraDoc.DocumentObjectModel.Tables;
 using MigraDoc.Rendering;
+using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -152,11 +154,27 @@ namespace Integration.Pdf.Service
 
                             if (!string.IsNullOrWhiteSpace(format))
                             {
-                                cell.AddParagraph(Convert.ToDouble(item[key]).ToString(format));
+                                if (item[key] is IList)
+                                {
+                                    var datalist = JsonConvert.DeserializeObject<List<string>>(item[key].ToString());
+                                    datalist.ForEach(x => cell.AddParagraph(x));
+                                }
+                                else
+                                {
+                                    cell.AddParagraph(Convert.ToDouble(item[key]).ToString(format));
+                                }
                             }
                             else
                             {
-                                cell.AddParagraph(item[key].ToString());
+                                if (item[key] is IList)
+                                {
+                                    var datalist = JsonConvert.DeserializeObject<List<string>>(item[key].ToString());
+                                    datalist.ForEach(x => cell.AddParagraph(x));
+                                }
+                                else
+                                {
+                                    cell.AddParagraph(item[key].ToString());
+                                }
                             }
                         }
                     }

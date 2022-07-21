@@ -7,7 +7,7 @@ namespace Service.Report.Dtos
 {
     public class ReportFiltroDto
     {
-        public string SucursalId { get; set; }
+        public List<string> SucursalId { get; set; }
         public List<DateTime> Fecha { get; set; }
         public string Sucursal { get; set; }
         public string MedicoId { get; set; }
