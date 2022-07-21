@@ -8,7 +8,7 @@
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/LabRamos/services/report/api/report/expediente/getAll",
+      "UpstreamPathTemplate": "/api/report/expediente/getAll",
       "UpstreamHttpMethod": [ "GET" ]
     },
 
@@ -20,7 +20,7 @@
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/LabRamos/services/report/api/report/expediente/download/pdf",
+      "UpstreamPathTemplate": "/api/report/expediente/download/pdf",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
@@ -31,7 +31,7 @@
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/LabRamos/services/report/api/report/expediente/export/table/{search}",
+      "UpstreamPathTemplate": "/api/report/expediente/export/table/{search}",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
@@ -42,7 +42,7 @@
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/LabRamos/services/report/api/report/expediente/export/graphic/{search}",
+      "UpstreamPathTemplate": "/api/report/expediente/export/graphic/{search}",
       "UpstreamHttpMethod": [ "POST" ]
     },
 
@@ -54,7 +54,7 @@
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/LabRamos/services/report/api/report/expediente/filter",
+      "UpstreamPathTemplate": "/api/report/expediente/filter",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
@@ -65,7 +65,7 @@
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/LabRamos/services/report/api/report/estadistica/getAll",
+      "UpstreamPathTemplate": "/api/report/estadistica/getAll",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
@@ -76,7 +76,7 @@
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/LabRamos/services/report/api/report/estadistica/download/pdf",
+      "UpstreamPathTemplate": "/api/report/estadistica/download/pdf",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
@@ -87,7 +87,7 @@
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/LabRamos/services/report/api/report/estadistica/export/table/{search}",
+      "UpstreamPathTemplate": "/api/report/estadistica/export/table/{search}",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
@@ -98,7 +98,7 @@
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/LabRamos/services/report/api/report/estadistica/export/graphic/{search}",
+      "UpstreamPathTemplate": "/api/report/estadistica/export/graphic/{search}",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
@@ -109,7 +109,7 @@
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/LabRamos/services/report/api/report/estadistica/filter",
+      "UpstreamPathTemplate": "/api/report/estadistica/filter",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
@@ -120,7 +120,7 @@
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/LabRamos/services/report/api/report/medicos/getAll",
+      "UpstreamPathTemplate": "/api/report/medicos/getAll",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
@@ -131,7 +131,7 @@
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/LabRamos/services/report/api/report/medicos/download/pdf",
+      "UpstreamPathTemplate": "/api/report/medicos/download/pdf",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
@@ -142,7 +142,7 @@
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/LabRamos/services/report/api/report/medicos/filter",
+      "UpstreamPathTemplate": "/api/report/medicos/filter",
       "UpstreamHttpMethod": [ "POST" ]
     }
   ]

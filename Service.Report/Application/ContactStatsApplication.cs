@@ -46,15 +46,14 @@ namespace Service.Report.Application
                            group c by c.Expediente into grupo
                            select new ContactStatsChartDto
                            {
-                               Cant_Celular = grupo.Select(x => x.Expediente.Celular).Count(),
-                               Cant_Correo = grupo.Select(x => x.Expediente.Correo).Count()
+                               Cant_Celular = grupo.Count(x => !string.IsNullOrWhiteSpace(x.Expediente.Celular)),
+                               Cant_Correo = grupo.Count(x => !string.IsNullOrWhiteSpace(x.Expediente.Correo))
                            }).ToList();
 
             results.Add(new ContactStatsChartDto
             {
                 Cant_Celular = results.Sum(x => x.Cant_Celular),
                 Cant_Correo = results.Sum(x => x.Cant_Correo),
-                Total = results.Sum(x => x.Cant_Celular + x.Cant_Correo)
             });
 
             return results;
@@ -84,15 +83,14 @@ namespace Service.Report.Application
                            group c by c.Expediente into grupo
                            select new ContactStatsChartDto
                            {
-                               Cant_Celular = grupo.Select(x => x.Expediente.Celular).Count(),
-                               Cant_Correo = grupo.Select(x => x.Expediente.Correo).Count()
+                               Cant_Celular = grupo.Count(x => !string.IsNullOrWhiteSpace(x.Expediente.Celular)),
+                               Cant_Correo = grupo.Count(x => !string.IsNullOrWhiteSpace(x.Expediente.Correo))
                            }).ToList();
 
             results.Add(new ContactStatsChartDto
             {
                 Cant_Celular = results.Sum(x => x.Cant_Celular),
                 Cant_Correo = results.Sum(x => x.Cant_Correo),
-                Total = results.Sum(x => x.Cant_Celular + x.Cant_Correo)
             });
 
             return results;
@@ -108,8 +106,7 @@ namespace Service.Report.Application
                 new Col("Expediente", ParagraphAlignment.Left),
                 new Col("Nombre del Paciente", ParagraphAlignment.Left),
                 new Col("Nombre del Médico", ParagraphAlignment.Right, "C"),
-                new Col("Celular", ParagraphAlignment.Right),
-                new Col("Correo", ParagraphAlignment.Right),
+                new Col("Contacto", ParagraphAlignment.Right),
             };
 
             List<ChartSeries> series = new()
@@ -125,8 +122,7 @@ namespace Service.Report.Application
                 { "Expendiente", x.Expediente },
                 { "Nombre del Paciente", x.NombrePaciente},
                 { "Nombre del Médico", x.NombreMedico },
-                { "Celular", x.Celular},
-                { "Correo", x.Correo},
+                { "Contacto", new List<string>{ x.Celular, x.Correo } },
             }).ToList();
 
             var datachart = requestchartData.Select(x => new Dictionary<string, object>
