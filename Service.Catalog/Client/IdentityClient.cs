@@ -32,6 +32,14 @@ namespace Service.Catalog.Client
                 return await response.Content.ReadFromJsonAsync<ScopesDto>();
             }
 
+            if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.NoContent)
+            {
+                return new ScopesDto()
+                {
+                    Modificar = true
+                };
+            }
+
             throw new CustomException(response.StatusCode, response.ReasonPhrase);
         }
     }

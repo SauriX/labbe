@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using EventBus.Messages.Common;
+using MassTransit;
+using Microsoft.Extensions.Configuration;
 using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Client.IClient;
 using Service.MedicalRecord.Dtos.Request;
@@ -23,19 +25,22 @@ namespace Service.MedicalRecord.Application
         private readonly ICatalogClient _catalogClient;
         private readonly IPdfClient _pdfClient;
         private readonly ITransactionProvider _transaction;
+        private readonly ISendEndpointProvider _sendEndpointProvider;
 
         public RequestApplication(
             IConfiguration configuration,
             IRequestRepository repository,
             ICatalogClient catalogClient,
             ITransactionProvider transaction,
-            IPdfClient pdfClient)
+            IPdfClient pdfClient,
+            ISendEndpointProvider sendEndpoint)
         {
             _imageUrl = configuration.GetValue<string>("Request:ImageUrl");
             _repository = repository;
             _catalogClient = catalogClient;
             _transaction = transaction;
             _pdfClient = pdfClient;
+            _sendEndpointProvider = sendEndpoint;
         }
 
         public async Task<byte[]> GetTicket()
@@ -143,9 +148,13 @@ namespace Service.MedicalRecord.Application
             return null;
         }
 
-        public async Task<bool> SendTestEmail()
+        public async Task SendTestEmail()
         {
-            return await Task.FromResult(true);
+            var emailToSend = new EmailContract("mike_fa96@hotmail.com", null, "hola", "test", "test");
+
+            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("rabbitmq://axsishost.online:5672/labramos-dev/email-queue"));
+
+            await endpoint.Send(emailToSend);
         }
     }
 }

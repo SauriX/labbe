@@ -45,5 +45,12 @@ namespace Service.MedicalRecord.Controllers
 
             return await _service.Create(request);
         }
+
+        [HttpGet("test/email")]
+        [AllowAnonymous]
+        public async Task SendTestEmail()
+        {
+            await _service.SendTestEmail(); 
+        }
     }
 }

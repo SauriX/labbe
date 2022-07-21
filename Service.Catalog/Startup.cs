@@ -1,4 +1,5 @@
 using FluentValidation.AspNetCore;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -19,6 +20,7 @@ using Service.Catalog.Application;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Client;
 using Service.Catalog.Client.IClient;
+using Service.Catalog.Consumers.Error;
 using Service.Catalog.Context;
 using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Domain.Indication;
@@ -28,6 +30,7 @@ using Service.Catalog.Middleware;
 using Service.Catalog.Repository;
 using Service.Catalog.Repository.IRepository;
 using Service.Catalog.Requirements;
+using Service.Catalog.Settings;
 using Shared.Dictionary;
 using System;
 using System.Collections.Generic;
@@ -78,6 +81,30 @@ namespace Service.Catalog
 
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
             });
+
+            services.AddMassTransit(x =>
+            {
+                x.AddConsumer<BranchErrorConsumer>();
+
+                x.UsingRabbitMq((context, configurator) =>
+                {
+                    var rabbitMQSettings = Configuration.GetSection(nameof(RabbitMQSettings)).Get<RabbitMQSettings>();
+
+                    configurator.Host(new Uri(rabbitMQSettings.Host), "Catalogo", c =>
+                    {
+                        c.ContinuationTimeout(TimeSpan.FromSeconds(20));
+                        c.Username(rabbitMQSettings.Username);
+                        c.Password(rabbitMQSettings.Password);
+                    });
+
+                    configurator.ReceiveEndpoint("branch-queue-faults", re =>
+                    {
+                        re.Consumer<BranchErrorConsumer>(context);
+                    });
+                });
+            });
+
+            services.AddMassTransitHostedService();
 
             services.AddSwaggerGen(c =>
             {

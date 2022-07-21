@@ -1,4 +1,7 @@
+using EventBus.Messages.Common;
 using FluentValidation.AspNetCore;
+using MassTransit;
+using MassTransit.Definition;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -18,11 +21,13 @@ using Service.MedicalRecord.Application;
 using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Client;
 using Service.MedicalRecord.Client.IClient;
+using Service.MedicalRecord.Consumers;
 using Service.MedicalRecord.Context;
 using Service.MedicalRecord.Middleware;
 using Service.MedicalRecord.Repository;
 using Service.MedicalRecord.Repository.IRepository;
 using Service.MedicalRecord.Requirements;
+using Service.MedicalRecord.Settings;
 using Service.MedicalRecord.Transactions;
 using Shared.Dictionary;
 using System;
@@ -107,6 +112,31 @@ namespace Service.MedicalRecord
 
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
             });
+
+            services.AddMassTransit(x =>
+            {
+                x.AddConsumer<BranchConsumer>();
+
+                x.UsingRabbitMq((context, configurator) =>
+                {
+                    var rabbitMQSettings = Configuration.GetSection(nameof(RabbitMQSettings)).Get<RabbitMQSettings>();
+
+                    configurator.Host(new Uri(rabbitMQSettings.Host), "MedicalRecord", c =>
+                    {
+                        c.ContinuationTimeout(TimeSpan.FromSeconds(20));
+                        c.Username(rabbitMQSettings.Username);
+                        c.Password(rabbitMQSettings.Password);
+                    });
+
+                    configurator.ReceiveEndpoint("branch-medicalRecord-queue", re =>
+                    {
+                        re.Consumer<BranchConsumer>(context);
+                        re.DiscardFaultedMessages();
+                    });
+                });
+            });
+
+            services.AddMassTransitHostedService();
 
             services.AddSwaggerGen(c =>
             {

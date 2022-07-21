@@ -14,14 +14,14 @@ using System.Threading.Tasks;
 
 namespace Service.Sender.Service
 {
-    public class EmailService
+    public class EmailService : IEmailService
     {
         private readonly IKeySettings _keySettings;
         private readonly IUrlSettings _urlSettings;
         private readonly IUrlLocalSettings _urlLocalSettings;
-        private readonly IConfigurationService _configurationService;
+        private readonly IEmailConfigurationService _configurationService;
 
-        public EmailService(IKeySettings keySettings, IUrlSettings urlSettings, IUrlLocalSettings urlLocalSettings, IConfigurationService configurationService)
+        public EmailService(IKeySettings keySettings, IUrlSettings urlSettings, IUrlLocalSettings urlLocalSettings, IEmailConfigurationService configurationService)
         {
             _keySettings = keySettings;
             _urlSettings = urlSettings;
@@ -31,13 +31,13 @@ namespace Service.Sender.Service
 
         public async Task Send(string to, string subject, string title, string content)
         {
-            var conf = await _configurationService.GetEmail(true);
+            var conf = await _configurationService.GetEmail();
 
-            if (conf == null || string.IsNullOrWhiteSpace(conf.Smtp) || string.IsNullOrWhiteSpace(conf.Usuario) || (conf.RequiereContraseña && string.IsNullOrWhiteSpace(conf.Contraseña)))
-                throw new CustomException(HttpStatusCode.FailedDependency, Responses.EmailFailed);
+            if (conf == null || string.IsNullOrWhiteSpace(conf.Smtp) || string.IsNullOrWhiteSpace(conf.Correo) || (conf.RequiereContraseña && string.IsNullOrWhiteSpace(conf.Contraseña)))
+                throw new Exception(Responses.EmailConfigurationIncomplete);
 
-            if (string.IsNullOrWhiteSpace(to))
-                throw new CustomException(HttpStatusCode.FailedDependency, Responses.EmailFailed);
+            if (string.IsNullOrWhiteSpace(to) || !IsValid(to))
+                throw new CustomException(HttpStatusCode.FailedDependency, Responses.EmailFordwardError);
 
             var path = Path.Combine(_urlLocalSettings.Layout, Assets.HtmlGeneral);
             var html = "";
@@ -50,7 +50,7 @@ namespace Service.Sender.Service
             }
 
             using MailMessage emailMessage = new();
-            emailMessage.From = new MailAddress(conf.Usuario, conf.Remitente);
+            emailMessage.From = new MailAddress(conf.Correo, conf.Remitente);
             emailMessage.To.Add(new MailAddress(to, to));
             emailMessage.Subject = subject;
             emailMessage.Body = html;
@@ -59,17 +59,20 @@ namespace Service.Sender.Service
             using SmtpClient MailClient = new(conf.Smtp);
             if (conf.RequiereContraseña)
             {
-                MailClient.Credentials = new NetworkCredential(conf.Usuario, Crypto.DecryptString(conf.Contraseña, _keySettings.MailPassword));
+                MailClient.Credentials = new NetworkCredential(conf.Correo, Crypto.DecryptString(conf.Contraseña, _keySettings.MailPassword));
             }
             MailClient.Send(emailMessage);
         }
 
         public async Task Send(IEnumerable<string> to, string subject, string title, string content)
         {
-            var conf = await _configurationService.GetEmail(true);
+            var conf = await _configurationService.GetEmail();
 
-            if (conf == null || string.IsNullOrWhiteSpace(conf.Smtp) || string.IsNullOrWhiteSpace(conf.Usuario) || (conf.RequiereContraseña && string.IsNullOrWhiteSpace(conf.Contraseña)))
-                throw new CustomException(HttpStatusCode.FailedDependency, Responses.EmailFailed);
+            if (conf == null || string.IsNullOrWhiteSpace(conf.Smtp) || string.IsNullOrWhiteSpace(conf.Correo) || (conf.RequiereContraseña && string.IsNullOrWhiteSpace(conf.Contraseña)))
+                throw new Exception(Responses.EmailConfigurationIncomplete);
+
+            if (to == null || !to.Any() || to.Any(x => !IsValid(x)))
+                throw new CustomException(HttpStatusCode.FailedDependency, Responses.EmailFordwardError);
 
             var path = Path.Combine(_urlLocalSettings.Layout, Assets.HtmlGeneral);
             var html = "";
@@ -82,7 +85,7 @@ namespace Service.Sender.Service
             }
 
             using MailMessage emailMessage = new();
-            emailMessage.From = new MailAddress(conf.Usuario, conf.Remitente);
+            emailMessage.From = new MailAddress(conf.Correo, conf.Remitente);
 
             foreach (var user in to.Where(x => !string.IsNullOrWhiteSpace(x)))
             {
@@ -96,9 +99,23 @@ namespace Service.Sender.Service
             using SmtpClient MailClient = new(conf.Smtp);
             if (conf.RequiereContraseña)
             {
-                MailClient.Credentials = new NetworkCredential(conf.Usuario, Crypto.DecryptString(conf.Contraseña, _keySettings.MailPassword));
+                MailClient.Credentials = new NetworkCredential(conf.Correo, Crypto.DecryptString(conf.Contraseña, _keySettings.MailPassword));
             }
             MailClient.Send(emailMessage);
+        }
+
+        private bool IsValid(string emailaddress)
+        {
+            try
+            {
+                MailAddress m = new MailAddress(emailaddress);
+
+                return true;
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
         }
     }
 }

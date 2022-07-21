@@ -9,5 +9,6 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<byte[]> GetTicket();
         Task<byte[]> GetOrder();
         Task<string> Create(RequestDto request);
+        Task SendTestEmail();
     }
 }
