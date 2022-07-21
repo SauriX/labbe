@@ -65,7 +65,7 @@ namespace Service.Identity.Context
                     var menus = new List<Menu>
                     {
                         new Menu(18, 1, "Maquilador", "maquila", "maquila", 1017),
-                        new Menu(19, 1, "Expedientes", "expedientes", "expedientes", 1018),
+                        
                     };
 
                     context.CAT_Menu.AddRange(menus);
@@ -83,7 +83,7 @@ namespace Service.Identity.Context
                 }
             }      
             
-            if (context.CAT_Menu.Count() == 19)
+            if (context.CAT_Menu.Count() == 18)
             {
                 using var transaction = context.Database.BeginTransaction();
 
@@ -91,6 +91,7 @@ namespace Service.Identity.Context
                 {
                     var menus = new List<Menu>
                     {
+                        
                         new Menu(20, null, "Parámetros de sistema", "configuration", "configuration", 2000),
                     };
 
@@ -108,7 +109,7 @@ namespace Service.Identity.Context
                     throw;
                 }
             }
-            if (context.CAT_Menu.Count() == 20)
+            if (context.CAT_Menu.Count() == 19)
             {
                 using var transaction = context.Database.BeginTransaction();
 
@@ -116,7 +117,11 @@ namespace Service.Identity.Context
                 {
                     var menus = new List<Menu>
                     {
-                        new Menu(21, 1, "Cotización", "cotizacion", "cotizacion", 1019),
+                        new Menu(24, null, "Recepción", "configuration", "configuration", 2400),
+                        new Menu(19, 24, "Expedientes", "expedientes", "expedientes", 2401),
+                        new Menu(21, 24, "Cotización", "cotizacion", "cotizacion", 2402),
+                        new Menu(22, 24, "Reportes" , "reports", "reports", 2403),
+                        new Menu(23,24,"Citas","appointments","appointments",2404),
                     };
 
                     context.CAT_Menu.AddRange(menus);
@@ -133,6 +138,7 @@ namespace Service.Identity.Context
                     throw;
                 }
             }
+
 
             var roleId = Guid.NewGuid();
 

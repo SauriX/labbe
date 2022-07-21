@@ -9,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Mail;
+using System.Reflection;
 using System.Web;
 
 namespace Integration.Pdf.Service
@@ -65,13 +67,38 @@ namespace Integration.Pdf.Service
             section.PageSetup.LeftMargin = Unit.FromCentimeter(1);
             section.PageSetup.RightMargin = Unit.FromCentimeter(1);
 
-            Format(section, reportData.Columnas, reportData.Series, reportData.Datos);
+            Format(section, reportData.Columnas, reportData.Series, reportData.Datos, reportData.DatosGrafica, reportData.Header);
 
             return document;
         }
 
-        static void Format(Section section, List<Models.Col> columns, List<ChartSeries> seriesInfo, List<Dictionary<string, object>> data)
+        static void Format(Section section, List<Models.Col> columns, List<ChartSeries> seriesInfo, List<Dictionary<string, object>> data, List<Dictionary<string, object>> datachart, HeaderData Header)
         {
+            var fontTitle = new Font("calibri", 20);
+            var fontSubtitle = new Font("calibri", 16);
+            var fontText = new Font("calibri", 12);
+            var title = new Col(Header.NombreReporte, fontTitle);
+            var branchType = "Sucursal " + Header.Sucursal;
+
+            if(Header.Sucursal == string.Empty || Header.Sucursal == "string")
+            {
+                branchType = Header.Sucursal = "Todas las Sucursales";
+            }
+
+            var branch = new Col(branchType, fontSubtitle);
+            var period = new Col("Periodo: " + Header.Fecha, fontSubtitle);
+            var printDate = new Col("Fecha de impresión: " + DateTime.Now.ToString("dd/MM/yyyy"), fontText, ParagraphAlignment.Right);
+            var logo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets\\LabRamosLogo.png");
+         
+            section.AddImage(logo);
+            section.AddText(title);
+            section.AddSpace(10);
+            section.AddText(branch);
+            section.AddText(period);
+            section.AddSpace(5);
+            section.AddText(printDate);
+            section.AddSpace(10);
+
             var contentWidth = section.PageSetup.PageWidth - section.PageSetup.LeftMargin - section.PageSetup.RightMargin;
 
             Table table = new Table();
@@ -182,7 +209,14 @@ namespace Integration.Pdf.Service
                 {
                     series.FillFormat.Color = Color.FromRgb(Convert.ToByte("18", 16), Convert.ToByte("90", 16), Convert.ToByte("FF", 16));
                 }
-                series.Add(data.Select(x => Convert.ToDouble(x[serie.Serie])).ToArray());
+                if(datachart != null && datachart.Count > 0)
+                {
+                    series.Add(datachart.Select(x => Convert.ToDouble(x[serie.Serie])).ToArray());
+                }
+                else
+                {
+                    series.Add(data.Select(x => Convert.ToDouble(x[serie.Serie])).ToArray());
+                }
                 series.HasDataLabel = true;
                 series.DataLabel.Format = serie.Formato;
                 series.DataLabel.Position = DataLabelPosition.OutsideEnd;
@@ -192,7 +226,14 @@ namespace Integration.Pdf.Service
             var serieX = seriesInfo.FirstOrDefault(s => s.SerieX)?.Serie;
 
             XSeries xseries = chart.XValues.AddXSeries();
-            xseries.Add(data.Select((x, i) => x[serieX].ToString() ?? "S-" + i).ToArray());
+            if(datachart != null && datachart.Count > 0)
+            {
+                xseries.Add(datachart.Select((x, i) => x[serieX].ToString() ?? "S-" + i).ToArray());
+            }
+            else
+            {
+                xseries.Add(data.Select((x, i) => x[serieX].ToString() ?? "S-" + i).ToArray());
+            }
 
             chart.XAxis.MajorTickMark = TickMarkType.Outside;
             chart.XAxis.Title.Caption = serieX ?? "Serie X";

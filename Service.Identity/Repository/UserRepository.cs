@@ -82,6 +82,8 @@ namespace Service.Identity.Repository
 
         public async Task Create(User user)
         {
+            
+
             _context.CAT_Usuario.Add(user);
 
             await _context.SaveChangesAsync();
@@ -93,8 +95,9 @@ namespace Service.Identity.Repository
 
             try
             {
+                         
                 var permissions = user.Permisos.ToList();
-
+ 
                 user.Permisos = null;
                 _context.CAT_Usuario.Update(user);
 
@@ -102,6 +105,7 @@ namespace Service.Identity.Repository
 
                 if (updatePermission)
                 {
+                    
                     var config = new BulkConfig();
                     config.SetSynchronizeFilter<UserPermission>(x => x.UsuarioId == user.Id);
 
@@ -123,6 +127,7 @@ namespace Service.Identity.Repository
                 (from menu in _context.CAT_Menu
                  join lPer in _context.CAT_Usuario_Permiso.Where(x => x.UsuarioId == id) on menu.Id equals lPer.MenuId into ljPer
                  from p in ljPer.DefaultIfEmpty()
+                 where menu.MenuPadreId != null || (menu.MenuPadreId == null && menu.Controlador != null)
                  orderby menu.Orden
                  select new { menu, permission = p ?? new UserPermission() })
                  .Select(x => new UserPermission
@@ -137,7 +142,7 @@ namespace Service.Identity.Repository
                      EnviarCorreo = x.permission.EnviarCorreo,
                      EnviarWapp = x.permission.EnviarWapp,
                  })
-                 .ToListAsync();
+                 .ToListAsync(); 
 
             return permissions;
         }

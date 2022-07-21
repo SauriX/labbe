@@ -19,6 +19,134 @@ namespace Service.MedicalRecord.Migrations
                 .HasAnnotation("ProductVersion", "5.0.15")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("Service.MedicalRecord.Domain.Appointments.AppointmentDom", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Celular")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Direccion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Estatus_Cita")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("ExpedienteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("FechaCita")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaMod")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Genero")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("HoraCita")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Indicaciones")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NombrePaciente")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UsuarioCreoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UsuarioModId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("WhatsApp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExpedienteId");
+
+                    b.ToTable("CAT_Cita_Dom");
+                });
+
+            modelBuilder.Entity("Service.MedicalRecord.Domain.Appointments.AppointmentLab", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("CompaniaID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Direccion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Edad")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("ExpedienteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("FechaCita")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaMod")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Genero")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("HoraCita")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("MedicoID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("NombrePaciente")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Procedencia")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("SucursalID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsuarioCreoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UsuarioModId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("WhatsApp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExpedienteId");
+
+                    b.ToTable("CAT_Cita_Lab");
+                });
+
             modelBuilder.Entity("Service.MedicalRecord.Domain.MedicalRecord.MedicalRecord", b =>
                 {
                     b.Property<Guid>("Id")
@@ -132,6 +260,12 @@ namespace Service.MedicalRecord.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("AppointmentDomId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("AppointmentLabId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("Cargo")
                         .HasColumnType("bit");
 
@@ -172,6 +306,10 @@ namespace Service.MedicalRecord.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("id");
+
+                    b.HasIndex("AppointmentDomId");
+
+                    b.HasIndex("AppointmentLabId");
 
                     b.HasIndex("PriceQuoteId");
 
@@ -367,6 +505,24 @@ namespace Service.MedicalRecord.Migrations
                     b.ToTable("CAT_Datos_Fiscales");
                 });
 
+            modelBuilder.Entity("Service.MedicalRecord.Domain.Appointments.AppointmentDom", b =>
+                {
+                    b.HasOne("Service.MedicalRecord.Domain.MedicalRecord.MedicalRecord", "Expediente")
+                        .WithMany()
+                        .HasForeignKey("ExpedienteId");
+
+                    b.Navigation("Expediente");
+                });
+
+            modelBuilder.Entity("Service.MedicalRecord.Domain.Appointments.AppointmentLab", b =>
+                {
+                    b.HasOne("Service.MedicalRecord.Domain.MedicalRecord.MedicalRecord", "Expediente")
+                        .WithMany()
+                        .HasForeignKey("ExpedienteId");
+
+                    b.Navigation("Expediente");
+                });
+
             modelBuilder.Entity("Service.MedicalRecord.Domain.MedicalRecord.MedicalRecordTaxData", b =>
                 {
                     b.HasOne("Service.MedicalRecord.Domain.MedicalRecord.MedicalRecord", "Expediente")
@@ -388,6 +544,14 @@ namespace Service.MedicalRecord.Migrations
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.PriceQuote.CotizacionStudy", b =>
                 {
+                    b.HasOne("Service.MedicalRecord.Domain.Appointments.AppointmentDom", null)
+                        .WithMany("Estudios")
+                        .HasForeignKey("AppointmentDomId");
+
+                    b.HasOne("Service.MedicalRecord.Domain.Appointments.AppointmentLab", null)
+                        .WithMany("Estudios")
+                        .HasForeignKey("AppointmentLabId");
+
                     b.HasOne("Service.MedicalRecord.Domain.PriceQuote.PriceQuote", null)
                         .WithMany("Estudios")
                         .HasForeignKey("PriceQuoteId");
@@ -400,6 +564,16 @@ namespace Service.MedicalRecord.Migrations
                         .HasForeignKey("ExpedienteId");
 
                     b.Navigation("Expediente");
+                });
+
+            modelBuilder.Entity("Service.MedicalRecord.Domain.Appointments.AppointmentDom", b =>
+                {
+                    b.Navigation("Estudios");
+                });
+
+            modelBuilder.Entity("Service.MedicalRecord.Domain.Appointments.AppointmentLab", b =>
+                {
+                    b.Navigation("Estudios");
                 });
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.MedicalRecord.MedicalRecord", b =>

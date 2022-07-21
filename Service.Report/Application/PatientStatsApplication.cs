@@ -23,46 +23,61 @@ using Shared.Helpers;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http.Json;
 using Service.Report.Client.IClient;
+using Service.Report.Dtos;
 
 namespace Service.Report.Application
 {
     public class PatientStatsApplication : IPatientStatsApplication
     {
-        public readonly IPatientStatsRepository _repository;
+        public readonly IReportRepository _repository;
         private readonly IPdfClient _pdfClient;
 
-        public PatientStatsApplication(IPatientStatsRepository repository, IPdfClient pdfClient)
+        public PatientStatsApplication(IReportRepository repository, IPdfClient pdfClient)
         {
             _repository = repository;
             _pdfClient = pdfClient;
         }
 
-        public async Task<IEnumerable<PatientStatsFiltroDto>> GetByName()
+        public async Task<IEnumerable<PatientStatsDto>> GetByName()
         {
-            var req = await _repository.GetByName();
-            var results = from c in req
-                         group c by c.Expediente into grupo
-                         select new PatientStatsFiltroDto
-                         {
-                             NombrePaciente = grupo.Key.Nombre,
-                             Solicitudes = grupo.Count(),
-                             Total = grupo.Sum(x => x.PrecioFinal),
-                         };
+            var req = await _repository.GetAll();
+            var results = (from c in req
+                           group c by new { c.Expediente.Nombre, c.ExpedienteId } into grupo
+                           select new PatientStatsDto
+                           {
+                               NombrePaciente = grupo.Key.Nombre,
+                               Solicitudes = grupo.Count(),
+                               Total = grupo.Sum(x => x.PrecioFinal),
+                           }).ToList();
+
+            results.Add(new PatientStatsDto
+            {
+                NombrePaciente = "Total",
+                Solicitudes = results.Sum(x => x.Solicitudes),
+                Total = results.Sum(x => x.Total)
+            });
 
             return results;
         }
 
-        public async Task<IEnumerable<PatientStatsFiltroDto>> GetFilter(PatientStatsSearchDto search)
+        public async Task<IEnumerable<PatientStatsDto>> GetFilter(ReportFiltroDto search)
         {
-            var req = await _repository.GetByName();
-            var results = from c in req
-                          group c by c.Expediente into grupo
-                          select new PatientStatsFiltroDto
+            var req = await _repository.GetFilter(search);
+            var results = (from c in req
+                          group c by new { c.Expediente.Nombre, c.ExpedienteId } into grupo
+                          select new PatientStatsDto
                           {
                               NombrePaciente = grupo.Key.Nombre,
                               Solicitudes = grupo.Count(),
                               Total = grupo.Sum(x => x.PrecioFinal),
-                          };
+                          }).ToList();
+
+            results.Add(new PatientStatsDto
+            {
+                NombrePaciente = "Total",
+                Solicitudes = results.Sum(x => x.Solicitudes),
+                Total = results.Sum(x => x.Total)
+            });
 
             return results;
         }
@@ -115,37 +130,47 @@ namespace Service.Report.Application
             return (template.ToByteArray(), "Estadística de Pacientes.xlsx");
         }
 
-        public async Task<byte[]> GenerateReportPDF()
+        public async Task<byte[]> GenerateReportPDF(ReportFiltroDto search)
         {
-            var requestData = await GetByName();
+            var requestData = await GetFilter(search);
 
             List<Col> columns = new()
             {
                 new Col("Nombre de Paciente", 3, ParagraphAlignment.Left),
                 new Col("Solicitudes", ParagraphAlignment.Left),
-                new Col("Total Sol.", ParagraphAlignment.Right ,"C"),
+                new Col("Total", ParagraphAlignment.Right ,"C"),
             };
 
             List<ChartSeries> series = new()
             {
-                new ChartSeries("Nombre de Paciente", true),
-                new ChartSeries("Solicitudes"),
-                new ChartSeries("Total"),
+                new ChartSeries("Iniciales Paciente", true),
+                new ChartSeries("Solicitudes", "#c4c4c4"),
+                new ChartSeries("Total", null, "C"),
             };
 
             var data = requestData.Select(x => new Dictionary<string, object>
             {
                 { "Nombre de Paciente", x.NombrePaciente},
                 { "Solicitudes", x.Solicitudes },
-                { "Total", x.Total }
+                { "Total", x.Total },
+                {"Iniciales Paciente", string.Join(" ", x.NombrePaciente.Split(" ").Select(x => x[0]))}
             }).ToList();
+
+            var headerData = new HeaderData()
+            {
+                NombreReporte = "Estadística de Solicitudes por Paciente",
+                Sucursal = search.Sucursal,
+                Fecha = $"{ search.Fecha.Min():dd/MM/yyyy} - {search.Fecha.Max().ToString("dd/MM/yyyy")}"
+            };
 
             var reportData = new ReportData()
             {
                 Columnas = columns,
                 Series = series,
-                Datos = data
+                Datos = data,
+                Header = headerData,
             };
+
 
             var file = await _pdfClient.GenerateReport(reportData);
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Report.Application.IApplication;
+using Service.Report.Dtos;
 using Service.Report.Dtos.PatientStats;
 using Service.Report.PdfModel;
 using Shared.Dictionary;
@@ -8,32 +9,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Service.Report.Controllers
+namespace Service.Report.Controllers.Report
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class PatientStatsController : ControllerBase
+    public partial class ReportController : ControllerBase
     {
-        private readonly IPatientStatsApplication _patientstatsService;
-
-        public PatientStatsController(IPatientStatsApplication indicationService)
-        {
-            _patientstatsService = indicationService;
-        }
-
-        [HttpGet("getByName")]
-        public async Task<IEnumerable<PatientStatsFiltroDto>> GetByName()
+        [HttpGet("estadistica/getAll")]
+        public async Task<IEnumerable<PatientStatsDto>> GetByName()
         {
             return await _patientstatsService.GetByName();
         }
 
-        [HttpPost("filter")]
-        public async Task<IEnumerable<PatientStatsFiltroDto>> GetNow(PatientStatsSearchDto search)
+        [HttpPost("estadistica/filter")]
+        public async Task<IEnumerable<PatientStatsDto>> GetNameNow(ReportFiltroDto search)
         {
             return await _patientstatsService.GetFilter(search);
         }
 
-        [HttpPost("export/table/{search?}")]
+        [HttpPost("estadistica/export/table/{search?}")]
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportTableStats(string search = null)
         {
@@ -41,7 +33,7 @@ namespace Service.Report.Controllers
             return File(file, MimeType.XLSX, fileName);
         }
 
-        [HttpPost("export/graphic/{search?}")]
+        [HttpPost("estadistica/export/graphic/{search?}")]
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportChartStats(string search = null)
         {
@@ -49,11 +41,11 @@ namespace Service.Report.Controllers
             return File(file, MimeType.XLSX, fileName);
         }
 
-        [HttpPost("download/pdf")]
+        [HttpPost("estadistica/download/pdf")]
         [AllowAnonymous]
-        public async Task<IActionResult> StatsPDF()
+        public async Task<IActionResult> PacientePDF(ReportFiltroDto search)
         {
-            var file = await _patientstatsService.GenerateReportPDF();
+            var file = await _patientstatsService.GenerateReportPDF(search);
             return File(file, MimeType.PDF, "EstadisticaPaciente.pdf");
         }
     }

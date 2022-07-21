@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Report.Application.IApplication;
+using Service.Report.Dtos;
 using Service.Report.Dtos.Request;
 using Service.Report.PdfModel;
 using Shared.Dictionary;
@@ -8,33 +9,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Service.Report.Controllers
+namespace Service.Report.Controllers.Report
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class RequestController: ControllerBase
-    {
-        private readonly IRequestApplication _requestService;
-
-        public RequestController(IRequestApplication indicationService)
-        {
-            _requestService = indicationService;
-        }
-         
-        [HttpGet("getBranchByCount")]
+    public partial class ReportController : ControllerBase
+    {    
+        [HttpGet("expediente/getAll")]
         //[Authorize(Policies.Access)]
-        public async Task<IEnumerable<RequestFiltroDto>> GetBranchByCount()
+        public async Task<IEnumerable<RequestDto>> GetBranchByCount() 
         {
             return await _requestService.GetBranchByCount();
         }
-        [HttpPost("filter")]
+        [HttpPost("expediente/filter")]
         //[Authorize(Policies.Access)]
-        public async Task<IEnumerable<RequestFiltroDto>> GetNow(RequestSearchDto search )
+        public async Task<IEnumerable<RequestDto>> GetBranchNow(ReportFiltroDto search )
         {
             return await _requestService.GetFilter(search);
         }
 
-        [HttpPost("export/table/{search?}")]
+        [HttpPost("expediente/export/table/{search?}")]
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportTableBranch(string search = null)
         {
@@ -42,7 +34,7 @@ namespace Service.Report.Controllers
             return File(file, MimeType.XLSX, fileName);
         }
 
-        [HttpPost("export/graphic/{search?}")]
+        [HttpPost("expediente/export/graphic/{search?}")]
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportGraphicBranch(string search = null)
         {
@@ -50,13 +42,13 @@ namespace Service.Report.Controllers
             return File(file, MimeType.XLSX, fileName);
         }
 
-        [HttpPost("download/pdf")]
+        [HttpPost("expediente/download/pdf")]
         [AllowAnonymous]
-        public async Task<IActionResult> ExpedientePDF()
+        public async Task<IActionResult> ExpedientePDF(ReportFiltroDto search)
         {
-            var file = await _requestService.GenerateReportPDF();
+            var file = await _requestService.GenerateReportPDF(search);
 
-            return File(file, MimeType.PDF, "reporte.pdf");
+            return File(file, MimeType.PDF, "EstadísticaExpediente.pdf");
         }
     }
 }

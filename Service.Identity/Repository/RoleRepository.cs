@@ -106,6 +106,7 @@ namespace Service.Identity.Repository
                 (from menu in _context.CAT_Menu
                  join lPer in _context.CAT_Rol_Permiso.Where(x => x.RolId == id) on menu.Id equals lPer.MenuId into ljPer
                  from p in ljPer.DefaultIfEmpty()
+                 where menu.MenuPadreId != null || (menu.MenuPadreId == null && menu.Controlador != null)
                  orderby menu.Orden
                  select new { menu, permission = p ?? new RolePermission() })
                  .Select(x => new RolePermission

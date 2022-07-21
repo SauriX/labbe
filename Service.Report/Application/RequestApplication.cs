@@ -23,26 +23,27 @@ using Shared.Helpers;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http.Json;
 using Service.Report.Client.IClient;
+using Service.Report.Dtos;
 
 namespace Service.Report.Application
 {
     public class RequestApplication : IRequestApplication
     {
-        public readonly IRequestRepository _repository;
+        public readonly IReportRepository _repository;
         private readonly IPdfClient _pdfClient;
 
-        public RequestApplication(IRequestRepository repository, IPdfClient pdfClient)
+        public RequestApplication(IReportRepository repository, IPdfClient pdfClient)
         {
             _repository = repository;
             _pdfClient = pdfClient;
         }
 
-        public async Task<IEnumerable<RequestFiltroDto>> GetBranchByCount()
+        public async Task<IEnumerable<RequestDto>> GetBranchByCount()
         {
-            var req = await _repository.GetRequestByCount();
+            var req = await _repository.GetAll();
             var results = from c in req
-                          group c by c.Expediente into grupo
-                          select new RequestFiltroDto
+                          group c by new { c.Expediente.Nombre, c.Expediente.Expediente } into grupo
+                          select new RequestDto
                           {
                               Visitas = grupo.Count(),
                               PacienteNombre = grupo.Key.Nombre,
@@ -52,24 +53,18 @@ namespace Service.Report.Application
 
             return results;
         }
-        //public async Task<List<RequestFiltroDto>> GetFilter(RequestSearchDto search)
-        //{
-        //    var doctors = await _repository.GetFilter(search);
-        //    return doctors.ToRequestRecordsListDto();
-        //}
-        public async Task<IEnumerable<RequestFiltroDto>> GetFilter(RequestSearchDto search)
+
+        public async Task<IEnumerable<RequestDto>> GetFilter(ReportFiltroDto search)
         {
-            var doctors = await _repository.GetFilter(search);
-            var req = await _repository.GetRequestByCount();
+            var req = await _repository.GetFilter(search);
             var results = from c in req
-                          group c by c.Expediente into grupo
-                          select new RequestFiltroDto
+                          group c by new { c.Expediente.Nombre, c.Expediente.Expediente } into grupo
+                          select new RequestDto
                           {
                               Visitas = grupo.Count(),
                               PacienteNombre = grupo.Key.Nombre,
                               ExpedienteNombre = grupo.Key.Expediente
                           };
-
 
             return results;
         }
@@ -124,15 +119,16 @@ namespace Service.Report.Application
             return (template.ToByteArray(), "Estadística de Expedientes.xlsx");
         }
 
-        public async Task<byte[]> GenerateReportPDF()
+        public async Task<byte[]> GenerateReportPDF(ReportFiltroDto search)
         {
-            var requestsData = await GetBranchByCount();
+            var requestsData = await GetFilter(search);
 
             List<Col> columns = new()
             {
                 new Col("Clave", ParagraphAlignment.Left),
                 new Col("Paciente", ParagraphAlignment.Left),
                 new Col("Visitas"),
+               
             };
 
             List<ChartSeries> series = new()
@@ -148,13 +144,21 @@ namespace Service.Report.Application
                 {"Paciente", x.PacienteNombre }
             }).ToList();
 
+            var headerData = new HeaderData()
+            {
+                NombreReporte = "Estadística de Solicitudes por Paciente",
+                Sucursal = search.Sucursal,
+                Fecha = $"{ search.Fecha.Min():dd/MM/yyyy} - {search.Fecha.Max().ToString("dd/MM/yyyy")}"
+            };
+
             var reportData = new ReportData()
             {
                 Columnas = columns,
                 Series = series,
-                Datos = data
+                Datos = data,
+                Header = headerData,
+                //ColumnaFinal = column,
             };
-
             var file = await _pdfClient.GenerateReport(reportData);
 
             return file;

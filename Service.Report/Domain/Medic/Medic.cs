@@ -8,6 +8,7 @@ namespace Service.Report.Domain.Medic
     public class Medic
     {
         public Guid Id { get; set; }
+        public string ClaveMedico { get; set; }
         public string NombreMedico { get; set; }
     }
 }

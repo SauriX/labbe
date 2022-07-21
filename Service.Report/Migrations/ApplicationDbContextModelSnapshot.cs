@@ -53,6 +53,9 @@ namespace Service.Report.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("ClaveMedico")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("NombreMedico")
                         .HasColumnType("nvarchar(max)");
 
@@ -66,6 +69,12 @@ namespace Service.Report.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Celular")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Correo")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Expediente")
                         .HasColumnType("nvarchar(max)");

@@ -151,7 +151,7 @@ namespace Service.Catalog.Mapper
                     Precio=0
                 }).ToList(),
                 Dias = dias,
-           
+                lista = model.prices.FirstOrDefault().PrecioLista.Nombre
             };
         }
 
