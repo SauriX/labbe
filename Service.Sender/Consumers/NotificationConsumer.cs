@@ -2,10 +2,8 @@
 using MassTransit;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
-using Notification.SignalrHub.SignalR;
 using Service.Sender.SignalR;
 using Shared.Helpers;
-using SharedKernel.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;

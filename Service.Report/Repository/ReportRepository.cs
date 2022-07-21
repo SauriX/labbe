@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Service.Catalog.Context;
+using Service.Report.Context;
 using Service.Report.Domain.Request;
 using Service.Report.Dtos;
 using Service.Report.Repository.IRepository;

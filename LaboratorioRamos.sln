@@ -36,11 +36,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Invoice", "Inte
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Pdf", "Integration.Pdf\Integration.Pdf.csproj", "{64AF38C1-2132-45C4-80DD-C40F797A79AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Sender", "Service.Sender\Service.Sender.csproj", "{CDFCF1B1-FECD-4012-BC0F-9D0D6E9A725E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.Sender", "Service.Sender\Service.Sender.csproj", "{CDFCF1B1-FECD-4012-BC0F-9D0D6E9A725E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Contracts", "Contracts", "{38F43A51-621A-49F1-A8F3-0237FCFA5158}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventBus.Messages", "EventBus.Messages\EventBus.Messages.csproj", "{5FDF9FFF-573F-4BB2-B5D2-676C569EB34B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus.Messages", "EventBus.Messages\EventBus.Messages.csproj", "{5FDF9FFF-573F-4BB2-B5D2-676C569EB34B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
