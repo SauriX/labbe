@@ -5,15 +5,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Service.Report.Application;
@@ -22,7 +18,6 @@ using Service.Report.Client;
 using Service.Report.Client.IClient;
 using Service.Report.Consumers;
 using Service.Report.Context;
-using Service.Report.Domain.Request;
 using Service.Report.Middleware;
 using Service.Report.Repository;
 using Service.Report.Repository.IRepository;
@@ -32,10 +27,8 @@ using Shared.Dictionary;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Service.Report
 {
@@ -210,11 +203,12 @@ namespace Service.Report
                 });
             });
 
-            services.AddScoped<IRequestApplication, RequestApplication>();
+            services.AddScoped<IRequestStatsApplication, RequestStatsApplication>();
             services.AddScoped<IPatientStatsApplication, PatientStatsApplication>();
             services.AddScoped<IMedicalStatsApplication, MedicalStatsApplication>();
             services.AddScoped<IContactStatsApplication, ContactStatsApplication>();
 
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IReportRepository, ReportRepository>();
         }
 

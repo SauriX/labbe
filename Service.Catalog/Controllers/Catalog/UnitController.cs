@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Service.Catalog.Dtos.Catalog;
-using Shared.Dictionary;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

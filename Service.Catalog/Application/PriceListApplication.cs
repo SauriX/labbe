@@ -7,14 +7,13 @@ using Service.Catalog.Mapper;
 using Service.Catalog.Repository.IRepository;
 using Shared.Dictionary;
 using Shared.Error;
-using Shared.Helpers;
 using Shared.Extensions;
+using Shared.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Service.Catalog.Domain.Price;
-using System.Linq;
 
 namespace Service.Catalog.Application
 {

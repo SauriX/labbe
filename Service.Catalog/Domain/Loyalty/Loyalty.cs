@@ -1,6 +1,4 @@
-﻿using Service.Catalog.Domain.Price;
-using System;
-using System.Collections.Generic;
+﻿using System;
 
 namespace Service.Catalog.Domain.Loyalty
 {

@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Service.Report.Domain.Request
 {
-    public class Request
+    public class Request : Base
     {
-        public Guid Id { get; set; }
+        public Guid SolicitudId { get; set; }
+        public string Clave { get; set; }
         public Guid SucursalId { get; set; }
         public virtual Branch.Branch Sucursal { get; set; }
         public Guid ExpedienteId { get; set; }
@@ -18,6 +21,7 @@ namespace Service.Report.Domain.Request
         public virtual Medic.Medic Medico { get; set; }
         public Guid EmpresaId { get; set; }
         public virtual Company.Company Empresa { get; set; }
-        public byte Status { get; set; }
+        public byte EstatusId { get; set; }
+        public virtual ICollection<RequestStudy> Estudios { get; set; }
     }
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Service.Sender.Settings
+﻿namespace Service.Sender.Settings
 {
     public class RabbitMQSettings
     {

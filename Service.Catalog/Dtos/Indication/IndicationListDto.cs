@@ -1,7 +1,4 @@
-﻿using Service.Catalog.Dtos.Catalog;
-using System.Collections.Generic;
-
-namespace Service.Catalog.Dtos.Indication
+﻿namespace Service.Catalog.Dtos.Indication
 {
     public class IndicationListDto
     {

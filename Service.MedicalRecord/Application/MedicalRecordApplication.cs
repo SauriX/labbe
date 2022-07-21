@@ -1,20 +1,19 @@
-﻿using Service.MedicalRecord.Dtos.MedicalRecords;
-using Service.MedicalRecord.Repository.IRepository;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Service.MedicalRecord.Mapper;
-using System;
-using Shared.Error;
-using System.Net;
-using Shared.Dictionary;
-using Service.MedicalRecord.Application.IApplication;
+﻿using ClosedXML.Excel;
 using ClosedXML.Report;
-using ClosedXML.Excel;
-using Shared.Extensions;
-using Service.MedicalRecord.Dtos;
-using Shared.Helpers;
-using Service.MedicalRecord.Domain.MedicalRecord;
+using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Dictionary;
+using Service.MedicalRecord.Domain.MedicalRecord;
+using Service.MedicalRecord.Dtos;
+using Service.MedicalRecord.Dtos.MedicalRecords;
+using Service.MedicalRecord.Mapper;
+using Service.MedicalRecord.Repository.IRepository;
+using Shared.Dictionary;
+using Shared.Error;
+using Shared.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Service.MedicalRecord.Application
 {

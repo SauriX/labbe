@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Shared.Dictionary;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dtos.Indication;
-using Microsoft.AspNetCore.Authorization;
+using Shared.Dictionary;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Service.Catalog.Controllers
 {

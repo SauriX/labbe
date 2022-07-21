@@ -1,21 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.EntityFrameworkCore;
 using Service.Identity.Context;
-using Service.Identity.Dtos;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using System.Text;
-using System.Security.Claims;
-using System;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using Service.Identity.Repository.IRepository;
-using System.Linq;
 using Service.Identity.Domain.Menu;
-using Microsoft.EntityFrameworkCore;
 using Service.Identity.Domain.User;
+using Service.Identity.Repository.IRepository;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Service.Identity.Repository
 {
@@ -30,7 +21,7 @@ namespace Service.Identity.Repository
 
         public async Task<User> GetById(Guid id)
         {
-            return await _context.CAT_Usuario.Include(x => x.Rol).FirstOrDefaultAsync(x=>x.Id==id);
+            return await _context.CAT_Usuario.Include(x => x.Rol).FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<User> GetByCode(string code)
@@ -47,23 +38,27 @@ namespace Service.Identity.Repository
                 .Select(x => x.Menu)
                 .ToListAsync();
             var menuspadres = new List<Menu>();
-            foreach (var menu in menus) {
-                if (menu.MenuPadreId != null) {
+            foreach (var menu in menus)
+            {
+                if (menu.MenuPadreId != null)
+                {
                     var menupadre = _context.CAT_Menu.FirstOrDefault(x => x.Id == menu.MenuPadreId);
                     if (menuspadres.Count() != 0)
                     {
-                           var menpad= menuspadres.Where(x => x.Id == menu.MenuPadreId);
-                        if (menpad.Count() == 0) {
+                        var menpad = menuspadres.Where(x => x.Id == menu.MenuPadreId);
+                        if (menpad.Count() == 0)
+                        {
                             menuspadres.Add(menupadre);
                         }
                     }
-                    else {
+                    else
+                    {
                         menuspadres.Add(menupadre);
                     }
 
-                    
+
                 }
-                
+
             }
             return menus.Concat(menuspadres).ToList();
         }

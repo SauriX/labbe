@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Service.Catalog.Dtos.Scopes
+﻿namespace Service.Catalog.Dtos.Scopes
 {
     public class ScopesDto
     {

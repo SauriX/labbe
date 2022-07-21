@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Service.MedicalRecord.Settings
+﻿namespace Service.MedicalRecord.Settings
 {
     public class RabbitMQSettings
     {

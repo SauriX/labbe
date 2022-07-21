@@ -1,7 +1,5 @@
 ﻿using EventBus.Messages.Common;
 using MassTransit;
-using MassTransit.ConsumeConfigurators;
-using MassTransit.Definition;
 using Microsoft.Extensions.Logging;
 using Service.Sender.Service.IService;
 using Shared.Helpers;

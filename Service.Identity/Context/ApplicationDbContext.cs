@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Service.Identity.Domain.Menu;
 using Service.Identity.Domain.Role;
 using Service.Identity.Domain.User;
-using System;
 using System.Reflection;
 
 namespace Service.Identity.Context

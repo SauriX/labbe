@@ -4,7 +4,6 @@ using EventBus.Messages.Catalog;
 using MassTransit;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dictionary;
-using Service.Catalog.Domain.Branch;
 using Service.Catalog.Dtos.Branch;
 using Service.Catalog.Mapper;
 using Service.Catalog.Repository.IRepository;

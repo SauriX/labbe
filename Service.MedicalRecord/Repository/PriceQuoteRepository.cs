@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Service.MedicalRecord.Repository
 {
-    public class PriceQuoteRepository: IPriceQuoteRepository
+    public class PriceQuoteRepository : IPriceQuoteRepository
     {
         private readonly ApplicationDbContext _context;
 
@@ -21,12 +21,12 @@ namespace Service.MedicalRecord.Repository
             _context = context;
         }
         public async Task<List<MedicalRecord.Domain.MedicalRecord.MedicalRecord>> GetMedicalRecord(PriceQuoteExpedienteSearch search)
-            {
+        {
 
             if (!string.IsNullOrEmpty(search.Buscar) || !string.IsNullOrEmpty(search.Telefono) || search.FechaInicial.Date != DateTime.Now.Date || search.FechaFinal.Date != DateTime.Now.Date || !string.IsNullOrEmpty(search.Email))
             {
 
-                var expedientes = await _context.CAT_Expedientes.Where(x => x.Telefono == search.Telefono || x.Correo == search.Email || search.Buscar.Contains(x.NombrePaciente)|| search.Buscar.Contains(x.PrimerApellido)|| search.Buscar.Contains(x.Expediente) || (x.FechaCreo >= search.FechaInicial.Date && x.FechaCreo.Date <= search.FechaFinal.Date) ).ToListAsync();
+                var expedientes = await _context.CAT_Expedientes.Where(x => x.Telefono == search.Telefono || x.Correo == search.Email || search.Buscar.Contains(x.NombrePaciente) || search.Buscar.Contains(x.PrimerApellido) || search.Buscar.Contains(x.Expediente) || (x.FechaCreo >= search.FechaInicial.Date && x.FechaCreo.Date <= search.FechaFinal.Date)).ToListAsync();
 
                 return expedientes;
             }
@@ -39,32 +39,32 @@ namespace Service.MedicalRecord.Repository
                 return expedientes;
             }
         }
-        public async Task<string> GetLastCode( string date)
+        public async Task<string> GetLastCode(string date)
         {
             var lastRequest = await _context.CAT_Cotizaciones
                 .OrderBy(x => x.FechaCreo)
-                .LastOrDefaultAsync(x =>  x.Afiliacion.EndsWith(date));
+                .LastOrDefaultAsync(x => x.Afiliacion.EndsWith(date));
 
             return lastRequest?.Afiliacion;
         }
         public async Task<List<PriceQuote>> GetNow(PriceQuoteSearchDto search)
         {
 
-            if (!string.IsNullOrEmpty(search.Presupuesto) || !string.IsNullOrEmpty(search.Email) || !string.IsNullOrEmpty(search.Ciudad) || !string.IsNullOrEmpty(search.Sucursal)  || !string.IsNullOrEmpty(search.Telefono)||search.Activo || search.FechaAlta.Date != DateTime.Now.Date)
+            if (!string.IsNullOrEmpty(search.Presupuesto) || !string.IsNullOrEmpty(search.Email) || !string.IsNullOrEmpty(search.Ciudad) || !string.IsNullOrEmpty(search.Sucursal) || !string.IsNullOrEmpty(search.Telefono) || search.Activo || search.FechaAlta.Date != DateTime.Now.Date)
             {
                 var sucursal = Guid.Empty;
                 if (!string.IsNullOrEmpty(search.Sucursal))
                 {
                     sucursal = Guid.Parse(search.Sucursal);
                 }
-                var expedientes = await _context.CAT_Cotizaciones.Include(x=>x.Expediente).Where(x => x.Expediente.Ciudad == search.Ciudad || x.NombrePaciente.Contains(search.Presupuesto) || x.FechaCreo.Date == search.FechaAlta.Date || x.Expediente.IdSucursal == sucursal).ToListAsync();
+                var expedientes = await _context.CAT_Cotizaciones.Include(x => x.Expediente).Where(x => x.Expediente.Ciudad == search.Ciudad || x.NombrePaciente.Contains(search.Presupuesto) || x.FechaCreo.Date == search.FechaAlta.Date || x.Expediente.IdSucursal == sucursal).ToListAsync();
 
                 return expedientes.Select(x =>
                 {
                     var estudios = _context.cotizacionStudies.Where(y => y.CotizacionId == x.Id);
                     x.Estudios = estudios;
                     return x;
-                }).ToList() ;
+                }).ToList();
             }
             else
             {
@@ -91,7 +91,7 @@ namespace Service.MedicalRecord.Repository
             config.SetSynchronizeFilter<CotizacionStudy>(x => x.CotizacionId == expediente.Id);
             estudios.ForEach(x => x.CotizacionId = expediente.Id);
             estudios.ForEach(x => x.id = Guid.NewGuid());
-            await _context.BulkInsertOrUpdateOrDeleteAsync(estudios,config);
+            await _context.BulkInsertOrUpdateOrDeleteAsync(estudios, config);
         }
         public async Task Update(PriceQuote expediente)
         {
@@ -116,9 +116,9 @@ namespace Service.MedicalRecord.Repository
         public async Task<PriceQuote> GetById(Guid id)
         {
             var expedientes = await _context.CAT_Cotizaciones.Include(x => x.Expediente).FirstOrDefaultAsync(x => x.Id == id);
-            var estudios =  _context.cotizacionStudies.Where(x => x.CotizacionId == expedientes.Id);
+            var estudios = _context.cotizacionStudies.Where(x => x.CotizacionId == expedientes.Id);
             expedientes.Estudios = estudios;
             return expedientes;
         }
     }
-}   
+}

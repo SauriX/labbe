@@ -1,138 +1,40 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ClosedXML.Excel;
-using ClosedXML.Report;
-using Service.Report.Application.IApplication;
-using Service.Report.Dictionary;
+﻿using Service.Report.Application.IApplication;
+using Service.Report.Client.IClient;
+using Service.Report.Domain.Branch;
+using Service.Report.Dtos;
 using Service.Report.Dtos.PatientStats;
+using Service.Report.Mapper;
 using Service.Report.PdfModel;
 using Service.Report.Repository.IRepository;
-using Shared.Dictionary;
-using Shared.Extensions;
-using System;
-using System.IO;
 using System.Collections.Generic;
-
 using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using System.Net.Http;
-using System.Text;
-using System.Net;
-using Shared.Error;
-using Shared.Helpers;
-using Microsoft.Extensions.Configuration;
-using System.Net.Http.Json;
-using Service.Report.Client.IClient;
-using Service.Report.Dtos;
 
 namespace Service.Report.Application
 {
-    public class PatientStatsApplication : IPatientStatsApplication
+    public class PatientStatsApplication : BaseApplication, IPatientStatsApplication
     {
-        public readonly IReportRepository _repository;
+        private readonly IReportRepository _repository;
         private readonly IPdfClient _pdfClient;
 
-        public PatientStatsApplication(IReportRepository repository, IPdfClient pdfClient)
+        public PatientStatsApplication(IReportRepository repository, IPdfClient pdfClient, IRepository<Branch> branchRepository) : base(branchRepository)
         {
             _repository = repository;
             _pdfClient = pdfClient;
         }
 
-        public async Task<IEnumerable<PatientStatsDto>> GetByName()
+        public async Task<IEnumerable<PatientStatsDto>> GetByFilter(ReportFilterDto filter)
         {
-            var req = await _repository.GetAll();
-            var results = (from c in req
-                           group c by new { c.Expediente.Nombre, c.ExpedienteId } into grupo
-                           select new PatientStatsDto
-                           {
-                               NombrePaciente = grupo.Key.Nombre,
-                               Solicitudes = grupo.Count(),
-                               Total = grupo.Sum(x => x.PrecioFinal),
-                           }).ToList();
+            var data = await _repository.GetByFilter(filter);
 
-            results.Add(new PatientStatsDto
-            {
-                NombrePaciente = "Total",
-                Solicitudes = results.Sum(x => x.Solicitudes),
-                Total = results.Sum(x => x.Total)
-            });
+            var results = data.ToPatientStatsDto();
 
             return results;
         }
 
-        public async Task<IEnumerable<PatientStatsDto>> GetFilter(ReportFiltroDto search)
+        public async Task<byte[]> DownloadReportPdf(ReportFilterDto filter)
         {
-            var req = await _repository.GetFilter(search);
-            var results = (from c in req
-                          group c by new { c.Expediente.Nombre, c.ExpedienteId } into grupo
-                          select new PatientStatsDto
-                          {
-                              NombrePaciente = grupo.Key.Nombre,
-                              Solicitudes = grupo.Count(),
-                              Total = grupo.Sum(x => x.PrecioFinal),
-                          }).ToList();
-
-            results.Add(new PatientStatsDto
-            {
-                NombrePaciente = "Total",
-                Solicitudes = results.Sum(x => x.Solicitudes),
-                Total = results.Sum(x => x.Total)
-            });
-
-            return results;
-        }
-
-        public async Task<(byte[] file, string fileName)> ExportTableStats(string search = null)
-        {
-            var indication = await GetByName();
-            var path = Assets.PatientStatsTable;
-            var template = new XLTemplate(path);
-
-            template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
-            template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
-            template.AddVariable("Titulo", "Sucursales");
-            template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
-            template.AddVariable("Expediente", indication);
-
-            template.Generate();
-
-            var range = template.Workbook.Worksheet("Sucursales").Range("Sucursales");
-            var table = template.Workbook.Worksheet("Sucursales").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
-            table.Theme = XLTableTheme.TableStyleMedium2;
-
-            template.Format();
-
-            return (template.ToByteArray(), "Estadística de Pacientes.xlsx");
-        }
-
-        public async Task<(byte[] file, string fileName)> ExportChartStats(string search = null)
-        {
-            var indication = await GetByName();
-
-            var path = Assets.PatientStatsChart;
-
-            var template = new XLTemplate(path);
-
-            template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
-            template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
-            template.AddVariable("Titulo", "Sucursales");
-            template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
-            template.AddVariable("Gráfica", indication);
-
-            template.Generate();
-
-            var range = template.Workbook.Worksheet("Sucursales").Range("Sucursales");
-            var table = template.Workbook.Worksheet("Sucursales").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
-            table.Theme = XLTableTheme.TableStyleMedium2;
-
-            template.Format();
-
-            return (template.ToByteArray(), "Estadística de Pacientes.xlsx");
-        }
-
-        public async Task<byte[]> GenerateReportPDF(ReportFiltroDto search)
-        {
-            var requestData = await GetFilter(search);
+            var requestData = await GetByFilter(filter);
 
             List<Col> columns = new()
             {
@@ -148,19 +50,21 @@ namespace Service.Report.Application
                 new ChartSeries("Total", null, "C"),
             };
 
+            var branches = await GetBranchNames(filter.SucursalId);
+
             var data = requestData.Select(x => new Dictionary<string, object>
             {
-                { "Nombre de Paciente", x.NombrePaciente},
-                { "Solicitudes", x.Solicitudes },
-                { "Total", x.Total },
-                {"Iniciales Paciente", string.Join(" ", x.NombrePaciente.Split(" ").Select(x => x[0]))}
+                ["Nombre de Paciente"] = x.Paciente,
+                ["Solicitudes"] = x.NoSolicitudes,
+                ["Total"] = x.Total,
+                ["Iniciales Paciente"] = string.Join(" ", x.Paciente.Split(" ").Select(x => x[0]))
             }).ToList();
 
             var headerData = new HeaderData()
             {
                 NombreReporte = "Estadística de Solicitudes por Paciente",
-                Sucursal = search.Sucursal,
-                Fecha = $"{ search.Fecha.Min():dd/MM/yyyy} - {search.Fecha.Max().ToString("dd/MM/yyyy")}"
+                Sucursal = string.Join(", ", branches.Select(x => x)),
+                Fecha = $"{filter.Fecha.Min():dd/MM/yyyy} - {filter.Fecha.Max():dd/MM/yyyy}"
             };
 
             var reportData = new ReportData()
@@ -171,11 +75,9 @@ namespace Service.Report.Application
                 Header = headerData,
             };
 
-
             var file = await _pdfClient.GenerateReport(reportData);
 
             return file;
-
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Service.Sender.Domain.EmailConfiguration
+﻿namespace Service.Sender.Domain.EmailConfiguration
 {
     public class EmailConfiguration
     {

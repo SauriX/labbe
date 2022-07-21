@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Service.Catalog.Domain.Indication;
 using Service.Catalog.Domain.Parameter;
 
 namespace Service.Catalog.Context.EntityConfiguration.Parameter

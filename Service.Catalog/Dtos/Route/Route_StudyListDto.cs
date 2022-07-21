@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Service.Catalog.Dtos.Route
+﻿namespace Service.Catalog.Dtos.Route
 {
     public class Route_StudyListDto
     {

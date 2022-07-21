@@ -5,8 +5,6 @@ using Microsoft.Extensions.Logging;
 using Service.Sender.SignalR;
 using Shared.Helpers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Service.Sender.Consumers

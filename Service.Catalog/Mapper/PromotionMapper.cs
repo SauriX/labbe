@@ -17,7 +17,7 @@ namespace Service.Catalog.Mapper
             {
                 Id = model.Id,
                 Clave = model.Clave,
-                Nombre = model.Nombre, 
+                Nombre = model.Nombre,
                 Periodo = $"{model.FechaInicio}-{model.FechaInicio}",
                 NombreListaPrecio = listaDeprecios,
                 Activo = model.Activo,
@@ -38,9 +38,10 @@ namespace Service.Catalog.Mapper
             });
         }
         public static IEnumerable<PromotionEstudioListDto> TopromotionEstudioListDto(this Promotion model)
-        { var estudios = model.prices.AsQueryable().Where(y => y.PromocionId == model.Id && y.Activo == true).FirstOrDefault().PrecioLista.Estudios;
-            
-            var listaEstudios = model.studies.Select(x =>  new PromotionEstudioListDto
+        {
+            var estudios = model.prices.AsQueryable().Where(y => y.PromocionId == model.Id && y.Activo == true).FirstOrDefault().PrecioLista.Estudios;
+
+            var listaEstudios = model.studies.Select(x => new PromotionEstudioListDto
             {
 
                 Id = x.Study.Id,
@@ -55,7 +56,7 @@ namespace Service.Catalog.Mapper
                 FechaFinal = x.FechaFinal,
                 Activo = x.Activo,
                 Precio = estudios.AsQueryable().Where(m => m.EstudioId == x.StudyId).FirstOrDefault().Precio,
-                PrecioFinal=x.FinalPrice,
+                PrecioFinal = x.FinalPrice,
                 Paquete = false,
                 Lunes = x.Lunes,
                 Martes = x.Martes,
@@ -63,9 +64,9 @@ namespace Service.Catalog.Mapper
                 Jueves = x.Jueves,
                 Viernes = x.Viernes,
                 Sabado = x.Sabado,
-                Domingo= x.Domingo,
+                Domingo = x.Domingo,
             }).ToList();
- 
+
             var paquetes = model.prices.AsQueryable().Where(y => y.PromocionId == model.Id && y.Activo == true).FirstOrDefault().PrecioLista.Paquete;
             var listaPaquetes = model.packs.Select(x => new PromotionEstudioListDto
             {
@@ -74,7 +75,7 @@ namespace Service.Catalog.Mapper
                 Clave = x.Pack.Clave,
                 Nombre = x.Pack.Nombre,
                 Area = x.Pack.Area.Nombre,
-                Departamento= x.Pack.Area.Departamento.Nombre,
+                Departamento = x.Pack.Area.Departamento.Nombre,
                 DescuentoPorcentaje = x.Discountporcent,
                 DescuentoCantidad = x.DiscountNumeric,
                 Lealtad = x.Loyality,
@@ -82,7 +83,7 @@ namespace Service.Catalog.Mapper
                 FechaFinal = x.FechaFinal,
                 Activo = x.Activo,
                 Precio = paquetes.AsQueryable().Where(m => m.PaqueteId == x.PackId).FirstOrDefault()?.Precio,
-                PrecioFinal=x.FinalPrice,
+                PrecioFinal = x.FinalPrice,
                 Paquete = true,
                 Lunes = x.Lunes,
                 Martes = x.Martes,
@@ -90,7 +91,7 @@ namespace Service.Catalog.Mapper
                 Jueves = x.Jueves,
                 Viernes = x.Viernes,
                 Sabado = x.Sabado,
-                Domingo= x.Domingo
+                Domingo = x.Domingo
 
             }).ToList();
 
@@ -102,8 +103,9 @@ namespace Service.Catalog.Mapper
         {
             if (model == null) return null;
             var dias = new List<DiasDto>();
-            if (model.Lunes) {
-                dias.Add(new DiasDto{ Id =1, Dia="L" });
+            if (model.Lunes)
+            {
+                dias.Add(new DiasDto { Id = 1, Dia = "L" });
             }
             if (model.Martes)
             {
@@ -143,12 +145,12 @@ namespace Service.Catalog.Mapper
                 Lealtad = model.Visibilidad,
                 Cantidad = model.CantidadDescuento,
                 Estudio = model.TopromotionEstudioListDto(),
-                Branchs = model.branches.Select(x=>new PriceListBranchDto
+                Branchs = model.branches.Select(x => new PriceListBranchDto
                 {
                     Id = x.BranchId,
                     Clave = x.Branch.Clave,
                     Nombre = x.Branch.Nombre,
-                    Precio=0
+                    Precio = 0
                 }).ToList(),
                 Dias = dias,
                 lista = model.prices.FirstOrDefault().PrecioLista.Nombre
@@ -172,29 +174,31 @@ namespace Service.Catalog.Mapper
                 Activo = dto.Activo,
                 UsuarioCreoId = dto.UsuarioId.ToString(),
                 FechaCreo = DateTime.Now,
-                branches = dto.Branchs.Select(x=>new PromotionBranch {
+                branches = dto.Branchs.Select(x => new PromotionBranch
+                {
                     PromotionId = dto.Id,
                     BranchId = x.Id,
                     Activo = x.Activo,
                     UsuarioCreoId = dto.UsuarioId,
                     FechaCreo = DateTime.Now,
                     UsuarioModId = dto.UsuarioId,
-                    FechaMod= DateTime.Now,
+                    FechaMod = DateTime.Now,
                 }).ToList(),
-                packs = dto.Estudio.Where(x=>x.Paquete==true).Select(x=> new PromotionPack {
+                packs = dto.Estudio.Where(x => x.Paquete == true).Select(x => new PromotionPack
+                {
                     PromotionId = dto.Id,
-                    PackId =x.Id,
+                    PackId = x.Id,
                     Discountporcent = x.DescuentoPorcentaje,
                     DiscountNumeric = x.DescuentoCantidad,
-                    Price = x.Precio??0,
+                    Price = x.Precio ?? 0,
                     FinalPrice = x.PrecioFinal,
                     Loyality = x.Lealtad,
                     FechaInicio = x.FechaInicial,
                     FechaFinal = x.FechaFinal,
-                    Activo =x.Activo,
+                    Activo = x.Activo,
                     UsuarioCreoId = dto.UsuarioId,
                     FechaCreo = DateTime.Now,
-                    UsuarioModId=dto.UsuarioId,
+                    UsuarioModId = dto.UsuarioId,
                     FechaMod = DateTime.Now,
                     Lunes = x.Lunes,
                     Martes = x.Martes,
@@ -224,12 +228,12 @@ namespace Service.Catalog.Mapper
                     Martes = x.Martes,
                     Miercoles = x.Miercoles,
                     Jueves = x.Jueves,
-                    Viernes =x.Viernes,
+                    Viernes = x.Viernes,
                     Sabado = x.Sabado,
                     Domingo = x.Domingo,
                 }).ToList(),
                 PrecioListaId = Guid.Parse(dto.IdListaPrecios),
-                Lunes = dto.Dias.Any(x=>x.Id==1),
+                Lunes = dto.Dias.Any(x => x.Id == 1),
                 Martes = dto.Dias.Any(x => x.Id == 2),
                 Miercoles = dto.Dias.Any(x => x.Id == 3),
                 Jueves = dto.Dias.Any(x => x.Id == 4),
@@ -265,7 +269,7 @@ namespace Service.Catalog.Mapper
                     FechaCreo = DateTime.Now,
                     UsuarioModId = dto.UsuarioId,
                     FechaMod = DateTime.Now,
-    
+
                 }).ToList(),
                 packs = dto.Estudio.Where(x => x.Paquete == true).Select(x => new PromotionPack
                 {

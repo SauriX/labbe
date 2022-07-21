@@ -65,7 +65,7 @@ namespace Service.Identity.Context
                     var menus = new List<Menu>
                     {
                         new Menu(18, 1, "Maquilador", "maquila", "maquila", 1017),
-                        
+
                     };
 
                     context.CAT_Menu.AddRange(menus);
@@ -81,8 +81,8 @@ namespace Service.Identity.Context
                     transaction.Rollback();
                     throw;
                 }
-            }      
-            
+            }
+
             if (context.CAT_Menu.Count() == 18)
             {
                 using var transaction = context.Database.BeginTransaction();
@@ -91,7 +91,7 @@ namespace Service.Identity.Context
                 {
                     var menus = new List<Menu>
                     {
-                        
+
                         new Menu(20, null, "Parámetros de sistema", "configuration", "configuration", 2000),
                     };
 

@@ -11,6 +11,6 @@ namespace Service.Catalog.Domain.Packet
         public virtual Area Area { get; set; }
         public string NombreLargo { get; set; }
         public bool Visibilidad { get; set; }
-        public ICollection<PacketStudy> studies { get; set;}
+        public ICollection<PacketStudy> studies { get; set; }
     }
 }

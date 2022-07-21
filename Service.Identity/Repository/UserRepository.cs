@@ -1,31 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using Service.Identity.Context;
-using Service.Identity.Dtos;
+using Service.Identity.Domain.User;
 using Service.Identity.Repository.IRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Service.Identity.Mapper;
-using System.Text;
-using System.Security.Claims;
-using Microsoft.IdentityModel.Logging;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Http;
-using System.Security.Principal;
-using Microsoft.Identity.Web;
-using Microsoft.AspNetCore.Mvc;
-using Service.Identity.Dictionary;
-using ClosedXML.Report;
-using Shared.Extensions;
-using ClosedXML.Excel;
 using System.Linq.Dynamic.Core;
-using Service.Identity.Domain.User;
-using EFCore.BulkExtensions;
+using System.Threading.Tasks;
 
 namespace Service.Identity.Repository
 {
@@ -82,7 +64,7 @@ namespace Service.Identity.Repository
 
         public async Task Create(User user)
         {
-            
+
 
             _context.CAT_Usuario.Add(user);
 
@@ -95,9 +77,9 @@ namespace Service.Identity.Repository
 
             try
             {
-                         
+
                 var permissions = user.Permisos.ToList();
- 
+
                 user.Permisos = null;
                 _context.CAT_Usuario.Update(user);
 
@@ -105,7 +87,7 @@ namespace Service.Identity.Repository
 
                 if (updatePermission)
                 {
-                    
+
                     var config = new BulkConfig();
                     config.SetSynchronizeFilter<UserPermission>(x => x.UsuarioId == user.Id);
 
@@ -142,7 +124,7 @@ namespace Service.Identity.Repository
                      EnviarCorreo = x.permission.EnviarCorreo,
                      EnviarWapp = x.permission.EnviarWapp,
                  })
-                 .ToListAsync(); 
+                 .ToListAsync();
 
             return permissions;
         }

@@ -1,9 +1,4 @@
 ﻿using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Shared.Validators
 {
@@ -17,8 +12,8 @@ namespace Shared.Validators
                 .Matches(@"^\d{3}-\d{3}-\d{2}-\d{2}$");
 
             return options;
-        }      
-        
+        }
+
         public static IRuleBuilder<T, string> Guid<T>(this IRuleBuilder<T, string> ruleBuilder)
         {
             var options = ruleBuilder

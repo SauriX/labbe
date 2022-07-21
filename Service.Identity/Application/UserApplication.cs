@@ -1,24 +1,20 @@
-﻿using Service.Identity.Application.IApplication;
+﻿using ClosedXML.Excel;
+using ClosedXML.Report;
+using Microsoft.Extensions.Configuration;
+using Service.Identity.Application.IApplication;
+using Service.Identity.Dictionary;
+using Service.Identity.Dtos.Profile;
+using Service.Identity.Dtos.User;
+using Service.Identity.Mapper;
 using Service.Identity.Repository.IRepository;
 using Shared.Dictionary;
 using Shared.Error;
+using Shared.Extensions;
+using Shared.Utils;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Service.Identity.Mapper;
-using ClosedXML.Excel;
-using Service.Identity.Dictionary;
-using ClosedXML.Report;
-using Shared.Extensions;
-using Service.Identity.Domain.User;
-using Service.Identity.Dtos.User;
-using Microsoft.Extensions.Configuration;
-using System.Text;
-using Service.Identity.Dtos.Profile;
-using System.Text.RegularExpressions;
-using Shared.Utils;
 
 namespace Service.Identity.Application
 {

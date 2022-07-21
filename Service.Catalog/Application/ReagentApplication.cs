@@ -6,14 +6,12 @@ using Service.Catalog.Domain.Reagent;
 using Service.Catalog.Dtos.Reagent;
 using Service.Catalog.Mapper;
 using Service.Catalog.Repository.IRepository;
-using Service.Catalog.Transactions;
 using Shared.Dictionary;
 using Shared.Error;
 using Shared.Extensions;
 using Shared.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 

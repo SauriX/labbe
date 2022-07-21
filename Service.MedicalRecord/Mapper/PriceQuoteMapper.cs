@@ -13,7 +13,8 @@ namespace Service.MedicalRecord.Mapper
         {
             if (x == null) return null;
             StringBuilder sb = new StringBuilder();
-            foreach (var estudio in x.Estudios) {
+            foreach (var estudio in x.Estudios)
+            {
                 sb.Append(estudio.Clave);
                 sb.Append(", ");
             }
@@ -22,22 +23,24 @@ namespace Service.MedicalRecord.Mapper
                 Id = x.Id.ToString(),
                 Presupuesto = x.Afiliacion,
                 NomprePaciente = x.NombrePaciente,
-                Estudios = sb.ToString(), 
-                 Email = x.Correo, 
-                 Whatsapp = x.Whatsapp,
-                 Fecha  = x.FechaCreo,
-                 Expediente = x.Expediente.Expediente,
-                 Activo = x.Activo
+                Estudios = sb.ToString(),
+                Email = x.Correo,
+                Whatsapp = x.Whatsapp,
+                Fecha = x.FechaCreo,
+                Expediente = x.Expediente.Expediente,
+                Activo = x.Activo
             };
         }
         public static List<PriceQuoteListDto> ToPriceQuoteListDto(this List<PriceQuote> model)
         {
             if (model == null) return null;
- 
-            return model.Select(x => {
+
+            return model.Select(x =>
+            {
                 StringBuilder sb = new StringBuilder();
 
-                if (x.Estudios != null) {
+                if (x.Estudios != null)
+                {
                     if (x.Estudios.Count() > 0)
                     {
                         foreach (var estudio in x.Estudios)
@@ -76,31 +79,33 @@ namespace Service.MedicalRecord.Mapper
         public static PriceQuoteFormDto ToPriceQuoteFormDto(this PriceQuote model)
         {
             if (model == null) return null;
-            
+
             return new PriceQuoteFormDto
             {
                 Id = model.Id.ToString(),
                 expediente = model.Expediente.Expediente,
                 nomprePaciente = model.NombrePaciente,
-                Genero = model.Genero,    
+                Genero = model.Genero,
                 edad = model.Edad,
                 fechaNacimiento = model.FechaNac,
-                expedienteid= model.Expediente.Id.ToString(),
-                typo= model.Tipo,
-                cargo= model.Cargo,
-                generales = new PriceQuoteGeneralDto {
+                expedienteid = model.Expediente.Id.ToString(),
+                typo = model.Tipo,
+                cargo = model.Cargo,
+                generales = new PriceQuoteGeneralDto
+                {
                     Procedencia = model.Procedencia,
                     Compañia = model.CompaniaId.ToString(),
                     Medico = model.MedicoId.ToString(),
                     NomprePaciente = model.NombrePaciente,
-                    
+
                     Observaciones = model.Observaciones,
                     TipoEnvio = "",
                     Email = model.Correo,
                     Whatssap = model.Whatsapp,
                     Activo = model.Activo,
                 },
-                estudy= model.Estudios.Select(x=> new QuotetPrice {
+                estudy = model.Estudios.Select(x => new QuotetPrice
+                {
                     PrecioListaId = x.CotizacionId,
                     ListaPrecioId = x.ListaPrecioId,
                     PromocionId = x.PromocionId,
@@ -113,14 +118,16 @@ namespace Service.MedicalRecord.Mapper
                     Precio = x.Precio,
                     PrecioFinal = x.PrecioFinal,
                     Nombre = x.Clave,
-                    
+
                 }).ToList()
             };
         }
 
-        public static PriceQuote ToModel(this PriceQuoteFormDto priceQuoteForm) {
+        public static PriceQuote ToModel(this PriceQuoteFormDto priceQuoteForm)
+        {
 
-            var priceQuote = new PriceQuote {
+            var priceQuote = new PriceQuote
+            {
                 Procedencia = priceQuoteForm.generales.Procedencia,
                 NombrePaciente = priceQuoteForm.nomprePaciente,
                 FechaNac = priceQuoteForm.fechaNacimiento,
@@ -139,20 +146,21 @@ namespace Service.MedicalRecord.Mapper
                 FechaCreo = DateTime.Now,
                 Genero = priceQuoteForm.Genero,
                 Edad = priceQuoteForm.edad,
-                Estudios = priceQuoteForm.estudy.Select(x=> new CotizacionStudy {
-                            CotizacionId = x.PrecioListaId,
-                        ListaPrecioId = x.ListaPrecioId,
-                        PromocionId =x.PromocionId,
-                       EstudioId =x.EstudioId,
-                        PaqueteId =x.PaqueteId,
-                        EstatusId =x.EstatusId,
-                        Descuento =x.Descuento,
-                        Cargo =x.Cargo,
-                        Copago =x.Copago,
-                        Precio =x.Precio,
-                        PrecioFinal =x.PrecioFinal,
-                        Clave = x.Nombre
-                })   
+                Estudios = priceQuoteForm.estudy.Select(x => new CotizacionStudy
+                {
+                    CotizacionId = x.PrecioListaId,
+                    ListaPrecioId = x.ListaPrecioId,
+                    PromocionId = x.PromocionId,
+                    EstudioId = x.EstudioId,
+                    PaqueteId = x.PaqueteId,
+                    EstatusId = x.EstatusId,
+                    Descuento = x.Descuento,
+                    Cargo = x.Cargo,
+                    Copago = x.Copago,
+                    Precio = x.Precio,
+                    PrecioFinal = x.PrecioFinal,
+                    Clave = x.Nombre
+                })
 
             };
 
@@ -163,7 +171,7 @@ namespace Service.MedicalRecord.Mapper
 
             var priceQuote = new PriceQuote
             {
-                Id= model.Id,
+                Id = model.Id,
                 Procedencia = priceQuoteForm.generales.Procedencia,
                 NombrePaciente = priceQuoteForm.nomprePaciente,
                 FechaNac = priceQuoteForm.fechaNacimiento,
@@ -196,8 +204,8 @@ namespace Service.MedicalRecord.Mapper
                     PrecioFinal = x.PrecioFinal,
                     Clave = x.Nombre,
                 }),
-                FechaCreo=model.FechaCreo,
-                
+                FechaCreo = model.FechaCreo,
+
             };
 
             return priceQuote;

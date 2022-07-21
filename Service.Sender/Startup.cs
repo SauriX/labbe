@@ -1,17 +1,14 @@
 using MassTransit;
-using MassTransit.Definition;
 using MassTransit.SignalR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -27,8 +24,6 @@ using Service.Sender.Settings;
 using Service.Sender.Settings.Interfaces;
 using Service.Sender.SignalR;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -94,8 +89,8 @@ namespace Service.Sender
                     configurator.ReceiveEndpoint("email-configuration-queue-faults", re =>
                     {
                         re.Consumer<EmailConfigurationErrorConsumer>(context);
-                    });         
-                    
+                    });
+
                     configurator.ReceiveEndpoint("notification-queue", re =>
                     {
                         re.Consumer<NotificationConsumer>(context);

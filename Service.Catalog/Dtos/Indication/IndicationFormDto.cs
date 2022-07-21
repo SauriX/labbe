@@ -1,6 +1,4 @@
 ﻿using FluentValidation;
-using Service.Catalog.Dtos.Catalog;
-using Service.Catalog.Dtos.Study;
 using System;
 using System.Collections.Generic;
 

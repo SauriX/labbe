@@ -3,9 +3,7 @@ using Service.Catalog.Domain.Constant;
 using Service.Catalog.Dtos.Common;
 using Service.Catalog.Mapper;
 using Service.Catalog.Repository.IRepository;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Service.Catalog.Application
@@ -27,7 +25,7 @@ namespace Service.Catalog.Application
         }
 
         public async Task<List<City>> Getcity()
-                {
+        {
             var colonies = await _repository.GetCities();
 
             return colonies;

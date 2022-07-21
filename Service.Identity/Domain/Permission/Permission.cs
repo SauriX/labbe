@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 namespace Service.Identity.Domain.Permission
 {
     public class Permission

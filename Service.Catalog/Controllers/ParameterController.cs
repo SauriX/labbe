@@ -73,7 +73,7 @@ namespace Service.Catalog.Controllers
         [Authorize(Policies.Create)]
         public async Task AddValues(ParameterValuesDto values)
         {
-            await _service.AddValues(values.Values,values.IdParameter);
+            await _service.AddValues(values.Values, values.IdParameter);
         }
         [HttpPut]
         [Authorize(Policies.Update)]

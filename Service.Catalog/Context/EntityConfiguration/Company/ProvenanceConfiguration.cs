@@ -22,7 +22,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Company
               .Property(x => x.Nombre)
               .IsRequired(true)
               .HasMaxLength(100);
-            
+
         }
     }
 }

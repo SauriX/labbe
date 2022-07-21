@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Shared.Validators;
 using System;
 
 namespace Service.Catalog.Dtos.Maquila

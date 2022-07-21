@@ -1,11 +1,7 @@
 ﻿using EventBus.Messages.Common;
 using MassTransit;
-using MassTransit.ConsumeConfigurators;
-using MassTransit.Definition;
 using Microsoft.Extensions.Logging;
-using Service.Sender.Service.IService;
 using Shared.Dictionary;
-using Shared.Helpers;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;

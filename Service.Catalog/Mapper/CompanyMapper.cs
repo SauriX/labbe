@@ -50,7 +50,7 @@ namespace Service.Catalog.Mapper
                 Contrasena = model.Contrasena.Trim(),
                 EmailEmpresarial = model.EmailEmpresarial.Trim(),
                 NombreComercial = model.NombreComercial.Trim(),
-                ProcedenciaId = model.ProcedenciaId ,
+                ProcedenciaId = model.ProcedenciaId,
                 Procedencia = model.Procedencia.Nombre,
                 PrecioListaId = model?.PrecioListaId,
                 PrecioLista = model?.PrecioLista.Nombre,

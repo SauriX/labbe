@@ -56,8 +56,8 @@ namespace Service.Identity.Application
             {
                 Nombre = user.NombreCompleto,
                 RequiereCambio = !user.FlagPassword,
-                Sucursal= user.SucursalId.ToString(),
-                Admin=user.Rol.Nombre==ADMIN,
+                Sucursal = user.SucursalId.ToString(),
+                Admin = user.Rol.Nombre == ADMIN,
             };
         }
 

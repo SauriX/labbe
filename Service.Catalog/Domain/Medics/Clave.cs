@@ -5,6 +5,6 @@
         public string Nombre { get; set; }
         public string PrimerApllido { get; set; }
         public string SegundoApellido { get; set; }
-       
+
     }
 }

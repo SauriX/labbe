@@ -1,5 +1,4 @@
-﻿using Service.Catalog.Domain.Indication;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Service.Catalog.Context.EntityConfiguration.Indication

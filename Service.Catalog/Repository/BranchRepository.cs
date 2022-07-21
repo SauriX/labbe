@@ -1,11 +1,7 @@
 ﻿using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Context;
-using Service.Catalog.Dictionary;
-using Service.Catalog.Domain;
 using Service.Catalog.Domain.Branch;
-using Service.Catalog.Dtos.Study;
-using Service.Catalog.Mapper;
 using Service.Catalog.Repository.IRepository;
 using System;
 using System.Collections.Generic;

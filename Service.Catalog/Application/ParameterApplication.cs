@@ -105,7 +105,7 @@ namespace Service.Catalog.Application
 
             await _repository.AddValue(newValue);
         }
-        public async Task AddValues(List<ParameterValueDto> value,string id)
+        public async Task AddValues(List<ParameterValueDto> value, string id)
         {
             if (value == null)
             {
@@ -114,7 +114,7 @@ namespace Service.Catalog.Application
 
             var newValue = value.ToModel();
 
-            await _repository.AddValues(newValue,id);
+            await _repository.AddValues(newValue, id);
         }
 
         public async Task<ParameterListDto> Update(ParameterFormDto parameter)

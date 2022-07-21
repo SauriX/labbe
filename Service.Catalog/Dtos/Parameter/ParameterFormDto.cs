@@ -1,12 +1,7 @@
 ﻿using FluentValidation;
-using Service.Catalog.Domain.Catalog;
-using Service.Catalog.Domain.Parameter;
-using Service.Catalog.Dtos.Catalog;
 using Shared.Validators;
-using Service.Catalog.Dtos.Study;
 using System;
 using System.Collections.Generic;
-using Service.Catalog.Dtos.Reagent;
 
 namespace Service.Catalog.Dtos.Parameter
 {

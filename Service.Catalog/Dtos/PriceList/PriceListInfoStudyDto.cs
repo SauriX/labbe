@@ -1,6 +1,5 @@
 ﻿using Service.Catalog.Dtos.Indication;
 using Service.Catalog.Dtos.Parameter;
-using System;
 using System.Collections.Generic;
 
 namespace Service.Catalog.Dtos.PriceList

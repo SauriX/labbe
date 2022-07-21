@@ -7,11 +7,6 @@ using Service.Catalog.Mapper;
 using Service.Catalog.Repository.IRepository;
 using Shared.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Service.Catalog.Application

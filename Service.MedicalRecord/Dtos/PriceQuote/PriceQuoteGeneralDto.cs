@@ -6,7 +6,7 @@
         public string Compañia { get; set; }
         public string Medico { get; set; }
         public string NomprePaciente { get; set; }
-        
+
         public string Observaciones { get; set; }
         public string TipoEnvio { get; set; }
         public string Email { get; set; }

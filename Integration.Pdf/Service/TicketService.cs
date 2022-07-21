@@ -2,12 +2,8 @@
 using Integration.Pdf.Models;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Web;
 
 namespace Integration.Pdf.Service
 {

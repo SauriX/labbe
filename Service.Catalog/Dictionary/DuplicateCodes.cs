@@ -2,7 +2,8 @@
 {
     public class DuplicateCodes
     {
-        public enum DuplicateCodesEnum {
+        public enum DuplicateCodesEnum
+        {
             Clave,
             Nombre,
             Email,

@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.MedicalRecord.Application.IApplication;
-using Service.MedicalRecord.Client.IClient;
 using Service.MedicalRecord.Dtos.Request;
 using Shared.Dictionary;
-using System;
 using System.Threading.Tasks;
 
 namespace Service.MedicalRecord.Controllers
@@ -50,7 +47,7 @@ namespace Service.MedicalRecord.Controllers
         [AllowAnonymous]
         public async Task SendTestEmail()
         {
-            await _service.SendTestEmail(); 
+            await _service.SendTestEmail();
         }
     }
 }

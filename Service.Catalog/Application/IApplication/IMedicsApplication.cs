@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Service.Catalog.Dtos.Medicos;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Service.Catalog.Dtos.Medicos;
 
 namespace Service.Catalog.Application.IApplication
 {

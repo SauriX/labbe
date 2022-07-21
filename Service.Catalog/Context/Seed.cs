@@ -90,12 +90,12 @@ namespace Service.Catalog.Context
                         {
                             Id = 14,
                             Descripcion = "Número",
-                        }, 
+                        },
                         new Configuration()
                         {
                             Id = 15,
                             Descripcion = "Teléfono",
-                        },   
+                        },
                         new Configuration()
                         {
                             Id = 16,
@@ -120,7 +120,7 @@ namespace Service.Catalog.Context
                 using var transaction = context.Database.BeginTransaction();
                 try
                 {
-                    var ciudades = new List<CiudadBranch>(){ 
+                    var ciudades = new List<CiudadBranch>(){
                         new CiudadBranch {
                             Id = 1,
                             Nombre = "Ciudad Obregón"
@@ -166,7 +166,7 @@ namespace Service.Catalog.Context
                 }
             }
 
-                if (!context.CAT_Departamento.Any() || context.CAT_Departamento.Any(x => x.Id == 1 && x.Nombre != "Paquetes"))
+            if (!context.CAT_Departamento.Any() || context.CAT_Departamento.Any(x => x.Id == 1 && x.Nombre != "Paquetes"))
             {
                 using var transaction = context.Database.BeginTransaction();
                 try
