@@ -22,6 +22,7 @@
         public const string Configuration = "configuration";
         public const string MedicalRecord = "MedicalRecord";
         public const string Request = "request";
+        public const string Report = "report";
 
     }
 }

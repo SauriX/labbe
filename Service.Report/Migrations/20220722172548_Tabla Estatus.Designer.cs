@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Report.Context;
 
 namespace Service.Report.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220722172548_Tabla Estatus")]
+    partial class TablaEstatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -89,7 +91,8 @@ namespace Service.Report.Migrations
 
             modelBuilder.Entity("Service.Report.Domain.Request.Request", b =>
                 {
-                    b.Property<Guid>("SolicitudId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Cargo")
@@ -122,10 +125,13 @@ namespace Service.Report.Migrations
                     b.Property<decimal>("PrecioFinal")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<Guid>("SolicitudId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("SucursalId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("SolicitudId");
+                    b.HasKey("Id");
 
                     b.HasIndex("EmpresaId");
 

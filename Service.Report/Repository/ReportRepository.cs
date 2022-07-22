@@ -25,7 +25,7 @@ namespace Service.Report.Repository
         public async Task<List<Request>> GetByFilter(ReportFilterDto search)
         {
             var report = _context.Request
-                .Include(x => x.Expediente).Include(x => x.Medico)
+                .Include(x => x.Expediente).Include(x => x.Medico).Include(x => x.Estudios)
                 .AsQueryable();
 
             var query = report.ToQueryString();

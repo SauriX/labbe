@@ -8,6 +8,8 @@ namespace Service.Report.Context.EntityConfiguration
     {
         public void Configure(EntityTypeBuilder<Request> builder)
         {
+            builder.HasKey(x => x.SolicitudId);
+            builder.Property(x => x.SolicitudId).ValueGeneratedNever();
             builder
                 .HasMany(x => x.Estudios)
                 .WithOne(x => x.Solicitud)

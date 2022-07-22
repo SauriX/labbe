@@ -1,8 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Service.Report.Application.IApplication;
 using Service.Report.Client.IClient;
+using Service.Report.Domain.Branch;
+using Service.Report.Domain.Medic;
 using Service.Report.Dtos;
 using Service.Report.Dtos.MedicalStats;
+using Service.Report.Mapper;
 using Service.Report.PdfModel;
 using Service.Report.Repository.IRepository;
 using System.Collections.Generic;
@@ -11,45 +14,27 @@ using System.Threading.Tasks;
 
 namespace Service.Report.Application
 {
-    public class MedicalStatsApplication : IMedicalStatsApplication
+    public class MedicalStatsApplication : BaseApplication, IMedicalStatsApplication
     {
         public readonly IReportRepository _repository;
         private readonly IPdfClient _pdfClient;
 
-        public MedicalStatsApplication(IReportRepository repository, IPdfClient pdfClient)
+        public MedicalStatsApplication(IReportRepository repository, IPdfClient pdfClient, IRepository<Branch> branchRepository, IRepository<Medic> medicRepository) : base(branchRepository, medicRepository)
         {
             _repository = repository;
             _pdfClient = pdfClient;
         }
-        public async Task<IEnumerable<MedicalStatsDto>> GetByFilter(ReportFilterDto search)
+        public async Task<IEnumerable<MedicalStatsDto>> GetByFilter(ReportFilterDto filter)
         {
-            var req = await _repository.GetByFilter(search);
-            var results = (from c in req
-                           group c by new { c.Medico.NombreMedico, c.Medico.ClaveMedico, c.MedicoId } into grupo
-                           select new MedicalStatsDto
-                           {
-                               ClaveMedico = grupo.Key.ClaveMedico,
-                               Medico = grupo.Key.NombreMedico,
-                               Total = grupo.Sum(x => x.PrecioFinal),
-                               NoSolicitudes = grupo.Count(),
-                               NoPacientes = grupo.Select(x => x.ExpedienteId).Distinct().Count(),
-                           }).ToList();
-
-            results.Add(new MedicalStatsDto
-            {
-                ClaveMedico = "Total",
-                Medico = " ",
-                Total = results.Sum(x => x.Total),
-                NoSolicitudes = results.Sum(x => x.NoSolicitudes),
-                NoPacientes = results.Sum(x => x.NoPacientes),
-            });
+            var data = await _repository.GetByFilter(filter);
+            var results = data.ToMedicalStatsDto();
 
             return results;
         }
 
-        public async Task<byte[]> DownloadReportPdf(ReportFilterDto search)
+        public async Task<byte[]> DownloadReportPdf(ReportFilterDto filter)
         {
-            var requestData = await GetByFilter(search);
+            var requestData = await GetByFilter(filter);
 
             List<Col> columns = new()
             {
@@ -77,11 +62,13 @@ namespace Service.Report.Application
                 { "Pacientes", x.NoPacientes },
             }).ToList();
 
+            var branches = await GetBranchNames(filter.SucursalId);
+
             var headerData = new HeaderData()
             {
                 NombreReporte = "Solicitudes por Médico Condensado",
-                Sucursal = "",
-                Fecha = $"{search.Fecha.Min():dd/MM/yyyy} - {search.Fecha.Max().ToString("dd/MM/yyyy")}"
+                Sucursal = string.Join(", ", branches.Select(x => x)),
+                Fecha = $"{filter.Fecha.Min():dd/MM/yyyy} - {filter.Fecha.Max().ToString("dd/MM/yyyy")}"
             };
 
             var reportData = new ReportData()

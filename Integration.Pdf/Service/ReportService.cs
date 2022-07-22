@@ -147,13 +147,14 @@ namespace Integration.Pdf.Service
                             cell.Borders.Left.Visible = false;
                             cell.Borders.Right.Visible = false;
                             var format = columns[i].Formato;
+                            var cellData = item[key].ToString();
 
                             if (!string.IsNullOrWhiteSpace(format))
                             {
-                                if (item[key] is IList)
+                                if (cellData[0] == '[' && cellData[cellData.Length - 1] == ']')
                                 {
-                                    var datalist = JsonConvert.DeserializeObject<List<string>>(item[key].ToString());
-                                    datalist.ForEach(x => cell.AddParagraph(x));
+                                    var datalist = JsonConvert.DeserializeObject<List<string>>(cellData);
+                                    datalist.Where(x => x != null).ToList().ForEach(x => cell.AddParagraph(x));
                                 }
                                 else
                                 {
@@ -162,14 +163,14 @@ namespace Integration.Pdf.Service
                             }
                             else
                             {
-                                if (item[key] is IList)
+                                if (cellData[0] == '[' && cellData[cellData.Length - 1] == ']')
                                 {
-                                    var datalist = JsonConvert.DeserializeObject<List<string>>(item[key].ToString());
-                                    datalist.ForEach(x => cell.AddParagraph(x));
+                                    var datalist = JsonConvert.DeserializeObject<List<string>>(cellData);
+                                    datalist.Where(x => x != null).ToList().ForEach(x => cell.AddParagraph(x));
                                 }
                                 else
                                 {
-                                    cell.AddParagraph(item[key].ToString());
+                                    cell.AddParagraph(cellData);
                                 }
                             }
                         }
