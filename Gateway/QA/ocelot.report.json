@@ -87,7 +87,7 @@
       ],
       "UpstreamPathTemplate": "/api/report/contacto/filter",
       "UpstreamHttpMethod": [ "POST" ]
-    }
+    },
     {
       "DownstreamPathTemplate": "/LabRamos/services/report/api/report/contacto/chart/filter",
       "DownstreamScheme": "https",
