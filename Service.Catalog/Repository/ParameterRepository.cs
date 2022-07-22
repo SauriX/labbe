@@ -92,7 +92,7 @@ namespace Service.Catalog.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task AddValues(List<ParameterValue> value,string id)
+        public async Task AddValues(List<ParameterValue> value, string id)
         {
             var config = new BulkConfig();
             config.SetSynchronizeFilter<ParameterValue>(x => x.ParametroId == Guid.Parse(id));

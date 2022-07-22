@@ -1,7 +1,7 @@
-﻿using Service.Catalog.Dtos.Promotion;
+﻿using FluentValidation;
+using Service.Catalog.Dtos.Promotion;
 using System;
 using System.Collections.Generic;
-using FluentValidation;
 
 namespace Service.Catalog.Dtos.Route
 {

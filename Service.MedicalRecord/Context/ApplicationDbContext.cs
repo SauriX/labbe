@@ -1,11 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Service.MedicalRecord.Domain.MedicalRecord;
-using Service.MedicalRecord.Domain.Request;
-using Service.MedicalRecord.Domain.PriceQuote;
-using Service.MedicalRecord.Domain.TaxData;
-using Shared.Error;
-using System.Reflection;
 using Service.MedicalRecord.Domain.Appointments;
+using Service.MedicalRecord.Domain.MedicalRecord;
+using Service.MedicalRecord.Domain.PriceQuote;
+using Service.MedicalRecord.Domain.Request;
+using Service.MedicalRecord.Domain.TaxData;
+using System.Reflection;
 
 namespace Service.MedicalRecord.Context
 {

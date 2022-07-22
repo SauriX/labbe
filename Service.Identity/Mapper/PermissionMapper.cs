@@ -1,5 +1,4 @@
-﻿using Service.Identity.Domain.permissions;
-using Service.Identity.Dtos;
+﻿using Service.Identity.Domain.Permission;
 using Service.Identity.Dtos.Menu;
 using Service.Identity.Dtos.Role;
 using Service.Identity.Dtos.User;
@@ -7,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Service.Identity.Mapper
 {

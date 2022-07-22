@@ -10,7 +10,8 @@ namespace Service.Catalog.Context.EntityConfiguration.Promotion
         {
             builder.ToTable("Relacion_Promocion_Lealtad");
 
-            builder.HasKey(x => new {
+            builder.HasKey(x => new
+            {
                 x.PromotionId,
                 x.LoyaltyId
             });

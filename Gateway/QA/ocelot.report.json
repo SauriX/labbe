@@ -1,18 +1,6 @@
 ﻿{
   "Routes": [
     {
-      "DownstreamPathTemplate": "/LabRamos/services/report/api/report/expediente/getAll",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "axsishost.online"
-        }
-      ],
-      "UpstreamPathTemplate": "/api/report/expediente/getAll",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-
-    {
       "DownstreamPathTemplate": "/LabRamos/services/report/api/report/expediente/download/pdf",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -24,29 +12,6 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/report/api/report/expediente/export/table/{search}",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "axsishost.online"
-        }
-      ],
-      "UpstreamPathTemplate": "/api/report/expediente/export/table/{search}",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/LabRamos/services/report/api/report/expediente/export/graphic/{search}",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "axsishost.online"
-        }
-      ],
-      "UpstreamPathTemplate": "/api/report/expediente/export/graphic/{search}",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-
-    {
       "DownstreamPathTemplate": "/LabRamos/services/report/api/report/expediente/filter",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -56,17 +21,6 @@
       ],
       "UpstreamPathTemplate": "/api/report/expediente/filter",
       "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/LabRamos/services/report/api/report/estadistica/getAll",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "axsishost.online"
-        }
-      ],
-      "UpstreamPathTemplate": "/api/report/estadistica/getAll",
-      "UpstreamHttpMethod": [ "GET" ]
     },
     {
       "DownstreamPathTemplate": "/LabRamos/services/report/api/report/estadistica/download/pdf",
@@ -80,28 +34,6 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/report/api/report/estadistica/export/table/{search}",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "axsishost.online"
-        }
-      ],
-      "UpstreamPathTemplate": "/api/report/estadistica/export/table/{search}",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/LabRamos/services/report/api/report/estadistica/export/graphic/{search}",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "axsishost.online"
-        }
-      ],
-      "UpstreamPathTemplate": "/api/report/estadistica/export/graphic/{search}",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
       "DownstreamPathTemplate": "/LabRamos/services/report/api/report/estadistica/filter",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -111,17 +43,6 @@
       ],
       "UpstreamPathTemplate": "/api/report/estadistica/filter",
       "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/LabRamos/services/report/api/report/medicos/getAll",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "axsishost.online"
-        }
-      ],
-      "UpstreamPathTemplate": "/api/report/medicos/getAll",
-      "UpstreamHttpMethod": [ "GET" ]
     },
     {
       "DownstreamPathTemplate": "/LabRamos/services/report/api/report/medicos/download/pdf",
@@ -143,6 +64,39 @@
         }
       ],
       "UpstreamPathTemplate": "/api/report/medicos/filter",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/report/api/report/contacto/download/pdf",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/medicos/contacto/pdf",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/report/api/report/contacto/filter",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/contacto/filter",
+      "UpstreamHttpMethod": [ "POST" ]
+    }
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/report/api/report/contacto/chart/filter",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/contacto/chart/filter",
       "UpstreamHttpMethod": [ "POST" ]
     }
   ]

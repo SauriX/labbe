@@ -1,11 +1,7 @@
 ﻿using Shared.Dictionary;
 using Shared.Error;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Shared.Helpers
 {

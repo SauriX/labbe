@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Microsoft.Win32; //SetCurrentDiectory
+using System;
 using System.Runtime.InteropServices;
 using System.Text;
-using Microsoft.Win32; //SetCurrentDiectory
 
 namespace Test
 {

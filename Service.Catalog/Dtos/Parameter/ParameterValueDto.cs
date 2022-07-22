@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using System;
 
-namespace Service.Catalog.Dtos.Parameters
+namespace Service.Catalog.Dtos.Parameter
 {
     public class ParameterValueDto
     {

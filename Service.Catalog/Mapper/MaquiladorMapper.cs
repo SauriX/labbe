@@ -1,5 +1,5 @@
 ﻿using Service.Catalog.Domain.Maquila;
-using Service.Catalog.Dtos.Maquilador;
+using Service.Catalog.Dtos.Maquila;
 using System;
 using System.Collections.Generic;
 using System.Linq;

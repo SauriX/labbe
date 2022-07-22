@@ -1,5 +1,4 @@
-﻿using Service.Catalog.Dtos.Parameters;
-using System;
+﻿using Service.Catalog.Dtos.Parameter;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

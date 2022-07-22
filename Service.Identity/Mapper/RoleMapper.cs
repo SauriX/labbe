@@ -1,12 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Service.Identity.Domain.Role;
-using Service.Identity.Dtos;
+﻿using Service.Identity.Domain.Role;
 using Service.Identity.Dtos.Role;
-using Service.Identity.Dtos.User;
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using PP = Service.Identity.Dictionary.PermissionProps;
 

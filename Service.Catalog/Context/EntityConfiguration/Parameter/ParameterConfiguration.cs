@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Service.Catalog.Domain.Parameter;
 
 namespace Service.Catalog.Context.EntityConfiguration.Parameter
 {
@@ -28,7 +27,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Parameter
                 .HasMaxLength(100);
 
             builder
-                .Property(x=>x.NombreCorto)
+                .Property(x => x.NombreCorto)
                 .IsRequired(true)
                 .HasMaxLength(50);
 
@@ -47,7 +46,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Parameter
                 .HasMaxLength(100);
 
             builder
-                .HasOne(x=>x.Area)
+                .HasOne(x => x.Area)
                 .WithMany();
 
             builder
@@ -66,8 +65,8 @@ namespace Service.Catalog.Context.EntityConfiguration.Parameter
 
             builder
                .HasMany(x => x.Estudios)
-               .WithOne (x=>x.Parametro)
-               .HasForeignKey(x=>x.ParametroId)
+               .WithOne(x => x.Parametro)
+               .HasForeignKey(x => x.ParametroId)
                .OnDelete(DeleteBehavior.Restrict);
 
         }

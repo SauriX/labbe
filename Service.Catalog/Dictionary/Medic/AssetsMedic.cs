@@ -1,4 +1,4 @@
-﻿namespace Service.Catalog.Dictionary
+﻿namespace Service.Catalog.Dictionary.Medic
 {
     public class AssetsMedic
     {

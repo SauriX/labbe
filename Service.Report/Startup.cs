@@ -1,38 +1,34 @@
 using FluentValidation.AspNetCore;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Service.Catalog.Context;
 using Service.Report.Application;
 using Service.Report.Application.IApplication;
 using Service.Report.Client;
 using Service.Report.Client.IClient;
-using Service.Report.Domain.Request;
+using Service.Report.Consumers;
+using Service.Report.Context;
 using Service.Report.Middleware;
 using Service.Report.Repository;
 using Service.Report.Repository.IRepository;
 using Service.Report.Requirements;
+using Service.Report.Settings;
 using Shared.Dictionary;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Service.Report
 {
@@ -90,6 +86,31 @@ namespace Service.Report
 
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
             });
+
+            services.AddMassTransit(x =>
+            {
+                x.AddConsumer<BranchConsumer>();
+
+                x.UsingRabbitMq((context, configurator) =>
+                {
+                    var rabbitMQSettings = Configuration.GetSection(nameof(RabbitMQSettings)).Get<RabbitMQSettings>();
+
+                    configurator.Host(new Uri(rabbitMQSettings.Host), "MedicalRecord", c =>
+                    {
+                        c.ContinuationTimeout(TimeSpan.FromSeconds(20));
+                        c.Username(rabbitMQSettings.Username);
+                        c.Password(rabbitMQSettings.Password);
+                    });
+
+                    configurator.ReceiveEndpoint("branch-report-queue", re =>
+                    {
+                        re.Consumer<BranchConsumer>(context);
+                        re.DiscardFaultedMessages();
+                    });
+                });
+            });
+
+            services.AddMassTransitHostedService();
 
             services.AddSwaggerGen(c =>
             {
@@ -182,11 +203,12 @@ namespace Service.Report
                 });
             });
 
-            services.AddScoped<IRequestApplication, RequestApplication>();
+            services.AddScoped<IRequestStatsApplication, RequestStatsApplication>();
             services.AddScoped<IPatientStatsApplication, PatientStatsApplication>();
             services.AddScoped<IMedicalStatsApplication, MedicalStatsApplication>();
             services.AddScoped<IContactStatsApplication, ContactStatsApplication>();
 
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IReportRepository, ReportRepository>();
         }
 

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Service.MedicalRecord.Repository
 {
-    public class AppointmentRepository: IAppointmentResposiotry
+    public class AppointmentRepository : IAppointmentResposiotry
     {
         private readonly ApplicationDbContext _context;
 
@@ -31,7 +31,8 @@ namespace Service.MedicalRecord.Repository
 
             return await citasDom.ToListAsync();
         }
-        public async Task CreateLab(AppointmentLab appointmentLab) {
+        public async Task CreateLab(AppointmentLab appointmentLab)
+        {
             var estudios = appointmentLab.Estudios.ToList();
             appointmentLab.Estudios = null;
             _context.CAT_Cita_Lab.Add(appointmentLab);
@@ -58,7 +59,8 @@ namespace Service.MedicalRecord.Repository
 
         }
 
-        public async Task UpdateLab(AppointmentLab appointmentLab) {
+        public async Task UpdateLab(AppointmentLab appointmentLab)
+        {
             var estudios = appointmentLab.Estudios.ToList();
             appointmentLab.Estudios = null;
             _context.CAT_Cita_Lab.Update(appointmentLab);
@@ -84,6 +86,6 @@ namespace Service.MedicalRecord.Repository
             estudios.ForEach(x => x.id = Guid.NewGuid());
             await _context.BulkInsertOrUpdateOrDeleteAsync(estudios, config);
 
-        } 
+        }
     }
 }

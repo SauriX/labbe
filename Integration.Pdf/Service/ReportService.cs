@@ -1,17 +1,15 @@
 ﻿using Integration.Pdf.Extensions;
 using Integration.Pdf.Models;
 using MigraDoc.DocumentObjectModel;
-using MigraDoc.DocumentObjectModel.Shapes;
 using MigraDoc.DocumentObjectModel.Shapes.Charts;
 using MigraDoc.DocumentObjectModel.Tables;
 using MigraDoc.Rendering;
+using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Mail;
-using System.Reflection;
-using System.Web;
 
 namespace Integration.Pdf.Service
 {
@@ -80,7 +78,7 @@ namespace Integration.Pdf.Service
             var title = new Col(Header.NombreReporte, fontTitle);
             var branchType = "Sucursal " + Header.Sucursal;
 
-            if(Header.Sucursal == string.Empty || Header.Sucursal == "string")
+            if (Header.Sucursal == string.Empty || Header.Sucursal == "string")
             {
                 branchType = Header.Sucursal = "Todas las Sucursales";
             }
@@ -89,7 +87,7 @@ namespace Integration.Pdf.Service
             var period = new Col("Periodo: " + Header.Fecha, fontSubtitle);
             var printDate = new Col("Fecha de impresión: " + DateTime.Now.ToString("dd/MM/yyyy"), fontText, ParagraphAlignment.Right);
             var logo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets\\LabRamosLogo.png");
-         
+
             section.AddImage(logo);
             section.AddText(title);
             section.AddSpace(10);
@@ -109,7 +107,7 @@ namespace Integration.Pdf.Service
 
             var colWidth = contentWidth / columns.Sum(x => x.Tamaño);
 
-            if (columns.Count == 0)
+            if (columns == null || columns.Count == 0)
             {
                 return;
             }
@@ -134,7 +132,7 @@ namespace Integration.Pdf.Service
                 cell.AddParagraph(columns[i].Texto);
             }
 
-            if (data.Count > 0)
+            if (data != null && data.Count > 0)
             {
                 foreach (var item in data)
                 {
@@ -149,14 +147,31 @@ namespace Integration.Pdf.Service
                             cell.Borders.Left.Visible = false;
                             cell.Borders.Right.Visible = false;
                             var format = columns[i].Formato;
+                            var cellData = item[key].ToString();
 
                             if (!string.IsNullOrWhiteSpace(format))
                             {
-                                cell.AddParagraph(Convert.ToDouble(item[key]).ToString(format));
+                                if (cellData[0] == '[' && cellData[cellData.Length - 1] == ']')
+                                {
+                                    var datalist = JsonConvert.DeserializeObject<List<string>>(cellData);
+                                    datalist.Where(x => x != null).ToList().ForEach(x => cell.AddParagraph(x));
+                                }
+                                else
+                                {
+                                    cell.AddParagraph(Convert.ToDouble(item[key]).ToString(format));
+                                }
                             }
                             else
                             {
-                                cell.AddParagraph(item[key].ToString());
+                                if (cellData[0] == '[' && cellData[cellData.Length - 1] == ']')
+                                {
+                                    var datalist = JsonConvert.DeserializeObject<List<string>>(cellData);
+                                    datalist.Where(x => x != null).ToList().ForEach(x => cell.AddParagraph(x));
+                                }
+                                else
+                                {
+                                    cell.AddParagraph(cellData);
+                                }
                             }
                         }
                     }
@@ -179,7 +194,7 @@ namespace Integration.Pdf.Service
 
             section.Add(table);
 
-            if (!seriesInfo.Any(x => x.SerieX) || data.Count == 0)
+            if (seriesInfo == null || !seriesInfo.Any(x => x.SerieX) || data.Count == 0)
             {
                 return;
             }
@@ -209,7 +224,7 @@ namespace Integration.Pdf.Service
                 {
                     series.FillFormat.Color = Color.FromRgb(Convert.ToByte("18", 16), Convert.ToByte("90", 16), Convert.ToByte("FF", 16));
                 }
-                if(datachart != null && datachart.Count > 0)
+                if (datachart != null && datachart.Count > 0)
                 {
                     series.Add(datachart.Select(x => Convert.ToDouble(x[serie.Serie])).ToArray());
                 }
@@ -226,7 +241,7 @@ namespace Integration.Pdf.Service
             var serieX = seriesInfo.FirstOrDefault(s => s.SerieX)?.Serie;
 
             XSeries xseries = chart.XValues.AddXSeries();
-            if(datachart != null && datachart.Count > 0)
+            if (datachart != null && datachart.Count > 0)
             {
                 xseries.Add(datachart.Select((x, i) => x[serieX].ToString() ?? "S-" + i).ToArray());
             }

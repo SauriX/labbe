@@ -1,8 +1,6 @@
 ﻿using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Context;
-using Service.Catalog.Domain.Branch;
-using Service.Catalog.Domain.Company;
 using Service.Catalog.Domain.Price;
 using Service.Catalog.Repository.IRepository;
 using System;

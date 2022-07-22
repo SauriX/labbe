@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Service.Report.Domain.Medic
+﻿namespace Service.Report.Domain.Medic
 {
-    public class Medic
+    public class Medic : Base
     {
-        public Guid Id { get; set; }
         public string ClaveMedico { get; set; }
         public string NombreMedico { get; set; }
     }

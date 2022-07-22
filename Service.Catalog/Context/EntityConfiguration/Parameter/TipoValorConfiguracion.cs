@@ -14,8 +14,8 @@ namespace Service.Catalog.Context.EntityConfiguration.Parameter
             builder
                 .HasOne(x => x.Parametro)
                 .WithMany()
-                .HasForeignKey(x=>x.ParametroId);
-                
+                .HasForeignKey(x => x.ParametroId);
+
 
         }
     }

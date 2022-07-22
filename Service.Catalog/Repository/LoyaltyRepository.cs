@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Service.Catalog.Repository
 {
-    public class LoyaltyRepository: ILoyaltyRepository
+    public class LoyaltyRepository : ILoyaltyRepository
     {
         private readonly ApplicationDbContext _context;
 

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Service.Catalog.Dtos.Catalog;
 using System.Collections.Generic;
 using System.Threading.Tasks;

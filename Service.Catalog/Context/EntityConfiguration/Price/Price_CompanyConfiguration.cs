@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Service.Catalog.Domain.Company;
+using Service.Catalog.Domain.Price;
 
-namespace Service.Catalog.Context.EntityConfiguration.Company
+namespace Service.Catalog.Context.EntityConfiguration.Price
 {
 
     public class Price_CompanyConfiguration : IEntityTypeConfiguration<Price_Company>
@@ -12,7 +12,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Company
             builder.ToTable("CAT_ListaP_Compañia");
 
             builder.HasKey(x => new { x.PrecioListaId, x.CompañiaId });
-            
+
             builder
               .Property(x => x.Activo)
               .IsRequired(true);
@@ -33,8 +33,8 @@ namespace Service.Catalog.Context.EntityConfiguration.Company
               .Property(x => x.FechaMod)
               .IsRequired(true);
 
-            
-            
+
+
 
         }
 

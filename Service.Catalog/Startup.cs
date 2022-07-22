@@ -1,45 +1,38 @@
 using FluentValidation.AspNetCore;
-using Identidad.Api.Infraestructure.Repository;
-using Identidad.Api.Infraestructure.Repository.IRepository;
-using Identidad.Api.Infraestructure.Services;
-using Identidad.Api.Infraestructure.Services.IServices;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Service.Catalog.Application;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Client;
 using Service.Catalog.Client.IClient;
+using Service.Catalog.Consumers.Error;
 using Service.Catalog.Context;
 using Service.Catalog.Domain.Catalog;
-using Service.Catalog.Domain.Indication;
 using Service.Catalog.Domain.Parameter;
 using Service.Catalog.Domain.Provenance;
 using Service.Catalog.Middleware;
 using Service.Catalog.Repository;
 using Service.Catalog.Repository.IRepository;
 using Service.Catalog.Requirements;
+using Service.Catalog.Settings;
 using Shared.Dictionary;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Service.Catalog
 {
@@ -82,6 +75,30 @@ namespace Service.Catalog
 
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
             });
+
+            services.AddMassTransit(x =>
+            {
+                x.AddConsumer<BranchErrorConsumer>();
+
+                x.UsingRabbitMq((context, configurator) =>
+                {
+                    var rabbitMQSettings = Configuration.GetSection(nameof(RabbitMQSettings)).Get<RabbitMQSettings>();
+
+                    configurator.Host(new Uri(rabbitMQSettings.Host), "Catalogo", c =>
+                    {
+                        c.ContinuationTimeout(TimeSpan.FromSeconds(20));
+                        c.Username(rabbitMQSettings.Username);
+                        c.Password(rabbitMQSettings.Password);
+                    });
+
+                    configurator.ReceiveEndpoint("branch-queue-faults", re =>
+                    {
+                        re.Consumer<BranchErrorConsumer>(context);
+                    });
+                });
+            });
+
+            services.AddMassTransitHostedService();
 
             services.AddSwaggerGen(c =>
             {

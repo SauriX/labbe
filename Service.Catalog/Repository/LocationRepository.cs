@@ -2,7 +2,6 @@
 using Service.Catalog.Context;
 using Service.Catalog.Domain.Constant;
 using Service.Catalog.Repository.IRepository;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,7 +26,8 @@ namespace Service.Catalog.Repository
             return colonies;
         }
 
-        public async Task<List<City>> GetCities() { 
+        public async Task<List<City>> GetCities()
+        {
             var cities = await _context.CAT_Ciudad.ToListAsync();
             return cities;
         }

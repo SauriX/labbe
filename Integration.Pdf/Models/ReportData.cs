@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 
 namespace Integration.Pdf.Models
 {
@@ -11,6 +8,6 @@ namespace Integration.Pdf.Models
         public List<ChartSeries> Series { get; set; }
         public List<Dictionary<string, object>> Datos { get; set; }
         public List<Dictionary<string, object>> DatosGrafica { get; set; }
-        public HeaderData Header{ get; set; } 
+        public HeaderData Header { get; set; }
     }
 }

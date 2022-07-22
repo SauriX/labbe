@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Service.Catalog.Dtos.Medicos;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Service.Catalog.Dtos.Medicos;
 
-namespace Identidad.Api.Infraestructure.Services.IServices
+namespace Service.Catalog.Application.IApplication
 {
     public interface IMedicsApplication
     {

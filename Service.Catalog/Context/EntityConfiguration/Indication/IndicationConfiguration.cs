@@ -1,13 +1,12 @@
-﻿using Service.Catalog.Domain.Indication;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Service.Catalog.Context.EntityConfiguration.IndicationConfiguration
+namespace Service.Catalog.Context.EntityConfiguration.Indication
 {
 
-    public class IndicationConfiguration : IEntityTypeConfiguration<Indication>
+    public class IndicationConfiguration : IEntityTypeConfiguration<Domain.Indication.Indication>
     {
-        public void Configure(EntityTypeBuilder<Indication> builder)
+        public void Configure(EntityTypeBuilder<Domain.Indication.Indication> builder)
         {
             builder.ToTable("CAT_Indicacion");
 

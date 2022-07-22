@@ -1,12 +1,8 @@
 ﻿using Service.Catalog.Domain.Configuration;
 using Service.Catalog.Dtos.Configuration;
-using Service.Catalog.Mapper;
 using Service.Catalog.Utils;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Service.Catalog.Mapper
 {

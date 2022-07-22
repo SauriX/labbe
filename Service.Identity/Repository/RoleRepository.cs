@@ -1,21 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using EFCore.BulkExtensions;
+using Microsoft.EntityFrameworkCore;
 using Service.Identity.Context;
-using Service.Identity.Dtos;
+using Service.Identity.Domain.Role;
 using Service.Identity.Repository.IRepository;
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
-using ClosedXML.Report;
-using Shared.Extensions;
-using ClosedXML.Excel;
-using Service.Identity.Dictionary;
-using Service.Identity.Domain.permissions;
-using Service.Identity.Domain.Role;
-using Microsoft.EntityFrameworkCore;
-using EFCore.BulkExtensions;
 
 namespace Service.Identity.Repository
 {

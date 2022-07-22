@@ -1,13 +1,13 @@
 ﻿using System;
 
-namespace Service.Catalog.Domain.Company
+namespace Service.Catalog.Domain.Price
 {
     public class Price_Company
     {
         public Guid PrecioListaId { get; set; }
-        public virtual Price.PriceList PrecioLista { get; set; }
+        public virtual PriceList PrecioLista { get; set; }
         public Guid CompañiaId { get; set; }
-        public virtual Company Compañia { get; set; }
+        public virtual Company.Company Compañia { get; set; }
         public Guid Id { get; set; }
         public decimal Precio { get; set; }
         public bool Activo { get; set; }

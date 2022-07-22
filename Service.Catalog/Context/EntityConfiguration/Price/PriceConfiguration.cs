@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Service.Catalog.Context.EntityConfiguration
+namespace Service.Catalog.Context.EntityConfiguration.Price
 {
 
     public class PriceConfiguration : IEntityTypeConfiguration<Domain.Price.PriceList>

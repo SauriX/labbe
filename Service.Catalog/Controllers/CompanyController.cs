@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Catalog.Application.IApplication;
-using Service.Catalog.Dtos.Catalog;
 using Service.Catalog.Dtos.Company;
 using Shared.Dictionary;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Identidad.Api.Controllers
+namespace Service.Catalog.Controllers
 {
 
     [Route("api/[Controller]")]

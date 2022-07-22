@@ -1,5 +1,4 @@
-﻿using Service.MedicalRecord.Domain.PriceQuote;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Service.MedicalRecord.Dtos.PriceQuote

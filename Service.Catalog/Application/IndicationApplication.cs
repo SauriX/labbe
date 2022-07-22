@@ -1,7 +1,7 @@
 ﻿using ClosedXML.Excel;
 using ClosedXML.Report;
 using Service.Catalog.Application.IApplication;
-using Service.Catalog.Dictionary;
+using Service.Catalog.Dictionary.Indication;
 using Service.Catalog.Domain.Indication;
 using Service.Catalog.Dtos.Indication;
 using Service.Catalog.Mapper;

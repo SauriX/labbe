@@ -1,10 +1,6 @@
 ﻿using Service.MedicalRecord.Context;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Service.Catalog.Transactions
+namespace Service.MedicalRecord.Transactions
 {
     public class TransactionProvider : ITransactionProvider
     {

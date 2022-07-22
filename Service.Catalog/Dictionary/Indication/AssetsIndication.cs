@@ -1,4 +1,4 @@
-﻿namespace Service.Catalog.Dictionary
+﻿namespace Service.Catalog.Dictionary.Indication
 {
     public class AssetsIndication
     {

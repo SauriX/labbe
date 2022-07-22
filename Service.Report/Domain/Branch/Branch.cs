@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Service.Report.Domain.Branch
+﻿namespace Service.Report.Domain.Branch
 {
-    public class Branch
+    public class Branch : Base
     {
-        public Guid Id { get; set; }
         public string Sucursal { get; set; }
     }
 }

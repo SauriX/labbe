@@ -2,10 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Identity.Application.IApplication;
-using Service.Identity.Dtos;
 using Service.Identity.Dtos.Profile;
 using Service.Identity.Dtos.User;
-using Service.Identity.Repository.IRepository;
 using Shared.Dictionary;
 using System;
 using System.Collections.Generic;
@@ -98,7 +96,7 @@ namespace Service.Identity.Controllers
             var (file, fileName) = await _service.ExportList(search);
             return File(file, MimeType.XLSX, fileName);
         }
-         
+
         [HttpPost("export/form/{id}")]
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportForm(string id)

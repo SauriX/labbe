@@ -1,10 +1,9 @@
 ﻿using Service.Identity.Domain.User;
 using Service.Identity.Dtos.User;
-using Service.Identity.Utils;
+using Shared.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using PP = Service.Identity.Dictionary.PermissionProps;
 
 namespace Service.Identity.Mapper

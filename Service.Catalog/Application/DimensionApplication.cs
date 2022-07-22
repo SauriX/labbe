@@ -2,7 +2,6 @@
 using ClosedXML.Report;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dictionary;
-using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Dtos.Catalog;
 using Service.Catalog.Mapper;
 using Service.Catalog.Repository.IRepository;
@@ -11,7 +10,6 @@ using Shared.Error;
 using Shared.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 

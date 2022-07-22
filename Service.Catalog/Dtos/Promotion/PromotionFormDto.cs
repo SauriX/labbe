@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Service.Catalog.Domain.Price;
 using Service.Catalog.Dtos.PriceList;
 using System;
 using System.Collections.Generic;
@@ -19,7 +18,7 @@ namespace Service.Catalog.Dtos.Promotion
         public string IdListaPrecios { get; set; }
         public bool Lealtad { get; set; }
         public Guid UsuarioId { get; set; }
-        public IEnumerable<PromotionEstudioListDto> Estudio {get; set;}
+        public IEnumerable<PromotionEstudioListDto> Estudio { get; set; }
         public List<PriceListBranchDto> Branchs { get; set; }
         public string lista { get; set; }
         public IEnumerable<DiasDto> Dias { get; set; }
@@ -31,7 +30,7 @@ namespace Service.Catalog.Dtos.Promotion
         public PromotionFormDtoValidator()
         {
             RuleFor(x => x.Dias).NotEmpty(); ;
-            
+
         }
     }
 }

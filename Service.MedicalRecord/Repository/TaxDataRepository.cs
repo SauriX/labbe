@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Service.MedicalRecord.Repository
 {
-    public class TaxDataRepository: ITaxDataRepository
+    public class TaxDataRepository : ITaxDataRepository
     {
         private readonly ApplicationDbContext _context;
         public TaxDataRepository(ApplicationDbContext context)

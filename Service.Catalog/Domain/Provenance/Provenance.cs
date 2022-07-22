@@ -5,6 +5,6 @@ namespace Service.Catalog.Domain.Provenance
 {
     public class Provenance : GenericCatalog
     {
-        
+
     }
 }

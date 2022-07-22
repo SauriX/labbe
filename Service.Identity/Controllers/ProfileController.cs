@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Identity.Application.IApplication;
-using Service.Identity.Dtos;
 using Service.Identity.Dtos.Menu;
 using Service.Identity.Dtos.Profile;
-using Service.Identity.Repository.IRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;

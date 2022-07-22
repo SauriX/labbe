@@ -16,7 +16,7 @@ namespace Service.Catalog.Mapper
                 Id = x.Id,
                 Nombre = x.Nombre + " " + x.Apellidos,
                 Correo = x.Correo,
-                Telefono = x.Telefono, 
+                Telefono = x.Telefono,
                 Activo = x.Activo,
             });
         }

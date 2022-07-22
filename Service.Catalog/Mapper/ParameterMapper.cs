@@ -1,6 +1,5 @@
 ﻿using Service.Catalog.Domain.Parameter;
 using Service.Catalog.Dtos.Parameter;
-using Service.Catalog.Dtos.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -165,7 +164,7 @@ namespace Service.Catalog.Mapper
         {
             if (dto == null) return null;
 
-            return dto.Select (x=>new ParameterValue
+            return dto.Select(x => new ParameterValue
             {
                 Id = x.Id == null ? Guid.NewGuid() : Guid.Parse(x.Id),
                 ParametroId = Guid.Parse(x.ParametroId),

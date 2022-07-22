@@ -1,6 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Dtos.MedicalRecords;
 using Service.MedicalRecord.Dtos.PriceQuote;
@@ -18,7 +16,7 @@ namespace Service.MedicalRecord.Controllers
     {
         private readonly IPriceQuoteApplication _Service;
         private readonly IRequestApplication _ServiceRequest;
-        public PriceQuoteController(IPriceQuoteApplication Service, IRequestApplication request )
+        public PriceQuoteController(IPriceQuoteApplication Service, IRequestApplication request)
         {
             _Service = Service;
             _ServiceRequest = request;
@@ -62,7 +60,7 @@ namespace Service.MedicalRecord.Controllers
         public async Task<string> CreateSolicitud(RequestDto request)
         {
             //request.UsuarioId = (Guid)HttpContext.Items["userId"];
-            
+
             return await _ServiceRequest.Create(request);
         }
         [HttpPut]
@@ -89,8 +87,9 @@ namespace Service.MedicalRecord.Controllers
         }
 
         [HttpPost("records")]
-        public async Task<List<MedicalRecordsListDto>> GetMedicalRecord(PriceQuoteExpedienteSearch search) { 
-                return await _Service.GetMedicalRecord(search);
+        public async Task<List<MedicalRecordsListDto>> GetMedicalRecord(PriceQuoteExpedienteSearch search)
+        {
+            return await _Service.GetMedicalRecord(search);
         }
 
         [HttpPost("ticket")]

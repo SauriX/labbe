@@ -18,7 +18,7 @@ namespace Service.MedicalRecord.Context.EntityConfiguration.PriceQuote
             builder
                 .HasMany(x => x.Estudios)
                 .WithOne();
-   
+
         }
     }
 }

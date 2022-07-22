@@ -11,7 +11,7 @@ namespace Service.Catalog.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StudyController:ControllerBase
+    public class StudyController : ControllerBase
     {
         private readonly IStudyApplication _Service;
 
@@ -32,8 +32,8 @@ namespace Service.Catalog.Controllers
         public async Task<IEnumerable<StudyListDto>> GetAll(string search = null)
         {
             return await _Service.GetAll(search);
-        }     
-        
+        }
+
         [HttpGet("active")]
         public async Task<IEnumerable<StudyListDto>> GetActive()
         {
@@ -52,7 +52,7 @@ namespace Service.Catalog.Controllers
         public async Task<StudyFormDto> Update(StudyFormDto study)
         {
             study.UsuarioId = (Guid)HttpContext.Items["userId"];
-                return await _Service.Update(study);
+            return await _Service.Update(study);
         }
 
 
@@ -61,7 +61,7 @@ namespace Service.Catalog.Controllers
         public async Task<IActionResult> ExportList(string search = null)
         {
             var (file, fileName) = await _Service.ExportList(search);
-            return File(file, MimeType.XLSX,fileName);
+            return File(file, MimeType.XLSX, fileName);
         }
 
         [HttpPost("export/form/{id}")]
@@ -69,7 +69,7 @@ namespace Service.Catalog.Controllers
         public async Task<IActionResult> ExportForm(int id)
         {
             var (file, fileName) = await _Service.ExportForm(id);
-            return File(file, MimeType.XLSX,fileName);
+            return File(file, MimeType.XLSX, fileName);
         }
     }
 

@@ -21,7 +21,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Catalog
               .Property(x => x.Nombre)
               .IsRequired(true)
               .HasMaxLength(100);
-            
+
             builder
               .Property(x => x.Activo)
               .IsRequired(true);

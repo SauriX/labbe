@@ -9,7 +9,7 @@ namespace Service.Catalog.Dtos.Medicos
         public long ClinicaId { get; set; }
         public bool Activo { get; set; }
         public long UsuarioCreoId { get; set; }
-        public DateTime  FechaCreo { get; set; }
+        public DateTime FechaCreo { get; set; }
         public long UsuarioModId { get; set; }
         public DateTime FechaMod { get; set; }
 
