@@ -20,7 +20,8 @@ namespace Service.MedicalRecord.Domain.Appointments
         public string Email { get; set; }
         public string WhatsApp { get; set; }
         public string Indicaciones { get; set; }
-        //SolicitudId
+        public string Cita { get; set; }
+        public int Status { get; set; }
         public DateTime FechaCita { get; set; }
         public DateTime HoraCita { get; set; }
         public bool Activo { get; set; }

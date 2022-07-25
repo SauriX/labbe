@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Service.MedicalRecord.Context;
 using Service.MedicalRecord.Domain.Appointments;
 using Service.MedicalRecord.Domain.PriceQuote;
+using Service.MedicalRecord.Dtos.Appointment;
 using Service.MedicalRecord.Repository.IRepository;
 using System;
 using System.Collections.Generic;
@@ -19,17 +20,46 @@ namespace Service.MedicalRecord.Repository
         {
             _context = context;
         }
-        public async Task<List<AppointmentLab>> GetAllLab()
+        public async Task<List<AppointmentLab>> GetAllLab(SearchAppointment search)
         {
-            var citasLab = _context.CAT_Cita_Lab.AsQueryable();
+            var citasLab = _context.CAT_Cita_Lab.Include(x => x.Expediente).AsQueryable();
+            if (!string.IsNullOrEmpty(search.nombre) || search.fecha.Length > 0)
+            {
+                citasLab = citasLab.Where(x => x.NombrePaciente.Contains(search.nombre) || x.FechaCita.Date <= search.fecha[1].Date && x.FechaCreo.Date >= search.fecha[0].Date);
+            }
+
 
             return await citasLab.ToListAsync();
         }
-        public async Task<List<AppointmentDom>> GetAllDom()
+        public async Task<List<AppointmentDom>> GetAllDom(SearchAppointment search)
         {
-            var citasDom = _context.CAT_Cita_Dom.AsQueryable();
+            var citasDom = _context.CAT_Cita_Dom.Include(x=>x.Expediente).AsQueryable();
+            if (!string.IsNullOrEmpty(search.nombre) || search.fecha.Length > 0)
+            {
+                citasDom = citasDom.Where(x => x.NombrePaciente.Contains(search.nombre) || x.FechaCita.Date <= search.fecha[1].Date && x.FechaCreo.Date >= search.fecha[0].Date);
+            }
 
             return await citasDom.ToListAsync();
+        }
+
+        public async Task<AppointmentLab> GetByIdLab(string id) {
+
+            var citas= await _context.CAT_Cita_Lab.Include(x=>x.Expediente).FirstOrDefaultAsync(x => x.Id == Guid.Parse(id));
+            var estudios = await _context.cotizacionStudies.Where(x => x.CotizacionId == citas.Id).ToListAsync();
+
+
+
+            citas.Estudios = estudios;
+            
+            return citas;
+        }
+        public async Task<AppointmentDom> GetByIdDom(string id)
+        {
+
+            var citas = await _context.CAT_Cita_Dom.Include(x => x.Expediente).FirstOrDefaultAsync(x => x.Id == Guid.Parse(id));
+            var estudios =await  _context.cotizacionStudies.Where(x => x.CotizacionId == citas.Id).ToListAsync();
+            citas.Estudios = estudios;
+            return citas;
         }
         public async Task CreateLab(AppointmentLab appointmentLab) {
             var estudios = appointmentLab.Estudios.ToList();
@@ -40,6 +70,8 @@ namespace Service.MedicalRecord.Repository
             config.SetSynchronizeFilter<CotizacionStudy>(x => x.CotizacionId == appointmentLab.Id);
             estudios.ForEach(x => x.CotizacionId = appointmentLab.Id);
             estudios.ForEach(x => x.id = Guid.NewGuid());
+
+
             await _context.BulkInsertOrUpdateOrDeleteAsync(estudios, config);
         }
 
@@ -84,6 +116,15 @@ namespace Service.MedicalRecord.Repository
             estudios.ForEach(x => x.id = Guid.NewGuid());
             await _context.BulkInsertOrUpdateOrDeleteAsync(estudios, config);
 
-        } 
+        }
+
+        public async Task<string> GetLastCode(string date)
+        {
+            var lastRequest = await _context.CAT_Cotizaciones
+                .OrderBy(x => x.FechaCreo)
+                .LastOrDefaultAsync(x => x.Afiliacion.EndsWith(date));
+
+            return lastRequest?.Afiliacion;
+        }
     }
 }

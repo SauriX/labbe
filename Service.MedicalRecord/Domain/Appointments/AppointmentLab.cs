@@ -17,6 +17,8 @@ namespace Service.MedicalRecord.Domain.Appointments
         public Guid MedicoID { get; set; }
       //  public string AfilacionID
         public string Genero { get; set; }
+        public int Status { get; set; }
+        public string Cita { get; set; }
         //Estatus_CitaId
         public string Email { get; set; }
         public string WhatsApp { get; set; }
