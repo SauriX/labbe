@@ -74,7 +74,7 @@
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/report/medicos/contacto/pdf",
+      "UpstreamPathTemplate": "/api/report/contacto/download/pdf",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
