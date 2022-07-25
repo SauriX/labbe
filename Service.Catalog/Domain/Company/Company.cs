@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Service.Catalog.Domain.Price;
+using System;
 using System.Collections.Generic;
 
 namespace Service.Catalog.Domain.Company

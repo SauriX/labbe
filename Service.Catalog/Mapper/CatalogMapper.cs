@@ -3,7 +3,6 @@ using Service.Catalog.Dtos.Catalog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Service.Catalog.Mapper
 {
@@ -26,7 +25,7 @@ namespace Service.Catalog.Mapper
         {
             if (model == null) return null;
 
-            return model.Select(x=> new CatalogListDto
+            return model.Select(x => new CatalogListDto
             {
                 Id = x.Id,
                 Clave = x.Clave,

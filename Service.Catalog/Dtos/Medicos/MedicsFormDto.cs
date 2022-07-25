@@ -27,7 +27,7 @@ namespace Service.Catalog.Dtos.Medicos
         public string Telefono { get; set; }
         public bool Activo { get; set; }
         public Guid IdUsuario { get; set; }
-        public IEnumerable<CatalogListDto> Clinicas { get;set;}
+        public IEnumerable<CatalogListDto> Clinicas { get; set; }
     }
 
     public class MedicosFormDtoValidator : AbstractValidator<MedicsFormDto>
@@ -41,8 +41,8 @@ namespace Service.Catalog.Dtos.Medicos
             RuleFor(x => x.EspecialidadId).NotEmpty();
             RuleFor(x => x.Calle).NotEmpty().MaximumLength(50);
             RuleFor(x => x.ColoniaId).NotEmpty();
-           
+
         }
-        
+
     }
 }

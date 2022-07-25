@@ -18,12 +18,12 @@ using System.Threading.Tasks;
 
 namespace Service.MedicalRecord.Application
 {
-    public class PriceQuoteApplication:IPriceQuoteApplication
+    public class PriceQuoteApplication : IPriceQuoteApplication
     {
-        public readonly  IPriceQuoteRepository _repository;
+        public readonly IPriceQuoteRepository _repository;
         private readonly ICatalogClient _catalogCliente;
         private readonly IPdfClient _pdfClient;
-        public PriceQuoteApplication(IPriceQuoteRepository repository,ICatalogClient catalogClient, IPdfClient pdfClient)
+        public PriceQuoteApplication(IPriceQuoteRepository repository, ICatalogClient catalogClient, IPdfClient pdfClient)
         {
             _repository = repository;
             _catalogCliente = catalogClient;
@@ -57,7 +57,7 @@ namespace Service.MedicalRecord.Application
             var date = DateTime.Now.ToString("ddMMyy");
             var newprice = priceQuote.ToModel();
             var codeRange = await _catalogCliente.GetCodeRange(priceQuote.SucursalId);
-            var lastCode = await _repository.GetLastCode( date);
+            var lastCode = await _repository.GetLastCode(date);
 
             var consecutive = Code.GetCode(codeRange, lastCode);
             var code = $"{consecutive}{date}";
@@ -93,7 +93,8 @@ namespace Service.MedicalRecord.Application
 
             return updatedPack.ToPriceQuoteListDto();
         }
-        public async Task<List<MedicalRecordsListDto>> GetMedicalRecord(PriceQuoteExpedienteSearch search) {
+        public async Task<List<MedicalRecordsListDto>> GetMedicalRecord(PriceQuoteExpedienteSearch search)
+        {
             var record = await _repository.GetMedicalRecord(search);
             return record.ToMedicalRecordsListDto();
         }

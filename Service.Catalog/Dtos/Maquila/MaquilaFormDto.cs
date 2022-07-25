@@ -1,8 +1,7 @@
 ﻿using FluentValidation;
-using Shared.Validators;
 using System;
 
-namespace Service.Catalog.Dtos.Maquilador
+namespace Service.Catalog.Dtos.Maquila
 {
     public class MaquilaFormDto
     {

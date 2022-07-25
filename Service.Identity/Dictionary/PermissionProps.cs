@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Service.Identity.Dictionary
+﻿namespace Service.Identity.Dictionary
 {
     public class PermissionProps
     {

@@ -3,7 +3,7 @@ using Service.Report.Domain.MedicalRecord;
 using Service.Report.Domain.Request;
 using System.Reflection;
 
-namespace Service.Catalog.Context
+namespace Service.Report.Context
 {
     public class ApplicationDbContext : DbContext
     {

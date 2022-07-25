@@ -1,8 +1,9 @@
 ﻿using ClosedXML.Excel;
 using ClosedXML.Report;
+using EventBus.Messages.Catalog;
+using MassTransit;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dictionary;
-using Service.Catalog.Domain.Branch;
 using Service.Catalog.Dtos.Branch;
 using Service.Catalog.Mapper;
 using Service.Catalog.Repository.IRepository;
@@ -19,9 +20,12 @@ namespace Service.Catalog.Application
 {
     public class BranchApplication : IBranchApplication
     {
-        public readonly IBranchRepository _repository;
-        public BranchApplication(IBranchRepository repository)
+        private readonly IPublishEndpoint _publishEndpoint;
+        private readonly IBranchRepository _repository;
+
+        public BranchApplication(IPublishEndpoint publishEndpoint, IBranchRepository repository)
         {
+            _publishEndpoint = publishEndpoint;
             _repository = repository;
         }
 
@@ -41,7 +45,11 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated(Responses.Duplicated($"El {code}")));
             }
 
-            await _repository.Create(newBranch);
+            //await _repository.Create(newBranch);
+
+            var contract = new BranchContract(newBranch.Id, newBranch.Clave, newBranch.Nombre, newBranch.Clinicos);
+
+            await _publishEndpoint.Publish(contract);
 
             return true;
         }
@@ -87,7 +95,12 @@ namespace Service.Catalog.Application
             {
                 throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated($"Ya exsite ubna matriz activa"));
             }
+
             await _repository.Update(updatedAgent);
+
+            var contract = new BranchContract(updatedAgent.Id, updatedAgent.Clave, updatedAgent.Nombre, updatedAgent.Clinicos);
+
+            await _publishEndpoint.Publish(contract);
 
             return true;
         }
@@ -159,7 +172,7 @@ namespace Service.Catalog.Application
             return results;
         }
 
-        
+
     }
 
 }

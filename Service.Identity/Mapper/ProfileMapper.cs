@@ -2,10 +2,8 @@
 using Service.Identity.Domain.User;
 using Service.Identity.Dtos.Menu;
 using Service.Identity.Dtos.Scopes;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Service.Identity.Mapper
 {

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Service.Catalog.Domain.Company;
 
-namespace Service.Catalog.Context.EntityConfiguration.CompanyConfiguration
+namespace Service.Catalog.Context.EntityConfiguration.Company
 {
     public class ContactConfiguration
     {

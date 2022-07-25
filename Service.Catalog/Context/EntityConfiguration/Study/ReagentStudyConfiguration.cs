@@ -10,7 +10,8 @@ namespace Service.Catalog.Context.EntityConfiguration.Study
         {
             builder.ToTable("Relacion_Estudio_Reactivo");
 
-            builder.HasKey(x => new {
+            builder.HasKey(x => new
+            {
                 x.EstudioId,
                 x.ReagentId
             });

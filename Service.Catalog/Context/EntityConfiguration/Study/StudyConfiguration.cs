@@ -25,7 +25,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Study
                 .IsRequired(true);
 
             builder
-                .Property(x=>x.Titulo)
+                .Property(x => x.Titulo)
                 .IsRequired(false)
                 .HasMaxLength(100);
 
@@ -61,7 +61,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Study
             builder
                 .HasOne(x => x.SampleType)
                 .WithMany()
-                .HasForeignKey(x=>x.SampleTypeId);
+                .HasForeignKey(x => x.SampleTypeId);
 
             builder
                 .Property(x => x.Activo)
@@ -89,7 +89,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Study
                .OnDelete(DeleteBehavior.Restrict);
 
             builder
-                .HasOne(x=>x.Tapon)
+                .HasOne(x => x.Tapon)
                 .WithMany();
         }
     }

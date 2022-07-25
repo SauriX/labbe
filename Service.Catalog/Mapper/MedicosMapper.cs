@@ -1,11 +1,10 @@
 ﻿using Service.Catalog.Domain.Medics;
 using Service.Catalog.Dtos.Medicos;
-using Service.Catalog.Mapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Identidad.Api.mapper
+namespace Service.Catalog.Mapper
 {
     public static class MedicosMapper
     {

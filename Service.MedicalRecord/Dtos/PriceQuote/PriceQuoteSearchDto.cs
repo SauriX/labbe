@@ -4,7 +4,7 @@ namespace Service.MedicalRecord.Dtos.PriceQuote
 {
     public class PriceQuoteSearchDto
     {
-        public string Presupuesto   { get; set; }
+        public string Presupuesto { get; set; }
         public bool Activo { get; set; }
         public string Telefono { get; set; }
         public DateTime FechaAlta { get; set; }

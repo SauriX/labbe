@@ -9,7 +9,7 @@
         public string telefono { get; set; }
         public string ubicacion { get; set; }
         public string clinico { get; set; }
-        public bool activo {get; set;}
-        public string codigoPostal {get; set;}
+        public bool activo { get; set; }
+        public string codigoPostal { get; set; }
     }
 }

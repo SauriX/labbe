@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Service.Catalog.Dtos.Medicos
+﻿namespace Service.Catalog.Dtos.Medicos
 {
     public class MedicsClaveDto
-        
+
     {
         public string Nombre { get; set; }
         public string PrimerApellido { get; set; }

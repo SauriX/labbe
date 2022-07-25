@@ -11,7 +11,7 @@ namespace Service.Catalog.Dtos.PriceList
         public decimal Precio { get; set; }
         public bool sucursal { get; set; }
         public bool medico { get; set; }
-        public bool  compañia { get; set; }
+        public bool compañia { get; set; }
         public string ListaPrecio { get; set; }
     }
 }

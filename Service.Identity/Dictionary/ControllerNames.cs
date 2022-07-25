@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Service.Identity.Dictionary
+﻿namespace Service.Identity.Dictionary
 {
     public class ControllerNames
     {
@@ -27,6 +22,7 @@ namespace Service.Identity.Dictionary
         public const string Configuration = "configuration";
         public const string MedicalRecord = "MedicalRecord";
         public const string Request = "request";
+        public const string Report = "report";
         public const string Appointment = "appointment";
 
     }

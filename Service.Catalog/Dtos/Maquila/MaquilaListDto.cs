@@ -1,4 +1,4 @@
-﻿namespace Service.Catalog.Dtos.Maquilador
+﻿namespace Service.Catalog.Dtos.Maquila
 {
     public class MaquilaListDto
     {

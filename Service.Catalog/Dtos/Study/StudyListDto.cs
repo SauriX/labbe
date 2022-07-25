@@ -1,7 +1,4 @@
-﻿using Service.Catalog.Domain.Catalog;
-using System;
-
-namespace Service.Catalog.Dtos.Study
+﻿namespace Service.Catalog.Dtos.Study
 {
     public class StudyListDto
     {

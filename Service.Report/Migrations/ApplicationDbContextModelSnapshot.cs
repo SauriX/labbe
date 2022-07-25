@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Service.Catalog.Context;
+using Service.Report.Context;
 
 namespace Service.Report.Migrations
 {
@@ -70,6 +70,12 @@ namespace Service.Report.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Celular")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Correo")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Expediente")
                         .HasColumnType("nvarchar(max)");
 
@@ -83,18 +89,23 @@ namespace Service.Report.Migrations
 
             modelBuilder.Entity("Service.Report.Domain.Request.Request", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid>("SolicitudId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Cargo")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Clave")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Descuento")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid>("EmpresaId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte>("EstatusId")
+                        .HasColumnType("tinyint");
 
                     b.Property<Guid>("ExpedienteId")
                         .HasColumnType("uniqueidentifier");
@@ -111,13 +122,10 @@ namespace Service.Report.Migrations
                     b.Property<decimal>("PrecioFinal")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<byte>("Status")
-                        .HasColumnType("tinyint");
-
                     b.Property<Guid>("SucursalId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("Id");
+                    b.HasKey("SolicitudId");
 
                     b.HasIndex("EmpresaId");
 
@@ -128,6 +136,53 @@ namespace Service.Report.Migrations
                     b.HasIndex("SucursalId");
 
                     b.ToTable("Request");
+                });
+
+            modelBuilder.Entity("Service.Report.Domain.Request.RequestStatus", b =>
+                {
+                    b.Property<byte>("Id")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("Estatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RequestStatus");
+                });
+
+            modelBuilder.Entity("Service.Report.Domain.Request.RequestStudy", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Clave")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Descuento")
+                        .HasColumnType("bit");
+
+                    b.Property<byte>("EstatusId")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("Estudio")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Precio")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("PrecioFinal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("SolicitudId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SolicitudId");
+
+                    b.ToTable("RequestStudy");
                 });
 
             modelBuilder.Entity("Service.Report.Domain.Request.Request", b =>
@@ -163,6 +218,22 @@ namespace Service.Report.Migrations
                     b.Navigation("Medico");
 
                     b.Navigation("Sucursal");
+                });
+
+            modelBuilder.Entity("Service.Report.Domain.Request.RequestStudy", b =>
+                {
+                    b.HasOne("Service.Report.Domain.Request.Request", "Solicitud")
+                        .WithMany("Estudios")
+                        .HasForeignKey("SolicitudId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Solicitud");
+                });
+
+            modelBuilder.Entity("Service.Report.Domain.Request.Request", b =>
+                {
+                    b.Navigation("Estudios");
                 });
 #pragma warning restore 612, 618
         }

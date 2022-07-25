@@ -1,19 +1,19 @@
-﻿using Service.Catalog.Application.IApplication;
-using Service.Catalog.Dtos.Promotion;
-using Service.Catalog.Repository.IRepository;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Service.Catalog.Mapper;
-using Shared.Error;
-using System.Net;
-using Shared.Dictionary;
-using ClosedXML.Excel;
-using System;
-using Service.Catalog.Dictionary;
+﻿using ClosedXML.Excel;
 using ClosedXML.Report;
-using Shared.Extensions;
+using Service.Catalog.Application.IApplication;
+using Service.Catalog.Dictionary;
 using Service.Catalog.Domain.Promotion;
+using Service.Catalog.Dtos.Promotion;
+using Service.Catalog.Mapper;
+using Service.Catalog.Repository.IRepository;
+using Shared.Dictionary;
+using Shared.Error;
+using Shared.Extensions;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Service.Catalog.Application
 {
@@ -33,9 +33,9 @@ namespace Service.Catalog.Application
         }
 
 
-        public async Task<PromotionFormDto> GetById(int  id)
+        public async Task<PromotionFormDto> GetById(int id)
         {
-           // Helpers.ValidateGuid(id, out Guid guid);
+            // Helpers.ValidateGuid(id, out Guid guid);
 
             var parameter = await _repository.GetById(id);
 
@@ -73,7 +73,7 @@ namespace Service.Catalog.Application
 
         public async Task<PromotionListDto> Update(PromotionFormDto parameter)
         {
-          //  Helpers.ValidateGuid(parameter.Id, out Guid guid);
+            //  Helpers.ValidateGuid(parameter.Id, out Guid guid);
 
             var existing = await _repository.GetById(parameter.Id);
 
@@ -126,7 +126,7 @@ namespace Service.Catalog.Application
             var dias = promotion.Dias;
             var sucursales = promotion.Branchs;
             var estudios = promotion.Estudio;
- 
+
 
             var path = Assets.PromotionForm;
 
@@ -157,21 +157,23 @@ namespace Service.Catalog.Application
             }
         }
 
-        private async  Task CheckPromotionPackActive(Promotion promotion) 
+        private async Task CheckPromotionPackActive(Promotion promotion)
         {
 
             var packs = await _repository.packsIsPriceList(promotion.PrecioListaId);
             var packassigned = promotion.packs.ToList();
-            foreach (var pack in packs) {
-                
+            foreach (var pack in packs)
+            {
+
                 var (isInPromotion, nombre) = await _repository.PackIsOnPromotrtion(pack.PaqueteId);
 
-                var (isOnvalidPromotion,nombre2) = await _repository.PackIsOnInvalidPromotion(pack.PaqueteId);
+                var (isOnvalidPromotion, nombre2) = await _repository.PackIsOnInvalidPromotion(pack.PaqueteId);
                 var isAssigned = packassigned.Any(x => x.PackId == pack.PaqueteId);
-                if ((!isInPromotion || isOnvalidPromotion) &&  !isAssigned) {
+                if ((!isInPromotion || isOnvalidPromotion) && !isAssigned)
+                {
                     throw new CustomException(HttpStatusCode.Conflict, $"El paquete {nombre} No tiene una promoción asignada");
                 }
-               
+
             }
         }
 

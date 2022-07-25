@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dtos.Parameter;
-using Service.Catalog.Dtos.Parameters;
 using Shared.Dictionary;
 using System;
 using System.Collections.Generic;
@@ -74,7 +73,7 @@ namespace Service.Catalog.Controllers
         [Authorize(Policies.Create)]
         public async Task AddValues(ParameterValuesDto values)
         {
-            await _service.AddValues(values.Values,values.IdParameter);
+            await _service.AddValues(values.Values, values.IdParameter);
         }
         [HttpPut]
         [Authorize(Policies.Update)]

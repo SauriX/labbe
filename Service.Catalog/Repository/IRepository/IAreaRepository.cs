@@ -1,7 +1,5 @@
 ﻿using Service.Catalog.Domain.Catalog;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Service.Catalog.Repository.IRepository
@@ -16,6 +14,6 @@ namespace Service.Catalog.Repository.IRepository
         Task Create(Area area);
         Task Update(Area area);
         Task<IEnumerable<Area>> GetAreas(int id);
-        
+
     }
 }

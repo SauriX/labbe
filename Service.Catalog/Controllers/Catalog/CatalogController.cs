@@ -1,15 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Service.Catalog.Application.IApplication;
-using Service.Catalog.Domain;
 using Service.Catalog.Domain.Catalog;
-using Service.Catalog.Domain.Indication;
 using Service.Catalog.Domain.Parameter;
 using Service.Catalog.Domain.Provenance;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Service.Catalog.Controllers.Catalog
 {

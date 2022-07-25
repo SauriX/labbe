@@ -1,6 +1,4 @@
-﻿using Service.Catalog.Domain.Price;
-using Service.Catalog.Dtos;
-using Service.Catalog.Dtos.PriceList;
+﻿using Service.Catalog.Dtos.PriceList;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

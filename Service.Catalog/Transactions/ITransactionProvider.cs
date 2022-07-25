@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Service.Catalog.Transactions
+﻿namespace Service.Catalog.Transactions
 {
     public interface ITransactionProvider
     {

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Identidad.Api.Infraestructure.Repository.IRepository
+namespace Service.Catalog.Repository.IRepository
 {
 
     public interface IMedicsRepository

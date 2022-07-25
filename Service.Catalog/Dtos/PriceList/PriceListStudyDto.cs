@@ -1,7 +1,5 @@
 ﻿using FluentValidation;
-using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Dtos.Pack;
-using System;
 using System.Collections.Generic;
 
 namespace Service.Catalog.Dtos.PriceList

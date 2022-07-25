@@ -1,9 +1,6 @@
-﻿using Service.Identity.Dtos.Menu;
-using Service.Identity.Dtos.Profile;
+﻿using Service.Identity.Dtos.Profile;
 using Service.Identity.Dtos.User;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Service.Identity.Application.IApplication

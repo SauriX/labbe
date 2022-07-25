@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Service.Identity.Dtos.Role
+﻿namespace Service.Identity.Dtos.Role
 {
     public class RoleListDto
     {

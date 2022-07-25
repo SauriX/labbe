@@ -9,7 +9,6 @@ using Service.Catalog.Repository.IRepository;
 using Shared.Dictionary;
 using Shared.Error;
 using Shared.Extensions;
-using Shared.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Net;

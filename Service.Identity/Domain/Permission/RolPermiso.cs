@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Service.Identity.Domain.permissions
+namespace Service.Identity.Domain.Permission
 {
     public class RolPermiso
     {

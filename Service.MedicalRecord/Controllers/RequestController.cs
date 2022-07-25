@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.MedicalRecord.Application.IApplication;
-using Service.MedicalRecord.Client.IClient;
 using Service.MedicalRecord.Dtos.Request;
 using Shared.Dictionary;
-using System;
 using System.Threading.Tasks;
 
 namespace Service.MedicalRecord.Controllers
@@ -44,6 +41,13 @@ namespace Service.MedicalRecord.Controllers
             //request.UsuarioId = (Guid)HttpContext.Items["userId"];
 
             return await _service.Create(request);
+        }
+
+        [HttpGet("test/email")]
+        [AllowAnonymous]
+        public async Task SendTestEmail()
+        {
+            await _service.SendTestEmail();
         }
     }
 }

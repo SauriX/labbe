@@ -2,12 +2,11 @@
 using Microsoft.AspNetCore.Http;
 using Service.MedicalRecord.Client.IClient;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Service.Catalog.Requirements
+namespace Service.MedicalRecord.Requirements
 {
     public class WappRequirement : IAuthorizationRequirement
     {
@@ -26,7 +25,10 @@ namespace Service.Catalog.Requirements
 
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, WappRequirement requirement)
         {
-            var userId = Guid.Parse(_httpContextAccessor.HttpContext.User?.Claims?.SingleOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
+            var id = _httpContextAccessor.HttpContext.User?.Claims?.SingleOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (id == null) return;
+
+            var userId = Guid.Parse(id);
             var controller = _httpContextAccessor.HttpContext.Request.RouteValues["controller"].ToString();
 
             var scopes = await _identityClient.GetScopes(controller);

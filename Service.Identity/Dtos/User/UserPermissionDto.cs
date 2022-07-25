@@ -18,7 +18,7 @@
         public short MenuId { get; set; }
         public string Menu { get; set; }
         public string Permiso { get; set; }
-        public bool Asignado {get; set;}
+        public bool Asignado { get; set; }
         public int Tipo { get; set; }
     }
 }

@@ -1,19 +1,6 @@
 ﻿{
   "Routes": [
-    {
-      "DownstreamPathTemplate": "/api/report/expediente/getBranchByCount",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 18934
-        }
-      ],
-      "UpstreamPathTemplate": "/api/report/expediente/getBranchByCount",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-
-    {
+     {
       "DownstreamPathTemplate": "/api/report/expediente/download/pdf",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -26,31 +13,6 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/report/expediente/export/table/{search}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 18934
-        }
-      ],
-      "UpstreamPathTemplate": "/api/report/expediente/export/table/{search}",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/report/expediente/export/graphic/{search}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 18934
-        }
-      ],
-      "UpstreamPathTemplate": "/api/report/expediente/export/graphic/{search}",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-
-    {
       "DownstreamPathTemplate": "/api/report/expediente/filter",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -61,18 +23,6 @@
       ],
       "UpstreamPathTemplate": "/api/report/expediente/filter",
       "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/report/estadistica/getByName",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 18934
-        }
-      ],
-      "UpstreamPathTemplate": "/api/report/estadistica/getByName",
-      "UpstreamHttpMethod": [ "GET" ]
     },
     {
       "DownstreamPathTemplate": "/api/report/estadistica/download/pdf",
@@ -87,30 +37,6 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/report/estadistica/export/table/{search}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 18934
-        }
-      ],
-      "UpstreamPathTemplate": "/api/report/estadistica/export/table/{search}",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/report/estadistica/export/graphic/{search}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 18934
-        }
-      ],
-      "UpstreamPathTemplate": "/api/report/estadistica/export/graphic/{search}",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
       "DownstreamPathTemplate": "/api/report/estadistica/filter",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -121,18 +47,6 @@
       ],
       "UpstreamPathTemplate": "/api/report/estadistica/filter",
       "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/report/medicos/getByDoctor",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 18934
-        }
-      ],
-      "UpstreamPathTemplate": "/api/report/medicos/getByDoctor",
-      "UpstreamHttpMethod": [ "GET" ]
     },
     {
       "DownstreamPathTemplate": "/api/report/medicos/download/pdf",
@@ -156,6 +70,42 @@
         }
       ],
       "UpstreamPathTemplate": "/api/report/medicos/filter",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/report/contacto/download/pdf",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 18934
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/contacto/download/pdf",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/report/contacto/filter",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 18934
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/contacto/filter",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/report/contacto/chart/filter",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 18934
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/contacto/chart/filter",
       "UpstreamHttpMethod": [ "POST" ]
     }
   ]

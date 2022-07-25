@@ -1,8 +1,9 @@
-﻿namespace Service.Catalog.Dictionary
+﻿namespace Service.MedicalRecord.Dictionary
 {
     public class DuplicateCodes
     {
-        public enum DuplicateCodesEnum {
+        public enum DuplicateCodesEnum
+        {
             Clave,
             Nombre,
             Email,

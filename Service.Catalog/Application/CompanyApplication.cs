@@ -1,22 +1,20 @@
-﻿using Service.Catalog.Dtos.Company;
-using Service.Catalog.Repository.IRepository;
-using Shared.Dictionary;
-using Identidad.Api.Infraestructure.Services.IServices;
-using Shared.Error;
-using Service.Catalog.Mapper;
-using System.Net;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using Service.Catalog.Dictionary;
+﻿using ClosedXML.Excel;
 using ClosedXML.Report;
-using System;
-using ClosedXML.Excel;
-using Shared.Extensions;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dictionary.Company;
-using Shared.Helpers;
 using Service.Catalog.Domain.Company;
+using Service.Catalog.Dtos.Company;
+using Service.Catalog.Mapper;
+using Service.Catalog.Repository.IRepository;
+using Shared.Dictionary;
+using Shared.Error;
+using Shared.Extensions;
+using Shared.Helpers;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Service.Catalog.Application
 {
@@ -54,7 +52,7 @@ namespace Service.Catalog.Application
 
             await CheckDuplicate(newIndication);
 
-             CheckDuplicateContact(newIndication.Contacts);
+            CheckDuplicateContact(newIndication.Contacts);
 
             await _repository.Create(newIndication);
 
@@ -158,7 +156,7 @@ namespace Service.Catalog.Application
             }
         }
 
-        private void CheckDuplicateContact( ICollection<Contact> contact)
+        private void CheckDuplicateContact(ICollection<Contact> contact)
         {
             var duplicates = contact.GroupBy(x => x.Nombre).Any(g => g.Count() > 1);
 

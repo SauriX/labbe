@@ -2,9 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Identity.Application.IApplication;
-using Service.Identity.Dtos;
 using Service.Identity.Dtos.Role;
-using Service.Identity.Repository.IRepository;
 using Shared.Dictionary;
 using System;
 using System.Collections.Generic;
@@ -49,8 +47,8 @@ namespace Service.Identity.Controllers
         public async Task<IEnumerable<RolePermissionDto>> GetPermission()
         {
             return await _service.GetPermission();
-        }        
-        
+        }
+
         [HttpGet("permission/{id}")]
         [Authorize(Policies.Access)]
         public async Task<IEnumerable<RolePermissionDto>> GetPermission(string id)

@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Service.Identity.Application.IApplication;
 using Service.Identity.Dictionary;
-using Service.Identity.Dtos;
 using Service.Identity.Dtos.Scopes;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -165,6 +162,13 @@ namespace Service.Identity.Controllers
         {
             var userId = GetUserId();
             return await _service.GetScopes(userId, ControllerNames.Request);
+        }
+
+        [HttpGet(ControllerNames.Report)]
+        public async Task<ScopesDto> GetReportScopes()
+        {
+            var userId = GetUserId();
+            return await _service.GetScopes(userId, ControllerNames.Report);
         }
 
         private Guid GetUserId()

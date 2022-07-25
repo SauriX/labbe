@@ -23,7 +23,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Pack
                 .HasMaxLength(100)
                 .IsRequired(true);
 
-            builder.Property(x=>x.Visibilidad)
+            builder.Property(x => x.Visibilidad)
                 .IsRequired(true);
 
             builder.Property(x => x.Activo)

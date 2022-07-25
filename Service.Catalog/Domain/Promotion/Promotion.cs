@@ -25,7 +25,7 @@ namespace Service.Catalog.Domain.Promotion
         public bool Miercoles { get; set; }
         public bool Jueves { get; set; }
         public bool Viernes { get; set; }
-        public bool Sabado { get; set; }  
+        public bool Sabado { get; set; }
         public bool Domingo { get; set; }
         public ICollection<PromotionBranch> branches { get; set; }
         public ICollection<PromotionLoyality> loyalities { get; set; }

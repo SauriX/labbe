@@ -1,16 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFCore.BulkExtensions;
+using Microsoft.EntityFrameworkCore;
 using Service.MedicalRecord.Context;
+using Service.MedicalRecord.Domain.MedicalRecord;
+using Service.MedicalRecord.Domain.TaxData;
+using Service.MedicalRecord.Dtos;
+using Service.MedicalRecord.Dtos.MedicalRecords;
+using Service.MedicalRecord.Mapper;
 using Service.MedicalRecord.Repository.IRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Service.MedicalRecord.Mapper;
-using Service.MedicalRecord.Domain.TaxData;
-using Service.MedicalRecord.Dtos;
-using EFCore.BulkExtensions;
-using Service.MedicalRecord.Domain.MedicalRecord;
-using Service.MedicalRecord.Dtos.MedicalRecords;
 
 namespace Service.MedicalRecord.Repository
 {

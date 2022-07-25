@@ -1,8 +1,5 @@
-﻿using Service.Catalog.Domain;
-using Service.Catalog.Domain.Branch;
+﻿using Service.Catalog.Domain.Branch;
 using Service.Catalog.Dtos.Branch;
-using Service.Catalog.Dtos.Catalog;
-using Service.Catalog.Dtos.Study;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +35,7 @@ namespace Service.Catalog.Mapper
                 Nombre = dto.nombre.Trim(),
                 Activo = dto.activo,
                 Calle = dto.calle.Trim(),
-              
+
                 ColoniaId = dto.coloniaId,
                 Correo = dto.correo,
                 FechaCreo = DateTime.Now,
@@ -76,7 +73,7 @@ namespace Service.Catalog.Mapper
                 calle = model.Calle,
                 clave = model.Clave,
                 ciudad = model.Ciudad,
-                clinicosId = model.Clinicos ,
+                clinicosId = model.Clinicos,
                 codigoPostal = model.Codigopostal,
                 coloniaId = model.ColoniaId,
                 correo = model.Correo,
@@ -90,7 +87,7 @@ namespace Service.Catalog.Mapper
                 departamentos = model.Departamentos.ToBranchDepartmentDto(),
                 Matriz = model.Matriz,
                 colonia = model.Colonia.Colonia
-               
+
             };
         }
 
@@ -121,7 +118,7 @@ namespace Service.Catalog.Mapper
                 Nombre = dto.nombre.Trim(),
                 Activo = dto.activo,
                 Calle = dto.calle.Trim(),
-                
+
                 ColoniaId = dto.coloniaId,
                 Correo = dto.correo,
                 FechaCreo = model.FechaCreo,

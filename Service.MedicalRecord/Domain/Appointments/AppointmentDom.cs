@@ -8,8 +8,8 @@ namespace Service.MedicalRecord.Domain.Appointments
     {
         public Guid Id { get; set; }
         public Guid? ExpedienteId { get; set; }
-        public MedicalRecord.MedicalRecord? Expediente  { get; set; }
-        public string NombrePaciente    { get; set; }
+        public MedicalRecord.MedicalRecord? Expediente { get; set; }
+        public string NombrePaciente { get; set; }
         //EquipoId
         //UsuarioID
         //RecolectorID

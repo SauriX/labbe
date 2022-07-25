@@ -1,12 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Service.Catalog.Domain.Medics;
 
-namespace Identidad.Api.Infraestructure.EntityConfiguration.CatalogoMedicosConfiguration
+namespace Service.Catalog.Context.EntityConfiguration.Medics
 {
-    public class MedicsConfiguration : IEntityTypeConfiguration<Medics>
+    public class MedicsConfiguration : IEntityTypeConfiguration<Domain.Medics.Medics>
     {
-        public void Configure(EntityTypeBuilder<Medics> builder)
+        public void Configure(EntityTypeBuilder<Domain.Medics.Medics> builder)
         {
             builder.ToTable("CAT_Medico");
 
@@ -85,8 +84,8 @@ namespace Identidad.Api.Infraestructure.EntityConfiguration.CatalogoMedicosConfi
             builder
                 .HasOne(x => x.Colonia)
                 .WithMany()
-                .OnDelete(DeleteBehavior.Restrict);          
-            
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder
                 .HasOne(x => x.Especialidad)
                 .WithMany()

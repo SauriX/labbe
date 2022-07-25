@@ -1,9 +1,7 @@
 ﻿using Facturapi;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace Integration.Invoice.Service
 {
@@ -16,7 +14,7 @@ namespace Integration.Invoice.Service
             try
             {
                 //var facturapi = new FacturapiClient("sk_test_API_KEY");
-                var invoiceP =  facturapi.Invoice.CreateAsync(new Dictionary<string, object>
+                var invoiceP = facturapi.Invoice.CreateAsync(new Dictionary<string, object>
                 {
                     ["customer"] = new Dictionary<string, object>
                     {

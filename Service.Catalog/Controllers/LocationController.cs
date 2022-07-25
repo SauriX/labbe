@@ -1,11 +1,8 @@
-﻿    using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Domain.Constant;
-using Service.Catalog.Dtos.Constant;
-using System;
+using Service.Catalog.Dtos.Common;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Service.Catalog.Controllers

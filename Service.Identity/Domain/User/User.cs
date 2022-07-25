@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Service.Identity.Dtos.User;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 namespace Service.Identity.Domain.User
 {

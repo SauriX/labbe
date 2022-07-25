@@ -15,6 +15,6 @@ namespace Service.Catalog.Application.IApplication
         Task<(byte[] file, string fileName)> ExportList(string search);
         Task<(byte[] file, string fileName)> ExportForm(Guid id);
         Task<LoyaltyListDto> CreateReschedule(LoyaltyFormDto indicacion);
-        
+
     }
 }

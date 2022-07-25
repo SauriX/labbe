@@ -15,6 +15,6 @@ namespace Service.MedicalRecord.Dtos.PriceQuote
         public bool Copago { get; set; }
         public decimal Precio { get; set; }
         public decimal PrecioFinal { get; set; }
-        public string Nombre { get; set; } 
+        public string Nombre { get; set; }
     }
 }

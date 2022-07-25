@@ -10,7 +10,8 @@ namespace Service.Catalog.Context.EntityConfiguration.Promotion
         {
             builder.ToTable("Relacion_Promocion_Paquete");
 
-            builder.HasKey(x => new {
+            builder.HasKey(x => new
+            {
                 x.PromotionId,
                 x.PackId
             });

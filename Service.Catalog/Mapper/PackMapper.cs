@@ -41,10 +41,10 @@ namespace Service.Catalog.Mapper
                     Area = x.Estudio.Area.Nombre,
                     Activo = true,
                 }).ToList(),
-                Activo =x.Activo,
-                Departamento= x.Area.Departamento.Nombre,
-                Area=x.Area.Nombre
-                
+                Activo = x.Activo,
+                Departamento = x.Area.Departamento.Nombre,
+                Area = x.Area.Nombre
+
             });
         }
 
@@ -104,7 +104,7 @@ namespace Service.Catalog.Mapper
             };
         }
 
-        public static Packet ToModel(this PackFormDto dto,Packet model)
+        public static Packet ToModel(this PackFormDto dto, Packet model)
         {
             if (dto == null) return null;
             return new Packet

@@ -2,9 +2,6 @@
 using Service.Catalog.Client.IClient;
 using Service.Catalog.Dtos.Scopes;
 using Shared.Error;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -30,6 +27,14 @@ namespace Service.Catalog.Client
             if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
             {
                 return await response.Content.ReadFromJsonAsync<ScopesDto>();
+            }
+
+            if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.NoContent)
+            {
+                return new ScopesDto()
+                {
+                    Modificar = true
+                };
             }
 
             throw new CustomException(response.StatusCode, response.ReasonPhrase);
