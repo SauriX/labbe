@@ -27,7 +27,7 @@ namespace Service.Catalog.Controllers.Catalog
         private readonly ICatalogDescriptionApplication<UseOfCFDI> _useOfCFDIService;
         private readonly ICatalogApplication<Format> _FormatService;
         private readonly ICatalogApplication<Units> _unitService;
-
+        private readonly ICatalogApplication<Equipos> _equipoService;
         public CatalogController(
             ICatalogApplication<Delivery> deliveryService,
             IAreaApplication areaService,
@@ -45,7 +45,8 @@ namespace Service.Catalog.Controllers.Catalog
             ICatalogApplication<WorkList> workListService,
             ICatalogApplication<Provenance> provenanceService,
             ICatalogApplication<Format> formatService,
-            ICatalogApplication<Units> uniteService
+            ICatalogApplication<Units> uniteService,
+            ICatalogApplication<Equipos> equipoService
             )
         {
             _deliveryService = deliveryService;
@@ -65,6 +66,7 @@ namespace Service.Catalog.Controllers.Catalog
             _provenanceService = provenanceService;
             _FormatService = formatService;
             _unitService = uniteService;
+            _equipoService = equipoService;
         }
     }
 }
