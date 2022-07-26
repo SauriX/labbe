@@ -1,5 +1,6 @@
 ﻿using Service.Report.Application.IApplication;
 using Service.Report.Domain.Branch;
+using Service.Report.Domain.Company;
 using Service.Report.Domain.Medic;
 using Service.Report.Repository.IRepository;
 using System;
@@ -13,11 +14,13 @@ namespace Service.Report.Application
     {
         private readonly IRepository<Branch> _branchRepository;
         private readonly IRepository<Medic> _medicRepository;
+        private readonly IRepository<Company> _companyRepository;
 
-        public BaseApplication(IRepository<Branch> branchRepository = null, IRepository<Medic> medicRepository = null)
+        public BaseApplication(IRepository<Branch> branchRepository = null, IRepository<Medic> medicRepository = null, IRepository<Company> companyRepository = null)
         {
             _branchRepository = branchRepository;
             _medicRepository = medicRepository;
+            _companyRepository = companyRepository;
         }
 
         public async Task<IEnumerable<string>> GetBranchNames(List<Guid> ids)
@@ -29,9 +32,15 @@ namespace Service.Report.Application
 
         public async Task<IEnumerable<string>> GetDoctorNames(List<Guid> ids)
         {
-            var branches = await _medicRepository.GetByIds(ids);
+            var doctors = await _medicRepository.GetByIds(ids);
 
-            return branches.Select(x => x.NombreMedico);
+            return doctors.Select(x => x.NombreMedico);
+        }
+        public async Task<IEnumerable<string>> GetCompanyNames(List<Guid> ids)
+        {
+            var companies = await _companyRepository.GetByIds(ids);
+
+            return companies.Select(x => x.NombreEmpresa);
         }
     }
 }

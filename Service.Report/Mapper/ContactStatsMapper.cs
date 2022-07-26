@@ -16,12 +16,13 @@ namespace Service.Report.Mapper
             if (model == null) return null;
 
             var results = (from c in model
-                           group c by new { c.Expediente.Expediente, c.Expediente.Nombre, c.Expediente.Celular, c.Expediente.Correo, c.Medico.NombreMedico } into grupo
+                           group c by new { c.Expediente.Expediente, c.Expediente.Nombre, c.Expediente.Celular, c.Expediente.Correo, c.Medico.NombreMedico, c.SolicitudId, c.Clave } into grupo
                            select new ContactStatsDto
                            {
                                Expediente = grupo.Key.Expediente,
                                Paciente = grupo.Key.Nombre,
                                Medico = grupo.Key.NombreMedico,
+                               Clave = grupo.Key.Clave,
                                Estatus = grupo.Sum(x => x.Estudios.Count) == 0 ? "" : GetStatus(grupo.SelectMany(x => x.Estudios)),
                                Celular = grupo.Key.Celular,
                                Correo = grupo.Key.Correo
@@ -39,8 +40,8 @@ namespace Service.Report.Mapper
                            {
                                Fecha = new DateTime(grupo.Key.Year, grupo.Key.Month, 1).ToString("MM/yyyy"),
                                Solicitudes = grupo.Count(),
-                               CantidadTelefono = grupo.Count(x => !string.IsNullOrWhiteSpace(x.Expediente.Celular)),
-                               CantidadCorreo = grupo.Count(x => !string.IsNullOrWhiteSpace(x.Expediente.Correo))
+                               CantidadTelefono = grupo.GroupBy(x => new { x.Expediente.Expediente, x.Expediente.Celular}).Count(x => !string.IsNullOrWhiteSpace(x.Key.Celular)),
+                               CantidadCorreo = grupo.GroupBy(x => new { x.Expediente.Expediente, x.Expediente.Correo }).Count(x => !string.IsNullOrWhiteSpace(x.Key.Correo)),
                            }).ToList();
 
             return results;
