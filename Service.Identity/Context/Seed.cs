@@ -117,7 +117,8 @@ namespace Service.Identity.Context
                 {
                     var menus = new List<Menu>
                     {
-                        new Menu(24, null, "Recepción", "configuration", "configuration", 2400),
+                            
+                        new Menu(24, null, "Recepción",  null, "configuration", 2400),
                         new Menu(19, 24, "Expedientes", "expedientes", "expedientes", 2401),
                         new Menu(21, 24, "Cotización", "cotizacion", "cotizacion", 2402),
                         new Menu(22, 24, "Reportes" , "reports", "reports", 2403),
@@ -162,7 +163,7 @@ namespace Service.Identity.Context
 
                     var permissions = new List<RolePermission>
                     {
-                        new RolePermission(roleId, 1, true, true, true, true, true, true, true),
+                        
                         new RolePermission(roleId, 2, true, true, true, true, true, true, true),
                         new RolePermission(roleId, 3, true, true, true, true, true, true, true),
                         new RolePermission(roleId, 4, true, true, true, true, true, true, true),

@@ -76,7 +76,7 @@ namespace Service.Catalog.Repository
 
             var branchPrice = await
                 (from p in prices
-                 join dp in _context.CAT_ListaP_Sucursal.Where(x => x.SucursalId == branchId) on p.PrecioListaId equals dp.PrecioListaId
+                 join dp in _context.CAT_ListaP_Sucursal/*.Where(x => x.SucursalId == branchId)*/ on p.PrecioListaId equals dp.PrecioListaId
                  where dp.Activo
                  select p).FirstOrDefaultAsync();
 
