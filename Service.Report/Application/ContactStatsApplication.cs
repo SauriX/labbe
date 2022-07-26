@@ -50,8 +50,9 @@ namespace Service.Report.Application
                 new Col("Expediente", ParagraphAlignment.Left),
                 new Col("Nombre del Paciente", ParagraphAlignment.Left),
                 new Col("Nombre del Médico", ParagraphAlignment.Left),
+                new Col("Solicitud", ParagraphAlignment.Left),
                 new Col("Estatus", ParagraphAlignment.Left),
-                new Col("Contacto", ParagraphAlignment.Right),
+                new Col("Contacto", ParagraphAlignment.Left),
             };
 
             List<ChartSeries> series = new()
@@ -68,6 +69,7 @@ namespace Service.Report.Application
                 { "Expediente", x.Expediente },
                 { "Nombre del Paciente", x.Paciente},
                 { "Nombre del Médico", x.Medico },
+                { "Solicitud", x.Clave },
                 { "Estatus", x.Estatus},
                 { "Contacto", new List<string>{ x.Celular, x.Correo } },
             }).ToList();
