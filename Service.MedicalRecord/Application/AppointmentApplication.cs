@@ -113,7 +113,7 @@ namespace Service.MedicalRecord.Application
             }
             else {
                 var studys = await GetAllDom(search);
-                var path = Assets.CitaForm;
+                var path = Assets.CitaList;
 
                 var template = new XLTemplate(path);
 
@@ -143,8 +143,8 @@ namespace Service.MedicalRecord.Application
             if (data.Tipo == "laboratorio")
             {
                 var study = await GetByIdLab(data.Id);
-
-                var path = Assets.CotizacionForm;
+                study.fechaNacimiento = DateTime.Now;
+                var path = Assets.CitaForm;
 
                 var template = new XLTemplate(path);
                 template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
@@ -161,8 +161,8 @@ namespace Service.MedicalRecord.Application
             }
             else {
                 var study = await GetByIdDom(data.Id);
-
-                var path = Assets.CotizacionForm;
+                study.fechaNacimiento = DateTime.Now;
+                var path = Assets.CitaForm;
 
                 var template = new XLTemplate(path);
                 template.AddVariable("Direccion", "Avenida Humberto Lobo #555");

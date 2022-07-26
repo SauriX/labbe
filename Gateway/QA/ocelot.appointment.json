@@ -1,0 +1,104 @@
+﻿{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/Appointment/getLab",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Appointment/getLab",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/Appointment/getDom",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Appointment/getDom",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/Appointment/getLabById/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Appointment/getLabById/{id}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/Appointment/getDomById/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Appointment/getDomById/{id}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/Appointment/Lab",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Appointment/Lab",
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/Appointment/Dom",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Appointment/Dom",
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/Appointment/export/list",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Appointment/export/list",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/Appointment/ticket",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Appointment/ticket",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/Appointment/export/form",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Appointment/export/form",
+      "UpstreamHttpMethod": [ "POST" ]
+    }
+  ]
+}
