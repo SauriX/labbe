@@ -15,12 +15,12 @@ using Service.Report.PdfModel;
 
 namespace Service.Report.Application
 {
-    public class StudyStatsApplicatios : BaseApplication, IStudyStatsApplication
+    public class StudyStatsApplication : BaseApplication, IStudyStatsApplication
     {
         public readonly IReportRepository _repository;
         private readonly IPdfClient _pdfClient;
 
-        public StudyStatsApplicatios(IReportRepository repository, IPdfClient pdfClient, IRepository<Branch> branchRepository, IRepository<Medic> medicRepository, IRepository<Company> companyRepository) : base(branchRepository, medicRepository, companyRepository)
+        public StudyStatsApplication(IReportRepository repository, IPdfClient pdfClient, IRepository<Branch> branchRepository, IRepository<Medic> medicRepository, IRepository<Company> companyRepository) : base(branchRepository, medicRepository, companyRepository)
         {
             _repository = repository;
             _pdfClient = pdfClient;
@@ -34,7 +34,7 @@ namespace Service.Report.Application
             return results;
         }
 
-        public async Task<IEnumerable<StudyStatsChartDto>> GetCharByFilter(ReportFilterDto filter)
+        public async Task<IEnumerable<StudyStatsChartDto>> GetChartByFilter(ReportFilterDto filter)
         {
             var data = await _repository.GetByFilter(filter);
             var results = data.ToStudyStatsChartDto();
@@ -45,7 +45,7 @@ namespace Service.Report.Application
         public async Task<byte[]> DownloadReportPdf(ReportFilterDto filter)
         {
             var requestData = await GetByFilter(filter);
-            var requestChartData = await GetCharByFilter(filter);
+            var requestChartData = await GetChartByFilter(filter);
 
             List<Col> columns = new()
             {
@@ -61,46 +61,31 @@ namespace Service.Report.Application
 
             List<ChartSeries> series = new()
             {
-                new ChartSeries("Estudios", true),
-                new ChartSeries("Pendiente", "#C4DAE8"),
-                new ChartSeries("Toma", "#C4DAE8"),
-                new ChartSeries("Solicitado", "#86B6D5"),
-                new ChartSeries("Capturado", "#9ECAE1"),
-                new ChartSeries("Validado", "#2D83BE"),
-                new ChartSeries("En Ruta", "#C4DAE8"),
-                new ChartSeries("Liberado", "#C4DAE8"),
-                new ChartSeries("Enviado", "#86B6D5"),
-                new ChartSeries("Entregado", "#9ECAE1"),
-                new ChartSeries("Cancelado", "#2D83BE"),
+                new ChartSeries("Estatus", true),
+                new ChartSeries("Cantidad"),
             };
 
             var data = requestData.Select(x => new Dictionary<string, object>
             {
                 { "Solicitud", x.Solicitud },
-                { "Nombre del Paciente", x.Paciente},
+                { "Nombre del Paciente", x.Paciente },
+                { "Children", x.Estudio.Select(x => new Dictionary<string, object> { { "Clave", x.Clave}, { "Estudio", x.Estudio}, { "Estatus", x.Estatus}  } )},
                 { "Edad", x.Edad},
                 { "Sexo", x.Sexo},
                 { "Nombre del Médico", x.Medico },
-                { "Fecha de Entrega", x.FechaEntrega},
-                { "Fecha de Estudio", x.Fecha},
-                { "Parcialidad", x.Parcialidad},
+                { "Fecha de Entrega", x.FechaEntrega.ToString("dd/MM/yyyy")},
+                { "Fecha de Estudio", x.Fecha.ToString("dd/MM/yyyy")},
+                { "Parcialidad", x.Parcialidad ? "Si" : "No"},
             }).ToList();
 
             var datachart = requestChartData.Select(x => new Dictionary<string, object>
             {
-                { "Estudios", "Estatus de Estudios"},
-                { "Pendiente", x.CantidadPendiente},
-                { "Toma", x.CantidadTomaDeMuestra},
-                { "Solicitado", x.CantidadSolicitado},
-                { "Capturado", x.CantidadCapturado},
-                { "Validado", x.CantidadValidado},
-                { "En Ruta", x.CantidadEnRuta},
-                { "Liberado", x.CantidadLiberado},
-                { "Enviado", x.CantidadEnviado},
-                { "Entregado", x.CantidadEntregado},
-                { "Cancelado", x.CantidadCancelado},
+                { "Estatus", x.Estatus},
+                { "Cantidad", x.Cantidad},
+                { "Color", x.Color}
 
             }).ToList();
+
 
             var branches = await GetBranchNames(filter.SucursalId);
 
@@ -114,7 +99,7 @@ namespace Service.Report.Application
             var reportData = new ReportData()
             {
                 Columnas = columns,
-                Series = series,
+                Series = filter.Grafica ? series : null,
                 Datos = data,
                 DatosGrafica = datachart,
                 Header = headerData,

@@ -21,7 +21,7 @@ namespace Service.Report.Controllers.Report
         [Authorize(Policies.Access)]
         public async Task<IEnumerable<ContactStatsChartDto>> GetFilterChart(ReportFilterDto search)
         {
-            return await _contactstatsService.GetCharByFilter(search);
+            return await _contactstatsService.GetChartByFilter(search);
         }
 
         [HttpPost("contacto/download/pdf")]

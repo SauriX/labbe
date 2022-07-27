@@ -7,6 +7,7 @@ namespace Service.Report.Dtos.StudyStats
 {
     public class StudyStatsDto
     {
+        public Guid Id { get; set; }
         public string Solicitud { get; set; }
         public string Paciente { get; set; }
         public List<StudiesDto> Estudio { get; set; }
