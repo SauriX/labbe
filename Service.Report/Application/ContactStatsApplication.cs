@@ -32,7 +32,7 @@ namespace Service.Report.Application
             return results;
         }
 
-        public async Task<IEnumerable<ContactStatsChartDto>> GetCharByFilter(ReportFilterDto filter)
+        public async Task<IEnumerable<ContactStatsChartDto>> GetChartByFilter(ReportFilterDto filter)
         {
             var data = await _repository.GetByFilter(filter);
             var results = data.ToContactStatsChartDto();
@@ -43,7 +43,7 @@ namespace Service.Report.Application
         public async Task<byte[]> DownloadReportPdf(ReportFilterDto filter)
         {
             var requestData = await GetByFilter(filter);
-            var requestchartData = await GetCharByFilter(filter);
+            var requestchartData = await GetChartByFilter(filter);
 
             List<Col> columns = new()
             {
@@ -95,7 +95,7 @@ namespace Service.Report.Application
             var reportData = new ReportData()
             {
                 Columnas = columns,
-                Series = series,
+                Series = filter.Grafica ? series : null,
                 Datos = data,
                 DatosGrafica = datachart,
                 Header = headerData,

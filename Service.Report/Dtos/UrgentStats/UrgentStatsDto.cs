@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Service.Report.Dtos.StudyStats;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Service.Report.Dtos.StudyStats
+namespace Service.Report.Dtos.UrgentStats
 {
-    public class StudyStatsDto
+    public class UrgentStatsDto
     {
         public Guid Id { get; set; }
         public string Solicitud { get; set; }
@@ -16,7 +17,5 @@ namespace Service.Report.Dtos.StudyStats
         public string Medico { get; set; }
         public DateTime FechaEntrega { get; set; }
         public string Estatus { get; set; }
-        public DateTime Fecha { get; set; }
-        public bool Parcialidad { get; set; }
     }
 }

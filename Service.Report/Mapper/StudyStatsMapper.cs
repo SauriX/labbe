@@ -1,8 +1,6 @@
-﻿using Automatonymous;
-using Service.Report.Dictionary;
+﻿using Service.Report.Dictionary;
 using Service.Report.Domain.Request;
 using Service.Report.Dtos.StudyStats;
-using Shared.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +23,7 @@ namespace Service.Report.Mapper
 
                                return new StudyStatsDto
                                {
+                                   Id = Guid.NewGuid(),
                                    Solicitud = grupo.Key.Clave,
                                    Paciente = grupo.Key.Nombre,
                                    Edad = grupo.Key.Expediente.Edad,
@@ -43,29 +42,18 @@ namespace Service.Report.Mapper
         public static IEnumerable<StudyStatsChartDto> ToStudyStatsChartDto(this IEnumerable<Request> model)
         {
             if (model == null) return null;
+            var studies = model.SelectMany(x => x.Estudios);
 
-            var results = (from c in model
-                           group c by c.SolicitudId into grupo
-                           select grupo)
-                           .Select(grupo =>
+            var results = (from c in studies
+                           group c by new { c.Estatus.Estatus, c.EstatusId } into grupo
+                           select new StudyStatsChartDto
                            {
-
-                               var studies = grupo.SelectMany(x => x.Estudios);
-
-                               return new StudyStatsChartDto
-                               {
-                                   CantidadPendiente = studies.Count(x => x.Estatus.Id == 1),
-                                   CantidadTomaDeMuestra = studies.Count(x => x.Estatus.Id == 2),
-                                   CantidadSolicitado = studies.Count(x => x.Estatus.Id == 3),
-                                   CantidadCapturado = studies.Count(x => x.Estatus.Id == 4),
-                                   CantidadValidado = studies.Count(x => x.Estatus.Id == 5),
-                                   CantidadEnRuta = studies.Count(x => x.Estatus.Id == 6),
-                                   CantidadLiberado = studies.Count(x => x.Estatus.Id == 7),
-                                   CantidadEnviado = studies.Count(x => x.Estatus.Id == 8),
-                                   CantidadEntregado = studies.Count(x => x.Estatus.Id == 9),
-                                   CantidadCancelado = studies.Count(x => x.Estatus.Id == 10),
-                               };
+                               Id = Guid.NewGuid(),
+                               Estatus = grupo.Key.Estatus,
+                               Cantidad = grupo.Count(),
+                               Color = GetColor(grupo.Key.EstatusId),
                            });
+
 
             return results;
         }
@@ -78,6 +66,22 @@ namespace Service.Report.Mapper
                 Estudio = x.Estudio,
                 Estatus = x.Estatus.Estatus
             }).ToList();
+        }
+
+        public static string GetColor(byte statusId)
+        {
+            if (statusId == Status.Request.Pendiente) return "#536FC6";
+            else if (statusId == Status.Request.TomaDeMuestra) return "#91CC75";
+            else if (statusId == Status.Request.Solicitado) return "#F9C857";
+            else if (statusId == Status.Request.Capturado) return "#71BFDD";
+            else if (statusId == Status.Request.Validado) return "#3AA271";
+            else if (statusId == Status.Request.EnRuta) return "#FB8350";
+            else if (statusId == Status.Request.Liberado) return "#9960B3";
+            else if (statusId == Status.Request.Enviado) return "#EA7BCC";
+            else if (statusId == Status.Request.Entregado) return "#E7EFC5";
+            else if (statusId == Status.Request.Cancelado) return "#EE6665";
+
+            return "#2f54eb";
         }
     }
 }
