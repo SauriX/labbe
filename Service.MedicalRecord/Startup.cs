@@ -222,10 +222,12 @@ namespace Service.MedicalRecord
             services.AddScoped<IMedicalRecordApplication, MedicalRecordApplication>();
             services.AddScoped<IPriceQuoteApplication, PriceQuoteApplication>();
             services.AddScoped<IRequestApplication, RequestApplication>();
+            services.AddScoped<IAppointmentApplication, AppointmentApplication>();
 
             services.AddScoped<IMedicalRecordRepository, MedicalRecordRepository>();
             services.AddScoped<IRequestRepository, RequestRepository>();
             services.AddScoped<IPriceQuoteRepository, PriceQuoteRepository>();
+            services.AddScoped<IAppointmentResposiotry, AppointmentRepository>();
         }
 
 
