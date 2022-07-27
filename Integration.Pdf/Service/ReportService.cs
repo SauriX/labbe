@@ -292,8 +292,8 @@ namespace Integration.Pdf.Service
                 series.Name = serie.Serie;
 
                 var elements = series.Elements.Cast<Point>().ToArray();
-                //elements[0].FillFormat.Color = Colors.Red;
-                if (datachart.All(x => x.ContainsKey("Color")))
+
+                if (datachart != null && datachart.All(x => x.ContainsKey("Color")))
                 {
 
                     for (int i = 0; i < datachart.Count; i++)

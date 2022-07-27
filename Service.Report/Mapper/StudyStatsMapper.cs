@@ -1,8 +1,6 @@
-﻿using Automatonymous;
-using Service.Report.Dictionary;
+﻿using Service.Report.Dictionary;
 using Service.Report.Domain.Request;
 using Service.Report.Dtos.StudyStats;
-using Shared.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
