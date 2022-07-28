@@ -18,5 +18,6 @@ namespace Service.Report.Dtos.StudyStats
         public string Estatus { get; set; }
         public DateTime Fecha { get; set; }
         public bool Parcialidad { get; set; }
+        public byte Urgencia { get; set; }
     }
 }

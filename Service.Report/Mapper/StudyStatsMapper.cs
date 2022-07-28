@@ -39,6 +39,35 @@ namespace Service.Report.Mapper
             return results;
         }
 
+        public static IEnumerable<StudyStatsDto> ToUrgentStatsDto(this IEnumerable<Request> model)
+        {
+            if (model == null) return null;
+
+            var results = (from c in model.Where(x => x.Urgencia != 1)
+                           group c by new { c.SolicitudId, c.Clave, c.Expediente.Nombre, c.Medico.NombreMedico, c.Fecha, c.Expediente, c.Urgencia } into grupo
+                           select grupo)
+                           .Select(grupo =>
+                           {
+                               var studies = grupo.SelectMany(x => x.Estudios);
+                               var dueDate = studies.Max(x => x.Duracion);
+
+                               return new StudyStatsDto
+                               {
+                                   Id = Guid.NewGuid(),
+                                   Solicitud = grupo.Key.Clave,
+                                   Paciente = grupo.Key.Nombre,
+                                   Edad = grupo.Key.Expediente.Edad,
+                                   Sexo = grupo.Key.Expediente.Sexo,
+                                   Estudio = studies.ToStudiesDto(),
+                                   Medico = grupo.Key.NombreMedico,
+                                   FechaEntrega = grupo.Key.Fecha.AddDays(dueDate),
+                                   Urgencia = grupo.Key.Urgencia,
+                               };
+                           });
+
+            return results;
+        }
+
         public static IEnumerable<StudyStatsChartDto> ToStudyStatsChartDto(this IEnumerable<Request> model)
         {
             if (model == null) return null;
