@@ -10,8 +10,8 @@ namespace Service.MedicalRecord.Dtos.Request
         public Guid SucursalId { get; set; }
         public string Clave { get; set; }
         public string ClavePatologica { get; set; }
+        public string Registro { get; set; }
+        public bool EsNuevo { get; set; }
         public Guid UsuarioId { get; set; }
-        public RequestGeneralDto General { get; set; }
-        public List<RequestStudyDto> Estudios { get; set; }
     }
 }

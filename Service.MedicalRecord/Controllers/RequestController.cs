@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Dtos.Request;
 using Shared.Dictionary;
+using System;
 using System.Threading.Tasks;
 
 namespace Service.MedicalRecord.Controllers
@@ -21,7 +22,7 @@ namespace Service.MedicalRecord.Controllers
         [HttpPost("ticket")]
         public async Task<IActionResult> GetTicket()
         {
-            var file = await _service.GetTicket();
+            var file = await _service.PrintTicket(System.Guid.Empty);
 
             return File(file, MimeType.PDF, "ticket.pdf");
         }
@@ -29,25 +30,25 @@ namespace Service.MedicalRecord.Controllers
         [HttpPost("order")]
         public async Task<IActionResult> GetOrder()
         {
-            var file = await _service.GetOrder();
+            var file = await _service.PrintOrder(System.Guid.Empty);
 
             return File(file, MimeType.PDF, "order.pdf");
         }
 
         [HttpPost]
         //[Authorize(Policies.Create)]
-        public async Task<string> Create(RequestDto request)
+        public async Task<RequestDto> Create(RequestDto request)
         {
             //request.UsuarioId = (Guid)HttpContext.Items["userId"];
 
             return await _service.Create(request);
         }
 
-        [HttpGet("test/email")]
+        [HttpGet("test/email/{requestId}/{email}")]
         [AllowAnonymous]
-        public async Task SendTestEmail()
+        public async Task SendTestEmail(Guid requestId, string email)
         {
-            await _service.SendTestEmail();
+            await _service.SendTestEmail(requestId, email);
         }
     }
 }

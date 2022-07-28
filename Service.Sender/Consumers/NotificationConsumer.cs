@@ -14,8 +14,9 @@ namespace Service.Sender.Consumers
         private readonly ILogger<NotificationConsumer> _logger;
         private readonly IHubContext<NotificationHub> _hubContext;
 
-        public NotificationConsumer(IHubContext<NotificationHub> hubContext)
+        public NotificationConsumer(ILogger<NotificationConsumer> logger, IHubContext<NotificationHub> hubContext)
         {
+            _logger = logger;
             _hubContext = hubContext;
         }
 

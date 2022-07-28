@@ -45,7 +45,7 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated(Responses.Duplicated($"El {code}")));
             }
 
-            //await _repository.Create(newBranch);
+            await _repository.Create(newBranch);
 
             var contract = new BranchContract(newBranch.Id, newBranch.Clave, newBranch.Nombre, newBranch.Clinicos);
 
@@ -56,11 +56,12 @@ namespace Service.Catalog.Application
         public async Task<BranchFormDto> GetById(string Id)
         {
             var branch = await _repository.GetById(Id);
+
             if (branch == null)
             {
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
-            //var studyes = await _repository.getservicios(Id);
+
             return branch.ToBranchFormDto();
         }
 

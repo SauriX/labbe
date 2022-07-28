@@ -1,20 +1,21 @@
 ﻿using Facturapi;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Integration.Invoice.Service
 {
     public class InvoiceService
     {
-        public static async Task<string> Create()
+        public static async Task<object> Create()
         {
             var facturapi = new FacturapiClient("sk_test_jrKzRvqdg87nNoa6E0WBknQG7rJp1xlDwVyeGBAZ34");
 
             try
             {
                 //var facturapi = new FacturapiClient("sk_test_API_KEY");
-                var invoiceP = facturapi.Invoice.CreateAsync(new Dictionary<string, object>
+                var invoiceP = await facturapi.Invoice.CreateAsync(new Dictionary<string, object>
                 {
                     ["customer"] = new Dictionary<string, object>
                     {
@@ -44,15 +45,58 @@ namespace Integration.Invoice.Service
                     ["series"] = "F"
                 });
 
-                var invoice = await invoiceP;
-                var a = invoice;
-
-                return "Hola";
+                return invoiceP;
             }
             catch (Exception e)
             {
 
                 throw;
+            }
+        }
+
+        public static async Task<object> GetById(string ig)
+        {
+            try
+            {
+                var facturapi = new FacturapiClient("sk_test_jrKzRvqdg87nNoa6E0WBknQG7rJp1xlDwVyeGBAZ34");
+
+                var a = await facturapi.Invoice.RetrieveAsync(ig);
+
+                return a;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public static async Task<byte[]> GetXml(string id)
+        {
+            try
+            {
+                var facturapi = new FacturapiClient("sk_test_jrKzRvqdg87nNoa6E0WBknQG7rJp1xlDwVyeGBAZ34");
+
+                var a = await facturapi.Invoice.DownloadXmlAsync(id);
+
+                return a.ToByteArray();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+    }
+
+    public static class Extensions
+    {
+        public static byte[] ToByteArray(this Stream stream)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                stream.CopyTo(ms);
+                return ms.ToArray();
             }
         }
     }

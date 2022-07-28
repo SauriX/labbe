@@ -19,6 +19,7 @@
         public const string PasswordExpired = "La contraseña ha expirado, configurela de nuevo";
         public const string ConfigureEmail = "Configure su correo";
         public const string InvalidGuid = "El Id no es válido";
+        public const string InvalidImage = "La imagén no es válida";
         public static string Duplicated(string name) => $"{name} ya se encuentra asignado(a) a un registro, favor de ingresar otro valor";
         public static string TipoDescuento(string name) => $"{name} No puede ser mayor a 100 si el tipo de descuento es por porcentaje, favor de ingresar otro valor";
         public static string DuplicatedDestiny(string name) => $"{name} no puede ser el mismo que la sucursal de origen, favor de ingresar otro valor";

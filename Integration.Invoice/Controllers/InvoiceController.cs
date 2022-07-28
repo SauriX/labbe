@@ -1,4 +1,7 @@
 ﻿using Integration.Invoice.Service;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -9,10 +12,41 @@ namespace Integration.Invoice.Controllers
     {
         [HttpPost]
         [Route("")]
-        public async Task<string> Ticket()
+        public async Task<object> Ticket()
         {
             var file = await InvoiceService.Create();
             return file;
+        }
+
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<object> GetTicket(string id)
+        {
+            var file = await InvoiceService.GetById(id);
+            return file;
+        }
+
+        [HttpGet]
+        [Route("xml/{id}")]
+        public async Task<HttpResponseMessage> Tag(string id)
+        {
+            var file = await InvoiceService.GetXml(id);
+
+            var result = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new ByteArrayContent(file)
+            };
+
+            result.Content.Headers.ContentDisposition =
+                new ContentDispositionHeaderValue("attachment")
+                {
+                    FileName = "order.xml"
+                };
+
+            result.Content.Headers.ContentType =
+                new MediaTypeHeaderValue("application/xml");
+
+            return result;
         }
     }
 }

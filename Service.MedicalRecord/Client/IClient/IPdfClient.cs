@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using Service.MedicalRecord.Dtos.Request;
+using System.Threading.Tasks;
 
 namespace Service.MedicalRecord.Client.IClient
 {
@@ -6,6 +7,6 @@ namespace Service.MedicalRecord.Client.IClient
     {
         Task<byte[]> GenerateTicket();
         Task<byte[]> GenerateQuotation();
-        Task<byte[]> GenerateOrder();
+        Task<byte[]> GenerateOrder(RequestOrderDto order);
     }
 }

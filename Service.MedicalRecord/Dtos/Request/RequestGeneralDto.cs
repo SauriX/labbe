@@ -4,6 +4,7 @@ namespace Service.MedicalRecord.Dtos.Request
 {
     public class RequestGeneralDto
     {
+        public Guid Id { get; set; }
         public byte Procedencia { get; set; }
         public string Afiliacion { get; set; }
         public Guid CompañiaId { get; set; }
@@ -13,5 +14,6 @@ namespace Service.MedicalRecord.Dtos.Request
         public string EnvioCorreo { get; set; }
         public string EnvioWhatsApp { get; set; }
         public bool Activo { get; set; }
+        public Guid UsuarioId { get; set; }
     }
 }

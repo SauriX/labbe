@@ -1,4 +1,5 @@
-﻿using Integration.Pdf.Extensions;
+﻿using Integration.Pdf.Dtos;
+using Integration.Pdf.Extensions;
 using Integration.Pdf.Models;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
@@ -9,22 +10,15 @@ namespace Integration.Pdf.Service
 {
     public class TicketService
     {
-        public static byte[] Generate()
+        public static byte[] Generate(RequestOrderDto order)
         {
-            Document document = CreateDocument();
+            Document document = CreateDocument(order);
 
             document.UseCmykColor = true;
             const bool unicode = false;
 
             DocumentRenderer renderer = new DocumentRenderer(document);
             renderer.PrepareDocument();
-
-            //RenderInfo[] info = renderer.GetRenderInfoFromPage(1);
-            //int index = info.Length - 1;
-
-            //double stop = info[index].LayoutInfo.ContentArea.Y.Millimeter + info[index].LayoutInfo.ContentArea.Height.Millimeter + 10;
-            //var section = document.LastSection;
-            //section.PageSetup.PageHeight = Unit.FromMillimeter(stop);
 
             PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer(unicode)
             {
@@ -47,7 +41,7 @@ namespace Integration.Pdf.Service
             return buffer;
         }
 
-        static Document CreateDocument()
+        static Document CreateDocument(RequestOrderDto order)
         {
             Document document = new Document();
 
@@ -64,12 +58,12 @@ namespace Integration.Pdf.Service
             section.PageSetup.LeftMargin = 0;
             section.PageSetup.RightMargin = 0;
 
-            Format(section);
+            Format(section, order);
 
             return document;
         }
 
-        static void Format(Section section)
+        static void Format(Section section, RequestOrderDto order)
         {
             var branchInfo = new Col("Laboratorio Alfonso Ramos, S.A. de C.V. Avenida Humberto Lobo #555 A, Col. del Valle C.P. 66220 San Pedro Garza García, Nuevo León.");
             section.AddText(branchInfo);
@@ -86,16 +80,16 @@ namespace Integration.Pdf.Service
 
             section.AddDivider();
 
-            var attendant = new Col("QUIEN ATIENDE: PERLA MARÍA SUAREZ MARTINEZ", Col.FONT_BOLD, ParagraphAlignment.Left);
+            var attendant = new Col($"QUIEN ATIENDE: {order.Atiende}", Col.FONT_BOLD, ParagraphAlignment.Left);
             section.AddText(attendant);
 
             section.AddDivider();
 
-            var user = new Col("PACIENTE:JOSE JUAN MORALES PLATA");
-            var userId = new Col("ID PACIENTE:F12D8");
+            var user = new Col($"PACIENTE: {order.Paciente}");
+            var userId = new Col($"ID PACIENTE: {order.Clave}");
             section.AddText(new[] { user, userId });
 
-            var birthdate = new Col("FECHA NACIMIENTO:25-01-1999");
+            var birthdate = new Col($"FECHA NACIMIENTO: {order.FechaNacimiento}");
             section.AddText(birthdate, partialBold: true);
 
             var exp = new Col("EXPEDIENTE:2202178006");
