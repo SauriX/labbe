@@ -71,7 +71,7 @@ namespace Service.Report.Application
                 { "Sexo", x.Sexo},
                 { "Nombre del Médico", x.Medico },
                 { "Fecha de Entrega", x.FechaEntrega.ToString("dd/MM/yyyy")},
-                { "Urgencia", x.Urgencia == 1 ? "Urgencia" : "Urgencia con cargo"},
+                { "Urgencia", x.Urgencia == 2 ? "Urgencia" : "Urgencia con cargo"},
             }).ToList();
 
             var datachart = requestChartData.Select(x => new Dictionary<string, object>
