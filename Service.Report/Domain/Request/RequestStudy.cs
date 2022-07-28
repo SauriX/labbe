@@ -16,10 +16,5 @@ namespace Service.Report.Domain.Request
         public bool Descuento { get; set; }
         public decimal Precio { get; set; }
         public decimal PrecioFinal { get; set; }
-
-        internal string GroupBy()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
