@@ -1,14 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Service.Report.Context;
-using Service.Report.Domain;
-using Service.Report.Repository.IRepository;
+using Service.MedicalRecord.Context;
+using Service.MedicalRecord.Repository.IRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace Service.Report.Repository
+namespace Service.MedicalRecord.Repository
 {
     public class Repository<T> : IRepository<T> where T : class
     {
@@ -30,9 +29,9 @@ namespace Service.Report.Repository
 
         public async Task<List<T>> Get(Expression<Func<T, bool>> query)
         {
-            var catalogs = await _entity.Where(query).ToListAsync();
+            var catalog = await _entity.Where(query).ToListAsync();
 
-            return catalogs;
+            return catalog;
         }
 
         public async Task Create(T catalog)

@@ -1,7 +1,6 @@
 ﻿using Service.Report.Application.IApplication;
 using Service.Report.Client.IClient;
-using Service.Report.Domain.Branch;
-using Service.Report.Domain.Medic;
+using Service.Report.Domain.Catalogs;
 using Service.Report.Dtos;
 using Service.Report.Dtos.ContactStats;
 using Service.Report.Mapper;

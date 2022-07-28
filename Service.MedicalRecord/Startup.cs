@@ -219,6 +219,8 @@ namespace Service.MedicalRecord
                 });
             });
 
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
             services.AddScoped<IMedicalRecordApplication, MedicalRecordApplication>();
             services.AddScoped<IPriceQuoteApplication, PriceQuoteApplication>();
             services.AddScoped<IRequestApplication, RequestApplication>();
