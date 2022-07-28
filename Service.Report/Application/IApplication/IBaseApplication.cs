@@ -7,5 +7,7 @@ namespace Service.Report.Application.IApplication
     public interface IBaseApplication
     {
         Task<IEnumerable<string>> GetBranchNames(List<Guid> ids);
+        Task<IEnumerable<string>> GetDoctorNames(List<Guid> ids);
+        Task<IEnumerable<string>> GetCompanyNames(List<Guid> ids);
     }
 }

@@ -10,21 +10,21 @@ namespace Service.Report.Controllers.Report
 {
     public partial class ReportController : ControllerBase
     {
-        [HttpPost("contact/filter")]
+        [HttpPost("contacto/filter")]
         [Authorize(Policies.Access)]
         public async Task<IEnumerable<ContactStatsDto>> GetContactNow(ReportFilterDto search)
         {
             return await _contactstatsService.GetByFilter(search);
         }
 
-        [HttpPost("contact/chart/filter")]
+        [HttpPost("contacto/chart/filter")]
         [Authorize(Policies.Access)]
         public async Task<IEnumerable<ContactStatsChartDto>> GetFilterChart(ReportFilterDto search)
         {
-            return await _contactstatsService.GetCharByFilter(search);
+            return await _contactstatsService.GetChartByFilter(search);
         }
 
-        [HttpPost("contact/download/pdf")]
+        [HttpPost("contacto/download/pdf")]
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ContactPDF(ReportFilterDto search)
         {

@@ -31,6 +31,9 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("Celular")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Cita")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Direccion")
                         .HasColumnType("nvarchar(max)");
 
@@ -64,6 +67,9 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("NombrePaciente")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");
 
@@ -88,6 +94,9 @@ namespace Service.MedicalRecord.Migrations
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Cita")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("CompaniaID")
                         .HasColumnType("uniqueidentifier");
@@ -127,6 +136,9 @@ namespace Service.MedicalRecord.Migrations
 
                     b.Property<string>("Procedencia")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("SucursalID")
                         .HasColumnType("uniqueidentifier");

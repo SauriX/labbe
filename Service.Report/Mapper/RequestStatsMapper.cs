@@ -1,5 +1,6 @@
 ﻿using Service.Report.Domain.Request;
 using Service.Report.Dtos.Request;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,6 +16,7 @@ namespace Service.Report.Mapper
                    group c by new { c.Expediente.Nombre, c.Expediente.Expediente } into g
                    select new RequestStatsDto
                    {
+                       Id = Guid.NewGuid(),
                        NoSolicitudes = g.Count(),
                        Paciente = g.Key.Nombre,
                        Expediente = g.Key.Expediente

@@ -72,17 +72,5 @@
       "UpstreamPathTemplate": "/api/scopes/report",
       "UpstreamHttpMethod": [ "GET" ]
     },
-    {
-      "DownstreamPathTemplate": "/api/scopes/patientstats",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 45216
-        }
-      ],
-      "UpstreamPathTemplate": "/api/scopes/patientstats",
-      "UpstreamHttpMethod": [ "GET" ]
-    }
   ]
 }

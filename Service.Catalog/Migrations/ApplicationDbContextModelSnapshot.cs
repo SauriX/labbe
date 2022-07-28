@@ -373,6 +373,42 @@ namespace Service.Catalog.Migrations
                     b.ToTable("CAT_Dimension");
                 });
 
+            modelBuilder.Entity("Service.Catalog.Domain.Catalog.Equipos", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Clave")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaModifico")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NombreLargo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("UsuarioCreoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UsuarioModificoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CAT_Equipos");
+                });
+
             modelBuilder.Entity("Service.Catalog.Domain.Catalog.Field", b =>
                 {
                     b.Property<int>("Id")

@@ -144,7 +144,12 @@ namespace Service.Identity.Controllers
             var userId = GetUserId();
             return await _service.GetScopes(userId, ControllerNames.Maquila);
         }
-
+        [HttpGet(ControllerNames.Appointment)]
+        public async Task<ScopesDto> GetAppointmentScopes()
+        {
+            var userId = GetUserId();
+            return await _service.GetScopes(userId, ControllerNames.Appointment);
+        }
         [HttpGet(ControllerNames.Configuration)]
         public async Task<ScopesDto> GetConfigurationScopes()
         {
@@ -157,6 +162,13 @@ namespace Service.Identity.Controllers
         {
             var userId = GetUserId();
             return await _service.GetScopes(userId, ControllerNames.Request);
+        }
+
+        [HttpGet(ControllerNames.Report)]
+        public async Task<ScopesDto> GetReportScopes()
+        {
+            var userId = GetUserId();
+            return await _service.GetScopes(userId, ControllerNames.Report);
         }
 
         private Guid GetUserId()

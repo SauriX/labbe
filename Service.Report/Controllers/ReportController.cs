@@ -11,17 +11,20 @@ namespace Service.Report.Controllers.Report
         private readonly IRequestStatsApplication _requestService;
         private readonly IMedicalStatsApplication _medicalstatsService;
         private readonly IContactStatsApplication _contactstatsService;
+        private readonly IStudyStatsApplication _studystatsService;
 
         public ReportController(
             IPatientStatsApplication patientStatsService,
             IRequestStatsApplication requestService,
             IMedicalStatsApplication medicalStatsService,
-            IContactStatsApplication contactStatsService)
+            IContactStatsApplication contactStatsService,
+            IStudyStatsApplication studystatsService)
         {
             _patientstatsService = patientStatsService;
             _requestService = requestService;
             _medicalstatsService = medicalStatsService;
             _contactstatsService = contactStatsService;
+            _studystatsService = studystatsService;
         }
     }
 }

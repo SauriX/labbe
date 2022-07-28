@@ -171,20 +171,29 @@ namespace Service.Catalog.Context
                 using var transaction = context.Database.BeginTransaction();
                 try
                 {
-                    var departamento = new Department
-                    {
-                        Id = 1,
-                        Clave = "Paquetes",
-                        Nombre = "Paquetes",
-                        Activo = true,
+                    var departamento = new List<Department>(){ 
+                     new Department
+                        {
+                            Id = 1,
+                            Clave = "Paquetes",
+                            Nombre = "Paquetes",
+                            Activo = true,
+                        } ,
+                       new Department
+                        {
+                            Id = 2,
+                            Clave = "Imagenologia",
+                            Nombre = "Imagenologia",
+                            Activo = true,
+                        }
                     };
                     if (!context.CAT_Departamento.Any())
                     {
-                        context.CAT_Departamento.Add(departamento);
+                        context.CAT_Departamento.AddRange(departamento);
                     }
                     else
                     {
-                        context.CAT_Departamento.Update(departamento);
+                        context.CAT_Departamento.UpdateRange(departamento);
                     }
 
 
@@ -201,28 +210,38 @@ namespace Service.Catalog.Context
                 }
             }
 
-            if (!context.CAT_Area.Any() || context.CAT_Area.Any(x => x.Id == 1 && x.Nombre != "Paquetes"))
+            if (!context.CAT_Area.Any() || context.CAT_Area.Any(x => x.Id == 1 && x.Nombre != "Paquetes" || x.Id == 1 && x.Nombre != "Imagenologia"))
             {
 
                 using var transaction = context.Database.BeginTransaction();
                 try
                 {
-                    var area = new Area
+                    var area = new List<Area>(){
+                        new Area
                     {
                         Id = 1,
                         Clave = "Paquetes",
                         Nombre = "Paquetes",
                         Activo = true,
                         DepartamentoId = 1
+                    },
+                        new Area
+                    {
+                        Id = 2,
+                        Clave = "Imagenologia",
+                        Nombre = "Imagenologia",
+                        Activo = true,
+                        DepartamentoId = 2
+                    }
                     };
 
                     if (!context.CAT_Area.Any())
                     {
-                        context.CAT_Area.Add(area);
+                        context.CAT_Area.AddRange(area);
                     }
                     else
                     {
-                        context.CAT_Area.Update(area);
+                        context.CAT_Area.UpdateRange(area);
                     }
                     context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Area ON;");
                     await context.SaveChangesAsync();

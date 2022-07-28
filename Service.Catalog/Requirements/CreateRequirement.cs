@@ -25,7 +25,10 @@ namespace Service.Catalog.Requirements
 
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, CreateRequirement requirement)
         {
-            var userId = Guid.Parse(_httpContextAccessor.HttpContext.User?.Claims?.SingleOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
+            var id = _httpContextAccessor.HttpContext.User?.Claims?.SingleOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (id == null) return;
+
+            var userId = Guid.Parse(id);
             var controller = _httpContextAccessor.HttpContext.Request.RouteValues["controller"].ToString();
 
             var scopes = await _identityClient.GetScopes(controller);

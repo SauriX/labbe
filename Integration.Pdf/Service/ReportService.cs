@@ -70,11 +70,12 @@ namespace Integration.Pdf.Service
             return document;
         }
 
-        static void Format(Section section, List<Models.Col> columns, List<ChartSeries> seriesInfo, List<Dictionary<string, object>> data, List<Dictionary<string, object>> datachart, HeaderData Header)
+        static void Format(Section section, List<Col> columns, List<ChartSeries> seriesInfo, List<Dictionary<string, object>> data, List<Dictionary<string, object>> datachart, HeaderData Header)
         {
             var fontTitle = new Font("calibri", 20);
             var fontSubtitle = new Font("calibri", 16);
             var fontText = new Font("calibri", 12);
+            var fontTitleChart = new Font("calibri", 11) { Bold = true };
             var title = new Col(Header.NombreReporte, fontTitle);
             var branchType = "Sucursal " + Header.Sucursal;
 
@@ -114,8 +115,8 @@ namespace Integration.Pdf.Service
 
             for (int i = 0; i < columns.Count; i++)
             {
-                Models.Col item = columns[i];
-                MigraDoc.DocumentObjectModel.Tables.Column column = table.AddColumn(colWidth * item.Tamaño);
+                Col item = columns[i];
+                Column column = table.AddColumn(colWidth * item.Tamaño);
                 column.Format.Alignment = item.Horizontal;
             }
 
@@ -129,6 +130,7 @@ namespace Integration.Pdf.Service
                 Cell cell = row.Cells[i];
                 cell.Borders.Left.Visible = false;
                 cell.Borders.Right.Visible = false;
+                cell.Borders.Bottom.Visible = false;
                 cell.AddParagraph(columns[i].Texto);
             }
 
@@ -146,14 +148,19 @@ namespace Integration.Pdf.Service
                             Cell cell = row.Cells[i];
                             cell.Borders.Left.Visible = false;
                             cell.Borders.Right.Visible = false;
+                            if (item.ContainsKey("Children"))
+                            {
+                                cell.Borders.Bottom.Visible = false;
+                            }
                             var format = columns[i].Formato;
+                            var cellData = item[key].ToString();
 
                             if (!string.IsNullOrWhiteSpace(format))
                             {
-                                if (item[key] is IList)
+                                if (cellData[0] == '[' && cellData[cellData.Length - 1] == ']')
                                 {
-                                    var datalist = JsonConvert.DeserializeObject<List<string>>(item[key].ToString());
-                                    datalist.ForEach(x => cell.AddParagraph(x));
+                                    var datalist = JsonConvert.DeserializeObject<List<string>>(cellData);
+                                    datalist.Where(x => x != null).ToList().ForEach(x => cell.AddParagraph(x));
                                 }
                                 else
                                 {
@@ -162,17 +169,64 @@ namespace Integration.Pdf.Service
                             }
                             else
                             {
-                                if (item[key] is IList)
+                                if (cellData[0] == '[' && cellData[cellData.Length - 1] == ']')
                                 {
-                                    var datalist = JsonConvert.DeserializeObject<List<string>>(item[key].ToString());
-                                    datalist.ForEach(x => cell.AddParagraph(x));
+                                    var datalist = JsonConvert.DeserializeObject<List<string>>(cellData);
+                                    datalist.Where(x => x != null).ToList().ForEach(x => cell.AddParagraph(x));
                                 }
                                 else
                                 {
-                                    cell.AddParagraph(item[key].ToString());
+                                    cell.AddParagraph(cellData);
                                 }
                             }
                         }
+                    }
+
+                    if (item.ContainsKey("Children"))
+                    {
+                        row = table.AddRow();
+                        Cell cell = row.Cells[0];
+                        cell.MergeRight = columns.Count - 1;
+
+                        Table childrenTable = new Table();
+                        childrenTable.Borders.Visible = false;
+                        childrenTable.Borders.Width = 0;
+
+                        cell.Borders.Visible = false;
+
+                        var childrenData = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(item["Children"].ToString());
+
+                        var noCol = childrenData.Max(x => x.Count);
+
+                        for (int i = 0; i < noCol; i++)
+                        {
+                            Column column = childrenTable.AddColumn(contentWidth / noCol);
+                        }
+
+                        Row childrenRow = childrenTable.AddRow();
+                        Cell titleCell = childrenRow.Cells[0];
+                        titleCell.Borders.Visible = false;
+                        titleCell.MergeRight = noCol - 1;
+                        var paragraph = titleCell.AddParagraph();
+                        paragraph.AddFormattedText("Estudio", fontTitleChart);
+
+                        for (int i = 0; i < childrenData.Count; i++)
+                        {
+                            childrenRow = childrenTable.AddRow();
+                            childrenRow.Borders.Visible = false;
+
+                            var values = childrenData[i].Values.ToList();
+
+                            for (int j = 0; j < values.Count; j++)
+                            {
+                                Cell childrenCell = childrenRow.Cells[j];
+                                childrenCell.Borders.Visible = false;
+
+                                childrenCell.AddParagraph(values[j].ToString());
+                            }
+                        }
+
+                        cell.Elements.Add(childrenTable);
                     }
                 }
 
@@ -186,6 +240,7 @@ namespace Integration.Pdf.Service
                 cell.MergeRight = columns.Count - 1;
                 cell.Borders.Left.Visible = false;
                 cell.Borders.Right.Visible = false;
+                cell.Borders.Bottom.Visible = false;
                 cell.Format.Alignment = ParagraphAlignment.Center;
 
                 cell.AddParagraph("No hay registros");
@@ -206,7 +261,7 @@ namespace Integration.Pdf.Service
             chart.Height = Unit.FromCentimeter(8);
             chart.Left = 0;
 
-            chart.TopArea.AddLegend();
+
 
             foreach (var serie in seriesInfo.Where(x => !x.SerieX))
             {
@@ -235,6 +290,25 @@ namespace Integration.Pdf.Service
                 series.DataLabel.Format = serie.Formato;
                 series.DataLabel.Position = DataLabelPosition.OutsideEnd;
                 series.Name = serie.Serie;
+
+                var elements = series.Elements.Cast<Point>().ToArray();
+
+                if (datachart != null && datachart.All(x => x.ContainsKey("Color")))
+                {
+
+                    for (int i = 0; i < datachart.Count; i++)
+                    {
+                        var color = datachart[i]["Color"].ToString();
+                        var r = Convert.ToByte(color.Substring(1, 2), 16);
+                        var g = Convert.ToByte(color.Substring(3, 2), 16);
+                        var b = Convert.ToByte(color.Substring(5, 2), 16);
+                        elements[i].FillFormat.Color = Color.FromRgb(r, g, b);
+                    }
+                }
+                else
+                {
+                    chart.TopArea.AddLegend();
+                }
             }
 
             var serieX = seriesInfo.FirstOrDefault(s => s.SerieX)?.Serie;

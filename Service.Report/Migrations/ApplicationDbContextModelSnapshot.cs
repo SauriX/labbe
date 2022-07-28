@@ -76,10 +76,16 @@ namespace Service.Report.Migrations
                     b.Property<string>("Correo")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Edad")
+                        .HasColumnType("int");
+
                     b.Property<string>("Expediente")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Sexo")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -89,8 +95,7 @@ namespace Service.Report.Migrations
 
             modelBuilder.Entity("Service.Report.Domain.Request.Request", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid>("SolicitudId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Cargo")
@@ -117,19 +122,19 @@ namespace Service.Report.Migrations
                     b.Property<Guid>("MedicoId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("Parcialidad")
+                        .HasColumnType("bit");
+
                     b.Property<decimal>("Precio")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("PrecioFinal")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("SolicitudId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("SucursalId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("Id");
+                    b.HasKey("SolicitudId");
 
                     b.HasIndex("EmpresaId");
 
@@ -140,6 +145,19 @@ namespace Service.Report.Migrations
                     b.HasIndex("SucursalId");
 
                     b.ToTable("Request");
+                });
+
+            modelBuilder.Entity("Service.Report.Domain.Request.RequestStatus", b =>
+                {
+                    b.Property<byte>("Id")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("Estatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RequestStatus");
                 });
 
             modelBuilder.Entity("Service.Report.Domain.Request.RequestStudy", b =>
@@ -154,11 +172,17 @@ namespace Service.Report.Migrations
                     b.Property<bool>("Descuento")
                         .HasColumnType("bit");
 
+                    b.Property<int>("Duracion")
+                        .HasColumnType("int");
+
                     b.Property<byte>("EstatusId")
                         .HasColumnType("tinyint");
 
                     b.Property<string>("Estudio")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte>("Parcialidad")
+                        .HasColumnType("tinyint");
 
                     b.Property<decimal>("Precio")
                         .HasColumnType("decimal(18,2)");
@@ -170,6 +194,8 @@ namespace Service.Report.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EstatusId");
 
                     b.HasIndex("SolicitudId");
 
@@ -213,11 +239,19 @@ namespace Service.Report.Migrations
 
             modelBuilder.Entity("Service.Report.Domain.Request.RequestStudy", b =>
                 {
+                    b.HasOne("Service.Report.Domain.Request.RequestStatus", "Estatus")
+                        .WithMany()
+                        .HasForeignKey("EstatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Service.Report.Domain.Request.Request", "Solicitud")
                         .WithMany("Estudios")
                         .HasForeignKey("SolicitudId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Estatus");
 
                     b.Navigation("Solicitud");
                 });
