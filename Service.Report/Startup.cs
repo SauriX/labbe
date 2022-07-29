@@ -207,6 +207,8 @@ namespace Service.Report
             services.AddScoped<IPatientStatsApplication, PatientStatsApplication>();
             services.AddScoped<IMedicalStatsApplication, MedicalStatsApplication>();
             services.AddScoped<IContactStatsApplication, ContactStatsApplication>();
+            services.AddScoped<IStudyStatsApplication, StudyStatsApplication>();
+            services.AddScoped<IUrgentStatsApplication, UrgentStatsApplication>();
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IReportRepository, ReportRepository>();

@@ -19,6 +19,7 @@ namespace Service.Report.Mapper
                            group c by new { c.Expediente.Expediente, c.Expediente.Nombre, c.Expediente.Celular, c.Expediente.Correo, c.Medico.NombreMedico, c.SolicitudId, c.Clave } into grupo
                            select new ContactStatsDto
                            {
+                               Id = Guid.NewGuid(),
                                Expediente = grupo.Key.Expediente,
                                Paciente = grupo.Key.Nombre,
                                Medico = grupo.Key.NombreMedico,
@@ -38,6 +39,7 @@ namespace Service.Report.Mapper
                            group c by new { c.Fecha.Year, c.Fecha.Month } into grupo
                            select new ContactStatsChartDto
                            {
+                               Id = Guid.NewGuid(),
                                Fecha = new DateTime(grupo.Key.Year, grupo.Key.Month, 1).ToString("MM/yyyy"),
                                Solicitudes = grupo.Count(),
                                CantidadTelefono = grupo.GroupBy(x => new { x.Expediente.Expediente, x.Expediente.Celular}).Count(x => !string.IsNullOrWhiteSpace(x.Key.Celular)),

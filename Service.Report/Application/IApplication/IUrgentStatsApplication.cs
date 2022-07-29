@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Service.Report.Application.IApplication
 {
-    public interface IStudyStatsApplication
+    public interface IUrgentStatsApplication
     {
         Task<IEnumerable<StudyStatsDto>> GetByFilter(ReportFilterDto search);
         Task<IEnumerable<StudyStatsChartDto>> GetChartByFilter(ReportFilterDto search);

@@ -4,6 +4,7 @@ namespace Service.Report.Dtos.ContactStats
 {
     public class ContactStatsChartDto
     {
+        public Guid Id { get; set; }
         public string Fecha { get; set; }
         public int Solicitudes { get; set; }
         public int CantidadTelefono { get; set; }

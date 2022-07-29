@@ -17,6 +17,7 @@ namespace Service.Report.Mapper
                            group c by new { c.Medico.NombreMedico, c.Medico.ClaveMedico, c.MedicoId } into grupo
                            select new MedicalStatsDto
                            {
+                               Id = Guid.NewGuid(),
                                ClaveMedico = grupo.Key.ClaveMedico,
                                Medico = grupo.Key.NombreMedico,
                                Total = grupo.Sum(x => x.PrecioFinal),
@@ -26,6 +27,7 @@ namespace Service.Report.Mapper
 
             results.Add(new MedicalStatsDto
             {
+                Id = Guid.NewGuid(),
                 ClaveMedico = "Total",
                 Medico = " ",
                 Total = results.Sum(x => x.Total),

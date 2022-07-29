@@ -68,7 +68,7 @@ namespace Service.Report.Application
             var reportData = new ReportData()
             {
                 Columnas = columns,
-                Series = series,
+                Series = filter.Grafica ? series : null,
                 Datos = data,
                 Header = headerData,
             };
