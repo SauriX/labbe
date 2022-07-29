@@ -65,12 +65,12 @@ namespace Integration.Pdf.Service
             section.PageSetup.LeftMargin = Unit.FromCentimeter(1);
             section.PageSetup.RightMargin = Unit.FromCentimeter(1);
 
-            Format(section, reportData.Columnas, reportData.Series, reportData.Datos, reportData.DatosGrafica, reportData.Header);
+            Format(section, reportData.Columnas, reportData.Series, reportData.Datos, reportData.DatosGrafica, reportData.Invoice, reportData.Header);
 
             return document;
         }
 
-        static void Format(Section section, List<Col> columns, List<ChartSeries> seriesInfo, List<Dictionary<string, object>> data, List<Dictionary<string, object>> datachart, HeaderData Header)
+        static void Format(Section section, List<Col> columns, List<ChartSeries> seriesInfo, List<Dictionary<string, object>> data, List<Dictionary<string, object>> datachart, List<Dictionary<string, object>> invoice, HeaderData Header)
         {
             var fontTitle = new Font("calibri", 20);
             var fontSubtitle = new Font("calibri", 16);

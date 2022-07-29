@@ -71,7 +71,26 @@ namespace Service.Report.Mapper
         public static IEnumerable<StudyStatsChartDto> ToStudyStatsChartDto(this IEnumerable<Request> model)
         {
             if (model == null) return null;
-            var studies = model.SelectMany(x => x.Estudios);
+            var studies = model.Where(x => x.Urgencia != 1).SelectMany(x => x.Estudios);
+
+            var results = (from c in studies
+                           group c by new { c.Estatus.Estatus, c.EstatusId } into grupo
+                           select new StudyStatsChartDto
+                           {
+                               Id = Guid.NewGuid(),
+                               Estatus = grupo.Key.Estatus,
+                               Cantidad = grupo.Count(),
+                               Color = GetColor(grupo.Key.EstatusId),
+                           });
+
+
+            return results;
+        }
+
+        public static IEnumerable<StudyStatsChartDto> ToUrgentStatsChartDto(this IEnumerable<Request> model)
+        {
+            if (model == null) return null;
+            var studies = model.Where(x => x.Urgencia != 1).SelectMany(x => x.Estudios);
 
             var results = (from c in studies
                            group c by new { c.Estatus.Estatus, c.EstatusId } into grupo
