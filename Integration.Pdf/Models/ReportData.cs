@@ -8,6 +8,7 @@ namespace Integration.Pdf.Models
         public List<ChartSeries> Series { get; set; }
         public List<Dictionary<string, object>> Datos { get; set; }
         public List<Dictionary<string, object>> DatosGrafica { get; set; }
+        public List<Dictionary<string, object>> Invoice { get; set; }
         public HeaderData Header { get; set; }
     }
 }

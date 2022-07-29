@@ -16,6 +16,8 @@ namespace Service.Report.Repository
         private const int Telefono = 2;
         private const int Urgencia = 1;
         private const int UrgenciaConCargo = 2;
+        private const int Convenio = 1;
+        private const int Todas = 2;
 
         private readonly ApplicationDbContext _context;
 
@@ -85,6 +87,29 @@ namespace Service.Report.Repository
                 if (search.Urgencia.Contains(Urgencia) && search.Urgencia.Contains(UrgenciaConCargo))
                 {
                     report = report.Where(x => x.Urgencia == 2 || x.Urgencia == 3);
+                }
+            }
+
+            if (search.TipoCompañia != null && search.TipoCompañia.Count == 1)
+            {
+                if (search.TipoCompañia.Contains(Convenio))
+                {
+                    report = report.Where(x => x.Empresa.Convenio == 1);
+                }
+
+                else if (search.TipoCompañia.Contains(Todas))
+                {
+                    report = report.Where(x => x.Empresa.Convenio == 2);
+                }
+
+                query = report.ToQueryString();
+            }
+
+            if (search.TipoCompañia != null && search.TipoCompañia.Count == 2)
+            {
+                if (search.TipoCompañia.Contains(Convenio) && search.TipoCompañia.Contains(Todas))
+                {
+                    report = report.Where(x => x.Empresa.Convenio == 1 || x.Empresa.Convenio == 2);
                 }
             }
 
