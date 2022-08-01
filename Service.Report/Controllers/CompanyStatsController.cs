@@ -14,7 +14,7 @@ namespace Service.Report.Controllers.Report
     {
         [HttpPost("empresa/filter")]
         [Authorize(Policies.Access)]
-        public async Task <IEnumerable<CompanyStatsDto>> GetCompanyNow(ReportFilterDto search)
+        public async Task<IEnumerable<CompanyStatsDto>> GetCompanyNow(ReportFilterDto search)
         {
             return await _companystatsService.GetByFilter(search);
         }
