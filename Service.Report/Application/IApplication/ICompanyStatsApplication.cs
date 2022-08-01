@@ -9,7 +9,9 @@ namespace Service.Report.Application.IApplication
 {
     public interface ICompanyStatsApplication
     {
-        Task<IEnumerable<CompanyStatsDto>> GetByFilter(ReportFilterDto search);
+        Task <IEnumerable<CompanyStatsDto>> GetByFilter(ReportFilterDto search);
+        Task<CompanyDto> GetTableByFilter(ReportFilterDto search);
+        Task<IEnumerable<CompanyStatsChartDto>> GetChartByFilter(ReportFilterDto search);
         Task<byte[]> DownloadReportPdf(ReportFilterDto search);
     }
 }

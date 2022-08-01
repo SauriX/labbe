@@ -19,14 +19,5 @@ namespace Service.Report.Dtos.CompanyStats
         public decimal Descuento { get; set; }
         public decimal DescuentoPorcentual { get; set; }
         public decimal TotalEstudios => PrecioEstudios - Descuento;
-        //
-        public int NoSolicitudes { get; set; }
-        public decimal SumaEstudios { get; set; }
-        public decimal SumaDescuentos { get; set; }
-        public decimal SumaDescuentoPorcentual { get; set; }
-        //
-        public decimal Subtotal => Total - IVA;
-        public decimal IVA => Total * (decimal)0.16;
-        public decimal Total { get; set; }
     }
 }

@@ -20,7 +20,7 @@ namespace Service.Report.Mapper
                            {
                                var studies = grupo.SelectMany(x => x.Estudios);
 
-                               var priceStudies = studies.Sum(x => x.PrecioFinal);
+                               var priceStudies = studies.Sum(x => x.Precio);
                                var descount = studies.Sum(x => x.Descuento);
                                var porcentualDescount = (descount * 100) / priceStudies;
                                decimal sumStudies = 0;
@@ -38,21 +38,80 @@ namespace Service.Report.Mapper
                                    PrecioEstudios = priceStudies,
                                    Descuento = descount,
                                    DescuentoPorcentual = porcentualDescount,
-                                   NoSolicitudes = grupo.Count(),
                                };
                            }
                            ).ToList();
 
-            results.Add(new CompanyStatsDto
-            {
-                SumaEstudios = results.Sum(x => x.PrecioEstudios),
-                SumaDescuentos = results.Sum(x => x.Descuento),
-                SumaDescuentoPorcentual = results.Sum(x => x.DescuentoPorcentual),
-            });
+            return results;
+        }
 
+        public static IEnumerable<CompanyStatsChartDto> ToCompanyStatsChartDto(this IEnumerable<Request> model)
+        {
+            if (model == null) return null;
 
+            var results = (from c in model
+                           group c by new { c.EmpresaId, c.Empresa.NombreEmpresa } into grupo
+                           select grupo).Select(grupo =>
+                           {
+                               return new CompanyStatsChartDto
+                               {
+                                   Id = Guid.NewGuid(),
+                                   Compañia = grupo.Key.NombreEmpresa,
+                                   NoSolicitudes = grupo.Count(),
+                               };
+                           }
+                          );
 
             return results;
+
+        }
+
+        public static CompanyDto ToCompanyDto(this IEnumerable<Request> model)
+        {
+            if (model == null) return null;
+
+            var results = (from c in model
+                           group c by new { c.Clave, c.Expediente.Nombre, c.Medico.NombreMedico, c.Empresa.Id, c.Empresa.NombreEmpresa, c.Empresa.Convenio } into grupo
+                           select grupo).Select(grupo =>
+                           {
+                               var studies = grupo.SelectMany(x => x.Estudios);
+
+                               var priceStudies = studies.Sum(x => x.Precio);
+                               var descount = studies.Sum(x => x.Descuento);
+                               var porcentualDescount = (descount / priceStudies) * 100;
+                               decimal sumStudies = 0;
+                               var sum = sumStudies += priceStudies;
+
+                               return new CompanyStatsDto
+                               {
+                                   Id = Guid.NewGuid(),
+                                   Solicitud = grupo.Key.Clave,
+                                   Paciente = grupo.Key.Nombre,
+                                   Medico = grupo.Key.NombreMedico,
+                                   Empresa = grupo.Key.NombreEmpresa,
+                                   Convenio = grupo.Key.Convenio,
+                                   Estudio = studies.ToCompanyDto(),
+                                   PrecioEstudios = priceStudies,
+                                   Descuento = descount,
+                                   DescuentoPorcentual = porcentualDescount,
+                               };
+                           }
+                           ).ToList();
+
+            var totals = new CompanyStatsTotalDto
+            {
+                NoSolicitudes = results.Count(),
+                SumaEstudios = results.Sum(x => x.PrecioEstudios),
+                SumaDescuentos = results.Sum(x => x.Descuento),
+            };
+
+            var data = new CompanyDto
+            {
+                CompanyStats = results,
+                CompanyTotal = totals
+            };
+
+            return data;
         }
 
         public static List<StudiesDto> ToCompanyDto(this IEnumerable<RequestStudy> studies)
@@ -62,7 +121,8 @@ namespace Service.Report.Mapper
                 Clave = x.Clave,
                 Estudio = x.Estudio,
                 Estatus = x.Estatus.Estatus,
-                Precio = x.PrecioFinal,
+                Precio = x.Precio,
+                PrecioFinal = x.PrecioFinal,
             }).ToList();
         }
     }

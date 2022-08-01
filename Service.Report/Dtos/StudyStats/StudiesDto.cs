@@ -12,6 +12,7 @@ namespace Service.Report.Dtos.StudyStats
         public string Estudio { get; set; }
         public string Estatus { get; set; }
         public decimal Precio { get; set; }
+        public decimal PrecioFinal { get; set; }
         public decimal Descuento { get; set; }
         public decimal TotalEstudios { get; set; }
         public decimal DescuentoPorcentual { get; set; }
