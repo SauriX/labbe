@@ -24,6 +24,7 @@ namespace Service.Report.Application
             _repository = repository;
             _pdfClient = pdfClient;
         }
+
         public async Task<IEnumerable<CompanyStatsDto>> GetByFilter(ReportFilterDto filter)
         {
             var data = await _repository.GetByFilter(filter);
@@ -32,19 +33,35 @@ namespace Service.Report.Application
             return results;
         }
 
+        public async Task<CompanyDto> GetTableByFilter(ReportFilterDto filter)
+        {
+            var data = await _repository.GetByFilter(filter);
+            var results = data.ToCompanyDto();
+
+            return results;
+        }
+
+        public async Task<IEnumerable<CompanyStatsChartDto>> GetChartByFilter(ReportFilterDto filter)
+        {
+            var data = await _repository.GetByFilter(filter);
+            var results = data.ToCompanyStatsChartDto();
+
+            return results;
+        }
+
         public async Task<byte[]> DownloadReportPdf(ReportFilterDto filter)
         {
-            var requestData = await GetByFilter(filter);
+            var requestData = await GetTableByFilter(filter);
+            var requestchartData = await GetChartByFilter(filter);
 
             List<Col> columns = new()
             {
                 new Col("Solicitud", ParagraphAlignment.Left),
                 new Col("Nombre del Paciente", ParagraphAlignment.Left),
                 new Col("Nombre del Médico", ParagraphAlignment.Left),
-                new Col("Compañía", ParagraphAlignment.Left),
                 new Col("Tipo de compañía", ParagraphAlignment.Left),
                 new Col("Estudios", ParagraphAlignment.Left, "C"),
-                new Col("Desc. %", ParagraphAlignment.Left, "%"),
+                new Col("Desc. %", ParagraphAlignment.Left),
                 new Col("Desc.", ParagraphAlignment.Left, "C"),
                 new Col("Total", ParagraphAlignment.Left, "C"),
             };
@@ -55,21 +72,33 @@ namespace Service.Report.Application
                 new ChartSeries("Solicitudes"),
             };
 
-            var data = requestData.Select(x => new Dictionary<string, object>
+            var data = requestData.CompanyStats.Select(x => new Dictionary<string, object>
             {
                 { "Solicitud", x.Solicitud },
                 { "Nombre del Paciente", x.Paciente },
                 { "Nombre del Médico", x.Medico },
-                { "Children", x.Estudio.Select(x => new Dictionary<string, object> { { "Clave", x.Clave}, { "Estudio", x.Estudio}, { "Precio", x.Precio}  } )},
-                { "Compañía", x.Empresa},
+                { "Children", x.Estudio.Select(x => new Dictionary<string, object> { { "Clave", x.Clave}, { "Estudio", x.Estudio}, { "Precio", $"${x.Precio}"}  } )},
                 { "Tipo de compañía", x.Convenio == 1 ? "Convenio" : "Todas"},
-                { "Estudios", x.TotalEstudios},
-                { "Desc. %", x.DescuentoPorcentual},
+                { "Estudios", x.PrecioEstudios},
+                { "Desc. %", $"{Math.Round(x.DescuentoPorcentual, 2)}%"},
                 { "Desc.", x.Descuento},
-                { "Total", x.Total},
-                { "Table", new Dictionary<string, object> { { "Solicitudes", x.NoSolicitudes}, { "Estudios", x.TotalEstudios}, { "Desc. %", x.DescuentoPorcentual}, { "Desc.", x.Descuento}, { "Total", x.Total} } },
-                { "Invoice", new Dictionary<string, object> { { "Subtotal", x.Subtotal}, { "IVA", x.IVA }, { "Total", x.Total } } }
+                { "Total", x.TotalEstudios}
             }).ToList();
+
+            var datachart = requestchartData.Select(x => new Dictionary<string, object>
+            {
+                { "Compañía", x.Compañia},
+                { "Solicitudes", x.NoSolicitudes}
+            }).ToList();
+
+            var totales = new TotalData()
+            {
+                NoSolicitudes = requestData.CompanyTotal.NoSolicitudes,
+                Precios = requestData.CompanyTotal.SumaEstudios,
+                Descuento = requestData.CompanyTotal.SumaDescuentos,
+                DescuentoPorcentual = requestData.CompanyTotal.SumaDescuentoPorcentual,
+                Total = requestData.CompanyTotal.Total
+            };
 
             var branches = await GetBranchNames(filter.SucursalId);
 
@@ -77,7 +106,14 @@ namespace Service.Report.Application
             {
                 NombreReporte = "Solicitudes por Compañía",
                 Sucursal = string.Join(", ", branches.Select(x => x)),
-                Fecha = $"{filter.Fecha.Min():dd/MM/yyyy} - {filter.Fecha.Max().ToString("dd/MM/yyyy")}"
+                Fecha = $"{filter.Fecha.Min():dd/MM/yyyy} - {filter.Fecha.Max():dd/MM/yyyy}"
+            };
+
+            var invoice = new InvoiceData()
+            {
+                Subtotal = requestData.CompanyTotal.Subtotal,
+                IVA = requestData.CompanyTotal.IVA,
+                Total = requestData.CompanyTotal.Total,
             };
 
             var reportData = new ReportData()
@@ -85,7 +121,10 @@ namespace Service.Report.Application
                 Columnas = columns,
                 Series = filter.Grafica ? series : null,
                 Datos = data,
+                DatosGrafica = datachart,
                 Header = headerData,
+                Invoice = invoice,
+                Totales = totales
             };
 
             var file = await _pdfClient.GenerateReport(reportData);
