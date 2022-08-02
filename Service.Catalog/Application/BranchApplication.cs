@@ -45,7 +45,7 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated(Responses.Duplicated($"El {code}")));
             }
 
-            //await _repository.Create(newBranch);
+            await _repository.Create(newBranch);
 
             var contract = new BranchContract(newBranch.Id, newBranch.Clave, newBranch.Nombre, newBranch.Clinicos);
 
