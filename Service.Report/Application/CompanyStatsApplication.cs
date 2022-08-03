@@ -96,7 +96,7 @@ namespace Service.Report.Application
                 NoSolicitudes = requestData.CompanyTotal.NoSolicitudes,
                 Precios = requestData.CompanyTotal.SumaEstudios,
                 Descuento = requestData.CompanyTotal.SumaDescuentos,
-                DescuentoPorcentual = requestData.CompanyTotal.SumaDescuentoPorcentual,
+                DescuentoPorcentual = requestData.CompanyTotal.TotalDescuentoPorcentual,
                 Total = requestData.CompanyTotal.Total
             };
 

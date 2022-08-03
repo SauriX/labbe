@@ -73,8 +73,8 @@ namespace Service.Report.Application
                 { "Edad", x.Edad},
                 { "Sexo", x.Sexo},
                 { "Nombre del Médico", x.Medico },
-                { "Fecha de Entrega", x.FechaEntrega.ToString("dd/MM/yyyy")},
-                { "Fecha de Estudio", x.Fecha.ToString("dd/MM/yyyy")},
+                { "Fecha de Entrega", x.FechaEntrega},
+                { "Fecha de Estudio", x.Fecha},
                 { "Parcialidad", x.Parcialidad ? "Si" : "No"},
             }).ToList();
 

@@ -30,8 +30,8 @@ namespace Service.Report.Mapper
                                    Sexo = grupo.Key.Expediente.Sexo,
                                    Estudio = studies.ToStudiesDto(),
                                    Medico = grupo.Key.NombreMedico,
-                                   FechaEntrega = grupo.Key.Fecha.AddDays(dueDate),
-                                   Fecha = grupo.Key.Fecha,
+                                   FechaEntrega = grupo.Key.Fecha.AddDays(dueDate).ToString("dd/MM/yyyy"),
+                                   Fecha = grupo.Key.Fecha.ToString("dd/MM/yyyy"),
                                    Parcialidad = grupo.Key.Parcialidad,
                                };
                            });
@@ -60,7 +60,7 @@ namespace Service.Report.Mapper
                                    Sexo = grupo.Key.Expediente.Sexo,
                                    Estudio = studies.ToStudiesDto(),
                                    Medico = grupo.Key.NombreMedico,
-                                   FechaEntrega = grupo.Key.Fecha.AddDays(dueDate),
+                                   FechaEntrega = grupo.Key.Fecha.AddDays(dueDate).ToString("dd/MM/yyyy"),
                                    Urgencia = grupo.Key.Urgencia,
                                };
                            });
