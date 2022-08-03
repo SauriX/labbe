@@ -1,7 +1,14 @@
-﻿namespace Service.MedicalRecord.Domain.Catalogs
+﻿using System;
+
+namespace Service.MedicalRecord.Domain.Catalogs
 {
     public class Branch
     {
-        public string Sucursal { get; set; }
+        public Guid Id { get; set; }
+        public string CodigoPostal { get; set; }
+        public short CiudadId { get; set; }
+        public string Clinicos { get; set; }
+        public string Clave { get; set; }
+        public string Nombre { get; set; }
     }
 }

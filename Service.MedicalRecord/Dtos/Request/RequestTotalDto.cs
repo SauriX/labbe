@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 
 namespace Service.MedicalRecord.Dtos.Request
 {
     public class RequestTotalDto
     {
-        public Guid Id { get; set; }
+        public Guid SolicitudId { get; set; }
+        public Guid ExpedienteId { get; set; }
         public decimal TotalEstudios { get; set; }
         public decimal Descuento { get; set; }
         public byte DescuentoTipo { get; set; }
@@ -14,6 +16,7 @@ namespace Service.MedicalRecord.Dtos.Request
         public byte CopagoTipo { get; set; }
         public decimal Total { get; set; }
         public decimal Saldo { get; set; }
+        [JsonIgnore]
         public Guid UsuarioId { get; set; }
     }
 }

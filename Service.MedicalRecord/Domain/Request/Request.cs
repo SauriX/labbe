@@ -14,7 +14,7 @@ namespace Service.MedicalRecord.Domain.Request
         public byte Procedencia { get; set; }
         public string Afiliacion { get; set; }
         public Guid? CompañiaId { get; set; }
-        public Guid MedicoId { get; set; }
+        public Guid? MedicoId { get; set; }
         public byte Urgencia { get; set; }
         public string Observaciones { get; set; }
         public string EnvioCorreo { get; set; }
@@ -28,5 +28,6 @@ namespace Service.MedicalRecord.Domain.Request
         public string UsuarioCreo { get; set; }
 
         public virtual ICollection<RequestStudy> Estudios { get; set; }
+        public virtual ICollection<RequestPack> Paquetes { get; set; }
     }
 }

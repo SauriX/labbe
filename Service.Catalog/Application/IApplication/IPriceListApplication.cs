@@ -9,8 +9,8 @@ namespace Service.Catalog.Application.IApplication
     {
         Task<IEnumerable<PriceListListDto>> GetAll(string search);
         Task<PriceListFormDto> GetById(string Id);
-        Task<PriceListInfoStudyDto> GetPriceStudyById(int id, Guid? companyId, Guid? doctorId, Guid? branchId);
-        Task<PriceListInfoPackDto> GetPricePackById(int id, Guid? companyId, Guid? doctorId, Guid? branchId);
+        Task<PriceListInfoStudyDto> GetPriceStudyById(PriceListInfoFilterDto filterDto);
+        Task<PriceListInfoPackDto> GetPricePackById(PriceListInfoFilterDto filterDto);
         Task<PriceListListDto> Create(PriceListFormDto indicacion);
         Task<PriceListListDto> Update(PriceListFormDto indication);
         Task<IEnumerable<PriceListListDto>> GetActive();

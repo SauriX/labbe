@@ -61,7 +61,7 @@ namespace Service.MedicalRecord.Controllers
         {
             //request.UsuarioId = (Guid)HttpContext.Items["userId"];
 
-            return (await _ServiceRequest.Create(request)).Id.ToString();
+            return await _ServiceRequest.Create(request);
         }
         [HttpPut]
         //[Authorize(Policies.Update)]

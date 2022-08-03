@@ -13,9 +13,11 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task<RequestStudy> GetStudyById(Guid requestId, int studyId);
         Task<List<RequestStudy>> GetStudyById(Guid requestId, IEnumerable<int> studiesIds);
         Task<List<RequestStudy>> GetStudiesByRequest(Guid requestId);
+        Task<List<RequestPack>> GetPacksByRequest(Guid requestId);
         Task Create(Request request);
         Task Update(Request request);
         Task UpdateStudy(RequestStudy study);
+        Task BulkUpdatePacks(Guid requestId, List<RequestPack> studies);
         Task BulkUpdateStudies(Guid requestId, List<RequestStudy> studies);
     }
 }

@@ -2,6 +2,6 @@
 {
     public class Company 
     {
-        public string NombreEmpresa { get; set; }
+        public string Nombre { get; set; }
     }
 }

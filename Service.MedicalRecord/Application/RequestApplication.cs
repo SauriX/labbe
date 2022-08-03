@@ -18,32 +18,73 @@ using System.Net;
 using System.Threading.Tasks;
 using SharedResponses = Shared.Dictionary.Responses;
 using RecordResponses = Service.MedicalRecord.Dictionary.Response;
+using Service.MedicalRecord.Settings.ISettings;
+using Service.MedicalRecord.Transactions;
 
 namespace Service.MedicalRecord.Application
 {
     public class RequestApplication : IRequestApplication
     {
-        private readonly string _imageUrl;
+        private readonly ITransactionProvider _transaction;
         private readonly IRequestRepository _repository;
         private readonly ICatalogClient _catalogClient;
         private readonly IPdfClient _pdfClient;
         private readonly ISendEndpointProvider _sendEndpointProvider;
+        private readonly IRabbitMQSettings _rabbitMQSettings;
+        private readonly IQueueNames _queueNames;
+
+        public const byte Compañia = 1;
 
         public RequestApplication(
-            IConfiguration configuration,
+            ITransactionProvider transaction,
             IRequestRepository repository,
             ICatalogClient catalogClient,
             IPdfClient pdfClient,
-            ISendEndpointProvider sendEndpoint)
+            ISendEndpointProvider sendEndpoint,
+            IRabbitMQSettings rabbitMQSettings,
+            IQueueNames queueNames)
         {
-            _imageUrl = configuration.GetValue<string>("Request:ImageUrl");
+            _transaction = transaction;
             _repository = repository;
             _catalogClient = catalogClient;
             _pdfClient = pdfClient;
             _sendEndpointProvider = sendEndpoint;
+            _queueNames = queueNames;
+            _rabbitMQSettings = rabbitMQSettings;
         }
 
-        public async Task<RequestDto> Create(RequestDto requestDto)
+        public async Task<RequestDto> GetById(Guid recordId, Guid requestId)
+        {
+            var request = await GetExistingRequest(recordId, requestId);
+
+            return request.ToRequestDto();
+        }
+
+        public async Task<RequestGeneralDto> GetGeneral(Guid recordId, Guid requestId)
+        {
+            var request = await GetExistingRequest(recordId, requestId);
+
+            return request.ToRequestGeneralDto();
+        }
+
+        public async Task<RequestStudyUpdateDto> GetStudies(Guid recordId, Guid requestId)
+        {
+            var request = await GetExistingRequest(recordId, requestId);
+
+            var packs = await _repository.GetPacksByRequest(request.Id);
+            var packsDto = packs.ToRequestPackDto();  
+            
+            var studies = await _repository.GetStudiesByRequest(request.Id);
+            var studiesDto = studies.ToRequestStudyDto();
+
+            return new RequestStudyUpdateDto()
+            {
+                Paquetes = packsDto,
+                Estudios = studiesDto
+            };
+        }
+
+        public async Task<string> Create(RequestDto requestDto)
         {
             var date = DateTime.Now.ToString("ddMMyy");
 
@@ -58,139 +99,141 @@ namespace Service.MedicalRecord.Application
 
             await _repository.Create(newRequest);
 
-            return newRequest.ToRequestDto();
+            return newRequest.Id.ToString();
         }
 
-        public async Task SendTestEmail(Guid requestId, string email)
+        public async Task UpdateGeneral(RequestGeneralDto requestDto)
         {
-            var request = await _repository.FindAsync(requestId);
+            var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
 
-            if (request == null)
-            {
-                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
-            }
-
-            var emailToSend = new EmailContract("mike_fa96@hotmail.com", null, "hola", "test", "test");
-
-            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("rabbitmq://axsishost.online:5672/labramos-dev/email-queue"));
-
-            await endpoint.Send(emailToSend);
-        }
-
-        public async Task SendTestWhatsapp(Guid requestId, string phone)
-        {
-            var request = await _repository.FindAsync(requestId);
-
-            if (request == null)
-            {
-                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
-            }
-
-            var emailToSend = new EmailContract("mike_fa96@hotmail.com", null, "hola", "test", "test");
-
-            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("rabbitmq://axsishost.online:5672/labramos-dev/email-queue"));
-
-            await endpoint.Send(emailToSend);
-        }
-
-        public async Task UpdateGeneral(RequestGeneralDto requestGeneralDto)
-        {
-            var request = await _repository.FindAsync(requestGeneralDto.Id);
-
-            if (request == null)
-            {
-                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
-            }
-
-            request.Procedencia = requestGeneralDto.Procedencia;
-            request.CompañiaId = requestGeneralDto.Procedencia == 1 ? null : requestGeneralDto.CompañiaId;
-            request.MedicoId = requestGeneralDto.MedicoId;
-            request.Afiliacion = requestGeneralDto.Afiliacion;
-            request.Urgencia = requestGeneralDto.Urgencia;
-            request.EnvioCorreo = requestGeneralDto.EnvioCorreo;
-            request.EnvioWhatsApp = requestGeneralDto.EnvioWhatsApp;
-            request.Observaciones = requestGeneralDto.Observaciones;
-            request.UsuarioModificoId = requestGeneralDto.UsuarioId;
+            request.Procedencia = requestDto.Procedencia;
+            request.CompañiaId = requestDto.Procedencia == Compañia ? requestDto.CompañiaId : null;
+            request.MedicoId = requestDto.MedicoId;
+            request.Afiliacion = requestDto.Afiliacion;
+            request.Urgencia = requestDto.Urgencia;
+            request.EnvioCorreo = requestDto.Correo;
+            request.EnvioWhatsApp = requestDto.Whatsapp;
+            request.Observaciones = requestDto.Observaciones;
+            request.UsuarioModificoId = requestDto.UsuarioId;
             request.FechaModifico = DateTime.Now;
 
             await _repository.Update(request);
         }
 
-        public async Task UpdateTotals(RequestTotalDto requestTotalDto)
+        public async Task SendTestEmail(RequestSendDto requestDto)
         {
-            var request = await _repository.FindAsync(requestTotalDto.Id);
+            var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
 
-            if (request == null)
+            var emailToSend = new EmailContract("mike_fa96@hotmail.com", null, "hola", "test", "test");
+
+            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("rabbitmq://axsishost.online:5672/labramos-dev/email-queue"));
+
+            await endpoint.Send(emailToSend);
+        }
+
+        public async Task SendTestWhatsapp(RequestSendDto requestDto)
+        {
+            var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
+
+            var emailToSend = new WhatsappContract(requestDto.Telefono, "Hola")
             {
-                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
-            }
+                Notificar = true,
+                RemitenteId = requestDto.UsuarioId.ToString()
+            };
+
+            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, _queueNames.Whatsapp)));
+
+            await endpoint.Send(emailToSend);
+        }
+
+        public async Task UpdateTotals(RequestTotalDto requestDto)
+        {
+            var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
 
             await _repository.Update(request);
         }
 
-        public async Task AddStudies(Guid requestId, List<RequestStudyDto> studiesDto)
+        public async Task UpdateStudies(RequestStudyUpdateDto requestDto)
         {
-            var request = await _repository.FindAsync(requestId);
-
-            if (request == null)
+            try
             {
-                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
+                _transaction.BeginTransaction();
+
+                var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
+
+                var studiesDto = requestDto.Estudios ?? new List<RequestStudyDto>();
+                var packStudiesDto = new List<RequestStudyDto>();
+
+                if (requestDto.Paquetes != null)
+                {
+                    if (requestDto.Paquetes.Any(x => x.Estudios == null || x.Estudios.Count == 0))
+                    {
+                        throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.PackWithoutStudies);
+                    }
+
+                    packStudiesDto = requestDto.Paquetes.SelectMany(x =>
+                    {
+                        foreach (var item in x.Estudios)
+                        {
+                            item.PaqueteId = x.PaqueteId;
+                        }
+
+                        return x.Estudios;
+                    }).ToList();
+                }
+
+                studiesDto.AddRange(packStudiesDto);
+
+                var duplicates = requestDto.Estudios.GroupBy(x => x.Clave).Where(x => x.Count() > 1).Select(x => x.Key);
+
+                if (duplicates != null && duplicates.Any())
+                {
+                    throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.RepeatedStudies(string.Join(", ", duplicates)));
+                }
+
+                var currentPacks = await _repository.GetPacksByRequest(requestDto.SolicitudId);
+
+                var currentSudies = await _repository.GetStudiesByRequest(requestDto.SolicitudId);
+
+                var packs = requestDto.Paquetes.ToModel(requestDto.SolicitudId, currentPacks, requestDto.UsuarioId);
+
+                await _repository.BulkUpdatePacks(requestDto.SolicitudId, packs);
+
+                var studies = studiesDto.ToModel(requestDto.SolicitudId, currentSudies, requestDto.UsuarioId);
+
+                await _repository.BulkUpdateStudies(requestDto.SolicitudId, studies);
+
+                _transaction.CommitTransaction();
             }
-
-            var duplicates = studiesDto.GroupBy(x => x.Clave).Where(x => x.Count() > 1).Select(x => x.Key);
-
-            if (duplicates != null && duplicates.Any())
+            catch (Exception)
             {
-                throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.RepeatedStudies(string.Join(", ", duplicates)));
+                _transaction.RollbackTransaction();
+                throw;
             }
-
-            var currentSudies = await _repository.GetStudiesByRequest(requestId);
-
-            var studies = studiesDto.ToModel(requestId, currentSudies);
-
-            await _repository.BulkUpdateStudies(requestId, studies);
         }
 
-        public async Task CancelStudies(Guid requestId, List<int> studiesIds)
+        public async Task CancelStudies(RequestStudyUpdateDto requestDto)
         {
-            var request = await _repository.FindAsync(requestId);
+            var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
 
-            if (request == null)
+            var currentSudies = await _repository.GetStudiesByRequest(requestDto.SolicitudId);
+
+            var studies = currentSudies.Where(x => !requestDto.Estudios.Select(y => y.EstudioId).Contains(x.EstudioId)).ToList();
+
+            if (studies == null || studies.Count == 0)
             {
-                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
+                throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.NoStudySelected);
             }
 
-            var currentSudies = await _repository.GetStudiesByRequest(requestId);
-
-            var studies = currentSudies.Where(x => !studiesIds.Contains(x.EstudioId)).ToList();
-
-            await _repository.BulkUpdateStudies(requestId, studies);
+            await _repository.BulkUpdateStudies(requestDto.SolicitudId, studies);
         }
 
-        public async Task<byte[]> PrintTicket(Guid requestId)
+        public async Task<int> SendStudiesToSampling(RequestStudyUpdateDto requestDto)
         {
-            var request = await _repository.GetById(requestId);
+            var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
 
-            if (request == null)
-            {
-                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
-            }
-
-            var orderData = request.ToRequestOrderDto();
-
-            return await _pdfClient.GenerateTicket();
-        }
-
-        public async Task<int> SendStudiesToSampling(Guid requestId, List<int> studiesIds, Guid userId)
-        {
-            var request = await _repository.FindAsync(requestId);
-
-            if (request == null)
-            {
-                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
-            }
-
-            var studies = await _repository.GetStudyById(requestId, studiesIds);
+            var studiesIds = requestDto.Estudios.Select(x => x.EstudioId);
+            var studies = await _repository.GetStudyById(requestDto.SolicitudId, studiesIds);
 
             studies = studies.Where(x => x.EstatusId == Status.Request.Pendiente).ToList();
 
@@ -199,28 +242,24 @@ namespace Service.MedicalRecord.Application
                 throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.NoStudySelected);
             }
 
-            studies.ForEach(x =>
+            foreach (var study in studies)
             {
-                x.EstatusId = Status.Request.TomaDeMuestra;
-                x.UsuarioModificoId = userId;
-                x.FechaModifico = DateTime.Now;
-            });
+                study.EstatusId = Status.Request.TomaDeMuestra;
+                study.UsuarioModificoId = requestDto.UsuarioId;
+                study.FechaModifico = DateTime.Now;
+            }
 
-            await _repository.BulkUpdateStudies(requestId, studies);
+            await _repository.BulkUpdateStudies(requestDto.SolicitudId, studies);
 
             return studies.Count;
         }
 
-        public async Task<int> SendStudiesToRequest(Guid requestId, List<int> studiesIds, Guid userId)
+        public async Task<int> SendStudiesToRequest(RequestStudyUpdateDto requestDto)
         {
-            var request = await _repository.FindAsync(requestId);
+            var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
 
-            if (request == null)
-            {
-                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
-            }
-
-            var studies = await _repository.GetStudyById(requestId, studiesIds);
+            var studiesIds = requestDto.Estudios.Select(x => x.EstudioId);
+            var studies = await _repository.GetStudyById(requestDto.SolicitudId, studiesIds);
 
             studies = studies.Where(x => x.EstatusId == Status.Request.TomaDeMuestra).ToList();
 
@@ -229,39 +268,43 @@ namespace Service.MedicalRecord.Application
                 throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.NoStudySelected);
             }
 
-            studies.ForEach(x =>
+            foreach (var study in studies)
             {
-                x.EstatusId = Status.Request.Solicitado;
-                x.UsuarioModificoId = userId;
-                x.FechaModifico = DateTime.Now;
-            });
+                study.EstatusId = Status.Request.Solicitado;
+                study.UsuarioModificoId = requestDto.UsuarioId;
+                study.FechaModifico = DateTime.Now;
+            }
 
-            await _repository.BulkUpdateStudies(requestId, studies);
+            await _repository.BulkUpdateStudies(requestDto.SolicitudId, studies);
 
             return studies.Count;
         }
 
-        public async Task AddPartiality(Guid requestId, bool apply, Guid userId)
+        public async Task AddPartiality(RequestPartialityDto requestDto)
         {
-            var request = await _repository.FindAsync(requestId);
+            var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
 
-            if (request == null)
-            {
-                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
-            }
-
-            request.Parcialidad = apply;
-            request.UsuarioModificoId = userId;
+            request.Parcialidad = requestDto.Aplicar;
+            request.UsuarioModificoId = requestDto.UsuarioId;
             request.FechaModifico = DateTime.Now;
 
             await _repository.Update(request);
         }
 
-        public async Task<byte[]> PrintOrder(Guid requestId)
+        public async Task<byte[]> PrintTicket(Guid recordId, Guid requestId)
         {
-            var request = await _repository.FindAsync(requestId);
+            var request = await GetExistingRequest(recordId, requestId);
 
-            if (request == null)
+            var orderData = request.ToRequestOrderDto();
+
+            return await _pdfClient.GenerateTicket();
+        }
+
+        public async Task<byte[]> PrintOrder(Guid recordId, Guid requestId)
+        {
+            var request = await _repository.GetById(requestId);
+
+            if (request == null || request.ExpedienteId != recordId)
             {
                 throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
             }
@@ -271,32 +314,27 @@ namespace Service.MedicalRecord.Application
             return await _pdfClient.GenerateOrder(order);
         }
 
-        public async Task SaveImage(RequestImageDto requestImageDto)
+        public async Task SaveImage(RequestImageDto requestDto)
         {
-            var request = await _repository.FindAsync(requestImageDto.SolicitudId);
+            var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
 
-            if (request == null)
-            {
-                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
-            }
+            var typeOk = requestDto.Tipo.In("orden", "ine", "formato");
 
-            var typeOk = requestImageDto.Tipo.In("orden", "ine", "formato");
-
-            var isImage = requestImageDto.Imagen.IsImage();
+            var isImage = requestDto.Imagen.IsImage();
 
             if (!typeOk || !isImage)
             {
                 throw new CustomException(HttpStatusCode.BadRequest, SharedResponses.InvalidImage);
             }
 
-            requestImageDto.Clave = request.Clave;
-            var path = await SaveImageGetPath(requestImageDto);
+            requestDto.Clave = request.Clave;
+            var path = await SaveImageGetPath(requestDto);
 
-            if (requestImageDto.Tipo == "orden")
+            if (requestDto.Tipo == "orden")
             {
                 request.RutaOrden = path;
             }
-            else if (requestImageDto.Tipo == "ine")
+            else if (requestDto.Tipo == "ine")
             {
                 request.RutaINE = path;
             }
@@ -305,12 +343,15 @@ namespace Service.MedicalRecord.Application
                 request.RutaFormato = path;
             }
 
+            request.UsuarioModificoId = requestDto.UsuarioId;
+            request.FechaModifico = DateTime.Now;
+
             await _repository.Update(request);
         }
 
-        private async Task<string> SaveImageGetPath(RequestImageDto requestDto)
+        private static async Task<string> SaveImageGetPath(RequestImageDto requestDto)
         {
-            var path = Path.Combine(_imageUrl, "Solicitudes", requestDto.Clave);
+            var path = Path.Combine("wwwroot/images/requests", requestDto.Clave);
             var name = string.Concat(requestDto.Tipo, ".png");
 
             var isSaved = await requestDto.Imagen.SaveFileAsync(path, name);
@@ -321,6 +362,18 @@ namespace Service.MedicalRecord.Application
             }
 
             return null;
+        }
+
+        private async Task<Domain.Request.Request> GetExistingRequest(Guid recordId, Guid requestId)
+        {
+            var request = await _repository.FindAsync(requestId);
+
+            if (request == null || request.ExpedienteId != recordId)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
+            }
+
+            return request;
         }
     }
 }

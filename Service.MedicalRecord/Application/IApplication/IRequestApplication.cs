@@ -7,18 +7,21 @@ namespace Service.MedicalRecord.Application.IApplication
 {
     public interface IRequestApplication
     {
-        Task AddPartiality(Guid requestId, bool apply, Guid userId);
-        Task AddStudies(Guid requestId, List<RequestStudyDto> studiesDto);
-        Task CancelStudies(Guid requestId, List<int> studiesIds);
-        Task<RequestDto> Create(RequestDto requestDto);
-        Task<byte[]> PrintOrder(Guid requestId);
-        Task<byte[]> PrintTicket(Guid requestId);
-        Task SaveImage(RequestImageDto requestImageDto);
-        Task<int> SendStudiesToRequest(Guid requestId, List<int> studiesIds, Guid userId);
-        Task<int> SendStudiesToSampling(Guid requestId, List<int> studiesIds, Guid userId);
-        Task SendTestEmail(Guid requestId, string email);
-        Task SendTestWhatsapp(Guid requestId, string phone);
-        Task UpdateGeneral(RequestGeneralDto requestGeneralDto);
-        Task UpdateTotals(RequestTotalDto requestTotalDto);
+        Task<RequestDto> GetById(Guid recordId, Guid requestId);
+        Task<RequestGeneralDto> GetGeneral(Guid recordId, Guid requestId);
+        Task<RequestStudyUpdateDto> GetStudies(Guid recordId, Guid requestId);
+        Task SendTestEmail(RequestSendDto requestDto);
+        Task SendTestWhatsapp(RequestSendDto requestDto);
+        Task<string> Create(RequestDto requestDto);
+        Task UpdateGeneral(RequestGeneralDto requestDto);
+        Task UpdateTotals(RequestTotalDto requestDto);
+        Task UpdateStudies(RequestStudyUpdateDto requestDto);
+        Task CancelStudies(RequestStudyUpdateDto requestDto);
+        Task<int> SendStudiesToSampling(RequestStudyUpdateDto requestDto);
+        Task<int> SendStudiesToRequest(RequestStudyUpdateDto requestDto);
+        Task AddPartiality(RequestPartialityDto requestDto);
+        Task<byte[]> PrintTicket(Guid recordId, Guid requestId);
+        Task<byte[]> PrintOrder(Guid recordId, Guid requestId);
+        Task SaveImage(RequestImageDto requestDto);
     }
 }

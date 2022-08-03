@@ -1,7 +1,12 @@
-﻿using EventBus.Messages.Common;
+﻿using EventBus.Messages;
+using EventBus.Messages.Common;
 using MassTransit;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Service.Sender.Service.IService;
+using Service.Sender.SignalR;
 using Shared.Helpers;
 using System.Threading.Tasks;
 
@@ -11,11 +16,13 @@ namespace Service.Sender.Consumers
     {
         private readonly ILogger<EmailConsumer> _logger;
         private readonly IEmailService _emailService;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        public EmailConsumer(ILogger<EmailConsumer> logger, IEmailService emailService)
+        public EmailConsumer(ILogger<EmailConsumer> logger, IEmailService emailService, IHubContext<NotificationHub> hubContext)
         {
             _logger = logger;
             _emailService = emailService;
+            _hubContext = hubContext;
         }
 
         public async Task Consume(ConsumeContext<EmailContract> context)
@@ -33,6 +40,13 @@ namespace Service.Sender.Consumers
                 else
                 {
                     await _emailService.Send(message.ParaMultiple, message.Asunto, message.Titulo, message.Contenido);
+                }
+
+                if (message.Notificar)
+                {
+                    var notification = new NotificationContract("Correo enviado correctamente", true);
+
+                    await _hubContext.Clients.Group(message.RemitenteId).SendAsync("Notify", notification.Serialize());
                 }
             }
             catch (System.Exception ex)

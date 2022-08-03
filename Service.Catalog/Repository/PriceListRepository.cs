@@ -39,11 +39,12 @@ namespace Service.Catalog.Repository
             return await indications.ToListAsync();
         }
 
-        public async Task<PriceList_Study> GetPriceStudyById(int studyId, Guid? companyId, Guid? doctorId, Guid branchId)
+        public async Task<PriceList_Study> GetPriceStudyById(int studyId, Guid branchId, Guid? companyId, Guid? doctorId)
         {
             var prices = _context.Relacion_ListaP_Estudio
                 .Include(x => x.Estudio.Parameters).ThenInclude(x => x.Parametro.Area.Departamento)
                 .Include(x => x.Estudio.Indications).ThenInclude(x => x.Indicacion)
+                .Include(x => x.PrecioLista)
                 .Where(x => x.EstudioId == studyId);
 
             if (companyId != null && companyId != Guid.Empty)
@@ -76,18 +77,30 @@ namespace Service.Catalog.Repository
 
             var branchPrice = await
                 (from p in prices
-                 join dp in _context.CAT_ListaP_Sucursal/*.Where(x => x.SucursalId == branchId)*/ on p.PrecioListaId equals dp.PrecioListaId
+                 join dp in _context.CAT_ListaP_Sucursal.Where(x => x.SucursalId == branchId) on p.PrecioListaId equals dp.PrecioListaId
                  where dp.Activo
                  select p).FirstOrDefaultAsync();
 
             return branchPrice;
         }
 
-        public async Task<PriceList_Packet> GetPricePackById(int packId, Guid? companyId, Guid? doctorId, Guid branchId)
+        public async Task<List<PriceList_Study>> GetPriceStudyById(Guid priceList, IEnumerable<int> studyId)
+        {
+            var prices = await _context.Relacion_ListaP_Estudio
+                .Include(x => x.Estudio.Parameters).ThenInclude(x => x.Parametro.Area.Departamento)
+                .Include(x => x.Estudio.Indications).ThenInclude(x => x.Indicacion)
+                .Where(x => x.PrecioListaId == priceList && studyId.Contains(x.EstudioId))
+                .ToListAsync();
+
+            return prices;
+        }
+
+        public async Task<PriceList_Packet> GetPricePackById(int packId, Guid branchId, Guid? companyId, Guid? doctorId)
         {
             var prices = _context.Relacion_ListaP_Paquete
                 .Include(x => x.Paquete.studies).ThenInclude(x => x.Estudio.Parameters).ThenInclude(x => x.Parametro.Area.Departamento)
                 .Include(x => x.Paquete.studies).ThenInclude(x => x.Estudio.Indications).ThenInclude(x => x.Indicacion)
+                .Include(x => x.PrecioLista)
                 .Where(x => x.PaqueteId == packId);
 
             if (companyId != null && companyId != Guid.Empty)

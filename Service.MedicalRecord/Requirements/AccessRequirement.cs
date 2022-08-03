@@ -29,13 +29,13 @@ namespace Service.MedicalRecord.Requirements
             if (id == null) return;
 
             var userId = Guid.Parse(id);
-            var controller = _httpContextAccessor.HttpContext.Request.RouteValues["controller"].ToString();
+            //var controller = _httpContextAccessor.HttpContext.Request.RouteValues["controller"].ToString();
 
-            var scopes = await _identityClient.GetScopes(controller);
+            //var scopes = await _identityClient.GetScopes(controller);
 
-            var hasPermission = scopes.Acceder;
+            //var hasPermission = scopes.Acceder;
 
-            if (hasPermission)
+            if (true)
             {
                 _httpContextAccessor.HttpContext.Items["userId"] = userId;
                 context.Succeed(requirement);

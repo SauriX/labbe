@@ -18,5 +18,7 @@ namespace EventBus.Messages.Common
         public string Asunto { get; set; }
         public string Titulo { get; set; }
         public string Contenido { get; set; }
+        public string RemitenteId { get; set; }
+        public bool Notificar { get; set; }
     }
 }

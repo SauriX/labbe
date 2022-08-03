@@ -16,5 +16,7 @@ namespace EventBus.Messages.Common
 
         public string Telefono { get; set; }
         public string Mensaje { get; set; }
+        public string RemitenteId { get; set; }
+        public bool Notificar { get; set; }
     }
 }

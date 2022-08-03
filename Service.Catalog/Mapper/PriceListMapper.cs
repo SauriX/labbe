@@ -220,11 +220,14 @@ namespace Service.Catalog.Mapper
 
             return new PriceListInfoStudyDto
             {
-                PrecioListaId = model.PrecioListaId.ToString(),
+                ListaPrecioId = model.PrecioListaId,
+                ListaPrecio = model.PrecioLista.Nombre,
                 EstudioId = model.EstudioId,
-                Clave = model.Estudio.Clave,
                 Nombre = model.Estudio.Nombre,
-                PrecioListaPrecio = model.Precio,
+                Clave = model.Estudio.Clave,
+                Dias = Convert.ToInt32(Math.Ceiling(model.Estudio.DiasResultado)),
+                Horas = model.Estudio.TiempoResultado,
+                Precio = model.Precio,
                 Parametros = model.Estudio.Parameters.Select(x => x.Parametro).ToParameterListDto(),
                 Indicaciones = model.Estudio.Indications.Select(x => x.Indicacion).ToIndicationListDto(),
             };
@@ -236,21 +239,24 @@ namespace Service.Catalog.Mapper
 
             return new PriceListInfoPackDto
             {
-                PrecioListaId = model.PrecioListaId.ToString(),
+                ListaPrecioId = model.PrecioListaId,
+                ListaPrecio = model.PrecioLista.Nombre,
                 PaqueteId = model.PaqueteId,
-                Clave = model.Paquete.Clave,
                 Nombre = model.Paquete.Nombre,
-                PrecioListaPrecio = model.Precio,
+                Clave = model.Paquete.Clave,
+                Precio = model.Precio,
                 Estudios = model.Paquete.studies.Select(x => new PriceListInfoStudyDto
                 {
-                    PrecioListaId = model.PrecioListaId.ToString(),
+                    ListaPrecioId = model.PrecioListaId,
+                    ListaPrecio = model.PrecioLista.Nombre,
                     EstudioId = x.EstudioId,
-                    Clave = x.Estudio.Clave,
                     Nombre = x.Estudio.Nombre,
-                    //PrecioListaPrecio = x.Precio,
+                    Clave = x.Estudio.Clave,
+                    Dias = Convert.ToInt32(Math.Ceiling(x.Estudio.DiasResultado)),
+                    Horas = x.Estudio.TiempoResultado,
                     Parametros = x.Estudio.Parameters.Select(x => x.Parametro).ToParameterListDto(),
                     Indicaciones = x.Estudio.Indications.Select(x => x.Indicacion).ToIndicationListDto(),
-                }),
+                }).ToList(),
             };
         }
 
