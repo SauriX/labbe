@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Service.Report.Repository
 {
-    public class Repository<T> : IRepository<T> where T : Base
+    public class Repository<T> : IRepository<T> where T : class
     {
         private readonly ApplicationDbContext _context;
         private readonly DbSet<T> _entity;
@@ -21,25 +21,18 @@ namespace Service.Report.Repository
             _entity = context.Set<T>();
         }
 
-        public async Task<T> GetById(Guid id)
+        public async Task<T> GetOne(Expression<Func<T, bool>> query)
         {
-            var catalog = await _entity.FindAsync(id);
-
-            return catalog;
-        }
-
-        public async Task<List<T>> GetByIds(List<Guid> ids)
-        {
-            var catalog = await _entity.Where(x => ids.Contains(x.Id)).ToListAsync();
+            var catalog = await _entity.Where(query).FirstOrDefaultAsync();
 
             return catalog;
         }
 
         public async Task<List<T>> Get(Expression<Func<T, bool>> query)
         {
-            var catalog = await _entity.Where(query).ToListAsync();
+            var catalogs = await _entity.Where(query).ToListAsync();
 
-            return catalog;
+            return catalogs;
         }
 
         public async Task Create(T catalog)

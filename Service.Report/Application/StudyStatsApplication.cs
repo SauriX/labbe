@@ -1,8 +1,5 @@
 ﻿using Service.Report.Application.IApplication;
 using Service.Report.Client.IClient;
-using Service.Report.Domain.Branch;
-using Service.Report.Domain.Company;
-using Service.Report.Domain.Medic;
 using Service.Report.Dtos;
 using Service.Report.Mapper;
 using Service.Report.Dtos.StudyStats;
@@ -12,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Service.Report.PdfModel;
+using Service.Report.Domain.Catalogs;
 
 namespace Service.Report.Application
 {

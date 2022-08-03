@@ -65,42 +65,46 @@ namespace Service.Catalog.Repository
             return promotions;
         }
 
-        public async Task<PromotionStudy> GetPriceStudyById(Guid priceListId, int studyId, Guid branchId)
+        public async Task<PromotionStudy> GetStudyPromo(Guid priceListId, Guid branchId, int studyId)
         {
-            var branchPrice = await
+            var today = DateTime.Today.Date;
+
+            var promo = await
                 (from p in _context.CAT_ListaP_Promocion.Include(x => x.Promocion).Where(x => x.PrecioListaId == priceListId)
-                 join ps in _context.Relacion_Promocion_Estudio.Include(x => x.Study).Where(x => x.StudyId == studyId) on p.PromocionId equals ps.PromotionId
+                 join ps in _context.Relacion_Promocion_Estudio.Include(x => x.Promotion).Include(x => x.Study).Where(x => x.StudyId == studyId) on p.PromocionId equals ps.PromotionId
                  join pb in _context.Relacion_Promocion_Sucursal.Where(x => x.BranchId == branchId) on p.PromocionId equals pb.PromotionId
-                 where p.Activo && p.Promocion.FechaInicio.Date >= DateTime.Now.Date && p.Promocion.FechaFinal.Date <= DateTime.Now.Date
+                 where p.Activo && p.Promocion.FechaInicio.Date >= today && p.Promocion.FechaFinal.Date <= today
+                 && ((today.DayOfWeek == DayOfWeek.Monday && ps.Lunes)
+                 || (today.DayOfWeek == DayOfWeek.Tuesday && ps.Martes)
+                 || (today.DayOfWeek == DayOfWeek.Wednesday && ps.Miercoles)
+                 || (today.DayOfWeek == DayOfWeek.Thursday && ps.Jueves)
+                 || (today.DayOfWeek == DayOfWeek.Friday && ps.Viernes)
+                 || (today.DayOfWeek == DayOfWeek.Saturday && ps.Sabado)
+                 || (today.DayOfWeek == DayOfWeek.Sunday && ps.Domingo))
                  select ps).FirstOrDefaultAsync();
 
-            return branchPrice;
+            return promo;
         }
 
-        public async Task<PromotionPack> GetPricePackById(int packId, Guid branchId)
+        public async Task<PromotionPack> GetPackPromo(Guid priceListId, Guid branchId, int packId)
         {
-            //        var prices = _context.Relacion_ListaP_Paquete
-            //            .Include(x => x.Paquete.studies).ThenInclude(x => x.Estudio.Parameters).ThenInclude(x => x.Parametro.Area.Departamento)
-            //            .Include(x => x.Paquete.studies).ThenInclude(x => x.Estudio.Indications).ThenInclude(x => x.Indicacion)
-            //            .Where(x => x.PaqueteId == packId);
+            var today = DateTime.Today.Date;
 
-            //        var branchPrice = await
-            //            (from p in prices
-            //             join dp in _context.CAT_ListaP_Sucursal.Where(x => x.SucursalId == branchId) on p.PrecioListaId equals dp.PrecioListaId
-            //             where dp.Activo
-            //             select p).FirstOrDefaultAsync();
+            var promo = await
+                (from p in _context.CAT_ListaP_Promocion.Include(x => x.Promocion).Where(x => x.PrecioListaId == priceListId)
+                 join pp in _context.Relacion_Promocion_Paquete.Include(x => x.Promotion).Include(x => x.Pack).Where(x => x.PackId == packId) on p.PromocionId equals pp.PromotionId
+                 join pb in _context.Relacion_Promocion_Sucursal.Where(x => x.BranchId == branchId) on p.PromocionId equals pb.PromotionId
+                 where p.Activo && p.Promocion.FechaInicio.Date >= today && p.Promocion.FechaFinal.Date <= today
+                 && ((today.DayOfWeek == DayOfWeek.Monday && pp.Lunes)
+                 || (today.DayOfWeek == DayOfWeek.Tuesday && pp.Martes)
+                 || (today.DayOfWeek == DayOfWeek.Wednesday && pp.Miercoles)
+                 || (today.DayOfWeek == DayOfWeek.Thursday && pp.Jueves)
+                 || (today.DayOfWeek == DayOfWeek.Friday && pp.Viernes)
+                 || (today.DayOfWeek == DayOfWeek.Saturday && pp.Sabado)
+                 || (today.DayOfWeek == DayOfWeek.Sunday && pp.Domingo))
+                 select pp).FirstOrDefaultAsync();
 
-            //        return branchPrice;
-
-            ////        var branchPrice = await
-            ////(from p in _context.CAT_ListaP_Promocion.Include(x => x.Promocion).Where(x => x.PrecioListaId == priceListId)
-            //// join ps in _context.Relacion_Promocion_Estudio.Where(x => x.StudyId == studyId) on p.PromocionId equals ps.PromotionId
-            //// join pb in _context.Relacion_Promocion_Sucursal.Where(x => x.BranchId == branchId) on p.PromocionId equals pb.PromotionId
-            //// where p.Activo && p.Promocion.FechaInicio.Date >= DateTime.Now.Date && p.Promocion.FechaFinal.Date <= DateTime.Now.Date
-            //// select ps).FirstOrDefaultAsync();
-
-            ////        return branchPrice;
-            return new PromotionPack();
+            return promo;
         }
 
         public async Task Create(Promotion promotion)

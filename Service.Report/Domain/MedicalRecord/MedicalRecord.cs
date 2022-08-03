@@ -2,7 +2,7 @@
 
 namespace Service.Report.Domain.MedicalRecord
 {
-    public class MedicalRecord : Base
+    public class MedicalRecord 
     {
         public Guid Id { get; set; }
         public string Expediente { get; set; }

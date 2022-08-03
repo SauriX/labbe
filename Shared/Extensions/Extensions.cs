@@ -19,6 +19,7 @@ namespace Shared.Extensions
             {
                 if (file != null && !string.IsNullOrWhiteSpace(path) && !string.IsNullOrWhiteSpace(name))
                 {
+                    Directory.CreateDirectory(path);
                     using Stream stream = new FileStream(Path.Combine(path, name), FileMode.Create);
                     await file.CopyToAsync(stream);
 
