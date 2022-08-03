@@ -37,7 +37,7 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/price/info/study/{id}",
+      "DownstreamPathTemplate": "/api/price/info/study",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -45,11 +45,11 @@
           "Port": 20347
         }
       ],
-      "UpstreamPathTemplate": "/api/price/info/study/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamPathTemplate": "/api/price/info/study",
+      "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/price/info/pack/{id}",
+      "DownstreamPathTemplate": "/api/price/info/pack",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -57,8 +57,8 @@
           "Port": 20347
         }
       ],
-      "UpstreamPathTemplate": "/api/price/info/pack/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamPathTemplate": "/api/price/info/pack",
+      "UpstreamHttpMethod": [ "POST" ]
     },
     {
       "DownstreamPathTemplate": "/api/price",

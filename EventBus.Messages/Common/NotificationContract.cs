@@ -2,6 +2,16 @@
 {
     public class NotificationContract
     {
+        public NotificationContract()
+        {
+        }
+
+        public NotificationContract(string mensaje, bool esAlerta)
+        {
+            Mensaje = mensaje;
+            EsAlerta = esAlerta;
+        }
+
         public NotificationContract(string para, string asunto, string mensaje, string @params)
         {
             Para = para;
@@ -14,5 +24,6 @@
         public string Asunto { get; set; }
         public string Mensaje { get; set; }
         public string Params { get; set; }
+        public bool EsAlerta { get; set; }
     }
 }

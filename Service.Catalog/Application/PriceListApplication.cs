@@ -56,30 +56,89 @@ namespace Service.Catalog.Application
             return price.ToPriceListFormDto();
         }
 
-        public async Task<PriceListInfoStudyDto> GetPriceStudyById(int id, Guid? companyId, Guid? doctorId, Guid? branchId)
+        public async Task<PriceListInfoStudyDto> GetPriceStudyById(PriceListInfoFilterDto filterDto)
         {
-            var prices = await _repository.GetPriceStudyById(id, companyId, doctorId, Guid.Empty);
+            if (filterDto.EstudioId == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, "No se seleccionó un estudio");
+            }
 
-            if (prices == null)
+            var price = await _repository.GetPriceStudyById((int)filterDto.EstudioId, filterDto.SucursalId, filterDto.CompañiaId, filterDto.MedicoId);
+
+            if (price == null || price.Precio <= 0)
             {
                 throw new CustomException(HttpStatusCode.NotFound, "Lista de precios no configurada");
             }
 
+            if (price.Estudio.Parameters == null || price.Estudio.Parameters.Count == 0)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, "El estudio no contiene parámetros");
+            }
 
+            var priceDto = price.ToPriceListInfoStudyDto();
 
-            return prices.ToPriceListInfoStudyDto();
+            var promo = await _promotionRepository.GetStudyPromo(price.PrecioListaId, filterDto.SucursalId, (int)filterDto.EstudioId);
+
+            if (promo != null)
+            {
+                priceDto.PromocionId = promo.PromotionId;
+                priceDto.Promocion = promo.Promotion.Nombre;
+                priceDto.Descuento = promo.DiscountNumeric;
+            }
+
+            return priceDto;
         }
 
-        public async Task<PriceListInfoPackDto> GetPricePackById(int id, Guid? companyId, Guid? doctorId, Guid? branchId)
+        public async Task<PriceListInfoPackDto> GetPricePackById(PriceListInfoFilterDto filterDto)
         {
-            var prices = await _repository.GetPricePackById(id, companyId, doctorId, Guid.Empty);
+            if (filterDto.PaqueteId == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, "No se seleccionó un paquete");
+            }
 
-            if (prices == null)
+            var price = await _repository.GetPricePackById((int)filterDto.PaqueteId, filterDto.SucursalId, filterDto.CompañiaId, filterDto.MedicoId);
+
+            if (price == null || price.Precio <= 0)
             {
                 throw new CustomException(HttpStatusCode.NotFound, "Lista de precios no configurada");
             }
 
-            return prices.ToPriceListInfoPackDto();
+            if (price.Paquete.studies == null || price.Paquete.studies.Count == 0)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, "El paquete no contiene estudios");
+            }
+
+            if (price.Paquete.studies.Any(x => x.Estudio.Parameters == null || x.Estudio.Parameters.Count == 0))
+            {
+                throw new CustomException(HttpStatusCode.NotFound, "Alguno de los estudios del paquete no contiene parámetros");
+            }
+
+            var priceDto = price.ToPriceListInfoPackDto();
+
+            var studies = await _repository.GetPriceStudyById(price.PrecioListaId, priceDto.Estudios.Select(x => x.EstudioId));
+
+            foreach (var study in priceDto.Estudios)
+            {
+                var studyPrice = studies.FirstOrDefault(x => x.Id == study.EstudioId)?.Precio;
+
+                if (studies.Any(x => x.Precio <= 0))
+                {
+                    throw new CustomException(HttpStatusCode.NotFound, $"Estudio ${study.Clave} no tiene precio configurado");
+                }
+
+                study.Precio = (decimal)studyPrice;
+            }
+
+            var promo = await _promotionRepository.GetPackPromo(price.PrecioListaId, filterDto.SucursalId, (int)filterDto.PaqueteId);
+
+            if (promo != null)
+            {
+                priceDto.PromocionId = promo.PromotionId;
+                priceDto.Promocion = promo.Promotion.Nombre;
+                priceDto.Descuento = promo.DiscountNumeric;
+            }
+
+            return price.ToPriceListInfoPackDto();
         }
 
         public async Task<PriceListListDto> Create(PriceListFormDto price)

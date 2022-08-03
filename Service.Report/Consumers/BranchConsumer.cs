@@ -21,8 +21,6 @@ namespace Service.Report.Consumers
             {
                 var message = context.Message;
 
-                throw new System.Exception("Oh no algo salio mal");
-
                 await Task.CompletedTask;
             }
             catch (System.Exception ex)

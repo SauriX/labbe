@@ -56,8 +56,6 @@ namespace Service.Sender
             {
                 x.AddConsumers(Assembly.GetExecutingAssembly());
 
-                x.AddSignalRHub<NotificationHub>();
-
                 x.UsingRabbitMq((context, configurator) =>
                 {
                     var rabbitMQSettings = Configuration.GetSection(nameof(RabbitMQSettings)).Get<RabbitMQSettings>();
@@ -78,6 +76,19 @@ namespace Service.Sender
                     configurator.ReceiveEndpoint("email-queue-faults", re =>
                     {
                         re.Consumer<EmailErrorConsumer>(context);
+                    });           
+                    
+                    configurator.ReceiveEndpoint("whatsapp-queue", re =>
+                    {
+                        x.AddSignalRHub<NotificationHub>();
+                        re.Consumer<WhatsappConsumer>(context);
+                        re.DiscardFaultedMessages();
+                    });
+
+                    configurator.ReceiveEndpoint("whatsapp-queue-faults", re =>
+                    {
+                        x.AddSignalRHub<NotificationHub>();
+                        re.Consumer<WhatsappErrorConsumer>(context);
                     });
 
                     configurator.ReceiveEndpoint("email-configuration-queue", re =>
@@ -172,6 +183,7 @@ namespace Service.Sender
             });
 
             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IWhatsappService, WhatsappService>();
             services.AddScoped<IEmailConfigurationService, EmailConfigurationService>();
 
             services.AddScoped<IEmailConfigurationRepository, EmailConfigurationRepository>();

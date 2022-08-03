@@ -27,6 +27,7 @@ namespace Service.Identity.Application
         private readonly IConfiguration _configuration;
         private readonly IProfileRepository _repository;
         private const string ADMIN = "Administrador";
+
         public ProfileApplication(IConfiguration configuration, IProfileRepository repository)
         {
             _configuration = configuration;

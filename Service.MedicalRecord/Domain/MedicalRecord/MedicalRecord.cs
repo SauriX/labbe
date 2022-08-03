@@ -10,8 +10,7 @@ namespace Service.MedicalRecord.Domain.MedicalRecord
         public string NombrePaciente { get; set; }
         public string PrimerApellido { get; set; }
         public string SegundoApellido { get; set; }
-        /*   public Guid IdSolicitud { get; set; }
-           public Guid IdCotizacion { get; set; }*/
+        public string NombreCompleto => $"{NombrePaciente} {PrimerApellido} {SegundoApellido}";
         public string Genero { get; set; }
         public DateTime FechaDeNacimiento { get; set; }
         public int Edad { get; set; }

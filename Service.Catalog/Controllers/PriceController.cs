@@ -33,18 +33,18 @@ namespace Service.Catalog.Controllers
             return await _service.GetAll(search);
         }
 
-        [HttpGet("info/study/{id}")]
+        [HttpPost("info/study")]
         [AllowAnonymous]
-        public async Task<PriceListInfoStudyDto> GetPriceStudyById(int id)
+        public async Task<PriceListInfoStudyDto> GetPriceStudyById(PriceListInfoFilterDto filterDto)
         {
-            return await _service.GetPriceStudyById(id, null, null, null);
+            return await _service.GetPriceStudyById(filterDto);
         }
 
-        [HttpGet("info/pack/{id}")]
+        [HttpPost("info/pack")]
         [AllowAnonymous]
-        public async Task<PriceListInfoPackDto> GetPricePackById(int id)
+        public async Task<PriceListInfoPackDto> GetPricePackById(PriceListInfoFilterDto filterDto)
         {
-            return await _service.GetPricePackById(id, null, null, null);
+            return await _service.GetPricePackById(filterDto);
         }
 
         [HttpGet("{id}")]

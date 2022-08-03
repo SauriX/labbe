@@ -56,11 +56,12 @@ namespace Service.Catalog.Application
         public async Task<BranchFormDto> GetById(string Id)
         {
             var branch = await _repository.GetById(Id);
+
             if (branch == null)
             {
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
-            //var studyes = await _repository.getservicios(Id);
+
             return branch.ToBranchFormDto();
         }
 

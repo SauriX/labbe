@@ -44,6 +44,7 @@ namespace Service.MedicalRecord
 
             try
             {
+                Directory.CreateDirectory("wwwroot/images");
                 host.Run();
             }
             catch (Exception e)

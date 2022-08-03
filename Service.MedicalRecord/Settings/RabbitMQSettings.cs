@@ -1,10 +1,11 @@
-﻿namespace Service.MedicalRecord.Settings
+﻿using Service.MedicalRecord.Settings.ISettings;
+
+namespace Service.MedicalRecord.Settings
 {
-    public class RabbitMQSettings
+    public class RabbitMQSettings : IRabbitMQSettings
     {
-        public string Host { get; set; }
-        public string VirtualHost { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
+        public string Host { get; init; }
+        public string Username { get; init; }
+        public string Password { get; init; }
     }
 }

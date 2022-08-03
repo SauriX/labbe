@@ -1,6 +1,6 @@
-﻿namespace Service.Report.Domain.Medic
+﻿namespace Service.MedicalRecord.Domain.Catalogs
 {
-    public class Medic : Base
+    public class Medic 
     {
         public string ClaveMedico { get; set; }
         public string NombreMedico { get; set; }
