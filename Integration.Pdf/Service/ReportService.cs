@@ -75,16 +75,25 @@ namespace Integration.Pdf.Service
             var fontSubtitle = new Font("calibri", 16);
             var fontText = new Font("calibri", 12);
             var fontTitleChart = new Font("calibri", 11) { Bold = true };
+
             var title = new Col(Header.NombreReporte, fontTitle);
             var branchType = "Sucursal " + Header.Sucursal;
+            var periodType = "Periodo: " + Header.Fecha;
 
             if (Header.Sucursal == string.Empty || Header.Sucursal == "string")
             {
                 branchType = Header.Sucursal = "Todas las Sucursales";
             }
 
+            if (Header.Fecha == string.Empty || Header.Fecha == "string")
+            {
+                periodType = Header.Fecha = "Sin especificar Fecha";
+            }
+
             var branch = new Col(branchType, fontSubtitle);
-            var period = new Col("Periodo: " + Header.Fecha, fontSubtitle);
+            var period = new Col(periodType, fontSubtitle);
+
+
             var printDate = new Col("Fecha de impresión: " + DateTime.Now.ToString("dd/MM/yyyy"), fontText, ParagraphAlignment.Right);
             var logo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets\\LabRamosLogo.png");
 

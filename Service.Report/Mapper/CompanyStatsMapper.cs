@@ -14,33 +14,7 @@ namespace Service.Report.Mapper
         {
             if (model == null) return null;
 
-            var results = (from c in model
-                           group c by new { c.Clave, c.Expediente.Nombre, c.Medico.NombreMedico, c.Empresa.Id, c.Empresa.NombreEmpresa, c.Empresa.Convenio } into grupo
-                           select grupo).Select(grupo =>
-                           {
-                               var studies = grupo.SelectMany(x => x.Estudios);
-
-                               var priceStudies = studies.Sum(x => x.Precio);
-                               var descount = studies.Sum(x => x.Descuento);
-                               var porcentualDescount = (descount * 100) / priceStudies;
-                               decimal sumStudies = 0;
-                               var sum = sumStudies += priceStudies;
-
-                               return new CompanyStatsDto
-                               {
-                                   Id = Guid.NewGuid(),
-                                   Solicitud = grupo.Key.Clave,
-                                   Paciente = grupo.Key.Nombre,
-                                   Medico = grupo.Key.NombreMedico,
-                                   Empresa = grupo.Key.NombreEmpresa,
-                                   Convenio = grupo.Key.Convenio,
-                                   Estudio = studies.ToCompanyDto(),
-                                   PrecioEstudios = priceStudies,
-                                   Descuento = descount,
-                                   DescuentoPorcentual = porcentualDescount,
-                               };
-                           }
-                           ).ToList();
+            var results = CompanyGeneric(model);
 
             return results;
         }
@@ -70,33 +44,7 @@ namespace Service.Report.Mapper
         {
             if (model == null) return null;
 
-            var results = (from c in model
-                           group c by new { c.Clave, c.Expediente.Nombre, c.Medico.NombreMedico, c.Empresa.Id, c.Empresa.NombreEmpresa, c.Empresa.Convenio } into grupo
-                           select grupo).Select(grupo =>
-                           {
-                               var studies = grupo.SelectMany(x => x.Estudios);
-
-                               var priceStudies = studies.Sum(x => x.Precio);
-                               var descount = studies.Sum(x => x.Descuento);
-                               var porcentualDescount = (descount / priceStudies) * 100;
-                               decimal sumStudies = 0;
-                               var sum = sumStudies += priceStudies;
-
-                               return new CompanyStatsDto
-                               {
-                                   Id = Guid.NewGuid(),
-                                   Solicitud = grupo.Key.Clave,
-                                   Paciente = grupo.Key.Nombre,
-                                   Medico = grupo.Key.NombreMedico,
-                                   Empresa = grupo.Key.NombreEmpresa,
-                                   Convenio = grupo.Key.Convenio,
-                                   Estudio = studies.ToCompanyDto(),
-                                   PrecioEstudios = priceStudies,
-                                   Descuento = descount,
-                                   DescuentoPorcentual = porcentualDescount,
-                               };
-                           }
-                           ).ToList();
+            var results = CompanyGeneric(model);
 
             var totals = new CompanyStatsTotalDto
             {
@@ -114,7 +62,7 @@ namespace Service.Report.Mapper
             return data;
         }
 
-        public static List<StudiesDto> ToCompanyDto(this IEnumerable<RequestStudy> studies)
+        public static List<StudiesDto> ToCompanyDto(this IEnumerable<RequestStudy> studies, decimal descuento)
         {
             return studies.Select(x => new StudiesDto
             {
@@ -122,8 +70,35 @@ namespace Service.Report.Mapper
                 Estudio = x.Estudio,
                 Estatus = x.Estatus.Estatus,
                 Precio = x.Precio,
-                PrecioFinal = x.PrecioFinal,
+                PrecioFinal = x.PrecioFinal - (x.Precio * descuento),
             }).ToList();
+        }
+
+        private static List<CompanyStatsDto> CompanyGeneric(IEnumerable<Request> model)
+        {
+            return model.Select(request =>
+                    {
+                        var studies = request.Estudios;
+
+                        var priceStudies = request.Precio;
+                        var descount = request.Descuento;
+                        var porcentualDescount = (descount * 100) / priceStudies;
+                        var descRequest = request.Descuento / 100;
+
+                        return new CompanyStatsDto
+                        {
+                            Id = Guid.NewGuid(),
+                            Solicitud = request.Clave,
+                            Paciente = request.Expediente.Nombre,
+                            Medico = request.Medico.NombreMedico,
+                            Empresa = request.Empresa.NombreEmpresa,
+                            Convenio = request.Empresa.Convenio,
+                            Estudio = studies.ToCompanyDto(descRequest),
+                            PrecioEstudios = priceStudies,
+                            Descuento = descount,
+                            DescuentoPorcentual = porcentualDescount,
+                        };
+                    }).ToList();
         }
     }
 }
