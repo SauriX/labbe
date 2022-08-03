@@ -14,9 +14,10 @@ namespace Service.Report.Dtos.StudyStats
         public int Edad { get; set; }
         public string Sexo { get; set; }
         public string Medico { get; set; }
-        public DateTime FechaEntrega { get; set; }
+        public string FechaEntrega { get; set; }
         public string Estatus { get; set; }
-        public DateTime Fecha { get; set; }
+        public string Fecha { get; set; }
         public bool Parcialidad { get; set; }
+        public byte Urgencia { get; set; }
     }
 }

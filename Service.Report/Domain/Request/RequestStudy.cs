@@ -13,13 +13,8 @@ namespace Service.Report.Domain.Request
         public virtual RequestStatus Estatus { get; set; }
         public byte Parcialidad { get; set; }
         public int Duracion { get; set; }
-        public bool Descuento { get; set; }
+        public decimal Descuento { get; set; }
         public decimal Precio { get; set; }
         public decimal PrecioFinal { get; set; }
-
-        internal string GroupBy()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

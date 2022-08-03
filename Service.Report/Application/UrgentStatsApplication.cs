@@ -1,24 +1,25 @@
 ﻿using Service.Report.Application.IApplication;
 using Service.Report.Client.IClient;
+using Service.Report.Domain.Branch;
+using Service.Report.Domain.Medic;
 using Service.Report.Dtos;
-using Service.Report.Mapper;
 using Service.Report.Dtos.StudyStats;
+using Service.Report.Mapper;
+using Service.Report.PdfModel;
 using Service.Report.Repository.IRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Service.Report.PdfModel;
-using Service.Report.Domain.Catalogs;
 
 namespace Service.Report.Application
 {
-    public class StudyStatsApplication : BaseApplication, IStudyStatsApplication
+    public class UrgentStatsApplication : BaseApplication, IUrgentStatsApplication
     {
         public readonly IReportRepository _repository;
         private readonly IPdfClient _pdfClient;
 
-        public StudyStatsApplication(IReportRepository repository, IPdfClient pdfClient, IRepository<Branch> branchRepository, IRepository<Medic> medicRepository, IRepository<Company> companyRepository) : base(branchRepository, medicRepository, companyRepository)
+        public UrgentStatsApplication(IReportRepository repository, IPdfClient pdfClient, IRepository<Branch> branchRepository, IRepository<Medic> medicRepository) : base(branchRepository, medicRepository)
         {
             _repository = repository;
             _pdfClient = pdfClient;
@@ -27,7 +28,7 @@ namespace Service.Report.Application
         public async Task<IEnumerable<StudyStatsDto>> GetByFilter(ReportFilterDto filter)
         {
             var data = await _repository.GetByFilter(filter);
-            var results = data.ToStudyStatsDto();
+            var results = data.ToUrgentStatsDto();
 
             return results;
         }
@@ -35,11 +36,10 @@ namespace Service.Report.Application
         public async Task<IEnumerable<StudyStatsChartDto>> GetChartByFilter(ReportFilterDto filter)
         {
             var data = await _repository.GetByFilter(filter);
-            var results = data.ToStudyStatsChartDto();
+            var results = data.ToUrgentStatsChartDto();
 
             return results;
         }
-
         public async Task<byte[]> DownloadReportPdf(ReportFilterDto filter)
         {
             var requestData = await GetByFilter(filter);
@@ -53,8 +53,7 @@ namespace Service.Report.Application
                 new Col("Sexo", ParagraphAlignment.Left),
                 new Col("Nombre del Médico", ParagraphAlignment.Left),
                 new Col("Fecha de Entrega", ParagraphAlignment.Left),
-                new Col("Fecha de Estudio", ParagraphAlignment.Left),
-                new Col("Parcialidad", ParagraphAlignment.Left),
+                new Col("Urgencia", ParagraphAlignment.Left),
             };
 
             List<ChartSeries> series = new()
@@ -72,8 +71,7 @@ namespace Service.Report.Application
                 { "Sexo", x.Sexo},
                 { "Nombre del Médico", x.Medico },
                 { "Fecha de Entrega", x.FechaEntrega},
-                { "Fecha de Estudio", x.Fecha},
-                { "Parcialidad", x.Parcialidad ? "Si" : "No"},
+                { "Urgencia", x.Urgencia == 2 ? "Urgencia" : "Urgencia con cargo"},
             }).ToList();
 
             var datachart = requestChartData.Select(x => new Dictionary<string, object>
@@ -89,7 +87,7 @@ namespace Service.Report.Application
 
             var headerData = new HeaderData()
             {
-                NombreReporte = "Relación estudios por Paciente",
+                NombreReporte = "Relación estudios por Paciente Urgente",
                 Sucursal = string.Join(", ", branches.Select(x => x)),
                 Fecha = $"{filter.Fecha.Min():dd/MM/yyyy} - {filter.Fecha.Max().ToString("dd/MM/yyyy")}"
             };
@@ -107,6 +105,5 @@ namespace Service.Report.Application
 
             return file;
         }
-
     }
 }

@@ -25,5 +25,6 @@ namespace Service.Report.Domain.Request
         public byte EstatusId { get; set; }
         public virtual ICollection<RequestStudy> Estudios { get; set; }
         public bool Parcialidad { get; set; }
+        public byte Urgencia { get; set; }
     }
 }

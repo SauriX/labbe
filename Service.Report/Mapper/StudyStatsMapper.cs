@@ -30,9 +30,38 @@ namespace Service.Report.Mapper
                                    Sexo = grupo.Key.Expediente.Sexo,
                                    Estudio = studies.ToStudiesDto(),
                                    Medico = grupo.Key.NombreMedico,
-                                   FechaEntrega = grupo.Key.Fecha.AddDays(dueDate),
-                                   Fecha = grupo.Key.Fecha,
+                                   FechaEntrega = grupo.Key.Fecha.AddDays(dueDate).ToString("dd/MM/yyyy"),
+                                   Fecha = grupo.Key.Fecha.ToString("dd/MM/yyyy"),
                                    Parcialidad = grupo.Key.Parcialidad,
+                               };
+                           });
+
+            return results;
+        }
+
+        public static IEnumerable<StudyStatsDto> ToUrgentStatsDto(this IEnumerable<Request> model)
+        {
+            if (model == null) return null;
+
+            var results = (from c in model.Where(x => x.Urgencia != 1)
+                           group c by new { c.SolicitudId, c.Clave, c.Expediente.Nombre, c.Medico.NombreMedico, c.Fecha, c.Expediente, c.Urgencia } into grupo
+                           select grupo)
+                           .Select(grupo =>
+                           {
+                               var studies = grupo.SelectMany(x => x.Estudios);
+                               var dueDate = studies.Max(x => x.Duracion);
+
+                               return new StudyStatsDto
+                               {
+                                   Id = Guid.NewGuid(),
+                                   Solicitud = grupo.Key.Clave,
+                                   Paciente = grupo.Key.Nombre,
+                                   Edad = grupo.Key.Expediente.Edad,
+                                   Sexo = grupo.Key.Expediente.Sexo,
+                                   Estudio = studies.ToStudiesDto(),
+                                   Medico = grupo.Key.NombreMedico,
+                                   FechaEntrega = grupo.Key.Fecha.AddDays(dueDate).ToString("dd/MM/yyyy"),
+                                   Urgencia = grupo.Key.Urgencia,
                                };
                            });
 
@@ -42,7 +71,26 @@ namespace Service.Report.Mapper
         public static IEnumerable<StudyStatsChartDto> ToStudyStatsChartDto(this IEnumerable<Request> model)
         {
             if (model == null) return null;
-            var studies = model.SelectMany(x => x.Estudios);
+            var studies = model.Where(x => x.Urgencia != 1).SelectMany(x => x.Estudios);
+
+            var results = (from c in studies
+                           group c by new { c.Estatus.Estatus, c.EstatusId } into grupo
+                           select new StudyStatsChartDto
+                           {
+                               Id = Guid.NewGuid(),
+                               Estatus = grupo.Key.Estatus,
+                               Cantidad = grupo.Count(),
+                               Color = GetColor(grupo.Key.EstatusId),
+                           });
+
+
+            return results;
+        }
+
+        public static IEnumerable<StudyStatsChartDto> ToUrgentStatsChartDto(this IEnumerable<Request> model)
+        {
+            if (model == null) return null;
+            var studies = model.Where(x => x.Urgencia != 1).SelectMany(x => x.Estudios);
 
             var results = (from c in studies
                            group c by new { c.Estatus.Estatus, c.EstatusId } into grupo

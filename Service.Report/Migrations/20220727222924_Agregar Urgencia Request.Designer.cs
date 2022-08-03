@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Report.Context;
 
 namespace Service.Report.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220727222924_Agregar Urgencia Request")]
+    partial class AgregarUrgenciaRequest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,9 +40,6 @@ namespace Service.Report.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<byte>("Convenio")
-                        .HasColumnType("tinyint");
 
                     b.Property<string>("NombreEmpresa")
                         .HasColumnType("nvarchar(max)");
@@ -175,8 +174,8 @@ namespace Service.Report.Migrations
                     b.Property<string>("Clave")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Descuento")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<bool>("Descuento")
+                        .HasColumnType("bit");
 
                     b.Property<int>("Duracion")
                         .HasColumnType("int");
