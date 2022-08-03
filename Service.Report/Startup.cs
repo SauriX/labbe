@@ -210,6 +210,7 @@ namespace Service.Report
             services.AddScoped<IStudyStatsApplication, StudyStatsApplication>();
             services.AddScoped<IUrgentStatsApplication, UrgentStatsApplication>();
             services.AddScoped<ICompanyStatsApplication, CompanyStatsApplication>();
+            services.AddScoped<ICanceledRequestApplication, CanceledRequestApplication>();
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IReportRepository, ReportRepository>();

@@ -227,6 +227,54 @@
       ],
       "UpstreamPathTemplate": "/api/report/empresa/chart/filter",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/report/canceladas/download/pdf",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 18934
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/canceladas/download/pdf",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/report/canceladas/filter",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 18934
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/canceladas/filter",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/report/canceladas/table/filter",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 18934
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/canceladas/table/filter",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/report/canceladas/chart/filter",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 18934
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/canceladas/chart/filter",
+      "UpstreamHttpMethod": [ "POST" ]
     }
   ]
 }

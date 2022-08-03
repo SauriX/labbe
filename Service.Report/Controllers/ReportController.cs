@@ -14,6 +14,7 @@ namespace Service.Report.Controllers.Report
         private readonly IStudyStatsApplication _studystatsService;
         private readonly IUrgentStatsApplication _urgentstatsService;
         private readonly ICompanyStatsApplication _companystatsService;
+        private readonly ICanceledRequestApplication _canceledrequestService;
 
         public ReportController(
             IPatientStatsApplication patientStatsService,
@@ -22,7 +23,8 @@ namespace Service.Report.Controllers.Report
             IContactStatsApplication contactStatsService,
             IStudyStatsApplication studyStatsService,
             IUrgentStatsApplication urgentStatsService,
-            ICompanyStatsApplication companyStatsService)
+            ICompanyStatsApplication companyStatsService,
+            ICanceledRequestApplication canceledRequestService)
         {
             _patientstatsService = patientStatsService;
             _requestService = requestService;
@@ -31,6 +33,7 @@ namespace Service.Report.Controllers.Report
             _studystatsService = studyStatsService;
             _urgentstatsService = urgentStatsService;
             _companystatsService = companyStatsService;
+            _canceledrequestService = canceledRequestService;
         }
     }
 }

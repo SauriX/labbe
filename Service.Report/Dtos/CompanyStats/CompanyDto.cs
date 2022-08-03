@@ -8,6 +8,6 @@ namespace Service.Report.Dtos.CompanyStats
     public class CompanyDto
     {
         public List<CompanyStatsDto> CompanyStats { get; set; }
-        public CompanyStatsTotalDto CompanyTotal { get; set; }
+        public InvoiceDto CompanyTotal { get; set; }
     }
 }
