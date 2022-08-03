@@ -36,7 +36,7 @@ namespace Service.Report.Application
         public async Task<IEnumerable<StudyStatsChartDto>> GetChartByFilter(ReportFilterDto filter)
         {
             var data = await _repository.GetByFilter(filter);
-            var results = data.ToStudyStatsChartDto();
+            var results = data.ToUrgentStatsChartDto();
 
             return results;
         }

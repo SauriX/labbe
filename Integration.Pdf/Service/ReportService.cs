@@ -6,7 +6,6 @@ using MigraDoc.DocumentObjectModel.Tables;
 using MigraDoc.Rendering;
 using Newtonsoft.Json;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -65,12 +64,12 @@ namespace Integration.Pdf.Service
             section.PageSetup.LeftMargin = Unit.FromCentimeter(1);
             section.PageSetup.RightMargin = Unit.FromCentimeter(1);
 
-            Format(section, reportData.Columnas, reportData.Series, reportData.Datos, reportData.DatosGrafica, reportData.Header);
+            Format(section, reportData.Columnas, reportData.Series, reportData.Datos, reportData.DatosGrafica, reportData.Invoice, reportData.Totales, reportData.Header);
 
             return document;
         }
 
-        static void Format(Section section, List<Col> columns, List<ChartSeries> seriesInfo, List<Dictionary<string, object>> data, List<Dictionary<string, object>> datachart, HeaderData Header)
+        static void Format(Section section, List<Col> columns, List<ChartSeries> seriesInfo, List<Dictionary<string, object>> data, List<Dictionary<string, object>> datachart, InvoiceData invoice, TotalData totales, HeaderData Header)
         {
             var fontTitle = new Font("calibri", 20);
             var fontSubtitle = new Font("calibri", 16);
@@ -230,6 +229,8 @@ namespace Integration.Pdf.Service
                     }
                 }
 
+
+
                 table.Rows.Alignment = RowAlignment.Center;
             }
             else
@@ -247,6 +248,89 @@ namespace Integration.Pdf.Service
             }
 
             section.Add(table);
+            section.AddSpace(25);
+
+            if (totales != null)
+            {
+                Table totalTable = new Table();
+                totalTable.Borders.Width = 0.75;
+                totalTable.Borders.Color = Colors.LightGray;
+                totalTable.TopPadding = 3;
+                totalTable.BottomPadding = 3;
+                totalTable.Rows.Alignment = RowAlignment.Right;
+
+                for (int i = 0; i < 5; i++)
+                {
+                    Column totalColumn = totalTable.AddColumn("2.5cm");
+                    totalColumn.Format.Alignment = ParagraphAlignment.Center;
+                }
+
+                row = totalTable.AddRow();
+                row.Cells[0].AddParagraph("Solicitudes");
+                row.Cells[0].Borders.Visible = false;
+                row.Cells[1].AddParagraph("Estudios");
+                row.Cells[1].Borders.Visible = false;
+                row.Cells[2].AddParagraph("Desc. %");
+                row.Cells[2].Borders.Visible = false;
+                row.Cells[3].AddParagraph("Desc.");
+                row.Cells[3].Borders.Visible = false;
+                row.Cells[4].AddParagraph("Total");
+                row.Cells[4].Borders.Visible = false;
+                row.Cells[0].Shading.Color = Colors.Gray;
+                row.Cells[1].Shading.Color = Colors.Gray;
+                row.Cells[2].Shading.Color = Colors.Gray;
+                row.Cells[3].Shading.Color = Colors.Gray;
+                row.Cells[4].Shading.Color = Colors.Gray;
+                row.Format.Font.Color = Colors.White;
+
+                Row totalRow = totalTable.AddRow();
+
+                totalRow.Cells[0].AddParagraph(totales.NoSolicitudes.ToString("0"));
+                totalRow.Cells[0].Borders.Visible = false;
+                totalRow.Cells[1].AddParagraph(totales.Precios.ToString("$" + "0.00"));
+                totalRow.Cells[1].Borders.Visible = false;
+                totalRow.Cells[2].AddParagraph(totales.DescuentoPorcentual.ToString("0.00" + "%"));
+                totalRow.Cells[2].Borders.Visible = false;
+                totalRow.Cells[3].AddParagraph(totales.Descuento.ToString("$" + "0.00"));
+                totalRow.Cells[3].Borders.Visible = false;
+                totalRow.Cells[4].AddParagraph(totales.Total.ToString("$" + "0.00"));
+                totalRow.Cells[4].Borders.Visible = false;
+
+                row = totalTable.AddRow();
+                row.Borders.Visible = false;
+
+                if (invoice != null)
+                {
+                    row = totalTable.AddRow();
+                    row.Cells[0].Borders.Visible = false;
+                    row.Cells[0].AddParagraph("Subtotal");
+                    row.Cells[0].Format.Font.Bold = true;
+                    row.Cells[0].Format.Alignment = ParagraphAlignment.Right;
+                    row.Cells[0].MergeRight = 3;
+                    row.Cells[4].AddParagraph(invoice.Subtotal.ToString("$" + "0.00"));
+
+                    row = totalTable.AddRow();
+                    row.Cells[0].Borders.Visible = false;
+                    row.Cells[0].AddParagraph("IVA");
+                    row.Cells[0].Format.Font.Bold = true;
+                    row.Cells[0].Format.Alignment = ParagraphAlignment.Right;
+                    row.Cells[0].MergeRight = 3;
+                    row.Cells[4].AddParagraph(invoice.IVA.ToString("$" + "0.00"));
+
+                    row = totalTable.AddRow();
+                    row.Cells[0].Borders.Visible = false;
+                    row.Cells[0].AddParagraph("Total");
+                    row.Cells[0].Format.Font.Bold = true;
+                    row.Cells[0].Format.Alignment = ParagraphAlignment.Right;
+                    row.Cells[0].MergeRight = 3;
+                    row.Cells[4].AddParagraph(invoice.Total.ToString("$" + "0.00"));
+                }
+
+                section.Add(totalTable);
+            }
+
+
+
 
             if (seriesInfo == null || !seriesInfo.Any(x => x.SerieX) || data.Count == 0)
             {
