@@ -70,7 +70,7 @@ namespace Service.Report.Application
                 { "Edad", x.Edad},
                 { "Sexo", x.Sexo},
                 { "Nombre del Médico", x.Medico },
-                { "Fecha de Entrega", x.FechaEntrega.ToString("dd/MM/yyyy")},
+                { "Fecha de Entrega", x.FechaEntrega},
                 { "Urgencia", x.Urgencia == 2 ? "Urgencia" : "Urgencia con cargo"},
             }).ToList();
 
