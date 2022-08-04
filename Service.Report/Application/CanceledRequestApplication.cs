@@ -18,7 +18,7 @@ namespace Service.Report.Application
         public readonly IReportRepository _repository;
         private readonly IPdfClient _pdfClient;
 
-        public CanceledRequestApplication(IReportRepository repository, IPdfClient pdfClient, IRepository<Branch> branchRepository, IRepository<Medic> medicRepository) : base(branchRepository, medicRepository)
+        public CanceledRequestApplication(IReportRepository repository, IPdfClient pdfClient, IRepository<Branch> branchRepository, IRepository<Medic> medicRepository, IRepository<Company> companyRepository) : base(branchRepository, medicRepository, companyRepository)
         {
             _repository = repository;
             _pdfClient = pdfClient;
@@ -67,7 +67,7 @@ namespace Service.Report.Application
 
             List<ChartSeries> series = new()
             {
-                new ChartSeries("Solicitud", true),
+                new ChartSeries("Sucursal", true),
                 new ChartSeries("Cancelada"),
             };
 
@@ -87,24 +87,33 @@ namespace Service.Report.Application
 
             var datachart = requestchartData.Select(x => new Dictionary<string, object>
             {
-                { "Solicitud", x.Solicitud},
+                { "Sucursal", x.Sucursal},
                 { "Cancelada", x.Cantidad}
             }).ToList();
 
-            var totales = new TotalData()
+            List<Col> totalColumns = new()
             {
-                NoSolicitudes = requestData.CanceledTotal.NoSolicitudes,
-                Precios = requestData.CanceledTotal.SumaEstudios,
-                Descuento = requestData.CanceledTotal.SumaDescuentos,
-                DescuentoPorcentual = requestData.CanceledTotal.TotalDescuentoPorcentual,
-                Total = requestData.CanceledTotal.Total
+                new Col("Desc. %", ParagraphAlignment.Center),
+                new Col("Desc.", ParagraphAlignment.Center, "C"),
+                new Col("IVA", ParagraphAlignment.Center, "C"),
+                new Col("Total", ParagraphAlignment.Center, "C"),
+            };
+
+            var totales = new Dictionary<string, object>
+            {
+                { "Desc. %", $"{Math.Round(requestData.CanceledTotal.TotalDescuentoPorcentual, 2)}%" },
+                { "Desc.", requestData.CanceledTotal.SumaDescuentos},
+                { "IVA", requestData.CanceledTotal.IVA},
+                { "Total", requestData.CanceledTotal.Total}
             };
 
             var branches = await GetBranchNames(filter.SucursalId);
+            var companies = await GetCompanyNames(filter.CompañiaId);
 
             var headerData = new HeaderData()
             {
                 NombreReporte = "Solicitudes Canceladas",
+                NombreEmpresa = companies.Any() ? string.Join(", ", companies.Select(x => x)) : "Todas las Compañías",
                 Sucursal = string.Join(", ", branches.Select(x => x)),
                 Fecha = $"{filter.Fecha.Min():dd/MM/yyyy} - {filter.Fecha.Max():dd/MM/yyyy}"
             };
@@ -122,6 +131,7 @@ namespace Service.Report.Application
                 Series = filter.Grafica ? series : null,
                 Datos = data,
                 DatosGrafica = datachart,
+                ColumnasTotales = totalColumns,
                 Header = headerData,
                 Invoice = invoice,
                 Totales = totales

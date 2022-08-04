@@ -90,13 +90,22 @@ namespace Service.Report.Application
                 { "Solicitudes", x.NoSolicitudes}
             }).ToList();
 
-            var totales = new TotalData()
+            List<Col> totalColumns = new()
             {
-                NoSolicitudes = requestData.CompanyTotal.NoSolicitudes,
-                Precios = requestData.CompanyTotal.SumaEstudios,
-                Descuento = requestData.CompanyTotal.SumaDescuentos,
-                DescuentoPorcentual = requestData.CompanyTotal.TotalDescuentoPorcentual,
-                Total = requestData.CompanyTotal.Total
+                new Col("Solicitudes"),
+                new Col("Estudios", ParagraphAlignment.Center, "C"),
+                new Col("Desc. %", ParagraphAlignment.Center),
+                new Col("Desc.", ParagraphAlignment.Center, "C"),
+                new Col("Total", ParagraphAlignment.Center, "C"),
+            };
+
+            var totales = new Dictionary<string, object>
+            {
+                { "Solicitudes", requestData.CompanyTotal.NoSolicitudes},
+                { "Estudios", requestData.CompanyTotal.SumaEstudios},
+                { "Desc. %", $"{Math.Round(requestData.CompanyTotal.TotalDescuentoPorcentual, 2)}%" },
+                { "Desc.", requestData.CompanyTotal.SumaDescuentos},
+                { "Total", requestData.CompanyTotal.Total}
             };
 
             var branches = await GetBranchNames(filter.SucursalId);
@@ -121,6 +130,7 @@ namespace Service.Report.Application
                 Series = filter.Grafica ? series : null,
                 Datos = data,
                 DatosGrafica = datachart,
+                ColumnasTotales = totalColumns,
                 Header = headerData,
                 Invoice = invoice,
                 Totales = totales
