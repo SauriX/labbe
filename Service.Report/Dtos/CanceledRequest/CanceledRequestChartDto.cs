@@ -8,7 +8,7 @@ namespace Service.Report.Dtos.CanceledRequest
     public class CanceledRequestChartDto
     {
         public Guid Id { get; set; }
-        public string Solicitud { get; set; }
+        public string Sucursal { get; set; }
         public int Cantidad { get; set; }
     }
 }
