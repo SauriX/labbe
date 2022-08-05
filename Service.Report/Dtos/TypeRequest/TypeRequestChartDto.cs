@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Service.Report.Dtos.CanceledRequest
+namespace Service.Report.Dtos.TypeRequest
 {
-    public class CanceledRequestChartDto
+    public class TypeRequestChartDto
     {
         public Guid Id { get; set; }
         public string Sucursal { get; set; }

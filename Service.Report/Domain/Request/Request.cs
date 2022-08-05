@@ -21,7 +21,7 @@ namespace Service.Report.Domain.Request
         public Guid MedicoId { get; set; }
         public virtual Medic Medico { get; set; }
         public Guid EmpresaId { get; set; }
-        public virtual Company.Company Empresa { get; set; }
+        public virtual Company Empresa { get; set; }
         public byte EstatusId { get; set; }
         public virtual ICollection<RequestStudy> Estudios { get; set; }
         public bool Parcialidad { get; set; }

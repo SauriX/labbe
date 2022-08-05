@@ -16,6 +16,8 @@ namespace Service.Report.Controllers.Report
         private readonly ICompanyStatsApplication _companystatsService;
         private readonly ICanceledRequestApplication _canceledrequestService;
         private readonly IMedicalBreakdownStatsApplication _medicalbreakdownstatsService;
+        private readonly IDescountRequestApplication _descountrequestService;
+        private readonly IChargeRequestApplication _chargerequestService;
 
         public ReportController(
             IPatientStatsApplication patientStatsService,
@@ -25,8 +27,10 @@ namespace Service.Report.Controllers.Report
             IStudyStatsApplication studyStatsService,
             IUrgentStatsApplication urgentStatsService,
             ICompanyStatsApplication companyStatsService,
-            ICanceledRequestApplication canceledRequestService,
             IMedicalBreakdownStatsApplication medicalbreakdownstatsService)
+            ICanceledRequestApplication canceledRequestService,
+            IDescountRequestApplication descountRequestService,
+            IChargeRequestApplication chargeRequestService)
         {
             _patientstatsService = patientStatsService;
             _requestService = requestService;
@@ -37,6 +41,8 @@ namespace Service.Report.Controllers.Report
             _companystatsService = companyStatsService;
             _canceledrequestService = canceledRequestService;
             _medicalbreakdownstatsService = medicalbreakdownstatsService;
+            _descountrequestService = descountRequestService;
+            _chargerequestService = chargeRequestService;
         }
     }
 }
