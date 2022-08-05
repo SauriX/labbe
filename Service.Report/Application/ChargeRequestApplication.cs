@@ -2,7 +2,7 @@
 using Service.Report.Client.IClient;
 using Service.Report.Domain.Catalogs;
 using Service.Report.Dtos;
-using Service.Report.Dtos.CanceledRequest;
+using Service.Report.Dtos.TypeRequest;
 using Service.Report.Mapper;
 using Service.Report.PdfModel;
 using Service.Report.Repository.IRepository;
@@ -13,40 +13,43 @@ using System.Threading.Tasks;
 
 namespace Service.Report.Application
 {
-    public class CanceledRequestApplication : BaseApplication, ICanceledRequestApplication
+    public class ChargeRequestApplication : BaseApplication, IChargeRequestApplication
     {
         public readonly IReportRepository _repository;
         private readonly IPdfClient _pdfClient;
 
-        public CanceledRequestApplication(IReportRepository repository, IPdfClient pdfClient, IRepository<Branch> branchRepository, IRepository<Medic> medicRepository, IRepository<Company> companyRepository) : base(branchRepository, medicRepository, companyRepository)
+        public ChargeRequestApplication(IReportRepository repository, IPdfClient pdfClient, IRepository<Branch> branchRepository, IRepository<Medic> medicRepository, IRepository<Company> companyRepository) : base(branchRepository, medicRepository, companyRepository)
         {
             _repository = repository;
             _pdfClient = pdfClient;
+
         }
 
-        public async Task<IEnumerable<CanceledRequestDto>> GetByFilter(ReportFilterDto filter)
+        public async Task<IEnumerable<TypeRequestDto>> GetByFilter(ReportFilterDto filter)
         {
             var data = await _repository.GetByFilter(filter);
-            var results = data.ToCanceledRequestDto();
+            var results = data.ToChargeRequestDto();
 
             return results;
         }
 
-        public async Task<IEnumerable<CanceledRequestChartDto>> GetChartByFilter(ReportFilterDto filter)
+        public async Task<TypeDto> GetTableByFilter(ReportFilterDto filter)
         {
             var data = await _repository.GetByFilter(filter);
-            var results = data.ToCanceledRequestChartDto();
+            var results = data.ToChargeDto();
 
             return results;
         }
 
-        public async Task<CanceledDto> GetTableByFilter(ReportFilterDto filter)
+        public async Task<IEnumerable<TypeRequestChartDto>> GetChartByFilter(ReportFilterDto filter)
         {
             var data = await _repository.GetByFilter(filter);
-            var results = data.ToCanceledDto();
+            var results = data.ToChargeRequestChartDto();
 
             return results;
         }
+
+
         public async Task<byte[]> DownloadReportPdf(ReportFilterDto filter)
         {
             var requestData = await GetTableByFilter(filter);
@@ -59,8 +62,8 @@ namespace Service.Report.Application
                 new Col("Médico", ParagraphAlignment.Left),
                 new Col("Compañía", ParagraphAlignment.Left),
                 new Col("Subtotal", ParagraphAlignment.Left, "C"),
-                new Col("Desc. %", ParagraphAlignment.Left),
-                new Col("Desc.", ParagraphAlignment.Left, "C"),
+                new Col("Cargo %", ParagraphAlignment.Left),
+                new Col("Cargo", ParagraphAlignment.Left, "C"),
                 new Col("IVA", ParagraphAlignment.Left, "C"),
                 new Col("Total", ParagraphAlignment.Left, "C"),
             };
@@ -68,61 +71,61 @@ namespace Service.Report.Application
             List<ChartSeries> series = new()
             {
                 new ChartSeries("Sucursal", true),
-                new ChartSeries("Cancelada"),
+                new ChartSeries("Cantidad con Cargo"),
             };
 
-            var data = requestData.CanceledRequest.Select(x => new Dictionary<string, object>
+            var data = requestData.TypeChargeRequest.Select(x => new Dictionary<string, object>
             {
                 { "Solicitud", x.Solicitud },
                 { "Paciente", x.Paciente },
                 { "Médico", x.Medico },
                 { "Children", x.Estudio.Select(x => new Dictionary<string, object> { { "Clave", x.Clave}, { "Estudio", x.Estudio}, { "Precio", $"${x.Precio}"}  } )},
                 { "Compañía", x.Empresa},
-                { "Subtotal", x.Subtotal},
-                { "Desc. %", $"{Math.Round(x.DescuentoPorcentual, 2)}%"},
-                { "Desc.", x.Descuento},
-                { "IVA", x.IVA},
-                { "Total", x.TotalEstudios}
+                { "Subtotal", x.SubtotalCargo},
+                { "Cargo %", $"{Math.Round(x.CargoPorcentual, 2)}%"},
+                { "Cargo", x.Cargo},
+                { "IVA", x.IVACargo},
+                { "Total", x.TotalCargo}
             }).ToList();
 
             var datachart = requestchartData.Select(x => new Dictionary<string, object>
             {
                 { "Sucursal", x.Sucursal},
-                { "Cancelada", x.Cantidad}
+                { "Cantidad con Cargo", x.Cantidad}
             }).ToList();
 
             List<Col> totalColumns = new()
             {
-                new Col("Desc. %", ParagraphAlignment.Center),
-                new Col("Desc.", ParagraphAlignment.Center, "C"),
+                new Col("Cargo %", ParagraphAlignment.Center),
+                new Col("Cargo", ParagraphAlignment.Center, "C"),
                 new Col("IVA", ParagraphAlignment.Center, "C"),
                 new Col("Total", ParagraphAlignment.Center, "C"),
             };
 
             var totales = new Dictionary<string, object>
             {
-                { "Desc. %", $"{Math.Round(requestData.CanceledTotal.TotalDescuentoPorcentual, 2)}%" },
-                { "Desc.", requestData.CanceledTotal.SumaDescuentos},
-                { "IVA", requestData.CanceledTotal.IVA},
-                { "Total", requestData.CanceledTotal.Total}
+                { "Cargo %", $"{Math.Round(requestData.TypeChargeTotal.TotalDescuentoPorcentual, 2)}%" },
+                { "Cargo", requestData.TypeChargeTotal.SumaDescuentos},
+                { "IVA", requestData.TypeChargeTotal.IVACargo},
+                { "Total", requestData.TypeChargeTotal.TotalCargo}
             };
 
             var branches = await GetBranchNames(filter.SucursalId);
-            var companies = await GetCompanyNames(filter.CompañiaId);
+            var doctors = await GetDoctorNames(filter.MedicoId);
 
             var headerData = new HeaderData()
             {
-                NombreReporte = "Solicitudes Canceladas",
-                Extra = companies.Any() ? "Compañía(s): " + string.Join(", ", companies.Select(x => x)) : "Todas las Compañías",
+                NombreReporte = "Solicitudes con Cargo",
+                Extra = doctors.Any() ? "Médico(s): " + string.Join(", ", doctors.Select(x => x)) : "Todos los Médicos",
                 Sucursal = string.Join(", ", branches.Select(x => x)),
                 Fecha = $"{filter.Fecha.Min():dd/MM/yyyy} - {filter.Fecha.Max():dd/MM/yyyy}"
             };
 
             var invoice = new InvoiceData()
             {
-                Subtotal = requestData.CanceledTotal.Subtotal,
-                IVA = requestData.CanceledTotal.IVA,
-                Total = requestData.CanceledTotal.Total,
+                Subtotal = requestData.TypeChargeTotal.SubtotalCargo,
+                IVA = requestData.TypeChargeTotal.IVACargo,
+                Total = requestData.TypeChargeTotal.TotalCargo,
             };
 
             var reportData = new ReportData()
