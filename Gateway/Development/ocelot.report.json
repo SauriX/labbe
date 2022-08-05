@@ -275,6 +275,54 @@
       ],
       "UpstreamPathTemplate": "/api/report/canceladas/chart/filter",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/report/medicos-desglosado/download/pdf",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 18934
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/medicos-desglosado/download/pdf",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/report/medicos-desglosado/filter",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 18934
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/medicos-desglosado/filter",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/report/medicos-desglosado/table/filter",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 18934
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/medicos-desglosado/table/filter",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/report/medicos-desglosado/chart/filter",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 18934
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/medicos-desglosado/chart/filter",
+      "UpstreamHttpMethod": [ "POST" ]
     }
   ]
 }

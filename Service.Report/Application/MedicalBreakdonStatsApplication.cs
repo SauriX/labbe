@@ -2,7 +2,7 @@
 using Service.Report.Client.IClient;
 using Service.Report.Domain.Catalogs;
 using Service.Report.Dtos;
-using Service.Report.Dtos.CanceledRequest;
+using Service.Report.Dtos.MedicalBreakdownStats;
 using Service.Report.Mapper;
 using Service.Report.PdfModel;
 using Service.Report.Repository.IRepository;
@@ -13,44 +13,39 @@ using System.Threading.Tasks;
 
 namespace Service.Report.Application
 {
-    public class CanceledRequestApplication : BaseApplication, ICanceledRequestApplication
+    public class MedicalBreakdonStatsApplication : BaseApplication, IMedicalBreakdownStatsApplication
     {
         public readonly IReportRepository _repository;
         private readonly IPdfClient _pdfClient;
 
-        public CanceledRequestApplication(IReportRepository repository, IPdfClient pdfClient, IRepository<Branch> branchRepository, IRepository<Medic> medicRepository) : base(branchRepository, medicRepository)
+        public MedicalBreakdonStatsApplication(IReportRepository repository, IPdfClient pdfClient, IRepository<Branch> branchRepository, IRepository<Medic> medicRepository) : base(branchRepository, medicRepository)
         {
             _repository = repository;
             _pdfClient = pdfClient;
         }
-
-        public async Task<IEnumerable<CanceledRequestDto>> GetByFilter(ReportFilterDto filter)
+        public async Task<IEnumerable<MedicalBreakdownRequestDto>> GetByFilter(ReportFilterDto search)
         {
-            var data = await _repository.GetByFilter(filter);
-            var results = data.ToCanceledRequestDto();
-
+            var data = await _repository.GetByFilter(search);
+            var results = data.ToMedicalBreakdownRequestDto();
             return results;
         }
-
-        public async Task<IEnumerable<CanceledRequestChartDto>> GetChartByFilter(ReportFilterDto filter)
+        public async Task<IEnumerable<MedicalBreakdownRequestChartDto>> GetChartByFilter(ReportFilterDto search)
         {
-            var data = await _repository.GetByFilter(filter);
-            var results = data.ToCanceledRequestChartDto();
+            var data = await _repository.GetByFilter(search);
+            var results = data.ToMedicalBreakdownRequestChartDto();
+            return results;
 
+        }
+        public async Task<MedicalBreakdownDto> GetTableByFilter(ReportFilterDto search)
+        {
+            var data = await _repository.GetByFilter(search);
+            var results = data.ToMedicalBreakdownDto();
             return results;
         }
-
-        public async Task<CanceledDto> GetTableByFilter(ReportFilterDto filter)
+        public async Task<byte[]> DownloadReportPdf(ReportFilterDto search)
         {
-            var data = await _repository.GetByFilter(filter);
-            var results = data.ToCanceledDto();
-
-            return results;
-        }
-        public async Task<byte[]> DownloadReportPdf(ReportFilterDto filter)
-        {
-            var requestData = await GetTableByFilter(filter);
-            var requestchartData = await GetChartByFilter(filter);
+            var requestData = await GetTableByFilter(search);
+            var requestchartData = await GetChartByFilter(search);
 
             List<Col> columns = new()
             {
@@ -67,11 +62,11 @@ namespace Service.Report.Application
 
             List<ChartSeries> series = new()
             {
-                new ChartSeries("Solicitud", true),
+                new ChartSeries("Clave de Médico", true),
                 new ChartSeries("Cancelada"),
             };
 
-            var data = requestData.CanceledRequest.Select(x => new Dictionary<string, object>
+            var data = requestData.MedicalBreakdownRequest.Select(x => new Dictionary<string, object>
             {
                 { "Solicitud", x.Solicitud },
                 { "Nombre del Paciente", x.Paciente },
@@ -87,39 +82,39 @@ namespace Service.Report.Application
 
             var datachart = requestchartData.Select(x => new Dictionary<string, object>
             {
-                { "Solicitud", x.Solicitud},
-                { "Cancelada", x.Cantidad}
+                { "Clave de Médico", x.ClaveMedico},
+                { "Cancelada", x.NoSolicitudes}
             }).ToList();
 
             var totales = new TotalData()
             {
-                NoSolicitudes = requestData.CanceledTotal.NoSolicitudes,
-                Precios = requestData.CanceledTotal.SumaEstudios,
-                Descuento = requestData.CanceledTotal.SumaDescuentos,
-                DescuentoPorcentual = requestData.CanceledTotal.TotalDescuentoPorcentual,
-                Total = requestData.CanceledTotal.Total
+                NoSolicitudes = requestData.MedicalBreakdownTotal.NoSolicitudes,
+                Precios = requestData.MedicalBreakdownTotal.SumaEstudios,
+                Descuento = requestData.MedicalBreakdownTotal.SumaDescuentos,
+                DescuentoPorcentual = requestData.MedicalBreakdownTotal.TotalDescuentoPorcentual,
+                Total = requestData.MedicalBreakdownTotal.Total
             };
 
-            var branches = await GetBranchNames(filter.SucursalId);
+            var branches = await GetBranchNames(search.SucursalId);
 
             var headerData = new HeaderData()
             {
-                NombreReporte = "Solicitudes Canceladas",
+                NombreReporte = "Solicitudes Médicos desglosados",
                 Sucursal = string.Join(", ", branches.Select(x => x)),
-                Fecha = $"{filter.Fecha.Min():dd/MM/yyyy} - {filter.Fecha.Max():dd/MM/yyyy}"
+                Fecha = $"{search.Fecha.Min():dd/MM/yyyy} - {search.Fecha.Max():dd/MM/yyyy}"
             };
 
             var invoice = new InvoiceData()
             {
-                Subtotal = requestData.CanceledTotal.Subtotal,
-                IVA = requestData.CanceledTotal.IVA,
-                Total = requestData.CanceledTotal.Total,
+                Subtotal = requestData.MedicalBreakdownTotal.Subtotal,
+                IVA = requestData.MedicalBreakdownTotal.IVA,
+                Total = requestData.MedicalBreakdownTotal.Total,
             };
 
             var reportData = new ReportData()
             {
                 Columnas = columns,
-                Series = filter.Grafica ? series : null,
+                Series = search.Grafica ? series : null,
                 Datos = data,
                 DatosGrafica = datachart,
                 Header = headerData,
@@ -131,5 +126,8 @@ namespace Service.Report.Application
 
             return file;
         }
+
+
+
     }
 }
