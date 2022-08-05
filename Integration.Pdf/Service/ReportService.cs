@@ -96,9 +96,9 @@ namespace Integration.Pdf.Service
             section.AddText(title);
             section.AddSpace(10);
             section.AddText(branch);
-            if(!string.IsNullOrWhiteSpace(Header.NombreEmpresa))
+            if(!string.IsNullOrWhiteSpace(Header.Extra))
             {
-                var company = new Col(Header.NombreEmpresa, fontSubtitle);
+                var company = new Col(Header.Extra, fontSubtitle);
                 section.AddText(company);
             }
             section.AddText(period);

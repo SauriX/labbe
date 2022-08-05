@@ -47,7 +47,7 @@ namespace Service.Report.Mapper
             if (model == null) return null;
 
             var results = (from c in model.Where(x => x.EstatusId == 10)
-                           group c by new { c.Clave ,c.SucursalId, c.Sucursal.Sucursal } into grupo
+                           group c by new { c.SucursalId, c.Sucursal.Sucursal } into grupo
                            select new CanceledRequestChartDto
                            {
                                Id = Guid.NewGuid(),
