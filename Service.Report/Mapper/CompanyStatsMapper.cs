@@ -1,4 +1,5 @@
 ﻿using Service.Report.Domain.Request;
+using Service.Report.Dtos;
 using Service.Report.Dtos.CompanyStats;
 using Service.Report.Dtos.StudyStats;
 using System;
@@ -46,7 +47,7 @@ namespace Service.Report.Mapper
 
             var results = CompanyGeneric(model);
 
-            var totals = new CompanyStatsTotalDto
+            var totals = new InvoiceDto
             {
                 NoSolicitudes = results.Count(),
                 SumaEstudios = results.Sum(x => x.PrecioEstudios),
