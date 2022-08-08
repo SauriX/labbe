@@ -225,6 +225,8 @@ namespace Service.Catalog.Mapper
                 EstudioId = model.EstudioId,
                 Nombre = model.Estudio.Nombre,
                 Clave = model.Estudio.Clave,
+                DepartamentoId = model.Estudio.DepartamentoId,
+                AreaId = model.Estudio.AreaId,
                 Dias = Convert.ToInt32(Math.Ceiling(model.Estudio.DiasResultado)),
                 Horas = model.Estudio.TiempoResultado,
                 Precio = model.Precio,
@@ -244,6 +246,8 @@ namespace Service.Catalog.Mapper
                 PaqueteId = model.PaqueteId,
                 Nombre = model.Paquete.Nombre,
                 Clave = model.Paquete.Clave,
+                DepartamentoId = model.Paquete.DepartamentoId,
+                AreaId = model.Paquete.AreaId,
                 Precio = model.Precio,
                 Estudios = model.Paquete.studies.Select(x => new PriceListInfoStudyDto
                 {
@@ -252,6 +256,8 @@ namespace Service.Catalog.Mapper
                     EstudioId = x.EstudioId,
                     Nombre = x.Estudio.Nombre,
                     Clave = x.Estudio.Clave,
+                    DepartamentoId = x.Estudio.DepartamentoId,
+                    AreaId = x.Estudio.AreaId,
                     Dias = Convert.ToInt32(Math.Ceiling(x.Estudio.DiasResultado)),
                     Horas = x.Estudio.TiempoResultado,
                     Parametros = x.Estudio.Parameters.Select(x => x.Parametro).ToParameterListDto(),

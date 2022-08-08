@@ -1,5 +1,7 @@
 ﻿using ClosedXML.Excel;
 using ClosedXML.Report;
+using EventBus.Messages.Catalog;
+using MassTransit;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dictionary.Medic;
 using Service.Catalog.Dtos.Medicos;
@@ -18,10 +20,12 @@ namespace Service.Catalog.Application
 {
     public class MedicsApplication : IMedicsApplication
     {
+        private readonly IPublishEndpoint _publishEndpoint;
         private readonly IMedicsRepository _repository;
 
-        public MedicsApplication(IMedicsRepository repository)
+        public MedicsApplication(IPublishEndpoint publishEndpoint, IMedicsRepository repository)
         {
+            _publishEndpoint = publishEndpoint;
             _repository = repository;
         }
 
@@ -53,6 +57,10 @@ namespace Service.Catalog.Application
 
             await _repository.Create(newMedics);
 
+            var contract = new MedicContract(newMedics.IdMedico, newMedics.Clave, newMedics.Nombre);
+
+            await _publishEndpoint.Publish(contract);
+
             medic = await GetById(newMedics.IdMedico);
             medic.ClaveCambio = !sameCode;
 
@@ -77,6 +85,11 @@ namespace Service.Catalog.Application
             var updatedAgent = medics.ToModel(existing);
 
             await _repository.Update(updatedAgent);
+
+            var contract = new MedicContract(updatedAgent.IdMedico, updatedAgent.Clave, updatedAgent.Nombre);
+
+            await _publishEndpoint.Publish(contract);
+
             return existing.ToMedicsFormDto();
         }
 

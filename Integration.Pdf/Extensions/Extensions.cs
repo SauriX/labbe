@@ -28,7 +28,7 @@ namespace Integration.Pdf.Extensions
             Paragraph paragraph = section.AddParagraph();
             paragraph.Format.Alignment = col.Horizontal;
 
-            string[] split = col.Texto.Split(new[] { ':' }, 2);
+            string[] split = (col.Texto ?? "").Split(new[] { ':' }, 2);
 
             if (partialBold && split.Length == 2)
             {
@@ -37,7 +37,7 @@ namespace Integration.Pdf.Extensions
             }
             else
             {
-                paragraph.AddFormattedText(col.Texto, col.Fuente);
+                paragraph.AddFormattedText(col.Texto ?? "", col.Fuente);
             }
 
             if (inverted)
@@ -78,7 +78,7 @@ namespace Integration.Pdf.Extensions
             }
             paragraph.Format.Alignment = col.Horizontal;
 
-            paragraph.AddFormattedText(col.Texto, col.Fuente);
+            paragraph.AddFormattedText(col.Texto ?? "", col.Fuente);
 
             Paragraph p = section.AddParagraph();
             p.Format.LineSpacingRule = LineSpacingRule.Exactly;
@@ -113,7 +113,7 @@ namespace Integration.Pdf.Extensions
                 Models.Col col = cols[i];
 
                 Paragraph paragraph = row.Cells[i].AddParagraph();
-                string[] split = col.Texto.Split(new[] { ':' }, 2);
+                string[] split = (col.Texto ?? "").Split(new[] { ':' }, 2);
 
                 if (partialBold && split.Length == 2)
                 {
@@ -122,7 +122,7 @@ namespace Integration.Pdf.Extensions
                 }
                 else
                 {
-                    paragraph.AddFormattedText(col.Texto, col.Fuente);
+                    paragraph.AddFormattedText(col.Texto ?? "", col.Fuente);
                 }
             }
 
@@ -189,11 +189,11 @@ namespace Integration.Pdf.Extensions
                 }
 
                 Paragraph paragraph = cell.AddParagraph();
-                //string[] split = col.Texto.Split(new[] { ':' }, 2);
-                //if (Regex.IsMatch(col.Texto, @"REPEAT\(([^,]*,([ ]|)[\d]*)\)"))
+                //string[] split = col.Texto ??"".Split(new[] { ':' }, 2);
+                //if (Regex.IsMatch(col.Texto ??"", @"REPEAT\(([^,]*,([ ]|)[\d]*)\)"))
                 //{
                 //    char[] splitChar = new[] { ',' };
-                //    var param = Regex.Match(col.Texto, @"\(\s*([^)]+?)\s*\)");
+                //    var param = Regex.Match(col.Texto ??"", @"\(\s*([^)]+?)\s*\)");
 
                 //    if (param.Success)
                 //    {
@@ -209,7 +209,7 @@ namespace Integration.Pdf.Extensions
                 //}
                 //else
                 //{
-                paragraph.AddFormattedText(col.Texto, col.Fuente);
+                paragraph.AddFormattedText(col.Texto ?? "", col.Fuente);
                 //}
             }
         }

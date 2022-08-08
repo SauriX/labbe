@@ -4,7 +4,7 @@ namespace Service.Sender.Settings
 {
     public class KeySettings : IKeySettings
     {
-        public string MailPassword { get; set; }
-        public string Token { get; set; }
+        public string MailKey { get; init; }
+        public string Token { get; init; }
     }
 }
