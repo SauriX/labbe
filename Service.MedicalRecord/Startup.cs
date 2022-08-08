@@ -122,6 +122,7 @@ namespace Service.MedicalRecord
                 x.UsingRabbitMq((context, configurator) =>
                 {
                     var rabbitMQSettings = Configuration.GetSection(nameof(RabbitMQSettings)).Get<RabbitMQSettings>();
+                    var queueNames = Configuration.GetSection(nameof(QueueNames)).Get<QueueNames>();
 
                     configurator.Host(new Uri(rabbitMQSettings.Host), "MedicalRecord", c =>
                     {
@@ -130,9 +131,21 @@ namespace Service.MedicalRecord
                         c.Password(rabbitMQSettings.Password);
                     });
 
-                    configurator.ReceiveEndpoint("branch-medicalRecord-queue", re =>
+                    configurator.ReceiveEndpoint(queueNames.Branch, re =>
                     {
                         re.Consumer<BranchConsumer>(context);
+                        re.DiscardFaultedMessages();
+                    });                
+                    
+                    configurator.ReceiveEndpoint(queueNames.Company, re =>
+                    {
+                        re.Consumer<CompanyConsumer>(context);
+                        re.DiscardFaultedMessages();
+                    });                
+                    
+                    configurator.ReceiveEndpoint(queueNames.Medic, re =>
+                    {
+                        re.Consumer<MedicConsumer>(context);
                         re.DiscardFaultedMessages();
                     });
                 });
@@ -234,11 +247,13 @@ namespace Service.MedicalRecord
             services.AddScoped<IPriceQuoteApplication, PriceQuoteApplication>();
             services.AddScoped<IRequestApplication, RequestApplication>();
             services.AddScoped<IAppointmentApplication, AppointmentApplication>();
+            services.AddScoped<ISamplingApplication, SamplingAplication>();
 
             services.AddScoped<IMedicalRecordRepository, MedicalRecordRepository>();
             services.AddScoped<IRequestRepository, RequestRepository>();
             services.AddScoped<IPriceQuoteRepository, PriceQuoteRepository>();
             services.AddScoped<IAppointmentResposiotry, AppointmentRepository>();
+            services.AddScoped<ISamplingRepository, SamplingRepository>();
         }
 
 

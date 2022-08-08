@@ -2,9 +2,9 @@
 {
     public class RabbitMQSettings
     {
-        public string Host { get; set; }
-        public string VirtualHost { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
+        public string Host { get; init; }
+        public string VirtualHost { get; init; }
+        public string Username { get; init; }
+        public string Password { get; init; }
     }
 }

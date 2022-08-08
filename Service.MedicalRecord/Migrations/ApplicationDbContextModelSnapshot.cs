@@ -159,6 +159,63 @@ namespace Service.MedicalRecord.Migrations
                     b.ToTable("CAT_Cita_Lab");
                 });
 
+            modelBuilder.Entity("Service.MedicalRecord.Domain.Catalogs.Branch", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<short>("CiudadId")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("Clave")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Clinicos")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CodigoPostal")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CAT_Sucursal");
+                });
+
+            modelBuilder.Entity("Service.MedicalRecord.Domain.Catalogs.Company", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Clave")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CAT_Compañia");
+                });
+
+            modelBuilder.Entity("Service.MedicalRecord.Domain.Catalogs.Medic", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Clave")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CAT_Medico");
+                });
+
             modelBuilder.Entity("Service.MedicalRecord.Domain.MedicalRecord.MedicalRecord", b =>
                 {
                     b.Property<Guid>("Id")
@@ -482,7 +539,13 @@ namespace Service.MedicalRecord.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CompañiaId");
+
                     b.HasIndex("ExpedienteId");
+
+                    b.HasIndex("MedicoId");
+
+                    b.HasIndex("SucursalId");
 
                     b.ToTable("CAT_Solicitud");
                 });
@@ -504,10 +567,19 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<bool>("AplicaDescuento")
                         .HasColumnType("bit");
 
+                    b.Property<int>("AreaId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Clave")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("DepartamentoId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Descuento")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("DescuentoPorcentaje")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Dias")
@@ -571,10 +643,19 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<bool>("AplicaDescuento")
                         .HasColumnType("bit");
 
+                    b.Property<int>("AreaId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Clave")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("DepartamentoId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Descuento")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("DescuentoPorcentaje")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Dias")
@@ -742,13 +823,33 @@ namespace Service.MedicalRecord.Migrations
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.Request.Request", b =>
                 {
+                    b.HasOne("Service.MedicalRecord.Domain.Catalogs.Company", "Compañia")
+                        .WithMany()
+                        .HasForeignKey("CompañiaId");
+
                     b.HasOne("Service.MedicalRecord.Domain.MedicalRecord.MedicalRecord", "Expediente")
                         .WithMany()
                         .HasForeignKey("ExpedienteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Service.MedicalRecord.Domain.Catalogs.Medic", "Medico")
+                        .WithMany()
+                        .HasForeignKey("MedicoId");
+
+                    b.HasOne("Service.MedicalRecord.Domain.Catalogs.Branch", "Sucursal")
+                        .WithMany()
+                        .HasForeignKey("SucursalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Compañia");
+
                     b.Navigation("Expediente");
+
+                    b.Navigation("Medico");
+
+                    b.Navigation("Sucursal");
                 });
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.Request.RequestPack", b =>

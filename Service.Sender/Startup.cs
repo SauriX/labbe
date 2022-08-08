@@ -55,10 +55,12 @@ namespace Service.Sender
             services.AddMassTransit(x =>
             {
                 x.AddConsumers(Assembly.GetExecutingAssembly());
+                x.AddSignalRHub<NotificationHub>();
 
                 x.UsingRabbitMq((context, configurator) =>
                 {
                     var rabbitMQSettings = Configuration.GetSection(nameof(RabbitMQSettings)).Get<RabbitMQSettings>();
+                    var queueNames = Configuration.GetSection(nameof(QueueNames)).Get<QueueNames>();
 
                     configurator.Host(new Uri(rabbitMQSettings.Host), "Sender", c =>
                     {
@@ -67,48 +69,46 @@ namespace Service.Sender
                         c.Password(rabbitMQSettings.Password);
                     });
 
-                    configurator.ReceiveEndpoint("email-queue", re =>
+                    configurator.ReceiveEndpoint(queueNames.Email, re =>
                     {
                         re.Consumer<EmailConsumer>(context);
                         re.DiscardFaultedMessages();
                     });
 
-                    configurator.ReceiveEndpoint("email-queue-faults", re =>
+                    configurator.ReceiveEndpoint(queueNames.EmailFault, re =>
                     {
                         re.Consumer<EmailErrorConsumer>(context);
                     });           
                     
-                    configurator.ReceiveEndpoint("whatsapp-queue", re =>
+                    configurator.ReceiveEndpoint(queueNames.Whatsapp, re =>
                     {
-                        x.AddSignalRHub<NotificationHub>();
                         re.Consumer<WhatsappConsumer>(context);
                         re.DiscardFaultedMessages();
                     });
 
-                    configurator.ReceiveEndpoint("whatsapp-queue-faults", re =>
+                    configurator.ReceiveEndpoint(queueNames.WhatsappFault, re =>
                     {
-                        x.AddSignalRHub<NotificationHub>();
                         re.Consumer<WhatsappErrorConsumer>(context);
                     });
 
-                    configurator.ReceiveEndpoint("email-configuration-queue", re =>
+                    configurator.ReceiveEndpoint(queueNames.EmailConfiguration, re =>
                     {
                         re.Consumer<EmailConfigurationConsumer>(context);
                         re.DiscardFaultedMessages();
                     });
 
-                    configurator.ReceiveEndpoint("email-configuration-queue-faults", re =>
+                    configurator.ReceiveEndpoint(queueNames.EmailConfigurationFault, re =>
                     {
                         re.Consumer<EmailConfigurationErrorConsumer>(context);
                     });
 
-                    configurator.ReceiveEndpoint("notification-queue", re =>
+                    configurator.ReceiveEndpoint(queueNames.Notification, re =>
                     {
                         re.Consumer<NotificationConsumer>(context);
                         re.DiscardFaultedMessages();
                     });
 
-                    configurator.ReceiveEndpoint("notification-queue-faults", re =>
+                    configurator.ReceiveEndpoint(queueNames.NotificationFault, re =>
                     {
                         re.Consumer<NotificationErrorConsumer>(context);
                     });
@@ -129,7 +129,10 @@ namespace Service.Sender
             services.AddSingleton<IUrlSettings>(fs => fs.GetRequiredService<IOptions<UrlSettings>>().Value);
 
             services.Configure<UrlLocalSettings>(Configuration.GetSection(nameof(UrlLocalSettings)));
-            services.AddSingleton<IUrlLocalSettings>(fs => fs.GetRequiredService<IOptions<UrlLocalSettings>>().Value);
+            services.AddSingleton<IUrlLocalSettings>(fs => fs.GetRequiredService<IOptions<UrlLocalSettings>>().Value);    
+            
+            services.Configure<EmailTemplateSettings>(Configuration.GetSection(nameof(EmailTemplateSettings)));
+            services.AddSingleton<IEmailTemplateSettings>(fs => fs.GetRequiredService<IOptions<EmailTemplateSettings>>().Value);
 
             var key = Configuration["SecretKey"];
             var tokenKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
