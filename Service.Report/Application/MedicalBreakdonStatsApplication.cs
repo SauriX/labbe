@@ -63,7 +63,7 @@ namespace Service.Report.Application
             List<ChartSeries> series = new()
             {
                 new ChartSeries("Clave de Médico", true),
-                new ChartSeries("Cancelada"),
+                new ChartSeries("Solicitudes por Médico"),
             };
 
             var data = requestData.MedicalBreakdownRequest.Select(x => new Dictionary<string, object>
@@ -83,23 +83,32 @@ namespace Service.Report.Application
             var datachart = requestchartData.Select(x => new Dictionary<string, object>
             {
                 { "Clave de Médico", x.ClaveMedico},
-                { "Cancelada", x.NoSolicitudes}
+                { "Solicitudes por Médico", x.NoSolicitudes}
             }).ToList();
 
-            var totales = new TotalData()
+            List<Col> totalColumns = new()
             {
-                NoSolicitudes = requestData.MedicalBreakdownTotal.NoSolicitudes,
-                Precios = requestData.MedicalBreakdownTotal.SumaEstudios,
-                Descuento = requestData.MedicalBreakdownTotal.SumaDescuentos,
-                DescuentoPorcentual = requestData.MedicalBreakdownTotal.TotalDescuentoPorcentual,
-                Total = requestData.MedicalBreakdownTotal.Total
+                new Col("Desc. %", ParagraphAlignment.Center),
+                new Col("Desc.", ParagraphAlignment.Center, "C"),
+                new Col("IVA", ParagraphAlignment.Center, "C"),
+                new Col("Total", ParagraphAlignment.Center, "C"),
+            };
+
+            var totales = new Dictionary<string, object>
+            {
+                { "Desc. %", $"{Math.Round(requestData.MedicalBreakdownTotal.TotalDescuentoPorcentual, 2)}%" },
+                { "Desc.", requestData.MedicalBreakdownTotal.SumaDescuentos},
+                { "IVA", requestData.MedicalBreakdownTotal.IVA},
+                { "Total", requestData.MedicalBreakdownTotal.Total}
             };
 
             var branches = await GetBranchNames(search.SucursalId);
+            var doctors = await GetDoctorNames(search.MedicoId);
 
             var headerData = new HeaderData()
             {
                 NombreReporte = "Solicitudes Médicos desglosados",
+                Extra = doctors.Any() ? "Médico(s): " + string.Join(", ", doctors.Select(x => x)) : "Todos los Médicos",
                 Sucursal = string.Join(", ", branches.Select(x => x)),
                 Fecha = $"{search.Fecha.Min():dd/MM/yyyy} - {search.Fecha.Max():dd/MM/yyyy}"
             };
@@ -117,6 +126,7 @@ namespace Service.Report.Application
                 Series = search.Grafica ? series : null,
                 Datos = data,
                 DatosGrafica = datachart,
+                ColumnasTotales = totalColumns,
                 Header = headerData,
                 Invoice = invoice,
                 Totales = totales

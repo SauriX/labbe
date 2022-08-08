@@ -27,7 +27,7 @@ namespace Service.Report.Controllers.Report
             IStudyStatsApplication studyStatsService,
             IUrgentStatsApplication urgentStatsService,
             ICompanyStatsApplication companyStatsService,
-            IMedicalBreakdownStatsApplication medicalbreakdownstatsService)
+            IMedicalBreakdownStatsApplication medicalbreakdownstatsService,
             ICanceledRequestApplication canceledRequestService,
             IDescountRequestApplication descountRequestService,
             IChargeRequestApplication chargeRequestService)
