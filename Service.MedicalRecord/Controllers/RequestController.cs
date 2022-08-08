@@ -48,7 +48,7 @@ namespace Service.MedicalRecord.Controllers
             {
                 ExpedienteId = recordId,
                 SolicitudId = requestId,
-                Telefono = email,
+                Correo = email,
                 UsuarioId = (Guid)HttpContext.Items["userId"]
             };
 

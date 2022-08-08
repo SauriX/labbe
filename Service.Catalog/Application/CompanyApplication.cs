@@ -1,5 +1,7 @@
 ﻿using ClosedXML.Excel;
 using ClosedXML.Report;
+using EventBus.Messages.Catalog;
+using MassTransit;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dictionary.Company;
 using Service.Catalog.Domain.Company;
@@ -20,10 +22,12 @@ namespace Service.Catalog.Application
 {
     public class CompanyApplication : ICompanyApplication
     {
+        private readonly IPublishEndpoint _publishEndpoint;
         private readonly ICompanyRepository _repository;
 
-        public CompanyApplication(ICompanyRepository repository)
+        public CompanyApplication(IPublishEndpoint publishEndpoint, ICompanyRepository repository)
         {
+            _publishEndpoint = publishEndpoint;
             _repository = repository;
         }
 
@@ -34,16 +38,18 @@ namespace Service.Catalog.Application
             return catalogs.ToCompanyListDto();
         }
 
-
         public async Task<CompanyFormDto> GetById(Guid Id)
         {
-            var Company = await _repository.GetById(Id);
-            if (Company == null)
+            var company = await _repository.GetById(Id);
+
+            if (company == null)
             {
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
-            return Company.ToCompanyFormDto();
+
+            return company.ToCompanyFormDto();
         }
+
         public async Task<CompanyFormDto> Create(CompanyFormDto company)
         {
             Helpers.ValidateGuid(company.Id.ToString(), out Guid guid);
@@ -56,6 +62,10 @@ namespace Service.Catalog.Application
 
             await _repository.Create(newIndication);
 
+            var contract = new CompanyContract(newIndication.Id, newIndication.Clave, newIndication.NombreComercial);
+
+            await _publishEndpoint.Publish(contract);
+
             company = await GetById(newIndication.Id);
 
             return company;
@@ -67,6 +77,7 @@ namespace Service.Catalog.Application
 
             return company.ToCompanyListDto();
         }
+
         public async Task<CompanyFormDto> Update(CompanyFormDto company)
         {
             Helpers.ValidateGuid(company.Id.ToString(), out Guid guid);
@@ -85,6 +96,10 @@ namespace Service.Catalog.Application
             CheckDuplicateContact(updatedAgent.Contacts);
 
             await _repository.Update(updatedAgent);
+
+            var contract = new CompanyContract(updatedAgent.Id, updatedAgent.Clave, updatedAgent.NombreComercial);
+
+            await _publishEndpoint.Publish(contract);
 
             return existing.ToCompanyFormDto();
         }

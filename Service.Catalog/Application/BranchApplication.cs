@@ -22,11 +22,13 @@ namespace Service.Catalog.Application
     {
         private readonly IPublishEndpoint _publishEndpoint;
         private readonly IBranchRepository _repository;
+        private readonly ILocationRepository _locationRepository;
 
-        public BranchApplication(IPublishEndpoint publishEndpoint, IBranchRepository repository)
+        public BranchApplication(IPublishEndpoint publishEndpoint, IBranchRepository repository, ILocationRepository locationRepository)
         {
             _publishEndpoint = publishEndpoint;
             _repository = repository;
+            _locationRepository = locationRepository;
         }
 
         public async Task<bool> Create(BranchFormDto branch)
@@ -45,9 +47,16 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated(Responses.Duplicated($"El {code}")));
             }
 
+            var location = await _locationRepository.GetColoniesByZipCode(newBranch.Codigopostal);
+
+            if (location == null || location.Count == 0)
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "Código postal no válido");
+            }
+
             await _repository.Create(newBranch);
 
-            var contract = new BranchContract(newBranch.Id, newBranch.Clave, newBranch.Nombre, newBranch.Clinicos);
+            var contract = new BranchContract(newBranch.Id, newBranch.Clave, newBranch.Nombre, newBranch.Clinicos, newBranch.Codigopostal, location.First().CiudadId);
 
             await _publishEndpoint.Publish(contract);
 
@@ -97,9 +106,16 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated($"Ya exsite ubna matriz activa"));
             }
 
+            var location = await _locationRepository.GetColoniesByZipCode(updatedAgent.Codigopostal);
+
+            if (location == null || location.Count == 0)
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "Código postal no válido");
+            }
+
             await _repository.Update(updatedAgent);
 
-            var contract = new BranchContract(updatedAgent.Id, updatedAgent.Clave, updatedAgent.Nombre, updatedAgent.Clinicos);
+            var contract = new BranchContract(updatedAgent.Id, updatedAgent.Clave, updatedAgent.Nombre, updatedAgent.Clinicos, updatedAgent.Codigopostal, location.First().CiudadId);
 
             await _publishEndpoint.Publish(contract);
 

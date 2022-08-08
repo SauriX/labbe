@@ -84,6 +84,7 @@ namespace Service.Catalog.Application
                 priceDto.PromocionId = promo.PromotionId;
                 priceDto.Promocion = promo.Promotion.Nombre;
                 priceDto.Descuento = promo.DiscountNumeric;
+                priceDto.DescuentoPorcentaje = promo.Discountporcent;
             }
 
             return priceDto;
@@ -136,6 +137,7 @@ namespace Service.Catalog.Application
                 priceDto.PromocionId = promo.PromotionId;
                 priceDto.Promocion = promo.Promotion.Nombre;
                 priceDto.Descuento = promo.DiscountNumeric;
+                priceDto.DescuentoPorcentaje = promo.Discountporcent;
             }
 
             return price.ToPriceListInfoPackDto();

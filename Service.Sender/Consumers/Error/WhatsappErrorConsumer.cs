@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Service.Sender.SignalR;
 using Shared.Dictionary;
+using Shared.Utils;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -24,25 +25,8 @@ namespace Service.Sender.Consumers.Error
 
         public async Task Consume(ConsumeContext<Fault<WhatsappContract>> context)
         {
-            var contract = typeof(WhatsappContract);
-            var messageId = context.Message.FaultedMessageId;
-            var messageEx = "";
-            if (context.Message?.Exceptions != null && context.Message.Exceptions.Any())
-            {
-                messageEx = string.Join("\n", context.Message.Exceptions.Select(x => $"Exception: {x.Message}\nStackTrace: {x.StackTrace}"));
-            }
-
-            var messageData = "";
-            if (context.Message?.Message != null)
-            {
-                messageData = JsonSerializer.Serialize(context.Message.Message);
-            }
-
-            var retry = context.GetRetryCount();
-
-            var exMessage = Responses.RabbitMQError("email-queue", retry, contract.FullName, messageId.ToString(), messageData, messageEx);
-
             var message = context.Message.Message;
+            var error = new RabbitFaultLog<WhatsappContract>().GetLog(context);
 
             if (message.Notificar)
             {
@@ -51,7 +35,7 @@ namespace Service.Sender.Consumers.Error
                 await _hubContext.Clients.Group(message.RemitenteId).SendAsync("Notify", notification);
             }
 
-            _logger.LogError(exMessage);
+            _logger.LogError(error);
         }
     }
 }
