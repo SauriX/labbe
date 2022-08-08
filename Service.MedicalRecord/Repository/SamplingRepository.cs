@@ -45,11 +45,11 @@ namespace Service.MedicalRecord.Repository
                 citasLab = citasLab.Where(x => search.Procedencia.Contains(x.Procedencia));
 
             }
-            /* if (search.Departamento != null && search.Departamento.Count > 0)
+             if (search.Departamento != null && search.Departamento.Count > 0)
              {
-                 citasLab = citasLab.Where(x => x.Estudios.Where(y=>y.));
+                 citasLab = citasLab.Where(x => x.Estudios.Any(y=>search.Departamento.Contains(y.DepartamentoId)));
 
-             }*/
+             }
             if (search.Ciudad != null && search.Ciudad.Count > 0)
             {
                 citasLab = citasLab.Where(x => search.Ciudad.Contains(x.Expediente.Expediente.ToString()));
@@ -61,11 +61,11 @@ namespace Service.MedicalRecord.Repository
 
             }
 
-            /*if (search.Area!= null && search.Area.Count > 0)
+            if (search.Area!= null && search.Area.Count > 0)
             {
-                citasLab = citasLab.Where(x => search.Area.Contains(x..ToString()));
+                citasLab = citasLab.Where(x => x.Estudios.Any(y => search.Area.Contains(y.AreaId)));
 
-            }*/
+            }
             if (search.Medico != null && search.Medico.Count > 0)
             {
                 citasLab = citasLab.Where(x => search.Medico.Contains(x.MedicoId.ToString()));
