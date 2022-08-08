@@ -120,6 +120,17 @@ namespace Service.Report.Repository
                 query = report.ToQueryString();
             }
 
+            if (search.FechaIndividual == DateTime.MinValue)
+            {
+                report = report.Where(x => x.Fecha.Date == search.FechaIndividual);
+            }
+
+            if (search.Hora != null)
+            {
+                report = report.
+                    Where(x => x.Fecha.Hour >= search.Fecha.First().Hour && x.Fecha.Hour <= search.Fecha.Last().Hour);
+            }
+
             return await report.ToListAsync();
         }
     }

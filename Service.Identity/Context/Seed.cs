@@ -123,6 +123,7 @@ namespace Service.Identity.Context
                         new Menu(21, 24, "Cotización", "cotizacion", "cotizacion", 2402),
                         new Menu(22, 24, "Reportes" , "reports", "reports", 2403),
                         new Menu(23,24,"Citas","appointments","appointments",2404),
+                        new Menu(24, 25, "Corte de Caja" , "cash", "cash", 2405),
                     };
 
                     context.CAT_Menu.AddRange(menus);
