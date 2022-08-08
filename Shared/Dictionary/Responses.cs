@@ -25,9 +25,15 @@
         public static string DuplicatedDestiny(string name) => $"{name} no puede ser el mismo que la sucursal de origen, favor de ingresar otro valor";
         public static string EmptyDestiny(string name) => $"{name} no puede estar vacio, favor de ingresar un valor";
         public static string DuplicatedDate(string name) => $"{name} ya se encuentra asignado(a) a otra lealtad, favor de ingresar otro valor";
-        public static string RabbitMQError(string queue, int retry, string contract, string messageId, string message, string excepciones)
+        public static string RabbitMQError(string url, int retry, string contract, string messageId, string message, string excepciones)
         {
-            return $"Ha ocurrido un error en la queue {queue}\nRetry: {retry}\nContract: {contract}\nMessageId: {messageId}\nMessage: {message}\n{excepciones}";
+            return $"" +
+                $"Ha ocurrido un error en: {url}\n" +
+                $"Retry: {retry}\n" +
+                $"Contract: {contract}\n" +
+                $"MessageId: {messageId}\n" +
+                $"Message: {message}\n" +
+                $"{excepciones}";
         }
     }
 }

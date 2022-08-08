@@ -8,19 +8,18 @@ using Newtonsoft.Json.Serialization;
 using Service.Sender.Service.IService;
 using Service.Sender.SignalR;
 using Shared.Helpers;
+using System;
 using System.Threading.Tasks;
 
 namespace Service.Sender.Consumers
 {
     public class EmailConsumer : IConsumer<EmailContract>
     {
-        private readonly ILogger<EmailConsumer> _logger;
         private readonly IEmailService _emailService;
         private readonly IHubContext<NotificationHub> _hubContext;
 
-        public EmailConsumer(ILogger<EmailConsumer> logger, IEmailService emailService, IHubContext<NotificationHub> hubContext)
+        public EmailConsumer(IEmailService emailService, IHubContext<NotificationHub> hubContext)
         {
-            _logger = logger;
             _emailService = emailService;
             _hubContext = hubContext;
         }
@@ -49,11 +48,8 @@ namespace Service.Sender.Consumers
                     await _hubContext.Clients.Group(message.RemitenteId).SendAsync("Notify", notification.Serialize());
                 }
             }
-            catch (System.Exception ex)
+            catch (Exception)
             {
-                var message = Exceptions.GetMessage(ex);
-                _logger.LogError($"MessageId: {context.MessageId}\n{message}");
-
                 throw;
             }
         }

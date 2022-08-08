@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Service.Sender.Service
@@ -17,15 +18,19 @@ namespace Service.Sender.Service
     public class EmailService : IEmailService
     {
         private readonly IKeySettings _keySettings;
-        private readonly IUrlSettings _urlSettings;
         private readonly IUrlLocalSettings _urlLocalSettings;
+        private readonly IEmailTemplateSettings _emailTemplateSettings;
         private readonly IEmailConfigurationService _configurationService;
 
-        public EmailService(IKeySettings keySettings, IUrlSettings urlSettings, IUrlLocalSettings urlLocalSettings, IEmailConfigurationService configurationService)
+        public EmailService(
+            IKeySettings keySettings,
+            IUrlLocalSettings urlLocalSettings,
+            IEmailTemplateSettings emailTemplateSettings,
+            IEmailConfigurationService configurationService)
         {
             _keySettings = keySettings;
-            _urlSettings = urlSettings;
             _urlLocalSettings = urlLocalSettings;
+            _emailTemplateSettings = emailTemplateSettings;
             _configurationService = configurationService;
         }
 
@@ -36,30 +41,35 @@ namespace Service.Sender.Service
             if (conf == null || string.IsNullOrWhiteSpace(conf.Smtp) || string.IsNullOrWhiteSpace(conf.Correo) || (conf.RequiereContraseña && string.IsNullOrWhiteSpace(conf.Contraseña)))
                 throw new Exception(Responses.EmailConfigurationIncomplete);
 
-            if (string.IsNullOrWhiteSpace(to) || !IsValid(to))
-                throw new CustomException(HttpStatusCode.FailedDependency, Responses.EmailFordwardError);
+            if (string.IsNullOrWhiteSpace(to) || !IsValidEmail(to))
+                throw new Exception(Responses.EmailFordwardError);
 
             var path = Path.Combine(_urlLocalSettings.Layout, Assets.HtmlGeneral);
-            var html = "";
-            using (var ot = File.OpenText(path))
+            var imgArr = File.ReadAllBytes(Path.Combine(_urlLocalSettings.Images, Assets.Logo));
+            var img64 = Convert.ToBase64String(imgArr);
+
+            var html = new StringBuilder();
+            using (var sr = File.OpenText(path))
             {
-                html += ot.ReadToEnd();
-                html = html.Replace("[Logo]", Path.Combine(_urlSettings.Images, Assets.Logo));
-                html = html.Replace("[Titulo]", title);
-                html = html.Replace("[Mensaje]", content.Replace("\n", "<br />"));
+                html.Append(sr.ReadToEnd());
+                html.Replace("{{PrimaryColor}}", _emailTemplateSettings.PrimaryColor);
+                html.Replace("{{BackgroundColor}}", _emailTemplateSettings.BackgroundColor);
+                html.Replace("{{Logo}}", $"data:image/png;base64, {img64}");
+                html.Replace("{{Titulo}}", title);
+                html.Replace("{{Mensaje}}", content.Replace("\n", "<br />"));
             }
 
             using MailMessage emailMessage = new();
             emailMessage.From = new MailAddress(conf.Correo, conf.Remitente);
             emailMessage.To.Add(new MailAddress(to, to));
             emailMessage.Subject = subject;
-            emailMessage.Body = html;
+            emailMessage.Body = html.ToString();
             emailMessage.IsBodyHtml = true;
             emailMessage.Priority = MailPriority.Normal;
             using SmtpClient MailClient = new(conf.Smtp);
             if (conf.RequiereContraseña)
             {
-                MailClient.Credentials = new NetworkCredential(conf.Correo, Crypto.DecryptString(conf.Contraseña, _keySettings.MailPassword));
+                MailClient.Credentials = new NetworkCredential(conf.Correo, Crypto.DecryptString(conf.Contraseña, _keySettings.MailKey));
             }
             MailClient.Send(emailMessage);
         }
@@ -71,17 +81,19 @@ namespace Service.Sender.Service
             if (conf == null || string.IsNullOrWhiteSpace(conf.Smtp) || string.IsNullOrWhiteSpace(conf.Correo) || (conf.RequiereContraseña && string.IsNullOrWhiteSpace(conf.Contraseña)))
                 throw new Exception(Responses.EmailConfigurationIncomplete);
 
-            if (to == null || !to.Any() || to.Any(x => !IsValid(x)))
-                throw new CustomException(HttpStatusCode.FailedDependency, Responses.EmailFordwardError);
+            if (to == null || !to.Any() || to.Any(x => !IsValidEmail(x)))
+                throw new Exception(Responses.EmailFordwardError);
 
             var path = Path.Combine(_urlLocalSettings.Layout, Assets.HtmlGeneral);
-            var html = "";
-            using (var ot = File.OpenText(path))
+            var html = new StringBuilder();
+            using (var sr = File.OpenText(path))
             {
-                html += ot.ReadToEnd();
-                html = html.Replace("[Logo]", Path.Combine(_urlSettings.Images, Assets.Logo));
-                html = html.Replace("[Titulo]", title);
-                html = html.Replace("[Mensaje]", content.Replace("\n", "<br />"));
+                html.Append(sr.ReadToEnd());
+                html.Replace("{{PrimaryColor}}", _emailTemplateSettings.PrimaryColor);
+                html.Replace("{{BackgroundColor}}", _emailTemplateSettings.BackgroundColor);
+                html.Replace("{{Logo}}", Path.Combine(_urlLocalSettings.Images, Assets.Logo));
+                html.Replace("{{Titulo}}", title);
+                html.Replace("{{Mensaje}}", content.Replace("\n", "<br />"));
             }
 
             using MailMessage emailMessage = new();
@@ -93,22 +105,22 @@ namespace Service.Sender.Service
             }
 
             emailMessage.Subject = subject;
-            emailMessage.Body = html;
+            emailMessage.Body = html.ToString();
             emailMessage.IsBodyHtml = true;
             emailMessage.Priority = MailPriority.Normal;
             using SmtpClient MailClient = new(conf.Smtp);
             if (conf.RequiereContraseña)
             {
-                MailClient.Credentials = new NetworkCredential(conf.Correo, Crypto.DecryptString(conf.Contraseña, _keySettings.MailPassword));
+                MailClient.Credentials = new NetworkCredential(conf.Correo, Crypto.DecryptString(conf.Contraseña, _keySettings.MailKey));
             }
             MailClient.Send(emailMessage);
         }
 
-        private bool IsValid(string emailaddress)
+        private static bool IsValidEmail(string emailaddress)
         {
             try
             {
-                MailAddress m = new MailAddress(emailaddress);
+                MailAddress m = new(emailaddress);
 
                 return true;
             }
