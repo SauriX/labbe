@@ -166,7 +166,6 @@
     <Compile Include="Models\Col.cs" />
     <Compile Include="Models\InvoiceData.cs" />
     <Compile Include="Models\ReportData.cs" />
-    <Compile Include="Models\TotalData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Dtos\RequestOrderDto.cs" />
     <Compile Include="Service\OrderService.cs" />

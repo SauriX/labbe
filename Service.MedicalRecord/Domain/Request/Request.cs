@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Service.MedicalRecord.Domain.Catalogs;
+using System;
 using System.Collections.Generic;
 
 namespace Service.MedicalRecord.Domain.Request
@@ -9,12 +10,15 @@ namespace Service.MedicalRecord.Domain.Request
         public Guid ExpedienteId { get; set; }
         public virtual MedicalRecord.MedicalRecord Expediente { get; set; }
         public Guid SucursalId { get; set; }
+        public virtual Branch Sucursal { get; set; }
         public string Clave { get; set; }
         public string ClavePatologica { get; set; }
         public byte Procedencia { get; set; }
         public string Afiliacion { get; set; }
         public Guid? CompañiaId { get; set; }
+        public virtual Company Compañia { get; set; }
         public Guid? MedicoId { get; set; }
+        public virtual Medic Medico { get; set; }
         public byte Urgencia { get; set; }
         public string Observaciones { get; set; }
         public string EnvioCorreo { get; set; }

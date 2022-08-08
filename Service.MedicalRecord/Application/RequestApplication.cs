@@ -20,6 +20,7 @@ using SharedResponses = Shared.Dictionary.Responses;
 using RecordResponses = Service.MedicalRecord.Dictionary.Response;
 using Service.MedicalRecord.Settings.ISettings;
 using Service.MedicalRecord.Transactions;
+using RequestTemplates = Service.MedicalRecord.Dictionary.EmailTemplates.Request;
 
 namespace Service.MedicalRecord.Application
 {
@@ -72,8 +73,8 @@ namespace Service.MedicalRecord.Application
             var request = await GetExistingRequest(recordId, requestId);
 
             var packs = await _repository.GetPacksByRequest(request.Id);
-            var packsDto = packs.ToRequestPackDto();  
-            
+            var packsDto = packs.ToRequestPackDto();
+
             var studies = await _repository.GetStudiesByRequest(request.Id);
             var studiesDto = studies.ToRequestStudyDto();
 
@@ -124,18 +125,30 @@ namespace Service.MedicalRecord.Application
         {
             var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
 
-            var emailToSend = new EmailContract("mike_fa96@hotmail.com", null, "hola", "test", "test");
+            var subject = RequestTemplates.Subjects.TestMessage;
+            var title = RequestTemplates.Titles.RequestCode(request.Clave);
+            var message = RequestTemplates.Messages.TestMessage;
 
-            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("rabbitmq://axsishost.online:5672/labramos-dev/email-queue"));
+            var emailToSend = new EmailContract(requestDto.Correo, null, subject, title, message)
+            {
+                Notificar = true,
+                RemitenteId = requestDto.UsuarioId.ToString()
+            };
+
+            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, _queueNames.Email)));
 
             await endpoint.Send(emailToSend);
         }
 
         public async Task SendTestWhatsapp(RequestSendDto requestDto)
         {
-            var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
+            _ = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
 
-            var emailToSend = new WhatsappContract(requestDto.Telefono, "Hola")
+            var message = RequestTemplates.Messages.TestMessage;
+
+            var phone = requestDto.Telefono.Replace("-", "");
+            phone = phone.Length == 10 ? "52" + phone : phone;
+            var emailToSend = new WhatsappContract(phone, message)
             {
                 Notificar = true,
                 RemitenteId = requestDto.UsuarioId.ToString()

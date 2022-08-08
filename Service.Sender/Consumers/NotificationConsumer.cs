@@ -11,12 +11,10 @@ namespace Service.Sender.Consumers
 {
     public class NotificationConsumer : IConsumer<NotificationContract>
     {
-        private readonly ILogger<NotificationConsumer> _logger;
         private readonly IHubContext<NotificationHub> _hubContext;
 
-        public NotificationConsumer(ILogger<NotificationConsumer> logger, IHubContext<NotificationHub> hubContext)
+        public NotificationConsumer(IHubContext<NotificationHub> hubContext)
         {
-            _logger = logger;
             _hubContext = hubContext;
         }
 
@@ -28,11 +26,8 @@ namespace Service.Sender.Consumers
 
                 await _hubContext.Clients.Group(message.Para).SendAsync("Notify", message);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                var message = Exceptions.GetMessage(ex);
-                _logger.LogError($"MessageId: {context.MessageId}\n{message}");
-
                 throw;
             }
         }

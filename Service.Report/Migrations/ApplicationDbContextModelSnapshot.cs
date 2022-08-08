@@ -19,7 +19,7 @@ namespace Service.Report.Migrations
                 .HasAnnotation("ProductVersion", "5.0.15")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Service.Report.Domain.Branch.Branch", b =>
+            modelBuilder.Entity("Service.Report.Domain.Catalogs.Branch", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -33,7 +33,7 @@ namespace Service.Report.Migrations
                     b.ToTable("Branch");
                 });
 
-            modelBuilder.Entity("Service.Report.Domain.Company.Company", b =>
+            modelBuilder.Entity("Service.Report.Domain.Catalogs.Company", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -50,7 +50,7 @@ namespace Service.Report.Migrations
                     b.ToTable("Company");
                 });
 
-            modelBuilder.Entity("Service.Report.Domain.Medic.Medic", b =>
+            modelBuilder.Entity("Service.Report.Domain.Catalogs.Medic", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -210,7 +210,7 @@ namespace Service.Report.Migrations
 
             modelBuilder.Entity("Service.Report.Domain.Request.Request", b =>
                 {
-                    b.HasOne("Service.Report.Domain.Company.Company", "Empresa")
+                    b.HasOne("Service.Report.Domain.Catalogs.Company", "Empresa")
                         .WithMany()
                         .HasForeignKey("EmpresaId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -222,13 +222,13 @@ namespace Service.Report.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Service.Report.Domain.Medic.Medic", "Medico")
+                    b.HasOne("Service.Report.Domain.Catalogs.Medic", "Medico")
                         .WithMany()
                         .HasForeignKey("MedicoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Service.Report.Domain.Branch.Branch", "Sucursal")
+                    b.HasOne("Service.Report.Domain.Catalogs.Branch", "Sucursal")
                         .WithMany()
                         .HasForeignKey("SucursalId")
                         .OnDelete(DeleteBehavior.Cascade)

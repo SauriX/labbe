@@ -83,6 +83,7 @@ namespace Service.Catalog
                 x.UsingRabbitMq((context, configurator) =>
                 {
                     var rabbitMQSettings = Configuration.GetSection(nameof(RabbitMQSettings)).Get<RabbitMQSettings>();
+                    var queueNames = Configuration.GetSection(nameof(QueueNames)).Get<QueueNames>();
 
                     configurator.Host(new Uri(rabbitMQSettings.Host), "Catalogo", c =>
                     {
@@ -91,9 +92,19 @@ namespace Service.Catalog
                         c.Password(rabbitMQSettings.Password);
                     });
 
-                    configurator.ReceiveEndpoint("branch-queue-faults", re =>
+                    configurator.ReceiveEndpoint(queueNames.BranchError, re =>
                     {
                         re.Consumer<BranchErrorConsumer>(context);
+                    });
+
+                    configurator.ReceiveEndpoint(queueNames.CompanyError, re =>
+                    {
+                        re.Consumer<CompanyErrorConsumer>(context);
+                    });
+
+                    configurator.ReceiveEndpoint(queueNames.MedicError, re =>
+                    {
+                        re.Consumer<MedicErrorConsumer>(context);
                     });
                 });
             });
