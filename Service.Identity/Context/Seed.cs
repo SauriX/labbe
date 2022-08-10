@@ -121,9 +121,8 @@ namespace Service.Identity.Context
                         new Menu(24, null, "Recepción",  null, "configuration", 2400),
                         new Menu(19, 24, "Expedientes", "expedientes", "expedientes", 2401),
                         new Menu(21, 24, "Cotización", "cotizacion", "cotizacion", 2402),
-                        new Menu(22, 24, "Reportes" , "reports", "reports", 2403),
+                        new Menu(22, 24, "Reportes" , "report", "reports", 2403),
                         new Menu(23,24,"Citas","appointments","appointments",2404),
-                        new Menu(24, 25, "Corte de Caja" , "cash", "cash", 2405),
                     };
 
                     context.CAT_Menu.AddRange(menus);
@@ -150,6 +149,7 @@ namespace Service.Identity.Context
                     {
 
                         new Menu(25,24,"Toma de muestra","samplings","samplings",2405),
+                        new Menu(27, 24, "Corte de Caja" , "cash", "cash", 2407),
                     };
 
                     context.CAT_Menu.AddRange(menus);

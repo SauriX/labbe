@@ -8,5 +8,6 @@ namespace Service.Report.Repository.IRepository
     public interface IReportRepository
     {
         Task<List<Request>> GetByFilter(ReportFilterDto search);
+        Task<List<RequestPayment>> GetPaymentByFilter(ReportFilterDto search);
     }
 }

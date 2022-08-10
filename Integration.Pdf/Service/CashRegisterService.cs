@@ -14,9 +14,9 @@ namespace Integration.Pdf.Service
 {
     public class CashRegisterService
     {
-        public static byte[] Generate(ReportData reportData)
+        public static byte[] Generate(CashData cashData)
         {
-            Document document = CreateDocument(reportData);
+            Document document = CreateDocument(cashData);
 
             document.UseCmykColor = true;
             const bool unicode = false;
@@ -48,7 +48,7 @@ namespace Integration.Pdf.Service
             return buffer;
         }
 
-        static Document CreateDocument(ReportData reportData)
+        static Document CreateDocument(CashData cashData)
         {
             Document document = new Document();
 
@@ -64,11 +64,11 @@ namespace Integration.Pdf.Service
             section.PageSetup.LeftMargin = Unit.FromCentimeter(1);
             section.PageSetup.RightMargin = Unit.FromCentimeter(1);
 
-            Format(section, reportData.Columnas, reportData.Series, reportData.Datos, reportData.DatosGrafica, reportData.Invoice, reportData.ColumnasTotales, reportData.Totales, reportData.Header);
+            Format(section, cashData.Columnas, cashData.Datos ,cashData.PerDay, cashData.Canceled, cashData.OtherDay, cashData.Invoice, cashData.ColumnasTotales, cashData.Totales, cashData.Header);
 
             return document;
         }
-        static void Format(Section section, List<Col> columns, List<ChartSeries> seriesInfo, List<Dictionary<string, object>> data, List<Dictionary<string, object>> datachart, InvoiceData invoice, List<Col> totalColumns, Dictionary<string, object> totales, HeaderData Header)
+        static void Format(Section section, List<Col> columns, List<Dictionary<string, object>> data, List<Dictionary<string, object>> perDay, List<Dictionary<string, object>> canceled, List<Dictionary<string, object>> otherDay, InvoiceData invoice, List<Col> totalColumns, Dictionary<string, object> totales, HeaderData Header)
         {
             var fontTitle = new Font("calibri", 18) { Bold = true };
             var fontSubtitle = new Font("calibri", 14);
@@ -80,7 +80,7 @@ namespace Integration.Pdf.Service
             var city = "San Pedro Garza García, Nuevo León";
 
             var title = new Col(businessName + "\n" + location + "\n" + city, fontTitle);
-            var subtitle = new Col("CORTE DE CAJA DEL " + Header.Fecha + Header.Hora, fontSubtitle);
+            var subtitle = new Col("CORTE DE CAJA DEL " + Header.Fecha + " " + Header.Hora, fontSubtitle);
             var branch = new Col(Header.Sucursal, fontSubtitle);
             string[] messageTable = { "PACIENTES DEL DIA", "**CANCELACIONES DEL DIA**", "PAGOS DE OTROS DIAS" };
 
@@ -93,11 +93,24 @@ namespace Integration.Pdf.Service
             }
             section.AddSpace(10);
 
-            var contentWidth = section.PageSetup.PageWidth - section.PageSetup.LeftMargin - section.PageSetup.RightMargin;
+            var contentWidth = section.PageSetup.PageHeight - section.PageSetup.LeftMargin - section.PageSetup.RightMargin;
 
-           for(int typeTable = 0; typeTable < messageTable.Length; typeTable++)
+           for (int typeTable = 0; typeTable < messageTable.Length; typeTable++)
             {
-                section.AddText(new Col(messageTable[typeTable]));
+                section.AddText(new Col(messageTable[typeTable], fontSubtitle, ParagraphAlignment.Left));
+
+                if (messageTable[typeTable] == "PACIENTES DEL DIA")
+                {
+                    data = perDay;
+                }
+                else if (messageTable[typeTable] == "**CANCELACIONES DEL DIA**")
+                {
+                    data = canceled;
+                }
+                else if (messageTable[typeTable] == "PAGOS DE OTROS DIAS")
+                {
+                    data = otherDay;
+                }
 
                 Table table = new Table();
                 table.Borders.Width = 0.75;
@@ -194,9 +207,10 @@ namespace Integration.Pdf.Service
 
                     cell.AddParagraph("No hay registros");
                 }
+
+                section.Add(table);
+                section.AddSpace(10);
             }
-
-
         }
     }
 }

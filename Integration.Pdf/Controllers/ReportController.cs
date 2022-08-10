@@ -32,5 +32,28 @@ namespace Integration.Pdf.Controllers
 
             return result;
         }
+
+        [HttpPost]
+        [Route("cash_register")]
+        public HttpResponseMessage CashRegister(CashData cashData)
+        {
+            var file = CashRegisterService.Generate(cashData);
+
+            var result = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new ByteArrayContent(file)
+            };
+
+            result.Content.Headers.ContentDisposition =
+                new ContentDispositionHeaderValue("attachment")
+                {
+                    FileName = "quotation.pdf"
+                };
+
+            result.Content.Headers.ContentType =
+                new MediaTypeHeaderValue("application/pdf");
+
+            return result;
+        }
     }
 }

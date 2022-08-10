@@ -120,7 +120,48 @@ namespace Service.Report.Repository
                 query = report.ToQueryString();
             }
 
-            if (search.FechaIndividual == DateTime.MinValue)
+            //if (search.FechaIndividual != DateTime.MinValue)
+            //{
+            //    report = report.Where(x => x.Fecha.Date == search.FechaIndividual);
+            //}
+
+            //if (search.Hora != null)
+            //{
+            //    report = report.
+            //        Where(x => x.Fecha.Hour >= search.Fecha.First().Hour && x.Fecha.Hour <= search.Fecha.Last().Hour);
+            //}
+
+            return await report.ToListAsync();
+        }
+
+        public async Task<List<RequestPayment>> GetPaymentByFilter(ReportFilterDto search)
+        {
+            var report = _context.RequestPayment
+                .Include(x => x.Empresa).Include(x => x.Solicitud)
+                .AsQueryable();
+
+            if (search.TipoCompañia != null && search.TipoCompañia.Count == 1)
+            {
+                if (search.TipoCompañia.Contains(Convenio))
+                {
+                    report = report.Where(x => x.Empresa.Convenio == 1);
+                }
+
+                else if (search.TipoCompañia.Contains(Todas))
+                {
+                    report = report.Where(x => x.Empresa.Convenio == 2);
+                }
+            }
+
+            if (search.TipoCompañia != null && search.TipoCompañia.Count == 2)
+            {
+                if (search.TipoCompañia.Contains(Convenio) && search.TipoCompañia.Contains(Todas))
+                {
+                    report = report.Where(x => x.Empresa.Convenio == 1 || x.Empresa.Convenio == 2);
+                }
+            }
+
+            if (search.FechaIndividual != DateTime.MinValue)
             {
                 report = report.Where(x => x.Fecha.Date == search.FechaIndividual);
             }
@@ -128,7 +169,7 @@ namespace Service.Report.Repository
             if (search.Hora != null)
             {
                 report = report.
-                    Where(x => x.Fecha.Hour >= search.Fecha.First().Hour && x.Fecha.Hour <= search.Fecha.Last().Hour);
+                    Where(x => x.Fecha.Hour >= search.Hora.First().Hour && x.Fecha.Hour <= search.Hora.Last().Hour);
             }
 
             return await report.ToListAsync();

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Report.Context;
 
 namespace Service.Report.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220809152449_Creacion de tabla metodo de pago")]
+    partial class Creaciondetablametododepago
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -153,66 +155,6 @@ namespace Service.Report.Migrations
                     b.ToTable("Request");
                 });
 
-            modelBuilder.Entity("Service.Report.Domain.Request.RequestPayment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("ACuenta")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Cheque")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Efectivo")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid>("EmpresaId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<byte>("Estatus")
-                        .HasColumnType("tinyint");
-
-                    b.Property<string>("Factura")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Fecha")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("PP")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Saldo")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid>("SolicitudId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("TDC")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("TDD")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Total")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Transferecia")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("UsuarioModifico")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmpresaId");
-
-                    b.HasIndex("SolicitudId");
-
-                    b.ToTable("RequestPayment");
-                });
-
             modelBuilder.Entity("Service.Report.Domain.Request.RequestStatus", b =>
                 {
                     b.Property<byte>("Id")
@@ -303,25 +245,6 @@ namespace Service.Report.Migrations
                     b.Navigation("Sucursal");
                 });
 
-            modelBuilder.Entity("Service.Report.Domain.Request.RequestPayment", b =>
-                {
-                    b.HasOne("Service.Report.Domain.Catalogs.Company", "Empresa")
-                        .WithMany()
-                        .HasForeignKey("EmpresaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Service.Report.Domain.Request.Request", "Solicitud")
-                        .WithMany("MetodoPago")
-                        .HasForeignKey("SolicitudId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Empresa");
-
-                    b.Navigation("Solicitud");
-                });
-
             modelBuilder.Entity("Service.Report.Domain.Request.RequestStudy", b =>
                 {
                     b.HasOne("Service.Report.Domain.Request.RequestStatus", "Estatus")
@@ -344,8 +267,6 @@ namespace Service.Report.Migrations
             modelBuilder.Entity("Service.Report.Domain.Request.Request", b =>
                 {
                     b.Navigation("Estudios");
-
-                    b.Navigation("MetodoPago");
                 });
 #pragma warning restore 612, 618
         }
