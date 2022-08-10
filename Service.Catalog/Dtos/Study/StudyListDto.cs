@@ -1,4 +1,8 @@
-﻿namespace Service.Catalog.Dtos.Study
+﻿using Service.Catalog.Dtos.Indication;
+using Service.Catalog.Dtos.Parameter;
+using System.Collections.Generic;
+
+namespace Service.Catalog.Dtos.Study
 {
     public class StudyListDto
     {
@@ -12,5 +16,7 @@
         public string Maquilador { get; set; }
         public string Metodo { get; set; }
         public bool Activo { get; set; }
+        public IEnumerable<ParameterListDto> Parametros { get; set; }
+        public IEnumerable<IndicationListDto> Indicaciones { get; set; }
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace Service.Catalog.Domain.Tapon
+﻿namespace Service.MedicalRecord.Domain.Catalogs
 {
-    public class Tapon
+    public class Cap
     {
         public int Id { get; set; }
         public string Clave { get; set; }

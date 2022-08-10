@@ -35,6 +35,7 @@ namespace Service.MedicalRecord
             {
                 var context = services.GetRequiredService<ApplicationDbContext>();
                 await context.Database.MigrateAsync();
+                await Seed.SeedData(context);
             }
             catch (Exception e)
             {

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.MedicalRecord.Context;
 
 namespace Service.MedicalRecord.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220808174851_Tabla Solicitud default value para Procedencia y Compa;ia")]
+    partial class TablaSolicituddefaultvalueparaProcedenciayCompaia
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -182,25 +184,6 @@ namespace Service.MedicalRecord.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CAT_Sucursal");
-                });
-
-            modelBuilder.Entity("Service.MedicalRecord.Domain.Catalogs.Cap", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Clave")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Color")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CAT_Tipo_Tapon");
                 });
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.Catalogs.Company", b =>
@@ -493,12 +476,6 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("Afiliacion")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Cargo")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<byte>("CargoTipo")
-                        .HasColumnType("tinyint");
-
                     b.Property<string>("Clave")
                         .HasColumnType("nvarchar(max)");
 
@@ -507,18 +484,6 @@ namespace Service.MedicalRecord.Migrations
 
                     b.Property<Guid?>("CompañiaId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Copago")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<byte>("CopagoTipo")
-                        .HasColumnType("tinyint");
-
-                    b.Property<decimal>("Descuento")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<byte>("DescuentoTipo")
-                        .HasColumnType("tinyint");
 
                     b.Property<string>("EnvioCorreo")
                         .HasColumnType("nvarchar(max)");
@@ -550,7 +515,7 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<byte>("Procedencia")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint")
-                        .HasDefaultValue((byte)2);
+                        .HasDefaultValue((byte)1);
 
                     b.Property<string>("RutaFormato")
                         .HasColumnType("nvarchar(max)");
@@ -561,17 +526,8 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("RutaOrden")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Saldo")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<Guid>("SucursalId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Total")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("TotalEstudios")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<byte>("Urgencia")
                         .ValueGeneratedOnAdd()
@@ -747,9 +703,6 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<int?>("PromocionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TaponId")
-                        .HasColumnType("int");
-
                     b.Property<Guid>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");
 
@@ -758,32 +711,9 @@ namespace Service.MedicalRecord.Migrations
 
                     b.HasKey("SolicitudId", "EstudioId");
 
-                    b.HasIndex("EstatusId");
-
-                    b.HasIndex("TaponId");
-
                     b.HasIndex("SolicitudId", "PaqueteId");
 
                     b.ToTable("Relacion_Solicitud_Estudio");
-                });
-
-            modelBuilder.Entity("Service.MedicalRecord.Domain.Request.RequestStudyStatus", b =>
-                {
-                    b.Property<byte>("Id")
-                        .HasColumnType("tinyint");
-
-                    b.Property<string>("Clave")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Color")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Estatus_Solicitud_Estudio");
                 });
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.TaxData.TaxData", b =>
@@ -941,36 +871,20 @@ namespace Service.MedicalRecord.Migrations
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.Request.RequestStudy", b =>
                 {
-                    b.HasOne("Service.MedicalRecord.Domain.Request.RequestStudyStatus", "Estatus")
-                        .WithMany()
-                        .HasForeignKey("EstatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Service.MedicalRecord.Domain.Request.Request", "Solicitud")
                         .WithMany("Estudios")
                         .HasForeignKey("SolicitudId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Service.MedicalRecord.Domain.Catalogs.Cap", "Tapon")
-                        .WithMany()
-                        .HasForeignKey("TaponId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Service.MedicalRecord.Domain.Request.RequestPack", "Paquete")
                         .WithMany("Estudios")
                         .HasForeignKey("SolicitudId", "PaqueteId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Estatus");
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Paquete");
 
                     b.Navigation("Solicitud");
-
-                    b.Navigation("Tapon");
                 });
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.Appointments.AppointmentDom", b =>

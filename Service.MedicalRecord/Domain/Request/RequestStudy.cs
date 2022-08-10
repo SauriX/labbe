@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Service.MedicalRecord.Domain.Catalogs;
+using System;
 
 namespace Service.MedicalRecord.Domain.Request
 {
@@ -18,11 +19,14 @@ namespace Service.MedicalRecord.Domain.Request
         public int DepartamentoId { get; set; }
         public int AreaId { get; set; }
         public byte EstatusId { get; set; }
+        public virtual RequestStudyStatus Estatus { get; set; }
         public decimal Dias { get; set; }
         public int Horas { get; set; }
         public bool AplicaDescuento { get; set; }
         public bool AplicaCargo { get; set; }
         public bool AplicaCopago { get; set; }
+        public int TaponId { get; set; }
+        public virtual Cap Tapon { get; set; }
         public decimal Precio { get; set; }
         public decimal Descuento { get; set; }
         public decimal DescuentoPorcentaje { get; set; }
