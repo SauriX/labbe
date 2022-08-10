@@ -175,6 +175,9 @@ namespace Service.Catalog.Mapper
                     Departamento = x.Paquete.Area.Departamento.Nombre,
                     Precio = x.Precio,
                     Activo = x.Activo,
+                   DescuenNum=x.DescuenNum,
+                   Descuento=x.Descuento,
+                   PrecioFinal=x.PrecioFinal,
                     Pack = x.Paquete.studies.Select(x => new PackStudyDto
                     {
                         Id = x.EstudioId,
@@ -251,6 +254,8 @@ namespace Service.Catalog.Mapper
                 DepartamentoId = model.Paquete.DepartamentoId,
                 AreaId = model.Paquete.AreaId,
                 Precio = model.Precio,
+                Descuento= model.DescuenNum,
+                DescuentoPorcentaje=model.Descuento,
                 Estudios = model.Paquete.studies.Select(x => new PriceListInfoStudyDto
                 {
                     ListaPrecioId = model.PrecioListaId,
@@ -283,6 +288,7 @@ namespace Service.Catalog.Mapper
                 Activo = dto.Activo,
                 UsuarioCreoId = dto.UsuarioCreoId,
                 FechaCreo = DateTime.Now,
+
                 Estudios = dto?.Estudios?.Select(x => new PriceList_Study
                 {
                     EstudioId = x.Id,
@@ -294,6 +300,9 @@ namespace Service.Catalog.Mapper
                     PaqueteId = x.Id,
                     Precio = x.Precio,
                     Activo = x.Activo,
+                    Descuento= x.Descuento,
+                    DescuenNum=x.DescuenNum,
+                    PrecioFinal=x.PrecioFinal
                 })?.ToList(),
                 Compañia = dto?.Compañia?.Select(x => new Price_Company
                 {
@@ -346,6 +355,9 @@ namespace Service.Catalog.Mapper
                     PaqueteId = x.Id,
                     Precio = x.Precio,
                     Activo = x.Activo,
+                    Descuento = x.Descuento,
+                    DescuenNum = x.DescuenNum,
+                    PrecioFinal=x.PrecioFinal
                 })?.ToList(),
                 Compañia = dto?.Compañia?.Select(x => new Price_Company
                 {

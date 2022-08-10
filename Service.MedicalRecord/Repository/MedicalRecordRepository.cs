@@ -36,7 +36,10 @@ namespace Service.MedicalRecord.Repository
             if (!string.IsNullOrEmpty(search.ciudad) || !string.IsNullOrEmpty(search.expediente) || search.fechaNacimiento.Date != DateTime.Now.Date || search.fechaAlta.Date != DateTime.Now.Date || !string.IsNullOrEmpty(search.sucursal))
             {
                 var sucursal = Guid.Empty;
-
+                if (search.fechaAlta.Date == DateTime.Now.Date)
+                {
+                    search.fechaAlta = DateTime.MinValue;
+                }
                 if (!string.IsNullOrEmpty(search.sucursal))
                 {
                     sucursal = Guid.Parse(search.sucursal);

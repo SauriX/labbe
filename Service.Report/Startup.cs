@@ -211,6 +211,7 @@ namespace Service.Report
             services.AddScoped<IUrgentStatsApplication, UrgentStatsApplication>();
             services.AddScoped<ICompanyStatsApplication, CompanyStatsApplication>();
             services.AddScoped<ICanceledRequestApplication, CanceledRequestApplication>();
+            services.AddScoped<IMedicalBreakdownStatsApplication, MedicalBreakdonStatsApplication>();
             services.AddScoped<IDescountRequestApplication, DescountRequestApplication>();
             services.AddScoped<IChargeRequestApplication, ChargeRequestApplication>();
 
