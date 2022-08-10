@@ -209,6 +209,7 @@ namespace Service.Sender
             }
             else if (env.IsEnvironment("QA"))
             {
+                app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
