@@ -62,7 +62,7 @@ namespace Service.Catalog.Application
             var newParameter = parameter.ToModel();
 
             await CheckDuplicate(newParameter);
-            await CheckPromotionPackActive(newParameter);
+           // await CheckPromotionPackActive(newParameter);
             await _repository.Create(newParameter);
 
             newParameter = await _repository.GetById(newParameter.Id);
@@ -85,7 +85,7 @@ namespace Service.Catalog.Application
             var updatedParameter = parameter.ToModel(existing);
 
             await CheckDuplicate(updatedParameter);
-            await CheckPromotionPackActive(updatedParameter);
+            //await CheckPromotionPackActive(updatedParameter);
             await _repository.Update(updatedParameter);
 
             updatedParameter = await _repository.GetById(updatedParameter.Id);

@@ -1,6 +1,18 @@
 ﻿{
   "Routes": [
     {
+      "DownstreamPathTemplate": "/api/request/filter",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/request/filter",
+      "UpstreamHttpMethod": [ "POST" ]
+    },   
+    {
       "DownstreamPathTemplate": "/api/request/{recordId}/{requestId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

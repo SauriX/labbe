@@ -25,6 +25,12 @@ namespace Service.Catalog.Controllers
         public async Task<StudyFormDto> GetById(int id)
         {
             return await _Service.GetById(id);
+        }      
+        
+        [HttpPost("multiple")]
+        public async Task<IEnumerable<StudyListDto>> GetByIds(List<int> ids)
+        {
+            return await _Service.GetByIds(ids);
         }
 
         [HttpGet("all/{search?}")]

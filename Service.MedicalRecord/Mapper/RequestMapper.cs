@@ -19,9 +19,40 @@ namespace Service.MedicalRecord.Mapper
                 ExpedienteId = model.ExpedienteId,
                 SucursalId = model.SucursalId,
                 Clave = model.Clave,
+                Parcialidad = model.Parcialidad,
                 EsNuevo = model.EsNuevo,
                 Registro = $"{model.FechaCreo:dd/MM/yyyy}"
             };
+        }
+
+        public static IEnumerable<RequestInfoDto> ToRequestInfoDto(this IEnumerable<Request> model)
+        {
+            if (model == null) return new List<RequestInfoDto>();
+
+            return model.Select(x => new RequestInfoDto
+            {
+                SolicitudId = x.Id,
+                ExpedienteId = x.ExpedienteId,
+                Clave = x.Clave,
+                ClavePatologica = x.ClavePatologica,
+                Afiliacion = x.Afiliacion,
+                Paciente = x.Expediente.NombreCompleto,
+                Compañia = x.Procedencia == 2 ? "Particular" : x.Compañia.Clave,
+                Procedencia = x.Procedencia == 2 ? "Particular" : x.Compañia.Nombre,
+                Factura = "",
+                Importe = x.TotalEstudios,
+                Descuento = x.DescuentoTipo == 2 ? x.Descuento : x.Total * x.Descuento,
+                Total = x.Total,
+                Saldo = x.Saldo,
+                Estudios = x.Estudios.Select(s => new RequestStudyInfoDto
+                {
+                    Clave = s.Clave,
+                    Nombre = s.Nombre,
+                    EstatusId = s.EstatusId,
+                    Estatus = s.Estatus.Clave,
+                    Color = s.Estatus.Color
+                })
+            });
         }
 
         public static RequestGeneralDto ToRequestGeneralDto(this Request model)
@@ -43,6 +74,24 @@ namespace Service.MedicalRecord.Mapper
             };
         }
 
+        public static RequestTotalDto ToRequestTotalDto(this Request model)
+        {
+            if (model == null) return null;
+
+            return new RequestTotalDto
+            {
+                TotalEstudios = model.TotalEstudios,
+                Descuento = model.Descuento,
+                DescuentoTipo = model.DescuentoTipo,
+                Cargo = model.Cargo,
+                CargoTipo = model.CargoTipo,
+                Copago = model.Copago,
+                CopagoTipo = model.CopagoTipo,
+                Total = model.Total,
+                Saldo = model.Saldo,
+            };
+        }
+
         public static RequestOrderDto ToRequestOrderDto(this Request model)
         {
             if (model == null) return null;
@@ -52,29 +101,37 @@ namespace Service.MedicalRecord.Mapper
 
             return new RequestOrderDto
             {
-                Sucursal = "Sucursal",
-                FolioVenta = "Folio de venta",
+                Clave = model.Clave,
+                Sucursal = model.Sucursal.Nombre,
                 FechaVenta = DateTime.Now.ToString("yyyy-MM-dd"),
+                FechaSolicitud = model.FechaCreo.ToString("dd/MM/yyyy"),
+                Fecha = model.FechaCreo.ToString("dd/MM/yyyy"),
                 Personal = model.UsuarioCreo,
                 Paciente = model.Expediente.NombreCompleto,
                 FechaNacimiento = model.Expediente.FechaDeNacimiento.ToString("dd-MM-yyyy"),
+                Edad = model.Expediente.Edad.ToString(),
+                Sexo = model.Expediente.Genero,
+                TelefonoPaciente = model.EnvioWhatsApp ?? model.Expediente.Telefono,
                 Expediente = model.Expediente.Expediente,
-                Codigo = "Codigo",
-                PacienteId = "PacienteId",
-                FechaEntrega = DateTime.Now.ToString("dd-MM-yyyy hh:mm tt"),
-                Medico = "Medico",
+                Medico = model.Medico.Nombre,
+                Compañia = model.Procedencia == 2 ? "Particular" : model.Compañia.Nombre,
+                Correo = model.EnvioCorreo,
+                Observaciones = model.Observaciones,
+                Total = model.Total.ToString("C"),
+                Descuento = model.DescuentoTipo == 2 ? model.Descuento.ToString("C") : (model.TotalEstudios * model.Descuento).ToString("C"),
+                Cargo = model.CargoTipo == 2 ? model.Cargo.ToString("C") : (model.TotalEstudios * model.Cargo).ToString("C"),
                 Estudios = studies.Select(x => new RequestOrderStudyDto
                 {
                     Clave = x.Clave,
                     Estudio = x.Nombre,
-                    Precio = x.Precio.ToString()
+                    Precio = x.Precio.ToString("C")
                 }).ToList()
             };
         }
 
         public static List<RequestPackDto> ToRequestPackDto(this IEnumerable<RequestPack> model)
         {
-            if (model == null) return null;
+            if (model == null) return new List<RequestPackDto>();
 
             return model.Select(x => new RequestPackDto
             {
@@ -103,7 +160,7 @@ namespace Service.MedicalRecord.Mapper
 
         public static List<RequestStudyDto> ToRequestStudyDto(this IEnumerable<RequestStudy> model)
         {
-            if (model == null) return null;
+            if (model == null) return new List<RequestStudyDto>();
 
             return model.Select(x => new RequestStudyDto
             {
@@ -116,7 +173,12 @@ namespace Service.MedicalRecord.Mapper
                 ListaPrecio = x.ListaPrecio,
                 PromocionId = x.PromocionId,
                 Promocion = x.Promocion,
+                TaponId = x.TaponId,
+                TaponColor = x.Tapon.Color,
+                TaponClave = x.Tapon.Clave,
+                TaponNombre = x.Tapon.Nombre,
                 EstatusId = x.EstatusId,
+                Estatus = x.Estatus.Nombre,
                 Dias = x.Dias,
                 Horas = x.Horas,
                 DepartamentoId = x.DepartamentoId,
@@ -147,13 +209,13 @@ namespace Service.MedicalRecord.Mapper
             };
         }
 
-        public static List<RequestPack> ToModel(this IEnumerable<RequestPackDto> dto, Guid requestId, IEnumerable<RequestPack> studies, Guid userId)
+        public static List<RequestPack> ToModel(this IEnumerable<RequestPackDto> dto, Guid requestId, IEnumerable<RequestPack> packs, Guid userId)
         {
-            if (dto == null) return null;
+            if (dto == null) return new List<RequestPack>();
 
             return dto.Select(x =>
             {
-                var Pack = studies.FirstOrDefault(s => s.PaqueteId == x.PaqueteId);
+                var pack = packs.FirstOrDefault(s => s.PaqueteId == x.PaqueteId);
 
                 return new RequestPack
                 {
@@ -176,17 +238,17 @@ namespace Service.MedicalRecord.Mapper
                     Descuento = x.Descuento,
                     DescuentoPorcentaje = x.DescuentoPorcentaje,
                     PrecioFinal = x.PrecioFinal,
-                    UsuarioCreoId = Pack?.UsuarioCreoId ?? userId,
-                    FechaCreo = Pack?.FechaCreo ?? DateTime.Now,
-                    UsuarioModificoId = Pack == null ? null : userId,
-                    FechaModifico = Pack == null ? null : DateTime.Now
+                    UsuarioCreoId = pack?.UsuarioCreoId ?? userId,
+                    FechaCreo = pack?.FechaCreo ?? DateTime.Now,
+                    UsuarioModificoId = pack == null ? null : userId,
+                    FechaModifico = pack == null ? null : DateTime.Now
                 };
             }).ToList();
         }
 
         public static List<RequestStudy> ToModel(this IEnumerable<RequestStudyDto> dto, Guid requestId, IEnumerable<RequestStudy> studies, Guid userId)
         {
-            if (dto == null) return null;
+            if (dto == null) return new List<RequestStudy>();
 
             return dto.Select(x =>
             {
@@ -198,6 +260,7 @@ namespace Service.MedicalRecord.Mapper
                     EstudioId = x.EstudioId,
                     Clave = x.Clave,
                     Nombre = x.Nombre,
+                    TaponId = x.TaponId,
                     PaqueteId = x.PaqueteId,
                     ListaPrecioId = x.ListaPrecioId,
                     ListaPrecio = x.ListaPrecio,
@@ -221,11 +284,6 @@ namespace Service.MedicalRecord.Mapper
                     FechaModifico = study == null ? null : DateTime.Now
                 };
             }).ToList();
-        }
-
-        public static IEnumerable<RequestStudy> ToModel(this IEnumerable<RequestStudyDto> dto)
-        {
-            return new List<RequestStudy>();
         }
     }
 }

@@ -861,42 +861,6 @@ namespace Service.Catalog.Migrations
                     b.ToTable("Contact");
                 });
 
-            modelBuilder.Entity("Service.Catalog.Domain.Company.Price_Company", b =>
-                {
-                    b.Property<Guid>("PrecioListaId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CompañiaId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaMod")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Precio")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<long>("UsuarioCreoId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("UsuarioModId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("PrecioListaId", "CompañiaId");
-
-                    b.HasIndex("CompañiaId");
-
-                    b.ToTable("CAT_ListaP_Compañia");
-                });
-
             modelBuilder.Entity("Service.Catalog.Domain.Configuration.Configuration", b =>
                 {
                     b.Property<int>("Id")
@@ -1627,6 +1591,12 @@ namespace Service.Catalog.Migrations
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
 
+                    b.Property<decimal>("DescuenNum")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Descuento")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
@@ -1634,6 +1604,9 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("Precio")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("PrecioFinal")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("UsuarioCreoId")
@@ -1719,6 +1692,42 @@ namespace Service.Catalog.Migrations
                     b.HasIndex("SucursalId");
 
                     b.ToTable("CAT_ListaP_Sucursal");
+                });
+
+            modelBuilder.Entity("Service.Catalog.Domain.Price.Price_Company", b =>
+                {
+                    b.Property<Guid>("PrecioListaId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CompañiaId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaMod")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Precio")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<long>("UsuarioCreoId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("UsuarioModId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PrecioListaId", "CompañiaId");
+
+                    b.HasIndex("CompañiaId");
+
+                    b.ToTable("CAT_ListaP_Compañia");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Price.Price_Medics", b =>
@@ -2497,10 +2506,13 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Clave")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Color")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Nombre")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -2583,25 +2595,6 @@ namespace Service.Catalog.Migrations
                         .IsRequired();
 
                     b.Navigation("Compañia");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Company.Price_Company", b =>
-                {
-                    b.HasOne("Service.Catalog.Domain.Company.Company", "Compañia")
-                        .WithMany("Precio")
-                        .HasForeignKey("CompañiaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Service.Catalog.Domain.Price.PriceList", "PrecioLista")
-                        .WithMany("Compañia")
-                        .HasForeignKey("PrecioListaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Compañia");
-
-                    b.Navigation("PrecioLista");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Constant.City", b =>
@@ -2833,6 +2826,25 @@ namespace Service.Catalog.Migrations
                     b.Navigation("PrecioLista");
 
                     b.Navigation("Sucursal");
+                });
+
+            modelBuilder.Entity("Service.Catalog.Domain.Price.Price_Company", b =>
+                {
+                    b.HasOne("Service.Catalog.Domain.Company.Company", "Compañia")
+                        .WithMany("Precio")
+                        .HasForeignKey("CompañiaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Service.Catalog.Domain.Price.PriceList", "PrecioLista")
+                        .WithMany("Compañia")
+                        .HasForeignKey("PrecioListaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Compañia");
+
+                    b.Navigation("PrecioLista");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Price.Price_Medics", b =>

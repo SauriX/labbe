@@ -15,6 +15,9 @@ namespace Service.Catalog.Dtos.PriceList
         public string Departamento { get; set; }
         public bool Activo { get; set; }
         public decimal Precio { get; set; }
+        public decimal Descuento { get; set; }
+        public decimal DescuenNum { get; set; }
+        public decimal PrecioFinal { get; set; }
         public IEnumerable<PackStudyDto> Pack { get; set; }
         public class PriceListStudyDtoValidator : AbstractValidator<PriceListStudyDto>
         {

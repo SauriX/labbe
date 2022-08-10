@@ -54,6 +54,13 @@ namespace Service.MedicalRecord.Application
             _rabbitMQSettings = rabbitMQSettings;
         }
 
+        public async Task<IEnumerable<RequestInfoDto>> GetByFilter(RequestFilterDto filter)
+        {
+            var request = await _repository.GetByFilter(filter);
+
+            return request.ToRequestInfoDto();
+        }
+
         public async Task<RequestDto> GetById(Guid recordId, Guid requestId)
         {
             var request = await GetExistingRequest(recordId, requestId);
@@ -78,11 +85,40 @@ namespace Service.MedicalRecord.Application
             var studies = await _repository.GetStudiesByRequest(request.Id);
             var studiesDto = studies.ToRequestStudyDto();
 
-            return new RequestStudyUpdateDto()
+            var ids = studiesDto.Select(x => x.EstudioId).Concat(packsDto.SelectMany(y => y.Estudios).Select(y => y.EstudioId)).Distinct().ToList();
+            var studiesParams = await _catalogClient.GetStudies(ids);
+
+            foreach (var pack in packsDto)
+            {
+                foreach (var study in pack.Estudios)
+                {
+                    var st = studiesParams.FirstOrDefault(x => x.Id == study.EstudioId);
+                    if (st == null) continue;
+
+                    study.Parametros = st.Parametros;
+                    study.Indicaciones = st.Indicaciones;
+                }
+            }
+
+            foreach (var study in studiesDto)
+            {
+                var st = studiesParams.FirstOrDefault(x => x.Id == study.EstudioId);
+                if (st == null) continue;
+
+                study.Parametros = st.Parametros;
+                study.Indicaciones = st.Indicaciones;
+            }
+
+            var totals = request.ToRequestTotalDto();
+
+            var data = new RequestStudyUpdateDto()
             {
                 Paquetes = packsDto,
-                Estudios = studiesDto
+                Estudios = studiesDto,
+                Total = totals,
             };
+
+            return data;
         }
 
         public async Task<string> Create(RequestDto requestDto)
@@ -210,11 +246,23 @@ namespace Service.MedicalRecord.Application
 
                 var packs = requestDto.Paquetes.ToModel(requestDto.SolicitudId, currentPacks, requestDto.UsuarioId);
 
-                await _repository.BulkUpdatePacks(requestDto.SolicitudId, packs);
+                await _repository.BulkUpdateDeletePacks(requestDto.SolicitudId, packs);
 
                 var studies = studiesDto.ToModel(requestDto.SolicitudId, currentSudies, requestDto.UsuarioId);
 
-                await _repository.BulkUpdateStudies(requestDto.SolicitudId, studies);
+                await _repository.BulkUpdateDeleteStudies(requestDto.SolicitudId, studies);
+
+                request.TotalEstudios = requestDto.Total.TotalEstudios;
+                request.Descuento = requestDto.Total.Descuento;
+                request.DescuentoTipo = requestDto.Total.DescuentoTipo;
+                request.Cargo = requestDto.Total.Cargo;
+                request.CargoTipo = requestDto.Total.CargoTipo;
+                request.Copago = requestDto.Total.Copago;
+                request.CopagoTipo = requestDto.Total.CopagoTipo;
+                request.Total = requestDto.Total.Total;
+                request.Saldo = requestDto.Total.Saldo;
+
+                await _repository.Update(request);
 
                 _transaction.CommitTransaction();
             }
@@ -229,13 +277,37 @@ namespace Service.MedicalRecord.Application
         {
             var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
 
-            var currentSudies = await _repository.GetStudiesByRequest(requestDto.SolicitudId);
+            var studiesIds = requestDto.Estudios.Select(x => x.EstudioId);
 
-            var studies = currentSudies.Where(x => !requestDto.Estudios.Select(y => y.EstudioId).Contains(x.EstudioId)).ToList();
+            var allStudies = await _repository.GetStudiesByRequest(requestDto.SolicitudId);
+            var studies = await _repository.GetStudyById(requestDto.SolicitudId, studiesIds);
+
+            var groups = allStudies.Where(x => x.PaqueteId != null).GroupBy(x => x.Paquete.Nombre);
+
+            foreach (var g in groups)
+            {
+                var st = (from gs in g.Where(x => x.EstatusId != Status.Request.Pendiente)
+                          join s in studies on gs.EstudioId equals s.EstudioId
+                          select s);
+
+                if (st != null && st.Any())
+                {
+                    throw new CustomException(HttpStatusCode.BadRequest, $"No es posible cancelar ya que un estudio del paquete {g.Key} ya no esta pendiente");
+                }
+            }
+
+            studies = studies.Where(x => x.EstatusId == Status.Request.Pendiente).ToList();
 
             if (studies == null || studies.Count == 0)
             {
                 throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.NoStudySelected);
+            }
+
+            foreach (var study in studies)
+            {
+                study.EstatusId = Status.Request.Cancelado;
+                study.UsuarioModificoId = requestDto.UsuarioId;
+                study.FechaModifico = DateTime.Now;
             }
 
             await _repository.BulkUpdateStudies(requestDto.SolicitudId, studies);

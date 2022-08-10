@@ -45,7 +45,7 @@ namespace Service.Sender.Consumers
                 {
                     var notification = new NotificationContract("Correo enviado correctamente", true);
 
-                    await _hubContext.Clients.Group(message.RemitenteId).SendAsync("Notify", notification.Serialize());
+                    await _hubContext.Clients.Group(message.RemitenteId).SendAsync("Notify", notification);
                 }
             }
             catch (Exception)

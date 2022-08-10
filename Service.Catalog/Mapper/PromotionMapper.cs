@@ -82,7 +82,7 @@ namespace Service.Catalog.Mapper
                 FechaInicial = x.FechaInicio,
                 FechaFinal = x.FechaFinal,
                 Activo = x.Activo,
-                Precio = paquetes.AsQueryable().Where(m => m.PaqueteId == x.PackId).FirstOrDefault()?.Precio,
+                Precio = paquetes.AsQueryable().Where(m => m.PaqueteId == x.PackId).FirstOrDefault()?.PrecioFinal,
                 PrecioFinal = x.FinalPrice,
                 Paquete = true,
                 Lunes = x.Lunes,
