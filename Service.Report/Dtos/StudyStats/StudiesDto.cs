@@ -9,6 +9,7 @@ namespace Service.Report.Dtos.StudyStats
     {
         public Guid Id { get; set; }
         public string Clave { get; set; }
+        public string Paquete { get; set; }
         public string Estudio { get; set; }
         public string Estatus { get; set; }
         public decimal Precio { get; set; }

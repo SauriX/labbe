@@ -9,6 +9,8 @@ namespace Service.Report.Domain.Request
         public virtual Request Solicitud { get; set; }
         public string Estudio { get; set; }
         public string Clave { get; set; }
+        public int? PaqueteId { get; set; }
+        public virtual RequestPack Paquete { get; set; }
         public byte EstatusId { get; set; }
         public virtual RequestStatus Estatus { get; set; }
         public byte Parcialidad { get; set; }
