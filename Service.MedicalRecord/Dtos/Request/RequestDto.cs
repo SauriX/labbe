@@ -12,6 +12,7 @@ namespace Service.MedicalRecord.Dtos.Request
         public string Clave { get; set; }
         public string ClavePatologica { get; set; }
         public string Registro { get; set; }
+        public bool Parcialidad { get; set; }
         public bool EsNuevo { get; set; }
         [JsonIgnore]
         public Guid UsuarioId { get; set; }

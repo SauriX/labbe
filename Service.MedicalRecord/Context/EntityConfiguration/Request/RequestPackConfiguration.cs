@@ -14,7 +14,7 @@ namespace Service.MedicalRecord.Context.EntityConfiguration.Request
                 .HasMany(x => x.Estudios)
                 .WithOne(x => x.Paquete)
                 .HasForeignKey(x => new { x.SolicitudId, x.PaqueteId })
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

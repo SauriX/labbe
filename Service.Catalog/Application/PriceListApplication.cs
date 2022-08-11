@@ -120,9 +120,9 @@ namespace Service.Catalog.Application
 
             foreach (var study in priceDto.Estudios)
             {
-                var studyPrice = studies.FirstOrDefault(x => x.Id == study.EstudioId)?.Precio;
+                var studyPrice = studies.FirstOrDefault(x => x.EstudioId == study.EstudioId)?.Precio;
 
-                if (studies.Any(x => x.Precio <= 0))
+                if (studyPrice == null || studyPrice <= 0)
                 {
                     throw new CustomException(HttpStatusCode.NotFound, $"Estudio ${study.Clave} no tiene precio configurado");
                 }
@@ -140,7 +140,7 @@ namespace Service.Catalog.Application
                 priceDto.DescuentoPorcentaje = promo.Discountporcent;
             }
 
-            return price.ToPriceListInfoPackDto();
+            return priceDto;
         }
 
         public async Task<PriceListListDto> Create(PriceListFormDto price)
