@@ -22,22 +22,38 @@ namespace Service.MedicalRecord.Repository
         }
         public async Task<List<MedicalRecord.Domain.MedicalRecord.MedicalRecord>> GetMedicalRecord(PriceQuoteExpedienteSearch search)
         {
+            var expedientes =  _context.CAT_Expedientes.AsQueryable();
 
-            if (!string.IsNullOrEmpty(search.Buscar) || !string.IsNullOrEmpty(search.Telefono) || search.FechaInicial.Date != DateTime.Now.Date || search.FechaFinal.Date != DateTime.Now.Date || !string.IsNullOrEmpty(search.Email))
+            if (!string.IsNullOrEmpty(search.Buscar))
             {
 
-                var expedientes = await _context.CAT_Expedientes.Where(x => x.Telefono == search.Telefono || x.Correo == search.Email || search.Buscar.Contains(x.NombrePaciente) || search.Buscar.Contains(x.PrimerApellido) || search.Buscar.Contains(x.Expediente) || (x.FechaCreo >= search.FechaInicial.Date && x.FechaCreo.Date <= search.FechaFinal.Date)).ToListAsync();
+                 expedientes =expedientes.Where(x => x.NombrePaciente.Contains(search.Buscar) || x.PrimerApellido.Contains(search.Buscar) || x.Expediente.Contains(search.Buscar));
 
-                return expedientes;
+                
             }
-            else
+            if ( !string.IsNullOrEmpty(search.Telefono) )
             {
 
+                expedientes = expedientes.Where(x => x.Telefono == search.Telefono  );
 
-                var expedientes = await _context.CAT_Expedientes.ToListAsync();
 
-                return expedientes;
             }
+            if ( search.FechaInicial.Date != DateTime.Now.Date && search.FechaFinal.Date != DateTime.Now.Date )
+            {
+
+                expedientes = expedientes.Where(x =>  (x.FechaCreo >= search.FechaInicial.Date && x.FechaCreo.Date <= search.FechaFinal.Date));
+
+
+            }
+
+            if ( !string.IsNullOrEmpty(search.Email))
+            {
+
+                expedientes = expedientes.Where(x => x.Correo.Contains(search.Email)) ;
+
+
+            }
+            return expedientes.ToList(); ;
         }
         public async Task<string> GetLastCode(string date)
         {
