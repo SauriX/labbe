@@ -97,7 +97,7 @@ namespace Service.MedicalRecord.Mapper
             if (model == null) return null;
 
             var studies = model.Paquetes?.SelectMany(x => x.Estudios)?.ToList() ?? new List<RequestStudy>();
-            studies.AddRange(model.Estudios ?? new List<RequestStudy>());
+                studies.AddRange(model.Estudios ?? new List<RequestStudy>());
 
             return new RequestOrderDto
             {
