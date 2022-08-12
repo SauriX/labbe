@@ -113,7 +113,7 @@ namespace Service.MedicalRecord.Mapper
                 Sexo = model.Expediente.Genero,
                 TelefonoPaciente = model.EnvioWhatsApp ?? model.Expediente.Telefono,
                 Expediente = model.Expediente.Expediente,
-                Medico = model.Medico.Nombre,
+                Medico = model.Medico?.Nombre,
                 Compañia = model.Procedencia == 2 ? "Particular" : model.Compañia.Nombre,
                 Correo = model.EnvioCorreo,
                 Observaciones = model.Observaciones,
