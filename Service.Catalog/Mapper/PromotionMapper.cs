@@ -29,6 +29,7 @@ namespace Service.Catalog.Mapper
 
             return model.Select(x => new PromotionListDto
             {
+
                 Id = x.Id,
                 Clave = x.Clave,
                 Nombre = x.Nombre,
