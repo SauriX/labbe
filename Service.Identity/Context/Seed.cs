@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFCore.BulkExtensions;
+using Microsoft.EntityFrameworkCore;
 using Service.Identity.Domain.Menu;
 using Service.Identity.Domain.Role;
 using Service.Identity.Domain.User;
@@ -14,7 +15,8 @@ namespace Service.Identity.Context
     {
         public static async Task SeedData(ApplicationDbContext context, string key)
         {
-            if (!context.CAT_Menu.Any())
+            //if (!context.CAT_Menu.Any())
+            if (true)
             {
                 using var transaction = context.Database.BeginTransaction();
 
@@ -39,123 +41,28 @@ namespace Service.Identity.Context
                         new Menu(15, 1, "Lealtades", "loyalty", "loyalties", 1014),
                         new Menu(16, 1, "Etiquetas", "tag", "tags", 1015),
                         new Menu(17, 1, "Rutas", "route", "routes", 1016),
-                    };
-
-                    context.CAT_Menu.AddRange(menus);
-
-                    context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Menu ON;");
-                    await context.SaveChangesAsync();
-                    context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Menu OFF;");
-
-                    transaction.Commit();
-                }
-                catch (Exception)
-                {
-                    transaction.Rollback();
-                    throw;
-                }
-            }
-
-            if (context.CAT_Menu.Count() == 17)
-            {
-                using var transaction = context.Database.BeginTransaction();
-
-                try
-                {
-                    var menus = new List<Menu>
-                    {
                         new Menu(18, 1, "Maquilador", "maquila", "maquila", 1017),
-
-                    };
-
-                    context.CAT_Menu.AddRange(menus);
-
-                    context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Menu ON;");
-                    await context.SaveChangesAsync();
-                    context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Menu OFF;");
-
-                    transaction.Commit();
-                }
-                catch (Exception)
-                {
-                    transaction.Rollback();
-                    throw;
-                }
-            }
-
-            if (context.CAT_Menu.Count() == 18)
-            {
-                using var transaction = context.Database.BeginTransaction();
-
-                try
-                {
-                    var menus = new List<Menu>
-                    {
-
-                        new Menu(20, null, "Parámetros de sistema", "configuration", "configuration", 2000),
-                    };
-
-                    context.CAT_Menu.AddRange(menus);
-
-                    context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Menu ON;");
-                    await context.SaveChangesAsync();
-                    context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Menu OFF;");
-
-                    transaction.Commit();
-                }
-                catch (Exception)
-                {
-                    transaction.Rollback();
-                    throw;
-                }
-            }
-            if (context.CAT_Menu.Count() == 19)
-            {
-                using var transaction = context.Database.BeginTransaction();
-
-                try
-                {
-                    var menus = new List<Menu>
-                    {
-                            
-                        new Menu(24, null, "Recepción",  null, "configuration", 2400),
                         new Menu(19, 24, "Expedientes", "expedientes", "expedientes", 2401),
+                        new Menu(20, null, "Parámetros de sistema", "configuration", "configuration", 2000),
                         new Menu(21, 24, "Cotización", "cotizacion", "cotizacion", 2402),
-                        new Menu(22, 24, "Reportes" , "reports", "reports", 2403),
-                        new Menu(23,24,"Citas","appointments","appointments",2404),
+                        new Menu(22, 24, "Reportes" , "report", "reports", 2403),
+                        new Menu(23, 24, "Citas","appointments", "appointments", 2404),
+                        new Menu(24, null, "Recepción",  null, "configuration", 2400),
+                        new Menu(25, 24, "Toma de muestra", "samplings", "samplings", 2405),
+                        new Menu(26, 24, "Solicitudes", "request", "requests", 2406),
+                        new Menu(27, 24, "Corte de Caja", "cash", "cash", 2407),
                     };
 
-                    context.CAT_Menu.AddRange(menus);
+                    //context.CAT_Menu.AddRange(menus);
 
-                    context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Menu ON;");
-                    await context.SaveChangesAsync();
-                    context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Menu OFF;");
-
-                    transaction.Commit();
-                }
-                catch (Exception)
-                {
-                    transaction.Rollback();
-                    throw;
-                }
-            }
-            if (context.CAT_Menu.Count() == 24)
-            {
-                using var transaction = context.Database.BeginTransaction();
-
-                try
-                {
-                    var menus = new List<Menu>
+                    //context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Menu ON;");
+                    //await context.SaveChangesAsync();
+                    var config = new BulkConfig
                     {
-
-                        new Menu(25,24,"Toma de muestra","samplings","samplings",2405),
+                        PreserveInsertOrder = true,
                     };
-
-                    context.CAT_Menu.AddRange(menus);
-
-                    context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Menu ON;");
-                    await context.SaveChangesAsync();
-                    context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Menu OFF;");
+                    await context.BulkInsertOrUpdateAsync(menus, config);
+                    //context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Menu OFF;");
 
                     transaction.Commit();
                 }
@@ -165,7 +72,6 @@ namespace Service.Identity.Context
                     throw;
                 }
             }
-
 
             var roleId = Guid.NewGuid();
 
@@ -189,7 +95,7 @@ namespace Service.Identity.Context
 
                     var permissions = new List<RolePermission>
                     {
-                        
+
                         new RolePermission(roleId, 2, true, true, true, true, true, true, true),
                         new RolePermission(roleId, 3, true, true, true, true, true, true, true),
                         new RolePermission(roleId, 4, true, true, true, true, true, true, true),

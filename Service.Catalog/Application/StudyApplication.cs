@@ -30,7 +30,15 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
             return estudio.ToStudyFormDto();
+        }      
+        
+        public async Task<IEnumerable<StudyListDto>> GetByIds(List<int> ids)
+        {
+            var studies = await _repository.GetByIds(ids);
+
+            return studies.ToStudyListDtos();
         }
+
         public async Task<StudyFormDto> Create(StudyFormDto study)
         {
             var code = await ValidarClaveNombre(study, true, true, study.Id, study.Orden);

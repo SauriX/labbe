@@ -32,7 +32,7 @@ namespace Service.Sender.Consumers.Error
             {
                 var notification = new NotificationContract("Hubo un error al enviar el correo, intenta más tarde", true);
 
-                await _hubContext.Clients.Group(message.RemitenteId).SendAsync("Notify", notification.Serialize());
+                await _hubContext.Clients.Group(message.RemitenteId).SendAsync("Notify", notification);
             }
 
             _logger.LogError(error);

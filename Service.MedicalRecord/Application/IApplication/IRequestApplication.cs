@@ -7,12 +7,14 @@ namespace Service.MedicalRecord.Application.IApplication
 {
     public interface IRequestApplication
     {
+        Task<IEnumerable<RequestInfoDto>> GetByFilter(RequestFilterDto filter);
         Task<RequestDto> GetById(Guid recordId, Guid requestId);
         Task<RequestGeneralDto> GetGeneral(Guid recordId, Guid requestId);
         Task<RequestStudyUpdateDto> GetStudies(Guid recordId, Guid requestId);
         Task SendTestEmail(RequestSendDto requestDto);
         Task SendTestWhatsapp(RequestSendDto requestDto);
         Task<string> Create(RequestDto requestDto);
+        Task<string> Convert(RequestConvertDto requestDto);
         Task UpdateGeneral(RequestGeneralDto requestDto);
         Task UpdateTotals(RequestTotalDto requestDto);
         Task UpdateStudies(RequestStudyUpdateDto requestDto);

@@ -21,7 +21,7 @@ namespace Service.MedicalRecord.Repository
         }
         public async Task<List<Request>> GetAll(SamplingSearchDto search)
         {
-            var citasLab = _context.CAT_Solicitud.Include(x=>x.Estudios).Include(x=>x.Expediente).AsQueryable();
+            var citasLab = _context.CAT_Solicitud.Include(x=>x.Estudios).Include(x=>x.Expediente).Include(x=>x.Sucursal).Include(x=>x.Compañia).AsQueryable();
             if (search.Sucursal != null && search.Sucursal.Count > 0)
             {
                 citasLab = citasLab.Where(x => search.Sucursal.Contains(x.SucursalId.ToString()));
@@ -101,5 +101,6 @@ namespace Service.MedicalRecord.Repository
             }
         
         }
+
     }
 }

@@ -57,11 +57,12 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("solicitud")]
         //[Authorize(Policies.Create)]
-        public async Task<string> CreateSolicitud(RequestDto request)
+        public async Task<string> CreateSolicitud(RequestConvertDto request)
         {
             //request.UsuarioId = (Guid)HttpContext.Items["userId"];
-
-            return await _ServiceRequest.Create(request);
+            var id = await _ServiceRequest.Convert(request);
+            //await _Service.convert
+            return id;
         }
         [HttpPut]
         //[Authorize(Policies.Update)]

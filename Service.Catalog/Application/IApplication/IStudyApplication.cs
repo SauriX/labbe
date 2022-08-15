@@ -7,6 +7,7 @@ namespace Service.Catalog.Application.IApplication
     public interface IStudyApplication
     {
         Task<StudyFormDto> GetById(int Id);
+        Task<IEnumerable<StudyListDto>> GetByIds(List<int> Id);
         Task<IEnumerable<StudyListDto>> GetAll(string search = null);
         Task<IEnumerable<StudyListDto>> GetActive();
         Task<StudyFormDto> Create(StudyFormDto study);

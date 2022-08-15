@@ -55,7 +55,6 @@ namespace Service.Sender
             services.AddMassTransit(x =>
             {
                 x.AddConsumers(Assembly.GetExecutingAssembly());
-                x.AddSignalRHub<NotificationHub>();
 
                 x.UsingRabbitMq((context, configurator) =>
                 {
@@ -71,23 +70,27 @@ namespace Service.Sender
 
                     configurator.ReceiveEndpoint(queueNames.Email, re =>
                     {
+                        x.AddSignalRHub<NotificationHub>();
                         re.Consumer<EmailConsumer>(context);
                         re.DiscardFaultedMessages();
                     });
 
                     configurator.ReceiveEndpoint(queueNames.EmailFault, re =>
                     {
+                        x.AddSignalRHub<NotificationHub>();
                         re.Consumer<EmailErrorConsumer>(context);
                     });           
                     
                     configurator.ReceiveEndpoint(queueNames.Whatsapp, re =>
                     {
+                        x.AddSignalRHub<NotificationHub>();
                         re.Consumer<WhatsappConsumer>(context);
                         re.DiscardFaultedMessages();
                     });
 
                     configurator.ReceiveEndpoint(queueNames.WhatsappFault, re =>
                     {
+                        x.AddSignalRHub<NotificationHub>();
                         re.Consumer<WhatsappErrorConsumer>(context);
                     });
 
@@ -206,6 +209,7 @@ namespace Service.Sender
             }
             else if (env.IsEnvironment("QA"))
             {
+                app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {

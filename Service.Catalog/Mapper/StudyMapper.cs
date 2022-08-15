@@ -35,7 +35,8 @@ namespace Service.Catalog.Mapper
             return model.Select(x => new StudyListDto
             {
                 Id = x.Id,
-                Nombre = x.Nombre,
+                Parametros = x.Parameters.Select(y => y.Parametro).ToParameterListDto(),
+                Indicaciones = x.Indications.Select(y => y.Indicacion).ToIndicationListDto(),
             });
         }
 

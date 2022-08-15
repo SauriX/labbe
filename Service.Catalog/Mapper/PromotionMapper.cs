@@ -29,10 +29,11 @@ namespace Service.Catalog.Mapper
 
             return model.Select(x => new PromotionListDto
             {
+
                 Id = x.Id,
                 Clave = x.Clave,
                 Nombre = x.Nombre,
-                Periodo = $"{x.FechaInicio}-{x.FechaInicio}",
+                Periodo = $"{x.FechaInicio.ToShortDateString()}---{x.FechaInicio.Date.ToShortDateString()}",
                 NombreListaPrecio = x?.prices?.AsQueryable()?.Where(x => x.Activo == true)?.FirstOrDefault()?.PrecioLista.Nombre,
                 Activo = x.Activo,
             });
@@ -82,7 +83,7 @@ namespace Service.Catalog.Mapper
                 FechaInicial = x.FechaInicio,
                 FechaFinal = x.FechaFinal,
                 Activo = x.Activo,
-                Precio = paquetes.AsQueryable().Where(m => m.PaqueteId == x.PackId).FirstOrDefault()?.Precio,
+                Precio = paquetes.AsQueryable().Where(m => m.PaqueteId == x.PackId).FirstOrDefault()?.PrecioFinal,
                 PrecioFinal = x.FinalPrice,
                 Paquete = true,
                 Lunes = x.Lunes,

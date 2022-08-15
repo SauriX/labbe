@@ -20,6 +20,13 @@ namespace Service.MedicalRecord.Controllers
             _service = service;
         }
 
+        [HttpPost("filter")]
+        [Authorize(Policies.Access)]
+        public async Task<IEnumerable<RequestInfoDto>> GetByFilter(RequestFilterDto filter)
+        {
+            return await _service.GetByFilter(filter);
+        }
+
         [HttpGet("{recordId}/{requestId}")]
         [Authorize(Policies.Access)]
         public async Task<RequestDto> GetById(Guid recordId, Guid requestId)

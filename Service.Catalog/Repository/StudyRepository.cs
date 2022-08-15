@@ -72,6 +72,17 @@ namespace Service.Catalog.Repository
             return reagent;
         }
 
+        public async Task<List<Study>> GetByIds(List<int> ids)
+        {
+            var studies = await _context.CAT_Estudio
+                .Include(x => x.Parameters).ThenInclude(x => x.Parametro).ThenInclude(x => x.Area).ThenInclude(x => x.Departamento)
+                .Include(x => x.Indications).ThenInclude(x => x.Indicacion)
+                .Where(x => ids.Contains(x.Id))
+                .ToListAsync();
+
+            return studies;
+        }
+
         public async Task Create(Study study)
         {
             using var transaction = _context.Database.BeginTransaction();

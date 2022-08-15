@@ -175,6 +175,9 @@ namespace Service.Catalog.Mapper
                     Departamento = x.Paquete.Area.Departamento.Nombre,
                     Precio = x.Precio,
                     Activo = x.Activo,
+                   DescuenNum=x.DescuenNum,
+                   Descuento=x.Descuento,
+                   PrecioFinal=x.PrecioFinal,
                     Pack = x.Paquete.studies.Select(x => new PackStudyDto
                     {
                         Id = x.EstudioId,
@@ -225,6 +228,8 @@ namespace Service.Catalog.Mapper
                 EstudioId = model.EstudioId,
                 Nombre = model.Estudio.Nombre,
                 Clave = model.Estudio.Clave,
+                TaponId = model.Estudio.TaponId,
+                TaponColor = model.Estudio.Tapon.Color,
                 DepartamentoId = model.Estudio.DepartamentoId,
                 AreaId = model.Estudio.AreaId,
                 Dias = Convert.ToInt32(Math.Ceiling(model.Estudio.DiasResultado)),
@@ -249,6 +254,8 @@ namespace Service.Catalog.Mapper
                 DepartamentoId = model.Paquete.DepartamentoId,
                 AreaId = model.Paquete.AreaId,
                 Precio = model.Precio,
+                Descuento= model.DescuenNum,
+                DescuentoPorcentaje=model.Descuento,
                 Estudios = model.Paquete.studies.Select(x => new PriceListInfoStudyDto
                 {
                     ListaPrecioId = model.PrecioListaId,
@@ -256,6 +263,8 @@ namespace Service.Catalog.Mapper
                     EstudioId = x.EstudioId,
                     Nombre = x.Estudio.Nombre,
                     Clave = x.Estudio.Clave,
+                    TaponId = x.Estudio.TaponId,
+                    TaponColor = x.Estudio.Tapon.Color,
                     DepartamentoId = x.Estudio.DepartamentoId,
                     AreaId = x.Estudio.AreaId,
                     Dias = Convert.ToInt32(Math.Ceiling(x.Estudio.DiasResultado)),
@@ -279,6 +288,7 @@ namespace Service.Catalog.Mapper
                 Activo = dto.Activo,
                 UsuarioCreoId = dto.UsuarioCreoId,
                 FechaCreo = DateTime.Now,
+
                 Estudios = dto?.Estudios?.Select(x => new PriceList_Study
                 {
                     EstudioId = x.Id,
@@ -290,6 +300,9 @@ namespace Service.Catalog.Mapper
                     PaqueteId = x.Id,
                     Precio = x.Precio,
                     Activo = x.Activo,
+                    Descuento= x.Descuento,
+                    DescuenNum=x.DescuenNum,
+                    PrecioFinal=x.PrecioFinal
                 })?.ToList(),
                 Compañia = dto?.Compañia?.Select(x => new Price_Company
                 {
@@ -342,6 +355,9 @@ namespace Service.Catalog.Mapper
                     PaqueteId = x.Id,
                     Precio = x.Precio,
                     Activo = x.Activo,
+                    Descuento = x.Descuento,
+                    DescuenNum = x.DescuenNum,
+                    PrecioFinal=x.PrecioFinal
                 })?.ToList(),
                 Compañia = dto?.Compañia?.Select(x => new Price_Company
                 {

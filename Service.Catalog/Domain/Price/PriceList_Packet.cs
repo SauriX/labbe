@@ -10,6 +10,9 @@ namespace Service.Catalog.Domain.Price
         public virtual Packet.Packet Paquete { get; set; }
         public bool Activo { get; set; }
         public decimal Precio { get; set; }
+        public decimal Descuento { get; set; }
+        public decimal DescuenNum { get; set; }
+        public decimal PrecioFinal { get; set; }
         public long UsuarioCreoId { get; set; }
         public DateTime FechaCreo { get; set; }
         public string UsuarioModId { get; set; }

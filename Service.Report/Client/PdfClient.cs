@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Integration.Pdf.Models;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Service.Report.Client.IClient;
 using Service.Report.PdfModel;
@@ -33,6 +34,33 @@ namespace Service.Report.Client
                 var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
                 var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Pdf")}/api/pdf/report/generate", stringContent);
+
+                if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+                {
+                    return await response.Content.ReadAsByteArrayAsync();
+                }
+
+                var error = await response.Content.ReadFromJsonAsync<ServerException>();
+
+                var ex = Exceptions.GetException(error);
+
+                throw ex;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<byte[]> CashRegisterReport(CashData cashData)
+        {
+            try
+            {
+                var json = JsonConvert.SerializeObject(cashData);
+
+                var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Pdf")}/api/pdf/report/cash_register", stringContent);
 
                 if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
                 {

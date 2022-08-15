@@ -370,9 +370,6 @@ namespace Integration.Pdf.Service
                 section.Add(totalTable);
             }
 
-
-
-
             if (seriesInfo == null || !seriesInfo.Any(x => x.SerieX) || data.Count == 0)
             {
                 return;

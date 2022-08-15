@@ -214,6 +214,7 @@ namespace Service.Report
             services.AddScoped<IMedicalBreakdownStatsApplication, MedicalBreakdonStatsApplication>();
             services.AddScoped<IDescountRequestApplication, DescountRequestApplication>();
             services.AddScoped<IChargeRequestApplication, ChargeRequestApplication>();
+            services.AddScoped<ICashRegisterApplication, CashRegisterApplication>();
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IReportRepository, ReportRepository>();
