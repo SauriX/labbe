@@ -24,6 +24,7 @@
         public const string Request = "request";
         public const string Report = "report";
         public const string Appointment = "appointment";
+        public const string Equipment = "equipment";
 
     }
 }

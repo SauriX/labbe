@@ -74,6 +74,12 @@ namespace Service.Identity.Controllers
         {
             var userId = GetUserId();
             return await _service.GetScopes(userId, ControllerNames.Indication);
+        } 
+        [HttpGet(ControllerNames.Equipment)]
+        public async Task<ScopesDto> GetEquipmentScopes()
+        {
+            var userId = GetUserId();
+            return await _service.GetScopes(userId, ControllerNames.Equipment);
         }
 
         [HttpGet(ControllerNames.Parameter)]

@@ -20,6 +20,7 @@ using Service.Catalog.Client.IClient;
 using Service.Catalog.Consumers.Error;
 using Service.Catalog.Context;
 using Service.Catalog.Domain.Catalog;
+using Service.Catalog.Domain.Equipment;
 using Service.Catalog.Domain.Parameter;
 using Service.Catalog.Domain.Provenance;
 using Service.Catalog.Middleware;
@@ -210,6 +211,9 @@ namespace Service.Catalog
             services.AddScoped<ICatalogDescriptionApplication<UseOfCFDI>, CatalogDescriptionApplication<UseOfCFDI>>();
             services.AddScoped<ICatalogDescriptionApplication<Payment>, CatalogDescriptionApplication<Payment>>();
             services.AddScoped<ICatalogDescriptionApplication<Indicator>, CatalogDescriptionApplication<Indicator>>();
+
+            services.AddScoped<IEquipmentApplication, EquipmentApplication>();
+
             services.AddScoped<IConfigurationApplication, ConfigurationApplication>();
             services.AddScoped<IAreaApplication, AreaApplication>();
             services.AddScoped<IDimensionApplication, DimensionApplication>();
@@ -252,6 +256,7 @@ namespace Service.Catalog
             services.AddScoped<IReagentRepository, ReagentRepository>();
             services.AddScoped<IMedicsRepository, MedicsRepository>();
             services.AddScoped<IIndicationRepository, IndicationRepository>();
+            services.AddScoped<IEquipmentRepository, EquipmentRepository>();
             services.AddScoped<ILocationRepository, LocationRepository>();
             services.AddScoped<IBranchRepository, BranchRepository>();
             services.AddScoped<ICompanyRepository, CompanyRepository>();
