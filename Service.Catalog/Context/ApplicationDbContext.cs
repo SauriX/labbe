@@ -17,6 +17,7 @@ using Service.Catalog.Domain.Reagent;
 using Service.Catalog.Domain.Route;
 using Service.Catalog.Domain.Study;
 using Service.Catalog.Domain.Tapon;
+using Service.Catalog.Domain.Equipment;
 using System.Reflection;
 
 namespace Service.Catalog.Context
@@ -79,6 +80,8 @@ namespace Service.Catalog.Context
         public DbSet<Units> CAT_Units { get; set; }
         public DbSet<CiudadBranch> CAT_ciudadBranch { get; set; }
         public DbSet<Equipos> CAT_Equipos { get; set; }
+        //public DbSet<Equipment> CAT_Equipos { get; set; }
+        public DbSet<EquipmentBranch> Relacion_Equipo_Sucursal { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
 

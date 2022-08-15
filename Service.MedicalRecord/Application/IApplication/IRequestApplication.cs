@@ -14,6 +14,7 @@ namespace Service.MedicalRecord.Application.IApplication
         Task SendTestEmail(RequestSendDto requestDto);
         Task SendTestWhatsapp(RequestSendDto requestDto);
         Task<string> Create(RequestDto requestDto);
+        Task<string> Convert(RequestConvertDto requestDto);
         Task UpdateGeneral(RequestGeneralDto requestDto);
         Task UpdateTotals(RequestTotalDto requestDto);
         Task UpdateStudies(RequestStudyUpdateDto requestDto);
