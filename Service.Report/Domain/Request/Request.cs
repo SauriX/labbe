@@ -27,5 +27,6 @@ namespace Service.Report.Domain.Request
         public bool Parcialidad { get; set; }
         public byte Urgencia { get; set; }
         public virtual ICollection<RequestPayment> MetodoPago { get; set; }
+        public virtual ICollection<RequestPack> Paquetes { get; set; }
     }
 }
