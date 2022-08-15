@@ -67,6 +67,7 @@ namespace Service.Report.Mapper
         {
             return studies.Select(x => new StudiesDto
             {
+                Id = x.Id,
                 Clave = x.Clave,
                 Estudio = x.Estudio,
                 Estatus = x.Estatus.Estatus,
@@ -97,11 +98,12 @@ namespace Service.Report.Mapper
                             Empresa = request.Empresa.NombreEmpresa,
                             Convenio = request.Empresa.Convenio,
                             Estudio = studies.ToCompanyDto(),
-                            PrecioEstudios = priceStudies,
                             Descuento = descount,
                             DescuentoPorcentual = porcentualDescount,
                         };
                     }).ToList();
+
+
         }
     }
 }

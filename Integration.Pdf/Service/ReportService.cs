@@ -348,7 +348,7 @@ namespace Integration.Pdf.Service
                     row.Cells[0].Format.Font.Bold = true;
                     row.Cells[0].Format.Alignment = ParagraphAlignment.Right;
                     row.Cells[0].MergeRight = totales.Count() - 2;
-                    row.Cells[totales.Count() - 1].AddParagraph(invoice.Subtotal.ToString("$" + "0.00"));
+                    row.Cells[totales.Count() - 1].AddParagraph($"${invoice.Subtotal}");
 
                     row = totalTable.AddRow();
                     row.Cells[0].Borders.Visible = false;
@@ -356,7 +356,7 @@ namespace Integration.Pdf.Service
                     row.Cells[0].Format.Font.Bold = true;
                     row.Cells[0].Format.Alignment = ParagraphAlignment.Right;
                     row.Cells[0].MergeRight = totales.Count() - 2;
-                    row.Cells[totales.Count() - 1].AddParagraph(invoice.IVA.ToString("$" + "0.00"));
+                    row.Cells[totales.Count() - 1].AddParagraph($"${invoice.IVA}");
 
                     row = totalTable.AddRow();
                     row.Cells[0].Borders.Visible = false;

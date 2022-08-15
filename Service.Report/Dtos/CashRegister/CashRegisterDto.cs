@@ -14,7 +14,7 @@ namespace Service.Report.Dtos
         public decimal ACuenta { get; set; }
         public decimal Efectivo { get; set; }
         public decimal TDC { get; set; }
-        public decimal Transferecia { get; set; }
+        public decimal Transferencia { get; set; }
         public decimal Cheque { get; set; }
         public decimal TDD { get; set; }
         public decimal PP { get; set; }

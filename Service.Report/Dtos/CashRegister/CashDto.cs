@@ -10,5 +10,6 @@ namespace Service.Report.Dtos.CashRegister
         public List<CashRegisterDto> PerDay { get; set; }
         public List<CashRegisterDto> Canceled { get; set; }
         public List<CashRegisterDto> OtherDay { get; set; }
+        public CashInvoiceDto CashTotal { get; set; }
     }
 }

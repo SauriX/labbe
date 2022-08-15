@@ -85,8 +85,8 @@ namespace Service.Report.Mapper
         public static List<StudiesDto> ToRequestMedicalBreakdown(this IEnumerable<RequestStudy> studies, decimal descuento)
         {
             return studies.Select(x => new StudiesDto
-            { 
-                Id = Guid.NewGuid(),
+            {
+                Id = x.Id,
                 Clave = x.Clave,
                 Estudio = x.Estudio,
                 Estatus = x.Estatus.Estatus,

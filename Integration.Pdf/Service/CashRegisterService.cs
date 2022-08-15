@@ -60,19 +60,20 @@ namespace Integration.Pdf.Service
             section.PageSetup.PageFormat = PageFormat.A4;
 
             section.PageSetup.TopMargin = Unit.FromCentimeter(1);
-            section.PageSetup.BottomMargin = Unit.FromCentimeter(1);
+            section.PageSetup.BottomMargin = Unit.FromCentimeter(2.5);
             section.PageSetup.LeftMargin = Unit.FromCentimeter(1);
             section.PageSetup.RightMargin = Unit.FromCentimeter(1);
 
-            Format(section, cashData.Columnas, cashData.Datos ,cashData.PerDay, cashData.Canceled, cashData.OtherDay, cashData.Invoice, cashData.ColumnasTotales, cashData.Totales, cashData.Header);
+            Format(section, cashData.Columnas, cashData.Datos, cashData.PerDay, cashData.Canceled, cashData.OtherDay, cashData.Invoice, cashData.ColumnasTotales, cashData.Totales, cashData.Header, cashData.User);
 
             return document;
         }
-        static void Format(Section section, List<Col> columns, List<Dictionary<string, object>> data, List<Dictionary<string, object>> perDay, List<Dictionary<string, object>> canceled, List<Dictionary<string, object>> otherDay, InvoiceData invoice, List<Col> totalColumns, Dictionary<string, object> totales, HeaderData Header)
+        static void Format(Section section, List<Col> columns, List<Dictionary<string, object>> data, List<Dictionary<string, object>> perDay, List<Dictionary<string, object>> canceled, List<Dictionary<string, object>> otherDay, InvoiceData invoice, List<Col> totalColumns, Dictionary<string, object> totales, HeaderData Header, string user)
         {
             var fontTitle = new Font("calibri", 18) { Bold = true };
             var fontSubtitle = new Font("calibri", 14);
             var fontText = new Font("calibri", 11);
+            var fontDisclaimer = new Font("calibri", 11) { Italic = true };
             var fontTitleChart = new Font("calibri", 11) { Bold = true };
 
             var businessName = "Laboratorio Alfonso Ramos S.A de C.V MONTERREY";
@@ -81,7 +82,7 @@ namespace Integration.Pdf.Service
 
             var title = new Col(businessName + "\n" + location + "\n" + city, fontTitle);
             var subtitle = new Col("CORTE DE CAJA DEL " + Header.Fecha + " " + Header.Hora, fontSubtitle);
-            var branch = new Col(Header.Sucursal, fontSubtitle);
+            var branch = new Col("Sucursal: " + Header.Sucursal, fontSubtitle);
             string[] messageTable = { "PACIENTES DEL DIA", "**CANCELACIONES DEL DIA**", "PAGOS DE OTROS DIAS" };
 
             section.AddText(title);
@@ -91,11 +92,27 @@ namespace Integration.Pdf.Service
             {
                 section.AddText(branch);
             }
+
+            var disclaimer = user + " " + DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "\nEste informe no podrá ser reproducido total o parcialmente";
+
+            section.PageSetup.OddAndEvenPagesHeaderFooter = true;
+            section.PageSetup.StartingNumber = 1;
+            Paragraph paragraph = new Paragraph();
+            paragraph.AddText(disclaimer);
+            paragraph.AddTab();
+            paragraph.AddTab();
+            paragraph.AddTab();
+            paragraph.AddTab();
+            paragraph.AddPageField();
+            paragraph.Format.Alignment = ParagraphAlignment.Left;
+            section.Footers.Primary.Add(paragraph);
+            section.Footers.EvenPage.Add(paragraph.Clone());
+
             section.AddSpace(10);
 
             var contentWidth = section.PageSetup.PageHeight - section.PageSetup.LeftMargin - section.PageSetup.RightMargin;
 
-           for (int typeTable = 0; typeTable < messageTable.Length; typeTable++)
+            for (int typeTable = 0; typeTable < messageTable.Length; typeTable++)
             {
                 section.AddText(new Col(messageTable[typeTable], fontSubtitle, ParagraphAlignment.Left));
 
@@ -209,8 +226,108 @@ namespace Integration.Pdf.Service
                 }
 
                 section.Add(table);
-                section.AddSpace(10);
+                section.AddSpace(15);
+
+            }
+
+            section.AddSpace(20);
+
+            if (totales != null && totales.Count > 0)
+            {
+                Table totalTable = new Table();
+                totalTable.Borders.Width = 0.75;
+                totalTable.Borders.Color = Colors.LightGray;
+                totalTable.TopPadding = 3;
+                totalTable.BottomPadding = 3;
+                totalTable.Rows.Alignment = RowAlignment.Right;
+
+                if (totalColumns == null || totalColumns.Count == 0)
+                {
+                    return;
+                }
+
+                var totalWidth = contentWidth / totalColumns.Sum(x => x.Tamaño);
+
+                for (int i = 0; i < totalColumns.Count; i++)
+                {
+                    Col item = columns[i];
+                    Column totalColumn = totalTable.AddColumn("3cm");
+                    totalColumn.Format.Alignment = item.Horizontal;
+                }
+
+                Row row = totalTable.AddRow();
+
+                for (int i = 0; i < totalColumns.Count; i++)
+                {
+                    row.Shading.Color = Colors.Gray;
+                    row.Format.Font.Color = Colors.White;
+
+                    Cell cell = row.Cells[i];
+                    cell.Borders.Left.Visible = false;
+                    cell.Borders.Right.Visible = false;
+                    cell.Borders.Bottom.Visible = false;
+                    cell.AddParagraph(totalColumns[i].Texto);
+                }
+
+                row = totalTable.AddRow();
+
+                for (int i = 0; i < totalColumns.Count; i++)
+                {
+                    var key = totalColumns[i].Texto;
+
+                    if (totales.ContainsKey(key))
+                    {
+                        Cell cell = row.Cells[i];
+                        cell.Borders.Visible = false;
+                        var format = totalColumns[i].Formato;
+                        var cellData = totales[key].ToString();
+
+                        if (!string.IsNullOrWhiteSpace(format))
+                        {
+                            if (cellData.Length > 0 && cellData[0] == '[' && cellData[cellData.Length - 1] == ']')
+                            {
+                                var datalist = JsonConvert.DeserializeObject<List<string>>(cellData);
+                                datalist.Where(x => x != null).ToList().ForEach(x => cell.AddParagraph(x));
+                            }
+                            else
+                            {
+                                cell.AddParagraph(Convert.ToDouble(totales[key]).ToString(format));
+                            }
+                        }
+                        else
+                        {
+                            if (cellData.Length > 0 && cellData[0] == '[' && cellData[cellData.Length - 1] == ']')
+                            {
+                                var datalist = JsonConvert.DeserializeObject<List<string>>(cellData);
+                                datalist.Where(x => x != null).ToList().ForEach(x => cell.AddParagraph(x));
+                            }
+                            else
+                            {
+                                cell.AddParagraph(cellData);
+                            }
+                        }
+                    }
+                }
+
+                totalTable.Rows.Alignment = RowAlignment.Right;
+                row = totalTable.AddRow();
+                row.Borders.Visible = false;
+
+                if (invoice != null)
+                {
+
+                    row = totalTable.AddRow();
+                    row.Cells[0].Borders.Visible = false;
+                    row.Cells[0].AddParagraph("Gran Total");
+                    row.Cells[0].Format.Font.Bold = true;
+                    row.Cells[0].Format.Alignment = ParagraphAlignment.Right;
+                    row.Cells[0].MergeRight = totales.Count() - 2;
+                    row.Cells[totales.Count() - 1].AddParagraph(invoice.Total.ToString("$" + "0.00"));
+                    row.Cells[totales.Count() - 1].Borders.Visible = false;
+                }
+
+                section.Add(totalTable);
             }
         }
     }
-}
+};

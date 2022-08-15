@@ -65,7 +65,7 @@ namespace Service.Report.Application
                 { "A cuenta", x.ACuenta },
                 { "Efectivo", x.Efectivo },
                 { "TDC", x.TDC },
-                { "Tranf. E", x.Transferecia },
+                { "Tranf. E", x.Transferencia },
                 { "Cheque", x.Cheque },
                 { "TDD", x.TDD },
                 { "PP", x.PP },
@@ -84,7 +84,7 @@ namespace Service.Report.Application
                 { "A cuenta", x.ACuenta },
                 { "Efectivo", x.Efectivo },
                 { "TDC", x.TDC },
-                { "Tranf. E", x.Transferecia },
+                { "Tranf. E", x.Transferencia },
                 { "Cheque", x.Cheque },
                 { "TDD", x.TDD },
                 { "PP", x.PP },
@@ -103,7 +103,7 @@ namespace Service.Report.Application
                 { "A cuenta", x.ACuenta },
                 { "Efectivo", x.Efectivo },
                 { "TDC", x.TDC },
-                { "Tranf. E", x.Transferecia },
+                { "Tranf. E", x.Transferencia },
                 { "Cheque", x.Cheque },
                 { "TDD", x.TDD },
                 { "PP", x.PP },
@@ -113,6 +113,28 @@ namespace Service.Report.Application
                 { "Compañía", x.Empresa},
             }).ToList();
 
+            List<Col> totalColumns = new()
+            {
+                new Col("Efectivo", ParagraphAlignment.Center, "C"),
+                new Col("TDC", ParagraphAlignment.Center, "C"),
+                new Col("Transf. E", ParagraphAlignment.Center, "C"),
+                new Col("Cheque", ParagraphAlignment.Center, "C"),
+                new Col("TDD", ParagraphAlignment.Center, "C"),
+            };
+
+            var totales = new Dictionary<string, object>
+            {
+                { "Efectivo", requestData.CashTotal.SumaEfectivo },
+                { "TDC", requestData.CashTotal.SumaTDC},
+                { "Transf. E", requestData.CashTotal.SumaTransferencia},
+                { "Cheque", requestData.CashTotal.SumaCheque},
+                { "TDD", requestData.CashTotal.SumaTDD}
+            };
+
+            var invoice = new InvoiceData()
+            {
+                Total = requestData.CashTotal.Total,
+            };
 
             var branches = await GetBranchNames(filter.SucursalId);
 
@@ -130,6 +152,10 @@ namespace Service.Report.Application
                 Canceled = canceled,
                 OtherDay = otherDay,
                 Header = headerData,
+                ColumnasTotales = totalColumns,
+                Totales = totales,
+                Invoice = invoice,
+                User = filter.User
             };
 
             var file = await _pdfClient.CashRegisterReport(cashData);
