@@ -18,6 +18,7 @@ namespace Service.Report.Dtos.CompanyStats
         public decimal PrecioEstudios => Estudio.Sum(x => x.PrecioFinal);
         public decimal Descuento { get; set; }
         public decimal DescuentoPorcentual { get; set; }
-        public decimal TotalEstudios => PrecioEstudios - Descuento;
+        public decimal? Promocion { get; set; }
+        public decimal TotalEstudios => PrecioEstudios - Descuento - Promocion ?? 0;
     }
 }

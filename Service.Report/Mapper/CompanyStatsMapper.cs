@@ -72,8 +72,9 @@ namespace Service.Report.Mapper
                 Estudio = x.Estudio,
                 Estatus = x.Estatus.Estatus,
                 Precio = x.Precio,
+                Descuento = x.Descuento,
                 Paquete = x.Paquete?.Nombre,
-                PrecioFinal = x.PrecioFinal - (x.Precio * x.Paquete?.DescuentoPorcentaje ?? 0),
+                PrecioFinal = x.PrecioFinal - (x.Precio * x.Paquete?.DescuentoPorcentaje ?? 0) - (x.Precio * x.Descuento),
             }).ToList();
         }
 
@@ -84,7 +85,7 @@ namespace Service.Report.Mapper
                         var studies = request.Estudios;
                         var pack = request.Paquetes;
 
-                        var priceStudies = studies.Sum(x => x.PrecioFinal - (x.Precio * x.Paquete?.DescuentoPorcentaje ?? 0));
+                        var priceStudies = studies.Sum(x => x.PrecioFinal - (x.Precio * x.Paquete?.DescuentoPorcentaje ?? 0) - (x.Precio * x.Descuento));
                         var descount = request.Descuento;
                         var porcentualDescount = (descount * 100) / priceStudies;
                         var descRequest = request.Descuento / 100;
@@ -100,6 +101,7 @@ namespace Service.Report.Mapper
                             Estudio = studies.ToCompanyDto(),
                             Descuento = descount,
                             DescuentoPorcentual = porcentualDescount,
+                            Promocion = pack.Select(x => x.Descuento).Last(),
                         };
                     }).ToList();
 
