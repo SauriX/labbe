@@ -7,5 +7,6 @@
         public string NombreMedico { get; set; }
         public string Sucursal { get; set; }
         public string Fecha { get; set; }
+        public string Hora { get; set; }
     }
 }

@@ -74,6 +74,12 @@ namespace Service.Identity.Controllers
         {
             var userId = GetUserId();
             return await _service.GetScopes(userId, ControllerNames.Indication);
+        } 
+        [HttpGet(ControllerNames.Equipment)]
+        public async Task<ScopesDto> GetEquipmentScopes()
+        {
+            var userId = GetUserId();
+            return await _service.GetScopes(userId, ControllerNames.Equipment);
         }
 
         [HttpGet(ControllerNames.Parameter)]
@@ -169,6 +175,13 @@ namespace Service.Identity.Controllers
         {
             var userId = GetUserId();
             return await _service.GetScopes(userId, ControllerNames.Report);
+        }
+
+        [HttpGet(ControllerNames.Cash)]
+        public async Task<ScopesDto> GetCashScopes()
+        {
+            var userId = GetUserId();
+            return await _service.GetScopes(userId, ControllerNames.Cash);
         }
 
         private Guid GetUserId()

@@ -14,6 +14,16 @@ namespace Service.Report.Context.EntityConfiguration
                 .HasMany(x => x.Estudios)
                 .WithOne(x => x.Solicitud)
                 .HasForeignKey(x => x.SolicitudId);
+            builder
+                .HasMany(x => x.MetodoPago)
+                .WithOne(x => x.Solicitud)
+                .HasForeignKey(x => x.SolicitudId)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder
+                .HasMany(x => x.Paquetes)
+                .WithOne(x => x.Solicitud)
+                .HasForeignKey(x => x.SolicitudId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

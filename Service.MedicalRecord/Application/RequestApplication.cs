@@ -139,6 +139,53 @@ namespace Service.MedicalRecord.Application
             return newRequest.Id.ToString();
         }
 
+        public async Task<string> Convert(RequestConvertDto requestDto)
+        {
+            try
+            {
+                _transaction.BeginTransaction();
+
+                var request = new RequestDto(requestDto.ExpedienteId,
+                    requestDto.SucursalId,
+                    requestDto.Clave,
+                    requestDto.ClavePatologica,
+                    requestDto.UsuarioId);
+                var id = await Create(request);
+
+                var general = requestDto.General;
+                general.SolicitudId = Guid.Parse(id);
+                general.UsuarioId = requestDto.UsuarioId;
+                general.Procedencia = 1;
+                general.Urgencia = 1;
+                await UpdateGeneral(general);
+
+                _transaction.CommitTransaction();
+
+                var studies = new RequestStudyUpdateDto
+                {
+                    SolicitudId = Guid.Parse(id),
+                    ExpedienteId = requestDto.ExpedienteId,
+                    Paquetes = requestDto.Paquetes,
+                    Estudios = requestDto.Estudios,
+                    Total = new RequestTotalDto()
+                    {
+                        SolicitudId = Guid.Parse(id),
+                        ExpedienteId = requestDto.ExpedienteId,
+                    },
+                    UsuarioId = requestDto.UsuarioId,
+                };
+
+                await UpdateStudies(studies);
+
+                return id;
+            }
+            catch (Exception)
+            {
+                _transaction.RollbackTransaction();
+                throw;
+            }
+        }
+
         public async Task UpdateGeneral(RequestGeneralDto requestDto)
         {
             var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);

@@ -63,7 +63,7 @@ namespace Service.Report.Mapper
             return model.Where(x => x.Descuento != 0).Select(request =>
             {
                 var studies = request.Estudios;
-                var priceStudies = request.Precio;
+                var priceStudies = studies.Sum(x => x.PrecioFinal - (x.Precio * x.Paquete?.DescuentoPorcentaje ?? 0));
                 var descount = request.Descuento;
                 var porcentualDescount = (descount * 100) / priceStudies;
                 var descRequest = request.Descuento / 100;
@@ -75,8 +75,7 @@ namespace Service.Report.Mapper
                     Paciente = request.Expediente.Nombre,
                     Medico = request.Medico.NombreMedico,
                     Empresa = request.Empresa.NombreEmpresa,
-                    Estudio = studies.ToRequest(descRequest),
-                    PrecioEstudios = priceStudies,
+                    Estudio = studies.ToRequest(),
                     Descuento = descount,
                     DescuentoPorcentual = porcentualDescount,
                 };
@@ -135,7 +134,7 @@ namespace Service.Report.Mapper
             return model.Where(x => x.Cargo != 0).Select(request =>
             {
                 var studies = request.Estudios;
-                var priceStudies = request.Precio;
+                var priceStudies = studies.Sum(x => x.PrecioFinal - (x.Precio * x.Paquete?.DescuentoPorcentaje ?? 0));
                 var charge = request.Cargo;
                 var porcentualCharge = (charge * 100) / priceStudies;
                 var chargeRequest = request.Cargo / 100;
@@ -147,8 +146,7 @@ namespace Service.Report.Mapper
                     Paciente = request.Expediente.Nombre,
                     Medico = request.Medico.NombreMedico,
                     Empresa = request.Empresa.NombreEmpresa,
-                    Estudio = studies.ToRequest(chargeRequest),
-                    PrecioEstudios = priceStudies,
+                    Estudio = studies.ToRequest(),
                     Cargo = charge,
                     CargoPorcentual = porcentualCharge,
                 };

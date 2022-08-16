@@ -12,7 +12,10 @@ namespace Service.Report.Dtos
         public List<byte> Urgencia { get; set; }
         public List<byte> TipoCompañia { get; set; }
         public List<DateTime> Fecha { get; set; }
+        public DateTime FechaIndividual { get; set; }
+        public List<DateTime> Hora { get; set; }
         public bool Grafica { get; set; }
+        public string User { get; set; } 
 
     }
 }

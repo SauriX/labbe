@@ -110,6 +110,7 @@ namespace Service.Report.Mapper
         {
             return studies.Select(x => new StudiesDto
             {
+                Id = x.Id,
                 Clave = x.Clave,
                 Estudio = x.Estudio,
                 Estatus = x.Estatus.Estatus

@@ -23,7 +23,9 @@
         public const string MedicalRecord = "MedicalRecord";
         public const string Request = "request";
         public const string Report = "report";
+        public const string Cash = "cash";
         public const string Appointment = "appointment";
+        public const string Equipment = "equipment";
 
     }
 }

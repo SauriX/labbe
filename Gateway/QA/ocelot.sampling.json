@@ -8,7 +8,7 @@
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/LabRamos/services/records/api/sampling/getList",
+      "UpstreamPathTemplate": "/api/sampling/getList",
       "UpstreamHttpMethod": [ "POST" ]
     },
 
@@ -21,7 +21,7 @@
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/LabRamos/services/records/api/sampling",
+      "UpstreamPathTemplate": "/api/sampling",
       "UpstreamHttpMethod": [ "PUT" ]
     },
     {
@@ -32,7 +32,7 @@
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/LabRamos/services/records/api/sampling/order/{recordId}/{requestId}",
+      "UpstreamPathTemplate": "/api/sampling/order/{recordId}/{requestId}",
       "UpstreamHttpMethod": [ "POST" ]
     }
   ]

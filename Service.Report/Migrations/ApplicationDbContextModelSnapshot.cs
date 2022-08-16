@@ -153,6 +153,97 @@ namespace Service.Report.Migrations
                     b.ToTable("Request");
                 });
 
+            modelBuilder.Entity("Service.Report.Domain.Request.RequestPack", b =>
+                {
+                    b.Property<Guid>("SolicitudId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("PaqueteId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Clave")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Descuento")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("DescuentoPorcentaje")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Precio")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("PrecioFinal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("SolicitudId", "PaqueteId");
+
+                    b.ToTable("RequestPack");
+                });
+
+            modelBuilder.Entity("Service.Report.Domain.Request.RequestPayment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("ACuenta")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Cheque")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Efectivo")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("EmpresaId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte>("Estatus")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("Factura")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("PP")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Saldo")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("SolicitudId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("TDC")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("TDD")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Transferecia")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("UsuarioModifico")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmpresaId");
+
+                    b.HasIndex("SolicitudId");
+
+                    b.ToTable("RequestPayment");
+                });
+
             modelBuilder.Entity("Service.Report.Domain.Request.RequestStatus", b =>
                 {
                     b.Property<byte>("Id")
@@ -187,6 +278,9 @@ namespace Service.Report.Migrations
                     b.Property<string>("Estudio")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("PaqueteId")
+                        .HasColumnType("int");
+
                     b.Property<byte>("Parcialidad")
                         .HasColumnType("tinyint");
 
@@ -203,7 +297,7 @@ namespace Service.Report.Migrations
 
                     b.HasIndex("EstatusId");
 
-                    b.HasIndex("SolicitudId");
+                    b.HasIndex("SolicitudId", "PaqueteId");
 
                     b.ToTable("RequestStudy");
                 });
@@ -243,6 +337,36 @@ namespace Service.Report.Migrations
                     b.Navigation("Sucursal");
                 });
 
+            modelBuilder.Entity("Service.Report.Domain.Request.RequestPack", b =>
+                {
+                    b.HasOne("Service.Report.Domain.Request.Request", "Solicitud")
+                        .WithMany("Paquetes")
+                        .HasForeignKey("SolicitudId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Solicitud");
+                });
+
+            modelBuilder.Entity("Service.Report.Domain.Request.RequestPayment", b =>
+                {
+                    b.HasOne("Service.Report.Domain.Catalogs.Company", "Empresa")
+                        .WithMany()
+                        .HasForeignKey("EmpresaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Service.Report.Domain.Request.Request", "Solicitud")
+                        .WithMany("MetodoPago")
+                        .HasForeignKey("SolicitudId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Empresa");
+
+                    b.Navigation("Solicitud");
+                });
+
             modelBuilder.Entity("Service.Report.Domain.Request.RequestStudy", b =>
                 {
                     b.HasOne("Service.Report.Domain.Request.RequestStatus", "Estatus")
@@ -257,12 +381,28 @@ namespace Service.Report.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Service.Report.Domain.Request.RequestPack", "Paquete")
+                        .WithMany("Estudios")
+                        .HasForeignKey("SolicitudId", "PaqueteId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.Navigation("Estatus");
+
+                    b.Navigation("Paquete");
 
                     b.Navigation("Solicitud");
                 });
 
             modelBuilder.Entity("Service.Report.Domain.Request.Request", b =>
+                {
+                    b.Navigation("Estudios");
+
+                    b.Navigation("MetodoPago");
+
+                    b.Navigation("Paquetes");
+                });
+
+            modelBuilder.Entity("Service.Report.Domain.Request.RequestPack", b =>
                 {
                     b.Navigation("Estudios");
                 });

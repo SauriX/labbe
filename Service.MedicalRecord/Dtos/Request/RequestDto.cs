@@ -6,6 +6,19 @@ namespace Service.MedicalRecord.Dtos.Request
 {
     public class RequestDto
     {
+        public RequestDto()
+        {
+        }
+
+        public RequestDto(Guid expedienteId, Guid sucursalId, string clave, string cp, Guid usuarioId)
+        {
+            ExpedienteId = expedienteId;
+            SucursalId = sucursalId;
+            Clave = clave;
+            ClavePatologica = cp;
+            UsuarioId = usuarioId;
+        }
+
         public Guid? SolicitudId { get; set; }
         public Guid ExpedienteId { get; set; }
         public Guid SucursalId { get; set; }
