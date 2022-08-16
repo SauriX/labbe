@@ -4,6 +4,8 @@ using EventBus.Messages.Catalog;
 using MassTransit;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dictionary;
+using Service.Catalog.Domain.Branch;
+using Service.Catalog.Domain.Constant;
 using Service.Catalog.Dtos.Branch;
 using Service.Catalog.Mapper;
 using Service.Catalog.Repository.IRepository;
@@ -54,6 +56,28 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.BadRequest, "Código postal no válido");
             }
 
+            var city = await _locationRepository.GetCityByName(newBranch.Ciudad);
+
+            if (city == null)
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "Ciudad no válida");
+            }
+
+            var hasMatriz = await _repository.HasMatriz(newBranch);
+
+            if (!hasMatriz && !newBranch.Matriz)
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "Configure la matriz para la ciudad");
+            }
+
+            if (hasMatriz && newBranch.Matriz)
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "Ya existe una matriz para la ciudad");
+            }
+
+            string finalCode = await GetBranchFolio(newBranch, city);
+
+            newBranch.Clinicos = finalCode;
             await _repository.Create(newBranch);
 
             var contract = new BranchContract(newBranch.Id, newBranch.Clave, newBranch.Nombre, newBranch.Clinicos, newBranch.Codigopostal, location.First().CiudadId);
@@ -62,6 +86,7 @@ namespace Service.Catalog.Application
 
             return true;
         }
+
         public async Task<BranchFormDto> GetById(string Id)
         {
             var branch = await _repository.GetById(Id);
@@ -99,11 +124,11 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated($"El {code}"));
             }
 
-            var isMAtrisActive = await _repository.isMatrizActive(updatedAgent);
+            var isMAtrisActive = await _repository.HasMatriz(updatedAgent);
 
-            if (isMAtrisActive)
+            if (isMAtrisActive && updatedAgent.Matriz)
             {
-                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated($"Ya exsite ubna matriz activa"));
+                throw new CustomException(HttpStatusCode.Conflict, "Ya exsite una matriz activa");
             }
 
             var location = await _locationRepository.GetColoniesByZipCode(updatedAgent.Codigopostal);
@@ -189,7 +214,53 @@ namespace Service.Catalog.Application
             return results;
         }
 
+        private async Task<string> GetBranchFolio(Branch newBranch, City city)
+        {
+            var config = await _repository.GetConfigByState(city.EstadoId);
 
+            if (config == null || !config.Any())
+            {
+                var last = await _repository.GetLastConfig();
+
+                var newConfig = new BranchFolioConfig(city.EstadoId, city.Id,
+                    last == null ? (byte)1 : (byte)(last.ConsecutivoEstado + 1),
+                    1);
+
+                await _repository.CreateConfig(newConfig);
+
+                config = await _repository.GetConfigByState(city.EstadoId);
+            }
+
+            var cityConfig = config.Where(x => x.CiudadId == city.Id).FirstOrDefault();
+
+            if (cityConfig == null)
+            {
+                var last = config.OrderByDescending(x => x.ConsecutivoCiudad).FirstOrDefault();
+
+                var newConfig = new BranchFolioConfig(city.EstadoId, city.Id, last.ConsecutivoEstado, (byte)(last.ConsecutivoCiudad + 1));
+
+                await _repository.CreateConfig(newConfig);
+
+                cityConfig = newConfig;
+            }
+
+            var lastFolio = await _repository.GetLastFolio(newBranch.Ciudad);
+            lastFolio ??= "0-0";
+
+            var currentLastOk = int.TryParse(lastFolio?.Split("-")[1], out int currentLast);
+            currentLast = currentLast == 0 ? -1 : currentLast;
+
+            if (!currentLastOk)
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "Folio anterior no configurado correctamente");
+            }
+
+            var gap = newBranch.Matriz ? 1000 : 300;
+            var consecutive = $"{cityConfig.ConsecutivoEstado}{cityConfig.ConsecutivoCiudad}";
+            var start = $"{consecutive}{(currentLast + 1).ToString("D4")[^4..]}";
+            var end = $"{consecutive}{(currentLast + gap).ToString("D4")[^4..]}";
+            var finalCode = $"{start}-{end}";
+            return finalCode;
+        }
     }
-
 }

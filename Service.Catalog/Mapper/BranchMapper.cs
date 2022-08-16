@@ -135,6 +135,7 @@ namespace Service.Catalog.Mapper
                 Estado = dto.estado,
                 Codigopostal = dto.codigoPostal,
                 Matriz = dto.Matriz,
+                Clinicos = model.Clinicos,
                 Departamentos = dto.departamentos.Select(x => new BranchDepartment
                 {
                     SucursalId = model.Id,
