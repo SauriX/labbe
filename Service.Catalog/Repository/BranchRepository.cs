@@ -46,6 +46,17 @@ namespace Service.Catalog.Repository
             return branch;
         }
 
+        public async Task<string> GetLastFolio(string ciudad)
+        {
+            var folio = await _context.CAT_Sucursal
+                .Where(x => x.Ciudad == ciudad)
+                .OrderByDescending(x => x.FechaCreo)
+                .Select(x => x.Clinicos)
+                .FirstOrDefaultAsync();
+
+            return folio;
+        }
+
         public async Task<string> GetCodeRange(Guid id)
         {
             var branch = await _context.CAT_Sucursal.FindAsync(id);
@@ -84,38 +95,9 @@ namespace Service.Catalog.Repository
             using var transaction = _context.Database.BeginTransaction();
             try
             {
-                var clincios = "";
-                if (branch.Matriz)
-                {
-                    var estado = _context.CAT_ciudadBranch.FirstOrDefaultAsync(x => x.Nombre == branch.Ciudad);
-                    var clinico_inicial = $"{estado.Id}0001";
-                    var clinico_final = Int32.Parse(clinico_inicial) + 998;
-                    clincios = $"{clinico_inicial}-{clinico_final}";
-                }
-                else
-                {
-                    var sucursales = _context.CAT_Sucursal.AsQueryable().Where(x => x.Ciudad == branch.Ciudad);
-                    if (sucursales.Count() > 1)
-                    {
-                        var sucursal = _context.CAT_Sucursal.OrderBy(x => x.FechaCreo).Last(x => x.Ciudad == branch.Ciudad && !x.Matriz);
-                        var clinicoIncial = Int32.Parse(sucursal.Clinicos.Split("-")[1]) + 1;
-                        var clinicoFinal = clinicoIncial + 299;
-                        clincios = $"{clinicoIncial}-{clinicoFinal}";
-                    }
-                    else
-                    {
-                        var sucursal = await _context.CAT_Sucursal.FirstOrDefaultAsync(x => x.Ciudad == branch.Ciudad && x.Matriz);
-                        var clinicoIncial = Int32.Parse(sucursal.Clinicos.Split("-")[1]) + 1;
-                        var clinicoFinal = clinicoIncial + 299;
-                        clincios = $"{clinicoIncial}-{clinicoFinal}";
-                    }
-;
-                }
-
                 var departments = branch.Departamentos.ToList();
 
                 branch.Departamentos = null;
-                branch.Clinicos = clincios;
                 _context.CAT_Sucursal.Add(branch);
 
                 await _context.SaveChangesAsync();
@@ -182,28 +164,35 @@ namespace Service.Catalog.Repository
             return colonies;
         }
 
-
-        public async Task<bool> isMatrizActive(Branch branch)
+        public async Task<List<BranchFolioConfig>> GetConfigByState(byte stateId)
         {
-            var active = await _context.CAT_Sucursal.AsQueryable().AnyAsync(x => x.Ciudad == branch.Ciudad && x.Matriz && x.Id != branch.Id);
+            var config = await _context.CAT_Sucursal_Folio
+                .Where(x => x.EstadoId == stateId)
+                .OrderByDescending(x => x.ConsecutivoCiudad)
+                .ToListAsync();
+
+            return config;
+        }
+
+        public async Task<BranchFolioConfig> GetLastConfig()
+        {
+            var config = await _context.CAT_Sucursal_Folio.OrderByDescending(x => x.ConsecutivoEstado).FirstOrDefaultAsync();
+
+            return config;
+        }
+
+        public async Task CreateConfig(BranchFolioConfig config)
+        {
+            _context.CAT_Sucursal_Folio.Add(config);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> HasMatriz(Branch branch)
+        {
+            var active = await _context.CAT_Sucursal.AnyAsync(x => x.Ciudad == branch.Ciudad && x.Matriz && x.Activo && x.Id != branch.Id);
+
             return active;
         }
-        //public async Task<IEnumerable<StudyListDto>> getservicios(string id)
-        //{
-        //    List<Study> studys = new List<Study>();
-        //    var servicios = _context.Relacion_Estudio_Sucursal.Where(x => x.BranchId == Guid.Parse(id));
-        //    foreach (var study in servicios)
-        //    {
-        //        var stud = _context.CAT_Estudio.Where(x => x.Id == study.EstudioId);
-        //        foreach (var estu in stud)
-        //        {
-
-        //            studys.Add(estu);
-        //        }
-
-        //    }
-        //    var estudios = studys.ToStudyListDtos();
-        //    return estudios;
-        //}
     }
 }

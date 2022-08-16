@@ -9,11 +9,15 @@ namespace Service.Catalog.Repository.IRepository
     {
         Task<List<Branch>> GetAll(string search = null);
         Task<Branch> GetById(string id);
+        Task<string> GetLastFolio(string ciudad);
         Task<string> GetCodeRange(Guid id);
         Task<(bool, string)> IsDuplicate(Branch branch);
         Task Create(Branch reagent);
         Task Update(Branch reagent);
         Task<List<Branch>> GetBranchByCity();
-        Task<bool> isMatrizActive(Branch branch);
+        Task<List<BranchFolioConfig>> GetConfigByState(byte stateId);
+        Task<BranchFolioConfig> GetLastConfig();
+        Task CreateConfig(BranchFolioConfig config);
+        Task<bool> HasMatriz(Branch branch);
     }
 }

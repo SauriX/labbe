@@ -115,46 +115,31 @@ namespace Service.Catalog.Context
                     throw;
                 }
             }
-            if (!context.CAT_ciudadBranch.Any())
+            if (!context.CAT_Sucursal_Folio.Any())
             {
                 using var transaction = context.Database.BeginTransaction();
                 try
                 {
-                    var ciudades = new List<CiudadBranch>(){
-                        new CiudadBranch {
-                            Id = 1,
-                            Nombre = "Ciudad Obregón"
-                        },
-                        new CiudadBranch {
-                            Id = 2,
-                            Nombre = "Navojoa"
-                        },
-                        new CiudadBranch {
-                            Id = 3,
-                            Nombre = "Hermosillo"
-                        },
-                        new CiudadBranch {
-                            Id = 4,
-                            Nombre = "Nogales"
-                        },
-                        new CiudadBranch {
-                            Id = 5,
-                            Nombre = "Guaymas"
-                        },
-                        new CiudadBranch {
-                            Id = 6,
-                            Nombre = "Monterrey"
-                        },
-                        new CiudadBranch {
-                            Id = 7,
-                            Nombre = "San Pedro Garza García"
-                        },
-                    };
+                    var ciudades = new List<BranchFolioConfig>()
+                    {
+                        // Sonora -> Ciudad Obregon
+                        new BranchFolioConfig(26, 2059, 1, 1),    
+                        // Sonora -> Navojoa
+                        new BranchFolioConfig(26, 2042, 1, 2),  
+                        // Sonora -> Hermosillo
+                        new BranchFolioConfig(26, 2045, 1, 3),
+                        // Sonora -> Nogales
+                        new BranchFolioConfig(26, 2070, 1, 4),
+                        // Sonora -> Guaymas
+                        new BranchFolioConfig(26, 2105, 1, 5),
+                        // Nuevo León -> Monterrey
+                        new BranchFolioConfig(19, 1061, 2, 1),
+                        // Nuevo León -> Nuevo León
+                        new BranchFolioConfig(19, 1073, 2, 2),
+                };
 
-                    context.CAT_ciudadBranch.AddRange(ciudades);
-                    context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_ciudadBranch ON;");
+                    context.CAT_Sucursal_Folio.AddRange(ciudades);
                     await context.SaveChangesAsync();
-                    context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_ciudadBranch OFF;");
 
                     transaction.Commit();
 
@@ -171,7 +156,7 @@ namespace Service.Catalog.Context
                 using var transaction = context.Database.BeginTransaction();
                 try
                 {
-                    var departamento = new List<Department>(){ 
+                    var departamento = new List<Department>(){
                      new Department
                         {
                             Id = 1,
