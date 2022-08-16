@@ -116,6 +116,7 @@ namespace Service.Identity.Application
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Clave),
+                new Claim(CustomClaims.FullName, user.NombreCompleto),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
             };
 

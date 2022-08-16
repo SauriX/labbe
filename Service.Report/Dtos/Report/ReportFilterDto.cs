@@ -15,6 +15,7 @@ namespace Service.Report.Dtos
         public DateTime FechaIndividual { get; set; }
         public List<DateTime> Hora { get; set; }
         public bool Grafica { get; set; }
+        public string User { get; set; } 
 
     }
 }

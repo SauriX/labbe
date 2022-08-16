@@ -16,5 +16,6 @@ namespace Integration.Pdf.Models
         public Dictionary<string, object> Totales { get; set; }
         public InvoiceData Invoice { get; set; }
         public HeaderData Header { get; set; }
+        public string User { get; set; }
     }
 }

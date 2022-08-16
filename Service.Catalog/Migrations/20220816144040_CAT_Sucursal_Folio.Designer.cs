@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220816144040_CAT_Sucursal_Folio")]
+    partial class CAT_Sucursal_Folio
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -395,9 +397,6 @@ namespace Service.Catalog.Migrations
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
-
-                    b.Property<string>("Categoria")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Clave")
                         .HasColumnType("nvarchar(max)");
@@ -952,42 +951,6 @@ namespace Service.Catalog.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CAT_Estado");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Equipment.EquipmentBranch", b =>
-                {
-                    b.Property<Guid>("EquipmentBranchId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("BranchId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("EquipmentId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("FechaCreo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaMod")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Num_Serie")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("UsuarioModId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("EquipmentBranchId");
-
-                    b.HasIndex("BranchId");
-
-                    b.HasIndex("EquipmentId");
-
-                    b.ToTable("Relacion_Equipo_Sucursal");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Indication.Indication", b =>
@@ -2690,25 +2653,6 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Ciudad");
                 });
 
-            modelBuilder.Entity("Service.Catalog.Domain.Equipment.EquipmentBranch", b =>
-                {
-                    b.HasOne("Service.Catalog.Domain.Branch.Branch", "Sucursal")
-                        .WithMany()
-                        .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Service.Catalog.Domain.Catalog.Equipos", "Equipment")
-                        .WithMany("Valores")
-                        .HasForeignKey("EquipmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Equipment");
-
-                    b.Navigation("Sucursal");
-                });
-
             modelBuilder.Entity("Service.Catalog.Domain.Indication.IndicationStudy", b =>
                 {
                     b.HasOne("Service.Catalog.Domain.Study.Study", "Estudio")
@@ -3212,11 +3156,6 @@ namespace Service.Catalog.Migrations
             modelBuilder.Entity("Service.Catalog.Domain.Branch.Branch", b =>
                 {
                     b.Navigation("Departamentos");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Catalog.Equipos", b =>
-                {
-                    b.Navigation("Valores");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Company.Company", b =>

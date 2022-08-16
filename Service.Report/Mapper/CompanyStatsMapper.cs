@@ -63,15 +63,17 @@ namespace Service.Report.Mapper
             return data;
         }
 
-        public static List<StudiesDto> ToCompanyDto(this IEnumerable<RequestStudy> studies, decimal descuento)
+        public static List<StudiesDto> ToCompanyDto(this IEnumerable<RequestStudy> studies)
         {
             return studies.Select(x => new StudiesDto
             {
+                Id = x.Id,
                 Clave = x.Clave,
                 Estudio = x.Estudio,
                 Estatus = x.Estatus.Estatus,
                 Precio = x.Precio,
-                PrecioFinal = x.PrecioFinal - (x.Precio * descuento),
+                Paquete = x.Paquete?.Nombre,
+                PrecioFinal = x.PrecioFinal - (x.Precio * x.Paquete?.DescuentoPorcentaje ?? 0),
             }).ToList();
         }
 
@@ -80,8 +82,9 @@ namespace Service.Report.Mapper
             return model.Select(request =>
                     {
                         var studies = request.Estudios;
+                        var pack = request.Paquetes;
 
-                        var priceStudies = request.Precio;
+                        var priceStudies = studies.Sum(x => x.PrecioFinal - (x.Precio * x.Paquete?.DescuentoPorcentaje ?? 0));
                         var descount = request.Descuento;
                         var porcentualDescount = (descount * 100) / priceStudies;
                         var descRequest = request.Descuento / 100;
@@ -94,12 +97,13 @@ namespace Service.Report.Mapper
                             Medico = request.Medico.NombreMedico,
                             Empresa = request.Empresa.NombreEmpresa,
                             Convenio = request.Empresa.Convenio,
-                            Estudio = studies.ToCompanyDto(descRequest),
-                            PrecioEstudios = priceStudies,
+                            Estudio = studies.ToCompanyDto(),
                             Descuento = descount,
                             DescuentoPorcentual = porcentualDescount,
                         };
                     }).ToList();
+
+
         }
     }
 }

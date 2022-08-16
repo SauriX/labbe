@@ -26,6 +26,13 @@ namespace Service.Catalog.Repository
             return colonies;
         }
 
+        public async Task<City> GetCityByName(string cityName)
+        {
+            var city = await _context.CAT_Ciudad.FirstOrDefaultAsync(x => x.Ciudad == cityName);
+
+            return city;
+        }
+
         public async Task<List<City>> GetCities()
         {
             var cities = await _context.CAT_Ciudad.ToListAsync();

@@ -23,6 +23,7 @@ namespace Service.Report.Controllers.Report
         [Authorize(Policies.Download)]
         public async Task<IActionResult> CashRegisterPDF(ReportFilterDto search)
         {
+            search.User = HttpContext.Items["fullname"].ToString();
             var file = await _cashregisterService.DownloadReportPdf(search);
             return File(file, MimeType.PDF, "CorteCaja.pdf");
         }

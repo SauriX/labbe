@@ -14,7 +14,7 @@ namespace Service.Report.Dtos.TypeRequest
         public string Medico { get; set; }
         public string Empresa { get; set; }
         public List<StudiesDto> Estudio { get; set; }
-        public decimal PrecioEstudios { get; set; }
+        public decimal PrecioEstudios => Estudio.Sum(x => x.PrecioFinal);
         public decimal Descuento { get; set; }
         public decimal DescuentoPorcentual { get; set; }
         public decimal IVA => TotalEstudios * (decimal)0.16;
