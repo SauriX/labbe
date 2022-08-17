@@ -115,32 +115,45 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
 
-            var updatedAgent = branch.ToModel(existing);
+            var updatedBranch = branch.ToModel(existing);
 
-            var (isDuplicate, code) = await _repository.IsDuplicate(updatedAgent);
+            var (isDuplicate, code) = await _repository.IsDuplicate(updatedBranch);
 
             if (isDuplicate)
             {
                 throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated($"El {code}"));
             }
 
-            var isMAtrisActive = await _repository.HasMatriz(updatedAgent);
-
-            if (isMAtrisActive && updatedAgent.Matriz)
-            {
-                throw new CustomException(HttpStatusCode.Conflict, "Ya exsite una matriz activa");
-            }
-
-            var location = await _locationRepository.GetColoniesByZipCode(updatedAgent.Codigopostal);
+            var location = await _locationRepository.GetColoniesByZipCode(updatedBranch.Codigopostal);
 
             if (location == null || location.Count == 0)
             {
                 throw new CustomException(HttpStatusCode.BadRequest, "Código postal no válido");
             }
 
-            await _repository.Update(updatedAgent);
+            var city = await _locationRepository.GetCityByName(updatedBranch.Ciudad);
 
-            var contract = new BranchContract(updatedAgent.Id, updatedAgent.Clave, updatedAgent.Nombre, updatedAgent.Clinicos, updatedAgent.Codigopostal, location.First().CiudadId);
+            if (city == null)
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "Ciudad no válida");
+            }
+
+            var isMAtrisActive = await _repository.HasMatriz(updatedBranch);
+
+            if (isMAtrisActive && updatedBranch.Matriz)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, "Ya exsite una matriz activa");
+            }
+
+            if (existing.Matriz != updatedBranch.Matriz)
+            {
+                string finalCode = await GetBranchFolio(updatedBranch, city);
+                updatedBranch.Clinicos = finalCode;
+            }
+
+            await _repository.Update(updatedBranch);
+
+            var contract = new BranchContract(updatedBranch.Id, updatedBranch.Clave, updatedBranch.Nombre, updatedBranch.Clinicos, updatedBranch.Codigopostal, location.First().CiudadId);
 
             await _publishEndpoint.Publish(contract);
 
@@ -210,11 +223,10 @@ namespace Service.Catalog.Application
                               Sucursales = grupo.ToList().ToBranchListDto(),
                           };
 
-
             return results;
         }
 
-        private async Task<string> GetBranchFolio(Branch newBranch, City city)
+        private async Task<string> GetBranchFolio(Branch branch, City city)
         {
             var config = await _repository.GetConfigByState(city.EstadoId);
 
@@ -244,18 +256,18 @@ namespace Service.Catalog.Application
                 cityConfig = newConfig;
             }
 
-            var lastFolio = await _repository.GetLastFolio(newBranch.Ciudad);
+            var lastFolio = await _repository.GetLastFolio(branch.Ciudad);
             lastFolio ??= "0-0";
 
             var currentLastOk = int.TryParse(lastFolio?.Split("-")[1], out int currentLast);
-            currentLast = currentLast == 0 ? -1 : currentLast;
+            currentLast = currentLast == 0 || branch.Matriz ? -1 : currentLast;
 
             if (!currentLastOk)
             {
                 throw new CustomException(HttpStatusCode.BadRequest, "Folio anterior no configurado correctamente");
             }
 
-            var gap = newBranch.Matriz ? 1000 : 300;
+            var gap = branch.Matriz ? 1000 : 300;
             var consecutive = $"{cityConfig.ConsecutivoEstado}{cityConfig.ConsecutivoCiudad}";
             var start = $"{consecutive}{(currentLast + 1).ToString("D4")[^4..]}";
             var end = $"{consecutive}{(currentLast + gap).ToString("D4")[^4..]}";
