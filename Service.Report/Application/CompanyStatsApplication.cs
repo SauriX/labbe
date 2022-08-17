@@ -60,7 +60,7 @@ namespace Service.Report.Application
                 new Col("Nombre del Médico", ParagraphAlignment.Left),
                 new Col("Tipo de compañía", ParagraphAlignment.Left),
                 new Col("Estudios", ParagraphAlignment.Left, "C"),
-                new Col("Desc. %", ParagraphAlignment.Left),
+                new Col("Promoción", ParagraphAlignment.Left, "C"),
                 new Col("Desc.", ParagraphAlignment.Left, "C"),
                 new Col("Total", ParagraphAlignment.Left, "C"),
             };
@@ -76,10 +76,13 @@ namespace Service.Report.Application
                 { "Solicitud", x.Solicitud },
                 { "Nombre del Paciente", x.Paciente },
                 { "Nombre del Médico", x.Medico },
-                { "Children", x.Estudio.Select(x => new Dictionary<string, object> { { "Clave", x.Clave}, { "Estudio", x.Estudio}, { "Precio", $"${x.Precio}"}  } )},
+                { "Children", x.Estudio.Select(x => new Dictionary<string, object> { { "Clave", x.Clave}, { "Estudio", x.Estudio}, { "Precio", $"Precio Estudio ${x.PrecioFinal}"},
+                    { "Promoción Estudio", x.Descuento == 0 ? $"Sin Promoción" : $"Promoción Estudio ${x.Descuento}" },
+                    { "Paquete", x.Paquete == null ? "Sin paquete" : $"Paquete {x.Paquete}" },
+                    { "Promoción paquete", x.Promocion == 0 || x.Promocion == null ? $"Sin Promoción" : $"Promoción Paquete ${x.Promocion}" }  } )},
                 { "Tipo de compañía", x.Convenio == 1 ? "Convenio" : "Todas"},
                 { "Estudios", x.PrecioEstudios},
-                { "Desc. %", $"{Math.Round(x.DescuentoPorcentual, 2)}%"},
+                { "Promoción", x.Promocion},
                 { "Desc.", x.Descuento},
                 { "Total", x.TotalEstudios}
             }).ToList();

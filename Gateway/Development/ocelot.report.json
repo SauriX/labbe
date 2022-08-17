@@ -443,6 +443,78 @@
       ],
       "UpstreamPathTemplate": "/api/report/corte_caja/filter",
       "UpstreamHttpMethod": [ "POST" ]
-    }
+    },
+    {
+      "DownstreamPathTemplate": "/api/report/maquila_interna/download/pdf",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 18934
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/maquila_interna/download/pdf",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/report/maquila_interna/filter",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 18934
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/maquila_interna/filter",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    //{
+    //  "DownstreamPathTemplate": "/api/report/maquila_interna/chart/filter",
+    //  "DownstreamScheme": "http",
+    //  "DownstreamHostAndPorts": [
+    //    {
+    //      "Host": "localhost",
+    //      "Port": 18934
+    //    }
+    //  ],
+    //  "UpstreamPathTemplate": "/api/report/maquila_interna/chart/filter",
+    //  "UpstreamHttpMethod": [ "POST" ]
+    //},
+    {
+      "DownstreamPathTemplate": "/api/report/maquila_externa/download/pdf",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 18934
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/maquila_externa/download/pdf",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/report/maquila_externa/filter",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 18934
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/maquila_externa/filter",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    //{
+    //  "DownstreamPathTemplate": "/api/report/maquila_externa/chart/filter",
+    //  "DownstreamScheme": "http",
+    //  "DownstreamHostAndPorts": [
+    //    {
+    //      "Host": "localhost",
+    //      "Port": 18934
+    //    }
+    //  ],
+    //  "UpstreamPathTemplate": "/api/report/maquila_externa/chart/filter",
+    //  "UpstreamHttpMethod": [ "POST" ]
+    //}
   ]
 }

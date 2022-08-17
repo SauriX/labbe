@@ -63,8 +63,11 @@ namespace Service.Report.Mapper
             return model.Where(x => x.Descuento != 0).Select(request =>
             {
                 var studies = request.Estudios;
-                var priceStudies = studies.Sum(x => x.PrecioFinal - (x.Precio * x.Paquete?.DescuentoPorcentaje ?? 0));
+                var pack = request.Paquetes;
+
+                var priceStudies = studies.Sum(x => x.Precio - (x.Precio * x.Paquete?.DescuentoPorcentaje ?? 0) - (x.Descuento == 0 ? 0 : x.Descuento));
                 var descount = request.Descuento;
+                var promotion = studies.Sum(x => x.Descuento) + pack.Sum(x => x.Descuento);
                 var porcentualDescount = (descount * 100) / priceStudies;
                 var descRequest = request.Descuento / 100;
 
@@ -75,9 +78,10 @@ namespace Service.Report.Mapper
                     Paciente = request.Expediente.Nombre,
                     Medico = request.Medico.NombreMedico,
                     Empresa = request.Empresa.NombreEmpresa,
-                    Estudio = studies.ToRequest(),
+                    Estudio = studies.PromotionStudies(),
                     Descuento = descount,
                     DescuentoPorcentual = porcentualDescount,
+                    Promocion = promotion,
                 };
             }).ToList();
         }
@@ -134,10 +138,14 @@ namespace Service.Report.Mapper
             return model.Where(x => x.Cargo != 0).Select(request =>
             {
                 var studies = request.Estudios;
-                var priceStudies = studies.Sum(x => x.PrecioFinal - (x.Precio * x.Paquete?.DescuentoPorcentaje ?? 0));
+                var pack = request.Paquetes;
+
+                var priceStudies = studies.Sum(x => x.Precio - (x.Precio * x.Paquete?.DescuentoPorcentaje ?? 0) - (x.Descuento == 0 ? 0 : x.Descuento));
                 var charge = request.Cargo;
                 var porcentualCharge = (charge * 100) / priceStudies;
                 var chargeRequest = request.Cargo / 100;
+
+                var promotion = studies.Sum(x => x.Descuento) + pack.Sum(x => x.Descuento);
 
                 return new TypeRequestDto
                 {
@@ -146,9 +154,10 @@ namespace Service.Report.Mapper
                     Paciente = request.Expediente.Nombre,
                     Medico = request.Medico.NombreMedico,
                     Empresa = request.Empresa.NombreEmpresa,
-                    Estudio = studies.ToRequest(),
+                    Estudio = studies.PromotionStudies(),
                     Cargo = charge,
                     CargoPorcentual = porcentualCharge,
+                    Promocion = promotion,
                 };
             }).ToList();
         }

@@ -1,6 +1,7 @@
 ﻿using Service.Report.Domain.Request;
 using Service.Report.Dtos;
 using Service.Report.Dtos.CompanyStats;
+using Service.Report.Dtos.Request;
 using Service.Report.Dtos.StudyStats;
 using System;
 using System.Collections.Generic;
@@ -63,7 +64,7 @@ namespace Service.Report.Mapper
             return data;
         }
 
-        public static List<StudiesDto> ToCompanyDto(this IEnumerable<RequestStudy> studies)
+        public static List<StudiesDto> PromotionStudies(this IEnumerable<RequestStudy> studies)
         {
             return studies.Select(x => new StudiesDto
             {
@@ -74,7 +75,8 @@ namespace Service.Report.Mapper
                 Precio = x.Precio,
                 Descuento = x.Descuento,
                 Paquete = x.Paquete?.Nombre,
-                PrecioFinal = x.PrecioFinal - (x.Precio * x.Paquete?.DescuentoPorcentaje ?? 0) - (x.Precio * x.Descuento),
+                Promocion = x.Paquete?.Descuento / studies.Count(),
+                PrecioFinal = x.Precio - (x.Precio * x.Paquete?.DescuentoPorcentaje ?? 0) - (x.Descuento == 0 ? 0 : x.Descuento),
             }).ToList();
         }
 
@@ -85,8 +87,9 @@ namespace Service.Report.Mapper
                         var studies = request.Estudios;
                         var pack = request.Paquetes;
 
-                        var priceStudies = studies.Sum(x => x.PrecioFinal - (x.Precio * x.Paquete?.DescuentoPorcentaje ?? 0) - (x.Precio * x.Descuento));
+                        var priceStudies = studies.Sum(x => x.Precio - (x.Precio * x.Paquete?.DescuentoPorcentaje ?? 0) - (x.Descuento == 0 ? 0 : x.Descuento));
                         var descount = request.Descuento;
+                        var promotion = studies.Sum(x => x.Descuento) + pack.Sum(x => x.Descuento);
                         var porcentualDescount = (descount * 100) / priceStudies;
                         var descRequest = request.Descuento / 100;
 
@@ -98,10 +101,10 @@ namespace Service.Report.Mapper
                             Medico = request.Medico.NombreMedico,
                             Empresa = request.Empresa.NombreEmpresa,
                             Convenio = request.Empresa.Convenio,
-                            Estudio = studies.ToCompanyDto(),
+                            Estudio = studies.PromotionStudies(),
                             Descuento = descount,
                             DescuentoPorcentual = porcentualDescount,
-                            Promocion = pack.Select(x => x.Descuento).Last(),
+                            Promocion = promotion,
                         };
                     }).ToList();
 
