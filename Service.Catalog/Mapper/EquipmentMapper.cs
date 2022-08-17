@@ -32,8 +32,16 @@ namespace Service.Catalog.Mapper
                 Id = x.Id,
                 Nombre = x.Nombre,
                 Clave = x.Clave,
-                Activo = x.Activo
-                // falta numero de serie
+                Activo = x.Activo,
+                Categoria = x.Categoria,
+                Valores = x.Valores.Select(x => new EquipmentBranch
+                {
+                    BranchId = x.BranchId,
+                    EquipmentId = x.EquipmentId,
+                    Num_Serie = x.Num_Serie,
+                    FechaCreo = DateTime.Now
+
+                }).ToList()
             });
         }
 
@@ -41,27 +49,29 @@ namespace Service.Catalog.Mapper
         {
             if (model == null) return null;
 
-            return new EquipmentFormDto
+                return new EquipmentFormDto
             {
                 Id = model.Id,
                 Clave = model.Clave.Trim(),
                 Nombre = model.Nombre.Trim(),
                 Activo = model.Activo,
+                Categoria = model.Categoria.Trim(),
+                valores = model.Valores.ToEquipmentBranchDto(),
             };
         }
 
-        //private static IEnumerable<EquipmentStudyDto> ToEquipmentStudyDto(this IEnumerable<EquipmentStudy> model)
-        //{
-        //    if (model == null) return null;
+        private static IEnumerable<EquipmentBrancheDto> ToEquipmentBranchDto(this IEnumerable<EquipmentBranch> model)
+        {
+            if (model == null) return null;
 
-        //    return model.Select(x => x.Estudio).Select(x => new EquipmentStudyDto
-        //    {
-        //        Id = x.Id,
-        //        Clave = x.Clave.Trim(),
-        //        Nombre = x.Nombre,
-        //        Area = x.Area.Nombre,
-        //    });
-        //}
+            return model.Select(x => new EquipmentBrancheDto
+            {
+                BranchId = x.BranchId,
+                EquipmentId = x.EquipmentId,
+                Num_serie = x.Num_Serie
+
+            });
+        }
 
         public static Equipos ToModel(this EquipmentFormDto dto)
         {
@@ -74,7 +84,18 @@ namespace Service.Catalog.Mapper
                 Activo = dto.Activo,
                 UsuarioCreoId = dto.UsuarioId,
                 FechaCreo = DateTime.Now,
-                //falta numero de serie
+                FechaModifico = DateTime.Now,
+                Categoria = dto.Categoria.Trim(),
+                Valores = dto.valores.Select(x => new EquipmentBranch
+                {
+                    BranchId = x.BranchId,
+                    EquipmentId = x.EquipmentId,
+                    Num_Serie = x.Num_serie,
+                    FechaCreo = DateTime.Now
+
+
+                }).ToList()
+
             };
         }
 
@@ -88,10 +109,21 @@ namespace Service.Catalog.Mapper
                 Clave = dto.Clave.Trim(),
                 Nombre = dto.Nombre.Trim(),
                 Activo = dto.Activo,
+                Categoria = dto.Categoria.Trim(),
                 UsuarioCreoId = model.UsuarioCreoId,
                 FechaCreo = model.FechaCreo,
                 UsuarioModificoId = dto.UsuarioId,
                 FechaModifico = DateTime.Now,
+                Valores = dto.valores.Select(x => new EquipmentBranch
+                {
+                    BranchId = x.BranchId,
+                    EquipmentId = x.EquipmentId,
+                    UsuarioCreoId = model.UsuarioCreoId,
+                    FechaCreo = DateTime.Now,
+                    Num_Serie = x.Num_serie,
+
+                }).ToList(),
+
                 //falta numero de serie
             };
         }

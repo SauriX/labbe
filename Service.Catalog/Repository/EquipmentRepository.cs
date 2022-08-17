@@ -5,8 +5,11 @@ using Service.Catalog.Domain.Equipment;
 using Service.Catalog.Repository.IRepository;
 using System;
 using System.Collections.Generic;
+using Service.Catalog.Mapper;
 using System.Linq;
 using System.Threading.Tasks;
+using Service.Catalog.Dtos.Equipment;
+using EFCore.BulkExtensions;
 
 namespace Service.Catalog.Repository
 {
@@ -19,14 +22,58 @@ namespace Service.Catalog.Repository
         }
         public async Task Create(Equipos equipment)
         {
-            _context.CAT_Equipos.Add(equipment);
+            //var newEquipo = equipment.ToModel();
+            //await _equipmentRepository.Create(newEquipo);
+            using var transaction = _context.Database.BeginTransaction();
+            try
+            {
 
-            await _context.SaveChangesAsync();
+                var valores = equipment.Valores.ToList();
+
+                equipment.Valores = null;
+
+                _context.CAT_Equipos.Add(equipment);
+
+                await _context.SaveChangesAsync();
+
+                valores.ForEach(valor => { valor.EquipmentId = equipment.Id; valor.EquipmentBranchId = Guid.NewGuid(); });
+
+                var config = new BulkConfig();
+
+                config.SetSynchronizeFilter<EquipmentBranch>(x => x.EquipmentId == equipment.Id);
+
+                await _context.BulkInsertOrUpdateOrDeleteAsync(valores, config);
+
+                transaction.Commit();
+            }
+            catch (System.Exception)
+            {
+                transaction.Rollback();
+                throw;
+            }
+
+
+
+
+
+
+            //Equipment equipo = new Equipment();
+            //equipo.NombreLargo;
+            ////...
+
+            //var equipo_guardado = _context.CAT_Equipos.Add(equipo);
+            //for(var valor of equipment.Valores)
+            //{
+            //    valor.Equipoid = equipo_guardado.id
+            //    _context.Relacion_Equipo_Sucursal.Add(valor);
+            //}
+
+            //await _context.SaveChangesAsync();
         }
 
         public async Task<List<Equipos>> GetAll(string search)
         {
-            var equipment = _context.CAT_Equipos.AsQueryable();
+            var equipment = _context.CAT_Equipos.Include(x => x.Valores).ThenInclude(x => x.Sucursal).AsQueryable();
 
             search = search.Trim().ToLower();
 
@@ -40,24 +87,47 @@ namespace Service.Catalog.Repository
 
         public async Task<Equipos> GetById(int Id)
         {
-            var indication = await _context.CAT_Equipos
+            var equipment = await _context.CAT_Equipos.Include(x => x.Valores).ThenInclude(x => x.Sucursal)
                  .FirstOrDefaultAsync(x => x.Id == Id);
 
-            return indication;
+            return equipment;
         }
 
         public async Task<bool> IsDuplicate(Equipos equipment)
         {
-            var isDuplicate = await _context.CAT_Equipos.AnyAsync(x => x.Id != equipment.Id || x.NombreLargo == equipment.NombreLargo);
+            var isDuplicate = await _context.CAT_Equipos.AnyAsync((x => x.Id != equipment.Id && x.Nombre == equipment.Nombre));
 
             return isDuplicate;
         }
 
         public async Task Update(Equipos equipment)
         {
-            _context.CAT_Equipos.Update(equipment);
+            using var transaction = _context.Database.BeginTransaction();
+            try
+            {
+                var values = equipment.Valores.ToList();
 
-            await _context.SaveChangesAsync();
+                equipment.Valores = null;
+
+                _context.CAT_Equipos.Update(equipment);
+
+                await _context.SaveChangesAsync();
+
+                values.ForEach(valor => { valor.EquipmentBranchId = Guid.NewGuid(); });
+
+                var config = new BulkConfig();
+
+                config.SetSynchronizeFilter<EquipmentBranch>(x => x.EquipmentId == equipment.Id);
+
+                await _context.BulkInsertOrUpdateOrDeleteAsync(values, config);
+
+                transaction.Commit();
+            }
+            catch (System.Exception)
+            {
+                transaction.Rollback();
+                throw;
+            }
         }
     }
 }
