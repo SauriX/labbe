@@ -50,6 +50,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\layout\excel\catalog\" />
+    <Folder Include="wwwroot\layout\excel\equipment\" />
     <Folder Include="wwwroot\layout\excel\reagent\" />
   </ItemGroup>
 

@@ -1,4 +1,7 @@
-﻿using Service.Catalog.Application.IApplication;
+﻿using ClosedXML.Excel;
+using ClosedXML.Report;
+using Service.Catalog.Application.IApplication;
+using Service.Catalog.Dictionary;
 using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Domain.Equipment;
 using Service.Catalog.Dtos.Equipment;
@@ -6,6 +9,7 @@ using Service.Catalog.Mapper;
 using Service.Catalog.Repository.IRepository;
 using Shared.Dictionary;
 using Shared.Error;
+using Shared.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -73,14 +77,51 @@ namespace Service.Catalog.Application
 
             return updatedEquipmentn.ToEquipmentListDto();
         }
-        public Task<(byte[] file, string fileName)> ExportForm(int id)
+        public async Task<(byte[] file, string fileName)> ExportForm(int id)
         {
-            throw new System.NotImplementedException();
+            var equipment = await GetById(id);
+
+            var path = Assets.EquipmentForm;
+
+            var template = new XLTemplate(path);
+
+            template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
+            template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
+            template.AddVariable("Titulo", "Equipos");
+            template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
+            template.AddVariable("Sucursales", equipment);
+
+            template.Generate();
+
+            template.Format();
+
+            return (template.ToByteArray(), $"Catálogo de Equipos ({equipment.Clave}).xlsx");
         }
 
-        public Task<(byte[] file, string fileName)> ExportList(string search)
+        public async Task<(byte[] file, string fileName)> ExportList(string search)
         {
-            throw new System.NotImplementedException();
+            
+            var equipment = await GetAll(search);
+
+            var path = Assets.EquipmentList;
+
+            var template = new XLTemplate(path);
+
+            template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
+            template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
+            template.AddVariable("Titulo", "Equipos");
+            template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
+            template.AddVariable("Sucursales", equipment);
+
+            template.Generate();
+
+            var range = template.Workbook.Worksheet("Sucursales").Range("Sucursales");
+            var table = template.Workbook.Worksheet("Sucursales").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
+            table.Theme = XLTableTheme.TableStyleMedium2;
+
+            template.Format();
+
+            return (template.ToByteArray(), "Catálogo de Equipos.xlsx");
         }
         private async Task CheckDuplicate(Equipos equipment)
         {
