@@ -50,7 +50,7 @@ namespace Service.Catalog.Repository
         {
             var folio = await _context.CAT_Sucursal
                 .Where(x => x.Ciudad == ciudad)
-                .OrderByDescending(x => x.FechaCreo)
+                .OrderByDescending(x => x.Clinicos)
                 .Select(x => x.Clinicos)
                 .FirstOrDefaultAsync();
 
@@ -190,7 +190,7 @@ namespace Service.Catalog.Repository
 
         public async Task<bool> HasMatriz(Branch branch)
         {
-            var active = await _context.CAT_Sucursal.AnyAsync(x => x.Ciudad == branch.Ciudad && x.Matriz && x.Activo && x.Id != branch.Id);
+            var active = await _context.CAT_Sucursal.AnyAsync(x => x.Ciudad == branch.Ciudad && x.Matriz && x.Id != branch.Id);
 
             return active;
         }
