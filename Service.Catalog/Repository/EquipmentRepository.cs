@@ -73,7 +73,7 @@ namespace Service.Catalog.Repository
 
         public async Task<List<Equipos>> GetAll(string search)
         {
-            var equipment = _context.CAT_Equipos.AsQueryable();
+            var equipment = _context.CAT_Equipos.Include(x => x.Valores).ThenInclude(x => x.Sucursal).AsQueryable();
 
             search = search.Trim().ToLower();
 

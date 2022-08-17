@@ -95,7 +95,7 @@ namespace Service.Catalog.Application
 
             template.Format();
 
-            return (template.ToByteArray(), $"Catálogo de Sucursales ({equipment.Clave}).xlsx");
+            return (template.ToByteArray(), $"Catálogo de Equipos ({equipment.Clave}).xlsx");
         }
 
         public async Task<(byte[] file, string fileName)> ExportList(string search)

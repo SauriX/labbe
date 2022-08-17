@@ -34,7 +34,14 @@ namespace Service.Catalog.Mapper
                 Clave = x.Clave,
                 Activo = x.Activo,
                 Categoria = x.Categoria,
-                // falta numero de serie
+                Valores = x.Valores.Select(x => new EquipmentBranch
+                {
+                    BranchId = x.BranchId,
+                    EquipmentId = x.EquipmentId,
+                    Num_Serie = x.Num_Serie,
+                    FechaCreo = DateTime.Now
+
+                }).ToList()
             });
         }
 
@@ -102,7 +109,7 @@ namespace Service.Catalog.Mapper
                 Clave = dto.Clave.Trim(),
                 Nombre = dto.Nombre.Trim(),
                 Activo = dto.Activo,
-                Categoria = model.Categoria.Trim(),
+                Categoria = dto.Categoria.Trim(),
                 UsuarioCreoId = model.UsuarioCreoId,
                 FechaCreo = model.FechaCreo,
                 UsuarioModificoId = dto.UsuarioId,
