@@ -19,11 +19,12 @@ namespace Service.Report.Dtos.TypeRequest
         public decimal DescuentoPorcentual { get; set; }
         public decimal IVA => TotalEstudios * (decimal)0.16;
         public decimal Subtotal => TotalEstudios - IVA;
-        public decimal TotalEstudios => PrecioEstudios - Descuento;
+        public decimal TotalEstudios => PrecioEstudios - Descuento - Promocion;
         public decimal Cargo { get; set; }
         public decimal CargoPorcentual { get; set; }
+        public decimal Promocion { get; set; }
         public decimal IVACargo => TotalCargo * (decimal)0.16;
         public decimal SubtotalCargo => TotalCargo - IVACargo;
-        public decimal TotalCargo => PrecioEstudios + Cargo;
+        public decimal TotalCargo => PrecioEstudios + Cargo - Promocion;
     }
 }
