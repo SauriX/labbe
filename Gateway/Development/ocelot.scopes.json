@@ -83,7 +83,7 @@
       ],
       "UpstreamPathTemplate": "/api/scopes/cash",
       "UpstreamHttpMethod": [ "GET" ]
-    }
+    },
     {
       "DownstreamPathTemplate": "/api/scopes/equipment",
       "DownstreamScheme": "http",
