@@ -51,6 +51,7 @@ namespace Service.Identity.Context
                         new Menu(25, 24, "Toma de muestra", "samplings", "samplings", 2405),
                         new Menu(26, 24, "Solicitudes", "request", "requests", 2406),
                         new Menu(27, 24, "Corte de Caja", "cash", "cash", 2407),
+                        new Menu(28, 1, "Admin. Equipos", "equipment", "equipment", 1018),
                     };
 
                     //context.CAT_Menu.AddRange(menus);
