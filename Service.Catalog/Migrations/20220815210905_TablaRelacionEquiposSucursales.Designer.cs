@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220815210905_TablaRelacionEquiposSucursales")]
+    partial class TablaRelacionEquiposSucursales
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -116,34 +118,6 @@ namespace Service.Catalog.Migrations
                     b.ToTable("CAT_Sucursal_Departamento");
                 });
 
-            modelBuilder.Entity("Service.Catalog.Domain.Branch.BranchFolioConfig", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<short>("CiudadId")
-                        .HasColumnType("smallint");
-
-                    b.Property<byte>("ConsecutivoCiudad")
-                        .HasColumnType("tinyint");
-
-                    b.Property<byte>("ConsecutivoEstado")
-                        .HasColumnType("tinyint");
-
-                    b.Property<byte>("EstadoId")
-                        .HasColumnType("tinyint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CiudadId");
-
-                    b.HasIndex("EstadoId");
-
-                    b.ToTable("CAT_Sucursal_Folio");
-                });
-
             modelBuilder.Entity("Service.Catalog.Domain.Branch.BranchStudy", b =>
                 {
                     b.Property<Guid>("Id")
@@ -174,6 +148,21 @@ namespace Service.Catalog.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Relacion_Estudio_Sucursal");
+                });
+
+            modelBuilder.Entity("Service.Catalog.Domain.Branch.CiudadBranch", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CAT_ciudadBranch");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Catalog.Area", b =>
@@ -395,9 +384,6 @@ namespace Service.Catalog.Migrations
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
-
-                    b.Property<string>("Categoria")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Clave")
                         .HasColumnType("nvarchar(max)");
@@ -2600,25 +2586,6 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Departamento");
 
                     b.Navigation("Sucursal");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Branch.BranchFolioConfig", b =>
-                {
-                    b.HasOne("Service.Catalog.Domain.Constant.City", "Ciudad")
-                        .WithMany()
-                        .HasForeignKey("CiudadId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Service.Catalog.Domain.Constant.State", "Estado")
-                        .WithMany()
-                        .HasForeignKey("EstadoId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Ciudad");
-
-                    b.Navigation("Estado");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Catalog.Area", b =>

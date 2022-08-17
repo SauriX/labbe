@@ -1,5 +1,6 @@
 ﻿using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Domain.Equipment;
+using Service.Catalog.Dtos.Equipment;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
