@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.MedicalRecord.Context;
 
 namespace Service.MedicalRecord.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220818140007_Tabla CAT_Solicitud_Estudioo FechaEntrega")]
+    partial class TablaCAT_Solicitud_EstudiooFechaEntrega
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -529,11 +531,6 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<bool>("EsNuevo")
                         .HasColumnType("bit");
 
-                    b.Property<byte>("EstatusId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint")
-                        .HasDefaultValue((byte)1);
-
                     b.Property<Guid>("ExpedienteId")
                         .HasColumnType("uniqueidentifier");
 
@@ -595,8 +592,6 @@ namespace Service.MedicalRecord.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CompañiaId");
-
-                    b.HasIndex("EstatusId");
 
                     b.HasIndex("ExpedienteId");
 
@@ -681,25 +676,6 @@ namespace Service.MedicalRecord.Migrations
                     b.HasKey("SolicitudId", "PaqueteId");
 
                     b.ToTable("Relacion_Solicitud_Paquete");
-                });
-
-            modelBuilder.Entity("Service.MedicalRecord.Domain.Request.RequestStatus", b =>
-                {
-                    b.Property<byte>("Id")
-                        .HasColumnType("tinyint");
-
-                    b.Property<string>("Clave")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Color")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Estatus_Solicitud");
                 });
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.Request.RequestStudy", b =>
@@ -934,12 +910,6 @@ namespace Service.MedicalRecord.Migrations
                         .WithMany()
                         .HasForeignKey("CompañiaId");
 
-                    b.HasOne("Service.MedicalRecord.Domain.Request.RequestStatus", "Estatus")
-                        .WithMany()
-                        .HasForeignKey("EstatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Service.MedicalRecord.Domain.MedicalRecord.MedicalRecord", "Expediente")
                         .WithMany()
                         .HasForeignKey("ExpedienteId")
@@ -957,8 +927,6 @@ namespace Service.MedicalRecord.Migrations
                         .IsRequired();
 
                     b.Navigation("Compañia");
-
-                    b.Navigation("Estatus");
 
                     b.Navigation("Expediente");
 

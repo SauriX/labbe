@@ -9,6 +9,12 @@ namespace Service.MedicalRecord.Mapper
 {
     public static class RequestMapper
     {
+        private const byte VIGENTE = 1;
+        private const byte PARTICULAR = 2;
+        private const byte URGENCIA_NORMAL = 1;
+        //private const byte DESCUENTO_PORCENTAJE = 1;
+        private const byte DESCUENTO_DINERO = 2;
+
         public static RequestDto ToRequestDto(this Request model)
         {
             if (model == null) return null;
@@ -37,11 +43,11 @@ namespace Service.MedicalRecord.Mapper
                 ClavePatologica = x.ClavePatologica,
                 Afiliacion = x.Afiliacion,
                 Paciente = x.Expediente.NombreCompleto,
-                Compañia = x.Procedencia == 2 ? "Particular" : x.Compañia.Clave,
-                Procedencia = x.Procedencia == 2 ? "Particular" : x.Compañia.Nombre,
+                Compañia = x.Procedencia == PARTICULAR ? "Particular" : x.Compañia.Clave,
+                Procedencia = x.Procedencia == PARTICULAR ? "Particular" : x.Compañia.Nombre,
                 Factura = "",
                 Importe = x.TotalEstudios,
-                Descuento = x.DescuentoTipo == 2 ? x.Descuento : x.Total * x.Descuento,
+                Descuento = x.DescuentoTipo == DESCUENTO_DINERO ? x.Descuento : x.Total * x.Descuento,
                 Total = x.Total,
                 Saldo = x.Saldo,
                 Estudios = x.Estudios.Select(s => new RequestStudyInfoDto
@@ -97,7 +103,7 @@ namespace Service.MedicalRecord.Mapper
             if (model == null) return null;
 
             var studies = model.Paquetes?.SelectMany(x => x.Estudios)?.ToList() ?? new List<RequestStudy>();
-                studies.AddRange(model.Estudios ?? new List<RequestStudy>());
+            studies.AddRange(model.Estudios ?? new List<RequestStudy>());
 
             return new RequestOrderDto
             {
@@ -114,12 +120,12 @@ namespace Service.MedicalRecord.Mapper
                 TelefonoPaciente = model.EnvioWhatsApp ?? model.Expediente.Telefono,
                 Expediente = model.Expediente.Expediente,
                 Medico = model.Medico?.Nombre,
-                Compañia = model.Procedencia == 2 ? "Particular" : model.Compañia.Nombre,
+                Compañia = model.Procedencia == PARTICULAR ? "Particular" : model.Compañia.Nombre,
                 Correo = model.EnvioCorreo,
                 Observaciones = model.Observaciones,
                 Total = model.Total.ToString("C"),
-                Descuento = model.DescuentoTipo == 2 ? model.Descuento.ToString("C") : (model.TotalEstudios * model.Descuento).ToString("C"),
-                Cargo = model.CargoTipo == 2 ? model.Cargo.ToString("C") : (model.TotalEstudios * model.Cargo).ToString("C"),
+                Descuento = model.DescuentoTipo == DESCUENTO_DINERO ? model.Descuento.ToString("C") : (model.TotalEstudios * model.Descuento).ToString("C"),
+                Cargo = model.CargoTipo == DESCUENTO_DINERO ? model.Cargo.ToString("C") : (model.TotalEstudios * model.Cargo).ToString("C"),
                 Estudios = studies.Select(x => new RequestOrderStudyDto
                 {
                     Clave = x.Clave,
@@ -181,6 +187,7 @@ namespace Service.MedicalRecord.Mapper
                 Estatus = x.Estatus.Nombre,
                 Dias = x.Dias,
                 Horas = x.Horas,
+                FechaEntrega = x.FechaEntrega,
                 DepartamentoId = x.DepartamentoId,
                 AreaId = x.AreaId,
                 AplicaDescuento = x.AplicaDescuento,
@@ -204,6 +211,9 @@ namespace Service.MedicalRecord.Mapper
                 SucursalId = dto.SucursalId,
                 Clave = dto.Clave,
                 EsNuevo = true,
+                Procedencia = PARTICULAR,
+                Urgencia = URGENCIA_NORMAL,
+                EstatusId = VIGENTE,
                 UsuarioCreoId = dto.UsuarioId,
                 FechaCreo = DateTime.Now,
             };
@@ -268,12 +278,13 @@ namespace Service.MedicalRecord.Mapper
                     Promocion = x.Promocion,
                     DepartamentoId = x.DepartamentoId,
                     AreaId = x.AreaId,
-                    EstatusId = study?.EstatusId ?? Status.Request.Pendiente,
+                    EstatusId = study?.EstatusId ?? Status.RequestStudy.Pendiente,
                     AplicaDescuento = x.AplicaDescuento,
                     AplicaCargo = x.AplicaCargo,
                     AplicaCopago = x.AplicaCopago,
                     Dias = x.Dias,
                     Horas = x.Horas,
+                    FechaEntrega = x.FechaEntrega,
                     Precio = x.Precio,
                     Descuento = x.Descuento,
                     DescuentoPorcentaje = x.DescuentoPorcentaje,

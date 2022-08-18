@@ -7,7 +7,7 @@ namespace Shared.Helpers
     {
         public static Exception GetException(ServerException error)
         {
-            var message = error.ExceptionMessage;
+            var message = error.ExceptionMessage + " / " + error.Message;
             if (!string.IsNullOrWhiteSpace(error.StackTrace))
             {
                 message = string.Concat(message, Environment.NewLine, error.StackTrace.Trim().Split(Environment.NewLine)[0]);
@@ -16,7 +16,7 @@ namespace Shared.Helpers
             string innerMessage;
             if (error.InnerException != null)
             {
-                innerMessage = error.InnerException.ExceptionMessage;
+                innerMessage = error.InnerException.ExceptionMessage + " / " + error.InnerException.Message;
 
                 if (!string.IsNullOrWhiteSpace(error.InnerException.StackTrace))
                 {

@@ -24,11 +24,15 @@ namespace Service.MedicalRecord.Client
             _configuration = configuration;
         }
 
-        public async Task<byte[]> GenerateTicket()
+        public async Task<byte[]> GenerateTicket(RequestOrderDto order)
         {
             try
             {
-                var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Pdf")}/api/pdf/ticket");
+                var json = JsonConvert.SerializeObject(order);
+
+                var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Pdf")}/api/pdf/ticket", stringContent);
 
                 if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
                 {

@@ -34,7 +34,7 @@ namespace Service.MedicalRecord.Application
         private readonly IRabbitMQSettings _rabbitMQSettings;
         private readonly IQueueNames _queueNames;
 
-        public const byte Compañia = 1;
+        private const byte Compañia = 1;
 
         public RequestApplication(
             ITransactionProvider transaction,
@@ -320,6 +320,25 @@ namespace Service.MedicalRecord.Application
             }
         }
 
+        //public async Task CancelRequest(Guid recordId, Guid requestId, Guid userId)
+        //{
+        //    var request = await GetExistingRequest(recordId, requestId);
+
+        //    if (request.EstatusId == Status.Request.Cancelado)
+        //    {
+        //        throw new CustomException(HttpStatusCode.BadGateway, RecordResponses.Request.AlreadyCancelled);
+        //    }
+
+        //    if (request.EstatusId == Status.Request.Completado)
+        //    {
+        //        throw new CustomException(HttpStatusCode.BadGateway, RecordResponses.Request.AlreadyCompleted);
+        //    }
+
+        //    var studies = await _repository.GetStudiesByRequest(recordId);
+
+        //    if (studies.Estudios)
+        //}
+
         public async Task CancelStudies(RequestStudyUpdateDto requestDto)
         {
             var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
@@ -333,7 +352,7 @@ namespace Service.MedicalRecord.Application
 
             foreach (var g in groups)
             {
-                var st = (from gs in g.Where(x => x.EstatusId != Status.Request.Pendiente)
+                var st = (from gs in g.Where(x => x.EstatusId != Status.RequestStudy.Pendiente)
                           join s in studies on gs.EstudioId equals s.EstudioId
                           select s);
 
@@ -343,7 +362,7 @@ namespace Service.MedicalRecord.Application
                 }
             }
 
-            studies = studies.Where(x => x.EstatusId == Status.Request.Pendiente).ToList();
+            studies = studies.Where(x => x.EstatusId == Status.RequestStudy.Pendiente).ToList();
 
             if (studies == null || studies.Count == 0)
             {
@@ -352,7 +371,7 @@ namespace Service.MedicalRecord.Application
 
             foreach (var study in studies)
             {
-                study.EstatusId = Status.Request.Cancelado;
+                study.EstatusId = Status.RequestStudy.Cancelado;
                 study.UsuarioModificoId = requestDto.UsuarioId;
                 study.FechaModifico = DateTime.Now;
             }
@@ -367,7 +386,7 @@ namespace Service.MedicalRecord.Application
             var studiesIds = requestDto.Estudios.Select(x => x.EstudioId);
             var studies = await _repository.GetStudyById(requestDto.SolicitudId, studiesIds);
 
-            studies = studies.Where(x => x.EstatusId == Status.Request.Pendiente).ToList();
+            studies = studies.Where(x => x.EstatusId == Status.RequestStudy.Pendiente).ToList();
 
             if (studies == null || studies.Count == 0)
             {
@@ -376,7 +395,7 @@ namespace Service.MedicalRecord.Application
 
             foreach (var study in studies)
             {
-                study.EstatusId = Status.Request.TomaDeMuestra;
+                study.EstatusId = Status.RequestStudy.TomaDeMuestra;
                 study.UsuarioModificoId = requestDto.UsuarioId;
                 study.FechaModifico = DateTime.Now;
             }
@@ -393,7 +412,7 @@ namespace Service.MedicalRecord.Application
             var studiesIds = requestDto.Estudios.Select(x => x.EstudioId);
             var studies = await _repository.GetStudyById(requestDto.SolicitudId, studiesIds);
 
-            studies = studies.Where(x => x.EstatusId == Status.Request.TomaDeMuestra).ToList();
+            studies = studies.Where(x => x.EstatusId == Status.RequestStudy.TomaDeMuestra).ToList();
 
             if (studies == null || studies.Count == 0)
             {
@@ -402,7 +421,7 @@ namespace Service.MedicalRecord.Application
 
             foreach (var study in studies)
             {
-                study.EstatusId = Status.Request.Solicitado;
+                study.EstatusId = Status.RequestStudy.Solicitado;
                 study.UsuarioModificoId = requestDto.UsuarioId;
                 study.FechaModifico = DateTime.Now;
             }
@@ -425,11 +444,16 @@ namespace Service.MedicalRecord.Application
 
         public async Task<byte[]> PrintTicket(Guid recordId, Guid requestId)
         {
-            var request = await GetExistingRequest(recordId, requestId);
+            var request = await _repository.GetById(requestId);
 
-            var orderData = request.ToRequestOrderDto();
+            if (request == null || request.ExpedienteId != recordId)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
+            }
 
-            return await _pdfClient.GenerateTicket();
+            var order = request.ToRequestOrderDto();
+
+            return await _pdfClient.GenerateTicket(order);
         }
 
         public async Task<byte[]> PrintOrder(Guid recordId, Guid requestId)

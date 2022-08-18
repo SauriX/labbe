@@ -13,6 +13,8 @@ namespace Service.MedicalRecord.Domain.Request
         public virtual Branch Sucursal { get; set; }
         public string Clave { get; set; }
         public string ClavePatologica { get; set; }
+        public byte EstatusId { get; set; }
+        public virtual RequestStatus Estatus { get; set; }
         public byte Procedencia { get; set; }
         public string Afiliacion { get; set; }
         public Guid? CompañiaId { get; set; }

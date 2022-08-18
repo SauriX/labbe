@@ -22,6 +22,7 @@ namespace Service.MedicalRecord.Domain.Request
         public virtual RequestStudyStatus Estatus { get; set; }
         public decimal Dias { get; set; }
         public int Horas { get; set; }
+        public DateTime FechaEntrega { get; set; }
         public bool AplicaDescuento { get; set; }
         public bool AplicaCargo { get; set; }
         public bool AplicaCopago { get; set; }
