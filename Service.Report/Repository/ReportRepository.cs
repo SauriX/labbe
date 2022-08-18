@@ -170,7 +170,7 @@ namespace Service.Report.Repository
             if (search.Hora != null)
             {
                 report = report.
-                    Where(x => x.Fecha.Hour >= search.Hora.First().Hour && x.Fecha.Hour <= search.Hora.Last().Hour);
+                    Where(x => x.Fecha.TimeOfDay >= search.Hora.First().TimeOfDay && x.Fecha.TimeOfDay <= search.Hora.Last().TimeOfDay);
             }
 
             return await report.ToListAsync();
