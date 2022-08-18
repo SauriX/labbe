@@ -61,9 +61,12 @@ namespace Service.Report.Mapper
             return model.OrderBy(r => r.MedicoId).Select(request =>
             {
                 var studies = request.Estudios;
-                var priceStudies = request.Precio;
+                var pack = request.Paquetes;
+
+                var priceStudies = studies.Sum(x => x.Precio - (x.Precio * x.Paquete?.DescuentoPorcentaje ?? 0) - (x.Descuento == 0 ? 0 : x.Descuento));
                 var descount = request.Descuento;
-                var porcentualDescount = Math.Round(descount * 100) / priceStudies;
+                var promotion = studies.Sum(x => x.Descuento) + pack.Sum(x => x.Descuento);
+                var porcentualDescount = (descount * 100) / priceStudies;
                 var descRequest = request.Descuento / 100;
 
                 return new MedicalBreakdownRequestDto
@@ -74,24 +77,13 @@ namespace Service.Report.Mapper
                     Medico = request.Medico.NombreMedico,
                     ClaveMedico = request.Medico.ClaveMedico,
                     Empresa = request.Empresa.NombreEmpresa,
-                    Estudio = studies.ToRequestMedicalBreakdown(descRequest),
+                    Estudio = studies.PromotionStudies(),
                     PrecioEstudios = priceStudies,
                     Descuento = descount,
                     DescuentoPorcentual = porcentualDescount,
-                    MedicoId = request.Medico.Id
+                    MedicoId = request.Medico.Id,
+                    Promocion = promotion,
                 };
-            }).ToList();
-        }
-        public static List<StudiesDto> ToRequestMedicalBreakdown(this IEnumerable<RequestStudy> studies, decimal descuento)
-        {
-            return studies.Select(x => new StudiesDto
-            {
-                Id = x.Id,
-                Clave = x.Clave,
-                Estudio = x.Estudio,
-                Estatus = x.Estatus.Estatus,
-                Precio = x.Precio,
-                PrecioFinal = x.PrecioFinal - (x.Precio * descuento),
             }).ToList();
         }
     }

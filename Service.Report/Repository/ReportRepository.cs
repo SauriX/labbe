@@ -29,7 +29,13 @@ namespace Service.Report.Repository
         public async Task<List<Request>> GetByFilter(ReportFilterDto search)
         {
             var report = _context.Request
-                .Include(x => x.Expediente).Include(x => x.Medico).Include(x => x.Estudios).ThenInclude(x => x.Estatus).Include(x => x.Empresa).Include(x => x.Sucursal).Include(x => x.Estudios).ThenInclude(x => x.Paquete)
+                .Include(x => x.Expediente)
+                .Include(x => x.Medico)
+                .Include(x => x.Estudios).ThenInclude(x => x.Estatus)
+                .Include(x => x.Empresa)
+                .Include(x => x.Sucursal)
+                .Include(x => x.Estudios).ThenInclude(x => x.Paquete)
+                .Include(x => x.Paquetes)
                 .AsQueryable();
 
             var query = report.ToQueryString();
@@ -164,7 +170,7 @@ namespace Service.Report.Repository
             if (search.Hora != null)
             {
                 report = report.
-                    Where(x => x.Fecha.Hour >= search.Hora.First().Hour && x.Fecha.Hour <= search.Hora.Last().Hour);
+                    Where(x => x.Fecha.TimeOfDay >= search.Hora.First().TimeOfDay && x.Fecha.TimeOfDay <= search.Hora.Last().TimeOfDay);
             }
 
             return await report.ToListAsync();

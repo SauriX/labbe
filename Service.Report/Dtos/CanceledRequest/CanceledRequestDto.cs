@@ -17,8 +17,9 @@ namespace Service.Report.Dtos.CanceledRequest
         public decimal PrecioEstudios => Estudio.Sum(x => x.PrecioFinal);
         public decimal Descuento { get; set; }
         public decimal DescuentoPorcentual { get; set; }
+        public decimal Promocion { get; set; }
         public decimal IVA => TotalEstudios * (decimal)0.16;
         public decimal Subtotal => TotalEstudios - IVA;
-        public decimal TotalEstudios => PrecioEstudios - Descuento;
+        public decimal TotalEstudios => PrecioEstudios - Descuento - Promocion;
     }
 }
