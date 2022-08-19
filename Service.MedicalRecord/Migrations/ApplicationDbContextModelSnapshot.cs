@@ -596,8 +596,6 @@ namespace Service.MedicalRecord.Migrations
 
                     b.HasIndex("CompañiaId");
 
-                    b.HasIndex("EstatusId");
-
                     b.HasIndex("ExpedienteId");
 
                     b.HasIndex("MedicoId");
@@ -934,12 +932,6 @@ namespace Service.MedicalRecord.Migrations
                         .WithMany()
                         .HasForeignKey("CompañiaId");
 
-                    b.HasOne("Service.MedicalRecord.Domain.Request.RequestStatus", "Estatus")
-                        .WithMany()
-                        .HasForeignKey("EstatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Service.MedicalRecord.Domain.MedicalRecord.MedicalRecord", "Expediente")
                         .WithMany()
                         .HasForeignKey("ExpedienteId")
@@ -957,8 +949,6 @@ namespace Service.MedicalRecord.Migrations
                         .IsRequired();
 
                     b.Navigation("Compañia");
-
-                    b.Navigation("Estatus");
 
                     b.Navigation("Expediente");
 

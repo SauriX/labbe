@@ -10,8 +10,8 @@ using Service.MedicalRecord.Context;
 namespace Service.MedicalRecord.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220818161459_Tabla CAT_Solicitud EstatusId")]
-    partial class TablaCAT_SolicitudEstatusId
+    [Migration("20220819154459_CAT_Solicitud EstatudId")]
+    partial class CAT_SolicitudEstatudId
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -598,8 +598,6 @@ namespace Service.MedicalRecord.Migrations
 
                     b.HasIndex("CompañiaId");
 
-                    b.HasIndex("EstatusId");
-
                     b.HasIndex("ExpedienteId");
 
                     b.HasIndex("MedicoId");
@@ -936,12 +934,6 @@ namespace Service.MedicalRecord.Migrations
                         .WithMany()
                         .HasForeignKey("CompañiaId");
 
-                    b.HasOne("Service.MedicalRecord.Domain.Request.RequestStatus", "Estatus")
-                        .WithMany()
-                        .HasForeignKey("EstatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Service.MedicalRecord.Domain.MedicalRecord.MedicalRecord", "Expediente")
                         .WithMany()
                         .HasForeignKey("ExpedienteId")
@@ -959,8 +951,6 @@ namespace Service.MedicalRecord.Migrations
                         .IsRequired();
 
                     b.Navigation("Compañia");
-
-                    b.Navigation("Estatus");
 
                     b.Navigation("Expediente");
 
