@@ -87,12 +87,12 @@ namespace Service.MedicalRecord.Repository
                 var studio = await _context.Relacion_Solicitud_Estudio.FirstOrDefaultAsync(x => x.EstudioId==id);
                 if (studio.EstatusId == 1)
                 {
-                    studio.EstatusId = Status.Request.TomaDeMuestra;
+                    studio.EstatusId = Status.RequestStudy.TomaDeMuestra;
                 }
                 else {
                     if (studio.EstatusId == 2)
                     {
-                        studio.EstatusId = Status.Request.Pendiente;
+                        studio.EstatusId = Status.RequestStudy.Pendiente;
                     }
                 }
 

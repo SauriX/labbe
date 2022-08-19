@@ -42,6 +42,31 @@ namespace Service.MedicalRecord.Context
                     throw;
                 }
             }
+
+            if (!context.Estatus_Solicitud.Any())
+            {
+                using var transaction = context.Database.BeginTransaction();
+                try
+                {
+                    var status = new List<RequestStatus>()
+                    {
+                        new RequestStatus(1, "V", "Vigente", "#345454"),
+                        new RequestStatus(2, "CO", "Completado", "#345454"),
+                        new RequestStatus(3, "CA", "Cancelado", "#345454")
+                    };
+
+                    context.Estatus_Solicitud.AddRange(status);
+
+                    await context.SaveChangesAsync();
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
         }
     }
 }

@@ -19,6 +19,8 @@ namespace Service.MedicalRecord.Dtos.Request
 
     public class RequestStudyDto
     {
+        private DateTime fechaEntrega;
+
         public string Type => "study";
         public Guid SolicitudId { get; set; }
         public int EstudioId { get; set; }
@@ -43,6 +45,7 @@ namespace Service.MedicalRecord.Dtos.Request
         public bool AplicaCopago { get; set; }
         public decimal Dias { get; set; }
         public int Horas { get; set; }
+        public DateTime FechaEntrega { get => fechaEntrega == DateTime.MinValue ? DateTime.Now : fechaEntrega; set => fechaEntrega = value; }
         public decimal Precio { get; set; }
         public decimal Descuento { get; set; }
         public decimal DescuentoPorcentaje { get; set; }

@@ -6,12 +6,17 @@ namespace Service.MedicalRecord.Context.EntityConfiguration.Request
 {
     public class RequestConfiguration : IEntityTypeConfiguration<Domain.Request.Request>
     {
+        private const byte VIGENTE = 1;
         private const byte PARTICULAR = 2;
         private const byte URGENCIA_NORMAL = 1;
 
         public void Configure(EntityTypeBuilder<Domain.Request.Request> builder)
         {
             builder.HasKey(x => x.Id);
+
+            builder
+                .Property(x => x.EstatusId)
+                .HasDefaultValue(VIGENTE);
 
             builder
                 .Property(x => x.Procedencia)

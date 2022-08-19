@@ -4,9 +4,13 @@ namespace Integration.Pdf.Models
 {
     public class Col
     {
-        public readonly static Font FONT_DEFAULT = new Font("Calibri", 9);
+        public readonly static Font FONT_DEFAULT = new Font("Calibri", 9)
+        {
+            Color = Colors.Black,
+        };
         public readonly static Font FONT_BOLD = new Font("Calibri", 9)
         {
+            Color = Colors.Black,
             Bold = true
         };
 

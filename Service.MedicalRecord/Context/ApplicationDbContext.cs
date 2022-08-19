@@ -21,7 +21,9 @@ namespace Service.MedicalRecord.Context
         public DbSet<AppointmentDom> CAT_Cita_Dom { get; set; }
         public DbSet<PriceQuote> CAT_Cotizaciones { get; set; }
         public DbSet<CotizacionStudy> cotizacionStudies { get; set; }
+        public DbSet<RequestStatus> Estatus_Solicitud { get; set; }
         public DbSet<RequestStudyStatus> Estatus_Solicitud_Estudio { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

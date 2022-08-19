@@ -101,7 +101,7 @@ namespace Service.Identity.Application
             };
         }
 
-        private List<Menu> BuildMenu(List<Menu> menu)
+        private static List<Menu> BuildMenu(List<Menu> menu)
         {
             menu.ForEach(x =>
             {
