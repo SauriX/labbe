@@ -468,18 +468,18 @@
       "UpstreamPathTemplate": "/api/report/maquila_interna/filter",
       "UpstreamHttpMethod": [ "POST" ]
     },
-    //{
-    //  "DownstreamPathTemplate": "/api/report/maquila_interna/chart/filter",
-    //  "DownstreamScheme": "http",
-    //  "DownstreamHostAndPorts": [
-    //    {
-    //      "Host": "localhost",
-    //      "Port": 18934
-    //    }
-    //  ],
-    //  "UpstreamPathTemplate": "/api/report/maquila_interna/chart/filter",
-    //  "UpstreamHttpMethod": [ "POST" ]
-    //},
+    {
+      "DownstreamPathTemplate": "/api/report/maquila_interna/chart/filter",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 18934
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/maquila_interna/chart/filter",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
     {
       "DownstreamPathTemplate": "/api/report/maquila_externa/download/pdf",
       "DownstreamScheme": "http",
@@ -504,17 +504,17 @@
       "UpstreamPathTemplate": "/api/report/maquila_externa/filter",
       "UpstreamHttpMethod": [ "POST" ]
     },
-    //{
-    //  "DownstreamPathTemplate": "/api/report/maquila_externa/chart/filter",
-    //  "DownstreamScheme": "http",
-    //  "DownstreamHostAndPorts": [
-    //    {
-    //      "Host": "localhost",
-    //      "Port": 18934
-    //    }
-    //  ],
-    //  "UpstreamPathTemplate": "/api/report/maquila_externa/chart/filter",
-    //  "UpstreamHttpMethod": [ "POST" ]
-    //}
+    {
+      "DownstreamPathTemplate": "/api/report/maquila_externa/chart/filter",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 18934
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/maquila_externa/chart/filter",
+      "UpstreamHttpMethod": [ "POST" ]
+    }
   ]
 }

@@ -9,5 +9,6 @@ namespace Service.Report.Repository.IRepository
     {
         Task<List<Request>> GetByFilter(ReportFilterDto search);
         Task<List<RequestPayment>> GetPaymentByFilter(ReportFilterDto search);
+        Task<List<RequestStudy>> GetByStudies(ReportFilterDto search);
     }
 }

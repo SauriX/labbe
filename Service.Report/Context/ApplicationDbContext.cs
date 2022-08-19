@@ -14,6 +14,7 @@ namespace Service.Report.Context
         public DbSet<Company> Company { get; set; }
         public DbSet<Request> Request { get; set; }
         public DbSet<RequestPayment> RequestPayment { get; set;}
+        public DbSet<RequestStudy> RequestStudy { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
