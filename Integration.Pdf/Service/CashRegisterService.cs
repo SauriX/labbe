@@ -61,8 +61,8 @@ namespace Integration.Pdf.Service
 
             section.PageSetup.TopMargin = Unit.FromCentimeter(1);
             section.PageSetup.BottomMargin = Unit.FromCentimeter(2.5);
-            section.PageSetup.LeftMargin = Unit.FromCentimeter(1);
-            section.PageSetup.RightMargin = Unit.FromCentimeter(1);
+            section.PageSetup.LeftMargin = Unit.FromCentimeter(0.5);
+            section.PageSetup.RightMargin = Unit.FromCentimeter(0.5);
 
             Format(section, cashData.Columnas, cashData.Datos, cashData.PerDay, cashData.Canceled, cashData.OtherDay, cashData.Invoice, cashData.ColumnasTotales, cashData.Totales, cashData.Header, cashData.User);
 

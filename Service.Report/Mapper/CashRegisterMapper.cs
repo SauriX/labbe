@@ -27,6 +27,7 @@ namespace Service.Report.Mapper
                 SumaTransferencia = perday.Select(x => x.Transferencia).LastOrDefault() - canceled.Select(x => x.Transferencia).LastOrDefault() + otherday.Select(x => x.Transferencia).LastOrDefault(),
                 SumaCheque = perday.Select(x => x.Cheque).LastOrDefault() - canceled.Select(x => x.Cheque).LastOrDefault() + otherday.Select(x => x.Cheque).LastOrDefault(),
                 SumaTDD = perday.Select(x => x.TDD).LastOrDefault() - canceled.Select(x => x.TDD).LastOrDefault() + otherday.Select(x => x.TDD).LastOrDefault(),
+                SumaPP = perday.Select(x => x.PP).LastOrDefault() - canceled.Select(x => x.PP).LastOrDefault() + otherday.Select(x => x.PP).LastOrDefault(),
             };
 
             var data = new CashDto

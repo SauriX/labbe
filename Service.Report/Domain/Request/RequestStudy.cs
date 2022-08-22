@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Service.Report.Domain.Catalogs;
+using System;
 
 namespace Service.Report.Domain.Request
 {
@@ -13,10 +14,13 @@ namespace Service.Report.Domain.Request
         public virtual RequestPack Paquete { get; set; }
         public byte EstatusId { get; set; }
         public virtual RequestStatus Estatus { get; set; }
-        public byte Parcialidad { get; set; }
         public int Duracion { get; set; }
         public decimal Descuento { get; set; }
         public decimal Precio { get; set; }
         public decimal PrecioFinal { get; set; }
+        public Guid? SucursalId { get; set; }
+        public virtual Branch Sucursal { get; set; }
+        public Guid? MaquilaId { get; set; }
+        public virtual Maquila Maquila { get; set; }
     }
 }

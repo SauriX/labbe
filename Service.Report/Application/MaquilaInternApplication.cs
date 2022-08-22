@@ -2,6 +2,7 @@
 using Service.Report.Client.IClient;
 using Service.Report.Domain.Catalogs;
 using Service.Report.Dtos;
+using Service.Report.Dtos.BondedRequest;
 using Service.Report.Mapper;
 using Service.Report.PdfModel;
 using Service.Report.Repository.IRepository;
@@ -11,29 +12,36 @@ using System.Threading.Tasks;
 
 namespace Service.Report.Application
 {
-    public class BondedExternalApplication : BaseApplication, IBondedRequestApplication
+    public class MaquilaInternApplication : BaseApplication, IMaquilaInternApplication
     {
         public readonly IReportRepository _repository;
         private readonly IPdfClient _pdfClient;
 
-        public BondedExternalApplication(IReportRepository repository, IPdfClient pdfClient, IRepository<Branch> branchRepository, IRepository<Medic> medicRepository) : base(branchRepository, medicRepository)
+        public MaquilaInternApplication(IReportRepository repository, IPdfClient pdfClient, IRepository<Branch> branchRepository, IRepository<Medic> medicRepository) : base(branchRepository, medicRepository)
         {
             _repository = repository;
             _pdfClient = pdfClient;
         }
 
-        public async Task<IEnumerable<BondedRequestDto>> GetByFilter(ReportFilterDto filter)
+        public async Task<IEnumerable<MaquilaRequestDto>> GetByStudies(ReportFilterDto filter)
+        {
+            var data = await _repository.GetByStudies(filter);
+            var results = data.ToMaquilaInternDto();
+
+            return results;
+        }
+        public async Task<IEnumerable<MaquilaRequestChartDto>> GetChartByFilter(ReportFilterDto filter)
         {
             var data = await _repository.GetByFilter(filter);
-            var results = data.ToBondedExternalDto();
+            var results = data.ToMaquilaInternChartDto();
 
             return results;
         }
 
         public async Task<byte[]> DownloadReportPdf(ReportFilterDto filter)
         {
-            var requestData = await GetByFilter(filter);
-            //var requestChartData = await GetChartByFilter(filter);
+            var requestData = await GetByStudies(filter);
+            var requestChartData = await GetChartByFilter(filter);
 
             List<Col> columns = new()
             {
@@ -47,34 +55,33 @@ namespace Service.Report.Application
 
             List<ChartSeries> series = new()
             {
-                new ChartSeries("Estatus", true),
-                new ChartSeries("Cantidad"),
+                new ChartSeries("Maquila", true),
+                new ChartSeries("Cantidad de Solicitudes"),
             };
 
             var data = requestData.Select(x => new Dictionary<string, object>
             {
                 { "Solicitud", x.Solicitud },
                 { "Nombre del Paciente", x.Paciente },
-                { "Children", x.Estudio.Select(x => new Dictionary<string, object> { { "Clave", x.Clave}, { "Estudio", x.Estudio}, { "Estatus", x.Estatus}  } )},
+                { "Children", new List<Dictionary<string, object>> { { new Dictionary<string, object> { { "Clave", x.ClaveEstudio }, { "Estudio", x.NombreEstudio }, { "Estatus", x.Estatus }, { "Maquila", $"Maquila {x.Sucursal.ToUpper()}" } } } } },
                 { "Edad", x.Edad},
                 { "Sexo", x.Sexo},
                 { "Nombre del Médico", x.Medico },
                 { "Fecha de Entrega", x.FechaEntrega},
             }).ToList();
 
-            //var datachart = requestChartData.Select(x => new Dictionary<string, object>
-            //{
-            //    { "Estatus", x.Estatus},
-            //    { "Cantidad", x.Cantidad},
-            //    { "Color", x.Color}
+            var datachart = requestChartData.Select(x => new Dictionary<string, object>
+            {
+                { "Maquila", x.Maquila},
+                { "Cantidad de Solicitudes", x.NoSolicitudes}
 
-            //}).ToList();
+            }).ToList();
 
             var branches = await GetBranchNames(filter.SucursalId);
 
             var headerData = new HeaderData()
             {
-                NombreReporte = "Relación estudios por Paciente",
+                NombreReporte = "Relación Estudios con Maquila Interna por Paciente",
                 Sucursal = string.Join(", ", branches.Select(x => x)),
                 Fecha = $"{filter.Fecha.Min():dd/MM/yyyy} - {filter.Fecha.Max().ToString("dd/MM/yyyy")}"
             };
@@ -84,7 +91,7 @@ namespace Service.Report.Application
                 Columnas = columns,
                 Series = filter.Grafica ? series : null,
                 Datos = data,
-                //DatosGrafica = datachart,
+                DatosGrafica = datachart,
                 Header = headerData,
             };
 
@@ -92,6 +99,7 @@ namespace Service.Report.Application
 
             return file;
         }
+
+        
     }
 }
-
