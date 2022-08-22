@@ -177,13 +177,6 @@ namespace Service.Identity.Controllers
             return await _service.GetScopes(userId, ControllerNames.Report);
         }
 
-        [HttpGet(ControllerNames.Cash)]
-        public async Task<ScopesDto> GetCashScopes()
-        {
-            var userId = GetUserId();
-            return await _service.GetScopes(userId, ControllerNames.Cash);
-        }
-
         private Guid GetUserId()
         {
             return Guid.Parse(User.Claims.SingleOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
