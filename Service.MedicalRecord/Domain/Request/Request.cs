@@ -27,7 +27,7 @@ namespace Service.MedicalRecord.Domain.Request
         public string EnvioWhatsApp { get; set; }
         public string RutaOrden { get; set; }
         public string RutaINE { get; set; }
-        public string RutaFormato { get; set; }
+        public string RutaINEReverso { get; set; }
         public bool Parcialidad { get; set; }
         public bool Activo { get; set; }
         public bool EsNuevo { get; set; }
@@ -44,5 +44,6 @@ namespace Service.MedicalRecord.Domain.Request
 
         public virtual ICollection<RequestStudy> Estudios { get; set; }
         public virtual ICollection<RequestPack> Paquetes { get; set; }
+        public virtual ICollection<RequestImage> Imagenes { get; set; }
     }
 }

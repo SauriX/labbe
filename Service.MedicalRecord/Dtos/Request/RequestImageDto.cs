@@ -6,6 +6,7 @@ namespace Service.MedicalRecord.Dtos.Request
 {
     public class RequestImageDto
     {
+        public int Id { get; set; }
         public Guid SolicitudId { get; set; }
         public Guid ExpedienteId { get; set; }
         [JsonIgnore]
