@@ -26,10 +26,51 @@ namespace Service.Report.Repository
             _context = context;
         }
 
+        public async Task<List<RequestStudy>> GetByStudies(ReportFilterDto search)
+        {
+            var report = _context.RequestStudy
+                .Include(x => x.Maquila)
+                .Include(x => x.Sucursal)
+                .Include(x => x.Solicitud)
+                .Include(x => x.Solicitud).ThenInclude(x => x.Expediente)
+                .Include(x => x.Solicitud).ThenInclude(x => x.Medico)
+                .Include(x => x.Estatus)
+                .Include(x => x.Solicitud).ThenInclude(x => x.Sucursal)
+                .Include(x => x.Paquete)
+                .Include(x => x.Solicitud).ThenInclude(x => x.Paquetes)
+                .AsQueryable();
+
+            if (search.SucursalId != null && search.SucursalId.Count > 0)
+            {
+                report = report.Where(x => search.SucursalId.Contains(x.Solicitud.SucursalId));
+            }
+
+            if (search.MedicoId != null && search.MedicoId.Count > 0)
+            {
+                report = report.Where(x => search.MedicoId.Contains(x.Solicitud.MedicoId));
+            }
+
+            if (search.Fecha != null)
+            {
+                report = report.
+                    Where(x => x.Solicitud.Fecha.Date >= search.Fecha.First().Date && x.Solicitud.Fecha.Date <= search.Fecha.Last().Date);
+            }
+
+            return await report.ToListAsync();
+        }
+
         public async Task<List<Request>> GetByFilter(ReportFilterDto search)
         {
             var report = _context.Request
-                .Include(x => x.Expediente).Include(x => x.Medico).Include(x => x.Estudios).ThenInclude(x => x.Estatus).Include(x => x.Empresa).Include(x => x.Sucursal).Include(x => x.Estudios).ThenInclude(x => x.Paquete)
+                .Include(x => x.Expediente)
+                .Include(x => x.Medico)
+                .Include(x => x.Estudios).ThenInclude(x => x.Estatus)
+                .Include(x => x.Empresa)
+                .Include(x => x.Sucursal)
+                .Include(x => x.Estudios).ThenInclude(x => x.Paquete)
+                .Include(x => x.Paquetes)
+                .Include(x => x.Estudios).ThenInclude(x => x.Maquila)
+                .Include(x => x.Estudios).ThenInclude(x => x.Sucursal)
                 .AsQueryable();
 
             var query = report.ToQueryString();
@@ -132,7 +173,7 @@ namespace Service.Report.Repository
             if (search.SucursalId != null && search.SucursalId.Count > 0)
             {
                 report = report.Where(x => search.SucursalId.Contains(x.Solicitud.SucursalId));
-   
+
             }
 
             if (search.TipoCompañia != null && search.TipoCompañia.Count == 1)
@@ -164,7 +205,7 @@ namespace Service.Report.Repository
             if (search.Hora != null)
             {
                 report = report.
-                    Where(x => x.Fecha.Hour >= search.Hora.First().Hour && x.Fecha.Hour <= search.Hora.Last().Hour);
+                    Where(x => x.Fecha.TimeOfDay >= search.Hora.First().TimeOfDay && x.Fecha.TimeOfDay <= search.Hora.Last().TimeOfDay);
             }
 
             return await report.ToListAsync();

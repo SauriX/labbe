@@ -64,8 +64,11 @@ namespace Service.Report.Mapper
             return model.Where(x => x.EstatusId == 10).Select(request =>
             {
                 var studies = request.Estudios;
-                var priceStudies = studies.Sum(x => x.PrecioFinal - (x.Precio * x.Paquete?.DescuentoPorcentaje ?? 0));
+                var pack = request.Paquetes;
+
+                var priceStudies = studies.Sum(x => x.Precio - (x.Precio * x.Paquete?.DescuentoPorcentaje ?? 0) - (x.Descuento == 0 ? 0 : x.Descuento));
                 var descount = request.Descuento;
+                var promotion = studies.Sum(x => x.Descuento) + pack.Sum(x => x.Descuento);
                 var porcentualDescount = (descount * 100) / priceStudies;
                 var descRequest = request.Descuento / 100;
 
@@ -76,24 +79,10 @@ namespace Service.Report.Mapper
                     Paciente = request.Expediente.Nombre,
                     Medico = request.Medico.NombreMedico,
                     Empresa = request.Empresa.NombreEmpresa,
-                    Estudio = studies.ToRequest(),
+                    Estudio = studies.PromotionStudies(),
                     Descuento = descount,
                     DescuentoPorcentual = porcentualDescount,
                 };
-            }).ToList();
-        }
-
-        public static List<StudiesDto> ToRequest(this IEnumerable<RequestStudy> studies)
-        {
-            return studies.Select(x => new StudiesDto
-            {
-                Id = x.Id,
-                Clave = x.Clave,
-                Estudio = x.Estudio,
-                Estatus = x.Estatus.Estatus,
-                Precio = x.Precio,
-                Paquete = x.Paquete?.Nombre,
-                PrecioFinal = x.PrecioFinal - (x.Precio * x.Paquete?.DescuentoPorcentaje ?? 0),
             }).ToList();
         }
     }

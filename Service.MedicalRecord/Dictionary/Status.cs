@@ -4,6 +4,13 @@
     {
         public class Request
         {
+            public const byte Vigente = 1;
+            public const byte Completado = 2;
+            public const byte Cancelado = 3;
+        }
+
+        public class RequestStudy
+        {
             public const byte Pendiente = 1;
             public const byte TomaDeMuestra = 2;
             public const byte Solicitado = 3;

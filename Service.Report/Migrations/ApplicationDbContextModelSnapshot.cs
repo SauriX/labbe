@@ -50,6 +50,20 @@ namespace Service.Report.Migrations
                     b.ToTable("Company");
                 });
 
+            modelBuilder.Entity("Service.Report.Domain.Catalogs.Maquila", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Maquila");
+                });
+
             modelBuilder.Entity("Service.Report.Domain.Catalogs.Medic", b =>
                 {
                     b.Property<Guid>("Id")
@@ -278,11 +292,11 @@ namespace Service.Report.Migrations
                     b.Property<string>("Estudio")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("MaquilaId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int?>("PaqueteId")
                         .HasColumnType("int");
-
-                    b.Property<byte>("Parcialidad")
-                        .HasColumnType("tinyint");
 
                     b.Property<decimal>("Precio")
                         .HasColumnType("decimal(18,2)");
@@ -293,9 +307,16 @@ namespace Service.Report.Migrations
                     b.Property<Guid>("SolicitudId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("SucursalId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("EstatusId");
+
+                    b.HasIndex("MaquilaId");
+
+                    b.HasIndex("SucursalId");
 
                     b.HasIndex("SolicitudId", "PaqueteId");
 
@@ -375,11 +396,19 @@ namespace Service.Report.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Service.Report.Domain.Catalogs.Maquila", "Maquila")
+                        .WithMany()
+                        .HasForeignKey("MaquilaId");
+
                     b.HasOne("Service.Report.Domain.Request.Request", "Solicitud")
                         .WithMany("Estudios")
                         .HasForeignKey("SolicitudId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Service.Report.Domain.Catalogs.Branch", "Sucursal")
+                        .WithMany()
+                        .HasForeignKey("SucursalId");
 
                     b.HasOne("Service.Report.Domain.Request.RequestPack", "Paquete")
                         .WithMany("Estudios")
@@ -388,9 +417,13 @@ namespace Service.Report.Migrations
 
                     b.Navigation("Estatus");
 
+                    b.Navigation("Maquila");
+
                     b.Navigation("Paquete");
 
                     b.Navigation("Solicitud");
+
+                    b.Navigation("Sucursal");
                 });
 
             modelBuilder.Entity("Service.Report.Domain.Request.Request", b =>

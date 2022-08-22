@@ -19,6 +19,8 @@ namespace Service.Report.Controllers.Report
         private readonly IDescountRequestApplication _descountrequestService;
         private readonly IChargeRequestApplication _chargerequestService;
         private readonly ICashRegisterApplication _cashregisterService;
+        private readonly IMaquilaInternApplication _maquilainternService;
+        private readonly IMaquilaExternApplication _maquilaexternService;
 
         public ReportController(
             IPatientStatsApplication patientStatsService,
@@ -32,7 +34,9 @@ namespace Service.Report.Controllers.Report
             ICanceledRequestApplication canceledRequestService,
             IDescountRequestApplication descountRequestService,
             IChargeRequestApplication chargeRequestService,
-            ICashRegisterApplication cashRegisterService)
+            ICashRegisterApplication cashRegisterService,
+            IMaquilaInternApplication maquilaInternService,
+            IMaquilaExternApplication maquilaExternService)
         {
             _patientstatsService = patientStatsService;
             _requestService = requestService;
@@ -46,6 +50,8 @@ namespace Service.Report.Controllers.Report
             _descountrequestService = descountRequestService;
             _chargerequestService = chargeRequestService;
             _cashregisterService = cashRegisterService;
+            _maquilainternService = maquilaInternService;
+            _maquilaexternService = maquilaExternService;
         }
     }
 }

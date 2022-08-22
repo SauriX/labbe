@@ -113,7 +113,7 @@ namespace Service.Report.Mapper
                 Id = x.Id,
                 Clave = x.Clave,
                 Estudio = x.Estudio,
-                Estatus = x.Estatus.Estatus
+                Estatus = x.Estatus.Estatus,
             }).ToList();
         }
 

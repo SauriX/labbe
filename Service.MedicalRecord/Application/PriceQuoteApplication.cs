@@ -100,7 +100,7 @@ namespace Service.MedicalRecord.Application
         }
         public async Task<byte[]> GetTicket()
         {
-            return await _pdfClient.GenerateTicket();
+            return await _pdfClient.GenerateTicket(new Dtos.Request.RequestOrderDto());
         }
 
         public async Task<(byte[] file, string fileName)> ExportList(PriceQuoteSearchDto search)

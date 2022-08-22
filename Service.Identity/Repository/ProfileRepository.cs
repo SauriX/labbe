@@ -37,30 +37,18 @@ namespace Service.Identity.Repository
                 .SelectMany(x => x.Permisos.Where(y => y.Acceder || x.Permisos.Select(p => p.Menu.MenuPadreId).Contains(y.Menu.Id)))
                 .Select(x => x.Menu)
                 .ToListAsync();
-            var menuspadres = new List<Menu>();
+
             foreach (var menu in menus)
             {
-                if (menu.MenuPadreId != null)
+                if (menu.MenuPadreId != null && !menus.Any(x => x.Id == menu.MenuPadreId))
                 {
-                    var menupadre = _context.CAT_Menu.FirstOrDefault(x => x.Id == menu.MenuPadreId);
-                    if (menuspadres.Count() != 0)
-                    {
-                        var menpad = menuspadres.Where(x => x.Id == menu.MenuPadreId);
-                        if (menpad.Count() == 0)
-                        {
-                            menuspadres.Add(menupadre);
-                        }
-                    }
-                    else
-                    {
-                        menuspadres.Add(menupadre);
-                    }
+                    var menupadre = await _context.CAT_Menu.FirstOrDefaultAsync(x => x.Id == menu.MenuPadreId);
 
-
+                    menus.Add(menupadre);
                 }
-
             }
-            return menus.Concat(menuspadres).ToList();
+
+            return menus;
         }
 
         public async Task<UserPermission> GetScopes(Guid userId, string controller)

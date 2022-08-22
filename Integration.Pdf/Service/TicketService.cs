@@ -3,8 +3,11 @@ using Integration.Pdf.Extensions;
 using Integration.Pdf.Models;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
+using ZXing;
 
 namespace Integration.Pdf.Service
 {
@@ -14,7 +17,7 @@ namespace Integration.Pdf.Service
         {
             Document document = CreateDocument(order);
 
-            document.UseCmykColor = true;
+            //document.UseCmykColor = true;
             const bool unicode = false;
 
             DocumentRenderer renderer = new DocumentRenderer(document);
@@ -153,38 +156,37 @@ namespace Integration.Pdf.Service
 
             section.AddDivider();
 
-            //BarcodeWriter<Bitmap> writer = new BarcodeWriter<Bitmap>()
-            //{
-            //    Format = BarcodeFormat.CODE_128,
-            //    Renderer = new ZXing.Rendering.BitmapRenderer()
-            //};
+            BarcodeWriter<Bitmap> writer = new BarcodeWriter<Bitmap>()
+            {
+                Format = BarcodeFormat.CODE_128,
+                Renderer = new ZXing.Rendering.BitmapRenderer()
+            };
 
-            //var barHeight = 48;
-            //var barWidth = 150;
+            var barHeight = 35;
+            var barWidth = 150;
 
-            //writer.Options = new ZXing.Common.EncodingOptions { Width = barWidth, Height = barHeight, Margin = 0 };
+            writer.Options = new ZXing.Common.EncodingOptions { Width = barWidth, Height = barHeight, Margin = 0, PureBarcode = true };
 
-            //graphics.DrawImage(writer.Write("USUARIO:2202178006"), (TicketUtil.TICKET_WIDTH - barWidth) / 2, posY, barWidth, barHeight);
+            var bitmap = writer.Write("USUARIO:2202178006");
 
-            //posY += barHeight;
+            ImageConverter converter = new ImageConverter();
+            var image = (byte[])converter.ConvertTo(bitmap, typeof(byte[]));
 
-            //posY += 12;
+            string imageFilename = MigraDocFilenameFromByteArray(image);
+
+            var imgPar = section.AddParagraph();
+            imgPar.Format.Alignment = ParagraphAlignment.Center;
+            imgPar.AddImage(imageFilename);
 
             var page = new Col("Consulta tus resultados en línea en la página web: www.laboratoriosramos.com.mx con los siguientes datos:");
             section.AddText(page);
-
-            //posY += 3;
 
             var us = new Col("USUARIO: 2202178006", Col.FONT_BOLD, ParagraphAlignment.Center);
             var pass = new Col("CONTRASEÑA: F12D8", Col.FONT_BOLD, ParagraphAlignment.Center);
             section.AddText(new[] { us, pass });
 
-            //posY += 6;
-
             var wa = new Col("*También puedes solicitar tus resultados vía WhatsApp*", Col.FONT_BOLD);
             section.AddText(wa);
-
-            //posY += 6;
 
             var con = new Col("Contacto: 81 4170 0769", Col.FONT_BOLD);
             section.AddText(con);
@@ -194,6 +196,11 @@ namespace Integration.Pdf.Service
 
             var last = new Col("Laboratorio Alfonso Ramos S.A. de C.V. con domicilio matriz en Sinaloa No. 144 sur Col. Centro C.P. 85000 Ciudad Obregón, Sonora, así como las sucursales distribuidas en el territorio nacional utilizará sus datos personales recabados con los siguientes fines: Otorgar los servicios clínicos contratados, confirmar y/o asignar citas para servicios, tramites de facturación, actividades de archivo y respaldo de información, manejo de programas de lealtad, envío de comunicaciones y/o imágenes promocionales. Para más información sobre el tratamiento de sus datos personales usted puede ingresar en la siguiente página.", ParagraphAlignment.Justify);
             section.AddText(last);
+        }
+
+        static string MigraDocFilenameFromByteArray(byte[] image)
+        {
+            return "base64:" + Convert.ToBase64String(image);
         }
 
         public class Info

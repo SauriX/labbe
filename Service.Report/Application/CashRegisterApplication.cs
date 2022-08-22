@@ -42,14 +42,16 @@ namespace Service.Report.Application
                 new Col("Solicitud", ParagraphAlignment.Left),
                 new Col("Paciente", ParagraphAlignment.Left),
                 new Col("Factura", ParagraphAlignment.Left),
-                new Col("Total", ParagraphAlignment.Right, "C"),
+                new Col("Total a pagar", ParagraphAlignment.Right, "C"),
                 new Col("A cuenta", ParagraphAlignment.Right, "C"),
                 new Col("Efectivo", ParagraphAlignment.Right),
                 new Col("TDC", ParagraphAlignment.Right, "C"),
                 new Col("Tranf. E", ParagraphAlignment.Right, "C"),
                 new Col("Cheque", ParagraphAlignment.Right, "C"),
                 new Col("TDD", ParagraphAlignment.Right, "C"),
+                new Col("Subtotal", ParagraphAlignment.Right, "C"),
                 new Col("PP", ParagraphAlignment.Right, "C"),
+                new Col("Total recibido", ParagraphAlignment.Right, "C"),
                 new Col("Hora", ParagraphAlignment.Left),
                 new Col("Usuario", ParagraphAlignment.Left),
                 new Col("Saldo", ParagraphAlignment.Right, "C"),
@@ -68,7 +70,9 @@ namespace Service.Report.Application
                 { "Tranf. E", x.Transferencia },
                 { "Cheque", x.Cheque },
                 { "TDD", x.TDD },
+                { "Subtotal", x.Subtotal },
                 { "PP", x.PP },
+                { "Total recibido", x.PP },
                 { "Hora", x.Fecha},
                 { "Usuario", x.UsuarioModifico},
                 { "Saldo", x.Saldo},
@@ -87,7 +91,9 @@ namespace Service.Report.Application
                 { "Tranf. E", x.Transferencia },
                 { "Cheque", x.Cheque },
                 { "TDD", x.TDD },
+                { "Subtotal", x.Subtotal },
                 { "PP", x.PP },
+                { "Total recibido", x.PP },
                 { "Hora", x.Fecha},
                 { "Usuario", x.UsuarioModifico},
                 { "Saldo", x.Saldo},
@@ -106,7 +112,9 @@ namespace Service.Report.Application
                 { "Tranf. E", x.Transferencia },
                 { "Cheque", x.Cheque },
                 { "TDD", x.TDD },
+                { "Subtotal", x.Subtotal },
                 { "PP", x.PP },
+                { "Total recibido", x.PP },
                 { "Hora", x.Fecha},
                 { "Usuario", x.UsuarioModifico},
                 { "Saldo", x.Saldo},
@@ -120,6 +128,8 @@ namespace Service.Report.Application
                 new Col("Transf. E", ParagraphAlignment.Center, "C"),
                 new Col("Cheque", ParagraphAlignment.Center, "C"),
                 new Col("TDD", ParagraphAlignment.Center, "C"),
+                new Col("Subtotal", ParagraphAlignment.Center, "C"),
+                new Col("PP", ParagraphAlignment.Center, "C"),
             };
 
             var totales = new Dictionary<string, object>
@@ -128,7 +138,9 @@ namespace Service.Report.Application
                 { "TDC", requestData.CashTotal.SumaTDC},
                 { "Transf. E", requestData.CashTotal.SumaTransferencia},
                 { "Cheque", requestData.CashTotal.SumaCheque},
-                { "TDD", requestData.CashTotal.SumaTDD}
+                { "TDD", requestData.CashTotal.SumaTDD},
+                { "Subtotal", requestData.CashTotal.Subtotal},
+                { "PP", requestData.CashTotal.SumaPP}
             };
 
             var invoice = new InvoiceData()

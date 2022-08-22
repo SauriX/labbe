@@ -529,6 +529,11 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<bool>("EsNuevo")
                         .HasColumnType("bit");
 
+                    b.Property<byte>("EstatusId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint")
+                        .HasDefaultValue((byte)1);
+
                     b.Property<Guid>("ExpedienteId")
                         .HasColumnType("uniqueidentifier");
 
@@ -676,6 +681,25 @@ namespace Service.MedicalRecord.Migrations
                     b.ToTable("Relacion_Solicitud_Paquete");
                 });
 
+            modelBuilder.Entity("Service.MedicalRecord.Domain.Request.RequestStatus", b =>
+                {
+                    b.Property<byte>("Id")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("Clave")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Color")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Estatus_Solicitud");
+                });
+
             modelBuilder.Entity("Service.MedicalRecord.Domain.Request.RequestStudy", b =>
                 {
                     b.Property<Guid>("SolicitudId")
@@ -716,6 +740,11 @@ namespace Service.MedicalRecord.Migrations
 
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaEntrega")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("smalldatetime")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("datetime2");
