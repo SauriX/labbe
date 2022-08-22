@@ -100,28 +100,34 @@ namespace Service.Catalog.Application
 
         public async Task<(byte[] file, string fileName)> ExportList(string search)
         {
-            
-            var equipment = await GetAll(search);
+            try
+            {
 
-            var path = Assets.EquipmentList;
+                var equipment = await GetAll(search);
 
-            var template = new XLTemplate(path);
+                var path = Assets.EquipmentList;
 
-            template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
-            template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
-            template.AddVariable("Titulo", "Equipos");
-            template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
-            template.AddVariable("Sucursales", equipment);
+                var template = new XLTemplate(path);
 
-            template.Generate();
+                template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
+                template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
+                template.AddVariable("Titulo", "Equipos");
+                template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
+                template.AddVariable("Sucursales", equipment);
 
-            var range = template.Workbook.Worksheet("Sucursales").Range("Sucursales");
-            var table = template.Workbook.Worksheet("Sucursales").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
-            table.Theme = XLTableTheme.TableStyleMedium2;
+                template.Generate();
 
-            template.Format();
+                var range = template.Workbook.Worksheet("Equipos").Range("Sucursales");
+                var table = template.Workbook.Worksheet("Equipos").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
+                table.Theme = XLTableTheme.TableStyleMedium2;
 
-            return (template.ToByteArray(), "Catálogo de Equipos.xlsx");
+                template.Format();
+
+                return (template.ToByteArray(), "Catálogo de Equipos.xlsx");
+            }catch(Exception ex)
+            {
+                throw ex;
+            }
         }
         private async Task CheckDuplicate(Equipos equipment)
         {
