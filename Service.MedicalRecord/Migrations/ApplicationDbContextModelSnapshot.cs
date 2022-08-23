@@ -557,10 +557,10 @@ namespace Service.MedicalRecord.Migrations
                         .HasColumnType("tinyint")
                         .HasDefaultValue((byte)2);
 
-                    b.Property<string>("RutaINE")
+                    b.Property<string>("RutaFormato")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RutaINEReverso")
+                    b.Property<string>("RutaINE")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RutaOrden")
@@ -603,44 +603,6 @@ namespace Service.MedicalRecord.Migrations
                     b.HasIndex("SucursalId");
 
                     b.ToTable("CAT_Solicitud");
-                });
-
-            modelBuilder.Entity("Service.MedicalRecord.Domain.Request.RequestImage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Clave")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaModifico")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Ruta")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("SolicitudId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Tipo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("UsuarioModificoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SolicitudId");
-
-                    b.ToTable("Relacion_Solicitud_Imagen");
                 });
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.Request.RequestPack", b =>
@@ -995,17 +957,6 @@ namespace Service.MedicalRecord.Migrations
                     b.Navigation("Sucursal");
                 });
 
-            modelBuilder.Entity("Service.MedicalRecord.Domain.Request.RequestImage", b =>
-                {
-                    b.HasOne("Service.MedicalRecord.Domain.Request.Request", "Solicitud")
-                        .WithMany("Imagenes")
-                        .HasForeignKey("SolicitudId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Solicitud");
-                });
-
             modelBuilder.Entity("Service.MedicalRecord.Domain.Request.RequestPack", b =>
                 {
                     b.HasOne("Service.MedicalRecord.Domain.Request.Request", "Solicitud")
@@ -1074,8 +1025,6 @@ namespace Service.MedicalRecord.Migrations
             modelBuilder.Entity("Service.MedicalRecord.Domain.Request.Request", b =>
                 {
                     b.Navigation("Estudios");
-
-                    b.Navigation("Imagenes");
 
                     b.Navigation("Paquetes");
                 });

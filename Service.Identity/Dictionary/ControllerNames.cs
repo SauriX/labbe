@@ -25,6 +25,7 @@
         public const string Report = "report";
         public const string Appointment = "appointment";
         public const string Equipment = "equipment";
+        public const string Mantain = "mantain";
 
     }
 }

@@ -19,6 +19,7 @@ using Service.Catalog.Domain.Study;
 using Service.Catalog.Domain.Tapon;
 using Service.Catalog.Domain.Equipment;
 using System.Reflection;
+using Service.Catalog.Domain.EquipmentMantain;
 
 namespace Service.Catalog.Context
 {
@@ -82,6 +83,7 @@ namespace Service.Catalog.Context
         public DbSet<Equipos> CAT_Equipos { get; set; }
         //public DbSet<Equipment> CAT_Equipos { get; set; }
         public DbSet<EquipmentBranch> Relacion_Equipo_Sucursal { get; set; }
+        public DbSet<Mantain> CAT_Mantenimiento_Equipo { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
 
