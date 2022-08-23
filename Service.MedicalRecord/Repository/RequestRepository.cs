@@ -37,53 +37,53 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Estudios).ThenInclude(x => x.Tapon)
                 .AsQueryable();
 
-            if (filter.TipoFecha == 1)
+            if (filter.TipoFecha != null && filter.TipoFecha == 1 && filter.FechaInicial != null && filter.FechaFinal != null)
             {
-                requests = requests.Where(x => filter.FechaInicial.Date <= x.FechaCreo.Date && filter.FechaFinal.Date >= x.FechaCreo.Date);
+                requests = requests.Where(x => ((DateTime)filter.FechaInicial).Date <= x.FechaCreo.Date && ((DateTime)filter.FechaFinal).Date >= x.FechaCreo.Date);
             }
 
-            if (filter.TipoFecha == 2)
+            if (filter.TipoFecha != null && filter.TipoFecha == 2 && filter.FechaInicial != null && filter.FechaFinal != null)
             {
-                requests = requests.Where(x => x.Estudios.Any(x => filter.FechaInicial.Date <= x.FechaEntrega && filter.FechaFinal.Date >= x.FechaEntrega));
+                requests = requests.Where(x => x.Estudios.Any(x => ((DateTime)filter.FechaInicial).Date <= x.FechaEntrega && ((DateTime)filter.FechaFinal).Date >= x.FechaEntrega));
             }
 
             if (!string.IsNullOrWhiteSpace(filter.Clave))
             {
-                requests = requests.Where(x => string.Equals(x.Clave, filter.Clave, StringComparison.CurrentCultureIgnoreCase)
-                || string.Equals(x.ClavePatologica, filter.Clave, StringComparison.CurrentCultureIgnoreCase));
+                requests = requests.Where(x => x.Clave.ToLower().Contains(filter.Clave.ToLower())
+                || x.ClavePatologica.ToLower().Contains(filter.Clave.ToLower()));
             }
 
-            if (filter.Sucursales.Any())
+            if (filter.Sucursales != null && filter.Sucursales.Any())
             {
                 requests = requests.Where(x => filter.Sucursales.Contains(x.SucursalId));
             }
 
-            if (filter.Compañias.Any())
+            if (filter.Compañias != null && filter.Compañias.Any())
             {
                 requests = requests.Where(x => x.CompañiaId != null && filter.Compañias.Contains((Guid)x.CompañiaId));
             }
 
-            if (filter.Medicos.Any())
+            if (filter.Medicos != null && filter.Medicos.Any())
             {
                 requests = requests.Where(x => x.MedicoId != null && filter.Medicos.Contains((Guid)x.MedicoId));
             }
 
-            if (filter.Procedencias.Any())
+            if (filter.Procedencias != null && filter.Procedencias.Any())
             {
                 requests = requests.Where(x => filter.Procedencias.Contains(x.Procedencia));
             }
 
-            if (filter.Urgencias.Any())
+            if (filter.Urgencias != null && filter.Urgencias.Any())
             {
                 requests = requests.Where(x => filter.Urgencias.Contains(x.Urgencia));
             }
 
-            if (filter.Estatus.Any())
+            if (filter.Estatus != null && filter.Estatus.Any())
             {
                 requests = requests.Where(x => x.Estudios.Any(y => filter.Estatus.Contains(y.EstatusId)));
             }
 
-            if (filter.Departamentos.Any())
+            if (filter.Departamentos != null && filter.Departamentos.Any())
             {
                 requests = requests.Where(x => x.Estudios.Any(y => filter.Departamentos.Contains(y.DepartamentoId)));
             }
