@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFCore.BulkExtensions;
+using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Context;
 using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Domain.Equipment;
@@ -38,7 +39,7 @@ namespace Service.Catalog.Repository
             return equip;
         }
         public async Task<Mantain> GetById(Guid Id) {
-            var mantain = await _context.CAT_Mantenimiento_Equipo.Include(x => x.Equipo.Equipment).FirstOrDefaultAsync(x=>x.Id==Id);
+            var mantain = await _context.CAT_Mantenimiento_Equipo.Include(x => x.Equipo.Equipment).Include(x=>x.images).FirstOrDefaultAsync(x=>x.Id==Id);
             return mantain;
         }
         public async Task Create(Mantain mantain) {
@@ -50,6 +51,14 @@ namespace Service.Catalog.Repository
         public async Task Update(Mantain mantain) {
              _context.Update(mantain);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task AddImage(List<MantainImages> images,Guid Id) {
+
+            var config = new BulkConfig();
+            config.SetSynchronizeFilter<MantainImages>(x => x.MantainId == Id);
+            
+            await _context.BulkInsertOrUpdateOrDeleteAsync(images,config);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Service.Catalog.Domain.EquipmentMantain
 {
@@ -18,7 +19,7 @@ namespace Service.Catalog.Domain.EquipmentMantain
         public Guid? UsuarioModId { get; set; }
         public DateTime? FechaMod { get; set; }
 
-        public string Imagen1 { get; set; }
-        public string Imagen2 { get; set; }
+        public virtual ICollection<MantainImages> images { get; set; }
+       
     }
 }

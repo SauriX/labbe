@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220823223024_imagesupdate")]
+    partial class imagesupdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1037,9 +1039,13 @@ namespace Service.Catalog.Migrations
             modelBuilder.Entity("Service.Catalog.Domain.EquipmentMantain.MantainImages", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("MantainId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("MantainId1")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UrlImg")
@@ -1048,6 +1054,8 @@ namespace Service.Catalog.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("MantainId");
+
+                    b.HasIndex("MantainId1");
 
                     b.ToTable("CAT_Mantenimiento_Equipo_Images");
                 });
@@ -2786,15 +2794,13 @@ namespace Service.Catalog.Migrations
                 {
                     b.HasOne("Service.Catalog.Domain.EquipmentMantain.Mantain", null)
                         .WithMany("images")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("MantainId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Service.Catalog.Domain.EquipmentMantain.Mantain", "Mantain")
                         .WithMany()
-                        .HasForeignKey("MantainId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("MantainId1");
 
                     b.Navigation("Mantain");
                 });

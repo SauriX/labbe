@@ -1,5 +1,6 @@
 ﻿using ClosedXML.Report.Utils;
 using Service.Catalog.Application.IApplication;
+using Service.Catalog.Domain.EquipmentMantain;
 using Service.Catalog.Dtos.Equipmentmantain;
 using Service.Catalog.Mapper;
 using Service.Catalog.Repository;
@@ -95,45 +96,39 @@ namespace Service.Catalog.Application
            var mantain= request.ToMaquilaFormDto();
             return await _pdfClient.GenerateOrder(mantain);
         }
-        public async Task<bool> SaveImage(MantainImageDto requestDto)
+        public async Task<bool> SaveImage(MantainImageDto[] requestDto)
         {
-            var request = await GetById(requestDto.SolicitudId);
-            var Id = Guid.Parse(request.Id);
-            var existing = await _service.GetById(Id);
-            var updateiTEM = request.ToModel(existing);
-            var typeOk = requestDto.Tipo.In("orden", "ine");
+            List<MantainImages> images = new List<MantainImages>();
+            
+            foreach (var item in requestDto) {
+                var request = await GetById(item.SolicitudId);
+                var Id = Guid.Parse(request.Id);
+                var existing = await _service.GetById(Id);
+                var updateiTEM = request.ToModel(existing);
+                var typeOk = item.Tipo.In("orden", "ine");
 
-            var isImage = requestDto.Imagen.IsImage();
+                var isImage = item.Imagen.IsImage();
 
-            if (!typeOk || !isImage)
-            {
-                throw new CustomException(HttpStatusCode.BadRequest, SharedResponses.InvalidImage);
+                if (!typeOk || !isImage)
+                {
+                    throw new CustomException(HttpStatusCode.BadRequest, SharedResponses.InvalidImage);
+                }
+                var path = await SaveImageGetPath(item);
+                var image = new MantainImages
+                {
+                    Id = Guid.NewGuid(),
+                    UrlImg = path,
+                    MantainId = Guid.Parse(request.Id),
+                };
+                images.Add(image);
             }
-
-        
-            var path = await SaveImageGetPath(requestDto);
-
-            if (requestDto.Tipo == "orden")
-            {
-                updateiTEM.Imagen1 = path;
-                updateiTEM.Imagen2 = "";
-            }
-            else
-            {
-                updateiTEM.Imagen2 = path;
-                updateiTEM.Imagen1 = "";
-            }
-
-            request.IdUser = requestDto.UsuarioId;
-           
-
-            await _service.Update(updateiTEM);
+            await _service.AddImage(images, requestDto[0].SolicitudId);
             return true;
         }
 
         private static async Task<string> SaveImageGetPath(MantainImageDto requestDto)
         {
-            var path = Path.Combine("http://localhost:20347/images/mantain", requestDto.clave);
+            var path = Path.Combine("http://localhost:20347/images/mantain", $"{requestDto.clave}{requestDto.SolicitudId}");
             var name = string.Concat(requestDto.Tipo, ".png");
             var path2 = Path.Combine("wwwroot/images/mantain", requestDto.clave);
             var isSaved = await requestDto.Imagen.SaveFileAsync(path2, name);

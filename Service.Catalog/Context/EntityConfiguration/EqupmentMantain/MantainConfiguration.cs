@@ -19,6 +19,12 @@ namespace Service.Catalog.Context.EntityConfiguration.EqupmentMantain
             builder.HasOne(x => x.Equipo)
               .WithMany();
 
+            builder
+               .HasMany(x => x.images)
+               .WithOne()
+               .HasForeignKey(x=>x.Id)
+               .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }
