@@ -21,8 +21,6 @@ using RecordResponses = Service.MedicalRecord.Dictionary.Response;
 using Service.MedicalRecord.Settings.ISettings;
 using Service.MedicalRecord.Transactions;
 using RequestTemplates = Service.MedicalRecord.Dictionary.EmailTemplates.Request;
-using Shared.Helpers;
-using Service.MedicalRecord.Domain.Request;
 
 namespace Service.MedicalRecord.Application
 {
@@ -322,33 +320,24 @@ namespace Service.MedicalRecord.Application
             }
         }
 
-        public async Task CancelRequest(Guid recordId, Guid requestId, Guid userId)
-        {
-            var request = await GetExistingRequest(recordId, requestId);
+        //public async Task CancelRequest(Guid recordId, Guid requestId, Guid userId)
+        //{
+        //    var request = await GetExistingRequest(recordId, requestId);
 
-            if (request.EstatusId == Status.Request.Cancelado)
-            {
-                throw new CustomException(HttpStatusCode.BadGateway, RecordResponses.Request.AlreadyCancelled);
-            }
+        //    if (request.EstatusId == Status.Request.Cancelado)
+        //    {
+        //        throw new CustomException(HttpStatusCode.BadGateway, RecordResponses.Request.AlreadyCancelled);
+        //    }
 
-            if (request.EstatusId == Status.Request.Completado)
-            {
-                throw new CustomException(HttpStatusCode.BadGateway, RecordResponses.Request.AlreadyCompleted);
-            }
+        //    if (request.EstatusId == Status.Request.Completado)
+        //    {
+        //        throw new CustomException(HttpStatusCode.BadGateway, RecordResponses.Request.AlreadyCompleted);
+        //    }
 
-            var studies = await _repository.GetAllStudies(recordId);
+        //    var studies = await _repository.GetStudiesByRequest(recordId);
 
-            if (studies.Any(x => x.EstatusId != Status.RequestStudy.Pendiente))
-            {
-                throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.ProcessingStudies);
-            }
-
-            request.EstatusId = Status.Request.Cancelado;
-            request.UsuarioModificoId = userId;
-            request.FechaModifico = DateTime.Now;
-
-            await _repository.Update(request);
-        }
+        //    if (studies.Estudios)
+        //}
 
         public async Task CancelStudies(RequestStudyUpdateDto requestDto)
         {
@@ -356,7 +345,7 @@ namespace Service.MedicalRecord.Application
 
             var studiesIds = requestDto.Estudios.Select(x => x.EstudioId);
 
-            var allStudies = await _repository.GetAllStudies(requestDto.SolicitudId);
+            var allStudies = await _repository.GetStudiesByRequest(requestDto.SolicitudId);
             var studies = await _repository.GetStudyById(requestDto.SolicitudId, studiesIds);
 
             var groups = allStudies.Where(x => x.PaqueteId != null).GroupBy(x => x.Paquete.Nombre);
@@ -481,11 +470,11 @@ namespace Service.MedicalRecord.Application
             return await _pdfClient.GenerateOrder(order);
         }
 
-        public async Task<int> SaveImage(RequestImageDto requestDto)
+        public async Task SaveImage(RequestImageDto requestDto)
         {
             var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
 
-            var typeOk = requestDto.Tipo.In("orden", "ine", "ineReverso", "formato");
+            var typeOk = requestDto.Tipo.In("orden", "ine", "formato");
 
             var isImage = requestDto.Imagen.IsImage();
 
@@ -494,56 +483,32 @@ namespace Service.MedicalRecord.Application
                 throw new CustomException(HttpStatusCode.BadRequest, SharedResponses.InvalidImage);
             }
 
-            if (requestDto.Tipo == "formato")
+            requestDto.Clave = request.Clave;
+            var path = await SaveImageGetPath(requestDto);
+
+            if (requestDto.Tipo == "orden")
             {
-                var existingImage = await _repository.GetImage(requestDto.SolicitudId, requestDto.Id);
-
-                var name = Helpers.GenerateRandomHex();
-                var path = await SaveImageGetPath(requestDto, existingImage?.Clave ?? name);
-
-                var image = new RequestImage(existingImage?.Id ?? 0, requestDto.SolicitudId, existingImage?.Clave ?? name, path, "format")
-                {
-                    UsuarioCreoId = existingImage?.UsuarioCreoId ?? requestDto.UsuarioId,
-                    FechaCreo = existingImage?.FechaCreo ?? DateTime.Now,
-                    UsuarioModificoId = existingImage == null ? null : requestDto.UsuarioId,
-                    FechaModifico = existingImage == null ? null : DateTime.Now
-                };
-
-                await _repository.UpdateImage(image);
-
-                return image.Id;
+                request.RutaOrden = path;
+            }
+            else if (requestDto.Tipo == "ine")
+            {
+                request.RutaINE = path;
             }
             else
             {
-                requestDto.Clave = request.Clave;
-                var path = await SaveImageGetPath(requestDto);
-
-                if (requestDto.Tipo == "orden")
-                {
-                    request.RutaOrden = path;
-                }
-                else if (requestDto.Tipo == "ine")
-                {
-                    request.RutaINE = path;
-                }
-                else if (requestDto.Tipo == "ineReverso")
-                {
-                    request.RutaINEReverso = path;
-                }
-
-                request.UsuarioModificoId = requestDto.UsuarioId;
-                request.FechaModifico = DateTime.Now;
-
-                await _repository.Update(request);
-
-                return 0;
+                request.RutaFormato = path;
             }
+
+            request.UsuarioModificoId = requestDto.UsuarioId;
+            request.FechaModifico = DateTime.Now;
+
+            await _repository.Update(request);
         }
 
-        private static async Task<string> SaveImageGetPath(RequestImageDto requestDto, string fileName = null)
+        private static async Task<string> SaveImageGetPath(RequestImageDto requestDto)
         {
             var path = Path.Combine("wwwroot/images/requests", requestDto.Clave);
-            var name = string.Concat(fileName ?? requestDto.Tipo, ".png");
+            var name = string.Concat(requestDto.Tipo, ".png");
 
             var isSaved = await requestDto.Imagen.SaveFileAsync(path, name);
 

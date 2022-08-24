@@ -396,6 +396,9 @@ namespace Service.Catalog.Migrations
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Categoria")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Clave")
                         .HasColumnType("nvarchar(max)");
 
@@ -949,6 +952,104 @@ namespace Service.Catalog.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CAT_Estado");
+                });
+
+            modelBuilder.Entity("Service.Catalog.Domain.Equipment.EquipmentBranch", b =>
+                {
+                    b.Property<Guid>("EquipmentBranchId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("EquipmentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaMod")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Num_Serie")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("UsuarioCreoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UsuarioModId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("EquipmentBranchId");
+
+                    b.HasIndex("BranchId");
+
+                    b.HasIndex("EquipmentId");
+
+                    b.ToTable("Relacion_Equipo_Sucursal");
+                });
+
+            modelBuilder.Entity("Service.Catalog.Domain.EquipmentMantain.Mantain", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Descrip")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("EquipoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaMod")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Fecha_Prog")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Num_Serie")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("UsuarioCreoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UsuarioModId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("clave")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EquipoId");
+
+                    b.ToTable("CAT_Mantenimiento_Equipo");
+                });
+
+            modelBuilder.Entity("Service.Catalog.Domain.EquipmentMantain.MantainImages", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("MantainId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UrlImg")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MantainId");
+
+                    b.ToTable("CAT_Mantenimiento_Equipo_Images");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Indication.Indication", b =>
@@ -2651,6 +2752,53 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Ciudad");
                 });
 
+            modelBuilder.Entity("Service.Catalog.Domain.Equipment.EquipmentBranch", b =>
+                {
+                    b.HasOne("Service.Catalog.Domain.Branch.Branch", "Sucursal")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Service.Catalog.Domain.Catalog.Equipos", "Equipment")
+                        .WithMany("Valores")
+                        .HasForeignKey("EquipmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Equipment");
+
+                    b.Navigation("Sucursal");
+                });
+
+            modelBuilder.Entity("Service.Catalog.Domain.EquipmentMantain.Mantain", b =>
+                {
+                    b.HasOne("Service.Catalog.Domain.Equipment.EquipmentBranch", "Equipo")
+                        .WithMany()
+                        .HasForeignKey("EquipoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Equipo");
+                });
+
+            modelBuilder.Entity("Service.Catalog.Domain.EquipmentMantain.MantainImages", b =>
+                {
+                    b.HasOne("Service.Catalog.Domain.EquipmentMantain.Mantain", null)
+                        .WithMany("images")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Service.Catalog.Domain.EquipmentMantain.Mantain", "Mantain")
+                        .WithMany()
+                        .HasForeignKey("MantainId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Mantain");
+                });
+
             modelBuilder.Entity("Service.Catalog.Domain.Indication.IndicationStudy", b =>
                 {
                     b.HasOne("Service.Catalog.Domain.Study.Study", "Estudio")
@@ -3156,11 +3304,21 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Departamentos");
                 });
 
+            modelBuilder.Entity("Service.Catalog.Domain.Catalog.Equipos", b =>
+                {
+                    b.Navigation("Valores");
+                });
+
             modelBuilder.Entity("Service.Catalog.Domain.Company.Company", b =>
                 {
                     b.Navigation("Contacts");
 
                     b.Navigation("Precio");
+                });
+
+            modelBuilder.Entity("Service.Catalog.Domain.EquipmentMantain.Mantain", b =>
+                {
+                    b.Navigation("images");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Indication.Indication", b =>

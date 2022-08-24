@@ -24,6 +24,6 @@ namespace Service.MedicalRecord.Application.IApplication
         Task AddPartiality(RequestPartialityDto requestDto);
         Task<byte[]> PrintTicket(Guid recordId, Guid requestId);
         Task<byte[]> PrintOrder(Guid recordId, Guid requestId);
-        Task<int> SaveImage(RequestImageDto requestDto);
+        Task SaveImage(RequestImageDto requestDto);
     }
 }
