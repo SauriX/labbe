@@ -35,6 +35,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EventBus.Messages\EventBus.Messages.csproj" />
+    <ProjectReference Include="..\Integration.WeeClinic\Integration.WeeClinic.csproj" />
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 
