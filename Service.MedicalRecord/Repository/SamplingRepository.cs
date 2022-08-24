@@ -19,7 +19,7 @@ namespace Service.MedicalRecord.Repository
         {
             _context = context;
         }
-        public async Task<List<Request>> GetAll(SamplingSearchDto search)
+        public async Task<List<Request>> GetAll(rRequestedStudySearchDto search)
         {
             var citasLab = _context.CAT_Solicitud.Include(x=>x.Estudios).Include(x=>x.Expediente).Include(x=>x.Sucursal).Include(x=>x.Compañia).AsQueryable();
             if (search.Sucursal != null && search.Sucursal.Count > 0)

@@ -3,12 +3,11 @@ using Service.MedicalRecord.Dtos.Sampling;
 using System.Collections.Generic;
 using System.Linq;
 
-
 namespace Service.MedicalRecord.Mapper
 {
-    public static class SamplingMapper
+    public static class RequestedStudyMapper
     {
-        public static List<SamplingListDto> ToSamplingListDto(this List<Service.MedicalRecord.Domain.Request.Request> model)
+        public static List<SamplingListDto> ToRequestedStudyDto(this List<Request> model)
         {
             if (model == null) return null;
 
@@ -25,23 +24,6 @@ namespace Service.MedicalRecord.Mapper
                 studys = x.Estudios.ToStudySamplingDto(),
                 Id = x.Id.ToString(),
                 Order = x.ExpedienteId.ToString()
-            }).ToList();
-        }
-
-        public static List<StudyDto> ToStudySamplingDto(this ICollection<RequestStudy> model)
-        {
-
-
-            return model.Select(x => new StudyDto
-            {
-                Id = x.EstudioId,
-                Nombre = x.Clave,
-                Area = "",
-                Status = x.EstatusId,
-                Registro = x.FechaCreo.ToString(),
-                Entrega = x.FechaCreo.AddDays((double)x.Dias).ToString(),
-                Seleccion = false,
-                Clave = x.Clave,
             }).ToList();
         }
     }
