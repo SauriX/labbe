@@ -96,5 +96,17 @@
       "UpstreamPathTemplate": "/api/scopes/equipment",
       "UpstreamHttpMethod": [ "GET" ]
     },
+    {
+      "DownstreamPathTemplate": "/api/scopes/tracking-order",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 45216
+        }
+      ],
+      "UpstreamPathTemplate": "/api/scopes/tracking-order",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
   ]
 }

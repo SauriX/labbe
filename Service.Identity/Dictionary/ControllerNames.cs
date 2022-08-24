@@ -26,6 +26,7 @@
         public const string Cash = "cash";
         public const string Appointment = "appointment";
         public const string Equipment = "equipment";
+        public const string TrackingOrder = "TrackingOrder";
 
     }
 }
