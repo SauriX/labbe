@@ -92,14 +92,14 @@ namespace Service.Catalog
             });
             services.AddMassTransit(x =>
             {
-                x.AddConsumer<BranchErrorConsumer>();
+                x.AddConsumers(Assembly.GetExecutingAssembly());
 
                 x.UsingRabbitMq((context, configurator) =>
                 {
                     var rabbitMQSettings = Configuration.GetSection(nameof(RabbitMQSettings)).Get<RabbitMQSettings>();
                     var queueNames = Configuration.GetSection(nameof(QueueNames)).Get<QueueNames>();
 
-                    configurator.Host(new Uri(rabbitMQSettings.Host), "Catalogo", c =>
+                    configurator.Host(new Uri(rabbitMQSettings.Host), "Catalog", c =>
                     {
                         c.ContinuationTimeout(TimeSpan.FromSeconds(20));
                         c.Username(rabbitMQSettings.Username);

@@ -1,5 +1,7 @@
 ﻿using ClosedXML.Excel;
 using ClosedXML.Report;
+using EventBus.Messages.Catalog;
+using MassTransit;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dictionary;
 using Service.Catalog.Domain.Maquila;
@@ -18,10 +20,12 @@ namespace Service.Catalog.Application
 {
     public class MaquilaApplication : IMaquilaApplication
     {
+        private readonly IPublishEndpoint _publishEndpoint;
         private readonly IMaquilaRepository _repository;
 
-        public MaquilaApplication(IMaquilaRepository repository)
+        public MaquilaApplication(IPublishEndpoint publishEndpoint, IMaquilaRepository repository)
         {
+            _publishEndpoint = publishEndpoint;
             _repository = repository;
         }
 
@@ -64,6 +68,10 @@ namespace Service.Catalog.Application
 
             await _repository.Create(newMaquila);
 
+            var contract = new MaquilaContract(newMaquila.Id, newMaquila.Nombre);
+
+            await _publishEndpoint.Publish(contract);
+
             newMaquila = await _repository.GetById(newMaquila.Id);
 
             return newMaquila.ToMaquilaListDto();
@@ -83,6 +91,10 @@ namespace Service.Catalog.Application
             await CheckDuplicate(updatedMaquila);
 
             await _repository.Update(updatedMaquila);
+
+            var contract = new MaquilaContract(updatedMaquila.Id, updatedMaquila.Nombre);
+
+            await _publishEndpoint.Publish(contract);
 
             updatedMaquila = await _repository.GetById(updatedMaquila.Id);
 

@@ -42,7 +42,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Contracts", "Contracts", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus.Messages", "EventBus.Messages\EventBus.Messages.csproj", "{5FDF9FFF-573F-4BB2-B5D2-676C569EB34B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.WeeClinic", "Integration.WeeClinic\Integration.WeeClinic.csproj", "{0A03C3CC-EEC4-4B00-9BB5-DABF4E446076}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Integration.WeeClinic", "Integration.WeeClinic\Integration.WeeClinic.csproj", "{0A03C3CC-EEC4-4B00-9BB5-DABF4E446076}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

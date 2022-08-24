@@ -6,9 +6,9 @@ namespace Service.MedicalRecord.Dtos.Request
 {
     public class RequestImageDto
     {
+        public int Id { get; set; }
         public Guid SolicitudId { get; set; }
         public Guid ExpedienteId { get; set; }
-        [JsonIgnore]
         public string Clave { get; set; }
         public IFormFile Imagen { get; set; }
         public string ImagenUrl { get; set; }

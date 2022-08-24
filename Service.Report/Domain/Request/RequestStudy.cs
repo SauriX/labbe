@@ -20,7 +20,7 @@ namespace Service.Report.Domain.Request
         public decimal PrecioFinal { get; set; }
         public Guid? SucursalId { get; set; }
         public virtual Branch Sucursal { get; set; }
-        public Guid? MaquilaId { get; set; }
+        public int? MaquilaId { get; set; }
         public virtual Maquila Maquila { get; set; }
     }
 }

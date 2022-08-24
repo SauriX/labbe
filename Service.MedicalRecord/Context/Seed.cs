@@ -17,17 +17,17 @@ namespace Service.MedicalRecord.Context
                 {
                     var status = new List<RequestStudyStatus>()
                     {
-                        new RequestStudyStatus(1, "P", "Pendiente", "#345454"),
-                        new RequestStudyStatus(2, "TM", "Toma de muestra", "#345454"),
-                        new RequestStudyStatus(3, "S", "Solicitado", "#345454"),
-                        new RequestStudyStatus(4, "C", "Capturado", "#345454"),
-                        new RequestStudyStatus(5, "V", "Validado", "#345454"),
-                        new RequestStudyStatus(6, "L", "Liberado", "#345454"),
-                        new RequestStudyStatus(7, "E", "Enviado", "#345454"),
-                        new RequestStudyStatus(8, "ER", "En ruta", "#345454"),
+                        new RequestStudyStatus(1, "P", "Pendiente", "#f8e117"),
+                        new RequestStudyStatus(2, "TM", "Toma de muestra", "#f8e117"),
+                        new RequestStudyStatus(3, "S", "Solicitado", "#f8e117"),
+                        new RequestStudyStatus(4, "C", "Capturado", "#f88d17"),
+                        new RequestStudyStatus(5, "V", "Validado", "#f88d17"),
+                        new RequestStudyStatus(6, "L", "Liberado", "#f88d17"),
+                        new RequestStudyStatus(7, "E", "Enviado", "#28d417"),
+                        new RequestStudyStatus(8, "ER", "En ruta", "#f8e117"),
                         new RequestStudyStatus(9, "CL", "Cancelado", "#345454"),
-                        new RequestStudyStatus(10, "EO", "Entregado", "#345454"),
-                        new RequestStudyStatus(11, "U", "Urgente", "#345454")
+                        new RequestStudyStatus(10, "EO", "Entregado", "#28d417"),
+                        new RequestStudyStatus(11, "U", "Urgente", "#e11616")
                     };
 
                     context.Estatus_Solicitud_Estudio.AddRange(status);
