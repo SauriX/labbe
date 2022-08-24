@@ -496,7 +496,7 @@ namespace Service.MedicalRecord.Application
             }
             else
             {
-                request.RutaFormato = path;
+                request.RutaINEReverso = path;
             }
 
             request.UsuarioModificoId = requestDto.UsuarioId;
