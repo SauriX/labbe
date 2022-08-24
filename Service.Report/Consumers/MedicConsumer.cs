@@ -1,40 +1,40 @@
 ﻿using EventBus.Messages.Catalog;
 using MassTransit;
 using Microsoft.Extensions.Logging;
-using Service.MedicalRecord.Domain.Catalogs;
-using Service.MedicalRecord.Repository.IRepository;
+using Service.Report.Domain.Catalogs;
+using Service.Report.Repository.IRepository;
 using Shared.Helpers;
 using System.Threading.Tasks;
 
-namespace Service.MedicalRecord.Consumers
+namespace Service.Report.Consumers
 {
-    public class BranchConsumer : IConsumer<BranchContract>
+    public class MedicConsumer : IConsumer<MedicContract>
     {
-        private readonly ILogger<BranchConsumer> _logger;
-        private readonly IRepository<Branch> _repository;
+        private readonly ILogger<MedicConsumer> _logger;
+        private readonly IRepository<Medic> _repository;
 
-        public BranchConsumer(ILogger<BranchConsumer> logger, IRepository<Branch> repository)
+        public MedicConsumer(ILogger<MedicConsumer> logger, IRepository<Medic> repository)
         {
             _logger = logger;
             _repository = repository;
         }
 
-        public async Task Consume(ConsumeContext<BranchContract> context)
+        public async Task Consume(ConsumeContext<MedicContract> context)
         {
             try
             {
                 var message = context.Message;
-                var branch = new Branch(message.Id, message.Clave, message.Nombre, message.Clinicos, message.CodigoPostal, message.CiudadId);
+                var medic = new Medic(message.Id, message.Clave, message.Nombre);
 
                 var existing = await _repository.GetOne(x => x.Id == message.Id);
 
                 if (existing == null)
                 {
-                    await _repository.Create(branch);
+                    await _repository.Create(medic);
                 }
                 else
                 {
-                    await _repository.Update(branch);
+                    await _repository.Update(medic);
                 }
             }
             catch (System.Exception ex)

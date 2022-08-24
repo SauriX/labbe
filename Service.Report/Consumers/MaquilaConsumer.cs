@@ -1,40 +1,40 @@
 ﻿using EventBus.Messages.Catalog;
 using MassTransit;
 using Microsoft.Extensions.Logging;
-using Service.MedicalRecord.Domain.Catalogs;
-using Service.MedicalRecord.Repository.IRepository;
+using Service.Report.Domain.Catalogs;
+using Service.Report.Repository.IRepository;
 using Shared.Helpers;
 using System.Threading.Tasks;
 
-namespace Service.MedicalRecord.Consumers
+namespace Service.Report.Consumers
 {
-    public class BranchConsumer : IConsumer<BranchContract>
+    public class MaquilaConsumer : IConsumer<MaquilaContract>
     {
-        private readonly ILogger<BranchConsumer> _logger;
-        private readonly IRepository<Branch> _repository;
+        private readonly ILogger<MaquilaConsumer> _logger;
+        private readonly IRepository<Maquila> _repository;
 
-        public BranchConsumer(ILogger<BranchConsumer> logger, IRepository<Branch> repository)
+        public MaquilaConsumer(ILogger<MaquilaConsumer> logger, IRepository<Maquila> repository)
         {
             _logger = logger;
             _repository = repository;
         }
 
-        public async Task Consume(ConsumeContext<BranchContract> context)
+        public async Task Consume(ConsumeContext<MaquilaContract> context)
         {
             try
             {
                 var message = context.Message;
-                var branch = new Branch(message.Id, message.Clave, message.Nombre, message.Clinicos, message.CodigoPostal, message.CiudadId);
+                var maquila = new Maquila(message.Id, message.Nombre);
 
                 var existing = await _repository.GetOne(x => x.Id == message.Id);
 
                 if (existing == null)
                 {
-                    await _repository.Create(branch);
+                    await _repository.Create(maquila);
                 }
                 else
                 {
-                    await _repository.Update(branch);
+                    await _repository.Update(maquila);
                 }
             }
             catch (System.Exception ex)

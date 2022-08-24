@@ -22,7 +22,6 @@ namespace Service.Report.Migrations
             modelBuilder.Entity("Service.Report.Domain.Catalogs.Branch", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Sucursal")
@@ -30,13 +29,12 @@ namespace Service.Report.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Branch");
+                    b.ToTable("CAT_Sucursal");
                 });
 
             modelBuilder.Entity("Service.Report.Domain.Catalogs.Company", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<byte>("Convenio")
@@ -47,27 +45,25 @@ namespace Service.Report.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Company");
+                    b.ToTable("CAT_Compañia");
                 });
 
             modelBuilder.Entity("Service.Report.Domain.Catalogs.Maquila", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
                     b.Property<string>("Nombre")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Maquila");
+                    b.ToTable("CAT_Maquila");
                 });
 
             modelBuilder.Entity("Service.Report.Domain.Catalogs.Medic", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ClaveMedico")
@@ -78,7 +74,7 @@ namespace Service.Report.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Medic");
+                    b.ToTable("CAT_Medico");
                 });
 
             modelBuilder.Entity("Service.Report.Domain.MedicalRecord.MedicalRecord", b =>
@@ -292,8 +288,8 @@ namespace Service.Report.Migrations
                     b.Property<string>("Estudio")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("MaquilaId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("MaquilaId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("PaqueteId")
                         .HasColumnType("int");

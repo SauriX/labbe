@@ -117,7 +117,7 @@ namespace Service.MedicalRecord
 
             services.AddMassTransit(x =>
             {
-                x.AddConsumer<BranchConsumer>();
+                x.AddConsumers(Assembly.GetExecutingAssembly());
 
                 x.UsingRabbitMq((context, configurator) =>
                 {
