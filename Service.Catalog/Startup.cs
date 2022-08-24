@@ -28,6 +28,7 @@ using Service.Catalog.Repository;
 using Service.Catalog.Repository.IRepository;
 using Service.Catalog.Requirements;
 using Service.Catalog.Settings;
+using Service.MedicalRecord.Client;
 using Shared.Dictionary;
 using System;
 using System.Collections.Generic;
@@ -62,7 +63,7 @@ namespace Service.Catalog
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddScoped<IIdentityClient, IdentityClient>();
-
+            services.AddScoped<IPdfClient, PdfClient>();
             services.AddHttpClient<IIdentityClient, IdentityClient>(client =>
             {
                 var token = new HttpContextAccessor().HttpContext.Request.Headers["Authorization"].ToString();
@@ -76,17 +77,29 @@ namespace Service.Catalog
 
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
             });
+            services.AddHttpClient<IPdfClient, PdfClient>(client =>
+            {
+                var token = new HttpContextAccessor().HttpContext.Request.Headers["Authorization"].ToString();
 
+                client.BaseAddress = new Uri(Configuration["ClientUrls:Pdf"]);
+
+                if (!string.IsNullOrWhiteSpace(token))
+                {
+                    client.DefaultRequestHeaders.Add("Authorization", token);
+                }
+
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            });
             services.AddMassTransit(x =>
             {
-                x.AddConsumer<BranchErrorConsumer>();
+                x.AddConsumers(Assembly.GetExecutingAssembly());
 
                 x.UsingRabbitMq((context, configurator) =>
                 {
                     var rabbitMQSettings = Configuration.GetSection(nameof(RabbitMQSettings)).Get<RabbitMQSettings>();
                     var queueNames = Configuration.GetSection(nameof(QueueNames)).Get<QueueNames>();
 
-                    configurator.Host(new Uri(rabbitMQSettings.Host), "Catalogo", c =>
+                    configurator.Host(new Uri(rabbitMQSettings.Host), "Catalog", c =>
                     {
                         c.ContinuationTimeout(TimeSpan.FromSeconds(20));
                         c.Username(rabbitMQSettings.Username);
@@ -211,7 +224,7 @@ namespace Service.Catalog
             services.AddScoped<ICatalogDescriptionApplication<UseOfCFDI>, CatalogDescriptionApplication<UseOfCFDI>>();
             services.AddScoped<ICatalogDescriptionApplication<Payment>, CatalogDescriptionApplication<Payment>>();
             services.AddScoped<ICatalogDescriptionApplication<Indicator>, CatalogDescriptionApplication<Indicator>>();
-
+            services.AddScoped<IEquipmentMantainApplication, EquipmentMantainApplication>();
             services.AddScoped<IEquipmentApplication, EquipmentApplication>();
 
             services.AddScoped<IConfigurationApplication, ConfigurationApplication>();
@@ -269,6 +282,10 @@ namespace Service.Catalog
             services.AddScoped<IPromotionRepository, PromotionRepository>();
             services.AddScoped<ILoyaltyRepository, LoyaltyRepository>();
             services.AddScoped<IRouteRepository, RouteRepository>();
+            services.AddScoped<IEquipmentMantainRepository, EquipmentMantainRepository>();
+            services.AddScoped<IEquipmentApplication, EquipmentApplication>();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

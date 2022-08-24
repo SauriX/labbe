@@ -79,7 +79,28 @@ namespace Integration.Pdf.Controllers
 
             return result;
         }
+        [HttpPost]
+        [Route("mantain")]
+        public HttpResponseMessage Mantain(MantainDto order)
+        {
+            var file = MantainService.Generate(order);
 
+            var result = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new ByteArrayContent(file)
+            };
+
+            result.Content.Headers.ContentDisposition =
+                new ContentDispositionHeaderValue("attachment")
+                {
+                    FileName = "Mantain.pdf"
+                };
+
+            result.Content.Headers.ContentType =
+                new MediaTypeHeaderValue("application/pdf");
+
+            return result;
+        }
         [HttpPost]
         [Route("tags")]
         public HttpResponseMessage Tag(List<RequestTagDto> tags)

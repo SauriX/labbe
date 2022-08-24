@@ -107,12 +107,14 @@ namespace Service.Sender
 
                     configurator.ReceiveEndpoint(queueNames.Notification, re =>
                     {
+                        x.AddSignalRHub<NotificationHub>();
                         re.Consumer<NotificationConsumer>(context);
                         re.DiscardFaultedMessages();
                     });
 
                     configurator.ReceiveEndpoint(queueNames.NotificationFault, re =>
                     {
+                        x.AddSignalRHub<NotificationHub>();
                         re.Consumer<NotificationErrorConsumer>(context);
                     });
                 });

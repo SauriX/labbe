@@ -1,14 +1,11 @@
-﻿using EFCore.BulkExtensions;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Domain.Branch;
 using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Domain.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using DEP = Shared.Dictionary.Catalogs.Department;
 
 namespace Service.Catalog.Context
 {
@@ -154,128 +151,94 @@ namespace Service.Catalog.Context
                 }
             }
 
-            if (true)
+            if (!context.CAT_Departamento.Any() || context.CAT_Departamento.Any(x => x.Id == 1 && x.Nombre != "Paquetes"))
             {
                 using var transaction = context.Database.BeginTransaction();
                 try
                 {
-                    var departments = GetDepartments();
+                    var departamento = new List<Department>(){
+                     new Department
+                        {
+                            Id = 1,
+                            Clave = "Paquetes",
+                            Nombre = "Paquetes",
+                            Activo = true,
+                        } ,
+                       new Department
+                        {
+                            Id = 2,
+                            Clave = "Imagenologia",
+                            Nombre = "Imagenologia",
+                            Activo = true,
+                        }
+                    };
+                    if (!context.CAT_Departamento.Any())
+                    {
+                        context.CAT_Departamento.AddRange(departamento);
+                    }
+                    else
+                    {
+                        context.CAT_Departamento.UpdateRange(departamento);
+                    }
 
-                    StringBuilder script = new($@"
-                        MERGE {nameof(context.CAT_Departamento)} AS Target
-                            USING (VALUES [VALUES]) AS Source(Id, Clave, Nombre, Activo)
-                            ON Source.Id = Target.Id
-                        WHEN NOT MATCHED BY Target THEN
-                            INSERT (Id, Clave, Nombre, Activo)
-                            VALUES (Source.Id, Source.Clave, Source.Nombre, Source.Activo)
-                        WHEN MATCHED THEN UPDATE SET
-                            Target.Clave = Source.Clave, 
-	                        Target.Nombre = Source.Nombre,
-	                        Target.Activo = Source.Activo;");
 
-                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Departamento)} ON;");
-
-                    var values = string.Join("," + Environment.NewLine,
-                        departments.Select(x => string.Concat("(", x.Id, ",'", x.Clave, "','", x.Nombre, "',", x.Activo ? 1 : 0, ")")));
-
-                    script.Replace("[VALUES]", values);
-
-                    context.Database.ExecuteSqlRaw(script.ToString());
-
-                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Departamento)} OFF;");
+                    context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Departamento ON;");
+                    await context.SaveChangesAsync();
+                    context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Departamento OFF;");
 
                     transaction.Commit();
                 }
                 catch (Exception)
                 {
-                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Departamento)} OFF;");
                     transaction.Rollback();
                     throw;
                 }
             }
 
-            if (true)
+            if (!context.CAT_Area.Any() || context.CAT_Area.Any(x => x.Id == 1 && x.Nombre != "Paquetes" || x.Id == 1 && x.Nombre != "Imagenologia"))
             {
+
                 using var transaction = context.Database.BeginTransaction();
                 try
                 {
-                    var areas = GetAreas();
+                    var area = new List<Area>(){
+                        new Area
+                    {
+                        Id = 1,
+                        Clave = "Paquetes",
+                        Nombre = "Paquetes",
+                        Activo = true,
+                        DepartamentoId = 1
+                    },
+                        new Area
+                    {
+                        Id = 2,
+                        Clave = "Imagenologia",
+                        Nombre = "Imagenologia",
+                        Activo = true,
+                        DepartamentoId = 2
+                    }
+                    };
 
-                    StringBuilder script = new($@"
-                        MERGE {nameof(context.CAT_Area)} AS Target
-                            USING (VALUES [VALUES]) AS Source(Id, DepartamentoId, Clave, Nombre, Activo)
-                            ON Source.Id = Target.Id
-                        WHEN NOT MATCHED BY Target THEN
-                            INSERT (Id, DepartamentoId, Clave, Nombre, Activo)
-                            VALUES (Source.Id, Source.DepartamentoId, Source.Clave, Source.Nombre, Source.Activo)
-                        WHEN MATCHED THEN UPDATE SET
-                            Target.DepartamentoId = Source.DepartamentoId, 
-                            Target.Clave = Source.Clave, 
-	                        Target.Nombre = Source.Nombre,
-	                        Target.Activo = Source.Activo;");
-
-                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Area)} ON;");
-
-                    var values = string.Join("," + Environment.NewLine,
-                        areas.Select(x => string.Concat("(", x.Id, ",", x.DepartamentoId, ",'", x.Clave, "','", x.Nombre, "',", x.Activo ? 1 : 0, ")")));
-
-                    script.Replace("[VALUES]", values);
-
-                    context.Database.ExecuteSqlRaw(script.ToString());
-
-                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Area)} OFF;");
+                    if (!context.CAT_Area.Any())
+                    {
+                        context.CAT_Area.AddRange(area);
+                    }
+                    else
+                    {
+                        context.CAT_Area.UpdateRange(area);
+                    }
+                    context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Area ON;");
+                    await context.SaveChangesAsync();
+                    context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Area OFF;");
 
                     transaction.Commit();
                 }
                 catch (Exception)
                 {
-                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Area)} OFF;");
                     transaction.Rollback();
                     throw;
                 }
-
-
-                //using var transaction = context.Database.BeginTransaction();
-                //try
-                //{
-                //    var area = new List<Area>(){
-                //        new Area
-                //    {
-                //        Id = 1,
-                //        Clave = "Paquetes",
-                //        Nombre = "Paquetes",
-                //        Activo = true,
-                //        DepartamentoId = 1
-                //    },
-                //        new Area
-                //    {
-                //        Id = 2,
-                //        Clave = "Imagenologia",
-                //        Nombre = "Imagenologia",
-                //        Activo = true,
-                //        DepartamentoId = 2
-                //    }
-                //    };
-
-                //    if (!context.CAT_Area.Any())
-                //    {
-                //        context.CAT_Area.AddRange(area);
-                //    }
-                //    else
-                //    {
-                //        context.CAT_Area.UpdateRange(area);
-                //    }
-                //    context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Area ON;");
-                //    await context.SaveChangesAsync();
-                //    context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Area OFF;");
-
-                //    transaction.Commit();
-                //}
-                //catch (Exception)
-                //{
-                //    transaction.Rollback();
-                //    throw;
-                //}
             }
 
 
@@ -985,78 +948,6 @@ namespace Service.Catalog.Context
                     throw;
                 }
             }
-        }
-
-        private static List<Department> GetDepartments()
-        {
-            var departments = new List<Department>
-            {
-                new Department(DEP.PAQUETES, "PAQ", "PAQUETES"),
-                new Department(DEP.IMAGENOLOGIA, "IMAGENOLOGÍA", "IMAGENOLOGÍA"),
-                new Department(DEP.PATOLOGIA, "PATOLOGÍA", "PATOLOGÍA"),
-                new Department(DEP.LABORATORIO, "LABORATORIO", "LABORATORIO"),
-            };
-
-            return departments;
-        }
-
-        private static List<Area> GetAreas()
-        {
-            var areas = new List<Area>
-            {
-                new Area(1, DEP.PAQUETES, "PAQ", "PAQUETES"),
-                new Area(2, DEP.LABORATORIO, "ANA", "AUTOINMUNIDAD"),
-                new Area(3, DEP.LABORATORIO, "APE", "ANTIGENO PROSTATICO"),
-                new Area(4, DEP.PATOLOGIA, "BACTER", "BACTERIOLOGIA"),
-                new Area(5, DEP.LABORATORIO, "BH", "BIOMETRIAS"),
-                new Area(6, DEP.LABORATORIO, "CITO", "CITOMETRIA DE FLUJO"),
-                new Area(7, DEP.LABORATORIO, "CLAMI", "CLAMIDIA"),
-                new Area(8, DEP.PATOLOGIA, "CN", "CITOLOGIA NASAL"),
-                new Area(9, DEP.LABORATORIO, "COAG", "COAGULACION"),
-                new Area(10, DEP.LABORATORIO, "CONVU", "ANTICONVULSIVANTES"),
-                new Area(11, DEP.LABORATORIO, "COPROL", "COPROLOGICOS"),
-                new Area(12, DEP.LABORATORIO, "DOP", "ANTIDOPING"),
-                new Area(13, DEP.LABORATORIO, "ELECS", "ELECTROLITOS SERICOS"),
-                new Area(14, DEP.LABORATORIO, "ELECU", "ELECTROLITOS URINARIOS"),
-                new Area(15, DEP.LABORATORIO, "ESP", "ESPERMATOBIOSCOPIA"),
-                new Area(16, DEP.LABORATORIO, "ESPE", "PRUEBAS ESPECIALES"),
-                new Area(17, DEP.LABORATORIO, "FEB", "REACCIONES FEBRILES"),
-                new Area(18, DEP.LABORATORIO, "GAS", "PRUEBAS GAS"),
-                new Area(19, DEP.LABORATORIO, "GIN", "GINECOLOGICO"),
-                new Area(20, DEP.LABORATORIO, "GRU", "GRUPO SANGUINEO"),
-                new Area(21, DEP.LABORATORIO, "HEMATO", "HEMATOLOGIA"),
-                new Area(22, DEP.LABORATORIO, "HEPA", "HEPATITIS"),
-                new Area(23, DEP.LABORATORIO, "HOR", "HORMONAS"),
-                new Area(24, DEP.LABORATORIO, "IDR", "INTRADERMORREACCIONES"),
-                new Area(25, DEP.LABORATORIO, "IG", "INMUNOGLOBULINAS"),
-                new Area(26, DEP.LABORATORIO, "LENDO1", "LENDO1"),
-                new Area(27, DEP.LABORATORIO, "LIQUI", "LIQUIDOS"),
-                new Area(28, DEP.LABORATORIO, "ONCO", "MARCADORES TUMORALES"),
-                new Area(29, DEP.LABORATORIO, "PARA", "PARASITOLOGIA"),
-                new Area(30, DEP.PATOLOGIA, "HIPATO", "HISTOPATOLOGÍA"),
-                new Area(31, DEP.LABORATORIO, "PCR", "CARGAS VIRALES"),
-                new Area(32, DEP.LABORATORIO, "PRE", "PRENUPCIALES"),
-                new Area(33, DEP.LABORATORIO, "PRU", "AREA PRUEBA"),
-                new Area(34, DEP.LABORATORIO, "QS", "QUIMICAS"),
-                new Area(35, DEP.LABORATORIO, "RIA", "EMBARAZO"),
-                new Area(36, DEP.IMAGENOLOGIA, "RX", "RAYOS X"),
-                new Area(37, DEP.LABORATORIO, "SA", "SIN AREA"),
-                new Area(38, DEP.LABORATORIO, "SERO", "SEROLOGIA"),
-                new Area(39, DEP.LABORATORIO, "TIR", "TIROIDEOS"),
-                new Area(40, DEP.LABORATORIO, "TORCH", "TORCH"),
-                new Area(41, DEP.LABORATORIO, "URI", "URIANALISIS"),
-                new Area(42, DEP.LABORATORIO, "VDRL", "VDRL"),
-                new Area(43, DEP.LABORATORIO, "XXX", "INFORMATIVA"),
-                new Area(44, DEP.LABORATORIO, "INMUNO", "INMUNO"),
-                new Area(45, DEP.LABORATORIO, "GLICO", " GLICOSILADAS"),
-                new Area(46, DEP.LABORATORIO, "ELECTR", "ELECTROFORESIS"),
-                new Area(47, DEP.LABORATORIO, "BM", "BIOLOGIA MOLECULAR"),
-                new Area(48, DEP.LABORATORIO, "PCRGEN", "PCR GENNE XPERT"),
-                new Area(49, DEP.IMAGENOLOGIA, "ULTSO", "ULTRASONIDO"),
-                new Area(50, DEP.IMAGENOLOGIA, "MASTO", "MASTOGRAFÍA"),
-            };
-
-            return areas;
         }
     }
 }

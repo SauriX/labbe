@@ -44,6 +44,5 @@ namespace Service.MedicalRecord.Domain.Request
 
         public virtual ICollection<RequestStudy> Estudios { get; set; }
         public virtual ICollection<RequestPack> Paquetes { get; set; }
-        public virtual ICollection<RequestImage> Imagenes { get; set; }
     }
 }
