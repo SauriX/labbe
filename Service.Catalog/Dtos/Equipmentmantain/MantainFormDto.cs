@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Service.Catalog.Domain.EquipmentMantain;
+using System;
+using System.Collections.Generic;
 
 namespace Service.Catalog.Dtos.Equipmentmantain
 {
@@ -12,7 +14,7 @@ namespace Service.Catalog.Dtos.Equipmentmantain
         public string Clave { get; set; }
         public string No_serie { get; set; }
         public bool Ativo { get; set; }
-        public string imagenUrl { get; set; }
+        public List<string> imagenUrl { get; set; }
         public int ide { get; set; }
     }
 }

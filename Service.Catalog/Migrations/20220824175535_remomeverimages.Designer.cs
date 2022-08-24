@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220824175535_remomeverimages")]
+    partial class remomeverimages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1032,25 +1034,6 @@ namespace Service.Catalog.Migrations
                     b.HasIndex("EquipoId");
 
                     b.ToTable("CAT_Mantenimiento_Equipo");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.EquipmentMantain.MantainImages", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("MantainId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UrlImg")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MantainId");
-
-                    b.ToTable("CAT_Mantenimiento_Equipo_Images");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Indication.Indication", b =>
@@ -2783,17 +2766,6 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Equipo");
                 });
 
-            modelBuilder.Entity("Service.Catalog.Domain.EquipmentMantain.MantainImages", b =>
-                {
-                    b.HasOne("Service.Catalog.Domain.EquipmentMantain.Mantain", "Mantain")
-                        .WithMany("images")
-                        .HasForeignKey("MantainId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Mantain");
-                });
-
             modelBuilder.Entity("Service.Catalog.Domain.Indication.IndicationStudy", b =>
                 {
                     b.HasOne("Service.Catalog.Domain.Study.Study", "Estudio")
@@ -3309,11 +3281,6 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Contacts");
 
                     b.Navigation("Precio");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.EquipmentMantain.Mantain", b =>
-                {
-                    b.Navigation("images");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Indication.Indication", b =>
