@@ -218,7 +218,7 @@ namespace Service.MedicalRecord.Application
                 RemitenteId = requestDto.UsuarioId.ToString()
             };
 
-            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, _queueNames.Email)));
+            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, "/", _queueNames.Email)));
 
             await endpoint.Send(emailToSend);
         }
@@ -237,7 +237,7 @@ namespace Service.MedicalRecord.Application
                 RemitenteId = requestDto.UsuarioId.ToString()
             };
 
-            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, _queueNames.Whatsapp)));
+            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, "/", _queueNames.Whatsapp)));
 
             await endpoint.Send(emailToSend);
         }
@@ -496,7 +496,7 @@ namespace Service.MedicalRecord.Application
             }
             else
             {
-                request.RutaFormato = path;
+                request.RutaINEReverso = path;
             }
 
             request.UsuarioModificoId = requestDto.UsuarioId;

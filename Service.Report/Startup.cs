@@ -89,22 +89,41 @@ namespace Service.Report
 
             services.AddMassTransit(x =>
             {
-                x.AddConsumer<BranchConsumer>();
+                x.AddConsumers(Assembly.GetExecutingAssembly());
 
                 x.UsingRabbitMq((context, configurator) =>
                 {
                     var rabbitMQSettings = Configuration.GetSection(nameof(RabbitMQSettings)).Get<RabbitMQSettings>();
+                    var queueNames = Configuration.GetSection(nameof(QueueNames)).Get<QueueNames>();
 
-                    configurator.Host(new Uri(rabbitMQSettings.Host), "MedicalRecord", c =>
+                    configurator.Host(new Uri(rabbitMQSettings.Host), "Reporte", c =>
                     {
                         c.ContinuationTimeout(TimeSpan.FromSeconds(20));
                         c.Username(rabbitMQSettings.Username);
                         c.Password(rabbitMQSettings.Password);
                     });
 
-                    configurator.ReceiveEndpoint("branch-report-queue", re =>
+                    configurator.ReceiveEndpoint(queueNames.Branch, re =>
                     {
                         re.Consumer<BranchConsumer>(context);
+                        re.DiscardFaultedMessages();
+                    });
+
+                    configurator.ReceiveEndpoint(queueNames.Company, re =>
+                    {
+                        re.Consumer<CompanyConsumer>(context);
+                        re.DiscardFaultedMessages();
+                    });
+
+                    configurator.ReceiveEndpoint(queueNames.Medic, re =>
+                    {
+                        re.Consumer<MedicConsumer>(context);
+                        re.DiscardFaultedMessages();
+                    });      
+                    
+                    configurator.ReceiveEndpoint(queueNames.Maquila, re =>
+                    {
+                        re.Consumer<MaquilaConsumer>(context);
                         re.DiscardFaultedMessages();
                     });
                 });

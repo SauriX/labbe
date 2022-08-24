@@ -34,7 +34,7 @@ namespace Service.MedicalRecord.Consumers
                 }
                 else
                 {
-                    await _repository.Create(branch);
+                    await _repository.Update(branch);
                 }
             }
             catch (System.Exception ex)

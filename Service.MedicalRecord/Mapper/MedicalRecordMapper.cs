@@ -20,7 +20,7 @@ namespace Service.MedicalRecord.Mapper
                 NomprePaciente = $"{x.NombrePaciente} {x.PrimerApellido}",
                 Genero = x.Genero,
                 Edad = x.Edad,
-                FechaNacimiento = x.FechaDeNacimiento,
+                FechaNacimiento = x.FechaDeNacimiento.Date.ToShortDateString().ToString(),
                 MonederoElectronico = x.Monedero,
                 Telefono = x.Telefono,
             };
@@ -37,7 +37,7 @@ namespace Service.MedicalRecord.Mapper
                 NomprePaciente = $"{x.NombrePaciente} {x.PrimerApellido}",
                 Genero = x.Genero,
                 Edad = x.Edad,
-                FechaNacimiento = x.FechaDeNacimiento,
+                FechaNacimiento = x.FechaDeNacimiento.Date.ToShortDateString().ToString(),
                 MonederoElectronico = x.Monedero,
                 Telefono = x.Telefono,
             }).ToList();
