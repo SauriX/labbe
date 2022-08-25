@@ -150,7 +150,14 @@ namespace Service.MedicalRecord.Repository
 
             await _context.SaveChangesAsync();
         }
+        public async Task<string> GetLastCode(Guid branchId, string date)
+        {
+            var lastRequest = await _context.CAT_Expedientes
+                .OrderBy(x => x.FechaCreo)
+                .LastOrDefaultAsync(x => x.IdSucursal == branchId && x.Expediente.EndsWith(date));
 
+            return lastRequest?.Expediente;
+        }
         public async Task<List<Domain.MedicalRecord.MedicalRecord>> Coincidencias(MedicalRecord.Domain.MedicalRecord.MedicalRecord expediente)
         {
             var expedientes = await _context.CAT_Expedientes.Where(x => x.NombrePaciente == expediente.NombrePaciente && x.PrimerApellido == expediente.PrimerApellido).ToListAsync();
