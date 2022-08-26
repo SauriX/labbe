@@ -116,7 +116,7 @@ namespace Service.Catalog.Application
                 var path = await SaveImageGetPath(item);
                 var image = new MantainImages
                 {
-                    Id = Guid.NewGuid(),
+                    Id= Guid.NewGuid(),
                     UrlImg = path,
                     MantainId = Guid.Parse(request.Id),
                 };
@@ -128,9 +128,9 @@ namespace Service.Catalog.Application
 
         private static async Task<string> SaveImageGetPath(MantainImageDto requestDto)
         {
-            var path = Path.Combine("http://localhost:20347/images/mantain", $"{requestDto.clave}{requestDto.SolicitudId}");
-            var name = string.Concat(requestDto.Tipo, ".png");
-            var path2 = Path.Combine("wwwroot/images/mantain", requestDto.clave);
+            var path = Path.Combine("http://localhost:20347/images/mantain", $"{requestDto.clave}");
+            var name = string.Concat($"{requestDto.Tipo}{DateTime.Now.Second}", ".png");
+            var path2 = Path.Combine("wwwroot/images/mantain", $"{requestDto.clave}{requestDto.SolicitudId}");
             var isSaved = await requestDto.Imagen.SaveFileAsync(path2, name);
 
             if (isSaved)

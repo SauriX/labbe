@@ -45,7 +45,7 @@ namespace Service.Catalog.Mapper
                 IdEquipo = model.EquipoId,
                 Fecha = model.Fecha_Prog,
                 Descripcion = model.Descrip,
-              //  imagenUrl = string.IsNullOrWhiteSpace(model.Imagen1) ? model.Imagen2 : model.Imagen1,
+                imagenUrl = model.images.Select(x=>x.UrlImg).ToList(),
                 Clave = model.clave,
                 No_serie = model.Num_Serie,
                 

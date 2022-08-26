@@ -98,20 +98,22 @@ namespace Integration.Pdf.Service
 
 
 
-            if (!string.IsNullOrEmpty(order.imagenUrl)) {
+            if (order.imagenUrl.Count()>0) {
+                foreach (var image in order.imagenUrl) {
+                    var logo = image;
+                    var webClient = new WebClient();
+                    byte[] imageBytes = webClient.DownloadData(logo);
 
-                var logo = order.imagenUrl;
-                var webClient = new WebClient();
-                byte[] imageBytes = webClient.DownloadData(logo);
+                    /* System.Drawing.ImageConverter converter = new System.Drawing.ImageConverter();
+                     var image = (byte[])converter.ConvertTo(new System.Drawing.Bitmap(imageBytes), typeof(byte[]));*/
 
-                /* System.Drawing.ImageConverter converter = new System.Drawing.ImageConverter();
-                 var image = (byte[])converter.ConvertTo(new System.Drawing.Bitmap(imageBytes), typeof(byte[]));*/
+                    string imageFilename = MigraDocFilenameFromByteArray(imageBytes);
 
-                string imageFilename = MigraDocFilenameFromByteArray(imageBytes);
+                    var imgPar = section.AddParagraph();
+                    imgPar.Format.Alignment = ParagraphAlignment.Center;
+                    imgPar.AddImage(imageFilename);
+                }
 
-                var imgPar = section.AddParagraph();
-                imgPar.Format.Alignment = ParagraphAlignment.Center;
-                imgPar.AddImage(imageFilename);
             }
 
            

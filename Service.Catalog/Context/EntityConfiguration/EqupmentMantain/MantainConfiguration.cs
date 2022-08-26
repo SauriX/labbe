@@ -21,8 +21,8 @@ namespace Service.Catalog.Context.EntityConfiguration.EqupmentMantain
 
             builder
                .HasMany(x => x.images)
-               .WithOne()
-               .HasForeignKey(x=>x.Id)
+               .WithOne(x=>x.Mantain)
+               //.HasForeignKey(x=>x.MantainId)
                .OnDelete(DeleteBehavior.Restrict);
 
         }

@@ -16,7 +16,7 @@ namespace Integration.Pdf.Dtos
         public string No_serie { get; set; }
         public bool Ativo { get; set; }
      
-        public string imagenUrl { get; set; }
+        public List<string> imagenUrl { get; set; }
 
  
     }

@@ -1,12 +1,14 @@
 ﻿using ClosedXML.Excel;
 using ClosedXML.Report;
 using Service.MedicalRecord.Application.IApplication;
+using Service.MedicalRecord.Client.IClient;
 using Service.MedicalRecord.Dictionary;
 using Service.MedicalRecord.Domain.MedicalRecord;
 using Service.MedicalRecord.Dtos;
 using Service.MedicalRecord.Dtos.MedicalRecords;
 using Service.MedicalRecord.Mapper;
 using Service.MedicalRecord.Repository.IRepository;
+using Service.MedicalRecord.Utils;
 using Shared.Dictionary;
 using Shared.Error;
 using Shared.Extensions;
@@ -20,10 +22,12 @@ namespace Service.MedicalRecord.Application
     public class MedicalRecordApplication : IMedicalRecordApplication
     {
         public readonly IMedicalRecordRepository _repository;
+        private readonly ICatalogClient _catalogClient;
 
-        public MedicalRecordApplication(IMedicalRecordRepository repository)
+        public MedicalRecordApplication(IMedicalRecordRepository repository, ICatalogClient catalogClient)
         {
             _repository = repository;
+            _catalogClient = catalogClient;
         }
 
         public async Task<List<MedicalRecordsListDto>> GetAll()
@@ -69,7 +73,14 @@ namespace Service.MedicalRecord.Application
             }
 
             var newprice = expediente.ToModel();
+            var date = DateTime.Now.ToString("ddMMyy");
 
+            var codeRange = await _catalogClient.GetCodeRange(Guid.Parse(expediente.sucursal));
+            var lastCode = await _repository.GetLastCode(Guid.Parse(expediente.sucursal), date);
+
+            var consecutive = Code.GetCode(codeRange, lastCode);
+            var code = $"{consecutive}{date}";
+                
             await _repository.Create(newprice, expediente.TaxData);
 
             newprice = await _repository.GetById(newprice.Id);
