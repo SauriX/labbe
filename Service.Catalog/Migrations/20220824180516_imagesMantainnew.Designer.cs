@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220824180516_imagesMantainnew")]
+    partial class imagesMantainnew
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,7 +54,7 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("Estado")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("FacturaciónId")
+                    b.Property<Guid>("FacturaciónId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("FechaCreo")
@@ -73,10 +75,10 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("NumeroInterior")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("PresupuestosId")
+                    b.Property<Guid>("PresupuestosId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ServicioId")
+                    b.Property<Guid>("ServicioId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Telefono")

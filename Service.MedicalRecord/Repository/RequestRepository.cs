@@ -29,7 +29,7 @@ namespace Service.MedicalRecord.Repository
 
         public async Task<List<Request>> GetByFilter(RequestFilterDto filter)
         {
-            var request = _context.CAT_Solicitud
+            var requests = _context.CAT_Solicitud
                 .Include(x => x.Expediente)
                 .Include(x => x.Compañia)
                 .Include(x => x.Sucursal)
@@ -37,49 +37,58 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Estudios).ThenInclude(x => x.Tapon)
                 .AsQueryable();
 
+            if (filter.TipoFecha != null && filter.TipoFecha == 1 && filter.FechaInicial != null && filter.FechaFinal != null)
+            {
+                requests = requests.Where(x => ((DateTime)filter.FechaInicial).Date <= x.FechaCreo.Date && ((DateTime)filter.FechaFinal).Date >= x.FechaCreo.Date);
+            }
+
+            if (filter.TipoFecha != null && filter.TipoFecha == 2 && filter.FechaInicial != null && filter.FechaFinal != null)
+            {
+                requests = requests.Where(x => x.Estudios.Any(x => ((DateTime)filter.FechaInicial).Date <= x.FechaEntrega && ((DateTime)filter.FechaFinal).Date >= x.FechaEntrega));
+            }
+
             if (!string.IsNullOrWhiteSpace(filter.Clave))
             {
-                request = request.Where(x => string.Equals(x.Clave, filter.Clave, StringComparison.CurrentCultureIgnoreCase));
-
-                request = request.Where(x => string.Equals(x.ClavePatologica, filter.Clave, StringComparison.CurrentCultureIgnoreCase));
+                requests = requests.Where(x => x.Clave.ToLower().Contains(filter.Clave.ToLower())
+                || x.ClavePatologica.ToLower().Contains(filter.Clave.ToLower()));
             }
 
-            if (filter.Sucursales.Any())
+            if (filter.Sucursales != null && filter.Sucursales.Any())
             {
-                request = request.Where(x => filter.Sucursales.Contains(x.SucursalId));
+                requests = requests.Where(x => filter.Sucursales.Contains(x.SucursalId));
             }
 
-            if (filter.Compañias.Any())
+            if (filter.Compañias != null && filter.Compañias.Any())
             {
-                request = request.Where(x => x.CompañiaId != null && filter.Compañias.Contains((Guid)x.CompañiaId));
+                requests = requests.Where(x => x.CompañiaId != null && filter.Compañias.Contains((Guid)x.CompañiaId));
             }
 
-            if (filter.Medicos.Any())
+            if (filter.Medicos != null && filter.Medicos.Any())
             {
-                request = request.Where(x => x.MedicoId != null && filter.Medicos.Contains((Guid)x.MedicoId));
+                requests = requests.Where(x => x.MedicoId != null && filter.Medicos.Contains((Guid)x.MedicoId));
             }
 
-            if (filter.Procedencias.Any())
+            if (filter.Procedencias != null && filter.Procedencias.Any())
             {
-                request = request.Where(x => filter.Procedencias.Contains(x.Procedencia));
+                requests = requests.Where(x => filter.Procedencias.Contains(x.Procedencia));
             }
 
-            if (filter.Urgencias.Any())
+            if (filter.Urgencias != null && filter.Urgencias.Any())
             {
-                request = request.Where(x => filter.Urgencias.Contains(x.Urgencia));
+                requests = requests.Where(x => filter.Urgencias.Contains(x.Urgencia));
             }
 
-            if (filter.Estatus.Any())
+            if (filter.Estatus != null && filter.Estatus.Any())
             {
-                request = request.Where(x => x.Estudios.Any(y => filter.Estatus.Contains(y.EstatusId)));
+                requests = requests.Where(x => x.Estudios.Any(y => filter.Estatus.Contains(y.EstatusId)));
             }
 
-            if (filter.Departamentos.Any())
+            if (filter.Departamentos != null && filter.Departamentos.Any())
             {
-                request = request.Where(x => x.Estudios.Any(y => filter.Departamentos.Contains(y.DepartamentoId)));
+                requests = requests.Where(x => x.Estudios.Any(y => filter.Departamentos.Contains(y.DepartamentoId)));
             }
 
-            return await request.ToListAsync();
+            return await requests.ToListAsync();
         }
 
         public async Task<Request> GetById(Guid id)
@@ -122,6 +131,16 @@ namespace Service.MedicalRecord.Repository
             return studies;
         }
 
+        public async Task<List<RequestStudy>> GetAllStudies(Guid requestId)
+        {
+            var studies = await _context.Relacion_Solicitud_Estudio
+                .Include(x => x.Paquete)
+                .Where(x => x.SolicitudId == requestId)
+                .ToListAsync();
+
+            return studies;
+        }
+
         public async Task<List<RequestStudy>> GetStudiesByRequest(Guid requestId)
         {
             var studies = await _context.Relacion_Solicitud_Estudio
@@ -145,6 +164,13 @@ namespace Service.MedicalRecord.Repository
             return studies;
         }
 
+        public async Task<RequestImage> GetImage(Guid requestId, string code)
+        {
+            var image = await _context.Relacion_Solicitud_Imagen.FirstOrDefaultAsync(x => x.SolicitudId == requestId && x.Clave == code);
+
+            return image;
+        }
+
         public async Task Create(Request request)
         {
             _context.CAT_Solicitud.Add(request);
@@ -155,6 +181,20 @@ namespace Service.MedicalRecord.Repository
         public async Task Update(Request request)
         {
             _context.CAT_Solicitud.Update(request);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateImage(RequestImage requestImage)
+        {
+            if (requestImage.Id == 0)
+            {
+                _context.Relacion_Solicitud_Imagen.Add(requestImage);
+            }
+            else
+            {
+                _context.Relacion_Solicitud_Imagen.Update(requestImage);
+            }
 
             await _context.SaveChangesAsync();
         }

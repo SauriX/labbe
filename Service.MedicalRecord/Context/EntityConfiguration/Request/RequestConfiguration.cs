@@ -37,6 +37,12 @@ namespace Service.MedicalRecord.Context.EntityConfiguration.Request
                 .WithOne(x => x.Solicitud)
                 .HasForeignKey(x => x.SolicitudId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .HasMany(x => x.Imagenes)
+                .WithOne(x => x.Solicitud)
+                .HasForeignKey(x => x.SolicitudId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
