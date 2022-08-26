@@ -59,7 +59,7 @@ namespace Service.Catalog.Mapper
                 SucursalDestinoId = x?.SucursalDestinoId,
                 MaquiladorId = x?.MaquiladorId,
                 SucursalOrigen = x?.SucursalOrigen?.Nombre,
-                SucursalDestino = x?.SucursalDestino?.Nombre + " " + model?.Maquilador?.Nombre,
+                SucursalDestino = x?.SucursalDestino?.Nombre + " " + x?.Maquilador?.Nombre,
                 PaqueteriaId = x.PaqueteriaId,
                 Activo = x.Activo,
                 Comentarios = x.Comentarios.ToString(),
