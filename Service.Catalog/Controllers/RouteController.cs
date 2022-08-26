@@ -71,5 +71,12 @@ namespace Service.Catalog.Controllers
             var (file, fileName) = await _service.ExportForm(id);
             return File(file, MimeType.XLSX, fileName);
         }
+        [HttpPost("find")]
+        [Authorize(Policies.Access)]
+        public async Task<IEnumerable<RouteListDto>> Find(RouteFormDto routes)
+        {
+            routes.UsuarioId = (Guid)HttpContext.Items["userId"];
+            return await _service.FindRoutes(routes);
+        }
     }
 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220826013302_Cat_Sucursal Campos nuleables")]
+    partial class Cat_SucursalCamposnuleables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1037,7 +1039,6 @@ namespace Service.Catalog.Migrations
             modelBuilder.Entity("Service.Catalog.Domain.EquipmentMantain.MantainImages", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("MantainId")
@@ -2785,10 +2786,16 @@ namespace Service.Catalog.Migrations
 
             modelBuilder.Entity("Service.Catalog.Domain.EquipmentMantain.MantainImages", b =>
                 {
-                    b.HasOne("Service.Catalog.Domain.EquipmentMantain.Mantain", "Mantain")
+                    b.HasOne("Service.Catalog.Domain.EquipmentMantain.Mantain", null)
                         .WithMany("images")
-                        .HasForeignKey("MantainId")
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Service.Catalog.Domain.EquipmentMantain.Mantain", "Mantain")
+                        .WithMany()
+                        .HasForeignKey("MantainId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Mantain");

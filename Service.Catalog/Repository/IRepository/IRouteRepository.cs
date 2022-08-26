@@ -15,5 +15,6 @@ namespace Service.Catalog.Repository.IRepository
         Task<bool> IsDestinoVacio(Route routes);
         Task Create(Route routes);
         Task Update(Route routes);
+        Task<List<Route>> FindRoute(Route route);
     }
 }
