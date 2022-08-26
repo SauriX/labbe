@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Context;
 using Service.Catalog.Domain.Route;
+using Service.Catalog.Dtos.Route;
 using Service.Catalog.Repository.IRepository;
 using System;
 using System.Collections.Generic;
@@ -116,6 +117,38 @@ namespace Service.Catalog.Repository
                 transaction.Rollback();
                 throw;
             }
+        }
+
+        public async Task<List<Route>> FindRoute(Route route)
+        {
+            
+            var routes = _context.CAT_Rutas
+                 .Include(x => x.Estudios)
+                 .ThenInclude(x => x.Estudio)
+                 .ThenInclude(x => x.Area)
+                 .ThenInclude(x => x.Departamento)
+                .Include(x => x.SucursalOrigen)
+                .Include(x => x.SucursalDestino)
+                .Include(x => x.Paqueteria)
+                .Include(x => x.Maquilador)
+                .AsQueryable();
+
+            routes = routes.Where(x => x.HoraDeRecoleccion >= route.HoraDeRecoleccion
+                                    && (x.SucursalOrigenId == route.SucursalOrigenId)
+                                    && (x.Lunes && route.Lunes ? true :
+                                    x.Martes && route.Martes ? true :
+                                    x.Miercoles && route.Miercoles ? true :
+                                    x.Jueves && route.Jueves ? true :
+                                    x.Viernes && route.Viernes ? true :
+                                    x.Sabado && route.Sabado ? true :
+                                    x.Domingo && route.Domingo ? true : false)
+);
+
+            var routesList = await routes.ToListAsync();
+
+            //return routesList.FirstOrDefault();
+            return routesList;
+
         }
     }
 }

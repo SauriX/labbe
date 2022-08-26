@@ -45,6 +45,38 @@ namespace Service.Catalog.Mapper
                 Activo = x.Activo,
             });
         }
+        public static IEnumerable<RouteFormDto> ToRouteFoundDto(this List<Route> model)
+        {
+            if(model == null) return null;
+
+            return model.Select(x => new RouteFormDto
+            {
+
+                Id = x.Id.ToString(),
+                Clave = x.Clave,
+                Nombre = x.Nombre,
+                SucursalOrigenId = x?.SucursalOrigenId,
+                SucursalDestinoId = x?.SucursalDestinoId,
+                MaquiladorId = x?.MaquiladorId,
+                SucursalOrigen = x?.SucursalOrigen?.Nombre,
+                SucursalDestino = x?.SucursalDestino?.Nombre + " " + model?.Maquilador?.Nombre,
+                PaqueteriaId = x.PaqueteriaId,
+                Activo = x.Activo,
+                Comentarios = x.Comentarios.ToString(),
+                HoraDeRecoleccion = x.HoraDeRecoleccion,
+                TiempoDeEntrega = x.TiempoDeEntrega,
+                FormatoDeTiempoId = x.FormatoDeTiempoId,
+                Estudio = x?.Estudios?.Select(y => new Route_StudyListDto
+                {
+                    Id = y.EstudioId,
+                    Clave = y.Estudio.Clave,
+                    Nombre = y.Estudio.Nombre,
+                    Area = y.Estudio.Area.Nombre,
+                    Departamento = y.Estudio.Area.Departamento.Nombre,
+                })?.ToList(),
+                //Dias = dias
+            });
+        }
 
         public static RouteFormDto ToRouteFormDto(this Route model)
         {

@@ -173,5 +173,13 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.Conflict, Responses.EmptyDestiny("El Destino"));
             }
         }
+
+        public async Task<IEnumerable<RouteListDto>> FindRoutes(RouteFormDto route)
+        {
+            var ruta = route.ToModel();
+            var routes = await _repository.FindRoute(ruta);
+
+            return routes.ToRouteListDto();
+        }
     }
 }

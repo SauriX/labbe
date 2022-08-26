@@ -1,4 +1,5 @@
-﻿using Service.Catalog.Dtos.Route;
+﻿using Service.Catalog.Domain.Route;
+using Service.Catalog.Dtos.Route;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -13,5 +14,6 @@ namespace Service.Catalog.Application.IApplication
         Task<RouteListDto> Update(RouteFormDto routes);
         Task<(byte[] file, string fileName)> ExportList(string search);
         Task<(byte[] file, string fileName)> ExportForm(string id);
+        Task<IEnumerable<RouteListDto>> FindRoutes(RouteFormDto routeForm);
     }
 }
