@@ -1,12 +1,16 @@
 ﻿using ClosedXML.Excel;
 using ClosedXML.Report;
+using EventBus.Messages.Common;
+using MassTransit;
 using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Client.IClient;
 using Service.MedicalRecord.Dictionary;
 using Service.MedicalRecord.Dtos.MedicalRecords;
 using Service.MedicalRecord.Dtos.PriceQuote;
+using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Mapper;
 using Service.MedicalRecord.Repository.IRepository;
+using Service.MedicalRecord.Settings.ISettings;
 using Service.MedicalRecord.Utils;
 using Shared.Dictionary;
 using Shared.Error;
@@ -15,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-
+using RequestTemplates = Service.MedicalRecord.Dictionary.EmailTemplates.Request;
 namespace Service.MedicalRecord.Application
 {
     public class PriceQuoteApplication : IPriceQuoteApplication
@@ -23,11 +27,18 @@ namespace Service.MedicalRecord.Application
         public readonly IPriceQuoteRepository _repository;
         private readonly ICatalogClient _catalogCliente;
         private readonly IPdfClient _pdfClient;
-        public PriceQuoteApplication(IPriceQuoteRepository repository, ICatalogClient catalogClient, IPdfClient pdfClient)
+        private readonly ISendEndpointProvider _sendEndpointProvider;
+        private readonly IRabbitMQSettings _rabbitMQSettings;
+        private readonly IQueueNames _queueNames;
+        public PriceQuoteApplication(IPriceQuoteRepository repository, ICatalogClient catalogClient, IPdfClient pdfClient, ISendEndpointProvider sendEndpointProvider,
+           IRabbitMQSettings rabbitMQSettings, IQueueNames queueNames )
         {
             _repository = repository;
             _catalogCliente = catalogClient;
             _pdfClient = pdfClient;
+            _sendEndpointProvider = sendEndpointProvider;   
+            _rabbitMQSettings = rabbitMQSettings;
+            _queueNames = queueNames;
         }
         public async Task<List<PriceQuoteListDto>> GetNow(PriceQuoteSearchDto search)
         {
@@ -146,6 +157,44 @@ namespace Service.MedicalRecord.Application
             template.Format();
 
             return (template.ToByteArray(), $"Catálogo de Cotizacion ({study.nomprePaciente}).xlsx");
+        }
+
+        public async Task SendTestEmail(RequestSendDto requestDto)
+        {
+            var request =  await GetById(requestDto.SolicitudId);
+
+            var subject = RequestTemplates.Subjects.TestMessage;
+            var title = RequestTemplates.Titles.RequestCode(request.expediente);
+            var message = RequestTemplates.Messages.TestMessage;
+
+            var emailToSend = new EmailContract(requestDto.Correo, null, subject, title, message)
+            {
+                Notificar = true,
+                RemitenteId = requestDto.UsuarioId.ToString()
+            };
+
+            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, _queueNames.Email)));
+
+            await endpoint.Send(emailToSend);
+        }
+
+        public async Task SendTestWhatsapp(RequestSendDto requestDto)
+        {
+            var request = await GetById(requestDto.SolicitudId);
+
+            var message = RequestTemplates.Messages.TestMessage;
+
+            var phone = requestDto.Telefono.Replace("-", "");
+            phone = phone.Length == 10 ? "52" + phone : phone;
+            var emailToSend = new WhatsappContract(phone, message)
+            {
+                Notificar = true,
+                RemitenteId = requestDto.UsuarioId.ToString()
+            };
+
+            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, _queueNames.Whatsapp)));
+
+            await endpoint.Send(emailToSend);
         }
     }
 }
