@@ -33,14 +33,21 @@ namespace Service.MedicalRecord.Application.IApplication
 
         }
 
-        
+        public async Task<TrackingOrderDto> GetById(Guid Id)
+        {
+                var order = await _repository.GetById(Id);
+                return order.ToTrackingOrderFormDto();
+        }
 
         public Task<TrackingOrderDto> GetTrackingOrder(TrackingOrderFormDto order)
         {
             throw new NotImplementedException();
         }
 
-       
+        public Task<TrackingOrderDto> Update(TrackingOrderFormDto order)
+        {
+            throw new System.NotImplementedException();
+        }
         public Task<(byte[] file, string fileName)> ExportList(string search)
         {
             throw new NotImplementedException();
@@ -72,7 +79,7 @@ namespace Service.MedicalRecord.Application.IApplication
             //catch (Exception ex)
             //{
             //    throw ex;
-            }
+            //}
         }
 
     }

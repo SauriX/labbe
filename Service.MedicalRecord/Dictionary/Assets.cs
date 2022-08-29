@@ -8,7 +8,6 @@
         public const string CotizacionForm = "wwwroot/layout/excel/cotizacion/CotizacionFormulario.xlsx";
         public const string CitaList = "wwwroot/layout/excel/cita/CitaListado.xlsx";
         public const string CitaForm = "wwwroot/layout/excel/cita/CitaFormulario.xlsx";
-
-        public static object EquipmentList { get; internal set; }
+        public const string OrdenSeguimientoList = "wwwroot/layout/excel/cita/OrdenSeguimientoListado.xlsx";
     }
 }
