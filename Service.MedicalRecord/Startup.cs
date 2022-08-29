@@ -248,12 +248,14 @@ namespace Service.MedicalRecord
             services.AddScoped<IRequestApplication, RequestApplication>();
             services.AddScoped<IAppointmentApplication, AppointmentApplication>();
             services.AddScoped<ISamplingApplication, SamplingAplication>();
+            services.AddScoped<ITrackingOrderApplication, TrackingOrderApplication>();
 
             services.AddScoped<IMedicalRecordRepository, MedicalRecordRepository>();
             services.AddScoped<IRequestRepository, RequestRepository>();
             services.AddScoped<IPriceQuoteRepository, PriceQuoteRepository>();
             services.AddScoped<IAppointmentResposiotry, AppointmentRepository>();
             services.AddScoped<ISamplingRepository, SamplingRepository>();
+            services.AddScoped<ITrackingOrderRepository, TrackingOrderRepository>();
         }
 
 

@@ -31,9 +31,12 @@ namespace Service.Catalog.Dtos.Route
     {
         public RouteFormDtoValidator()
         {
-            RuleFor(x => x.Clave).NotEmpty().MaximumLength(100);
-            RuleFor(x => x.Nombre).NotEmpty().MaximumLength(100);
-            RuleFor(x => x.TiempoDeEntrega).NotEmpty();
+            //RuleFor(x => x.Clave).NotEmpty().MaximumLength(100);
+            //RuleFor(x => x.Nombre).NotEmpty().MaximumLength(100);
+            //RuleFor(x => x.TiempoDeEntrega).NotEmpty();  
+            RuleFor(x => x.Clave).MaximumLength(100);
+            RuleFor(x => x.Nombre).MaximumLength(100);
+            //RuleFor(x => x.TiempoDeEntrega);
             RuleFor(x => x.Comentarios).MaximumLength(500);
         }
     }

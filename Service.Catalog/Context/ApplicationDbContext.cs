@@ -81,7 +81,6 @@ namespace Service.Catalog.Context
         public DbSet<Units> CAT_Units { get; set; }
         public DbSet<BranchFolioConfig> CAT_Sucursal_Folio { get; set; }
         public DbSet<Equipos> CAT_Equipos { get; set; }
-        //public DbSet<Equipment> CAT_Equipos { get; set; }
         public DbSet<EquipmentBranch> Relacion_Equipo_Sucursal { get; set; }
         public DbSet<Mantain> CAT_Mantenimiento_Equipo { get; set; }
         public DbSet<MantainImages> CAT_Mantenimiento_Equipo_Images { get; set; }

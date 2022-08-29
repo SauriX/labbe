@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DEP = Shared.Dictionary.Catalogs.Department;
+using BR = Shared.Dictionary.Catalogs.Branch;
 
 namespace Service.Catalog.Context
 {
@@ -131,13 +132,13 @@ namespace Service.Catalog.Context
                         new BranchFolioConfig(26, 2042, 1, 2),  
                         // Sonora -> Hermosillo
                         new BranchFolioConfig(26, 2045, 1, 3),
-                        // Sonora -> Nogales
-                        new BranchFolioConfig(26, 2070, 1, 4),
-                        // Sonora -> Guaymas
-                        new BranchFolioConfig(26, 2105, 1, 5),
+                        // Sonora -> Heroica Nogales
+                        new BranchFolioConfig(26, 2066, 1, 4),
+                        // Sonora -> Heroica Guaymas
+                        new BranchFolioConfig(26, 2041, 1, 5),
                         // Nuevo León -> Monterrey
                         new BranchFolioConfig(19, 1061, 2, 1),
-                        // Nuevo León -> Nuevo León
+                        // Nuevo León -> San Pedro
                         new BranchFolioConfig(19, 1073, 2, 2),
                 };
 
@@ -176,7 +177,7 @@ namespace Service.Catalog.Context
                     context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Departamento)} ON;");
 
                     var values = string.Join("," + Environment.NewLine,
-                        departments.Select(x => string.Concat("(", x.Id, ",'", x.Clave, "','", x.Nombre, "',", x.Activo ? 1 : 0, ")")));
+                        departments.Select(x => $"({x.Id}, '{x.Clave}', '{x.Nombre}', {(x.Activo ? 1 : 0)})"));
 
                     script.Replace("[VALUES]", values);
 
@@ -217,7 +218,7 @@ namespace Service.Catalog.Context
                     context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Area)} ON;");
 
                     var values = string.Join("," + Environment.NewLine,
-                        areas.Select(x => string.Concat("(", x.Id, ",", x.DepartamentoId, ",'", x.Clave, "','", x.Nombre, "',", x.Activo ? 1 : 0, ")")));
+                        areas.Select(x => $"({x.Id}, {x.DepartamentoId}, '{x.Clave}', '{x.Nombre}', {(x.Activo ? 1 : 0)})"));
 
                     script.Replace("[VALUES]", values);
 
@@ -233,49 +234,52 @@ namespace Service.Catalog.Context
                     transaction.Rollback();
                     throw;
                 }
+            }
 
+            if (true)
+            {
+                using var transaction = context.Database.BeginTransaction();
+                try
+                {
+                    var branches = GetBranches();
 
-                //using var transaction = context.Database.BeginTransaction();
-                //try
-                //{
-                //    var area = new List<Area>(){
-                //        new Area
-                //    {
-                //        Id = 1,
-                //        Clave = "Paquetes",
-                //        Nombre = "Paquetes",
-                //        Activo = true,
-                //        DepartamentoId = 1
-                //    },
-                //        new Area
-                //    {
-                //        Id = 2,
-                //        Clave = "Imagenologia",
-                //        Nombre = "Imagenologia",
-                //        Activo = true,
-                //        DepartamentoId = 2
-                //    }
-                //    };
+                    StringBuilder script = new($@"
+                        MERGE {nameof(context.CAT_Sucursal)} AS Target
+                            USING (VALUES [VALUES]) AS Source(Id, Clave, Nombre, Clinicos, Telefono, Correo, Calle, NumeroExterior, NumeroInterior, Codigopostal, ColoniaId, Ciudad, Estado, Matriz, Activo)
+                            ON Source.Id = Target.Id
+                        WHEN NOT MATCHED BY Target THEN
+                            INSERT (Id, Clave, Nombre, Clinicos, Telefono, Correo, Calle, NumeroExterior, NumeroInterior, Codigopostal, ColoniaId, Ciudad, Estado, Matriz, Activo)
+                            VALUES (Source.Id, Source.Clave, Source.Nombre, Source.Clinicos, Source.Telefono, Source.Correo, Source.Calle, Source.NumeroExterior, Source.NumeroInterior, Source.Codigopostal, Source.ColoniaId, Source.Ciudad, Source.Estado, Source.Matriz, Source.Activo)
+                        WHEN MATCHED THEN UPDATE SET
+                            Target.Nombre = Source.Nombre, 
+	                        Target.Clinicos = Source.Clinicos,
+	                        Target.Telefono = Source.Telefono,
+	                        Target.Correo = Source.Correo,
+	                        Target.Calle = Source.Calle,
+	                        Target.NumeroExterior = Source.NumeroExterior,
+	                        Target.NumeroInterior = Source.NumeroInterior,
+	                        Target.Codigopostal = Source.Codigopostal,
+	                        Target.ColoniaId = Source.ColoniaId,
+	                        Target.Ciudad = Source.Ciudad,
+	                        Target.Estado = Source.Estado,
+	                        Target.Matriz = Source.Matriz,
+	                        Target.Activo = Source.Activo;");
 
-                //    if (!context.CAT_Area.Any())
-                //    {
-                //        context.CAT_Area.AddRange(area);
-                //    }
-                //    else
-                //    {
-                //        context.CAT_Area.UpdateRange(area);
-                //    }
-                //    context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Area ON;");
-                //    await context.SaveChangesAsync();
-                //    context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Area OFF;");
+                    var values = string.Join("," + Environment.NewLine,
+                        branches.Select(x => $"('{x.Id}', '{x.Clave}', '{x.Nombre}', '{x.Clinicos}', '{x.Telefono}', '{x.Correo}', '{x.Calle}', '{x.NumeroExterior}', '{x.NumeroInterior}', '{x.Codigopostal}', {x.ColoniaId}, '{x.Ciudad}', '{x.Estado}', {(x.Matriz ? 1 : 0)}, {(x.Activo ? 1 : 0)})"));
 
-                //    transaction.Commit();
-                //}
-                //catch (Exception)
-                //{
-                //    transaction.Rollback();
-                //    throw;
-                //}
+                    script.Replace("[VALUES]", values);
+
+                    context.Database.ExecuteSqlRaw(script.ToString());
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Area)} OFF;");
+                    transaction.Rollback();
+                    throw;
+                }
             }
 
 
@@ -1057,6 +1061,33 @@ namespace Service.Catalog.Context
             };
 
             return areas;
+        }
+
+        private static List<Branch> GetBranches()
+        {
+            var branches = new List<Branch>
+            {
+                new Branch(BR.MT,           "MT",            "Matriz",                   1, "110000-110999", "644-415-16-92", "laboratorioramos.recepcion@gmail.com",   "Sinaloa",                      "144",  null,   "85000", 123661, "Cajeme",                   "Sonora"),
+                new Branch(BR.CMSS,         "CMSS",          "Centro Médico Sur Sonora", 0, "111000-111299", "644-104-22-30", "labramoscmss@gmail.com",                 "Norte",                        null,   "749",  "85040", 123705, "Cajeme",                   "Sonora"),
+                new Branch(BR.U200,         "U200",          "Unidad 200",               0, "111300-111599", "644-416-14-07", "labramos200@gmail.com",                  "200",                          null,   null,   "85150", 123819, "Cajeme",                   "Sonora"),
+                new Branch(BR.U300,         "U300",          "Unidad 300",               0, "111600-111899", "644-444-66-69", "labramos300@gmail.com",                  "Jalisco",                      null,   "2250", "85080", 123739, "Cajeme",                   "Sonora"),
+                new Branch(BR.ALAMEDA,      "ALAMEDA",       "Unidad Alameda",           0, "111900-112199", "644-418-01-44", "labramoscalifornia@gmail.com",           "California",                   "358",  null,   "85219", 125349, "Cajeme",                   "Sonora"),
+                new Branch(BR.HACIENDAS,    "HACIENDAS",     "Unidad Las Haciendas",     0, "112200-112499", "644-104-22-30", "labramoshaciendas@gmail.com",            "No Reelección",                "2425", "1",    "85064", 123730, "Cajeme",                   "Sonora"),
+                new Branch(BR.REFORMA,      "REFORMA",       "Unidad Reforma",           0, "131600-131899", "662-213-68-66", "labramosreforma@gmail.com",              "Reforma",                      "273",  null,   "83270", 119437, "Hermosillo",               "Sonora"),
+                new Branch(BR.MORELOS,      "MORELOS",       "Unidad Morelos",           0, "131300-131599", "662-267-86-35", "lab.ramos.morelos@hotmail.com",          "Blvd. José María Morelos",     "357",  null,   "83144", 119192, "Hermosillo",               "Sonora"),
+                new Branch(BR.SOLIDARIDAD,  "SOLIDARIDAD",   "Unidad Solidaridad",       1, "130000-130999", "662-216-41-38", "solidaridad.labramos@gmail.com",         "Solidaridad 2",                null,   null,   "83200", 119328, "Hermosillo",               "Sonora"),
+                new Branch(BR.MNORTE,       "MNORTE",        "Unidad Médica Norte",      0, "131000-131299", "662-118-76-67", "labramos.medicanorte@gmail.com",         "Blvd. Solidaridad",            "574",  null,   "83110", 119063, "Hermosillo",               "Sonora"),
+                new Branch(BR.CANTABRIA,    "CANTABRIA",     "Unidad Cantabria",         0, "131900-132199", "662-980-04-16", "labramos.cantabria@gmail.com ",          "Blvd. Colosio",                "803",  "14",   "83224", 119360, "Hermosillo",               "Sonora"),
+                new Branch(BR.UNIDAD,       "UNIDAD",        "Unidad Guaymas",           1, "150001-150999", "622-221-91-83", "labramos.guaymas@gmail.com",             "Av. Calzada A. García López",  null,   null,   "85440", 126411, "Heroica Guaymas",          "Sonora"),
+                new Branch(BR.NAVOJOA,      "NAVOJOA",       "Navojoa Talamante",        1, "120001-120999", "642-421-19-41", "lramos.navojoa@gmail.com",               "Talamante",                    "703",  null,   "85870", 127452, "Navojoa",                  "Sonora"),
+                new Branch(BR.NAVOJOA2,     "NAVOJOA2",      "Navojoa Quintana Roo",     0, "121000-121299", "642-120-01-44", "lramos.navojoa2@gmail.com",              "Av. Quintana Roo Oriente",     "106",  null,   "85870", 127452, "Navojoa",                  "Sonora"),
+                new Branch(BR.KENNEDY,      "KENNEDY",       "Nogales Kennedy",          1, "140000-140999", "631-690-18-30", "labramos.nogales@gmail.com",             "Av. Kennedy",                  "156",  null,   "84066", 121756, "Nogales",                  "Sonora"),
+                new Branch(BR.NOGALES1,     "NOGALES1",      "Nogales Álvaro Obregón",   0, "141000-141299", "631-209-91-39", "labramos.nogales@gmail.com",             "Av. Álvaro Obregón",           "1623", null,   "84055", 121715, "Nogales",                  "Sonora"),
+                new Branch(BR.CUMBRES,      "CUMBRES",       "Cumbres, Monterrey",       1, "210000-210999", "818-526-00-22", "labramos.mty@gmail.com",                 "Av. Paseo de los Leones",      "2301", null,   "64610",  87256, "Monterrey",                "Nuevo León"),
+                new Branch(BR.SPGG,         "SPGG",          "San Pedro Garza García",   1, "220000-220999", "814-170-07-69", "labramos.cumbres@gmail.com",             "Av. Humberto Lobo",            "555A", null,   "66220",  88801, "San Pedro Garza García",   "Nuevo León" ),
+            };
+
+            return branches;
         }
     }
 }

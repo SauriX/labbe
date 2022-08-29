@@ -83,6 +83,18 @@
       ],
       "UpstreamPathTemplate": "/api/route/export/form/{id}",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/route/find",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/route/find",
+      "UpstreamHttpMethod": [ "POST" ]
     }
   ]
 }

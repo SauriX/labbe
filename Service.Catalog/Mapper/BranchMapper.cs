@@ -31,20 +31,17 @@ namespace Service.Catalog.Mapper
 
             return new Branch
             {
+                Id = Guid.NewGuid(),
                 Clave = dto.clave.Trim(),
                 Nombre = dto.nombre.Trim(),
                 Activo = dto.activo,
                 Calle = dto.calle.Trim(),
-
                 ColoniaId = dto.coloniaId,
                 Correo = dto.correo,
                 FechaCreo = DateTime.Now,
-                FacturaciónId = Guid.NewGuid(),
                 FechaModifico = DateTime.Now,
-                Id = Guid.NewGuid(),
                 NumeroInterior = dto.numeroInt?.ToString(),
                 NumeroExterior = dto.numeroExt.ToString(),
-                PresupuestosId = Guid.NewGuid(),
                 Telefono = dto.telefono,
                 UsuarioCreoId = Guid.NewGuid(),
                 UsuarioModificoId = Guid.NewGuid(),
@@ -114,20 +111,17 @@ namespace Service.Catalog.Mapper
 
             return new Branch
             {
+                Id = Guid.Parse(dto.idSucursal),
                 Clave = dto.clave,
                 Nombre = dto.nombre.Trim(),
                 Activo = dto.activo,
                 Calle = dto.calle.Trim(),
-
                 ColoniaId = dto.coloniaId,
                 Correo = dto.correo,
                 FechaCreo = model.FechaCreo,
-                FacturaciónId = model.FacturaciónId,
                 FechaModifico = model.FechaModifico,
-                Id = Guid.Parse(dto.idSucursal),
                 NumeroInterior = dto.numeroInt,
                 NumeroExterior = dto.numeroExt,
-                PresupuestosId = model.PresupuestosId,
                 Telefono = dto.telefono,
                 UsuarioCreoId = model.UsuarioCreoId,
                 UsuarioModificoId = model.UsuarioModificoId,

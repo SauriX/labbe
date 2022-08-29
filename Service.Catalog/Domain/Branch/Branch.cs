@@ -6,10 +6,32 @@ namespace Service.Catalog.Domain.Branch
 {
     public class Branch
     {
+        public Branch()
+        {
+        }
+
+        public Branch(Guid id, string clave, string nombre, int matriz, string clinicos, string telefono, string correo, string calle, string numExterior, string numInterior, string cp, int coloniaId, string municipio, string estado)
+        {
+            Id = id;
+            Clave = clave;
+            Nombre = nombre;
+            Clinicos = clinicos;
+            Telefono = telefono;
+            Correo = correo;
+            Calle = calle;
+            NumeroExterior = numExterior;
+            NumeroInterior = numInterior;
+            Codigopostal = cp;
+            ColoniaId = coloniaId;
+            Ciudad = municipio;
+            Estado = estado;
+            Matriz = matriz == 1;
+            Activo = true;
+        }
+
         public Guid Id { get; set; }
         public string Clave { get; set; }
         public string Nombre { get; set; }
-        //public string CodigoPostal { get; set; }
         public int ColoniaId { get; set; }
         public virtual Colony Colonia { get; set; }
         public string Ciudad { get; set; }
@@ -20,10 +42,10 @@ namespace Service.Catalog.Domain.Branch
         public string Calle { get; set; }
         public string Correo { get; set; }
         public string Telefono { get; set; }
-        public Guid PresupuestosId { get; set; }
-        public Guid FacturaciónId { get; set; }
+        public Guid? PresupuestosId { get; set; }
+        public Guid? FacturaciónId { get; set; }
         public string Clinicos { get; set; }
-        public Guid ServicioId { get; set; }
+        public Guid? ServicioId { get; set; }
         public bool Activo { get; set; }
         public Guid? UsuarioCreoId { get; set; }
         public DateTime? FechaCreo { get; set; }
