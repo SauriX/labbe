@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFCore.BulkExtensions;
+using Microsoft.EntityFrameworkCore;
 using Service.MedicalRecord.Context;
 using Service.MedicalRecord.Dictionary;
 using Service.MedicalRecord.Domain.Request;
@@ -21,6 +22,13 @@ namespace Service.MedicalRecord.Repository
             _context = context;
         }
 
+        public async Task<Request> FindAsync(Guid id)
+        {
+            var request = await _context.CAT_Solicitud.FindAsync(id);
+
+            return request;
+        }
+
         public async Task<List<Request>> GetAll(RequestedStudySearchDto search)
         {
             var report = _context.CAT_Solicitud
@@ -34,7 +42,7 @@ namespace Service.MedicalRecord.Repository
             if (!string.IsNullOrEmpty(search.Buscar))
             {
                 report = report.Where(x => x.Clave.Contains(search.Buscar) 
-                || x.Expediente.NombreCompleto.Contains(search.Buscar));
+                || x.Expediente.NombreCompleto.ToLower().Contains(search.Buscar.ToLower()));
             }
             if (search.SucursalId != null && search.SucursalId.Count > 0)
             {
@@ -75,6 +83,23 @@ namespace Service.MedicalRecord.Repository
             }
 
             return await report.ToListAsync();
+        }
+
+        public async Task<List<RequestStudy>> GetStudyById(Guid requestId, IEnumerable<int> studiesIds)
+        {
+            var studies = await _context.Relacion_Solicitud_Estudio
+                .Where(x => x.SolicitudId == requestId && studiesIds.Contains(x.EstudioId))
+                .ToListAsync();
+
+            return studies;
+        }
+
+        public async Task BulkUpdateStudies(Guid requestId, List<RequestStudy> studies)
+        {
+            var config = new BulkConfig();
+            config.SetSynchronizeFilter<RequestStudy>(x => x.SolicitudId == requestId);
+
+            await _context.BulkInsertOrUpdateAsync(studies, config);
         }
 
         public async Task UpdateStatus(UpdateDto status)

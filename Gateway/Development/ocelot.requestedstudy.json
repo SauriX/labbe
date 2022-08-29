@@ -12,8 +12,6 @@
       "UpstreamPathTemplate": "/api/requestedstudy/getList",
       "UpstreamHttpMethod": [ "POST" ]
     },
-
-
     {
       "DownstreamPathTemplate": "/api/requestedstudy",
       "DownstreamScheme": "http",
@@ -36,6 +34,18 @@
         }
       ],
       "UpstreamPathTemplate": "/api/requestedstudy/order/{recordId}/{requestId}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/requestedstudy/export/list",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/requestedstudy/export/list",
       "UpstreamHttpMethod": [ "POST" ]
     }
   ]

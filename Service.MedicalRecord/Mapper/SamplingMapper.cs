@@ -22,7 +22,7 @@ namespace Service.MedicalRecord.Mapper
                 Sexo = x.Expediente.Genero,
                 Compañia = x.Compañia?.Nombre,
                 Seleccion = false,
-                studys = x.Estudios.ToStudySamplingDto(),
+                Estudios = x.Estudios.ToStudySamplingDto(),
                 Id = x.Id.ToString(),
                 Order = x.ExpedienteId.ToString()
             }).ToList();
@@ -35,7 +35,7 @@ namespace Service.MedicalRecord.Mapper
             return model.Select(x => new StudyDto
             {
                 Id = x.EstudioId,
-                Nombre = x.Clave,
+                Nombre = x.Nombre,
                 Area = "",
                 Status = x.EstatusId,
                 Registro = x.FechaCreo.ToString(),

@@ -21,7 +21,7 @@ namespace Service.MedicalRecord.Mapper
                 Sexo = x.Expediente.Genero,
                 Compañia = x.Compañia?.Nombre,
                 Seleccion = false,
-                studys = x.Estudios.ToStudySamplingDto(),
+                Estudios = x.Estudios.ToStudySamplingDto(),
                 Id = x.Id.ToString(),
                 Order = x.ExpedienteId.ToString()
             }).ToList();

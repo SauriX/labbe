@@ -152,7 +152,7 @@ namespace Service.MedicalRecord.Application
 
         public async Task<(byte[] file, string fileName)> ExportList(MedicalRecordSearch search)
         {
-            var studys = await GetNow(search);
+            var studies = await GetNow(search);
 
             var path = Assets.ExpedientetList;
 
@@ -160,9 +160,9 @@ namespace Service.MedicalRecord.Application
 
             template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
-            template.AddVariable("Titulo", "Expedientes");
+            template.AddVariable("Titulo", "Registrar Solicitud de Estudio");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
-            template.AddVariable("Expedientes", studys);
+            template.AddVariable("Expedientes", studies);
 
             template.Generate();
 
