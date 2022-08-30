@@ -8,8 +8,8 @@ namespace Service.MedicalRecord.Application.IApplication
 {
     public interface IRequestedStudyApplication
     {
-        Task<int> UpdateStatus(RequestStudyUpdateDto requestDto);
+        Task<int> UpdateStatus(List<RequestedStudyUpdateDto> requestDto);
         Task<List<SamplingListDto>> GetAll(RequestedStudySearchDto search);
-        Task<(byte[] file, string fileName)> ExportList(RequestedStudySearchDto search = null);
+        Task<(byte[] file, string fileName)> ExportList(RequestedStudySearchDto search);
     }
 }

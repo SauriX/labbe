@@ -26,12 +26,12 @@ namespace Service.MedicalRecord.Controllers
         [Authorize(Policies.Access)]
         public async Task<List<SamplingListDto>> GetAll(RequestedStudySearchDto search)
         {
-            var sampling = await _service.GetAll(search);
-            return sampling;
+            var requestedStudy = await _service.GetAll(search);
+            return requestedStudy;
         }
         [HttpPut]
         [Authorize(Policies.Update)]
-        public async Task UpdateStatus(RequestStudyUpdateDto requestDto)
+        public async Task UpdateStatus(List<RequestedStudyUpdateDto> requestDto)
         {
             await _service.UpdateStatus(requestDto);
         }
@@ -48,7 +48,7 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("export/list")]
         [Authorize(Policies.Download)]
-        public async Task<IActionResult> ExportListPriceList(RequestedStudySearchDto search = null)
+        public async Task<IActionResult> ExportStudyExcel(RequestedStudySearchDto search)
         {
             var (file, fileName) = await _service.ExportList(search);
             return File(file, MimeType.XLSX, fileName);

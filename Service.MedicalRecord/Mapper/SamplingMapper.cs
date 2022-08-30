@@ -8,7 +8,7 @@ namespace Service.MedicalRecord.Mapper
 {
     public static class SamplingMapper
     {
-        public static List<SamplingListDto> ToSamplingListDto(this List<Service.MedicalRecord.Domain.Request.Request> model)
+        public static List<SamplingListDto> ToSamplingListDto(this List<Request> model)
         {
             if (model == null) return null;
 

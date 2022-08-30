@@ -27,6 +27,7 @@
         public const string Equipment = "equipment";
         public const string Mantain = "mantain";
         public const string TrackingOrder = "TrackingOrder";
+        public const string RequestedStudy = "requestedstudy";
 
     }
 }

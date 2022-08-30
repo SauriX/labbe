@@ -10,7 +10,6 @@ namespace Service.MedicalRecord.Repository.IRepository
     public interface IRequestedStudyRepository
     {
         Task<List<Request>> GetAll(RequestedStudySearchDto search);
-        Task UpdateStatus(UpdateDto dates);
         Task<Request> FindAsync(Guid id);
         Task<List<RequestStudy>> GetStudyById(Guid requestId, IEnumerable<int> studiesIds);
         Task BulkUpdateStudies(Guid requestId, List<RequestStudy> studies);

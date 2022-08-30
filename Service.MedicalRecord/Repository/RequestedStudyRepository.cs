@@ -1,10 +1,8 @@
 ﻿using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using Service.MedicalRecord.Context;
-using Service.MedicalRecord.Dictionary;
 using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Dtos.RequestedStudy;
-using Service.MedicalRecord.Dtos.Sampling;
 using Service.MedicalRecord.Repository.IRepository;
 using System;
 using System.Collections.Generic;
@@ -15,6 +13,9 @@ namespace Service.MedicalRecord.Repository
 {
     public class RequestedStudyRepository : IRequestedStudyRepository
     {
+        private const int TomaDeMuestra = 1;
+        private const int Solicitado = 2;
+
         private readonly ApplicationDbContext _context;
 
         public RequestedStudyRepository(ApplicationDbContext context)
@@ -24,6 +25,8 @@ namespace Service.MedicalRecord.Repository
 
         public async Task<Request> FindAsync(Guid id)
         {
+            var report = _context.CAT_Solicitud
+                   .Include(x => x.Estudios);
             var request = await _context.CAT_Solicitud.FindAsync(id);
 
             return request;
@@ -50,11 +53,11 @@ namespace Service.MedicalRecord.Repository
             }
             if (search.MedicoId != null && search.MedicoId.Count > 0)
             {
-                report = report.Where(x => search.MedicoId.Equals(x.MedicoId));;
+                report = report.Where(x => search.MedicoId.Contains(x.MedicoId.ToString()));
             }
             if (search.CompañiaId != null && search.CompañiaId.Count > 0)
             {
-                report = report.Where(x => search.CompañiaId.Equals(x.CompañiaId));
+                report = report.Where(x => search.CompañiaId.Contains(x.CompañiaId.ToString()));
             }
             if (search.Estatus != null && search.Estatus.Count > 0)
             {
@@ -99,31 +102,7 @@ namespace Service.MedicalRecord.Repository
             var config = new BulkConfig();
             config.SetSynchronizeFilter<RequestStudy>(x => x.SolicitudId == requestId);
 
-            await _context.BulkInsertOrUpdateAsync(studies, config);
-        }
-
-        public async Task UpdateStatus(UpdateDto status)
-        {
-            var data = status.Id.ToArray();
-
-            foreach(var id in data)
-            {
-                var studio = await _context.Relacion_Solicitud_Estudio.FirstOrDefaultAsync(x => x.EstudioId == id);
-                if (studio.EstatusId == 2)
-                {
-                    studio.EstatusId = Status.RequestStudy.Solicitado;
-                }
-                else
-                {
-                    if (studio.EstatusId == 3)
-                    {
-                        studio.EstatusId = Status.RequestStudy.TomaDeMuestra;
-                    }
-                }
-
-                _context.Update(studio);
-                await _context.SaveChangesAsync();
-            }
+            await _context.BulkUpdateAsync(studies, config);
         }
     }
 }
