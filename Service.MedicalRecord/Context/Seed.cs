@@ -25,7 +25,7 @@ namespace Service.MedicalRecord.Context
                         new RequestStudyStatus(6, "L", "Liberado", "#f88d17"),
                         new RequestStudyStatus(7, "E", "Enviado", "#28d417"),
                         new RequestStudyStatus(8, "ER", "En ruta", "#f8e117"),
-                        new RequestStudyStatus(9, "CL", "Cancelado", "#345454"),
+                        new RequestStudyStatus(9, "CL", "Cancelado", "#e11616"),
                         new RequestStudyStatus(10, "EO", "Entregado", "#28d417"),
                         new RequestStudyStatus(11, "U", "Urgente", "#e11616")
                     };

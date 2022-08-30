@@ -12,6 +12,7 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task<List<Request>> GetByFilter(RequestFilterDto filter);
         Task<Request> GetById(Guid id);
         Task<string> GetLastCode(Guid branchId, string date);
+        Task<string> GetLastPathologicalCode(Guid branchId, string date, string type);
         Task<RequestStudy> GetStudyById(Guid requestId, int studyId);
         Task<List<RequestStudy>> GetStudyById(Guid requestId, IEnumerable<int> studiesIds);
         Task<List<RequestStudy>> GetAllStudies(Guid requestId);

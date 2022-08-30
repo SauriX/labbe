@@ -45,7 +45,7 @@ namespace Service.MedicalRecord.Application
             var codeRange = await _catalogCliente.GetCodeRange(appointmentLab.SucursalId);
             var lastCode = await _repository.GetLastCode(date);
 
-            var consecutive = Code.GetCode(codeRange, lastCode);
+            var consecutive = RequestCodes.GetCode(codeRange, lastCode);
             var code = $"{consecutive}{date}";
             newAppointment.Cita = code;
             await _repository.CreateLab(newAppointment);
@@ -60,7 +60,7 @@ namespace Service.MedicalRecord.Application
             var codeRange = await _catalogCliente.GetCodeRange(appointmentDom.SucursalId);
             var lastCode = await _repository.GetLastCode(date);
 
-            var consecutive = Code.GetCode(codeRange, lastCode);
+            var consecutive = RequestCodes.GetCode(codeRange, lastCode);
             var code = $"{consecutive}{date}";
             newAppointment.Cita = code;
             await _repository.CreateDom(newAppointment);
