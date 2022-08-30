@@ -22,7 +22,7 @@ namespace Service.MedicalRecord.Controllers
         }
         [HttpPost("getList")]
         [Authorize(Policies.Access)]
-        public async Task<List<SamplingListDto>> GetAll(SamplingSearchDto search)
+        public async Task<List<SamplingListDto>> GetAll(rRequestedStudySearchDto search)
         {
             var sampling = await _service.GetAll(search);
             return sampling;
