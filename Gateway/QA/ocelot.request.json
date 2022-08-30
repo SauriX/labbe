@@ -111,6 +111,17 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/request/cancel/{recordId}/{requestId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/request/cancel/{recordId}/{requestId}",
+      "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
       "DownstreamPathTemplate": "/LabRamos/services/records/api/request/studies/cancel",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
