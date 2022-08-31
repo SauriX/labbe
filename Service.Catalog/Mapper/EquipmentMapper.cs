@@ -34,6 +34,8 @@ namespace Service.Catalog.Mapper
                 Clave = x.Clave,
                 Activo = x.Activo,
                 Categoria = x.Categoria,
+                CategoriaText = x.Categoria == "1" ? "Análisis" : x.Categoria == "2" ? "Cómputo" : "Impresión",
+                NumerosSeries = string.Join(", ", x.Valores.Select(x => x.Num_Serie)),
                 Valores = x.Valores.Select(x => new EquipmentBranch
                 {
                     BranchId = x.BranchId,
@@ -50,14 +52,15 @@ namespace Service.Catalog.Mapper
             if (model == null) return null;
 
                 return new EquipmentFormDto
-            {
-                Id = model.Id,
-                Clave = model.Clave.Trim(),
-                Nombre = model.Nombre.Trim(),
-                Activo = model.Activo,
-                Categoria = model.Categoria.Trim(),
-                valores = model.Valores.ToEquipmentBranchDto(),
-            };
+                {
+                    Id = model.Id,
+                    Clave = model.Clave.Trim(),
+                    Nombre = model.Nombre.Trim(),
+                    Activo = model.Activo,
+                    Categoria = model.Categoria.Trim(),
+                    valores = model.Valores.ToEquipmentBranchDto(),
+                    CategoriaText = model.Categoria == "1" ? "Análisis" : model.Categoria == "2" ? "Cómputo" : "Impresión",
+                };
         }
 
         private static IEnumerable<EquipmentBrancheDto> ToEquipmentBranchDto(this IEnumerable<EquipmentBranch> model)
@@ -68,7 +71,8 @@ namespace Service.Catalog.Mapper
             {
                 BranchId = x.BranchId,
                 EquipmentId = x.EquipmentId,
-                Num_serie = x.Num_Serie
+                Num_serie = x.Num_Serie,
+                SucursalText = x.Sucursal.Nombre
 
             });
         }
@@ -117,7 +121,7 @@ namespace Service.Catalog.Mapper
                 Valores = dto.valores.Select(x => new EquipmentBranch
                 {
                     BranchId = x.BranchId,
-                    EquipmentId = x.EquipmentId,
+                    EquipmentId = dto.Id,
                     UsuarioCreoId = model.UsuarioCreoId,
                     FechaCreo = DateTime.Now,
                     Num_Serie = x.Num_serie,

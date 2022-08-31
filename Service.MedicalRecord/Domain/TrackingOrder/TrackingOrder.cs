@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Service.MedicalRecord.Domain.TrackingOrder
 {
@@ -16,6 +17,7 @@ namespace Service.MedicalRecord.Domain.TrackingOrder
         public string PacienteId { get; set; }
         public bool Escaneado { get; set; }
         public bool Activo { get; set; }
+        public virtual IEnumerable<TrackingOrderDetail> Estudios { get; set; }
         public Guid? UsuarioCreoId { get; set; }
         public DateTime? FechaCreo { get; set; }
         public Guid? UsuarioModificoId { get; set; }

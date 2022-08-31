@@ -89,9 +89,14 @@ namespace Service.Catalog.Application
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
             template.AddVariable("Titulo", "Equipos");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
-            template.AddVariable("Sucursales", equipment);
+            template.AddVariable("Equipos", equipment);
+            template.AddVariable("Valores", equipment.valores);
 
             template.Generate();
+
+            var range = template.Workbook.Worksheet("Equipos").Range("Valores");
+            var table = template.Workbook.Worksheet("Equipos").Range("$A$7:" + range.RangeAddress.LastAddress).CreateTable();
+            table.Theme = XLTableTheme.TableStyleMedium2;
 
             template.Format();
 
@@ -113,11 +118,11 @@ namespace Service.Catalog.Application
                 template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
                 template.AddVariable("Titulo", "Equipos");
                 template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
-                template.AddVariable("Sucursales", equipment);
+                template.AddVariable("Equipos", equipment);
 
                 template.Generate();
 
-                var range = template.Workbook.Worksheet("Equipos").Range("Sucursales");
+                var range = template.Workbook.Worksheet("Equipos").Range("Equipos");
                 var table = template.Workbook.Worksheet("Equipos").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
                 table.Theme = XLTableTheme.TableStyleMedium2;
 

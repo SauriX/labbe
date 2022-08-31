@@ -174,12 +174,12 @@ namespace Service.Catalog.Application
             }
         }
 
-        public async Task<IEnumerable<RouteListDto>> FindRoutes(RouteFormDto route)
+        public async Task<IEnumerable<RouteFormDto>> FindRoutes(RouteFormDto route)
         {
             var ruta = route.ToModel();
             var routes = await _repository.FindRoute(ruta);
 
-            return routes.ToRouteListDto();
+            return routes.ToRouteFoundDto();
         }
     }
 }

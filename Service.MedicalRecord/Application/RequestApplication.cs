@@ -23,6 +23,8 @@ using Service.MedicalRecord.Transactions;
 using RequestTemplates = Service.MedicalRecord.Dictionary.EmailTemplates.Request;
 using Shared.Helpers;
 using Service.MedicalRecord.Domain.Request;
+using AREAS = Shared.Dictionary.Catalogs.Area;
+using DocumentFormat.OpenXml.Math;
 
 namespace Service.MedicalRecord.Application
 {
@@ -130,7 +132,7 @@ namespace Service.MedicalRecord.Application
             var codeRange = await _catalogClient.GetCodeRange(requestDto.SucursalId);
             var lastCode = await _repository.GetLastCode(requestDto.SucursalId, date);
 
-            var consecutive = Code.GetCode(codeRange, lastCode);
+            var consecutive = RequestCodes.GetCode(codeRange, lastCode);
             var code = $"{consecutive}{date}";
 
             requestDto.Clave = code;
@@ -220,7 +222,7 @@ namespace Service.MedicalRecord.Application
                 RemitenteId = requestDto.UsuarioId.ToString()
             };
 
-            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, _queueNames.Email)));
+            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, "/", _queueNames.Email)));
 
             await endpoint.Send(emailToSend);
         }
@@ -239,7 +241,7 @@ namespace Service.MedicalRecord.Application
                 RemitenteId = requestDto.UsuarioId.ToString()
             };
 
-            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, _queueNames.Whatsapp)));
+            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, "/", _queueNames.Whatsapp)));
 
             await endpoint.Send(emailToSend);
         }
@@ -301,6 +303,9 @@ namespace Service.MedicalRecord.Application
 
                 await _repository.BulkUpdateDeleteStudies(requestDto.SolicitudId, studies);
 
+                var pathologicalCode = await GeneratePathologicalCode(request);
+                request.ClavePatologica = pathologicalCode;
+
                 request.TotalEstudios = requestDto.Total.TotalEstudios;
                 request.Descuento = requestDto.Total.Descuento;
                 request.DescuentoTipo = requestDto.Total.DescuentoTipo;
@@ -336,9 +341,9 @@ namespace Service.MedicalRecord.Application
                 throw new CustomException(HttpStatusCode.BadGateway, RecordResponses.Request.AlreadyCompleted);
             }
 
-            var studies = await _repository.GetAllStudies(recordId);
+            var studies = await _repository.GetAllStudies(requestId);
 
-            if (studies.Any(x => x.EstatusId != Status.RequestStudy.Pendiente))
+            if (studies.Any(x => x.EstatusId != Status.RequestStudy.Pendiente && x.EstatusId != Status.RequestStudy.Cancelado))
             {
                 throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.ProcessingStudies);
             }
@@ -565,6 +570,50 @@ namespace Service.MedicalRecord.Application
             }
 
             return request;
+        }
+
+        private async Task<string> GeneratePathologicalCode(Request request)
+        {
+            var allStudies = await _repository.GetAllStudies(request.Id);
+
+            var isCitologic = allStudies.Any(x => x.AreaId == AREAS.CITOLOGIA_NASAL && x.EstatusId != Status.RequestStudy.Cancelado);
+            var isPathologic = allStudies.Any(x => x.AreaId == AREAS.HISTOPATOLOGIA && x.EstatusId != Status.RequestStudy.Cancelado);
+
+            string citCode = null;
+            string patCode = null;
+
+            if (request.ClavePatologica != null)
+            {
+                var pathCodes = request.ClavePatologica.Split(",");
+                citCode = pathCodes.FirstOrDefault(x => x.Contains("C"))?.Trim();
+                patCode = pathCodes.FirstOrDefault(x => x.Contains("LR"))?.Trim();
+            }
+
+            var date = DateTime.Now.ToString("yy");
+
+            if (isCitologic && citCode == null)
+            {
+                var lastCode = await _repository.GetLastPathologicalCode(request.SucursalId, date, "C");
+                citCode = RequestCodes.GetPathologicalCode("C", lastCode);
+            }
+            else if (!isCitologic)
+            {
+                citCode = null;
+            }
+            if (isPathologic && patCode == null)
+            {
+                var lastCode = await _repository.GetLastPathologicalCode(request.SucursalId, date, "LR");
+                patCode = RequestCodes.GetPathologicalCode("LR", lastCode);
+            }
+            else if (!isPathologic)
+            {
+                patCode = null;
+            }
+
+            return patCode == null && citCode == null ? null :
+                patCode != null && citCode == null ? patCode :
+                patCode == null && citCode != null ? citCode :
+                $"{patCode}, {citCode}";
         }
     }
 }

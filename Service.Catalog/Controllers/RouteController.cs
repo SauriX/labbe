@@ -73,7 +73,7 @@ namespace Service.Catalog.Controllers
         }
         [HttpPost("find")]
         [Authorize(Policies.Access)]
-        public async Task<IEnumerable<RouteListDto>> Find(RouteFormDto routes)
+        public async Task<IEnumerable<RouteFormDto>> Find(RouteFormDto routes)
         {
             routes.UsuarioId = (Guid)HttpContext.Items["userId"];
             return await _service.FindRoutes(routes);
