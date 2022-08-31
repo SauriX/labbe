@@ -2,11 +2,10 @@
   "Routes": [
     {
       "DownstreamPathTemplate": "/LabRamos/services/report/api/requestedstudy/getList",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 24048
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/requestedstudy/getList",
@@ -14,11 +13,10 @@
     },
     {
       "DownstreamPathTemplate": "/LabRamos/services/report/api/requestedstudy",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 24048
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/requestedstudy",
@@ -26,11 +24,10 @@
     },
     {
       "DownstreamPathTemplate": "/LabRamos/services/report/api/requestedstudy/order/{recordId}/{requestId}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 24048
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/requestedstudy/order/{recordId}/{requestId}",
@@ -38,11 +35,10 @@
     },
     {
       "DownstreamPathTemplate": "/LabRamos/services/report/api/requestedstudy/export/list",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 24048
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/requestedstudy/export/list",

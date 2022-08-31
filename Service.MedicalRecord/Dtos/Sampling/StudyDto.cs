@@ -10,5 +10,6 @@
         public string Entrega { get; set; }
         public bool Seleccion { get; set; }
         public string Clave { get; set; }
+        public string NombreEstatus { get; set; }
     }
 }
