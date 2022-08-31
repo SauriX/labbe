@@ -79,7 +79,7 @@ namespace Service.Catalog.Repository
 
             if (!string.IsNullOrWhiteSpace(search) && search != "all")
             {
-                equipment = equipment.Where(x => x.Nombre.ToLower().Contains(search) || x.Nombre.ToLower().Contains(search));
+                equipment = equipment.Where(x => x.Nombre.ToLower().Contains(search) || x.Clave.ToLower().Contains(search));
             }
 
             return await equipment.ToListAsync();
