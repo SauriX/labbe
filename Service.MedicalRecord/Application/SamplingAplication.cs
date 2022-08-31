@@ -18,7 +18,7 @@ namespace Service.MedicalRecord.Application
             _repository = repository;
         }
 
-        public async  Task<List<SamplingListDto>> GetAll(SamplingSearchDto search) {
+        public async  Task<List<SamplingListDto>> GetAll(rRequestedStudySearchDto search) {
             var sampling = await _repository.GetAll(search);
             if (sampling != null)
             {

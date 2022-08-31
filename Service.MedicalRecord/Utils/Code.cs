@@ -1,10 +1,13 @@
-﻿using Shared.Error;
+﻿using FluentValidation.Validators;
+using Shared.Error;
+using Shared.Helpers;
 using System;
+using System.Linq;
 using System.Net;
 
 namespace Service.MedicalRecord.Utils
 {
-    public static class Code
+    public static class RequestCodes
     {
         public static int GetCode(string codeRange, string lastCode)
         {
@@ -37,6 +40,22 @@ namespace Service.MedicalRecord.Utils
             }
 
             return currentCode;
+        }
+
+        public static string GetPathologicalCode(string type, string lastCode)
+        {
+            var date = DateTime.Now.ToString("yy");
+
+            if (lastCode == null)
+            {
+                return $"{(type == "C" ? "C" : "LR")}-{1:D4}-{date}";
+            }
+
+            var parts = lastCode.Split("-");
+
+            var consecutive = Convert.ToInt32(parts[1]) + 1;
+
+            return $"{(type == "C" ? "C" : "LR")}-{consecutive:D4}-{date}";
         }
     }
 }

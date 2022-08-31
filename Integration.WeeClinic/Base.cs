@@ -59,6 +59,45 @@ namespace Integration.WeeClinic
             }
 
         }
+
+        public static async Task<string> PostService<T>(string serviceUrl, Dictionary<string, string> data)
+        {
+            try
+            {
+                var url = $"{baseUrl}/API/{serviceUrl}";
+
+                using HttpClient client = new();
+
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+                client.DefaultRequestHeaders.Add("TokenClienteCert", certKey);
+
+                var response = await client.PostAsync(url, new FormUrlEncodedContent(data));
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseData = await response.Content.ReadAsStringAsync();
+                    return responseData;
+                }
+
+                if ((int)response.StatusCode == 400)
+                {
+                    var error = await response.Content.ReadFromJsonAsync<ErrorResponse>();
+                    throw new Exception(string.Concat(error.Error, Environment.NewLine, "Descripción: ", error.ErrorDescription));
+                }
+
+                if ((int)response.StatusCode == 401 || (int)response.StatusCode == 403)
+                {
+                    throw new Exception("Error de autenticación, token invalido o sin permisos con WeeClinic");
+                }
+
+                throw new Exception("Ha ocurrido un error al buscar folio con WeeClinic");
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
 

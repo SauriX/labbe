@@ -15,6 +15,6 @@ namespace Service.MedicalRecord.Dtos.Sampling
         public string Compañia { get; set; }
         public bool Seleccion { get; set; }
         public string Order { get; set; }
-        public List<StudyDto> studys { get; set; }
+        public List<StudyDto> Estudios { get; set; }
 }
 }

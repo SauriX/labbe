@@ -1,5 +1,6 @@
 ﻿using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
+using MoreLinq;
 using Service.MedicalRecord.Context;
 using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Dtos.Request;
@@ -112,6 +113,25 @@ namespace Service.MedicalRecord.Repository
                 .LastOrDefaultAsync(x => x.SucursalId == branchId && x.Clave.EndsWith(date));
 
             return lastRequest?.Clave;
+        }
+
+        public async Task<string> GetLastPathologicalCode(Guid branchId, string date, string type)
+        {
+            var lastRequest = await _context.CAT_Solicitud
+                .OrderBy(x => x.FechaCreo)
+                .Where(x => x.SucursalId == branchId)
+                .ToListAsync();
+
+            var last = lastRequest
+                .LastOrDefault(x => x.ClavePatologica != null
+                && x.ClavePatologica.Contains(type)
+                && x.ClavePatologica.Split(",").All(y => y.EndsWith(date)));
+
+            if (last == null) return null;
+
+            var code = last.ClavePatologica.Split(",").FirstOrDefault(x => x.Contains(type));
+
+            return code;
         }
 
         public async Task<RequestStudy> GetStudyById(Guid requestId, int studyId)
