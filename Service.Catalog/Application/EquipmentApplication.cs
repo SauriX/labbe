@@ -136,11 +136,11 @@ namespace Service.Catalog.Application
         }
         private async Task CheckDuplicate(Equipos equipment)
         {
-            var isDuplicate = await _repository.IsDuplicate(equipment);
+            var (isDuplicate, code) = await _repository.IsDuplicate(equipment);
 
             if (isDuplicate)
             {
-                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated(Responses.Duplicated($"{code}")));
             }
         }
     }
