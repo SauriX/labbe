@@ -1,7 +1,7 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/LabRamos/services/report/api/requestedstudy/getList",
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/requestedstudy/getList",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -12,7 +12,7 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/report/api/requestedstudy",
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/requestedstudy",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -23,7 +23,7 @@
       "UpstreamHttpMethod": [ "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/report/api/requestedstudy/order/{recordId}/{requestId}",
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/requestedstudy/order/{recordId}/{requestId}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -34,7 +34,7 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/report/api/requestedstudy/export/list",
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/requestedstudy/export/list",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
