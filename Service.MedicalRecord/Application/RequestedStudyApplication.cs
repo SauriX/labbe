@@ -33,6 +33,14 @@ namespace Service.MedicalRecord.Application
         {
             var studies = await GetAll(search);
 
+            foreach (var request in studies)
+            {
+                if (studies.Count > 0)
+                {
+                    request.Estudios.Insert(0, new StudyDto { Clave = "Clave", Nombre = "Nombre Estudio", Registro = "Fecha de Registro", Entrega = "Fecha de Entrega", NombreEstatus = "Estatus" });
+                }
+            }
+
             var path = Assets.InformeExpedientes;
 
             var template = new XLTemplate(path);
@@ -46,10 +54,6 @@ namespace Service.MedicalRecord.Application
 
             template.Generate();
 
-            //var range = template.Workbook.Worksheet("Expedientes").Range("Expedientes");
-            //var table = template.Workbook.Worksheet("Expedientes").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
-            //table.Theme = XLTableTheme.TableStyleMedium2;
-
             template.Workbook.Worksheets.ToList().ForEach(x =>
             {
                 var cuenta = 0;
@@ -57,14 +61,16 @@ namespace Service.MedicalRecord.Application
                 x.Worksheet.Rows().ForEach(y =>
                 {
                     var descripcion = template.Workbook.Worksheets.FirstOrDefault().Cell(y.RowNumber(), "B").Value.ToString();
+                    var next = template.Workbook.Worksheets.FirstOrDefault().Cell(y.RowNumber() + 2, "B").Value.ToString();
+                    var plusOne = template.Workbook.Worksheets.FirstOrDefault().Cell(y.RowNumber() + 1, "B").Value.ToString();
                     if (descripcion == "Clave" && cuenta == 0)
                     {
                         posiciones[0] = y.RowNumber();
                         cuenta++;
                     }
-                    if (descripcion == "" && cuenta == 1)
+                    if ((next == "Clave" || (next == "" && plusOne == "")) && cuenta == 1)
                     {
-                        posiciones[1] = y.RowNumber() - 1;
+                        posiciones[1] = y.RowNumber();
                         cuenta++;
                     }
                     if (cuenta == 2)
@@ -79,29 +85,12 @@ namespace Service.MedicalRecord.Application
             template.Format();
 
             return (template.ToByteArray(), $"Informe Solicitud de Estudio.xlsx");
-
-            //var template = new XLTemplate(AppDomain.CurrentDomain.BaseDirectory + "Archivos\\Formatos\\Reporte_Auditoria_Finalizada.xlsx");
-
-            //template.AddVariable(auditoria);
-
-            //template.Generate();
-
-
-
-            //// Agrupar Hallazgos
-
-
-
-
-            //MemoryStream stream = ObtenerStream(template);
-
-            //return stream.ToArray();
         }
 
         public async Task<List<SamplingListDto>> GetAll(RequestedStudySearchDto search)
         {
             var requestedStudy = await _repository.GetAll(search);
-            if(requestedStudy != null)
+            if (requestedStudy != null)
             {
                 return requestedStudy.ToRequestedStudyDto();
             }
@@ -116,31 +105,32 @@ namespace Service.MedicalRecord.Application
             int studyCount = 0;
             foreach (var item in requestDto)
             {
-            var request = await GetExistingRequest(item.SolicitudId);
+                var request = await GetExistingRequest(item.SolicitudId);
 
-            var studiesIds = item.EstudioId;
-            var studies = await _repository.GetStudyById(item.SolicitudId, studiesIds);
+                var studiesIds = item.EstudioId;
+                var studies = await _repository.GetStudyById(item.SolicitudId, studiesIds);
 
-            studies = studies.Where(x => x.EstatusId == Status.RequestStudy.TomaDeMuestra || x.EstatusId == Status.RequestStudy.Solicitado).ToList();
+                studies = studies.Where(x => x.EstatusId == Status.RequestStudy.TomaDeMuestra || x.EstatusId == Status.RequestStudy.Solicitado).ToList();
 
-            if (studies == null || studies.Count == 0)
-            {
-                throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.NoStudySelected);
-            }
-
-            foreach (var study in studies)
-            {
-                if (study.EstatusId == Status.RequestStudy.TomaDeMuestra)
+                if (studies == null || studies.Count == 0)
                 {
-                    study.EstatusId = Status.RequestStudy.Solicitado;
-                } else
-                {
-                    study.EstatusId = Status.RequestStudy.TomaDeMuestra;
+                    throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.NoStudySelected);
                 }
-            }
+
+                foreach (var study in studies)
+                {
+                    if (study.EstatusId == Status.RequestStudy.TomaDeMuestra)
+                    {
+                        study.EstatusId = Status.RequestStudy.Solicitado;
+                    }
+                    else
+                    {
+                        study.EstatusId = Status.RequestStudy.TomaDeMuestra;
+                    }
+                }
                 studyCount += studies.Count;
 
-            await _repository.BulkUpdateStudies(item.SolicitudId, studies);
+                await _repository.BulkUpdateStudies(item.SolicitudId, studies);
 
             }
 
