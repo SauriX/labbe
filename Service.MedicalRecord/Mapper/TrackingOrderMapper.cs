@@ -70,8 +70,8 @@ namespace Service.MedicalRecord.Mapper
                 {
                     Estudio = y.Nombre,
                     Clave = y.Clave,
-                    Paciente = y.Solicitud.Expediente.NombreCompleto,
-                    Solicitud = y.Solicitud.Clave,
+                    NombrePaciente = y.Solicitud.Expediente.NombreCompleto,
+                    SolicitudId = y.Solicitud.Clave,
                     TaponNombre = y.Tapon.Clave
                 }).ToList(),
             });

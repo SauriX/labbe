@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Service.Catalog.Dtos.Equipment;
 using EFCore.BulkExtensions;
+using static Service.Catalog.Dictionary.DuplicateCodes;
 
 namespace Service.Catalog.Repository
 {
@@ -93,11 +94,27 @@ namespace Service.Catalog.Repository
             return equipment;
         }
 
-        public async Task<bool> IsDuplicate(Equipos equipment)
+        public async Task<(bool, string)> IsDuplicate(Equipos equipment)
         {
-            var isDuplicate = await _context.CAT_Equipos.AnyAsync((x => x.Id != equipment.Id && x.Nombre == equipment.Nombre));
+            var isDuplicate = false;
+            var code = "";
 
-            return isDuplicate;
+            var isDuplicateName = await _context.CAT_Equipos.AnyAsync((x => x.Id != equipment.Id 
+                                                                && x.Nombre == equipment.Nombre));
+            var isDuplicateClave = await _context.CAT_Equipos.AnyAsync((x => x.Id != equipment.Id
+                                                                    && x.Clave == equipment.Clave));
+            if (isDuplicateName)
+            {
+                isDuplicate = isDuplicateName;
+                code = DuplicateCodesEnum.Nombre.ToString();
+            }
+            if (isDuplicateClave)
+            {
+                isDuplicate = isDuplicateClave;
+                code = DuplicateCodesEnum.Clave.ToString();
+            }
+
+            return (isDuplicate, code);
         }
 
         public async Task Update(Equipos equipment)
