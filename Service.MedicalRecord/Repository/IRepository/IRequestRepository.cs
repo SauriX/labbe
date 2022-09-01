@@ -19,6 +19,7 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task<List<RequestStudy>> GetStudiesByRequest(Guid requestId);
         Task<List<RequestPack>> GetPacksByRequest(Guid requestId);
         Task<RequestImage> GetImage(Guid requestId, string code);
+        Task<List<RequestImage>> GetImages(Guid requestId);
         Task Create(Request request);
         Task Update(Request request);
         Task UpdateImage(RequestImage requestImage);
@@ -27,5 +28,6 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task BulkUpdateDeletePacks(Guid requestId, List<RequestPack> studies);
         Task BulkUpdateStudies(Guid requestId, List<RequestStudy> studies);
         Task BulkUpdateDeleteStudies(Guid requestId, List<RequestStudy> studies);
+        Task DeleteImage(Guid requestId, string code);
     }
 }

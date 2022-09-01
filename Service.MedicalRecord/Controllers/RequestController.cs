@@ -47,6 +47,12 @@ namespace Service.MedicalRecord.Controllers
             return await _service.GetStudies(recordId, requestId);
         }
 
+        [HttpGet("images/{recordId}/{requestId}")]
+        public async Task<IEnumerable<string>> GetImages(Guid recordId, Guid requestId)
+        {
+            return await _service.GetImages(recordId, requestId);
+        }
+
         [HttpGet("email/{recordId}/{requestId}/{email}")]
         [Authorize(Policies.Mail)]
         public async Task SendTestEmail(Guid recordId, Guid requestId, string email)
@@ -170,11 +176,17 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPut("images")]
         [Authorize(Policies.Update)]
-        public async Task SaveImage([FromForm] RequestImageDto requestDto)
+        public async Task<string> SaveImage([FromForm] RequestImageDto requestDto)
         {
             requestDto.UsuarioId = (Guid)HttpContext.Items["userId"];
 
-            await _service.SaveImage(requestDto);
+            return await _service.SaveImage(requestDto);
+        }
+
+        [HttpDelete("image/{recordId}/{requestId}/{code}")]
+        public async Task DeleteImage(Guid recordId, Guid requestId, string code)
+        {
+            await _service.DeleteImage(recordId, requestId, code);
         }
     }
 }

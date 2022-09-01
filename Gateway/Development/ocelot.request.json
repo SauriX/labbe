@@ -11,7 +11,7 @@
       ],
       "UpstreamPathTemplate": "/api/request/filter",
       "UpstreamHttpMethod": [ "POST" ]
-    },   
+    },
     {
       "DownstreamPathTemplate": "/api/request/{recordId}/{requestId}",
       "DownstreamScheme": "http",
@@ -46,6 +46,18 @@
         }
       ],
       "UpstreamPathTemplate": "/api/request/studies/{recordId}/{requestId}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/request/images/{recordId}/{requestId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/request/images/{recordId}/{requestId}",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
@@ -215,6 +227,18 @@
       ],
       "UpstreamPathTemplate": "/api/request/images",
       "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/request/image/{recordId}/{requestId}/{code}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/request/image/{recordId}/{requestId}/{code}",
+      "UpstreamHttpMethod": [ "DELETE" ]
     }
   ]
 }
