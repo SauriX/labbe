@@ -16,6 +16,12 @@ namespace Shared.Dictionary
             public const int LABORATORIO = 4;
         }
 
+        public class Area
+        {
+            public const int CITOLOGIA_NASAL = 8;
+            public const int HISTOPATOLOGIA = 30;
+        }
+
         public class Branch
         {
             public static readonly Guid MT = new("698e416e-e5cb-4e7a-90ed-74448d408f20");

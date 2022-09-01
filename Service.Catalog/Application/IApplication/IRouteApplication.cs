@@ -14,6 +14,6 @@ namespace Service.Catalog.Application.IApplication
         Task<RouteListDto> Update(RouteFormDto routes);
         Task<(byte[] file, string fileName)> ExportList(string search);
         Task<(byte[] file, string fileName)> ExportForm(string id);
-        Task<IEnumerable<RouteListDto>> FindRoutes(RouteFormDto routeForm);
+        Task<IEnumerable<RouteFormDto>> FindRoutes(RouteFormDto routeForm);
     }
 }

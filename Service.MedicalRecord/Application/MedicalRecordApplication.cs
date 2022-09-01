@@ -78,7 +78,7 @@ namespace Service.MedicalRecord.Application
             var codeRange = await _catalogClient.GetCodeRange(Guid.Parse(expediente.sucursal));
             var lastCode = await _repository.GetLastCode(Guid.Parse(expediente.sucursal), date);
 
-            var consecutive = Code.GetCode(codeRange, lastCode);
+            var consecutive = RequestCodes.GetCode(codeRange, lastCode);
             var code = $"{consecutive}{date}";
                 
             await _repository.Create(newprice, expediente.TaxData);
@@ -152,7 +152,7 @@ namespace Service.MedicalRecord.Application
 
         public async Task<(byte[] file, string fileName)> ExportList(MedicalRecordSearch search)
         {
-            var studys = await GetNow(search);
+            var studies = await GetNow(search);
 
             var path = Assets.ExpedientetList;
 
@@ -162,7 +162,7 @@ namespace Service.MedicalRecord.Application
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
             template.AddVariable("Titulo", "Expedientes");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
-            template.AddVariable("Expedientes", studys);
+            template.AddVariable("Expedientes", studies);
 
             template.Generate();
 

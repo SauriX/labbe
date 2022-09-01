@@ -1,5 +1,6 @@
 ﻿using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
+using MoreLinq;
 using Service.MedicalRecord.Context;
 using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Dtos.Request;
@@ -114,6 +115,25 @@ namespace Service.MedicalRecord.Repository
             return lastRequest?.Clave;
         }
 
+        public async Task<string> GetLastPathologicalCode(Guid branchId, string date, string type)
+        {
+            var lastRequest = await _context.CAT_Solicitud
+                .OrderBy(x => x.FechaCreo)
+                .Where(x => x.SucursalId == branchId)
+                .ToListAsync();
+
+            var last = lastRequest
+                .LastOrDefault(x => x.ClavePatologica != null
+                && x.ClavePatologica.Contains(type)
+                && x.ClavePatologica.Split(",").All(y => y.EndsWith(date)));
+
+            if (last == null) return null;
+
+            var code = last.ClavePatologica.Split(",").FirstOrDefault(x => x.Contains(type));
+
+            return code;
+        }
+
         public async Task<RequestStudy> GetStudyById(Guid requestId, int studyId)
         {
             var study = await _context.Relacion_Solicitud_Estudio
@@ -170,6 +190,14 @@ namespace Service.MedicalRecord.Repository
 
             return image;
         }
+
+        public async Task<List<RequestImage>> GetImages(Guid requestId)
+        {
+            var images = await _context.Relacion_Solicitud_Imagen.Where(x => x.SolicitudId == requestId).ToListAsync();
+
+            return images;
+        }
+
 
         public async Task Create(Request request)
         {
@@ -236,6 +264,18 @@ namespace Service.MedicalRecord.Repository
             config.SetSynchronizeFilter<RequestStudy>(x => x.SolicitudId == requestId);
 
             await _context.BulkInsertOrUpdateOrDeleteAsync(studies, config);
+        }
+
+        public async Task DeleteImage(Guid requestId, string code)
+        {
+            var image = await _context.Relacion_Solicitud_Imagen.FirstOrDefaultAsync(x => x.SolicitudId == requestId && x.Clave == code);
+
+            if (image != null)
+            {
+                _context.Relacion_Solicitud_Imagen.Remove(image);
+
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

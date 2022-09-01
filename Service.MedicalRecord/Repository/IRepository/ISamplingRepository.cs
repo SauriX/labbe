@@ -7,7 +7,7 @@ namespace Service.MedicalRecord.Repository.IRepository
 {
     public interface ISamplingRepository
     {
-        Task<List<Request>> GetAll(SamplingSearchDto search);
+        Task<List<Request>> GetAll(rRequestedStudySearchDto search);
         Task UpdateStatus(UpdateDto dates);
     }
 }

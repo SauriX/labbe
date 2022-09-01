@@ -70,7 +70,7 @@ namespace Service.MedicalRecord.Application
             var codeRange = await _catalogCliente.GetCodeRange(priceQuote.SucursalId);
             var lastCode = await _repository.GetLastCode(date);
 
-            var consecutive = Code.GetCode(codeRange, lastCode);
+            var consecutive = RequestCodes.GetCode(codeRange, lastCode);
             var code = $"{consecutive}{date}";
             newprice.Afiliacion = code;
             await _repository.Create(newprice);
@@ -93,7 +93,7 @@ namespace Service.MedicalRecord.Application
             var codeRange = await _catalogCliente.GetCodeRange(expediente.SucursalId);
             var lastCode = await _repository.GetLastCode(date);
 
-            var consecutive = Code.GetCode(codeRange, lastCode);
+            var consecutive = RequestCodes.GetCode(codeRange, lastCode);
             var code = $"{consecutive}{date}";
             updatedPack.Afiliacion = code;
 

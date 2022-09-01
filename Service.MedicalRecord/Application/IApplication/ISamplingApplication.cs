@@ -7,6 +7,6 @@ namespace Service.MedicalRecord.Application.IApplication
     public interface ISamplingApplication
     {
         Task UpdateStatus(UpdateDto dates);
-        Task<List<SamplingListDto>> GetAll(SamplingSearchDto search);
+        Task<List<SamplingListDto>> GetAll(rRequestedStudySearchDto search);
     }
 }

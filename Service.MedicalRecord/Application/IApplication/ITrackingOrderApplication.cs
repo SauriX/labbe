@@ -1,5 +1,6 @@
 ﻿using Service.MedicalRecord.Dtos.TrackingOrder;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Service.MedicalRecord.Application.IApplication
@@ -10,5 +11,7 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<TrackingOrderDto> GetById(Guid Id);
         Task<TrackingOrderDto> Create(TrackingOrderFormDto order);
         Task<TrackingOrderDto> Update(TrackingOrderFormDto order);
+        Task<IEnumerable<EstudiosListDto>> FindEstudios(List<int> estudios);
+        Task<(byte[] file, string fileName)> ExportList(string search);
     }
 }

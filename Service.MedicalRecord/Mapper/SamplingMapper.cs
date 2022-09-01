@@ -8,7 +8,7 @@ namespace Service.MedicalRecord.Mapper
 {
     public static class SamplingMapper
     {
-        public static List<SamplingListDto> ToSamplingListDto(this List<Service.MedicalRecord.Domain.Request.Request> model)
+        public static List<SamplingListDto> ToSamplingListDto(this List<Request> model)
         {
             if (model == null) return null;
 
@@ -22,26 +22,28 @@ namespace Service.MedicalRecord.Mapper
                 Sexo = x.Expediente.Genero,
                 Compañia = x.Compañia?.Nombre,
                 Seleccion = false,
-                studys = x.Estudios.ToStudySamplingDto(),
+                Estudios = x.Estudios.ToStudySamplingDto(),
                 Id = x.Id.ToString(),
-                Order=x.ExpedienteId.ToString()
+                Order = x.ExpedienteId.ToString()
             }).ToList();
         }
 
-        public static List<StudyDto> ToStudySamplingDto(this ICollection<RequestStudy>model) {
+        public static List<StudyDto> ToStudySamplingDto(this ICollection<RequestStudy> model)
+        {
 
 
             return model.Select(x => new StudyDto
             {
-                Id=x.EstudioId,
-              Nombre =x.Clave,
-                Area ="",
-                 Status =x.EstatusId,
-                Registro =x.FechaCreo.ToString(),
-                Entrega =x.FechaCreo.AddDays((double)x.Dias).ToString(),
-                 Seleccion =false,
-                Clave =x.Clave,
-    }).ToList();
+                Id = x.EstudioId,
+                Nombre = x.Nombre,
+                Area = "",
+                Status = x.EstatusId,
+                Registro = x.FechaCreo.ToString(),
+                Entrega = x.FechaCreo.AddDays((double)x.Dias).ToString(),
+                Seleccion = false,
+                Clave = x.Clave,
+                NombreEstatus = x.Estatus.Nombre,
+            }).ToList();
         }
     }
 }
