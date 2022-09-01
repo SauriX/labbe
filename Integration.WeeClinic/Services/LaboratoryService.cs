@@ -32,13 +32,15 @@ namespace Integration.WeeClinic.Services
         }
 
         // Servicio 2. Consulta de estudios solicitados
+        // Dudas
+        // Datos llega como un [], por que? Llegan campos de mas que en la documentacion
         public static async Task<string> BuscaFolioLaboratorio()
         {
             var url = "api/Servicio/BuscaFolioLaboratorio";
 
             var data = new Dictionary<string, string>()
             {
-                ["Folio"] = "234234234"
+                ["Folio"] = folio3
             };
 
             var response = await PostService<string>(url, data);
@@ -46,129 +48,10 @@ namespace Integration.WeeClinic.Services
             return response;
         }
 
-        #region Ejemplos respuesta BuscaFolioLaboratorio
-        // Por que los 3 folios regresan el mismo resultado?
-        // Por que datos viene vacio
-        // Ejemplo AD00704422003227421X
-        //{
-        //  "IsOnline": false,
-        //	"IsActionPermitted": false,
-        //	"IsExists": false,
-        //	"IsOk": true,
-        //	"MensajeID": 0,
-        //	"Mensaje": "",
-        //	"TipoUsuario": null,
-        //	"UserName": "",
-        //	"Password": null,
-        //	"ID": "00000000-0000-0000-0000-000000000000",
-        //	"Fecha": "2022-08-25T16:53:11.411401+00:00",
-        //	"URL": "",
-        //	"NoFilas": 0,
-        //	"Permiso": "SI",
-        //	"dsRespuesta": {
-        //      "Datos": [],
-        //		"Datos1": [
-        //          {
-        //              "isVigente": 1,
-        //				"Poliza": "1012209030845",
-        //				"CodEstatus": 1,
-        //				"Estatus": "Solicitada",
-        //				"Cliente": "SKYWORKS SOLUTIONS DE MEXICO S DE RL DE CV",
-        //				"idServicio": "35caf363-e8d4-430e-b22e-1f8d005fb4dd",
-        //				"idNodo": "00000000-0000-0000-0000-000000000000",
-        //				"idCliente": "b2957ff3-b4ff-46d8-ae98-bddd9fae188d",
-        //				"idServicioParent": "6b1201a6-871a-4b8d-83a5-2dcbfaeb68bc",
-        //				"idNodoParent": "00000000-0000-0000-0000-000000000000",
-        //				"FolioSolicitud": "AD007044220032276WRT",
-        //				"CODTIPOSERVICIO": 2,                                           No viene en documentacion
-        //				"NoReferencia": "1125529",                                      No viene en documentacion
-        //				"EdadPersona": 22,
-        //				"IvaSucursal": "0"
-        //          }
-        //		]
-        //	},
-        //	"Nota": null
-        //}
-
-        // FOLIO NO VALIDO
-        // Ejemplo AD00704422003227421Z
-        //{
-        //  "IsOnline": false,
-        //	"IsActionPermitted": false,
-        //	"IsExists": false,
-        //	"IsOk": false,
-        //	"MensajeID": 0,
-        //	"Mensaje": "Cannot insert the value NULL into column 'idPersona', table 'dbHorusQP.dbo.Persona_Generales'; column does not allow nulls. INSERT fails.\r\nThe statement has been terminated.",
-        //	"TipoUsuario": null,
-        //	"UserName": "",
-        //	"Password": null,
-        //	"ID": "00000000-0000-0000-0000-000000000000",
-        //	"Fecha": "2022-08-25T17:18:49.1689651+00:00",
-        //	"URL": "",
-        //	"NoFilas": 0,
-        //	"Permiso": "SI",
-        //	"dsRespuesta": null,
-        //	"Nota": null
-        //}
-
-        // FOLIO NULL
-        // Ejemplo null
-        //{
-        //  "IsOnline": false,
-        //	"IsActionPermitted": false,
-        //	"IsExists": false,
-        //	"IsOk": false,
-        //	"MensajeID": 0,
-        //	"Mensaje": "",
-        //	"TipoUsuario": null,
-        //	"UserName": "",
-        //	"Password": null,
-        //	"ID": "00000000-0000-0000-0000-000000000000",
-        //	"Fecha": "2022-08-25T17:20:31.7247689+00:00",
-        //	"URL": "",
-        //	"NoFilas": 0,
-        //	"Permiso": "SI",
-        //	"dsRespuesta": {
-        //      "Datos": [],
-        //		"Validacion": [
-        //         {
-        //           "Detail": "Folio is required"
-        //         }
-        //		]
-        //	},
-        //	"Nota": null
-        //}
-
-        // FOLIO CON ESTRUCTURA INVALIDA
-        // Ejemplo 5dgdfgwefewfwefwef235243123123#$@#$#E@#FWFfsdfs4$%
-        //{
-        //  "IsOnline": false,
-        //	"IsActionPermitted": false,
-        //	"IsExists": false,
-        //	"IsOk": false,
-        //	"MensajeID": 0,
-        //	"Mensaje": "",
-        //	"TipoUsuario": null,
-        //	"UserName": "",
-        //	"Password": null,
-        //	"ID": "00000000-0000-0000-0000-000000000000",
-        //	"Fecha": "2022-08-25T17:23:29.4839359+00:00",
-        //	"URL": "",
-        //	"NoFilas": 0,
-        //	"Permiso": "SI",
-        //	"dsRespuesta": {
-        //      "Datos": [],
-        //		"Validacion": [
-        //          {
-        //            "Detail": "Folio Invalid type var isn't a IsString"
-        //          }
-        //		]
-        //	},
-        //	"Nota": null
-        //}
-        #endregion
-
         // Servicio 3. Consulta de precios por estudio
+        // Dudas
+        // Aunque se mande 1 sucursal que no existe regresa datos
+        // Me regresa Servicio Descartado aunque no exista el folio
         public static async Task<string> GetPreciosEstudios_ByidServicio()
         {
             var url = "api/Inventarios/GetPreciosEstudios_ByidServicio";
@@ -193,11 +76,11 @@ namespace Integration.WeeClinic.Services
 
             var data = new Dictionary<string, string>()
             {
-                ["idPersona"] = "",
-                ["CodAccion"] = "",
+                ["idPersona"] = "4254656b-f760-470b-b807-25fc5d11b37d",
+                ["CodAccion"] = "1",
                 ["CodAcceso"] = "",
-                ["CodMotivo"] = "",
-                ["idServicio"] = ""
+                ["CodMotivo"] = "5",
+                ["idServicio"] = null
             };
 
             var response = await PostService<string>(url, data);
@@ -212,9 +95,9 @@ namespace Integration.WeeClinic.Services
 
             var data = new Dictionary<string, string>()
             {
-                ["idPersona"] = "",
-                ["idOrden"] = "",
-                ["Token"] = "",
+                ["idPersona"] = "4254656b-f760-470b-b807-25fc5d11b37f",
+                ["idOrden"] = "a11c4d76-878e-4ec2-a7b9-03aeee28ddff",
+                ["Token"] = "34234234",
                 ["ClaveSucursal"] = ""
             };
 
@@ -230,8 +113,8 @@ namespace Integration.WeeClinic.Services
 
             var data = new Dictionary<string, string>()
             {
-                ["Servicios"] = "",
-                ["ClaveSucursal"] = ""
+                ["Servicios"] = "35caf363-e8d4-430e-b22e-1f8d005fb4dd,00000000-0000-0000-0000-000000000000,0,0|",
+                ["ClaveSucursal"] = "MT"
             };
 
             var response = await PostService<string>(url, data);
@@ -246,9 +129,9 @@ namespace Integration.WeeClinic.Services
 
             var data = new Dictionary<string, string>()
             {
-                ["idServicio"] = "",
-                ["idNodo"] = "",
-                ["ClaveSucursal"] = ""
+                ["idServicio"] = "35caf363-e8d4-430e-b22e-1f8d005fb4dd",
+                ["idNodo"] = "00000000-0000-0000-0000-000000000000",
+                ["ClaveSucursal"] = "MT"
             };
 
             var response = await PostService<string>(url, data);
