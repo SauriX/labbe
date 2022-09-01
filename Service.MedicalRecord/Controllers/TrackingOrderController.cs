@@ -4,10 +4,13 @@ using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Dtos.TrackingOrder;
 using Shared.Dictionary;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Service.MedicalRecord.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class TrackingOrderController : ControllerBase
     {
         private readonly ITrackingOrderApplication _service;
@@ -32,6 +35,13 @@ namespace Service.MedicalRecord.Controllers
             return await _service.Create(order);
         }
 
+        [HttpPost("findStudies")]
+        [Authorize(Policies.Access)]
+        public async Task<IEnumerable<EstudiosListDto>> FindEstudios(List<int> estudios)
+        {
+            return await _service.FindEstudios(estudios);
+        }
+
         [HttpGet("newOrder")]
         [Authorize(Policies.Access)]
         public async Task<TrackingOrderDto> GetTrackingOrder(TrackingOrderFormDto order)
@@ -46,6 +56,14 @@ namespace Service.MedicalRecord.Controllers
         {
             order.UsuarioId = (Guid)HttpContext.Items["userId"];
             return await _service.Update(order);
+        }
+
+        [HttpPost("export/list/{search}")]
+        [Authorize(Policies.Download)]
+        public async Task<IActionResult> ExportListTrackingOrder(string search)
+        {
+            var (file, fileName) = await _service.ExportList(search);
+            return File(file, MimeType.XLSX, fileName);
         }
     }
 }

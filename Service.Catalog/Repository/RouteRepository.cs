@@ -132,6 +132,14 @@ namespace Service.Catalog.Repository
                 .Include(x => x.Paqueteria)
                 .Include(x => x.Maquilador)
                 .AsQueryable();
+            if (route.SucursalDestinoId != null && route.SucursalDestinoId != Guid.Empty)
+            {
+                routes = routes.Where(x => x.SucursalDestinoId == route.SucursalDestinoId);
+            }
+            if (route.MaquiladorId != null && route.MaquiladorId > 0)
+            {
+                routes = routes.Where(x => x.MaquiladorId == route.MaquiladorId);
+            }
 
             routes = routes.Where(x => x.HoraDeRecoleccion >= route.HoraDeRecoleccion
                                     && (x.SucursalOrigenId == route.SucursalOrigenId)

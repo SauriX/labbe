@@ -11,7 +11,7 @@ namespace Service.Catalog.Repository.IRepository
     {
         Task<List<Equipos>> GetAll(string search);
         Task<Equipos> GetById(int Id);
-        Task<bool> IsDuplicate(Equipos equipment);
+        Task<(bool, string)> IsDuplicate(Equipos equipment);
         Task Create(Equipos equipment);
         Task Update(Equipos equipment);
     }
