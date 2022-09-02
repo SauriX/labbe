@@ -14,9 +14,6 @@ namespace Service.MedicalRecord.Repository
 {
     public class RequestedStudyRepository : IRequestedStudyRepository
     {
-        private const int TomaDeMuestra = 1;
-        private const int Solicitado = 2;
-
         private readonly ApplicationDbContext _context;
 
         public RequestedStudyRepository(ApplicationDbContext context)
