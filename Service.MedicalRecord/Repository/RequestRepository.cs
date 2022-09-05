@@ -191,6 +191,14 @@ namespace Service.MedicalRecord.Repository
             return image;
         }
 
+        public async Task<List<RequestImage>> GetImages(Guid requestId)
+        {
+            var images = await _context.Relacion_Solicitud_Imagen.Where(x => x.SolicitudId == requestId).ToListAsync();
+
+            return images;
+        }
+
+
         public async Task Create(Request request)
         {
             _context.CAT_Solicitud.Add(request);
@@ -256,6 +264,18 @@ namespace Service.MedicalRecord.Repository
             config.SetSynchronizeFilter<RequestStudy>(x => x.SolicitudId == requestId);
 
             await _context.BulkInsertOrUpdateOrDeleteAsync(studies, config);
+        }
+
+        public async Task DeleteImage(Guid requestId, string code)
+        {
+            var image = await _context.Relacion_Solicitud_Imagen.FirstOrDefaultAsync(x => x.SolicitudId == requestId && x.Clave == code);
+
+            if (image != null)
+            {
+                _context.Relacion_Solicitud_Imagen.Remove(image);
+
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

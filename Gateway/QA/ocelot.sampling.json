@@ -11,8 +11,17 @@
       "UpstreamPathTemplate": "/api/sampling/getList",
       "UpstreamHttpMethod": [ "POST" ]
     },
-
-
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/sampling/export/list",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/sampling/export/list",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
     {
       "DownstreamPathTemplate": "/LabRamos/services/records/api/sampling",
       "DownstreamScheme": "https",

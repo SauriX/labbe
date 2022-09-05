@@ -125,6 +125,17 @@ namespace Service.MedicalRecord.Application
             return data;
         }
 
+        public async Task<IEnumerable<string>> GetImages(Guid recordId, Guid requestId)
+        {
+            var request = await GetExistingRequest(recordId, requestId);
+
+            var images = await _repository.GetImages(requestId);
+
+            var imagesNames = images.Select(x => x.Clave);
+
+            return imagesNames;
+        }
+
         public async Task<string> Create(RequestDto requestDto)
         {
             var date = DateTime.Now.ToString("ddMMyy");
@@ -499,11 +510,16 @@ namespace Service.MedicalRecord.Application
                 throw new CustomException(HttpStatusCode.BadRequest, SharedResponses.InvalidImage);
             }
 
+            requestDto.Clave = request.Clave;
+
             if (requestDto.Tipo == "formato")
             {
-                var existingImage = await _repository.GetImage(requestDto.SolicitudId, requestDto.Clave);
+                //var name = Helpers.GenerateRandomHex();
+                var fileName = requestDto.Imagen.FileName;
+                var name = fileName[..fileName.LastIndexOf(".")];
 
-                var name = Helpers.GenerateRandomHex();
+                var existingImage = await _repository.GetImage(requestDto.SolicitudId, name);
+
                 var path = await SaveImageGetPath(requestDto, existingImage?.Clave ?? name);
 
                 var image = new RequestImage(existingImage?.Id ?? 0, requestDto.SolicitudId, existingImage?.Clave ?? name, path, "format")
@@ -520,7 +536,6 @@ namespace Service.MedicalRecord.Application
             }
             else
             {
-                requestDto.Clave = request.Clave;
                 var path = await SaveImageGetPath(requestDto);
 
                 if (requestDto.Tipo == "orden")
@@ -543,6 +558,13 @@ namespace Service.MedicalRecord.Application
 
                 return request.Clave;
             }
+        }
+
+        public async Task DeleteImage(Guid recordId, Guid requestId, string code)
+        {
+            await GetExistingRequest(recordId, requestId);
+
+            await _repository.DeleteImage(requestId, code);
         }
 
         private static async Task<string> SaveImageGetPath(RequestImageDto requestDto, string fileName = null)

@@ -14,9 +14,6 @@ namespace Service.MedicalRecord.Repository
 {
     public class RequestedStudyRepository : IRequestedStudyRepository
     {
-        private const int TomaDeMuestra = 1;
-        private const int Solicitado = 2;
-
         private readonly ApplicationDbContext _context;
 
         public RequestedStudyRepository(ApplicationDbContext context)
@@ -46,7 +43,7 @@ namespace Service.MedicalRecord.Repository
             if (!string.IsNullOrEmpty(search.Buscar))
             {
                 report = report.Where(x => x.Clave.Contains(search.Buscar) 
-                || x.Expediente.NombreCompleto.ToLower().Contains(search.Buscar.ToLower()));
+                || (x.Expediente.NombrePaciente + " " + x.Expediente.PrimerApellido + " " + x.Expediente.SegundoApellido).ToLower().Contains(search.Buscar.ToLower()));
             }
             if (search.SucursalId != null && search.SucursalId.Count > 0)
             {

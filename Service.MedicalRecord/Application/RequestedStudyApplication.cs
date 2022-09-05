@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Service.MedicalRecord.Mapper;
 using Service.MedicalRecord.Dictionary;
-using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.Sampling;
 using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Dtos.RequestedStudy;

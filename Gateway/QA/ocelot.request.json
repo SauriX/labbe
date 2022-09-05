@@ -45,6 +45,17 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/request/images/{recordId}/{requestId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/request/images/{recordId}/{requestId}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/LabRamos/services/records/api/request/email/{recordId}/{requestId}/{email}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -197,6 +208,17 @@
       ],
       "UpstreamPathTemplate": "/api/request/images",
       "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/request/image/{recordId}/{requestId}/{code}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/request/image/{recordId}/{requestId}/{code}",
+      "UpstreamHttpMethod": [ "DELETE" ]
     }
   ]
 }
