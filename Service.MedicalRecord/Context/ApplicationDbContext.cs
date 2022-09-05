@@ -26,7 +26,7 @@ namespace Service.MedicalRecord.Context
         public DbSet<RequestStatus> Estatus_Solicitud { get; set; }
         public DbSet<RequestStudyStatus> Estatus_Solicitud_Estudio { get; set; }
         public DbSet<TrackingOrder> CAT_Seguimiento_Ruta { get; set; }
-        //public DbSet<TrackingOrderDetail> CAT_DetalleSeguimientoEnvio { get; set; }
+        public DbSet<TrackingOrderDetail> Relacion_Seguimiento_Solicitud { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

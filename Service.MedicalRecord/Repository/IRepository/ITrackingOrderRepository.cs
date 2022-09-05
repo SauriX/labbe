@@ -8,9 +8,9 @@ namespace Service.MedicalRecord.Repository.IRepository
 {
     public interface ITrackingOrderRepository
     {
-        Task<TrackingOrder> GetById(Guid id);
         Task Create(TrackingOrder order);
-        Task Update(TrackingOrder order);
+        Task<bool> ConfirmarRecoleccion(Guid seguimientoId);
+        Task<bool> CancelarRecoleccion(Guid seguimientoId);
         Task<List<Domain.Request.RequestStudy>> FindEstudios(List<int> estudios);
     }
 }

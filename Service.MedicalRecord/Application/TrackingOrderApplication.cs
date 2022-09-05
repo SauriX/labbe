@@ -13,16 +13,17 @@ namespace Service.MedicalRecord.Application.IApplication
 {
     public class TrackingOrderApplication : ITrackingOrderApplication
     {
-        private readonly ITrackingOrderRepository _repository; 
+        private readonly ITrackingOrderRepository _repository;
 
         public TrackingOrderApplication(ITrackingOrderRepository repository)
         {
             _repository = repository;
         }
-        public Task<TrackingOrderDto> Create(TrackingOrderFormDto order)
+        public async Task<TrackingOrderDto> Create(TrackingOrderFormDto order)
         {
-            //var newOrder =
-                throw new NotImplementedException();
+            var newOrder = order.ToModel();
+            await _repository.Create(newOrder);
+            return newOrder.ToTrackingOrderFormDto();
         }
 
 
@@ -33,54 +34,55 @@ namespace Service.MedicalRecord.Application.IApplication
 
         }
 
-        public async Task<TrackingOrderDto> GetById(Guid Id)
+        
+
+        
+        public async Task<(byte[] file, string fileName)> ExportForm(TrackingOrderFormDto order)
         {
-                var order = await _repository.GetById(Id);
-                return order.ToTrackingOrderFormDto();
+            
+            try
+            {
+
+                //var orden = await GetAll(search);
+                //var newOrder = order.ToModel();
+
+                var path = Assets.TrackingOrderForm;
+
+                var template = new XLTemplate(path);
+
+                template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
+                template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
+                template.AddVariable("Titulo", "Orden de Seguimiento");
+                template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
+                template.AddVariable("Orden", order);
+                template.AddVariable("Estudios", order.Estudios);
+
+                template.Generate();
+
+                var range = template.Workbook.Worksheet("OrdenSeguimiento").Range("Estudios");
+                var table = template.Workbook.Worksheet("OrdenSeguimiento").Range("$A$10:" + range.RangeAddress.LastAddress).CreateTable();
+                table.Theme = XLTableTheme.TableStyleMedium2;
+
+                template.Format();
+
+                return (template.ToByteArray(), "Creación de Orden de Seguimiento.xlsx");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
-        public Task<TrackingOrderDto> GetTrackingOrder(TrackingOrderFormDto order)
+        public async Task<bool> ConfirmarRecoleccion(Guid seguimientoId)
         {
-            throw new NotImplementedException();
+            return await _repository.ConfirmarRecoleccion(seguimientoId);
+
         }
 
-        public Task<TrackingOrderDto> Update(TrackingOrderFormDto order)
+        public async Task<bool> CancelarRecoleccion(Guid seguimientoId)
         {
-            throw new System.NotImplementedException();
+            return await _repository.CancelarRecoleccion(seguimientoId);
+
         }
-        public Task<(byte[] file, string fileName)> ExportList(string search)
-        {
-            throw new NotImplementedException();
-            //try
-            //{
-
-            //    //var orden = await GetAll(search);
-
-            //    var path = Assets.OrdenSeguimientoList;
-
-            //    var template = new XLTemplate(path);
-
-            //    template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
-            //    template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
-            //    template.AddVariable("Titulo", "Equipos");
-            //    template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
-            //    template.AddVariable("Orden", search);
-
-            //    template.Generate();
-
-            //    var range = template.Workbook.Worksheet("Equipos").Range("Sucursales");
-            //    var table = template.Workbook.Worksheet("Equipos").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
-            //    table.Theme = XLTableTheme.TableStyleMedium2;
-
-            //    template.Format();
-
-            //    return (template.ToByteArray(), "Creación de Orden de Seguimiento.xlsx");
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw ex;
-            //}
-        }
-
     }
 }

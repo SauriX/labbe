@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.MedicalRecord.Context;
 
 namespace Service.MedicalRecord.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220901094309_Tablas_CAT_Seguimiento_Ruta_y_Relacion_Seguimiento_Solicitud")]
+    partial class Tablas_CAT_Seguimiento_Ruta_y_Relacion_Seguimiento_Solicitud
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -912,9 +914,6 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Clave")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("DiaRecoleccion")
                         .HasColumnType("datetime2");
 
@@ -968,8 +967,8 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("Estudio")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("EstudioId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("EstudioId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ExpedienteId")
                         .HasColumnType("uniqueidentifier");

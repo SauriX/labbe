@@ -7,11 +7,10 @@ namespace Service.MedicalRecord.Application.IApplication
 {
     public interface ITrackingOrderApplication
     {
-        Task<TrackingOrderDto> GetTrackingOrder(TrackingOrderFormDto order); 
-        Task<TrackingOrderDto> GetById(Guid Id);
         Task<TrackingOrderDto> Create(TrackingOrderFormDto order);
-        Task<TrackingOrderDto> Update(TrackingOrderFormDto order);
         Task<IEnumerable<EstudiosListDto>> FindEstudios(List<int> estudios);
-        Task<(byte[] file, string fileName)> ExportList(string search);
+        Task<bool> ConfirmarRecoleccion(Guid seguimientoId);
+        Task<bool> CancelarRecoleccion(Guid seguimientoId);
+        Task<(byte[] file, string fileName)> ExportForm(TrackingOrderFormDto order);
     }
 }
