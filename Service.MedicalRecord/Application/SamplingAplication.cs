@@ -20,7 +20,7 @@ namespace Service.MedicalRecord.Application
 
         public async  Task<List<SamplingListDto>> GetAll(rRequestedStudySearchDto search) {
             var sampling = await _repository.GetAll(search);
-            if (sampling != null)
+              if (sampling != null)
             {
                 return sampling.ToSamplingListDto();
             }

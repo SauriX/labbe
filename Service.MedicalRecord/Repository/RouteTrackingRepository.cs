@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Service.MedicalRecord.Context;
 using Service.MedicalRecord.Domain.RouteTracking;
+using Service.MedicalRecord.Repository.IRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Service.MedicalRecord.Repository
 {
-    public class RouteTrackingRepository
+    public class RouteTrackingRepository:IRouteTrackingRepository
     {
         private readonly ApplicationDbContext _context;
 

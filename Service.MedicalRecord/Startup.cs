@@ -258,6 +258,7 @@ namespace Service.MedicalRecord
             services.AddScoped<ISamplingRepository, SamplingRepository>();
             services.AddScoped<IRequestedStudyRepository, RequestedStudyRepository>();
             services.AddScoped<ITrackingOrderRepository, TrackingOrderRepository>();
+            services.AddScoped<IRouteTrackingRepository, RouteTrackingRepository>();
         }
 
 
