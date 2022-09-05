@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.MedicalRecord.Application.IApplication;
+using Service.MedicalRecord.Dtos.RequestedStudy;
 using Service.MedicalRecord.Dtos.Sampling;
 using Shared.Dictionary;
 using System;
@@ -22,16 +23,16 @@ namespace Service.MedicalRecord.Controllers
         }
         [HttpPost("getList")]
         [Authorize(Policies.Access)]
-        public async Task<List<SamplingListDto>> GetAll(rRequestedStudySearchDto search)
+        public async Task<List<SamplingListDto>> GetAll(RequestedStudySearchDto search)
         {
-            var sampling = await _service.GetAll(search);
-            return sampling;
+            var requestedStudy = await _service.GetAll(search);
+            return requestedStudy;
         }
         [HttpPut]
         [Authorize(Policies.Update)]
-        public async Task UpdateStatus(UpdateDto dates)
+        public async Task UpdateStatus(List<RequestedStudyUpdateDto> requestDto)
         {
-            await _service.UpdateStatus(dates);
+            await _service.UpdateStatus(requestDto);
         }
 
         [HttpPost("order/{recordId}/{requestId}")]
@@ -41,7 +42,15 @@ namespace Service.MedicalRecord.Controllers
         {
             var file = await _requestService.PrintOrder(recordId, requestId);
 
-            return File(file, MimeType.PDF, "order.pdf");
+            return File(file, MimeType.PDF, "Orden.pdf");
+        }
+
+        [HttpPost("export/list")]
+        [Authorize(Policies.Download)]
+        public async Task<IActionResult> ExportStudyExcel(RequestedStudySearchDto search)
+        {
+            var (file, fileName) = await _service.ExportList(search);
+            return File(file, MimeType.XLSX, fileName);
         }
     }
 }

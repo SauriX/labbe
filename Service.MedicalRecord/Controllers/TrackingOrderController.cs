@@ -20,12 +20,7 @@ namespace Service.MedicalRecord.Controllers
         }
 
 
-        [HttpGet("{id}")]
-        [Authorize(Policies.Access)]
-        public async Task<TrackingOrderDto> GetById(Guid id)
-        {
-            return await _service.GetById(id);
-        }
+        
 
         [HttpPost]
         [Authorize(Policies.Create)]
@@ -42,27 +37,26 @@ namespace Service.MedicalRecord.Controllers
             return await _service.FindEstudios(estudios);
         }
 
-        [HttpGet("newOrder")]
+        [HttpPost("confirmarRecoleccion")]
         [Authorize(Policies.Access)]
-        public async Task<TrackingOrderDto> GetTrackingOrder(TrackingOrderFormDto order)
+        public async Task<bool> ConfirmarRecoleccion([FromBody] string seguimientoId)
         {
-            return await _service.GetTrackingOrder(order);
+            return await _service.ConfirmarRecoleccion(Guid.Parse(seguimientoId));
+        }
+
+        [HttpPost("cancelarRecoleccion")]
+        [Authorize(Policies.Access)]
+        public async Task<bool> CancelarRecoleccion([FromBody] string seguimientoId)
+        {
+            return await _service.CancelarRecoleccion(Guid.Parse(seguimientoId));
         }
 
 
-        [HttpPut]
-        [Authorize(Policies.Update)]
-        public async Task<TrackingOrderDto> Update(TrackingOrderFormDto order)
+        [HttpPost("export/form")]
+        //[Authorize(Policies.Download)]
+        public async Task<IActionResult> ExportFormTrackingOrder(TrackingOrderFormDto order)
         {
-            order.UsuarioId = (Guid)HttpContext.Items["userId"];
-            return await _service.Update(order);
-        }
-
-        [HttpPost("export/list/{search}")]
-        [Authorize(Policies.Download)]
-        public async Task<IActionResult> ExportListTrackingOrder(string search)
-        {
-            var (file, fileName) = await _service.ExportList(search);
+            var (file, fileName) = await _service.ExportForm(order);
             return File(file, MimeType.XLSX, fileName);
         }
     }

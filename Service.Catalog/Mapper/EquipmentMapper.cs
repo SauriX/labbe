@@ -120,6 +120,7 @@ namespace Service.Catalog.Mapper
                 FechaModifico = DateTime.Now,
                 Valores = dto.valores.Select(x => new EquipmentBranch
                 {
+                    //EquipmentBranchId = x.EquipmentBranchId,
                     BranchId = x.BranchId,
                     EquipmentId = dto.Id,
                     UsuarioCreoId = model.UsuarioCreoId,

@@ -12,7 +12,14 @@ namespace Service.MedicalRecord.Mapper
         {
             if (dto == null) return null;
 
-            return new TrackingOrder
+            
+            DateTime dt = DateTime.Now;
+            TimeSpan ts = new TimeSpan(dto.HoraDeRecoleccion, 0, 0);
+            dt = dt.Date + ts;
+
+            
+
+            var orderModel = new TrackingOrder
             {
                 Id = new Guid(),
                 MuestraId = dto.MuestraId,
@@ -21,16 +28,29 @@ namespace Service.MedicalRecord.Mapper
                 SucursalOrigenId = dto.SucursalOrigenId,
                 UsuarioCreoId = dto.UsuarioId,
                 FechaCreo = DateTime.Now,
-                FechaModifico = DateTime.Now,
+                Activo = dto.Activo,
+                EscaneoCodigoBarras = dto.EscaneoCodigoBarras,
+                MaquiladorId = dto.MaquiladorId,
+                RutaId = dto.RutaId,
+                DiaRecoleccion = dt,
+                Clave = dto.Clave,
                 Estudios = dto.Estudios.Select(x => new TrackingOrderDetail
                 {
                     Id = new Guid(),
-                    SucursalDestinoId = dto.SucursalDestinoId,
-                    SucursalOrigenId = dto.SucursalOrigenId,
+                    SolicitudId = x.SolicitudId,
+                    EstudioId = x.EstudioId,
+                    //Estudio = x.Estudio,
+                    ExpedienteId = x.ExpedienteId,
+                    NombrePaciente = x.NombrePaciente,
+                    Temperatura = x.Temperatura,
+                    Escaneado = x.Escaneado,
                     FechaCreo = DateTime.Now
+                    
+
                 }).ToList()
 
             };
+            return orderModel;
         }
         public static TrackingOrderDto ToTrackingOrderFormDto(this TrackingOrder model)
         {
@@ -39,17 +59,24 @@ namespace Service.MedicalRecord.Mapper
             return new TrackingOrderDto
             {
                 Id = model.Id,
-                ClaveEstudio = model.ClaveEstudio,
-                Escaneado = model.Escaneado,
-                EscaneoCodigoBarras = model.EscaneoCodigoBarras,
-                Estudio = model.Estudio,
+                Activo = model.Activo,
+
+                //ClaveEstudio = model.ClaveEstudio,
+                //Escaneado = model.Escaneado,
+                //EscaneoCodigoBarras = model.EscaneoCodigoBarras,
+                //Estudio = model.Estudio,
+                //MuestraId = model.MuestraId,
+                //PacienteId = model.PacienteId,
+                //SolicitudId = model.SolicitudId,
+                RutaId = model.RutaId,
                 MuestraId = model.MuestraId,
-                PacienteId = model.PacienteId,
-                SolicitudId = model.SolicitudId,
+                MaquiladorId = model.MaquiladorId,
+                EscaneoCodigoBarras = model.EscaneoCodigoBarras,
+                DiaRecoleccion = model.DiaRecoleccion,
                 SucursalDestinoId = model.SucursalDestinoId,
                 SucursalOrigenId = model.SucursalOrigenId,
-                Temperatura = model.Temperatura
-
+                Temperatura = model.Temperatura,
+                Clave = model.Clave
             };
         }
         public static IEnumerable<EstudiosListDto> ToStudiesRequestRouteDto(this IEnumerable<Domain.Request.RequestStudy> model)
@@ -69,10 +96,13 @@ namespace Service.MedicalRecord.Mapper
                 Estudios = x.Select(y => new StudiesRequestRouteDto
                 {
                     Estudio = y.Nombre,
+                    EstudioId = y.EstudioId,
                     Clave = y.Clave,
                     NombrePaciente = y.Solicitud.Expediente.NombreCompleto,
-                    SolicitudId = y.Solicitud.Clave,
-                    TaponNombre = y.Tapon.Clave
+                    Solicitud = y.Solicitud.Clave,
+                    TaponNombre = y.Tapon.Clave,
+                    SolicitudId = y.Solicitud.Id,
+                    ExpedienteId = y.Solicitud.ExpedienteId
                 }).ToList(),
             });
         }

@@ -12,8 +12,18 @@
       "UpstreamPathTemplate": "/api/sampling/getList",
       "UpstreamHttpMethod": [ "POST" ]
     },
-
-
+    {
+      "DownstreamPathTemplate": "/api/sampling/export/list",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/sampling/export/list",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
     {
       "DownstreamPathTemplate": "/api/sampling",
       "DownstreamScheme": "http",

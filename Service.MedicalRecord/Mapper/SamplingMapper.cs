@@ -30,8 +30,6 @@ namespace Service.MedicalRecord.Mapper
 
         public static List<StudyDto> ToStudySamplingDto(this ICollection<RequestStudy> model)
         {
-
-
             return model.Select(x => new StudyDto
             {
                 Id = x.EstudioId,
