@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220905153140_Relacion 1N Lista precios Lealtades")]
+    partial class Relacion1NListapreciosLealtades
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1172,27 +1174,6 @@ namespace Service.Catalog.Migrations
                     b.ToTable("CAT_Lealtad");
                 });
 
-            modelBuilder.Entity("Service.Catalog.Domain.Loyalty.LoyaltyPriceList", b =>
-                {
-                    b.Property<Guid>("LoyaltyId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("PrecioListaId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("LoyaltyId", "PrecioListaId");
-
-                    b.HasIndex("PrecioListaId");
-
-                    b.ToTable("Relacion_Loyalty_PrecioLista");
-                });
-
             modelBuilder.Entity("Service.Catalog.Domain.Maquila.Maquila", b =>
                 {
                     b.Property<int>("Id")
@@ -1690,6 +1671,9 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("LealtadId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -1707,6 +1691,8 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("LealtadId");
 
                     b.ToTable("CAT_ListaPrecio");
                 });
@@ -2829,25 +2815,6 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Indicacion");
                 });
 
-            modelBuilder.Entity("Service.Catalog.Domain.Loyalty.LoyaltyPriceList", b =>
-                {
-                    b.HasOne("Service.Catalog.Domain.Loyalty.Loyalty", "Loyalty")
-                        .WithMany("PrecioLista")
-                        .HasForeignKey("LoyaltyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Service.Catalog.Domain.Price.PriceList", "PrecioLista")
-                        .WithMany()
-                        .HasForeignKey("PrecioListaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Loyalty");
-
-                    b.Navigation("PrecioLista");
-                });
-
             modelBuilder.Entity("Service.Catalog.Domain.Maquila.Maquila", b =>
                 {
                     b.HasOne("Service.Catalog.Domain.Constant.Colony", "Colonia")
@@ -2969,6 +2936,17 @@ namespace Service.Catalog.Migrations
                         .IsRequired();
 
                     b.Navigation("Parametro");
+                });
+
+            modelBuilder.Entity("Service.Catalog.Domain.Price.PriceList", b =>
+                {
+                    b.HasOne("Service.Catalog.Domain.Loyalty.Loyalty", "Lealtad")
+                        .WithMany("PrecioLista")
+                        .HasForeignKey("LealtadId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Lealtad");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Price.PriceList_Packet", b =>

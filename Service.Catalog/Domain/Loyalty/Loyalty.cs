@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Service.Catalog.Domain.Loyalty
 {
@@ -16,7 +17,13 @@ namespace Service.Catalog.Domain.Loyalty
         public DateTime FechaCreo { get; set; }
         public Guid? UsuarioModId { get; set; }
         public DateTime? FechaMod { get; set; }
-        public Guid? PrecioListaId { get; set; }
-        public virtual Price.PriceList PrecioLista { get; set; }
+        //public Guid? PrecioListaId { get; set; }
+        //public virtual Price.PriceList PrecioLista { get; set; }
+        public virtual IEnumerable<LoyaltyPriceList> PrecioLista { get; set; }
+
+        internal void ForEach()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
