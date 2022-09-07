@@ -11,4 +11,4 @@ namespace Service.Catalog.Domain.Loyalty
         public Guid? UsuarioCreoId { get; set; }
         public DateTime FechaCreo { get; set; }
     }
-}
+} 
