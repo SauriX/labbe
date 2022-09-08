@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using SharedResponses = Shared.Dictionary.Responses;
 
 namespace Service.Catalog.Application
 {
@@ -56,7 +57,7 @@ namespace Service.Catalog.Application
         {
             Helpers.ValidateGuid(loyalty.Id.ToString(), out Guid guid);
 
-            var newloyalty = loyalty.ToModel();
+            var newloyalty = loyalty.ToModelCreate();
 
 
             await CheckTipoDescuento(newloyalty);
@@ -77,6 +78,8 @@ namespace Service.Catalog.Application
             }
 
             await _repository.Create(newloyalty);
+
+            newloyalty = await _repository.GetById(loyalty.Id);
 
             return newloyalty.ToLoyaltyListDto();
         }
@@ -99,10 +102,12 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
 
-            var updatedLoyalty = loyalty.ToModel(existing);
+            var updatedLoyalty = loyalty.ToModelUpdate(existing);
             await CheckTipoDescuento(updatedLoyalty);
 
             await _repository.Update(updatedLoyalty);
+
+            updatedLoyalty = await _repository.GetById(loyalty.Id); 
 
             return updatedLoyalty.ToLoyaltyListDto();
         }
@@ -182,11 +187,27 @@ namespace Service.Catalog.Application
         {
             Helpers.ValidateGuid(loyalty.Id.ToString(), out Guid guid);
 
-            var newloyalty = loyalty.ToModel();
+            _ = await GetExistingLoyalty(loyalty.Id);
+
+            Loyalty newloyalty = loyalty.ToModelCreate();
 
             await _repository.Create(newloyalty);
 
+            newloyalty = await _repository.GetById(loyalty.Id);
+
             return newloyalty.ToLoyaltyListDto();
+        }
+
+        private async Task<Loyalty> GetExistingLoyalty(Guid loyaltyId)
+        {
+            var loyalty = await _repository.GetById(loyaltyId);
+
+            if (loyalty == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
+            }
+
+            return loyalty;
         }
     }
 }

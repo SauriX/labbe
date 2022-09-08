@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFCore.BulkExtensions;
+using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Context;
 using Service.Catalog.Domain.Loyalty;
 using Service.Catalog.Repository.IRepository;
@@ -21,7 +22,7 @@ namespace Service.Catalog.Repository
         public async Task<List<Loyalty>> GetAll(string search)
         {
             var loyaltys = _context.CAT_Lealtad
-                .Include(x => x.PrecioLista)
+                .Include(x => x.PrecioLista).ThenInclude(x => x.PrecioLista)
                     .AsQueryable();
 
             search = search.Trim().ToLower();
@@ -44,7 +45,7 @@ namespace Service.Catalog.Repository
         public async Task<Loyalty> GetById(Guid Id)
         {
             var loyalty = await _context.CAT_Lealtad
-                .Include(x => x.PrecioLista)
+                .Include(x => x.PrecioLista).ThenInclude(x => x.PrecioLista)
             .FirstOrDefaultAsync(x => x.Id == Id);
 
             return loyalty;
@@ -65,16 +66,60 @@ namespace Service.Catalog.Repository
 
         public async Task Create(Loyalty loyalty)
         {
-            _context.CAT_Lealtad.Add(loyalty);
+            using var transaction = _context.Database.BeginTransaction();
 
-            await _context.SaveChangesAsync();
+            try
+            {
+                var priceLists = loyalty.PrecioLista.ToList();
+
+                loyalty.PrecioLista = null;
+
+                _context.CAT_Lealtad.Add(loyalty);
+
+                await _context.SaveChangesAsync();
+
+                priceLists.ForEach(x => x.LoyaltyId = loyalty.Id);
+
+                var config = new BulkConfig();
+                config.SetSynchronizeFilter<LoyaltyPriceList>(x => x.LoyaltyId == loyalty.Id);
+
+                await _context.BulkInsertOrUpdateOrDeleteAsync(priceLists, config);
+
+                transaction.Commit();
+            }
+            catch (Exception)
+            {
+                transaction.Rollback();
+                throw;
+            }
         }
 
         public async Task Update(Loyalty loyalty)
         {
-            _context.CAT_Lealtad.Update(loyalty);
+            using var transaction = _context.Database.BeginTransaction();
 
-            await _context.SaveChangesAsync();
+            try
+            {
+                var priceLists = loyalty.PrecioLista.ToList();
+
+                loyalty.PrecioLista = null;
+
+                _context.CAT_Lealtad.Update(loyalty);
+
+                await _context.SaveChangesAsync();
+
+                var config = new BulkConfig();
+                config.SetSynchronizeFilter<LoyaltyPriceList>(x => x.LoyaltyId == loyalty.Id);
+
+                await _context.BulkInsertOrUpdateOrDeleteAsync(priceLists, config);
+
+                transaction.Commit();
+            }
+            catch (Exception)
+            {
+                transaction.Rollback();
+                throw;
+            }
         }
 
         public async Task<bool> IsPorcentaje(Loyalty loyalty)

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220905220923_Relacion Lista precios lealtades")]
+    partial class RelacionListaprecioslealtades
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -972,8 +974,8 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime?>("FechaMod")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Num_Serie")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Num_Serie")
+                        .HasColumnType("int");
 
                     b.Property<Guid?>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");
@@ -2840,7 +2842,7 @@ namespace Service.Catalog.Migrations
                     b.HasOne("Service.Catalog.Domain.Price.PriceList", "PrecioLista")
                         .WithMany()
                         .HasForeignKey("PrecioListaId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Loyalty");

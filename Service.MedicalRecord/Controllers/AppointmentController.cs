@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Dtos.Appointment;
+using Service.MedicalRecord.Dtos.Request;
 using Shared.Dictionary;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -81,6 +83,36 @@ namespace Service.MedicalRecord.Controllers
         {
             var (file, fileName) = await _service.ExportForm(data);
             return File(file, MimeType.XLSX, fileName);
+        }
+
+        [HttpGet("email/{requestId}/{email}/{typo}")]
+        // [Authorize(Policies.Mail)]
+        public async Task SendTestEmail(Guid requestId, string email,string typo)
+        {
+            var requestDto = new RequestSendDto
+            {
+                ExpedienteId = Guid.Empty,
+                SolicitudId = requestId,
+                Correo = email,
+                UsuarioId = (Guid)HttpContext.Items["userId"]
+            };
+
+            await _service.SendTestEmail(requestDto,typo);
+        }
+
+        [HttpGet("whatsapp/{requestId}/{phone}/{typo}")]
+        // [Authorize(Policies.Wapp)]
+        public async Task SendTestWhatsapp(Guid requestId, string phone,string typo)
+        {
+            var requestDto = new RequestSendDto
+            {
+                ExpedienteId = Guid.Empty,
+                SolicitudId = requestId,
+                Telefono = phone,
+                UsuarioId = (Guid)HttpContext.Items["userId"]
+            };
+
+            await _service.SendTestWhatsapp(requestDto,typo);
         }
     }
 }

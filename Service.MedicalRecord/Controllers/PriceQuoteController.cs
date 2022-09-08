@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Dtos.MedicalRecords;
 using Service.MedicalRecord.Dtos.PriceQuote;
@@ -99,6 +100,37 @@ namespace Service.MedicalRecord.Controllers
             var file = await _Service.GetTicket();
 
             return File(file, MimeType.PDF, "ticket.pdf");
+        }
+
+
+        [HttpGet("email/{requestId}/{email}")]
+       // [Authorize(Policies.Mail)]
+        public async Task SendTestEmail( Guid requestId, string email)
+        {
+            var requestDto = new RequestSendDto
+            {
+                ExpedienteId = Guid.Empty,
+                SolicitudId = requestId,
+                Correo = email,
+                UsuarioId = (Guid)HttpContext.Items["userId"]
+            };
+
+            await _Service.SendTestEmail(requestDto);
+        }
+
+        [HttpGet("whatsapp/{requestId}/{phone}")]
+       // [Authorize(Policies.Wapp)] 
+        public async Task SendTestWhatsapp( Guid requestId, string phone)
+        {
+            var requestDto = new RequestSendDto
+            {
+                ExpedienteId = Guid.Empty,
+                SolicitudId = requestId,
+                Telefono = phone,
+                UsuarioId = (Guid)HttpContext.Items["userId"]
+            };
+
+            await _Service.SendTestWhatsapp(requestDto);
         }
     }
 }

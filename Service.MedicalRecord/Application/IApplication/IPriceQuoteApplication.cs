@@ -1,5 +1,6 @@
 ﻿using Service.MedicalRecord.Dtos.MedicalRecords;
 using Service.MedicalRecord.Dtos.PriceQuote;
+using Service.MedicalRecord.Dtos.Request;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,5 +18,7 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<(byte[] file, string fileName)> ExportForm(Guid id);
         Task<List<MedicalRecordsListDto>> GetMedicalRecord(PriceQuoteExpedienteSearch search);
         Task<byte[]> GetTicket();
+        Task SendTestEmail(RequestSendDto requestDto);
+        Task SendTestWhatsapp(RequestSendDto requestDto);
     }
 }

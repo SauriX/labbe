@@ -40,7 +40,7 @@ namespace Service.MedicalRecord.Mapper
                 Entrega = x.FechaCreo.AddDays((double)x.Dias).ToString(),
                 Seleccion = false,
                 Clave = x.Clave,
-                NombreEstatus = x.Estatus.Nombre,
+               // NombreEstatus = x.Estatus.Nombre,
             }).ToList();
         }
     }
