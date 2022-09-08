@@ -22,7 +22,8 @@ namespace Service.MedicalRecord.Domain.MedicalRecord
         public string Celular { get; set; }
         public string Calle { get; set; }
         public int ColoniaId { get; set; }
-        public int Monedero { get; set; }
+        public decimal Monedero { get; set; }
+        public bool MonederoActivo { get; set; }
         public Guid IdSucursal { get; set; }
         public bool Activo { get; set; }
         public Guid UsuarioCreoId { get; set; }
