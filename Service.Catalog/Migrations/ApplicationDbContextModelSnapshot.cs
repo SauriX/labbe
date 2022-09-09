@@ -972,8 +972,8 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime?>("FechaMod")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Num_Serie")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Num_Serie")
+                        .HasColumnType("int");
 
                     b.Property<Guid?>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");

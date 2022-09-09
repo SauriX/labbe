@@ -130,7 +130,21 @@ namespace Service.MedicalRecord.Application
 
             return updatedPack.ToMedicalRecordsListDto();
         }
+        public async Task<bool> UpdateWallet(ExpedienteMonederoDto monedero)
+        {
+            var existing = await _repository.GetById(monedero.Id);
 
+            existing.MonederoActivo = monedero.Activo;
+
+            existing.Monedero = monedero.Saldo;
+
+            existing.FechaActivacionMonedero = DateTime.Now;
+
+            await _repository.UpdateWallet(existing);
+
+            return true;
+
+        }
         public async Task UpdateTaxData(TaxDataDto taxData)
         {
             if (taxData.ExpedienteId == null || taxData.ExpedienteId == Guid.Empty || taxData.Id == null || taxData.Id == Guid.Empty)
@@ -194,5 +208,7 @@ namespace Service.MedicalRecord.Application
 
             return (template.ToByteArray(), $"Catálogo de Expedientes ({study.Expediente}).xlsx");
         }
+
+        
     }
 }

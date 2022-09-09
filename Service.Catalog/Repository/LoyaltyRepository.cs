@@ -37,7 +37,8 @@ namespace Service.Catalog.Repository
 
         public async Task<List<Loyalty>> GetActive()
         {
-            var loyalty = await _context.CAT_Lealtad.Where(x => x.Activo).ToListAsync();
+            var loyalty = await _context.CAT_Lealtad.Where(x => x.Activo)
+                .Include(x => x.PrecioLista).ThenInclude(x => x.PrecioLista).ToListAsync();
 
             return loyalty;
         }

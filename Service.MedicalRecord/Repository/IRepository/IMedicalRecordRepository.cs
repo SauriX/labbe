@@ -19,6 +19,7 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task Create(Domain.MedicalRecord.MedicalRecord expediente, IEnumerable<TaxDataDto> taxdata);
         Task CreateTaxData(TaxData taxData, MedicalRecordTaxData recordTaxData);
         Task Update(Domain.MedicalRecord.MedicalRecord expediente, IEnumerable<TaxDataDto> taxdata);
+        Task UpdateWallet(Domain.MedicalRecord.MedicalRecord expediente);
         Task UpdateTaxData(TaxData taxData);
         Task<string> GetLastCode(Guid branchId, string date);
         Task<List<Domain.MedicalRecord.MedicalRecord>> Coincidencias(MedicalRecord.Domain.MedicalRecord.MedicalRecord expediente);

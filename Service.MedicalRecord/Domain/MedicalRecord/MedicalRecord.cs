@@ -24,6 +24,7 @@ namespace Service.MedicalRecord.Domain.MedicalRecord
         public int ColoniaId { get; set; }
         public decimal Monedero { get; set; }
         public bool MonederoActivo { get; set; }
+        public DateTime FechaActivacionMonedero { get; set; }
         public Guid IdSucursal { get; set; }
         public bool Activo { get; set; }
         public Guid UsuarioCreoId { get; set; }
