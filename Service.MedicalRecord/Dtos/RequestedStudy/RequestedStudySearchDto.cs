@@ -17,5 +17,7 @@ namespace Service.MedicalRecord.Dtos.RequestedStudy
         public List<byte> TipoSolicitud { get; set; }
         public List<int> Procedencia { get; set; }
         public List<byte> Estatus { get; set; }
+        public List<string> Estudios { get; set; }
+        public List<Guid> SolicitudId { get; set; }
     }
 }
