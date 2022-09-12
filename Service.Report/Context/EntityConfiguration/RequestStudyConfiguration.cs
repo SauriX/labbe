@@ -8,7 +8,7 @@ namespace Service.Report.Context.EntityConfiguration
     {
         public void Configure(EntityTypeBuilder<RequestStudy> builder)
         {
-            builder.HasKey(x => x.Id);
+            builder.HasKey(x => new { x.SolicitudId, x.Id });
             builder.Property(x => x.Id).ValueGeneratedNever();
         }
     }
