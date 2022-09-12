@@ -55,6 +55,7 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpGet("email/{recordId}/{requestId}/{email}")]
         [Authorize(Policies.Mail)]
+        [AllowAnonymous]
         public async Task SendTestEmail(Guid recordId, Guid requestId, string email)
         {
             var requestDto = new RequestSendDto
@@ -62,7 +63,7 @@ namespace Service.MedicalRecord.Controllers
                 ExpedienteId = recordId,
                 SolicitudId = requestId,
                 Correo = email,
-                UsuarioId = (Guid)HttpContext.Items["userId"]
+                //UsuarioId = (Guid)HttpContext.Items["userId"]
             };
 
             await _service.SendTestEmail(requestDto);
