@@ -5,7 +5,7 @@ namespace Service.Report.Domain.Request
 {
     public class RequestStudy
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public Guid SolicitudId { get; set; }
         public virtual Request Solicitud { get; set; }
         public string Estudio { get; set; }

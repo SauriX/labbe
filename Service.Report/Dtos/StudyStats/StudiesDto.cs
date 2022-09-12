@@ -4,7 +4,7 @@ namespace Service.Report.Dtos.StudyStats
 {
     public class StudiesDto
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Clave { get; set; }
         public string Paquete { get; set; }
         public string Estudio { get; set; }
