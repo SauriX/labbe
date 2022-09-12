@@ -14,9 +14,8 @@ namespace Service.MedicalRecord.Repository
 {
     public class RequestedStudyRepository : IRequestedStudyRepository
     {
-        private const int TomaDeMuestra = 1;
-        private const int Solicitado = 2;
-
+        private const int Toma = 2;
+        private const int Solicitado = 3;
         private readonly ApplicationDbContext _context;
 
         public RequestedStudyRepository(ApplicationDbContext context)
@@ -38,7 +37,7 @@ namespace Service.MedicalRecord.Repository
             var report = _context.CAT_Solicitud.Where(x => x.Estudios.Any(y => y.EstatusId == Status.RequestStudy.TomaDeMuestra || y.EstatusId == Status.RequestStudy.Solicitado))
                 .Include(x => x.Expediente)
                 .Include(x => x.Medico)
-                .Include(x => x.Estudios.Where(y => y.EstatusId == Status.RequestStudy.TomaDeMuestra || y.EstatusId == Status.RequestStudy.Solicitado)).ThenInclude(x => x.Estatus)
+                .Include(x => x.Estudios.Where(y => search.Estatus.Contains(y.EstatusId))).ThenInclude(x => x.Estatus)
                 .Include(x => x.Sucursal)
                 .Include(x => x.Compañia)
                 .AsQueryable();
@@ -46,7 +45,7 @@ namespace Service.MedicalRecord.Repository
             if (!string.IsNullOrEmpty(search.Buscar))
             {
                 report = report.Where(x => x.Clave.Contains(search.Buscar) 
-                || x.Expediente.NombreCompleto.ToLower().Contains(search.Buscar.ToLower()));
+                || (x.Expediente.NombrePaciente + " " + x.Expediente.PrimerApellido + " " + x.Expediente.SegundoApellido).ToLower().Contains(search.Buscar.ToLower()));
             }
             if (search.SucursalId != null && search.SucursalId.Count > 0)
             {

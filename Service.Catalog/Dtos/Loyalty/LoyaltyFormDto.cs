@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using System;
+using System.Collections.Generic;
 
 namespace Service.Catalog.Dtos.Loyalty
 {
@@ -19,8 +20,9 @@ namespace Service.Catalog.Dtos.Loyalty
         public DateTime FechaCreo { get; set; }
         public string UsuarioModId { get; set; }
         public DateTime? FechaMod { get; set; }
-        public Guid? PrecioListaId { get; set; }
-        public string PrecioLista { get; set; }
+        //public List<Guid> PrecioListaId { get; set; }
+        //public List<string> PrecioLista { get; set; }
+        public IEnumerable<LoyaltyPriceListDto> PrecioLista { get; set; }
     }
 
     public class LoyaltyFormDtoValidator : AbstractValidator<LoyaltyFormDto>
@@ -32,7 +34,6 @@ namespace Service.Catalog.Dtos.Loyalty
             RuleFor(x => x.TipoDescuento).NotEmpty();
             RuleFor(x => x.CantidadDescuento).NotEmpty();
             RuleFor(x => x.FechaInicial).NotEmpty();
-            RuleFor(x => x.PrecioListaId).NotEmpty();
             RuleFor(x => x.FechaFinal).NotEmpty();
             RuleFor(x => x.Activo).NotEmpty();
         }

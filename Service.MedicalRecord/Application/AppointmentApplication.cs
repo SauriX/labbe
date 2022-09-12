@@ -13,18 +13,28 @@ using Service.MedicalRecord.Dictionary;
 using ClosedXML.Report;
 using ClosedXML.Excel;
 using Shared.Extensions;
-
+using Service.MedicalRecord.Dtos.Request;
+using EventBus.Messages.Common;
+using MassTransit;
+using Service.MedicalRecord.Settings.ISettings;
+using RequestTemplates = Service.MedicalRecord.Dictionary.EmailTemplates.Request;
 namespace Service.MedicalRecord.Application
 {
     public class AppointmentApplication: IAppointmentApplication
     {
         public readonly IAppointmentResposiotry _repository;
         private readonly ICatalogClient _catalogCliente;
-
-        public AppointmentApplication(IAppointmentResposiotry repository, ICatalogClient catalogCliente)
+        private readonly ISendEndpointProvider _sendEndpointProvider;
+        private readonly IRabbitMQSettings _rabbitMQSettings;
+        private readonly IQueueNames _queueNames;
+        public AppointmentApplication(IAppointmentResposiotry repository, ICatalogClient catalogCliente, ISendEndpointProvider sendEndpointProvider,
+           IRabbitMQSettings rabbitMQSettings, IQueueNames queueNames)
         {
             _repository = repository;
             _catalogCliente = catalogCliente;   
+            _sendEndpointProvider = sendEndpointProvider;
+            _rabbitMQSettings = rabbitMQSettings;
+            _queueNames = queueNames;
         }
         public async Task<List<AppointmentList>> GetAllLab(SearchAppointment search) { 
             return (await _repository.GetAllLab(search)).ToApointmentListDtoLab();
@@ -176,6 +186,82 @@ namespace Service.MedicalRecord.Application
                 template.Format();
 
                 return (template.ToByteArray(), $"Catálogo de Cita ({study.nomprePaciente}).xlsx");
+            }
+
+        }
+        public async Task SendTestEmail(RequestSendDto requestDto, string Typo)
+        {
+            if (Typo == "laboratorio") {
+                var request = await GetByIdLab(requestDto.SolicitudId.ToString());
+                var subject = RequestTemplates.Subjects.TestMessage;
+                var title = RequestTemplates.Titles.RequestCode(request.expediente);
+                var message = RequestTemplates.Messages.TestMessage;
+
+                var emailToSend = new EmailContract(requestDto.Correo, null, subject, title, message)
+                {
+                    Notificar = true,
+                    RemitenteId = requestDto.UsuarioId.ToString()
+                };
+
+                var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, _queueNames.Email)));
+
+                await endpoint.Send(emailToSend);
+            } else {
+                var request = await GetByIdDom(requestDto.SolicitudId.ToString());
+                var subject = RequestTemplates.Subjects.TestMessage;
+                var title = RequestTemplates.Titles.RequestCode(request.expediente);
+                var message = RequestTemplates.Messages.TestMessage;
+
+                var emailToSend = new EmailContract(requestDto.Correo, null, subject, title, message)
+                {
+                    Notificar = true,
+                    RemitenteId = requestDto.UsuarioId.ToString()
+                };
+
+                var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, _queueNames.Email)));
+
+                await endpoint.Send(emailToSend);
+            }
+            
+
+
+        }
+
+        public async Task SendTestWhatsapp(RequestSendDto requestDto,string Typo)
+        {
+            if (Typo == "laboratorio"){
+                var request = await GetByIdLab(requestDto.SolicitudId.ToString());
+
+                var message = RequestTemplates.Messages.TestMessage;
+
+                var phone = requestDto.Telefono.Replace("-", "");
+                phone = phone.Length == 10 ? "52" + phone : phone;
+                var emailToSend = new WhatsappContract(phone, message)
+                {
+                    Notificar = true,
+                    RemitenteId = requestDto.UsuarioId.ToString()
+                };
+
+                var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, _queueNames.Whatsapp)));
+
+                await endpoint.Send(emailToSend);
+            }
+            else {
+                var request = await GetByIdDom(requestDto.SolicitudId.ToString());
+
+                var message = RequestTemplates.Messages.TestMessage;
+
+                var phone = requestDto.Telefono.Replace("-", "");
+                phone = phone.Length == 10 ? "52" + phone : phone;
+                var emailToSend = new WhatsappContract(phone, message)
+                {
+                    Notificar = true,
+                    RemitenteId = requestDto.UsuarioId.ToString()
+                };
+
+                var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, _queueNames.Whatsapp)));
+
+                await endpoint.Send(emailToSend);
             }
 
         }

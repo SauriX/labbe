@@ -5,10 +5,13 @@ namespace Service.MedicalRecord.Dtos.TrackingOrder
     public class StudiesRequestRouteDto
     {
         public string Clave { get; set; }
-        public string SolicitudId { get; set; }
-        public string EstudioId { get; set; }
+        public Guid SolicitudId { get; set; }
+
+        public string Solicitud { get; set; }
+
+        public int EstudioId { get; set; }
         public string Estudio { get; set; }
-        public string PacienteId { get; set; }
+        public Guid ExpedienteId { get; set; }
         public string NombrePaciente { get; set; }
         public decimal Temperatura { get; set; }
         public bool Escaneado { get; set; }

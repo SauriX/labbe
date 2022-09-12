@@ -37,7 +37,7 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/TrackingOrder/export/list/{search}",
+      "DownstreamPathTemplate": "/api/TrackingOrder/export/form",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -45,7 +45,31 @@
           "Port": 24048
         }
       ],
-      "UpstreamPathTemplate": "/api/tracking-order/export/list/{search}",
+      "UpstreamPathTemplate": "/api/tracking-order/export/form",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/TrackingOrder/confirmarRecoleccion",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/tracking-order/confirmarRecoleccion",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/TrackingOrder/cancelarRecoleccion",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/tracking-order/cancelarRecoleccion",
       "UpstreamHttpMethod": [ "POST" ]
     }
   ]

@@ -10,11 +10,13 @@ namespace Service.Catalog.Application.IApplication
         Task<IEnumerable<LoyaltyListDto>> GetAll(string search);
         Task<IEnumerable<LoyaltyListDto>> GetActive();
         Task<LoyaltyFormDto> GetById(Guid Id);
+        Task<LoyaltyListDto> GetByDate(DateTime fecha);
         Task<LoyaltyListDto> Create(LoyaltyFormDto indicacion);
         Task<LoyaltyListDto> Update(LoyaltyFormDto indication);
         Task<(byte[] file, string fileName)> ExportList(string search);
         Task<(byte[] file, string fileName)> ExportForm(Guid id);
         Task<LoyaltyListDto> CreateReschedule(LoyaltyFormDto indicacion);
+
 
     }
 }

@@ -143,7 +143,12 @@ namespace Service.MedicalRecord.Repository
             taxdataMedicalRecord.ForEach(x => x.ExpedienteID = expediente.Id);
             await _context.BulkInsertOrUpdateOrDeleteAsync(taxdataMedicalRecord, config);
         }
+        public async Task UpdateWallet(Domain.MedicalRecord.MedicalRecord expediente)
+        {
+            _context.CAT_Expedientes.Update(expediente);
+            await _context.SaveChangesAsync();
 
+        }
         public async Task UpdateTaxData(TaxData taxData)
         {
             _context.CAT_Datos_Fiscales.Update(taxData);
@@ -164,5 +169,7 @@ namespace Service.MedicalRecord.Repository
 
             return expedientes;
         }
+
+        
     }
 }

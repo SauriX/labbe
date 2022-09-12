@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Service.Catalog.Dtos.Loyalty
 {
@@ -10,8 +11,9 @@ namespace Service.Catalog.Dtos.Loyalty
         public decimal CantidadDescuento { get; set; }
         public string TipoDescuento { get; set; }
         public string Fecha { get; set; }
-        public Guid? PrecioListaId { get; set; }
-        public string PrecioLista { get; set; }
+        public List<Guid> PrecioListaId { get; set; }
+        public List<string> PrecioLista { get; set; }
+        public string ListaPrecio => string.Join(", ", PrecioLista);
         public bool Activo { get; set; }
     }
 }

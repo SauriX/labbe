@@ -1,4 +1,5 @@
 ﻿using Service.MedicalRecord.Dtos.Appointment;
+using Service.MedicalRecord.Dtos.Request;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -17,5 +18,7 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<AppointmentList> UpdateDom(AppointmentForm appointmentDom);
         Task<(byte[] file, string fileName)> ExportForm(exportFormDto data);
         Task<(byte[] file, string fileName)> ExportList(SearchAppointment search);
+        Task SendTestEmail(RequestSendDto requestDto,string typo);
+        Task SendTestWhatsapp(RequestSendDto requestDto,string typo);
     }
 }

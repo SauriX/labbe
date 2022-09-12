@@ -6,7 +6,7 @@ namespace Service.Catalog.Dtos.Equipment
     {
         public Guid BranchId { get; set; }
         public int EquipmentId { get; set; }
-        public int Num_serie { get; set; }
+        public string Num_serie { get; set; }
         public string SucursalText { get; set; }
     }
 }

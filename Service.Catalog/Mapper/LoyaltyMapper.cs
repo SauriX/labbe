@@ -1,4 +1,5 @@
 ﻿using Service.Catalog.Domain.Loyalty;
+using Service.Catalog.Domain.Price;
 using Service.Catalog.Dtos.Loyalty;
 using System;
 using System.Collections.Generic;
@@ -13,14 +14,14 @@ namespace Service.Catalog.Mapper
             if (model == null) return null;
             return new LoyaltyListDto
             {
-                Id = model.Id,
+                Id = Guid.NewGuid(),
                 Clave = model.Clave,
                 Nombre = model.Nombre,
                 CantidadDescuento = model.CantidadDescuento,
                 Fecha = $"{model.FechaInicial.ToShortDateString()}-{model.FechaFinal.ToShortDateString()}",
                 TipoDescuento = model.TipoDescuento.Trim(),
-                PrecioListaId = model?.PrecioListaId,
-                PrecioLista = model?.PrecioLista?.Nombre,
+                PrecioListaId = model.PrecioLista.Select(x => x.PrecioLista.Id).ToList(),
+                PrecioLista = model.PrecioLista.Select(x => x.PrecioLista.Nombre).ToList(),
                 Activo = model.Activo
             };
         }
@@ -37,10 +38,27 @@ namespace Service.Catalog.Mapper
                 CantidadDescuento = x.CantidadDescuento,
                 Fecha = $"{x.FechaInicial.ToShortDateString()}-{x.FechaFinal.ToShortDateString()}",
                 TipoDescuento = x.TipoDescuento.Trim(),
-                PrecioListaId = x?.PrecioListaId,
-                PrecioLista = x?.PrecioLista.Nombre,
+                PrecioListaId = x.PrecioLista.Select(x => x.PrecioLista.Id).ToList(),
+                PrecioLista = x.PrecioLista.Select(x => x.PrecioLista.Nombre).ToList(),
                 Activo = x.Activo
             });
+        }
+        public static LoyaltyListDto ToLoyaltyDto(this Loyalty model)
+        {
+            if (model == null) return null;
+
+            return  new LoyaltyListDto
+            {
+                Id = model.Id,
+                Clave = model.Clave,
+                Nombre = model.Nombre,
+                CantidadDescuento = model.CantidadDescuento,
+                Fecha = $"{model.FechaInicial.ToShortDateString()}-{model.FechaFinal.ToShortDateString()}",
+                TipoDescuento = model.TipoDescuento.Trim(),
+                PrecioListaId = model.PrecioLista.Select(x => x.PrecioLista.Id).ToList(),
+                PrecioLista = model.PrecioLista.Select(x => x.PrecioLista.Nombre).ToList(),
+                Activo = model.Activo
+            };
         }
 
         public static LoyaltyFormDto ToLoyaltyFormDto(this Loyalty model)
@@ -53,8 +71,7 @@ namespace Service.Catalog.Mapper
                 Clave = model.Clave.Trim(),
                 Nombre = model.Nombre.Trim(),
                 TipoDescuento = model.TipoDescuento.Trim(),
-                PrecioListaId = model?.PrecioListaId,
-                PrecioLista = model?.PrecioLista.Nombre,
+                PrecioLista = model.PrecioLista.ToPriceListLoyaltyDto(),
                 CantidadDescuento = model.CantidadDescuento,
                 Fecha2 = $"{model?.FechaInicial.ToShortDateString()}-{model?.FechaFinal.ToShortDateString()}",
                 FechaInicial = model.FechaInicial.Date,
@@ -63,16 +80,22 @@ namespace Service.Catalog.Mapper
             };
         }
 
-        public static Loyalty ToModel(this LoyaltyFormDto dto)
+        public static Loyalty ToModelCreate(this LoyaltyFormDto dto)
         {
             if (dto == null) return null;
 
             return new Loyalty
             {
+                Id = Guid.NewGuid(),
                 Clave = dto.Clave.Trim(),
                 Nombre = dto.Nombre.Trim(),
                 TipoDescuento = dto.TipoDescuento.Trim(),
-                PrecioListaId = dto?.PrecioListaId,
+                PrecioLista = dto.PrecioLista.Select(x => new LoyaltyPriceList
+                {
+                    PrecioListaId = x.PrecioListaId,
+                    UsuarioCreoId = dto.UsuarioId,
+                    FechaCreo = DateTime.Now,
+                }).ToList(),
                 CantidadDescuento = dto.CantidadDescuento,
                 FechaInicial = dto.FechaInicial.Date,
                 FechaFinal = dto.FechaFinal.Date,
@@ -82,7 +105,7 @@ namespace Service.Catalog.Mapper
             };
         }
 
-        public static Loyalty ToModel(this LoyaltyFormDto dto, Loyalty model)
+        public static Loyalty ToModelUpdate(this LoyaltyFormDto dto, Loyalty model)
         {
             if (dto == null || model == null) return null;
 
@@ -92,7 +115,13 @@ namespace Service.Catalog.Mapper
                 Clave = dto.Clave.Trim(),
                 Nombre = dto.Nombre.Trim(),
                 TipoDescuento = dto.TipoDescuento.Trim(),
-                PrecioListaId = dto?.PrecioListaId,
+                PrecioLista = dto.PrecioLista.Select(x => new LoyaltyPriceList
+                {
+                    LoyaltyId = model.Id,
+                    PrecioListaId = x.PrecioListaId,
+                    UsuarioCreoId = dto.UsuarioId,
+                    FechaCreo = DateTime.Now,
+                }).ToList(),
                 CantidadDescuento = dto.CantidadDescuento,
                 FechaInicial = dto.FechaInicial.Date,
                 FechaFinal = dto.FechaFinal.Date,
@@ -102,6 +131,16 @@ namespace Service.Catalog.Mapper
                 UsuarioModId = dto.UsuarioId,
                 FechaMod = DateTime.Now,
             };
+        }
+
+        private static List<LoyaltyPriceListDto> ToPriceListLoyaltyDto(this IEnumerable<LoyaltyPriceList> price)
+        {
+            return price.Select(x => new LoyaltyPriceListDto
+            {
+                LealtadId = x.LoyaltyId,
+                PrecioListaId = x.PrecioListaId,
+                Nombre = x.PrecioLista.Nombre,
+            }).ToList();
         }
     }
 }
