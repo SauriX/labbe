@@ -41,6 +41,18 @@ namespace Service.Catalog.Application
             return loyaltys.ToLoyaltyListDto();
         }
 
+        public async Task<LoyaltyListDto> GetByDate(DateTime fecha)
+        {
+            var loyalty = await _repository.GetByDate(fecha);
+
+            if (loyalty == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
+            }
+
+            return loyalty.ToLoyaltyDto();
+        }
+
         public async Task<LoyaltyFormDto> GetById(Guid Id)
         {
             var loyalty = await _repository.GetById(Id);
@@ -209,5 +221,6 @@ namespace Service.Catalog.Application
 
             return loyalty;
         }
+
     }
 }

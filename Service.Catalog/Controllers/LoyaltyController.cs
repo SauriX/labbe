@@ -32,6 +32,11 @@ namespace Service.Catalog.Controllers
         {
             return await _service.GetActive();
         }
+        [HttpPost("findByDate")]
+        public async Task<LoyaltyListDto> GetByDate([FromBody]DateTime fecha)
+        {
+            return await _service.GetByDate(fecha);
+        }
 
         [HttpGet("{id}")]
         [Authorize(Policies.Access)]

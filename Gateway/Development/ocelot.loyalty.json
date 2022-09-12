@@ -49,6 +49,18 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
+      "DownstreamPathTemplate": "/api/loyalty/findByDate",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/loyalty/findByDate",
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/loyalty",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
