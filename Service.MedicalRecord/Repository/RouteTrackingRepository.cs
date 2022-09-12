@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Service.MedicalRecord.Context;
 using Service.MedicalRecord.Domain.RouteTracking;
+using Service.MedicalRecord.Domain.TrackingOrder;
+using Service.MedicalRecord.Dtos.RouteTracking;
 using Service.MedicalRecord.Repository.IRepository;
 using System;
 using System.Collections.Generic;
@@ -18,13 +20,28 @@ namespace Service.MedicalRecord.Repository
             _context = context;
         }
 
-        public async Task<List<RouteTracking>> GetAll() {
-            var routeTrackingList = _context.Cat_PendientesDeEnviar.Include(x => x.Solicitud.Estudios).AsQueryable();
+        public async Task<List<TrackingOrder>> GetAll(RouteTrackingSearchDto search) {
+            var routeTrackingList = _context.CAT_Seguimiento_Ruta.Include(x => x.Estudios).ThenInclude(x=>x.Solicitud).AsQueryable();
 
+            if (search.Fechas != null)
+            {
+                routeTrackingList = routeTrackingList.
+                    Where(x => x.FechaCreo.Date >= search.Fechas.First().Date && x.FechaCreo.Date <= search.Fechas.Last().Date);
+            }
+
+            if (search.Sucursal != null)
+            {
+                routeTrackingList = routeTrackingList.Where(x => search.Sucursal.Contains(x.SucursalOrigenId));
+            }
+
+            if (search.Buscar != null)
+            {
+                routeTrackingList = routeTrackingList.Where(x => search.Buscar.Contains(x.Clave));
+            }
             return await routeTrackingList.ToListAsync();
         }
-        public async Task<RouteTracking> getById(Guid Id) {
-            var route =await  _context.Cat_PendientesDeEnviar.Include(x => x.Solicitud.Estudios).AsQueryable().FirstOrDefaultAsync(x=>x.Id==Id);
+        public async Task<TrackingOrder> getById(Guid Id) {
+            var route =await  _context.CAT_Seguimiento_Ruta.Include(x => x.Estudios).ThenInclude(x=>x.Solicitud).AsQueryable().FirstOrDefaultAsync(x=>x.Id==Id);
             return route;
         }
         public async Task Update(RouteTracking route) {

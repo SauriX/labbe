@@ -20,6 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="Development\ocelot.routetracking.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="Development\ocelot.mantain.json" />
     <None Include="Development\ocelot.medicalRecord.json" />
     <None Include="Development\ocelot.pack.json" />
