@@ -271,6 +271,9 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("Expediente")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("FechaActivacionMonedero")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
@@ -648,11 +651,10 @@ namespace Service.MedicalRecord.Migrations
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.Request.RequestPack", b =>
                 {
-                    b.Property<Guid>("SolicitudId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("PaqueteId")
-                        .HasColumnType("int");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<bool>("AplicaCargo")
                         .HasColumnType("bit");
@@ -699,6 +701,9 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("Nombre")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("PaqueteId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Precio")
                         .HasColumnType("decimal(18,2)");
 
@@ -711,13 +716,18 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<int?>("PromocionId")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("SolicitudId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("UsuarioModificoId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("SolicitudId", "PaqueteId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("SolicitudId");
 
                     b.ToTable("Relacion_Solicitud_Paquete");
                 });
@@ -743,11 +753,10 @@ namespace Service.MedicalRecord.Migrations
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.Request.RequestStudy", b =>
                 {
-                    b.Property<Guid>("SolicitudId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("EstudioId")
-                        .HasColumnType("int");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<bool>("AplicaCargo")
                         .HasColumnType("bit");
@@ -778,6 +787,9 @@ namespace Service.MedicalRecord.Migrations
 
                     b.Property<byte>("EstatusId")
                         .HasColumnType("tinyint");
+
+                    b.Property<int>("EstudioId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
@@ -817,6 +829,9 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<int?>("PromocionId")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("SolicitudId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("TaponId")
                         .HasColumnType("int");
 
@@ -826,13 +841,15 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<Guid?>("UsuarioModificoId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("SolicitudId", "EstudioId");
+                    b.HasKey("Id");
 
                     b.HasIndex("EstatusId");
 
-                    b.HasIndex("TaponId");
+                    b.HasIndex("PaqueteId");
 
-                    b.HasIndex("SolicitudId", "PaqueteId");
+                    b.HasIndex("SolicitudId");
+
+                    b.HasIndex("TaponId");
 
                     b.ToTable("Relacion_Solicitud_Estudio");
                 });
@@ -958,31 +975,28 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
 
-                    b.Property<string>("ClaveEstudio")
+                    b.Property<string>("Clave")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Escaneado")
-                        .HasColumnType("bit");
+                    b.Property<DateTime>("DiaRecoleccion")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("EscaneoCodigoBarras")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Estudio")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("FechaCreo")
+                    b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("FechaModifico")
+                    b.Property<DateTime>("FechaMod")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("MaquiladorId")
+                        .HasColumnType("int");
 
                     b.Property<string>("MuestraId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PacienteId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SolicitudId")
+                    b.Property<string>("RutaId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SucursalDestinoId")
@@ -994,15 +1008,66 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<double>("Temperatura")
                         .HasColumnType("float");
 
-                    b.Property<Guid?>("UsuarioCreoId")
+                    b.Property<Guid>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("UsuarioModificoId")
+                    b.Property<Guid>("UsuarioModId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.ToTable("CAT_Seguimiento_Ruta");
+                });
+
+            modelBuilder.Entity("Service.MedicalRecord.Domain.TrackingOrder.TrackingOrderDetail", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Escaneado")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Estudio")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EstudioId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("ExpedienteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaMod")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NombrePaciente")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("SeguimientoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SolicitudId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Temperatura")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("UsuarioCreoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsuarioModId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SeguimientoId");
+
+                    b.HasIndex("SolicitudId");
+
+                    b.ToTable("Relacion_Seguimiento_Solicitud");
                 });
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.Appointments.AppointmentDom", b =>
@@ -1127,6 +1192,11 @@ namespace Service.MedicalRecord.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Service.MedicalRecord.Domain.Request.RequestPack", "Paquete")
+                        .WithMany("Estudios")
+                        .HasForeignKey("PaqueteId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("Service.MedicalRecord.Domain.Request.Request", "Solicitud")
                         .WithMany("Estudios")
                         .HasForeignKey("SolicitudId")
@@ -1138,11 +1208,6 @@ namespace Service.MedicalRecord.Migrations
                         .HasForeignKey("TaponId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Service.MedicalRecord.Domain.Request.RequestPack", "Paquete")
-                        .WithMany("Estudios")
-                        .HasForeignKey("SolicitudId", "PaqueteId")
-                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Estatus");
 
@@ -1160,6 +1225,25 @@ namespace Service.MedicalRecord.Migrations
                         .HasForeignKey("SolicitudId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Solicitud");
+                });
+
+            modelBuilder.Entity("Service.MedicalRecord.Domain.TrackingOrder.TrackingOrderDetail", b =>
+                {
+                    b.HasOne("Service.MedicalRecord.Domain.TrackingOrder.TrackingOrder", "Seguimiento")
+                        .WithMany("Estudios")
+                        .HasForeignKey("SeguimientoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Service.MedicalRecord.Domain.Request.Request", "Solicitud")
+                        .WithMany()
+                        .HasForeignKey("SolicitudId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Seguimiento");
 
                     b.Navigation("Solicitud");
                 });
