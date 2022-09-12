@@ -24,6 +24,7 @@ namespace Service.MedicalRecord.Dtos.MedicalRecords
         public Guid UsuarioId { get; set; }
         public bool HasWallet { get; set; }
         public decimal Wallet { get; set; }
+        public DateTime FechaActivacionMonedero { get; set; }
 
 #pragma warning disable CS8632 // La anotación para tipos de referencia que aceptan valores NULL solo debe usarse en el código dentro de un contexto de anotaciones "#nullable".
         public IEnumerable<TaxDataDto>? TaxData { get; set; }

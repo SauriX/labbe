@@ -138,7 +138,7 @@ namespace Service.MedicalRecord.Application
 
             existing.Monedero = monedero.Saldo;
 
-            //existing.FechaActivacionMonedero = DateTime.Now;
+            existing.FechaActivacionMonedero = DateTime.Now;
 
             await _repository.UpdateWallet(existing);
 

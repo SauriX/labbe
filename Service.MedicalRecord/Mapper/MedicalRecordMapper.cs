@@ -72,7 +72,8 @@ namespace Service.MedicalRecord.Mapper
                 TaxData = data,
                 sucursal = model.IdSucursal.ToString(),
                 HasWallet = model.MonederoActivo,
-                Wallet = model.Monedero
+                Wallet = model.Monedero,
+                FechaActivacionMonedero = model.FechaActivacionMonedero
             };
         }
 
