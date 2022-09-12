@@ -109,6 +109,12 @@ namespace Service.MedicalRecord.Controllers
             var (file, fileName) = await _service.ExportForm(Guid.Parse(id));
             return File(file, MimeType.XLSX, fileName);
         }
+        [HttpPost("updateWallet")]
+        public async Task<bool> UpdateWallet(ExpedienteMonederoDto monedero)
+        {
+             
+            return await _service.UpdateWallet(monedero);
+        }
 
     }
 }

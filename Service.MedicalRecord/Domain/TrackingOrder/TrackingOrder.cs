@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Service.MedicalRecord.Domain.TrackingOrder
 {
@@ -20,7 +21,7 @@ namespace Service.MedicalRecord.Domain.TrackingOrder
         public DateTime FechaCreo { get; set; }
         public Guid UsuarioModId { get; set; }
         public DateTime FechaMod { get; set; }
-        public virtual IEnumerable<TrackingOrderDetail> Estudios { get; set; }
+        public virtual ICollection<TrackingOrderDetail> Estudios { get; set; }
         
     }
 }

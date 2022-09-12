@@ -1,5 +1,4 @@
-﻿using EFCore.BulkExtensions;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Service.MedicalRecord.Context;
 using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Dtos.RequestedStudy;
@@ -12,13 +11,11 @@ using Service.MedicalRecord.Dictionary;
 
 namespace Service.MedicalRecord.Repository
 {
-    public class RequestedStudyRepository : IRequestedStudyRepository
+    public class ClinicResultsRepository : IClinicResultsRepository
     {
-        private const int Toma = 2;
-        private const int Solicitado = 3;
         private readonly ApplicationDbContext _context;
 
-        public RequestedStudyRepository(ApplicationDbContext context)
+        public ClinicResultsRepository(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -34,17 +31,17 @@ namespace Service.MedicalRecord.Repository
 
         public async Task<List<Request>> GetAll(RequestedStudySearchDto search)
         {
-            var report = _context.CAT_Solicitud.Where(x => x.Estudios.Any(y => y.EstatusId == Status.RequestStudy.TomaDeMuestra || y.EstatusId == Status.RequestStudy.Solicitado))
+            var report = _context.CAT_Solicitud
                 .Include(x => x.Expediente)
                 .Include(x => x.Medico)
-                .Include(x => x.Estudios.Where(y => search.Estatus.Contains(y.EstatusId))).ThenInclude(x => x.Estatus)
+                .Include(x => x.Estudios)
                 .Include(x => x.Sucursal)
                 .Include(x => x.Compañia)
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(search.Buscar))
             {
-                report = report.Where(x => x.Clave.Contains(search.Buscar) 
+                report = report.Where(x => x.Clave.Contains(search.Buscar)
                 || (x.Expediente.NombrePaciente + " " + x.Expediente.PrimerApellido + " " + x.Expediente.SegundoApellido).ToLower().Contains(search.Buscar.ToLower()));
             }
             if (search.SucursalId != null && search.SucursalId.Count > 0)
@@ -85,6 +82,7 @@ namespace Service.MedicalRecord.Repository
                 report = report.Where(x => x.Estudios.Any(y => search.Area.Contains(y.AreaId)));
             }
 
+
             return await report.ToListAsync();
         }
 
@@ -95,14 +93,6 @@ namespace Service.MedicalRecord.Repository
                 .ToListAsync();
 
             return studies;
-        }
-
-        public async Task BulkUpdateStudies(Guid requestId, List<RequestStudy> studies)
-        {
-            var config = new BulkConfig();
-            config.SetSynchronizeFilter<RequestStudy>(x => x.SolicitudId == requestId);
-
-            await _context.BulkUpdateAsync(studies, config);
         }
     }
 }

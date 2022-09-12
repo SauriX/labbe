@@ -97,6 +97,18 @@
       "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
     {
+      "DownstreamPathTemplate": "/api/MedicalRecord/updateWallet",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/MedicalRecord/updateWallet",
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/MedicalRecord/export/list",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
