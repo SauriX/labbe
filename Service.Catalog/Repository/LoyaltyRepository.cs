@@ -52,6 +52,20 @@ namespace Service.Catalog.Repository
             return loyalty;
         }
 
+        public async Task<Loyalty> GetByDate(DateTime fecha)
+        {
+            var loyalty = _context.CAT_Lealtad
+                .Include(x => x.PrecioLista).ThenInclude(x => x.PrecioLista)
+                .AsQueryable();
+
+            loyalty.Where(x => x.FechaInicial <= fecha && fecha <= x.FechaFinal);
+
+            loyalty.Where(x => x.Activo == true);
+
+            var loyalList = await loyalty.FirstOrDefaultAsync();
+
+            return loyalList;
+        }
         public async Task<bool> IsDuplicateDate(DateTime fechainicial, DateTime fechafinal, Guid id)
         {
             return await _context.CAT_Lealtad.AnyAsync
@@ -129,5 +143,6 @@ namespace Service.Catalog.Repository
 
             return isDuplicate;
         }
+
     }
 }

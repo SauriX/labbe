@@ -9,6 +9,7 @@ namespace Service.Catalog.Repository.IRepository
     {
         Task<List<Loyalty>> GetAll(string search);
         Task<Loyalty> GetById(Guid Id);
+        Task<Loyalty> GetByDate(DateTime fecha);
         Task<List<Loyalty>> GetActive();
         Task<bool> IsPorcentaje(Loyalty loyalty);
         Task<bool> IsDuplicateDate(DateTime fechainicial, DateTime fechafinal, Guid id);

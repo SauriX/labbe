@@ -43,6 +43,23 @@ namespace Service.Catalog.Mapper
                 Activo = x.Activo
             });
         }
+        public static LoyaltyListDto ToLoyaltyDto(this Loyalty model)
+        {
+            if (model == null) return null;
+
+            return  new LoyaltyListDto
+            {
+                Id = model.Id,
+                Clave = model.Clave,
+                Nombre = model.Nombre,
+                CantidadDescuento = model.CantidadDescuento,
+                Fecha = $"{model.FechaInicial.ToShortDateString()}-{model.FechaFinal.ToShortDateString()}",
+                TipoDescuento = model.TipoDescuento.Trim(),
+                PrecioListaId = model.PrecioLista.Select(x => x.PrecioLista.Id).ToList(),
+                PrecioLista = model.PrecioLista.Select(x => x.PrecioLista.Nombre).ToList(),
+                Activo = model.Activo
+            };
+        }
 
         public static LoyaltyFormDto ToLoyaltyFormDto(this Loyalty model)
         {
