@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Service.Report.Migrations
 {
-    public partial class MigracionCompleta : Migration
+    public partial class AllreportsRequestStudyId : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -200,7 +200,7 @@ namespace Service.Report.Migrations
                 name: "RequestStudy",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     SolicitudId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Estudio = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Clave = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -215,7 +215,7 @@ namespace Service.Report.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RequestStudy", x => x.Id);
+                    table.PrimaryKey("PK_RequestStudy", x => new { x.SolicitudId, x.Id });
                     table.ForeignKey(
                         name: "FK_RequestStudy_CAT_Maquila_MaquilaId",
                         column: x => x.MaquilaId,

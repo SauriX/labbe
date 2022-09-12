@@ -269,9 +269,11 @@ namespace Service.Report.Migrations
 
             modelBuilder.Entity("Service.Report.Domain.Request.RequestStudy", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid>("SolicitudId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
                     b.Property<string>("Clave")
                         .HasColumnType("nvarchar(max)");
@@ -300,13 +302,10 @@ namespace Service.Report.Migrations
                     b.Property<decimal>("PrecioFinal")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("SolicitudId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid?>("SucursalId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("Id");
+                    b.HasKey("SolicitudId", "Id");
 
                     b.HasIndex("EstatusId");
 
