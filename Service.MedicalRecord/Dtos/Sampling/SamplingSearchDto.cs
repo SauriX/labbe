@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Service.MedicalRecord.Dtos.Sampling
 {
-    public class rRequestedStudySearchDto
+    public class SamplingSearchDto
     {
        public DateTime[] Fecha { get; set; }
        public string Buscar { get; set; }

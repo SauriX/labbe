@@ -28,6 +28,6 @@
         public const string Mantain = "mantain";
         public const string TrackingOrder = "TrackingOrder";
         public const string RequestedStudy = "requestedstudy";
-
+        public const string ClinicResults = "clinicResults";
     }
 }
