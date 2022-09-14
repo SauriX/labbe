@@ -25,7 +25,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Indication
             builder
               .Property(x => x.Descripcion)
               .IsRequired(false)
-              .HasMaxLength(500);
+              .HasMaxLength(1000);
 
             builder
               .Property(x => x.FechaCreo)

@@ -21,5 +21,6 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<(byte[] file, string fileName)> ExportList(MedicalRecordSearch search = null);
 
         Task<(byte[] file, string fileName)> ExportForm(Guid id);
+        Task<bool> UpdateWallet(ExpedienteMonederoDto monedero);
     }
 }

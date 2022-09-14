@@ -54,7 +54,14 @@ namespace Service.Sender
 
             services.AddMassTransit(x =>
             {
-                x.AddConsumers(Assembly.GetExecutingAssembly());
+                x.AddConsumer<EmailConsumer>();
+                x.AddConsumer<EmailErrorConsumer>();
+                x.AddConsumer<WhatsappConsumer>();
+                x.AddConsumer<WhatsappErrorConsumer>();
+                x.AddConsumer<EmailConfigurationConsumer>();
+                x.AddConsumer<EmailConfigurationErrorConsumer>();
+                x.AddConsumer<NotificationConsumer>();
+                x.AddConsumer<NotificationErrorConsumer>();
 
                 x.UsingRabbitMq((context, configurator) =>
                 {
@@ -71,51 +78,51 @@ namespace Service.Sender
                     configurator.ReceiveEndpoint(queueNames.Email, re =>
                     {
                         x.AddSignalRHub<NotificationHub>();
-                        re.Consumer<EmailConsumer>(context);
+                        re.ConfigureConsumer<EmailConsumer>(context);
                         re.DiscardFaultedMessages();
                     });
 
                     configurator.ReceiveEndpoint(queueNames.EmailFault, re =>
                     {
                         x.AddSignalRHub<NotificationHub>();
-                        re.Consumer<EmailErrorConsumer>(context);
+                        re.ConfigureConsumer<EmailErrorConsumer>(context);
                     });           
                     
                     configurator.ReceiveEndpoint(queueNames.Whatsapp, re =>
                     {
                         x.AddSignalRHub<NotificationHub>();
-                        re.Consumer<WhatsappConsumer>(context);
+                        re.ConfigureConsumer<WhatsappConsumer>(context);
                         re.DiscardFaultedMessages();
                     });
 
                     configurator.ReceiveEndpoint(queueNames.WhatsappFault, re =>
                     {
                         x.AddSignalRHub<NotificationHub>();
-                        re.Consumer<WhatsappErrorConsumer>(context);
+                        re.ConfigureConsumer<WhatsappErrorConsumer>(context);
                     });
 
                     configurator.ReceiveEndpoint(queueNames.EmailConfiguration, re =>
                     {
-                        re.Consumer<EmailConfigurationConsumer>(context);
+                        re.ConfigureConsumer<EmailConfigurationConsumer>(context);
                         re.DiscardFaultedMessages();
                     });
 
                     configurator.ReceiveEndpoint(queueNames.EmailConfigurationFault, re =>
                     {
-                        re.Consumer<EmailConfigurationErrorConsumer>(context);
+                        re.ConfigureConsumer<EmailConfigurationErrorConsumer>(context);
                     });
 
                     configurator.ReceiveEndpoint(queueNames.Notification, re =>
                     {
                         x.AddSignalRHub<NotificationHub>();
-                        re.Consumer<NotificationConsumer>(context);
+                        re.ConfigureConsumer<NotificationConsumer>(context);
                         re.DiscardFaultedMessages();
                     });
 
                     configurator.ReceiveEndpoint(queueNames.NotificationFault, re =>
                     {
                         x.AddSignalRHub<NotificationHub>();
-                        re.Consumer<NotificationErrorConsumer>(context);
+                        re.ConfigureConsumer<NotificationErrorConsumer>(context);
                     });
                 });
             });

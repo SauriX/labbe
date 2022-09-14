@@ -66,7 +66,8 @@ namespace Service.Sender.Service
             emailMessage.Body = html.ToString();
             emailMessage.IsBodyHtml = true;
             emailMessage.Priority = MailPriority.Normal;
-            using SmtpClient MailClient = new(conf.Smtp);
+            using SmtpClient MailClient = new(conf.Smtp, 587);
+            MailClient.EnableSsl = true;
             if (conf.RequiereContraseña)
             {
                 MailClient.Credentials = new NetworkCredential(conf.Correo, Crypto.DecryptString(conf.Contraseña, _keySettings.MailKey));
@@ -108,7 +109,8 @@ namespace Service.Sender.Service
             emailMessage.Body = html.ToString();
             emailMessage.IsBodyHtml = true;
             emailMessage.Priority = MailPriority.Normal;
-            using SmtpClient MailClient = new(conf.Smtp);
+            using SmtpClient MailClient = new(conf.Smtp, 587);
+            MailClient.EnableSsl = true;
             if (conf.RequiereContraseña)
             {
                 MailClient.Credentials = new NetworkCredential(conf.Correo, Crypto.DecryptString(conf.Contraseña, _keySettings.MailKey));

@@ -1069,8 +1069,8 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Descripcion")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<DateTime?>("FechaCreo")
                         .HasColumnType("smalldatetime");

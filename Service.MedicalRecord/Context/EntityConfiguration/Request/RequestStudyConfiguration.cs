@@ -9,7 +9,7 @@ namespace Service.MedicalRecord.Context.EntityConfiguration.Request
     {
         public void Configure(EntityTypeBuilder<RequestStudy> builder)
         {
-            builder.HasKey(x => new { x.SolicitudId, x.EstudioId });
+            builder.HasKey(x => x.Id);
 
             builder
                 .Property(x => x.FechaEntrega)

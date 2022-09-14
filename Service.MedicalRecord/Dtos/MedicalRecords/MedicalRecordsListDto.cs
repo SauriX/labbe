@@ -10,7 +10,8 @@ namespace Service.MedicalRecord.Dtos.MedicalRecords
         public string Genero { get; set; }
         public int Edad { get; set; }
         public string FechaNacimiento { get; set; }
-        public int MonederoElectronico { get; set; }
+        public decimal MonederoElectronico { get; set; }
+        public bool MonederoActivo { get; set; }
         public string Telefono { get; set; }
     }
 }

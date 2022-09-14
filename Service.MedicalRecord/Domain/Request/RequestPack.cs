@@ -5,6 +5,7 @@ namespace Service.MedicalRecord.Domain.Request
 {
     public class RequestPack : BaseModel
     {
+        public int Id { get; set; }
         public Guid SolicitudId { get; set; }
         public virtual Request Solicitud { get; set; }
         public int PaqueteId { get; set; }

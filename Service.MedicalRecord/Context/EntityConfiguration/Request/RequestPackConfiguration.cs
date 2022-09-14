@@ -8,12 +8,12 @@ namespace Service.MedicalRecord.Context.EntityConfiguration.Request
     {
         public void Configure(EntityTypeBuilder<RequestPack> builder)
         {
-            builder.HasKey(x => new { x.SolicitudId, x.PaqueteId });
+            builder.HasKey(x => x.Id);
 
             builder
                 .HasMany(x => x.Estudios)
                 .WithOne(x => x.Paquete)
-                .HasForeignKey(x => new { x.SolicitudId, x.PaqueteId })
+                .HasForeignKey(x => new { x.PaqueteId })
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

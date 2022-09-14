@@ -70,7 +70,10 @@ namespace Service.MedicalRecord.Mapper
                 Calle = model.Calle,
                 Colonia = model.ColoniaId,
                 TaxData = data,
-                sucursal = model.IdSucursal.ToString()
+                sucursal = model.IdSucursal.ToString(),
+                HasWallet = model.MonederoActivo,
+                Wallet = model.Monedero,
+                FechaActivacionMonedero = model.FechaActivacionMonedero
             };
         }
 
@@ -224,6 +227,7 @@ namespace Service.MedicalRecord.Mapper
             };
         }
 
+        
         public static MedicalRecord.Domain.MedicalRecord.MedicalRecord ToModel(this MedicalRecordsFormDto dto, MedicalRecord.Domain.MedicalRecord.MedicalRecord model)
         {
             if (model == null || dto == null) return null;
