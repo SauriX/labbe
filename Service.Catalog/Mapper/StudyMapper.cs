@@ -21,6 +21,7 @@ namespace Service.Catalog.Mapper
                 Nombre = x.Nombre,
                 Titulo = x.Titulo,
                 Area = x.Area.Nombre,
+                AreaId = x.Area.Id,
                 Departamento = x.Area.Departamento.Nombre,
                 Formato = x.Formato.Nombre,
                 Maquilador = x.Maquilador.Nombre,
