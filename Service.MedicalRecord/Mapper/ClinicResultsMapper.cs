@@ -25,6 +25,7 @@ namespace Service.MedicalRecord.Mapper
                 Id = x.Id.ToString(),
                 Procedencia = x.Procedencia,
                 SucursalNombre = x.Sucursal.Nombre,
+                NombreMedico = x.Medico.Nombre,
             }).ToList();
         }
 

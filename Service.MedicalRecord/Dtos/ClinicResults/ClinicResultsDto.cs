@@ -17,6 +17,7 @@ namespace Service.MedicalRecord.Dtos
         public byte Procedencia { get; set; }
         public string Departamento { get; set; }
         public string Area { get; set; }
+        public string NombreMedico { get; set; }
         public List<StudyDto> Estudios { get; set; }
     }
 }

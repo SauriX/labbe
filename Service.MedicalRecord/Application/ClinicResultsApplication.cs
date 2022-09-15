@@ -37,7 +37,7 @@ namespace Service.MedicalRecord.Application
                 }
             }
 
-            var path = Assets.InformeExpedientes;
+            var path = Assets.InformeClinicos;
 
             var template = new XLTemplate(path);
 
