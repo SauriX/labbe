@@ -1,4 +1,6 @@
-﻿using Integration.WeeClinic.Responses;
+﻿using ClosedXML.Excel;
+using Integration.WeeClinic.Models;
+using Integration.WeeClinic.Responses;
 using Shared.Error;
 using System;
 using System.Collections.Generic;
@@ -59,10 +61,9 @@ namespace Integration.WeeClinic
             {
                 throw;
             }
-
         }
 
-        public static async Task<string> PostService<T>(string serviceUrl, Dictionary<string, string> data)
+        public static async Task<Dictionary<string, List<Dictionary<string, object>>>> PostService<T>(string serviceUrl, Dictionary<string, string> data)
         {
             try
             {
@@ -78,8 +79,23 @@ namespace Integration.WeeClinic
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var responseData = await response.Content.ReadAsStringAsync();
-                    return responseData;
+                    var responseData = await response.Content.ReadFromJsonAsync<WeeClinicBase>();
+
+                    if (responseData.DsRespuesta.ContainsKey("Validacion"))
+                    {
+                        var validations = responseData.DsRespuesta["Validacion"];
+
+                        var message = string.Join(" | ", validations.SelectMany(x => x.Values));
+
+                        throw new Exception(message);
+                    }
+
+                    if (!responseData.IsOk)
+                    {
+                        throw new Exception(responseData.Mensaje ?? "Ha ocurrido un error con WeeClinic");
+                    }
+
+                    return responseData.DsRespuesta;
                 }
 
                 if ((int)response.StatusCode == 400)
@@ -91,8 +107,8 @@ namespace Integration.WeeClinic
                 if ((int)response.StatusCode == 401 || (int)response.StatusCode == 403)
                 {
                     throw new Exception("Error de autenticación, token invalido o sin permisos con WeeClinic");
-                }           
-                
+                }
+
                 if ((int)response.StatusCode == 404)
                 {
                     throw new Exception("No se encontró el servicio de WeeClinic");

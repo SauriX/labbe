@@ -26,7 +26,7 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            return "";
         }
 
         // Servcio 2. Obtener Clientes
@@ -41,7 +41,7 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            return "";
         }
 
         // Servcio 3. Obtener Coberturas de Acuerdo a Cliente Seleccionado
@@ -56,7 +56,7 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            return "";
         }
 
         // Servcio 4. Obtener Coberturas de Acuerdo a Cliente Seleccionado
@@ -71,7 +71,7 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            return "";
         }
 
         // Servcio 5. Búsqueda de Servicios
@@ -92,7 +92,7 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            return "";
         }
 
         // Servcio 6. Agregar Servicios
@@ -110,7 +110,7 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            return "";
         }
 
         // Servcio 7. Cancelar Factura o Eliminar Servicios
@@ -128,7 +128,7 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            return "";
         }
 
         // Servicio 8. Subir Archivos en Azure
@@ -145,7 +145,7 @@ namespace Integration.WeeClinic.Services
 
                 var response = await PostService<string>(url, multipartFormContent);
 
-                return response;
+                return "";
             }
             catch (Exception)
             {
@@ -169,7 +169,7 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            return "";
         }
     }
 }

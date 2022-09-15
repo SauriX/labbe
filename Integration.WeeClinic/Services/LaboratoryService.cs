@@ -1,8 +1,12 @@
-﻿using Integration.WeeClinic.Responses;
+﻿using Integration.WeeClinic.Models.Laboratorio_BusquedaFolios;
+using Integration.WeeClinic.Responses;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+using Shared.Error;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -17,20 +21,38 @@ namespace Integration.WeeClinic.Services
         private static readonly int codEstatus_Liberar_Estudio = 1;
 
         // Servcio 1. Consulta de folios
-        // Dudas
-        // Esta correcto que regrese IsActionPermitted: false?
-        public static async Task<string> BusquedaFolios()
+        public static async Task<List<Laboratorio_BusquedaFolios>> BusquedaFolios()
         {
             var url = "api/Laboratorio/Laboratorio_BusquedaFolios";
 
             var data = new Dictionary<string, string>()
             {
-                ["NoFolio"] = folio3
+                ["NoFolio"] = "FE078378450001250Y88"
             };
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            if (!response.ContainsKey("Datos"))
+            {
+                throw new CustomException(HttpStatusCode.FailedDependency, "La respuesta no contiene el parametro Datos");
+            }
+
+            if (response["Datos"].Count == 0)
+            {
+                return new List<Laboratorio_BusquedaFolios>();
+            }
+
+            if (response["Datos"][0].ContainsKey("Mensaje"))
+            {
+                var errorMessage = response["Datos"][0]["Mensaje"].ToString();
+                throw new CustomException(HttpStatusCode.FailedDependency, errorMessage);
+            }
+
+            var serializedResponse = JsonConvert.SerializeObject(response);
+
+            var folios = JsonConvert.DeserializeObject<List<Laboratorio_BusquedaFolios>>(serializedResponse);
+
+            return folios;
         }
 
         // Servicio 2. Consulta de estudios solicitados
@@ -42,12 +64,12 @@ namespace Integration.WeeClinic.Services
 
             var data = new Dictionary<string, string>()
             {
-                ["Folio"] = "AD00704422003397421U"
+                ["Folio"] = "FE078378450001250Y88"
             };
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            return "";
         }
 
         // Servicio 3. Consulta de precios por estudio
@@ -68,7 +90,7 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            return "";
         }
 
         // Servicio 4. Enviar token de validación de estudios
@@ -87,7 +109,7 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            return "";
         }
 
         // Servicio 5. Validación de Token
@@ -105,7 +127,7 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            return "";
         }
 
         // Servicio 6. Asignación de estudios
@@ -121,7 +143,7 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            return "";
         }
 
         // Servicio 7. Cancelación de estudio
@@ -138,7 +160,7 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            return "";
         }
 
         // Servicio 8. Carga de resultados
@@ -156,7 +178,7 @@ namespace Integration.WeeClinic.Services
 
                 var response = await PostService<string>(url, multipartFormContent);
 
-                return response;
+                return "";
             }
             catch (Exception)
             {
@@ -180,7 +202,7 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            return "";
         }
 
         // Servicio 9. Relacionar archivo (PDF Resultado) con el estudio
@@ -199,7 +221,7 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            return "";
         }
 
         // Servicio 10. Reemplazar archivos con el estudio
@@ -216,7 +238,7 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            return "";
         }
 
         // Servicio 11. Enviar e-mail con los resultados
@@ -233,7 +255,7 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            return "";
         }
 
         // Servicio 18. Consultar estudios del paquete
@@ -249,7 +271,7 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            return "";
         }
 
         // Servicio 19. Consulta de información del laboratorio
@@ -264,7 +286,7 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            return "";
         }
 
         // Servicio 20. Consulta los estudios asignados al laboratorio
@@ -280,9 +302,9 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
-        }   
-        
+            return "";
+        }
+
         // Servicio 21. Consulta los estudios asignados al laboratorio
         public static async Task<string> Laboratorio_GetPreciosEstudiosPerfiles()
         {
@@ -298,7 +320,7 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            return "";
         }
     }
 }

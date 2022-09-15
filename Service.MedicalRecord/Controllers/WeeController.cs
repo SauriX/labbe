@@ -1,9 +1,11 @@
 ﻿using Integration.WeeClinic;
+using Integration.WeeClinic.Models.Laboratorio_BusquedaFolios;
 using Integration.WeeClinic.Responses;
 using Integration.WeeClinic.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Service.MedicalRecord.Controllers
@@ -21,7 +23,7 @@ namespace Service.MedicalRecord.Controllers
 
         // Laboratorio
         [HttpGet("servicio1")]
-        public async Task<string> BusquedaFolios()
+        public async Task<List<Laboratorio_BusquedaFolios>> BusquedaFolios()
         {
             return await LaboratoryService.BusquedaFolios();
         }
