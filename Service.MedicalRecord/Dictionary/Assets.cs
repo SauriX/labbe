@@ -3,6 +3,7 @@
     public class Assets
     {
         public const string InformeExpedientes = "wwwroot/layout/excel/expediente/InformeExpedientes.xlsx";
+        public const string InformeClinicos = "wwwroot/layout/excel/expediente/InformeClinicos.xlsx";
         public const string ExpedientetList = "wwwroot/layout/excel/expediente/ExpedienteListado.xlsx";
         public const string ExpedienteForm = "wwwroot/layout/excel/expediente/ExpedienteFormulario.xlsx";
         public const string CotizacionList = "wwwroot/layout/excel/cotizacion/CotizacionListado.xlsx";

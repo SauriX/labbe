@@ -1,0 +1,40 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Service.MedicalRecord.Application.IApplication;
+using Service.MedicalRecord.Dtos;
+using Service.MedicalRecord.Dtos.RequestedStudy;
+using Shared.Dictionary;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Service.MedicalRecord.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ClinicResultsController : ControllerBase 
+    {
+        private readonly IClinicResultsApplication _service;
+        public ClinicResultsController(IClinicResultsApplication service)
+        {
+            _service = service;
+        }
+
+        [HttpPost("getList")]
+        [Authorize(Policies.Access)]
+        public async Task<List<ClinicResultsDto>> GetAll(RequestedStudySearchDto search)
+        {
+            var clinicResults = await _service.GetAll(search);
+            return clinicResults;
+        }
+
+        [HttpPost("export/list")]
+        [Authorize(Policies.Download)]
+        public async Task<IActionResult> ExportClinicsExcel(RequestedStudySearchDto search)
+        {
+            var (file, fileName) = await _service.ExportList(search);
+            return File(file, MimeType.XLSX, fileName);
+        }
+    }
+}

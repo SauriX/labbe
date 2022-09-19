@@ -200,6 +200,12 @@ namespace Service.Identity.Controllers
             var userId = GetUserId();
             return await _service.GetScopes(userId, ControllerNames.RequestedStudy);
         }
+        [HttpGet(ControllerNames.ClinicResults)]
+        public async Task<ScopesDto> GetClinicResultsScopes()
+        {
+            var userId = GetUserId();
+            return await _service.GetScopes(userId, ControllerNames.ClinicResults);
+        }
 
         private Guid GetUserId()
         {
