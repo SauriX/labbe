@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFCore.BulkExtensions;
+using Microsoft.EntityFrameworkCore;
 using Service.MedicalRecord.Context;
 using Service.MedicalRecord.Domain.RouteTracking;
 using Service.MedicalRecord.Domain.TrackingOrder;
@@ -8,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static Service.MedicalRecord.Dictionary.Status;
 
 namespace Service.MedicalRecord.Repository
 {
@@ -23,18 +25,18 @@ namespace Service.MedicalRecord.Repository
         public async Task<List<TrackingOrder>> GetAll(RouteTrackingSearchDto search) {
             var routeTrackingList = _context.CAT_Seguimiento_Ruta.Include(x => x.Estudios).ThenInclude(x=>x.Solicitud).AsQueryable();
 
-            if (search.Fechas != null)
+            if (search.Fechas != null && search.Fechas.Length != 0)
             {
                 routeTrackingList = routeTrackingList.
                     Where(x => x.FechaCreo.Date >= search.Fechas.First().Date && x.FechaCreo.Date <= search.Fechas.Last().Date);
             }
 
-            if (search.Sucursal != null)
+            if (!string.IsNullOrEmpty(search.Sucursal))
             {
                 routeTrackingList = routeTrackingList.Where(x => search.Sucursal.Contains(x.SucursalOrigenId));
             }
 
-            if (search.Buscar != null)
+            if (!string.IsNullOrEmpty(search.Buscar))
             {
                 routeTrackingList = routeTrackingList.Where(x => search.Buscar.Contains(x.Clave));
             }
@@ -53,5 +55,7 @@ namespace Service.MedicalRecord.Repository
             await _context.AddAsync(route);
             await _context.SaveChangesAsync();
         }
+
+  
     }
 }

@@ -10,10 +10,10 @@
         }
       ],
       "UpstreamPathTemplate": "/api/RouteTracking/all",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/RouteTracking/export/form",
+      "DownstreamPathTemplate": "/api/RouteTracking",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -21,7 +21,19 @@
           "Port": 24048
         }
       ],
-      "UpstreamPathTemplate": "/api/RouteTracking/export/form",
+      "UpstreamPathTemplate": "/api/RouteTracking",
+      "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/RouteTracking/export/form/{order}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/RouteTracking/export/form/{order}",
       "UpstreamHttpMethod": [ "POST" ]
     }
 

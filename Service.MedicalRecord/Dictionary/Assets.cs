@@ -11,5 +11,6 @@
         public const string CitaForm = "wwwroot/layout/excel/cita/CitaFormulario.xlsx";
         public const string OrdenSeguimientoList = "wwwroot/layout/excel/cita/OrdenSeguimientoListado.xlsx";
         public const string TrackingOrderForm = "wwwroot/layout/excel/trackingOrder/TrackingOrderFormulario.xlsx";
+        public const string TrackingForm = "wwwroot/layout/excel/FormatoEnvioMuestras/FormatoEnvioMuestras.xlsx";
     }
 }

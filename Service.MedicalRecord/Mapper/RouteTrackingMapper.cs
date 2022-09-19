@@ -38,7 +38,8 @@ namespace Service.MedicalRecord.Mapper
                 Sucursal = x.SucursalOrigenId,
                 Fecha = x.FechaCreo,
                 Status = x.Activo.ToString(),
-                Estudios = x.Estudios.ToList().ToStudyRouteTrackingDto()
+                Estudios = x.Estudios.ToList().ToStudyRouteTrackingDto(),
+                Solicitud = x.Estudios.FirstOrDefault().Solicitud.Id
 
             };
         }

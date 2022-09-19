@@ -143,6 +143,12 @@ namespace Service.Identity.Controllers
             var userId = GetUserId();
             return await _service.GetScopes(userId, ControllerNames.Route);
         }
+        [HttpGet(ControllerNames.RouteTracking)]
+        public async Task<ScopesDto> GetRouteTrackingScopes()
+        {
+            var userId = GetUserId();
+            return await _service.GetScopes(userId, ControllerNames.RouteTracking);
+        }
 
         [HttpGet(ControllerNames.Maquila)]
         public async Task<ScopesDto> GetMaquilaScopes()
