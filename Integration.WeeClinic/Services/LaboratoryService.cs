@@ -20,14 +20,19 @@ namespace Integration.WeeClinic.Services
         private static readonly int codEstatus_Seleccionar_Estudio = 14;
         private static readonly int codEstatus_Liberar_Estudio = 1;
 
+        //AD007044220041013DW5
+        //AD007044220041014O01
+        //AD007044220041015272
+        //AD007044220041016TS3
+
         // Servcio 1. Consulta de folios
-        public static async Task<List<Laboratorio_BusquedaFolios>> BusquedaFolios()
+        public static async Task<List<Laboratorio_BusquedaFolios>> BusquedaFolios(string folio)
         {
             var url = "api/Laboratorio/Laboratorio_BusquedaFolios";
 
             var data = new Dictionary<string, string>()
             {
-                ["NoFolio"] = "FE078378450001250Y88"
+                ["NoFolio"] = folio
             };
 
             var response = await PostService<string>(url, data);
@@ -48,7 +53,7 @@ namespace Integration.WeeClinic.Services
                 throw new CustomException(HttpStatusCode.FailedDependency, errorMessage);
             }
 
-            var serializedResponse = JsonConvert.SerializeObject(response);
+            var serializedResponse = System.Text.Json.JsonSerializer.Serialize(response["Datos"]);
 
             var folios = JsonConvert.DeserializeObject<List<Laboratorio_BusquedaFolios>>(serializedResponse);
 
@@ -58,13 +63,13 @@ namespace Integration.WeeClinic.Services
         // Servicio 2. Consulta de estudios solicitados
         // Dudas
         // Datos llega como un [], por que? Llegan campos de mas que en la documentacion
-        public static async Task<string> BuscaFolioLaboratorio()
+        public static async Task<string> BuscaFolioLaboratorio(string folio)
         {
             var url = "api/Servicio/BuscaFolioLaboratorio";
 
             var data = new Dictionary<string, string>()
             {
-                ["Folio"] = "FE078378450001250Y88"
+                ["Folio"] = folio
             };
 
             var response = await PostService<string>(url, data);

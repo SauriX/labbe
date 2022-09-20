@@ -13,7 +13,7 @@ namespace Integration.WeeClinic.Models.Laboratorio_BusquedaFolios
         public string IdOrden { get; set; }
         public string FolioOrden { get; set; }
         [JsonPropertyName("xDateInsert")]
-        public string DateInsert { get; set; }
+        public DateTime DateInsert { get; set; }
         public string FechaFolio { get; set; }
         [JsonPropertyName("idProducto")]
         public string IdProducto { get; set; }
@@ -31,15 +31,15 @@ namespace Integration.WeeClinic.Models.Laboratorio_BusquedaFolios
         public string CodGenero { get; set; }
         public string Genero { get; set; }
         public string RFC { get; set; }
-        public string Edad { get; set; }
+        public int Edad { get; set; }
         public string Busqueda { get; set; }
         public string TPA { get; set; }
         [JsonPropertyName("isEstatus")]
-        public string IsEstatus { get; set; }
+        public int IsEstatus { get; set; }
         public string Copagos { get; set; }
         [JsonPropertyName("isTyC")]
-        public string IsTyC { get; set; }
+        public int IsTyC { get; set; }
         public string NombreCompleto_Medico { get; set; }
-        public string EstatusVigencia { get; set; }
+        public int EstatusVigencia { get; set; }
     }
 }

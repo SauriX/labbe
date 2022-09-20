@@ -13,7 +13,7 @@ namespace Service.MedicalRecord.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [AllowAnonymous]
-    public class WeeController : ControllerBase
+    public class WeeClinicController : ControllerBase
     {
         [HttpGet("login")]
         public async Task<LoginResponse> Login()
@@ -22,16 +22,16 @@ namespace Service.MedicalRecord.Controllers
         }
 
         // Laboratorio
-        [HttpGet("servicio1")]
-        public async Task<List<Laboratorio_BusquedaFolios>> BusquedaFolios()
+        [HttpGet("Laboratorio_BusquedaFolios/{folio}")]
+        public async Task<List<Laboratorio_BusquedaFolios>> BusquedaFolios(string folio)
         {
-            return await LaboratoryService.BusquedaFolios();
+            return await LaboratoryService.BusquedaFolios(folio);
         }
 
-        [HttpGet("servicio2")]
-        public async Task<string> BuscaFolioLaboratorio()
+        [HttpGet("BuscaFolioLaboratorio/{folio}")]
+        public async Task<string> BuscaFolioLaboratorio(string folio)
         {
-            return await LaboratoryService.BuscaFolioLaboratorio();
+            return await LaboratoryService.BuscaFolioLaboratorio(folio);
         }
 
         [HttpGet("servicio3")]
