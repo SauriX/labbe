@@ -76,6 +76,17 @@
       ],
       "UpstreamPathTemplate": "/api/route/export/form/{id}",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/route/find",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/route/find",
+      "UpstreamHttpMethod": [ "POST" ]
     }
   ]
 }

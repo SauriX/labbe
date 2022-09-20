@@ -34,7 +34,7 @@ namespace Service.MedicalRecord.Repository
             var report = _context.CAT_Solicitud
                 .Include(x => x.Expediente)
                 .Include(x => x.Medico)
-                .Include(x => x.Estudios)
+                .Include(x => x.Estudios).ThenInclude(x => x.Estatus)
                 .Include(x => x.Sucursal)
                 .Include(x => x.Compañia)
                 .AsQueryable();
@@ -80,6 +80,10 @@ namespace Service.MedicalRecord.Repository
             if (search.Area != null && search.Area.Count > 0)
             {
                 report = report.Where(x => x.Estudios.Any(y => search.Area.Contains(y.AreaId)));
+            }
+            if (search.Estudio != null && search.Estudio.Count > 0)
+            {
+                report = report.Where(x => x.Estudios.Any(y => search.Estudio.Contains(y.EstudioId)));
             }
 
 

@@ -105,7 +105,7 @@ namespace Service.Catalog.Application
 
             template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
-            template.AddVariable("Titulo", "Reactivos");
+            template.AddVariable("Titulo", catalogName);
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
             template.AddVariable("Catalogos", catalogs);
 
@@ -130,7 +130,7 @@ namespace Service.Catalog.Application
 
             template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
-            template.AddVariable("Titulo", "Reactivos");
+            template.AddVariable("Titulo", catalogName);
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
             template.AddVariable("Catalogo", catalog);
 

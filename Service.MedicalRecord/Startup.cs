@@ -249,6 +249,7 @@ namespace Service.MedicalRecord
             services.AddScoped<IAppointmentApplication, AppointmentApplication>();
             services.AddScoped<ISamplingApplication, SamplingAplication>();
             services.AddScoped<IRequestedStudyApplication, RequestedStudyApplication>();
+            services.AddScoped<IClinicResultsApplication, ClinicResultsApplication>();
             services.AddScoped<ITrackingOrderApplication, TrackingOrderApplication>();
             services.AddScoped<IRouteTrackingApplication, RouteTrackingApplication>();
 
@@ -258,6 +259,7 @@ namespace Service.MedicalRecord
             services.AddScoped<IAppointmentResposiotry, AppointmentRepository>();
             services.AddScoped<ISamplingRepository, SamplingRepository>();
             services.AddScoped<IRequestedStudyRepository, RequestedStudyRepository>();
+            services.AddScoped<IClinicResultsRepository, ClinicResultsRepository>();
             services.AddScoped<ITrackingOrderRepository, TrackingOrderRepository>();
             services.AddScoped<IRouteTrackingRepository, RouteTrackingRepository>();
         }

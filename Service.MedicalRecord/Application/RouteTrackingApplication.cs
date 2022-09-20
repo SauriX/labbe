@@ -2,6 +2,8 @@
 using ClosedXML.Report;
 using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Dictionary;
+using Service.MedicalRecord.Domain.RouteTracking;
+using Service.MedicalRecord.Dtos.RequestedStudy;
 using Service.MedicalRecord.Dtos.RouteTracking;
 using Service.MedicalRecord.Mapper;
 using Service.MedicalRecord.Repository.IRepository;
@@ -33,6 +35,32 @@ namespace Service.MedicalRecord.Application
 
             return routeTrackingList.ToRouteTrackingDto();
         }
+        public async Task<int> UpdateStatus(List<RequestedStudyUpdateDto> requestDto)
+        {
+            int studyCount = 0;
+            foreach (var item in requestDto)
+            {
+                var ruteOrder =await GetByid(item.SolicitudId);
+                var route = new RouteTracking
+                {
+                         Id = Guid.NewGuid(),
+                        SegumientoId = Guid.Parse(ruteOrder.Seguimiento),
+                        RutaId = Guid.Parse(ruteOrder.Seguimiento),
+                        SucursalId = Guid.Parse(ruteOrder.Seguimiento),
+                        FechaDeEntregaEstimada = ruteOrder.Fecha,
+                        SolicitudId = ruteOrder.Solicitud,
+                        HoraDeRecoleccion = ruteOrder.Fecha,
+                        UsuarioCreoId= Guid.NewGuid(),
+                        FechaCreo = DateTime.Now,
+
+                };
+
+                await _repository.Create(route);
+
+            }
+
+            return studyCount;
+        }
         public async Task<(byte[] file, string fileName)> ExportForm(Guid id)
         {
 
@@ -42,7 +70,7 @@ namespace Service.MedicalRecord.Application
                 var order = await GetByid(id);
                 //var newOrder = order.ToModel();
 
-                var path = Assets.TrackingOrderForm;
+                var path = Assets.TrackingForm;
 
                 var template = new XLTemplate(path);
 
@@ -55,9 +83,9 @@ namespace Service.MedicalRecord.Application
 
                 template.Generate();
 
-                var range = template.Workbook.Worksheet("OrdenSeguimiento").Range("Estudios");
-                var table = template.Workbook.Worksheet("OrdenSeguimiento").Range("$A$10:" + range.RangeAddress.LastAddress).CreateTable();
-                table.Theme = XLTableTheme.TableStyleMedium2;
+                //var range = template.Workbook.Worksheet("Orden").Range("Estudios");
+                //var table = template.Workbook.Worksheet("Orden").Range("$A$10:" + range.RangeAddress.LastAddress).CreateTable();
+                //table.Theme = XLTableTheme.TableStyleMedium2;
 
                 template.Format();
 
