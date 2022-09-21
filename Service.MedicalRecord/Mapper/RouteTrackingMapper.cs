@@ -20,7 +20,7 @@ namespace Service.MedicalRecord.Mapper
                 Id = x.Id,
                 Seguimiento = x.Id.ToString(),
                 Clave = x.Clave,
-                Sucursal = x.SucursalOrigenId,
+                Sucursal = x.Estudios.Count>0? x.Estudios.FirstOrDefault().Solicitud.Sucursal.Nombre :"",
                 Fecha = x.FechaCreo,
                 Status = x.Activo.ToString(),
                 Estudios = x.Estudios.ToList().ToStudyRouteTrackingDto()
