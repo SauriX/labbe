@@ -18,7 +18,7 @@ namespace Service.MedicalRecord.Dtos.RequestedStudy
         public List<int> Area { get; set; }
         public List<byte> TipoSolicitud { get; set; }
         public List<int> Procedencia { get; set; }
-        public List<byte> Estatus { get => estatus.Any() ? estatus : new List<byte> { 2, 3 }; set => estatus = value; }
+        public List<byte> Estatus { get => estatus != null && estatus.Any() ? estatus : new List<byte> { 2, 3 }; set => estatus = value; }
         public List<int> Estudio { get; set; }
         public List<Guid> SolicitudId { get; set; }
     }
