@@ -26,20 +26,26 @@ namespace Service.MedicalRecord.Mapper
                 Estudios = x.Estudios.ToList().ToStudyRouteTrackingDto()
             }).ToList();
         }
-        public static RouteTrackingListDto ToRouteTrackingDto(this TrackingOrder x)
+        public static RouteTrackingFormDto ToRouteTrackingDto(this TrackingOrder x)
         {
             if (x == null) return null;
 
-            return new RouteTrackingListDto
+            return new RouteTrackingFormDto
             {
-                Id = x.Id,
-                Seguimiento = x.Id.ToString(),
-                Clave = x.Clave,
-                Sucursal = x.SucursalOrigenId,
-                Fecha = x.FechaCreo,
-                Status = x.Activo.ToString(),
-                Estudios = x.Estudios.ToList().ToStudyRouteTrackingDto(),
-                Solicitud = x.Estudios.FirstOrDefault().Solicitud.Id
+                Origen = x.Estudios.FirstOrDefault(y => y.Solicitud.Sucursal.Id.ToString() == x.SucursalOrigenId).Solicitud.Sucursal.Nombre,
+                CLave = x.Clave,
+                Responsable = "",
+                Estudio = "",
+                Tramsportista = "",
+                Temperatura = x.Temperatura.ToString(),
+                Entrega = x.FechaCreo.Date.AddDays(4).ToString(),
+                Solicitud = x.Estudios.FirstOrDefault().Solicitud.Clave,
+                FechaEnvio = x.FechaCreo.ToString(),
+                Paciente = x.Estudios.FirstOrDefault().Solicitud.Expediente.NombreCompleto,
+                Destino = x.Estudios.FirstOrDefault(y => y.Solicitud.Sucursal.Id.ToString() == x.SucursalDestinoId).Solicitud.Sucursal.Nombre,
+                FechaEstimada = x.FechaCreo.Date.AddDays(5).ToString(),
+                FechaReal = x.FechaCreo.Date.AddDays(6).ToString(),
+
 
             };
         }
