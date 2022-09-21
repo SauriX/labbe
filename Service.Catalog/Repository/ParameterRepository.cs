@@ -45,7 +45,7 @@ namespace Service.Catalog.Repository
             var parameter = await _context.CAT_Parametro
                 .Include(x => x.Estudios).ThenInclude(x => x.Estudio)
                 .Include(x => x.Area).ThenInclude(x => x.Departamento)
-                .Include(x => x.Reactivo)
+                .Include(x => x.Reactivos)
                 .Include(x => x.FormatoImpresion)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
