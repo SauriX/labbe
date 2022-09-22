@@ -27,7 +27,7 @@ namespace Service.MedicalRecord.Application
         {
             var routeTrackingList = await _repository.GetAll( search);
 
-            return  routeTrackingList.ToList().ToRouteTrackingDto();
+                return  routeTrackingList.ToList().ToRouteTrackingDto();
         }
         public async Task <RouteTrackingListDto> GetByid(Guid id)
         {

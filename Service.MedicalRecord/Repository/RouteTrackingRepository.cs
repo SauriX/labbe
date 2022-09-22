@@ -23,7 +23,7 @@ namespace Service.MedicalRecord.Repository
         }
 
         public async Task<List<TrackingOrder>> GetAll(RouteTrackingSearchDto search) {
-            var routeTrackingList = _context.CAT_Seguimiento_Ruta.Include(x => x.Estudios).ThenInclude(x=>x.Solicitud).AsQueryable();
+            var routeTrackingList = _context.CAT_Seguimiento_Ruta.Include(x => x.Estudios).ThenInclude(x=>x.Solicitud.Sucursal).AsQueryable();
 
             if (search.Fechas != null && search.Fechas.Length != 0)
             {
@@ -43,7 +43,7 @@ namespace Service.MedicalRecord.Repository
             return await routeTrackingList.ToListAsync();
         }
         public async Task<TrackingOrder> getById(Guid Id) {
-            var route =await  _context.CAT_Seguimiento_Ruta.Include(x => x.Estudios).ThenInclude(x=>x.Solicitud).AsQueryable().FirstOrDefaultAsync(x=>x.Id==Id);
+            var route =await  _context.CAT_Seguimiento_Ruta.Include(x => x.Estudios).ThenInclude(x=>x.Solicitud.Sucursal).AsQueryable().FirstOrDefaultAsync(x=>x.Id==Id);
             return route;
         }
         public async Task Update(RouteTracking route) {

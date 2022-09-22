@@ -50,8 +50,10 @@ namespace Service.Catalog.Context.EntityConfiguration.Parameter
                 .WithMany();
 
             builder
-                .HasOne(x => x.Reactivo)
-                .WithMany();
+                .HasMany(x => x.Reactivos)
+                .WithOne(x => x.Parametro)
+                .HasForeignKey(x => x.ParametroId)
+               .OnDelete(DeleteBehavior.Restrict);
 
             /*builder
                 .Property(x => x.UnidadSi)
