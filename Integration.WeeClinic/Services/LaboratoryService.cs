@@ -1,4 +1,9 @@
-﻿using Integration.WeeClinic.Models.Laboratorio_BusquedaFolios;
+﻿using Integration.WeeClinic.Extensions;
+using Integration.WeeClinic.Models.Laboratorio_BusquedaFolioLaboratorio;
+using Integration.WeeClinic.Models.Laboratorio_BusquedaFolios;
+using Integration.WeeClinic.Models.Laboratorio_GetPreciosEstudios_ByidServicio;
+using Integration.WeeClinic.Models.Laboratorio_ValidarCodigoPacienteLaboratorio;
+using Integration.WeeClinic.Models.Laboratorio_ValidaToken;
 using Integration.WeeClinic.Responses;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -26,7 +31,7 @@ namespace Integration.WeeClinic.Services
         //AD007044220041016TS3
 
         // Servcio 1. Consulta de folios
-        public static async Task<List<Laboratorio_BusquedaFolios>> BusquedaFolios(string folio)
+        public static async Task<Laboratorio_BusquedaFolios> BusquedaFolios(string folio)
         {
             var url = "api/Laboratorio/Laboratorio_BusquedaFolios";
 
@@ -37,33 +42,21 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            if (!response.ContainsKey("Datos"))
-            {
-                throw new CustomException(HttpStatusCode.FailedDependency, "La respuesta no contiene el parametro Datos");
-            }
+            response.ValidateNotEmpty("Datos");
 
-            if (response["Datos"].Count == 0)
+            if (response["Datos"].Any(x => x.ContainsKey("Mensaje")))
             {
-                return new List<Laboratorio_BusquedaFolios>();
-            }
-
-            if (response["Datos"][0].ContainsKey("Mensaje"))
-            {
-                var errorMessage = response["Datos"][0]["Mensaje"].ToString();
+                var errorMessage = string.Join(" | ", response["Datos"].Where(x => x.ContainsKey("Mensaje")).SelectMany(x => x.Values));
                 throw new CustomException(HttpStatusCode.FailedDependency, errorMessage);
             }
 
-            var serializedResponse = System.Text.Json.JsonSerializer.Serialize(response["Datos"]);
-
-            var folios = JsonConvert.DeserializeObject<List<Laboratorio_BusquedaFolios>>(serializedResponse);
+            var folios = response.Transform<Laboratorio_BusquedaFolios>();
 
             return folios;
         }
 
         // Servicio 2. Consulta de estudios solicitados
-        // Dudas
-        // Datos llega como un [], por que? Llegan campos de mas que en la documentacion
-        public static async Task<string> BuscaFolioLaboratorio(string folio)
+        public static async Task<Laboratorio_BusquedaFolioLaboratorio> BuscaFolioLaboratorio(string folio)
         {
             var url = "api/Servicio/BuscaFolioLaboratorio";
 
@@ -74,65 +67,72 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return "";
+            response.ValidateNotEmpty("Datos", "Datos1");
+
+            var folios = response.Transform<Laboratorio_BusquedaFolioLaboratorio>();
+
+            return folios;
         }
 
         // Servicio 3. Consulta de precios por estudio
-        // Dudas
-        // Aunque se mande 1 sucursal que no existe regresa datos
-        // Me regresa Servicio Descartado aunque no exista el folio
-        public static async Task<string> GetPreciosEstudios_ByidServicio()
+        public static async Task<Laboratorio_GetPreciosEstudios_ByidServicio> GetPreciosEstudios_ByidServicio()
         {
             var url = "api/Inventarios/GetPreciosEstudios_ByidServicio";
 
             var data = new Dictionary<string, string>()
             {
                 ["idNodo"] = "00000000-0000-0000-0000-000000000000",
-                ["idServicio"] = "35caf363-e8d4-430e-b22e-1f8d005fb4dd",
+                ["idServicio"] = "139e9018-39b8-43c4-94de-0940b526d35b",
                 ["ClaveSucursal"] = "",
                 ["codEstatus"] = codEstatus_Seleccionar_Estudio.ToString()
             };
 
             var response = await PostService<string>(url, data);
 
-            return "";
+            var folios = response.Transform<Laboratorio_GetPreciosEstudios_ByidServicio>();
+
+            return folios;
         }
 
         // Servicio 4. Enviar token de validación de estudios
-        public static async Task<string> ValidarCodigoPacienteLaboratorio()
+        public static async Task<Laboratorio_ValidarCodigoPacienteLaboratorio> ValidarCodigoPacienteLaboratorio()
         {
             var url = "api/Sesion/ValidarCodigoPacienteLaboratorio";
 
             var data = new Dictionary<string, string>()
             {
-                ["idPersona"] = "4254656b-f760-470b-b807-25fc5d11b37d",
-                ["CodAccion"] = "1",
-                ["CodAcceso"] = "",
-                ["CodMotivo"] = "5",
-                ["idServicio"] = null
+                ["idPersona"] = "88a2db0b-0e7a-4e6e-9865-c7a8d1752312",
+                ["CodAccion"] = "2",
+                ["CodAcceso"] = "629726",
+                ["CodMotivo"] = "3",
+                ["idServicio"] = "f6d7c607-6da9-4ca6-b075-1a69719d39e9"
             };
 
             var response = await PostService<string>(url, data);
 
-            return "";
+            var folios = response.Transform<Laboratorio_ValidarCodigoPacienteLaboratorio>();
+
+            return folios;
         }
 
         // Servicio 5. Validación de Token
-        public static async Task<string> Laboratorio_ValidaToken()
+        public static async Task<Laboratorio_ValidaToken> Laboratorio_ValidaToken()
         {
             var url = "api/Servicio/Laboratorio_ValidaToken";
 
             var data = new Dictionary<string, string>()
             {
-                ["idPersona"] = "4254656b-f760-470b-b807-25fc5d11b37f",
-                ["idOrden"] = "a11c4d76-878e-4ec2-a7b9-03aeee28ddff",
+                ["idPersona"] = "88a2db0b-0e7a-4e6e-9865-c7a8d1752312",
+                ["idOrden"] = "b6e542dd-0386-4b94-b50b-06cd8ced0100",
                 ["Token"] = "34234234",
                 ["ClaveSucursal"] = ""
             };
 
             var response = await PostService<string>(url, data);
 
-            return "";
+            var folios = response.Transform<Laboratorio_ValidaToken>();
+
+            return folios;
         }
 
         // Servicio 6. Asignación de estudios

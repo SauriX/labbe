@@ -81,6 +81,11 @@ namespace Integration.WeeClinic
                 {
                     var responseData = await response.Content.ReadFromJsonAsync<WeeClinicBase>();
 
+                    if (!responseData.IsOk && (responseData.DsRespuesta == null || responseData.DsRespuesta.ContainsKey("Validacion")))
+                    {
+                        throw new Exception(string.IsNullOrEmpty(responseData.Mensaje) ? "Ha ocurrido un error con WeeClinic" : responseData.Mensaje);
+                    }
+
                     if (responseData.DsRespuesta.ContainsKey("Validacion"))
                     {
                         var validations = responseData.DsRespuesta["Validacion"];
@@ -88,11 +93,6 @@ namespace Integration.WeeClinic
                         var message = string.Join(" | ", validations.SelectMany(x => x.Values));
 
                         throw new Exception(message);
-                    }
-
-                    if (!responseData.IsOk)
-                    {
-                        throw new Exception(responseData.Mensaje ?? "Ha ocurrido un error con WeeClinic");
                     }
 
                     return responseData.DsRespuesta;
