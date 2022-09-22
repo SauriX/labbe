@@ -102,9 +102,30 @@ namespace Service.Catalog.Repository
 
         public async Task Update(Parameter parameter)
         {
-            _context.CAT_Parametro.Update(parameter);
+            using var transaction = _context.Database.BeginTransaction();
 
-            await _context.SaveChangesAsync();
+            try
+            {
+                var reagents = parameter.Reactivos.ToList();
+
+                parameter.Reactivos = null;
+
+                _context.CAT_Parametro.Update(parameter);
+
+                await _context.SaveChangesAsync();
+
+                var config = new BulkConfig();
+                config.SetSynchronizeFilter<ParameterReagent>(x => x.ReactivoId == parameter.Id);
+
+                await _context.BulkInsertOrUpdateOrDeleteAsync(reagents, config);
+
+                transaction.Commit();
+            }
+            catch (Exception)
+            {
+                transaction.Rollback();
+                throw;
+            }
         }
 
         public async Task UpdateValue(ParameterValue value)

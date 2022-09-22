@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Service.Catalog.Dtos.Reagent;
 using Shared.Validators;
 using System;
 using System.Collections.Generic;
@@ -24,9 +25,9 @@ namespace Service.Catalog.Dtos.Parameter
         public bool Activo { get; set; }
         public Guid UsuarioId { get; set; }
         public IEnumerable<ParameterStudyDto> Estudios { get; set; }
+        public IEnumerable<ReagentListDto> Reactivos { get; set; }
         public string Area { get; set; }
         public string Departamento { get; set; }
-        public string Reactivos { get; set; }
         public string Format { get; set; }
     }
 
