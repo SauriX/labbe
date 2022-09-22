@@ -34,7 +34,7 @@ namespace Service.MedicalRecord.Controllers
       //  [Authorize(Policies.Update)]
         public async Task UpdateStatus(List<RequestedStudyUpdateDto> requestDto)
         {
-            await _service.UpdateStatus(requestDto);
+           // await _service.UpdateStatus(requestDto);
         }
         [HttpPost("export/form/{order}")]
         //[Authorize(Policies.Download)]
