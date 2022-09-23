@@ -23,6 +23,7 @@ namespace Service.Catalog.Dtos.Parameter
         public int UnidadSi { get; set; }
         public string Fcsi { get; set; }
         public bool Activo { get; set; }
+        public bool Requerido { get; set; }
         public Guid UsuarioId { get; set; }
         public IEnumerable<ParameterStudyDto> Estudios { get; set; }
         public IEnumerable<ReagentListDto> Reactivos { get; set; }

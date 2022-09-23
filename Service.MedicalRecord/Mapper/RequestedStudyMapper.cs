@@ -15,7 +15,7 @@ namespace Service.MedicalRecord.Mapper
             {
                 Solicitud = x.Clave,
                 Nombre = x.Expediente.NombreCompleto,
-                Registro = x.FechaCreo.ToString(),
+                Registro = x.FechaCreo.ToString("dd/MM/yyyy HH:mm"),
                 Sucursal = x.Sucursal.Nombre,
                 Edad = x.Expediente.Edad.ToString(),
                 Sexo = x.Expediente.Genero,
