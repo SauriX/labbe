@@ -35,7 +35,7 @@ namespace Service.Catalog.Repository
 
         public async Task<List<Parameter>> GetActive()
         {
-            var parameters = await _context.CAT_Parametro.Where(x => x.Activo).Include(x => x.Area).ThenInclude(x => x.Departamento).ToListAsync();
+            var parameters = await _context.CAT_Parametro.Where(x => x.Activo).Where(x => x.Requerido).Include(x => x.Area).ThenInclude(x => x.Departamento).ToListAsync();
 
             return parameters;
         }
@@ -45,7 +45,7 @@ namespace Service.Catalog.Repository
             var parameter = await _context.CAT_Parametro
                 .Include(x => x.Estudios).ThenInclude(x => x.Estudio)
                 .Include(x => x.Area).ThenInclude(x => x.Departamento)
-                .Include(x => x.Reactivos)
+                .Include(x => x.Reactivos).ThenInclude(x => x.Reactivo)
                 .Include(x => x.FormatoImpresion)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
@@ -80,9 +80,33 @@ namespace Service.Catalog.Repository
 
         public async Task Create(Parameter parameter)
         {
-            _context.CAT_Parametro.Add(parameter);
+            using var transaction = _context.Database.BeginTransaction();
 
-            await _context.SaveChangesAsync();
+            try
+            {
+                var reagents = parameter.Reactivos.ToList();
+
+                parameter.Reactivos = null;
+
+                _context.CAT_Parametro.Add(parameter);
+
+                await _context.SaveChangesAsync();
+
+                reagents.ForEach(x => x.ParametroId = parameter.Id);
+
+                var config = new BulkConfig();
+                config.SetSynchronizeFilter<ParameterReagent>(x => x.ReactivoId == parameter.Id);
+
+                await _context.BulkInsertAsync(reagents, config);
+
+                transaction.Commit();
+            }
+            catch (Exception)
+            {
+                transaction.Rollback();
+                throw;
+            }
+
         }
 
         public async Task AddValue(ParameterValue value)
@@ -102,9 +126,30 @@ namespace Service.Catalog.Repository
 
         public async Task Update(Parameter parameter)
         {
-            _context.CAT_Parametro.Update(parameter);
+            using var transaction = _context.Database.BeginTransaction();
 
-            await _context.SaveChangesAsync();
+            try
+            {
+                var reagents = parameter.Reactivos.ToList();
+
+                parameter.Reactivos = null;
+
+                _context.CAT_Parametro.Update(parameter);
+
+                await _context.SaveChangesAsync();
+
+                var config = new BulkConfig();
+                config.SetSynchronizeFilter<ParameterReagent>(x => x.ReactivoId == parameter.Id);
+
+                await _context.BulkInsertOrUpdateOrDeleteAsync(reagents, config);
+
+                transaction.Commit();
+            }
+            catch (Exception)
+            {
+                transaction.Rollback();
+                throw;
+            }
         }
 
         public async Task UpdateValue(ParameterValue value)

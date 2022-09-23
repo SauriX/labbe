@@ -33,5 +33,17 @@ namespace Service.MedicalRecord.Domain.Request
         public decimal Descuento { get; set; }
         public decimal DescuentoPorcentaje { get; set; }
         public decimal PrecioFinal { get; set; }
+        public DateTime? FechaTomaMuestra { get; set; }
+        public string UsuarioTomaMuestra { get; set; }      
+        public DateTime? FechaValidacion { get; set; }
+        public string UsuarioValidacion { get; set; }     
+        public DateTime? FechaSolicitado { get; set; }
+        public string UsuarioSolicitado { get; set; }  
+        public DateTime? FechaCaptura { get; set; }
+        public string UsuarioCaptura { get; set; }     
+        public DateTime? FechaLiberado { get; set; }
+        public string UsuarioLiberado { get; set; }    
+        public DateTime? FechaEnviado { get; set; }
+        public string UsuarioEnviado { get; set; }
     }
 }

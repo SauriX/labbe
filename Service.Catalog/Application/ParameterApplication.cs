@@ -83,7 +83,7 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
             }
 
-            var newParameter = parameter.ToModel();
+            var newParameter = parameter.ToModelCreate();
 
             await CheckDuplicate(newParameter);
 
@@ -128,7 +128,7 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
 
-            var updatedParameter = parameter.ToModel(existing);
+            var updatedParameter = parameter.ToModelUpdate(existing);
 
             await CheckDuplicate(updatedParameter);
 
@@ -199,6 +199,7 @@ namespace Service.Catalog.Application
             template.AddVariable("Parameter", parameter);
             template.AddVariable("TiposVAlor", value);
             template.AddVariable("Estudios", parameter.Estudios);
+            template.AddVariable("Reactivos", parameter.Reactivos);
             template.Generate();
 
             template.Format();

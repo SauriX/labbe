@@ -32,33 +32,34 @@ namespace Service.MedicalRecord.Repository
 
         public async Task<List<Domain.MedicalRecord.MedicalRecord>> GetNow(MedicalRecordSearch search)
         {
-            var expedientes =  _context.CAT_Expedientes.AsQueryable();
+            var expedientes = _context.CAT_Expedientes.AsQueryable();
 
-            if (!string.IsNullOrEmpty(search.ciudad) )
+            if (!string.IsNullOrEmpty(search.ciudad))
             {
 
 
-                expedientes= expedientes.Where(x => x.Ciudad == search.ciudad);
+                expedientes = expedientes.Where(x => x.Ciudad == search.ciudad);
 
-                
-            }
-            if (!string.IsNullOrEmpty(search.expediente)) {
-                expedientes = expedientes.Where(x => x.Expediente.Contains(search.expediente)|| search.expediente.Contains(x.NombrePaciente));
 
             }
-            if ( search.fechaNacimiento.Date != DateTime.Now.Date )
+            if (!string.IsNullOrEmpty(search.expediente))
             {
-                expedientes = expedientes.Where(x =>   x.FechaDeNacimiento.Date == search.fechaNacimiento.Date );
+                expedientes = expedientes.Where(x => x.Expediente.Contains(search.expediente) || search.expediente.Contains(x.NombrePaciente));
+
+            }
+            if (search.fechaNacimiento.Date != DateTime.Now.Date)
+            {
+                expedientes = expedientes.Where(x => x.FechaDeNacimiento.Date == search.fechaNacimiento.Date);
 
             }
 
-            if ( search.fechaAlta.Date != DateTime.Now.Date )
+            if (search.fechaAlta.Date != DateTime.Now.Date)
             {
-                expedientes = expedientes.Where(x =>   x.FechaCreo.Date == search.fechaAlta.Date );
+                expedientes = expedientes.Where(x => x.FechaCreo.Date == search.fechaAlta.Date);
             }
-            if ( !string.IsNullOrEmpty(search.sucursal))
+            if (!string.IsNullOrEmpty(search.sucursal))
             {
-                expedientes = expedientes.Where(x=>  x.IdSucursal == Guid.Parse(search.sucursal));
+                expedientes = expedientes.Where(x => x.IdSucursal == Guid.Parse(search.sucursal));
 
             }
             return expedientes.ToList();
@@ -103,7 +104,7 @@ namespace Service.MedicalRecord.Repository
         public async Task Create(Domain.MedicalRecord.MedicalRecord expediente, IEnumerable<TaxDataDto> taxdata)
         {
             expediente.TaxData = null;
-            var newtaxdata = taxdata.ToTaxData();
+            var newtaxdata = taxdata.ToTaxData() ?? new List<TaxData>();
 
             _context.CAT_Expedientes.Add(expediente);
             await _context.SaveChangesAsync();
@@ -170,6 +171,6 @@ namespace Service.MedicalRecord.Repository
             return expedientes;
         }
 
-        
+
     }
 }

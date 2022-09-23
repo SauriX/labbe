@@ -10,7 +10,7 @@ namespace Service.Catalog.Domain.Parameter
         public virtual Reagent.Reagent Reactivo { get; set; }
         public string UsuarioCreoId { get; set; }
         public DateTime FechaCreo { get; set; }
-        public int? UsuarioModId { get; set; }
+        public string? UsuarioModId { get; set; }
         public DateTime? FechaMod { get; set; }
     }
 }

@@ -23,6 +23,7 @@ namespace Service.Catalog.Domain.Parameter
         public int UnidadSi { get; set; }
         public string FCSI { get; set; }
         public bool Activo { get; set; }
+        public bool Requerido { get; set; }
         public Guid UsuarioCreoId { get; set; }
         public DateTime FechaCreo { get; set; }
         public Guid UsuarioModificoId { get; set; }

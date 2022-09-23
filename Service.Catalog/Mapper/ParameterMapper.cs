@@ -1,5 +1,6 @@
 ﻿using Service.Catalog.Domain.Parameter;
 using Service.Catalog.Dtos.Parameter;
+using Service.Catalog.Dtos.Reagent;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,8 @@ namespace Service.Catalog.Mapper
                 NombreCorto = model.NombreCorto,
                 Area = model.Area.Nombre,
                 Departamento = model.Area.Departamento.Nombre,
-                Activo = model.Activo
+                Activo = model.Activo,
+                Requerido = model.Requerido,
             };
         }
 
@@ -36,7 +38,8 @@ namespace Service.Catalog.Mapper
                 NombreCorto = x.NombreCorto,
                 Area = x.Area.Nombre,
                 Departamento = x.Area.Departamento.Nombre,
-                Activo = x.Activo
+                Activo = x.Activo,
+                Requerido = x.Requerido,
             });
         }
 
@@ -58,9 +61,11 @@ namespace Service.Catalog.Mapper
                 UnidadSi = model.UnidadSi,
                 Fcsi = model.FCSI,
                 Activo = model.Activo,
+                Requerido = model.Requerido,
                 FormatoImpresionId = model.FormatoImpresionId,
                 TipoValor = model.TipoValor,
                 Estudios = model.Estudios.ToIndicationStudyDto(),
+                Reactivos = model.Reactivos.ToReagentDto(),
                 Area = model.Area.Nombre,
                 Departamento = model.Area.Departamento.Nombre,
                 Format = model.FormatoImpresion.Nombre
@@ -75,6 +80,19 @@ namespace Service.Catalog.Mapper
             {
                 Id = x.Clave,
                 Nombre = x.Nombre
+            });
+        }
+
+        private static IEnumerable<ReagentListDto> ToReagentDto(this IEnumerable<ParameterReagent> model)
+        {
+            if (model == null) return null;
+
+            return model.Select(x => x.Reactivo).Select(x => new ReagentListDto
+            {
+                Id = x.Id.ToString(),
+                ClaveSistema = x.ClaveSistema,
+                Nombre = x.Nombre,
+                NombreSistema = x.NombreSistema
             });
         }
 
@@ -217,12 +235,13 @@ namespace Service.Catalog.Mapper
             };
         }
 
-        public static Parameter ToModel(this ParameterFormDto dto)
+        public static Parameter ToModelCreate(this ParameterFormDto dto)
         {
             if (dto == null) return null;
 
             return new Parameter
             {
+                Id = Guid.NewGuid(),
                 Clave = dto.Clave,
                 Nombre = dto.Nombre,
                 TipoValor = dto.TipoValor,
@@ -236,12 +255,19 @@ namespace Service.Catalog.Mapper
                 UnidadSi = dto.UnidadSi,
                 FCSI = dto.Fcsi,
                 Activo = dto.Activo,
+                Requerido = dto.Requerido,
                 UsuarioCreoId = dto.UsuarioId,
-                FechaCreo = DateTime.Now
+                FechaCreo = DateTime.Now,
+                Reactivos = dto.Reactivos.Select(x => new ParameterReagent
+                {
+                    ReactivoId = Guid.Parse(x.Id),
+                    UsuarioCreoId = dto.UsuarioId.ToString(),
+                    FechaCreo = DateTime.Now
+                }).ToList(),
             };
         }
 
-        public static Parameter ToModel(this ParameterFormDto dto, Parameter model)
+        public static Parameter ToModelUpdate(this ParameterFormDto dto, Parameter model)
         {
             if (dto == null || model == null) return null;
 
@@ -253,18 +279,28 @@ namespace Service.Catalog.Mapper
                 TipoValor = dto.TipoValor,
                 ValorInicial = dto.ValorInicial,
                 NombreCorto = dto.NombreCorto,
-                //Unidades = dto.Unidades,
+                Unidades = dto.Unidades,
                 Formula = dto.Formula,
                 DepartamentoId = dto.DepartamentoId,
                 AreaId = dto.AreaId,
                 FormatoImpresionId = dto.FormatoImpresionId,
-                //UnidadSi = dto.UnidadSi,
+                UnidadSi = dto.UnidadSi,
                 FCSI = dto.Fcsi,
                 Activo = dto.Activo,
+                Requerido = dto.Requerido,
                 UsuarioCreoId = model.UsuarioCreoId,
                 FechaCreo = model.FechaCreo,
                 UsuarioModificoId = dto.UsuarioId,
-                FechaModifico = DateTime.Now
+                FechaModifico = DateTime.Now,
+                Reactivos = dto.Reactivos.Select(x => new ParameterReagent
+                {
+                    ReactivoId = Guid.Parse(x.Id),
+                    ParametroId = model.Id,
+                    UsuarioCreoId = dto.UsuarioId.ToString(),
+                    UsuarioModId = dto.UsuarioId.ToString(),
+                    FechaCreo = model.FechaCreo,
+                    FechaMod = DateTime.Now,
+                }).ToList(),
             };
         }
     }

@@ -1,9 +1,15 @@
 ﻿using Integration.WeeClinic;
+using Integration.WeeClinic.Models.Laboratorio_BusquedaFolioLaboratorio;
+using Integration.WeeClinic.Models.Laboratorio_BusquedaFolios;
+using Integration.WeeClinic.Models.Laboratorio_GetPreciosEstudios_ByidServicio;
+using Integration.WeeClinic.Models.Laboratorio_ValidarCodigoPacienteLaboratorio;
+using Integration.WeeClinic.Models.Laboratorio_ValidaToken;
 using Integration.WeeClinic.Responses;
 using Integration.WeeClinic.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Service.MedicalRecord.Controllers
@@ -11,7 +17,7 @@ namespace Service.MedicalRecord.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [AllowAnonymous]
-    public class WeeController : ControllerBase
+    public class WeeClinicController : ControllerBase
     {
         [HttpGet("login")]
         public async Task<LoginResponse> Login()
@@ -20,32 +26,32 @@ namespace Service.MedicalRecord.Controllers
         }
 
         // Laboratorio
-        [HttpGet("servicio1")]
-        public async Task<string> BusquedaFolios()
+        [HttpGet("Laboratorio_BusquedaFolios/{folio}")]
+        public async Task<Laboratorio_BusquedaFolios> BusquedaFolios(string folio)
         {
-            return await LaboratoryService.BusquedaFolios();
+            return await LaboratoryService.BusquedaFolios(folio);
         }
 
-        [HttpGet("servicio2")]
-        public async Task<string> BuscaFolioLaboratorio()
+        [HttpGet("Laboratorio_BusquedaFolioLaboratorio/{folio}")]
+        public async Task<Laboratorio_BusquedaFolioLaboratorio> BuscaFolioLaboratorio(string folio)
         {
-            return await LaboratoryService.BuscaFolioLaboratorio();
+            return await LaboratoryService.BuscaFolioLaboratorio(folio);
         }
 
-        [HttpGet("servicio3")]
-        public async Task<string> GetPreciosEstudios_ByidServicio()
+        [HttpGet("Laboratorio_GetPreciosEstudios_ByidServicio")]
+        public async Task<Laboratorio_GetPreciosEstudios_ByidServicio> GetPreciosEstudios_ByidServicio()
         {
             return await LaboratoryService.GetPreciosEstudios_ByidServicio();
         }
 
-        [HttpGet("servicio4")]
-        public async Task<string> ValidarCodigoPacienteLaboratorio()
+        [HttpGet("Laboratorio_ValidarCodigoPacienteLaboratorio")]
+        public async Task<Laboratorio_ValidarCodigoPacienteLaboratorio> ValidarCodigoPacienteLaboratorio()
         {
             return await LaboratoryService.ValidarCodigoPacienteLaboratorio();
         }
 
         [HttpGet("servicio5")]
-        public async Task<string> Laboratorio_ValidaToken()
+        public async Task<Laboratorio_ValidaToken> Laboratorio_ValidaToken()
         {
             return await LaboratoryService.Laboratorio_ValidaToken();
         }

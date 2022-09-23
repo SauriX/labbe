@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220922210022_campo Requerido ParametroReactivo")]
+    partial class campoRequeridoParametroReactivo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1572,6 +1574,7 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("FechaMod")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UsuarioCreoId")
@@ -2091,36 +2094,6 @@ namespace Service.Catalog.Migrations
                     b.HasIndex("LoyaltyId");
 
                     b.ToTable("Relacion_Promocion_Lealtad");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Promotion.PromotionMedics", b =>
-                {
-                    b.Property<int>("PromotionId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("MedicId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaMod")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UsuarioModId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("PromotionId", "MedicId");
-
-                    b.HasIndex("MedicId");
-
-                    b.ToTable("Relacion_Promocion_Medicos");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Promotion.PromotionPack", b =>
@@ -3190,25 +3163,6 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Promotion");
                 });
 
-            modelBuilder.Entity("Service.Catalog.Domain.Promotion.PromotionMedics", b =>
-                {
-                    b.HasOne("Service.Catalog.Domain.Medics.Medics", "Medic")
-                        .WithMany()
-                        .HasForeignKey("MedicId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Service.Catalog.Domain.Promotion.Promotion", "Promotion")
-                        .WithMany("medics")
-                        .HasForeignKey("PromotionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Medic");
-
-                    b.Navigation("Promotion");
-                });
-
             modelBuilder.Entity("Service.Catalog.Domain.Promotion.PromotionPack", b =>
                 {
                     b.HasOne("Service.Catalog.Domain.Packet.Packet", "Pack")
@@ -3474,8 +3428,6 @@ namespace Service.Catalog.Migrations
                     b.Navigation("branches");
 
                     b.Navigation("loyalities");
-
-                    b.Navigation("medics");
 
                     b.Navigation("packs");
 
