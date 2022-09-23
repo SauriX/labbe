@@ -153,6 +153,13 @@ namespace Service.Catalog.Mapper
                     Nombre = x.Branch.Nombre,
                     Precio = 0
                 }).ToList(),
+                Medics = model.medics.Select(x => new PromotionMedicsListDto
+                {
+                    Id = x.MedicId,
+                    Clave = x.Medic.Clave,
+                    Activo = true,
+                    Nombre = x.Medic.Nombre
+                }).ToList(),
                 Dias = dias,
                 lista = model.prices.FirstOrDefault().PrecioLista.Nombre
             };
@@ -180,6 +187,16 @@ namespace Service.Catalog.Mapper
                     PromotionId = dto.Id,
                     BranchId = x.Id,
                     Activo = x.Activo,
+                    UsuarioCreoId = dto.UsuarioId,
+                    FechaCreo = DateTime.Now,
+                    UsuarioModId = dto.UsuarioId,
+                    FechaMod = DateTime.Now,
+                }).ToList(),
+                medics = dto.Medics.Select(x => new PromotionMedics
+                {
+                    MedicId = x.Id,
+                    PromotionId = dto.Id,
+                    Activo = true,
                     UsuarioCreoId = dto.UsuarioId,
                     FechaCreo = DateTime.Now,
                     UsuarioModId = dto.UsuarioId,
@@ -295,6 +312,16 @@ namespace Service.Catalog.Mapper
                     Viernes = x.Viernes,
                     Sabado = x.Sabado,
                     Domingo = x.Domingo,
+                }).ToList(),
+                medics = dto.Medics.Select(x => new PromotionMedics
+                {
+                    MedicId = x.Id,
+                    PromotionId = dto.Id,
+                    Activo = true,
+                    UsuarioCreoId = dto.UsuarioId,
+                    FechaCreo = DateTime.Now,
+                    UsuarioModId = dto.UsuarioId,
+                    FechaMod = DateTime.Now,
                 }).ToList(),
                 studies = dto.Estudio.Where(x => x.Paquete == false).Select(x => new PromotionStudy
                 {

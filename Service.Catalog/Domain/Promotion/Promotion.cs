@@ -32,5 +32,6 @@ namespace Service.Catalog.Domain.Promotion
         public ICollection<PromotionPack> packs { get; set; }
         public ICollection<PromotionStudy> studies { get; set; }
         public ICollection<Price_Promotion> prices { get; set; }
+        public ICollection<PromotionMedics> medics { get; set; }
     }
 }

@@ -77,6 +77,7 @@ namespace Service.Catalog.Context
         public DbSet<PromotionBranch> Relacion_Promocion_Sucursal { get; set; }
         public DbSet<PromotionStudy> Relacion_Promocion_Estudio { get; set; }
         public DbSet<PromotionPack> Relacion_Promocion_Paquete { get; set; }
+        public DbSet<PromotionMedics> Relacion_Promocion_medicos { get; set; }
         public DbSet<Route> CAT_Rutas { get; set; }
         public DbSet<Units> CAT_Units { get; set; }
         public DbSet<BranchFolioConfig> CAT_Sucursal_Folio { get; set; }

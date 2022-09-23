@@ -22,6 +22,7 @@ namespace Service.Catalog.Dtos.Promotion
         public List<PriceListBranchDto> Branchs { get; set; }
         public string lista { get; set; }
         public IEnumerable<DiasDto> Dias { get; set; }
+        public List<PromotionMedicsListDto> Medics { get; set; }
 
     }
 
