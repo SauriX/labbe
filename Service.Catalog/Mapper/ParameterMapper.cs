@@ -21,7 +21,8 @@ namespace Service.Catalog.Mapper
                 NombreCorto = model.NombreCorto,
                 Area = model.Area.Nombre,
                 Departamento = model.Area.Departamento.Nombre,
-                Activo = model.Activo
+                Activo = model.Activo,
+                Requerido = model.Requerido,
             };
         }
 
@@ -37,7 +38,8 @@ namespace Service.Catalog.Mapper
                 NombreCorto = x.NombreCorto,
                 Area = x.Area.Nombre,
                 Departamento = x.Area.Departamento.Nombre,
-                Activo = x.Activo
+                Activo = x.Activo,
+                Requerido = x.Requerido,
             });
         }
 
@@ -59,6 +61,7 @@ namespace Service.Catalog.Mapper
                 UnidadSi = model.UnidadSi,
                 Fcsi = model.FCSI,
                 Activo = model.Activo,
+                Requerido = model.Requerido,
                 FormatoImpresionId = model.FormatoImpresionId,
                 TipoValor = model.TipoValor,
                 Estudios = model.Estudios.ToIndicationStudyDto(),
@@ -238,6 +241,7 @@ namespace Service.Catalog.Mapper
 
             return new Parameter
             {
+                Id = Guid.NewGuid(),
                 Clave = dto.Clave,
                 Nombre = dto.Nombre,
                 TipoValor = dto.TipoValor,
@@ -251,6 +255,7 @@ namespace Service.Catalog.Mapper
                 UnidadSi = dto.UnidadSi,
                 FCSI = dto.Fcsi,
                 Activo = dto.Activo,
+                Requerido = dto.Requerido,
                 UsuarioCreoId = dto.UsuarioId,
                 FechaCreo = DateTime.Now,
                 Reactivos = dto.Reactivos.Select(x => new ParameterReagent
@@ -274,14 +279,15 @@ namespace Service.Catalog.Mapper
                 TipoValor = dto.TipoValor,
                 ValorInicial = dto.ValorInicial,
                 NombreCorto = dto.NombreCorto,
-                //Unidades = dto.Unidades,
+                Unidades = dto.Unidades,
                 Formula = dto.Formula,
                 DepartamentoId = dto.DepartamentoId,
                 AreaId = dto.AreaId,
                 FormatoImpresionId = dto.FormatoImpresionId,
-                //UnidadSi = dto.UnidadSi,
+                UnidadSi = dto.UnidadSi,
                 FCSI = dto.Fcsi,
                 Activo = dto.Activo,
+                Requerido = dto.Requerido,
                 UsuarioCreoId = model.UsuarioCreoId,
                 FechaCreo = model.FechaCreo,
                 UsuarioModificoId = dto.UsuarioId,
@@ -290,8 +296,10 @@ namespace Service.Catalog.Mapper
                 {
                     ReactivoId = Guid.Parse(x.Id),
                     ParametroId = model.Id,
+                    UsuarioCreoId = dto.UsuarioId.ToString(),
                     UsuarioModId = dto.UsuarioId.ToString(),
-                    FechaMod = DateTime.Now
+                    FechaCreo = model.FechaCreo,
+                    FechaMod = DateTime.Now,
                 }).ToList(),
             };
         }
