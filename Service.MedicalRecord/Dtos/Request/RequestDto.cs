@@ -27,6 +27,7 @@ namespace Service.MedicalRecord.Dtos.Request
         public string Registro { get; set; }
         public bool Parcialidad { get; set; }
         public bool EsNuevo { get; set; }
+        public string FolioWeeClinic { get; set; }
         [JsonIgnore]
         public Guid UsuarioId { get; set; }
     }
