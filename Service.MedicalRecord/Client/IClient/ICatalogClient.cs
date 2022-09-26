@@ -9,5 +9,7 @@ namespace Service.MedicalRecord.Client.IClient
     {
         Task<string> GetCodeRange(Guid branchId);
         Task<List<RequestStudyParamsDto>> GetStudies(List<int> studies);
+        Task<List<RequestInfoStudyDto>> GetStudiesByCode(IEnumerable<string> codes);
+        Task<List<RequestInfoPackDto>> GetPacksByCode(IEnumerable<string> codes);
     }
 }

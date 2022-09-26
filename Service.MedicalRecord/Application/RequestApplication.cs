@@ -180,6 +180,12 @@ namespace Service.MedicalRecord.Application
 
             await _repository.Create(newRequest);
 
+            var weeStudies = services.Where(x => x.CodTipoCatalogo == 4).Select(x => x.ClaveCDP);
+            var weePacks = services.Where(x => x.CodTipoCatalogo == 12).Select(x => x.ClaveCDP);
+
+            var systemStudies = await _catalogClient.GetStudiesByCode(weeStudies);
+            var systemPacks = await _catalogClient.GetPacksByCode(weePacks);
+
             //return newRequest.Id.ToString();
 
             return "";
