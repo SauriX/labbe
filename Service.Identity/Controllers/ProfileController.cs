@@ -41,6 +41,12 @@ namespace Service.Identity.Controllers
         public async Task<ProfileDto> Login(LoginDto credentials)
         {
             return await _service.Login(credentials);
+        }    
+        
+        [HttpPost("validateAdmin")]
+        public async Task<bool> ValidateAdmin(LoginDto credentials)
+        {
+            return await _service.ValidateAdmin(credentials);
         }
 
         private Guid GetUserId()

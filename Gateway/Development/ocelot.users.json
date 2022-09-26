@@ -61,30 +61,6 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/profile/menu",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 45216
-        }
-      ],
-      "UpstreamPathTemplate": "/api/profile/menu",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/me",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 45216
-        }
-      ],
-      "UpstreamPathTemplate": "/api/profile/me",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
       "DownstreamPathTemplate": "/api/user/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -142,18 +118,6 @@
         }
       ],
       "UpstreamPathTemplate": "/api/user/export/list/{search}",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/login",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 45216
-        }
-      ],
-      "UpstreamPathTemplate": "/api/profile/login",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {

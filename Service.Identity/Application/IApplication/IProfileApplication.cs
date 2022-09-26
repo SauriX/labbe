@@ -13,5 +13,6 @@ namespace Service.Identity.Application.IApplication
         Task<ProfileDto> GetProfile(Guid userId);
         Task<IEnumerable<MenuDto>> GetMenu(Guid userId);
         Task<ScopesDto> GetScopes(Guid userId, string controller);
+        Task<bool> ValidateAdmin(LoginDto credentials);
     }
 }
