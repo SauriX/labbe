@@ -61,6 +61,9 @@ namespace Service.Catalog.Context.EntityConfiguration.Promotion
                 .HasMany(x => x.loyalities)
                 .WithOne(x => x.Promotion);
 
+            builder
+                .HasMany(x => x.medics)
+                .WithOne(x => x.Promotion);
 
         }
     }

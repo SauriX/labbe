@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220923184150_promotionmedics")]
+    partial class promotionmedics
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1524,9 +1526,6 @@ namespace Service.Catalog.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<bool>("Requerido")
-                        .HasColumnType("bit");
-
                     b.Property<string>("TipoValor")
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(100)
@@ -1572,14 +1571,15 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("FechaMod")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UsuarioCreoId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UsuarioModId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("UsuarioModId")
+                        .HasColumnType("int");
 
                     b.HasKey("ReactivoId", "ParametroId");
 

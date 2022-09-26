@@ -266,12 +266,18 @@ namespace Service.Catalog.Repository
 
         public async Task<bool> DuplicateSMC(PriceList price)
         {
-            foreach (var compañia in price.Compañia)
+            var company = false;
+            var branch = false;
+           // var precios = _context.CAT_ListaPrecio.Include(x=>x.Sucursales).Include(x=>x.Compañia).AsQueryable();
+
+           // var coincidencias = await precios.AnyAsync(x => x.Sucursales.SequenceEqual(price.Sucursales) && x.Compañia.SequenceEqual(price.Compañia));
+           foreach (var compañia in price.Compañia)
             {
                 var compañias = await _context.CAT_ListaP_Compañia.AnyAsync(x => x.CompañiaId == compañia.CompañiaId && x.PrecioListaId != price.Id);
                 if (compañias)
                 {
-                    return true;
+                    company = true;
+                    break;
                 }
             }
             foreach (var sucursal in price.Sucursales)
@@ -279,18 +285,14 @@ namespace Service.Catalog.Repository
                 var sucursales = await _context.CAT_ListaP_Sucursal.AnyAsync(x => x.SucursalId == sucursal.SucursalId && x.PrecioListaId != price.Id);
                 if (sucursales)
                 {
-                    return true;
+                    branch = true;
+                    break;
                 }
             }
-            foreach (var medico in price.Medicos)
-            {
-                var medicos = await _context.CAT_ListaP_Medicos.AnyAsync(x => x.MedicoId == medico.MedicoId && x.PrecioListaId != price.Id);
-                if (medicos)
-                {
-                    return true;
-                }
+            if (!branch && !company) {
+                return false;
             }
-            return false;
+            return true;
         }
     }
 }
