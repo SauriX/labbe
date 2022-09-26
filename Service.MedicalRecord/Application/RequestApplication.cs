@@ -139,16 +139,14 @@ namespace Service.MedicalRecord.Application
 
         public async Task<string> Create(RequestDto requestDto)
         {
-            //var code = = await GetNewCode(requestDto);
+            var code = await GetNewCode(requestDto);
 
-            //requestDto.Clave = code;
-            //var newRequest = requestDto.ToModel();
+            requestDto.Clave = code;
+            var newRequest = requestDto.ToModel();
 
-            //await _repository.Create(newRequest);
+            await _repository.Create(newRequest);
 
-            //return newRequest.Id.ToString();
-
-            return "";
+            return newRequest.Id.ToString();
         }
 
         public async Task<string> CreateWeeClinic(RequestDto requestDto)
