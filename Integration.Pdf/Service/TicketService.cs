@@ -172,7 +172,7 @@ namespace Integration.Pdf.Service
             ImageConverter converter = new ImageConverter();
             var image = (byte[])converter.ConvertTo(bitmap, typeof(byte[]));
 
-            string imageFilename = MigraDocFilenameFromByteArray(image);
+            string imageFilename = image.MigraDocFilenameFromByteArray();
 
             var imgPar = section.AddParagraph();
             imgPar.Format.Alignment = ParagraphAlignment.Center;
@@ -196,11 +196,6 @@ namespace Integration.Pdf.Service
 
             var last = new Col("Laboratorio Alfonso Ramos S.A. de C.V. con domicilio matriz en Sinaloa No. 144 sur Col. Centro C.P. 85000 Ciudad Obregón, Sonora, así como las sucursales distribuidas en el territorio nacional utilizará sus datos personales recabados con los siguientes fines: Otorgar los servicios clínicos contratados, confirmar y/o asignar citas para servicios, tramites de facturación, actividades de archivo y respaldo de información, manejo de programas de lealtad, envío de comunicaciones y/o imágenes promocionales. Para más información sobre el tratamiento de sus datos personales usted puede ingresar en la siguiente página.", ParagraphAlignment.Justify);
             section.AddText(last);
-        }
-
-        static string MigraDocFilenameFromByteArray(byte[] image)
-        {
-            return "base64:" + Convert.ToBase64String(image);
         }
 
         public class Info

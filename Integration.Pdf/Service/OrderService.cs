@@ -3,6 +3,7 @@ using Integration.Pdf.Extensions;
 using Integration.Pdf.Models;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
+using System;
 using System.IO;
 using System.Text;
 
@@ -64,6 +65,21 @@ namespace Integration.Pdf.Service
 
         static void Format(Section section, RequestOrderDto order)
         {
+            var logo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets\\LabRamosLogo.png");
+            var image = File.ReadAllBytes(logo);
+
+            var test = new Col[]
+            {
+                new Col(image)
+                {
+                    ImagenTamaño = Unit.FromCentimeter(1)
+                },
+                new Col($"Esto es un test de imagenes", 1, Col.FONT_BOLD, ParagraphAlignment.Left),
+                new Col($"Esto es un test de imagenes", 1, Col.FONT_BOLD, ParagraphAlignment.Left),
+                new Col(image),
+            };
+            section.AddText(test);
+
             var title = new Col("Laboratorio Alfonso Ramos S.A. de C.V. (HERMOSILLO)", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Right);
             section.AddText(title);
 
