@@ -24,6 +24,7 @@ namespace Service.MedicalRecord.Mapper
                 SolicitudId = model.Id,
                 NombreMedico = model.Medico.Nombre,
                 NombreCompania = model.Compañia.Nombre,
+                ClaveMedico = model.Medico.Clave,
                 Observaciones = model.Observaciones,
                 ExpedienteId = model.ExpedienteId,
                 SucursalId = model.SucursalId,
