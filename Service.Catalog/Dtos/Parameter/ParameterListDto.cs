@@ -9,5 +9,6 @@
         public string Area { get; set; }
         public string Departamento { get; set; }
         public bool Activo { get; set; }
+        public bool Requerido { get; set; }
     }
 }

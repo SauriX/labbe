@@ -991,6 +991,70 @@ namespace Service.Catalog.Context
             }
         }
 
+        private static List<Payment> GetPaymentForms()
+        {
+            var paymentForms = new List<Payment>
+            {
+                new Payment(1, "01", "EF", "Efectivo"),
+                new Payment(2, "02", "CN", "Cheque nominativo"),
+                new Payment(3, "03", "TE", "Transferencia electrónica de fondos"),
+                new Payment(4, "04", "TC", "Tarjeta de crédito"),
+                new Payment(5, "05", "PP", "Monedero electrónico"),
+                new Payment(6, "06", "DE", "Dinero electrónico"),
+                new Payment(7, "08", "VD", "Vales de despensa"),
+                new Payment(8, "12", "DP", "Dación en pago"),
+                new Payment(9, "13", "PS", "Pago por subrogación"),
+                new Payment(10, "14", "PC", "Pago por consignación"),
+                new Payment(11, "15", "CD", "Condonación"),
+                new Payment(12, "17", "CP", "Compensación"),
+                new Payment(13, "23", "NV", "Novación"),
+                new Payment(14, "24", "CF", "Confusión"),
+                new Payment(15, "25", "RD", "Remisión de deuda"),
+                new Payment(16, "26", "PR", "Prescripción o caducidad"),
+                new Payment(17, "27", "SA", "A satisfacción del acreedor"),
+                new Payment(18, "28", "TD", "Tarjeta de débito"),
+                new Payment(19, "29", "TS", "Tarjeta de servicios"),
+                new Payment(20, "30", "AA", "Aplicación de anticipos"),
+                new Payment(21, "31", "IP", "Intermediario pagos"),
+                new Payment(21, "99", "PD", "Por definir"),
+            };
+
+            return paymentForms;
+        }
+
+        private static List<UseOfCFDI​> GetUseOfCFDI​s()
+        {
+            var cfdis = new List<UseOfCFDI>
+            {
+                new UseOfCFDI(1, "G01", "G01", "Adquisición de mercancías"),
+                new UseOfCFDI(2, "G02", "G02", "Devoluciones, descuentos o bonificaciones"),
+                new UseOfCFDI(3, "G03", "G03", "Gastos en general"),
+                new UseOfCFDI(4, "I01", "I01", "Construcciones"),
+                new UseOfCFDI(5, "I02", "I02", "Mobiliario y equipo de oficina por inversiones"),
+                new UseOfCFDI(6, "I03", "I03", "Equipo de transporte"),
+                new UseOfCFDI(7, "I04", "I04", "Equipo de cómputo y accesorios"),
+                new UseOfCFDI(8, "I05", "I05", "Dados, troqueles, moldes, matrices y herramental"),
+                new UseOfCFDI(9, "I06", "I06", "Comunicaciones telefónicas"),
+                new UseOfCFDI(10, "I07", "I07", "Comunicaciones satelitales"),
+                new UseOfCFDI(11, "I08", "I08", "Otra maquinaria y equipo"),
+                new UseOfCFDI(12, "D01", "D01", "Honorarios médicos, dentales y gastos hospitalarios."),
+                new UseOfCFDI(13, "D02", "D02", "Gastos médicos por incapacidad o discapacidad"),
+                new UseOfCFDI(14, "D03", "D03", "Gastos funerales."),
+                new UseOfCFDI(15, "D04", "D04", "Donativos"),
+                new UseOfCFDI(16, "D05", "D05", "Intereses reales efectivamente pagados por créditos hipotecarios (casa habitación)."),
+                new UseOfCFDI(17, "D06", "D06", "Aportaciones voluntarias al SAR."),
+                new UseOfCFDI(18, "D07", "D07", "Primas por seguros de gastos médicos."),
+                new UseOfCFDI(19, "D08", "D08", "Gastos de transportación escolar obligatoria."),
+                new UseOfCFDI(20, "D09", "D09", "\tDepósitos en cuentas para el ahorro, primas que tengan como base planes de pensiones."),
+                new UseOfCFDI(21, "D10", "D10", "Pagos por servicios educativos (colegiaturas)"),
+                new UseOfCFDI(22, "CP01", "CP01", "Pagos"),
+                new UseOfCFDI(23, "CN01", "CN01", "Nómina"),
+                new UseOfCFDI(24, "S01", "S01", "Sin Efectos Fiscales")
+            };
+
+            return cfdis;
+        }
+
         private static List<Department> GetDepartments()
         {
             var departments = new List<Department>

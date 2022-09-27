@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Service.MedicalRecord.Dictionary;
+using EFCore.BulkExtensions;
 
 namespace Service.MedicalRecord.Repository
 {
@@ -90,6 +91,27 @@ namespace Service.MedicalRecord.Repository
             return await report.ToListAsync();
         }
 
+        public async Task<Request> GetById(Guid id)
+        {
+            var request = await _context.CAT_Solicitud
+                .Include(x => x.Expediente)
+                .Include(x => x.Medico)
+                .Include(x => x.Estudios).ThenInclude(x => x.Estatus)
+                .Include(x => x.Sucursal)
+                .Include(x => x.Compañia)
+               .FirstOrDefaultAsync(x => x.Id == id);
+
+            return request;
+        }
+
+        public async Task BulkUpdateStudies(Guid requestId, List<RequestStudy> studies)
+        {
+            var config = new BulkConfig();
+            config.SetSynchronizeFilter<RequestStudy>(x => x.SolicitudId == requestId);
+
+            await _context.BulkUpdateAsync(studies, config);
+        }
+
         public async Task<List<RequestStudy>> GetStudyById(Guid requestId, IEnumerable<int> studiesIds)
         {
             var studies = await _context.Relacion_Solicitud_Estudio
@@ -97,6 +119,30 @@ namespace Service.MedicalRecord.Repository
                 .ToListAsync();
 
             return studies;
+        }
+
+        public async Task<RequestImage> GetImage(Guid requestId, string code)
+        {
+            var image = await _context.Relacion_Solicitud_Imagen.FirstOrDefaultAsync(x => x.SolicitudId == requestId && x.Clave == code);
+
+            return image;
+        }
+
+        public async Task<List<RequestImage>> GetImages(Guid requestId)
+        {
+            var images = await _context.Relacion_Solicitud_Imagen.Where(x => x.SolicitudId == requestId).ToListAsync();
+
+            return images;
+        }
+
+        public Task UpdateImage(RequestImage requestImage)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteImage(Guid requestId, string code)
+        {
+            throw new NotImplementedException();
         }
     }
 }

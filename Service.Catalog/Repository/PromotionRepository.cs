@@ -53,6 +53,7 @@ namespace Service.Catalog.Repository
              .ThenInclude(x => x.Pack.Area.Departamento)
              .Include(x => x.studies)
              .ThenInclude(x => x.Study.Area.Departamento)
+             .Include(x=>x.medics)
              .AsQueryable()
             .FirstOrDefaultAsync(x => x.Id == id);
 
@@ -163,11 +164,13 @@ namespace Service.Catalog.Repository
             var packs = promotion.packs.ToList();
             var studies = promotion.studies.ToList();
             var prices = promotion.prices.ToList();
+            var medics = promotion.medics.ToList();
             promotion.branches = null;
             promotion.loyalities = null;
             promotion.prices = null;
             promotion.packs = null;
             promotion.studies = null;
+            promotion.medics = null;
 
             _context.CAT_Promocion.Update(promotion);
             var config = new BulkConfig();
@@ -186,6 +189,10 @@ namespace Service.Catalog.Repository
             config.SetSynchronizeFilter<Price_Promotion>(x => x.PromocionId == promotion.Id);
             prices.ForEach(x => x.PromocionId = promotion.Id);
             await _context.BulkInsertOrUpdateOrDeleteAsync(prices, config);
+
+            config.SetSynchronizeFilter<PromotionMedics>(x => x.PromotionId == promotion.Id);
+            medics.ForEach(x => x.PromotionId = promotion.Id);
+            await _context.BulkInsertOrUpdateOrDeleteAsync(medics, config);
 
             await _context.SaveChangesAsync();
         }

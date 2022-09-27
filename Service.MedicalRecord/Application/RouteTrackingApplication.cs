@@ -27,15 +27,15 @@ namespace Service.MedicalRecord.Application
         {
             var routeTrackingList = await _repository.GetAll( search);
 
-            return  routeTrackingList.ToList().ToRouteTrackingDto();
+                return  routeTrackingList.ToList().ToRouteTrackingDto();
         }
-        public async Task <RouteTrackingListDto> GetByid(Guid id)
+        public async Task <RouteTrackingFormDto> GetByid(Guid id)
         {
             var routeTrackingList = await _repository.getById(id);
 
             return routeTrackingList.ToRouteTrackingDto();
         }
-        public async Task<int> UpdateStatus(List<RequestedStudyUpdateDto> requestDto)
+       /* public async Task<int> UpdateStatus(List<RequestedStudyUpdateDto> requestDto)
         {
             int studyCount = 0;
             foreach (var item in requestDto)
@@ -60,7 +60,7 @@ namespace Service.MedicalRecord.Application
             }
 
             return studyCount;
-        }
+        }*/
         public async Task<(byte[] file, string fileName)> ExportForm(Guid id)
         {
 
@@ -79,7 +79,7 @@ namespace Service.MedicalRecord.Application
                 template.AddVariable("Titulo", "Orden de Seguimiento");
                 template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
                 template.AddVariable("Orden", order);
-                template.AddVariable("Estudios", order.Estudios);
+                template.AddVariable("Estudios", order);
 
                 template.Generate();
 

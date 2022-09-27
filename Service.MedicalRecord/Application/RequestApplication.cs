@@ -25,6 +25,7 @@ using Shared.Helpers;
 using Service.MedicalRecord.Domain.Request;
 using AREAS = Shared.Dictionary.Catalogs.Area;
 using DocumentFormat.OpenXml.Math;
+using Integration.WeeClinic.Services;
 
 namespace Service.MedicalRecord.Application
 {
@@ -138,13 +139,7 @@ namespace Service.MedicalRecord.Application
 
         public async Task<string> Create(RequestDto requestDto)
         {
-            var date = DateTime.Now.ToString("ddMMyy");
-
-            var codeRange = await _catalogClient.GetCodeRange(requestDto.SucursalId);
-            var lastCode = await _repository.GetLastCode(requestDto.SucursalId, date);
-
-            var consecutive = RequestCodes.GetCode(codeRange, lastCode);
-            var code = $"{consecutive}{date}";
+            var code = await GetNewCode(requestDto);
 
             requestDto.Clave = code;
             var newRequest = requestDto.ToModel();
@@ -152,6 +147,46 @@ namespace Service.MedicalRecord.Application
             await _repository.Create(newRequest);
 
             return newRequest.Id.ToString();
+        }
+
+        public async Task<string> CreateWeeClinic(RequestDto requestDto)
+        {
+            if (string.IsNullOrWhiteSpace(requestDto.FolioWeeClinic))
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "El Folio de WeeClinic es requerido");
+            }
+
+            var serviceData = await LaboratoryService.BuscaFolioLaboratorio(requestDto.FolioWeeClinic);
+
+            var statusData = serviceData.Datos1[0];
+            if (statusData.IsVigente == 1 && statusData.CodEstatus == 1)
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "El servicio no está vigente");
+            }
+
+            var services = serviceData.Datos;
+            if (services.Count == 0)
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "El folio no contiene servicios");
+            }
+
+            string code = await GetNewCode(requestDto);
+
+            requestDto.Clave = code;
+            var newRequest = requestDto.ToModel();
+            newRequest.FolioWeeClinic = requestDto.FolioWeeClinic;
+
+            await _repository.Create(newRequest);
+
+            var weeStudies = services.Where(x => x.CodTipoCatalogo == 4).Select(x => x.ClaveCDP);
+            var weePacks = services.Where(x => x.CodTipoCatalogo == 12).Select(x => x.ClaveCDP);
+
+            var systemStudies = await _catalogClient.GetStudiesByCode(weeStudies);
+            var systemPacks = await _catalogClient.GetPacksByCode(weePacks);
+
+            //return newRequest.Id.ToString();
+
+            return "";
         }
 
         public async Task<string> Convert(RequestConvertDto requestDto)
@@ -592,6 +627,18 @@ namespace Service.MedicalRecord.Application
             }
 
             return request;
+        }
+
+        private async Task<string> GetNewCode(RequestDto requestDto)
+        {
+            var date = DateTime.Now.ToString("ddMMyy");
+
+            var codeRange = await _catalogClient.GetCodeRange(requestDto.SucursalId);
+            var lastCode = await _repository.GetLastCode(requestDto.SucursalId, date);
+
+            var consecutive = RequestCodes.GetCode(codeRange, lastCode);
+            var code = $"{consecutive}{date}";
+            return code;
         }
 
         private async Task<string> GeneratePathologicalCode(Request request)

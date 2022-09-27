@@ -1524,8 +1524,8 @@ namespace Service.Catalog.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<Guid>("ReactivoId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<bool>("Requerido")
+                        .HasColumnType("bit");
 
                     b.Property<string>("TipoValor")
                         .ValueGeneratedOnAdd()
@@ -1557,9 +1557,35 @@ namespace Service.Catalog.Migrations
 
                     b.HasIndex("FormatoImpresionId");
 
-                    b.HasIndex("ReactivoId");
-
                     b.ToTable("CAT_Parametro");
+                });
+
+            modelBuilder.Entity("Service.Catalog.Domain.Parameter.ParameterReagent", b =>
+                {
+                    b.Property<Guid>("ReactivoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ParametroId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaMod")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UsuarioCreoId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UsuarioModId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ReactivoId", "ParametroId");
+
+                    b.HasIndex("ParametroId");
+
+                    b.ToTable("Relacion_Reactivo_Parametro");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Parameter.ParameterStudy", b =>
@@ -2065,6 +2091,36 @@ namespace Service.Catalog.Migrations
                     b.HasIndex("LoyaltyId");
 
                     b.ToTable("Relacion_Promocion_Lealtad");
+                });
+
+            modelBuilder.Entity("Service.Catalog.Domain.Promotion.PromotionMedics", b =>
+                {
+                    b.Property<int>("PromotionId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("MedicId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaMod")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UsuarioCreoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsuarioModId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("PromotionId", "MedicId");
+
+                    b.HasIndex("MedicId");
+
+                    b.ToTable("Relacion_Promocion_Medicos");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Promotion.PromotionPack", b =>
@@ -2926,17 +2982,28 @@ namespace Service.Catalog.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Area");
+
+                    b.Navigation("Departmento");
+
+                    b.Navigation("FormatoImpresion");
+                });
+
+            modelBuilder.Entity("Service.Catalog.Domain.Parameter.ParameterReagent", b =>
+                {
+                    b.HasOne("Service.Catalog.Domain.Parameter.Parameter", "Parametro")
+                        .WithMany("Reactivos")
+                        .HasForeignKey("ParametroId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Service.Catalog.Domain.Reagent.Reagent", "Reactivo")
                         .WithMany()
                         .HasForeignKey("ReactivoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Area");
-
-                    b.Navigation("Departmento");
-
-                    b.Navigation("FormatoImpresion");
+                    b.Navigation("Parametro");
 
                     b.Navigation("Reactivo");
                 });
@@ -3119,6 +3186,25 @@ namespace Service.Catalog.Migrations
                         .IsRequired();
 
                     b.Navigation("loyalities");
+
+                    b.Navigation("Promotion");
+                });
+
+            modelBuilder.Entity("Service.Catalog.Domain.Promotion.PromotionMedics", b =>
+                {
+                    b.HasOne("Service.Catalog.Domain.Medics.Medics", "Medic")
+                        .WithMany()
+                        .HasForeignKey("MedicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Service.Catalog.Domain.Promotion.Promotion", "Promotion")
+                        .WithMany("medics")
+                        .HasForeignKey("PromotionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Medic");
 
                     b.Navigation("Promotion");
                 });
@@ -3364,6 +3450,8 @@ namespace Service.Catalog.Migrations
             modelBuilder.Entity("Service.Catalog.Domain.Parameter.Parameter", b =>
                 {
                     b.Navigation("Estudios");
+
+                    b.Navigation("Reactivos");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Price.PriceList", b =>
@@ -3386,6 +3474,8 @@ namespace Service.Catalog.Migrations
                     b.Navigation("branches");
 
                     b.Navigation("loyalities");
+
+                    b.Navigation("medics");
 
                     b.Navigation("packs");
 

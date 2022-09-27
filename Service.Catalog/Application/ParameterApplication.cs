@@ -83,7 +83,7 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
             }
 
-            var newParameter = parameter.ToModel();
+            var newParameter = parameter.ToModelCreate();
 
             await CheckDuplicate(newParameter);
 
@@ -128,7 +128,7 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
 
-            var updatedParameter = parameter.ToModel(existing);
+            var updatedParameter = parameter.ToModelUpdate(existing);
 
             await CheckDuplicate(updatedParameter);
 
@@ -167,7 +167,7 @@ namespace Service.Catalog.Application
 
             template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
-            template.AddVariable("Titulo", "Parametros");
+            template.AddVariable("Titulo", "Parámetros");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
             template.AddVariable("Parameters", parameters);
 
@@ -179,7 +179,7 @@ namespace Service.Catalog.Application
 
             template.Format();
 
-            return (template.ToByteArray(), "Catálogo de Parametros.xlsx");
+            return (template.ToByteArray(), "Catálogo de Parámetros.xlsx");
         }
 
         public async Task<(byte[] file, string fileName)> ExportForm(string id)
@@ -194,16 +194,17 @@ namespace Service.Catalog.Application
 
             template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
-            template.AddVariable("Titulo", "Parametros");
+            template.AddVariable("Titulo", "Parámetros");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
             template.AddVariable("Parameter", parameter);
             template.AddVariable("TiposVAlor", value);
             template.AddVariable("Estudios", parameter.Estudios);
+            template.AddVariable("Reactivos", parameter.Reactivos);
             template.Generate();
 
             template.Format();
 
-            return (template.ToByteArray(), $"Catálogo de Parametros ({parameter.Clave}).xlsx");
+            return (template.ToByteArray(), $"Catálogo de Parámetros ({parameter.Clave}).xlsx");
         }
 
         private async Task CheckDuplicate(Domain.Parameter.Parameter parameter)

@@ -1,8 +1,17 @@
-﻿using Integration.WeeClinic.Responses;
+﻿using Integration.WeeClinic.Extensions;
+using Integration.WeeClinic.Models.Laboratorio_BusquedaFolioLaboratorio;
+using Integration.WeeClinic.Models.Laboratorio_BusquedaFolios;
+using Integration.WeeClinic.Models.Laboratorio_GetPreciosEstudios_ByidServicio;
+using Integration.WeeClinic.Models.Laboratorio_ValidarCodigoPacienteLaboratorio;
+using Integration.WeeClinic.Models.Laboratorio_ValidaToken;
+using Integration.WeeClinic.Responses;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+using Shared.Error;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -16,96 +25,118 @@ namespace Integration.WeeClinic.Services
         private static readonly int codEstatus_Seleccionar_Estudio = 14;
         private static readonly int codEstatus_Liberar_Estudio = 1;
 
+        //AD007044220041013DW5
+        //AD007044220041014O01
+        //AD007044220041015272
+        //AD007044220041016TS3
+
+        //AD00704422004140505K
+        //AD00704422004140684A
+        //AD0070442200414078UF
+
         // Servcio 1. Consulta de folios
-        // Dudas
-        // Esta correcto que regrese IsActionPermitted: false?
-        public static async Task<string> BusquedaFolios()
+        public static async Task<Laboratorio_BusquedaFolios> BusquedaFolios(string folio)
         {
             var url = "api/Laboratorio/Laboratorio_BusquedaFolios";
 
             var data = new Dictionary<string, string>()
             {
-                ["NoFolio"] = folio3
+                ["NoFolio"] = folio
             };
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            response.ValidateNotEmpty("Datos");
+
+            if (response["Datos"].Any(x => x.ContainsKey("Mensaje")))
+            {
+                var errorMessage = string.Join(" | ", response["Datos"].Where(x => x.ContainsKey("Mensaje")).SelectMany(x => x.Values));
+                throw new CustomException(HttpStatusCode.FailedDependency, errorMessage);
+            }
+
+            var folios = response.Transform<Laboratorio_BusquedaFolios>();
+
+            return folios;
         }
 
         // Servicio 2. Consulta de estudios solicitados
-        // Dudas
-        // Datos llega como un [], por que? Llegan campos de mas que en la documentacion
-        public static async Task<string> BuscaFolioLaboratorio()
+        public static async Task<Laboratorio_BusquedaFolioLaboratorio> BuscaFolioLaboratorio(string folio)
         {
             var url = "api/Servicio/BuscaFolioLaboratorio";
 
             var data = new Dictionary<string, string>()
             {
-                ["Folio"] = "AD00704422003397421U"
+                ["Folio"] = folio
             };
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            response.ValidateNotEmpty("Datos", "Datos1");
+
+            var folios = response.Transform<Laboratorio_BusquedaFolioLaboratorio>();
+
+            return folios;
         }
 
         // Servicio 3. Consulta de precios por estudio
-        // Dudas
-        // Aunque se mande 1 sucursal que no existe regresa datos
-        // Me regresa Servicio Descartado aunque no exista el folio
-        public static async Task<string> GetPreciosEstudios_ByidServicio()
+        public static async Task<Laboratorio_GetPreciosEstudios_ByidServicio> GetPreciosEstudios_ByidServicio()
         {
             var url = "api/Inventarios/GetPreciosEstudios_ByidServicio";
 
             var data = new Dictionary<string, string>()
             {
                 ["idNodo"] = "00000000-0000-0000-0000-000000000000",
-                ["idServicio"] = "35caf363-e8d4-430e-b22e-1f8d005fb4dd",
+                ["idServicio"] = "139e9018-39b8-43c4-94de-0940b526d35b",
                 ["ClaveSucursal"] = "",
                 ["codEstatus"] = codEstatus_Seleccionar_Estudio.ToString()
             };
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            var folios = response.Transform<Laboratorio_GetPreciosEstudios_ByidServicio>();
+
+            return folios;
         }
 
         // Servicio 4. Enviar token de validación de estudios
-        public static async Task<string> ValidarCodigoPacienteLaboratorio()
+        public static async Task<Laboratorio_ValidarCodigoPacienteLaboratorio> ValidarCodigoPacienteLaboratorio()
         {
             var url = "api/Sesion/ValidarCodigoPacienteLaboratorio";
 
             var data = new Dictionary<string, string>()
             {
-                ["idPersona"] = "4254656b-f760-470b-b807-25fc5d11b37d",
-                ["CodAccion"] = "1",
-                ["CodAcceso"] = "",
-                ["CodMotivo"] = "5",
-                ["idServicio"] = null
+                ["idPersona"] = "88a2db0b-0e7a-4e6e-9865-c7a8d1752312",
+                ["CodAccion"] = "2",
+                ["CodAcceso"] = "629726",
+                ["CodMotivo"] = "3",
+                ["idServicio"] = "f6d7c607-6da9-4ca6-b075-1a69719d39e9"
             };
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            var folios = response.Transform<Laboratorio_ValidarCodigoPacienteLaboratorio>();
+
+            return folios;
         }
 
         // Servicio 5. Validación de Token
-        public static async Task<string> Laboratorio_ValidaToken()
+        public static async Task<Laboratorio_ValidaToken> Laboratorio_ValidaToken()
         {
             var url = "api/Servicio/Laboratorio_ValidaToken";
 
             var data = new Dictionary<string, string>()
             {
-                ["idPersona"] = "4254656b-f760-470b-b807-25fc5d11b37f",
-                ["idOrden"] = "a11c4d76-878e-4ec2-a7b9-03aeee28ddff",
+                ["idPersona"] = "88a2db0b-0e7a-4e6e-9865-c7a8d1752312",
+                ["idOrden"] = "b6e542dd-0386-4b94-b50b-06cd8ced0100",
                 ["Token"] = "34234234",
                 ["ClaveSucursal"] = ""
             };
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            var folios = response.Transform<Laboratorio_ValidaToken>();
+
+            return folios;
         }
 
         // Servicio 6. Asignación de estudios
@@ -121,7 +152,7 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            return "";
         }
 
         // Servicio 7. Cancelación de estudio
@@ -138,7 +169,7 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            return "";
         }
 
         // Servicio 8. Carga de resultados
@@ -156,7 +187,7 @@ namespace Integration.WeeClinic.Services
 
                 var response = await PostService<string>(url, multipartFormContent);
 
-                return response;
+                return "";
             }
             catch (Exception)
             {
@@ -180,7 +211,7 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            return "";
         }
 
         // Servicio 9. Relacionar archivo (PDF Resultado) con el estudio
@@ -199,7 +230,7 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            return "";
         }
 
         // Servicio 10. Reemplazar archivos con el estudio
@@ -216,7 +247,7 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            return "";
         }
 
         // Servicio 11. Enviar e-mail con los resultados
@@ -233,7 +264,7 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            return "";
         }
 
         // Servicio 18. Consultar estudios del paquete
@@ -249,7 +280,7 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            return "";
         }
 
         // Servicio 19. Consulta de información del laboratorio
@@ -264,7 +295,7 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            return "";
         }
 
         // Servicio 20. Consulta los estudios asignados al laboratorio
@@ -280,9 +311,9 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
-        }   
-        
+            return "";
+        }
+
         // Servicio 21. Consulta los estudios asignados al laboratorio
         public static async Task<string> Laboratorio_GetPreciosEstudiosPerfiles()
         {
@@ -298,7 +329,7 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            return response;
+            return "";
         }
     }
 }
