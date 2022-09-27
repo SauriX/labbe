@@ -1,4 +1,5 @@
 ﻿using Service.MedicalRecord.Dtos;
+using Service.MedicalRecord.Dtos.ClinicResults;
 using Service.MedicalRecord.Dtos.RequestedStudy;
 using System;
 using System.Collections.Generic;
@@ -11,5 +12,6 @@ namespace Service.MedicalRecord.Application.IApplication
     {
         Task<List<ClinicResultsDto>> GetAll(RequestedStudySearchDto search);
         Task<(byte[] file, string fileName)> ExportList(RequestedStudySearchDto search);
+        Task SaveResultPathologicalStudy(ClinicalResultPathologicalFormDto search);
     }
 }

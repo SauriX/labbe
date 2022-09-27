@@ -144,5 +144,10 @@ namespace Service.MedicalRecord.Repository
         {
             throw new NotImplementedException();
         }
+
+        public Task CreateResultPathological(Domain.ClinicResults.ClinicalResultsPathological result)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

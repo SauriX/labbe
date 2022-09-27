@@ -13,6 +13,7 @@ using Service.MedicalRecord.Dictionary;
 using MoreLinq;
 using Shared.Extensions;
 using Service.MedicalRecord.Mapper;
+using Service.MedicalRecord.Dtos.ClinicResults;
 
 namespace Service.MedicalRecord.Application
 {
@@ -94,6 +95,13 @@ namespace Service.MedicalRecord.Application
             {
                 return null;
             }
+        }
+
+        public async Task SaveResultPathologicalStudy(ClinicalResultPathologicalFormDto result)
+        {
+            var newResult = result.ToClinicalResultPathological();
+            await _repository.CreateResultPathological(newResult);
+
         }
     }
 }

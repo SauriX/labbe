@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Dtos;
+using Service.MedicalRecord.Dtos.ClinicResults;
 using Service.MedicalRecord.Dtos.RequestedStudy;
 using Shared.Dictionary;
 using System;
@@ -35,6 +36,13 @@ namespace Service.MedicalRecord.Controllers
         {
             var (file, fileName) = await _service.ExportList(search);
             return File(file, MimeType.XLSX, fileName);
+        }
+
+        [HttpPost("savePathological")]
+        [Authorize(Policies.Create)]
+        public async Task SaveResultPathologicalStudy(ClinicalResultPathologicalFormDto result)
+        {
+            await _service.SaveResultPathologicalStudy(result);
         }
     }
 }

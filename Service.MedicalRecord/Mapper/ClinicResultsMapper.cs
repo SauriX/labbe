@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Dtos.Sampling;
+using Service.MedicalRecord.Dtos.ClinicResults;
 
 namespace Service.MedicalRecord.Mapper
 {
@@ -44,6 +45,15 @@ namespace Service.MedicalRecord.Mapper
                 Clave = x.Clave,
                 NombreEstatus = x.Estatus.Nombre,
             }).ToList();
+        }
+        public static Domain.ClinicResults.ClinicalResultsPathological ToClinicalResultPathological(this ClinicalResultPathologicalFormDto dto)
+        {
+            if (dto == null) return null;
+
+            return new Domain.ClinicResults.ClinicalResultsPathological
+            {
+                  
+            };
         }
     }
 }
