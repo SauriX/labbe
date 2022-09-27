@@ -1,4 +1,5 @@
 ﻿using Service.MedicalRecord.Dtos.Sampling;
+using System;
 using System.Collections.Generic;
 
 namespace Service.MedicalRecord.Dtos
@@ -6,6 +7,7 @@ namespace Service.MedicalRecord.Dtos
     public class ClinicResultsDto
     {
         public string Id { get; set; }
+        public Guid ExpedienteId { get; set; }
         public string Solicitud { get; set; }
         public string Nombre { get; set; }
         public string Registro { get; set; }

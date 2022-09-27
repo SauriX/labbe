@@ -19,6 +19,9 @@ namespace Service.MedicalRecord.Dtos.Request
             UsuarioId = usuarioId;
         }
 
+        public string NombreMedico { get; set; }
+        public string NombreCompania { get; set; }
+        public string Observaciones { get; set; }
         public Guid? SolicitudId { get; set; }
         public Guid ExpedienteId { get; set; }
         public Guid SucursalId { get; set; }
@@ -29,5 +32,7 @@ namespace Service.MedicalRecord.Dtos.Request
         public bool EsNuevo { get; set; }
         [JsonIgnore]
         public Guid UsuarioId { get; set; }
+
+        public IEnumerable<RequestStudyInfoDto> Estudios { get; set; }
     }
 }

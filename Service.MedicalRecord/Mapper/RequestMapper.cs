@@ -22,12 +22,24 @@ namespace Service.MedicalRecord.Mapper
             return new RequestDto
             {
                 SolicitudId = model.Id,
+                NombreMedico = model.Medico.Nombre,
+                NombreCompania = model.Compañia.Nombre,
+                Observaciones = model.Observaciones,
                 ExpedienteId = model.ExpedienteId,
                 SucursalId = model.SucursalId,
                 Clave = model.Clave,
                 Parcialidad = model.Parcialidad,
                 EsNuevo = model.EsNuevo,
-                Registro = $"{model.FechaCreo:dd/MM/yyyy}"
+                Registro = $"{model.FechaCreo:dd/MM/yyyy}",
+                Estudios = model.Estudios.Select(s => new RequestStudyInfoDto
+                {
+                    Clave = s.Clave,
+                    Nombre = s.Nombre,
+                    EstatusId = s.EstatusId,
+                    Estatus = s.Estatus.Clave,
+                    Color = s.Estatus.Color,
+                    Departamento = s.DepartamentoId,
+                })
             };
         }
 

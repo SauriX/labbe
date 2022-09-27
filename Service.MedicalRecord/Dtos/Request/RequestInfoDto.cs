@@ -28,5 +28,6 @@ namespace Service.MedicalRecord.Dtos.Request
         public byte EstatusId { get; set; }
         public string Estatus { get; set; }
         public string Color { get; set; }
+        public int Departamento { get; set; }
     }
 }

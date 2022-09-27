@@ -15,6 +15,7 @@ namespace Service.MedicalRecord.Mapper
             return model.Select(x => new ClinicResultsDto
             {
                 Solicitud = x.Clave,
+                ExpedienteId = x.ExpedienteId,
                 Nombre = x.Expediente.NombreCompleto,
                 Registro = x.FechaCreo.ToString(),
                 Sucursal = x.Sucursal.Clave,
