@@ -1,6 +1,5 @@
 ﻿using MigraDoc.DocumentObjectModel;
 using MigraDoc.DocumentObjectModel.Tables;
-using Swashbuckle.Swagger;
 using System.Linq;
 
 namespace Integration.Pdf.Extensions
@@ -14,14 +13,21 @@ namespace Integration.Pdf.Extensions
 
             string[] split = (col.Texto ?? "").Split(new[] { ':' }, 2);
 
-            if (partialBold && split.Length == 2)
+            if (!col.EsImagen && partialBold && split.Length == 2)
             {
                 paragraph.AddFormattedText(split[0] + ": ", Models.Col.FONT_BOLD);
                 paragraph.AddFormattedText(split[1], Models.Col.FONT_DEFAULT);
             }
-            else
+            else if (!col.EsImagen)
             {
                 paragraph.AddFormattedText(col.Texto ?? "", col.Fuente);
+            }
+            else
+            {
+                string imageFilename = col.Imagen.MigraDocFilenameFromByteArray();
+                var image = paragraph.AddImage(imageFilename);
+                image.Width = col.ImagenTamaño;
+                image.LockAspectRatio = true;
             }
 
             if (inverted)
@@ -62,13 +68,23 @@ namespace Integration.Pdf.Extensions
             }
             paragraph.Format.Alignment = col.Horizontal;
 
-            paragraph.AddFormattedText(col.Texto ?? "", col.Fuente);
+            if (!col.EsImagen)
+            {
+                paragraph.AddFormattedText(col.Texto ?? "", col.Fuente);
+            }
+            else
+            {
+                string imageFilename = col.Imagen.MigraDocFilenameFromByteArray();
+                var image = paragraph.AddImage(imageFilename);
+                image.Width = col.ImagenTamaño;
+                image.LockAspectRatio = true;
+            }
 
             Paragraph p = section.AddParagraph();
             p.Format.LineSpacingRule = LineSpacingRule.Exactly;
             p.Format.LineSpacing = 0;
             p.Format.SpaceBefore = Unit.FromPoint(5);
-        }     
+        }
 
         public static void AddText(this Section section, Models.Col[] cols, bool partialBold = false)
         {
@@ -82,7 +98,7 @@ namespace Integration.Pdf.Extensions
 
             for (int i = 0; i < cols.Length; i++)
             {
-                MigraDoc.DocumentObjectModel.Tables.Column column = table.AddColumn();
+                Column column = table.AddColumn();
                 column.LeftPadding = 0;
                 column.RightPadding = 0;
                 column.Width = columnWidth * cols[i].Tamaño;
@@ -99,14 +115,21 @@ namespace Integration.Pdf.Extensions
                 Paragraph paragraph = row.Cells[i].AddParagraph();
                 string[] split = (col.Texto ?? "").Split(new[] { ':' }, 2);
 
-                if (partialBold && split.Length == 2)
+                if (!col.EsImagen && partialBold && split.Length == 2)
                 {
                     paragraph.AddFormattedText(split[0] + ": ", Models.Col.FONT_BOLD);
                     paragraph.AddFormattedText(split[1], Models.Col.FONT_DEFAULT);
                 }
-                else
+                else if (!col.EsImagen)
                 {
                     paragraph.AddFormattedText(col.Texto ?? "", col.Fuente);
+                }
+                else
+                {
+                    string imageFilename = col.Imagen.MigraDocFilenameFromByteArray();
+                    var image = paragraph.AddImage(imageFilename);
+                    image.Width = col.ImagenTamaño;
+                    image.LockAspectRatio = true;
                 }
             }
 
@@ -134,7 +157,7 @@ namespace Integration.Pdf.Extensions
 
             for (int i = 0; i < cols.Length; i++)
             {
-                MigraDoc.DocumentObjectModel.Tables.Column column = table.AddColumn();
+                Column column = table.AddColumn();
                 column.Width = columnWidth * cols[i].Tamaño;
                 column.Format.Alignment = cols[i].Horizontal;
             }
@@ -173,7 +196,18 @@ namespace Integration.Pdf.Extensions
                 }
 
                 Paragraph paragraph = cell.AddParagraph();
-                paragraph.AddFormattedText(col.Texto ?? "", col.Fuente);
+
+                if (!col.EsImagen)
+                {
+                    paragraph.AddFormattedText(col.Texto ?? "", col.Fuente);
+                }
+                else
+                {
+                    string imageFilename = col.Imagen.MigraDocFilenameFromByteArray();
+                    var image = paragraph.AddImage(imageFilename);
+                    image.Width = col.ImagenTamaño;
+                    image.LockAspectRatio = true;
+                }
             }
         }
     }

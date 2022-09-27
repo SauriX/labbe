@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Service.MedicalRecord.Domain
 {
@@ -10,6 +7,8 @@ namespace Service.MedicalRecord.Domain
         public Guid Id { get; set; }
         public Guid SolicitudId { get; set; }
         public virtual Request.Request Solicitud{ get; set; }
+        public Guid ExpedienteId { get; set; }
+        public virtual MedicalRecord.MedicalRecord Expediente { get; set; }
         public int EstudioId { get; set; }
         public virtual Request.RequestStudy Estudio { get; set; }
         public Guid ParametroId { get; set; }

@@ -20,5 +20,6 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task<List<RequestImage>> GetImages(Guid requestId);
         Task UpdateImage(RequestImage requestImage);
         Task DeleteImage(Guid requestId, string code);
+        Task Create(object newParameter);
     }
 }

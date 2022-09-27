@@ -13,17 +13,41 @@ using Service.MedicalRecord.Dictionary;
 using MoreLinq;
 using Shared.Extensions;
 using Service.MedicalRecord.Mapper;
+using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.ClinicResults;
+using System.Net;
+using SharedResponses = Shared.Dictionary.Responses;
+using Shared.Error;
+using Shared.Dictionary;
+using Service.MedicalRecord.Client.IClient;
+using MassTransit;
+using RequestTemplates = Service.MedicalRecord.Dictionary.EmailTemplates.Request;
+using EventBus.Messages.Common;
+using Service.MedicalRecord.Settings.ISettings;
 
 namespace Service.MedicalRecord.Application
 {
     public class ClinicResultsApplication : IClinicResultsApplication
     {
         public readonly IClinicResultsRepository _repository;
+        private readonly IPdfClient _pdfClient;
+        private readonly ISendEndpointProvider _sendEndpointProvider;
+        private readonly IRabbitMQSettings _rabbitMQSettings;
+        private readonly IQueueNames _queueNames;
 
-        public ClinicResultsApplication(IClinicResultsRepository repository)
+        public ClinicResultsApplication(IClinicResultsRepository repository, IPdfClient pdfClient, ISendEndpointProvider sendEndpoint, IRabbitMQSettings rabbitMQSettings,
+            IQueueNames queueNames)
         {
             _repository = repository;
+            _sendEndpointProvider = sendEndpoint;
+            _pdfClient = pdfClient;
+            _queueNames = queueNames;
+            _rabbitMQSettings = rabbitMQSettings;
+        }
+
+        public Task DeleteImage(Guid recordId, Guid requestId, string code)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<(byte[] file, string fileName)> ExportList(RequestedStudySearchDto search)
@@ -97,11 +121,106 @@ namespace Service.MedicalRecord.Application
             }
         }
 
-        public async Task SaveResultPathologicalStudy(ClinicalResultPathologicalFormDto result)
+        /*public async Task<ClinicResultsCaptureDto> Create(ClinicResults results)
         {
-            var newResult = result.ToClinicalResultPathological();
-            await _repository.CreateResultPathological(newResult);
+            if (!string.IsNullOrEmpty(results.Id.ToString()))
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
+            }
 
+            var newResults = results.ToCaptureResults();
+
+            await CheckDuplicate(newResults);
+
+            await _repository.Create(newResults);
+
+            newResults = await _repository.GetById(newResults.Id);
+
+            return newResults.ToCaptureResults();
+        }*/
+
+        private Task CheckDuplicate(object newResults)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<string>> GetImages(Guid recordId, Guid requestId)
+        {
+            throw new NotImplementedException();
+        }
+
+        /*public async Task<byte[]> PrintOrder(Guid recordId, Guid requestId)
+        {
+            var results = await _repository.GetById(requestId);
+
+            if (results == null || results.ExpedienteId != recordId)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
+            }
+
+            var order = results.ToRequestDto();
+
+            return await _pdfClient.GenerateLabResults(order);
+        }*/
+
+        public Task<string> SaveImage(RequestImageDto requestDto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task SendTestEmail(RequestSendDto requestDto)
+        {
+            var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
+
+            var subject = RequestTemplates.Subjects.TestMessage;
+            var title = RequestTemplates.Titles.RequestCode(request.Clave);
+            var message = RequestTemplates.Messages.TestMessage;
+
+            var emailToSend = new EmailContract(requestDto.Correo, null, subject, title, message)
+            {
+                Notificar = true,
+                RemitenteId = requestDto.UsuarioId.ToString()
+            };
+
+            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, "/", _queueNames.Email)));
+
+            await endpoint.Send(emailToSend);
+        }
+
+        private async Task<Domain.Request.Request> GetExistingRequest(Guid recordId, Guid requestId)
+        {
+            var request = await _repository.FindAsync(requestId);
+
+            if (request == null || request.ExpedienteId != recordId)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
+            }
+
+            return request;
+        }
+
+        public async Task SendTestWhatsapp(RequestSendDto requestDto)
+        {
+            _ = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
+
+            var message = RequestTemplates.Messages.TestMessage;
+
+            var phone = requestDto.Telefono.Replace("-", "");
+            phone = phone.Length == 10 ? "52" + phone : phone;
+            var emailToSend = new WhatsappContract(phone, message)
+            {
+                Notificar = true,
+                RemitenteId = requestDto.UsuarioId.ToString()
+            };
+
+            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, "/", _queueNames.Whatsapp)));
+
+            await endpoint.Send(emailToSend);
+        }
+
+        public Task<int> UpdateStatus(List<ClinicResultsUpdateDto> requestDto)
+        {
+            throw new NotImplementedException();
         }
     }
 }

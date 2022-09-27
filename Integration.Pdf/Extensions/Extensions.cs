@@ -24,5 +24,10 @@ namespace Integration.Pdf.Extensions
             p.Format.Borders.Bottom = new Border() { Width = Unit.FromPoint(1), Color = Colors.Black };
             p.Format.SpaceAfter = Unit.FromPoint(5);
         }
+
+        public static string MigraDocFilenameFromByteArray(this byte[] image)
+        {
+            return "base64:" + Convert.ToBase64String(image);
+        }
     }
 }

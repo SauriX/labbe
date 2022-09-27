@@ -19,6 +19,9 @@ namespace Integration.Pdf.Models
         public string Formato { get; set; }
         public Font Fuente { get; set; }
         public ParagraphAlignment Horizontal { get; set; }
+        public byte[] Imagen { get; set; }
+        public Unit ImagenTamaño { get; set; }
+        public bool EsImagen => Imagen != null;
 
         public Col() { }
 
@@ -27,6 +30,13 @@ namespace Integration.Pdf.Models
             Texto = texto;
             Tamaño = 1;
             Fuente = FONT_DEFAULT;
+            Horizontal = ParagraphAlignment.Center;
+        }
+
+        public Col(byte[] imagen)
+        {
+            Imagen = imagen;
+            Tamaño = 1;
             Horizontal = ParagraphAlignment.Center;
         }
 
@@ -43,6 +53,13 @@ namespace Integration.Pdf.Models
             Texto = texto;
             Tamaño = tamaño;
             Fuente = FONT_DEFAULT;
+            Horizontal = ParagraphAlignment.Center;
+        }
+
+        public Col(byte[] imagen, int tamaño)
+        {
+            Imagen = imagen;
+            Tamaño = tamaño;
             Horizontal = ParagraphAlignment.Center;
         }
 
@@ -76,6 +93,13 @@ namespace Integration.Pdf.Models
             Texto = texto;
             Tamaño = tamaño;
             Fuente = FONT_DEFAULT;
+            Horizontal = horizontal;
+        }
+
+        public Col(byte[] imagen, int tamaño, ParagraphAlignment horizontal)
+        {
+            Imagen = imagen;
+            Tamaño = tamaño;
             Horizontal = horizontal;
         }
 

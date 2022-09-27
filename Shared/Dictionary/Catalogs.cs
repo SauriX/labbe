@@ -43,5 +43,10 @@ namespace Shared.Dictionary
             public static readonly Guid CUMBRES = new("234f1cb4-4b26-4d8a-a5df-03063dd17a85");
             public static readonly Guid SPGG = new("a5a3f4bf-9330-429c-a0ea-f2be9f13ca09");
         }
+
+        public class Role
+        {
+            public static readonly Guid ADMIN = new("3f06a33f-b077-4470-99b9-5dd487e81b9f");
+        }
     }
 }

@@ -26,7 +26,6 @@ namespace Service.Identity.Application
     {
         private readonly IConfiguration _configuration;
         private readonly IProfileRepository _repository;
-        private const string ADMIN = "Administrador";
 
         public ProfileApplication(IConfiguration configuration, IProfileRepository repository)
         {
@@ -58,7 +57,7 @@ namespace Service.Identity.Application
                 Nombre = user.NombreCompleto,
                 RequiereCambio = !user.FlagPassword,
                 Sucursal = user.SucursalId.ToString(),
-                Admin = user.Rol.Nombre == ADMIN,
+                Admin = user.RolId == Catalogs.Role.ADMIN,
             };
         }
 
@@ -97,8 +96,25 @@ namespace Service.Identity.Application
                 Token = CreateToken(user),
                 RequiereCambio = !user.FlagPassword,
                 Sucursal = user.SucursalId.ToString(),
-                Admin = user.Rol.Nombre == ADMIN,
+                Admin = user.RolId == Catalogs.Role.ADMIN,
             };
+        }
+
+        public async Task<bool> ValidateAdmin(LoginDto credentials)
+        {
+            var user = await _repository.GetByCode(credentials.Usuario);
+
+            if (user == null)
+            {
+                throw new CustomException(HttpStatusCode.Unauthorized, Responses.Unregistered);
+            }
+
+            if (!user.Activo)
+            {
+                throw new CustomException(HttpStatusCode.Unauthorized, Responses.Disabled);
+            }
+
+            return user.RolId == Catalogs.Role.ADMIN;
         }
 
         private static List<Menu> BuildMenu(List<Menu> menu)

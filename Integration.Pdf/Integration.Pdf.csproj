@@ -154,6 +154,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\PdfController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
+    <Compile Include="Dtos\LabResultsDto.cs" />
     <Compile Include="Dtos\MantainDto.cs" />
     <Compile Include="Dtos\RequestTagDto.cs" />
     <Compile Include="Extensions\Extensions.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Dtos\RequestOrderDto.cs" />
     <Compile Include="Service\CashRegisterService.cs" />
+    <Compile Include="Service\LabResultsService.cs" />
     <Compile Include="Service\MantainService.cs" />
     <Compile Include="Service\OrderService.cs" />
     <Compile Include="Service\QuotationService.cs" />
