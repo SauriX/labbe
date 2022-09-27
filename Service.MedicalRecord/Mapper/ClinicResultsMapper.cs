@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Dtos.Sampling;
+using Service.MedicalRecord.Dtos.ClinicResults;
+using Service.MedicalRecord.Domain;
 
 namespace Service.MedicalRecord.Mapper
 {
@@ -42,6 +44,22 @@ namespace Service.MedicalRecord.Mapper
                 Seleccion = false,
                 Clave = x.Clave,
                 NombreEstatus = x.Estatus.Nombre,
+            }).ToList();
+        }
+
+        public static List<ClinicResultsCaptureDto> ToCaptureResults(this ICollection<ClinicResults> model)
+        {
+            return model.Select(x => new ClinicResultsCaptureDto
+            {
+                Id = x.Id,
+                Nombre = x.Nombre,
+                Edad = x.Solicitud.Expediente.Edad,
+                ClaveSolicitud = x.Solicitud.Clave,
+                TipoValor = x.TipoValorId,
+                ValorInicial = x.ValorInicial,
+                ValorFinal = x.ValorFinal,
+                ParametroId = x.ParametroId.ToString(),
+                Resultado = x.Resultado
             }).ToList();
         }
     }

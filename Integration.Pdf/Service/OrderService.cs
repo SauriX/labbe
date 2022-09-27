@@ -3,6 +3,7 @@ using Integration.Pdf.Extensions;
 using Integration.Pdf.Models;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
+using System;
 using System.IO;
 using System.Text;
 

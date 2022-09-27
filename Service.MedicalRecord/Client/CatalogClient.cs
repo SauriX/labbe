@@ -53,6 +53,11 @@ namespace Service.MedicalRecord.Client
             }
         }
 
+        public Task<List<RequestInfoPackDto>> GetPacksByCode(IEnumerable<string> codes)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<List<RequestStudyParamsDto>> GetStudies(List<int> studies)
         {
             try
@@ -78,6 +83,11 @@ namespace Service.MedicalRecord.Client
             {
                 throw;
             }
+        }
+
+        public Task<List<RequestInfoStudyDto>> GetStudiesByCode(IEnumerable<string> codes)
+        {
+            throw new NotImplementedException();
         }
     }
 }

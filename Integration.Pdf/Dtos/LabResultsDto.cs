@@ -1,10 +1,11 @@
-﻿using Service.MedicalRecord.Dtos.Sampling;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 
-namespace Service.MedicalRecord.Dtos
+namespace Integration.Pdf.Dtos
 {
-    public class ClinicResultsDto
+    public class LabResultsDto
     {
         public string Id { get; set; }
         public string Solicitud { get; set; }
@@ -22,5 +23,24 @@ namespace Service.MedicalRecord.Dtos
         public string Area { get; set; }
         public string NombreMedico { get; set; }
         public List<StudyDto> Estudios { get; set; }
+        public List<StudyParamsDto> Parametros { get; set; }
+    }
+
+    public class StudyDto
+    {
+        public string Clave { get; set; }
+        public string Estudio { get; set; }
+        public string Precio { get; set; }
+        public decimal Dias { get; set; }
+    }
+
+    public class StudyParamsDto
+    {
+        public Guid Id { get; set; }
+        public string NombreParametro { get; set; }
+        public string Unidades { get; set; }
+        public string Resultado { get; set; }
+        public int ValorInicial { get; set; }
+        public int ValorFinal { get; set; }
     }
 }

@@ -139,16 +139,14 @@ namespace Service.MedicalRecord.Application
 
         public async Task<string> Create(RequestDto requestDto)
         {
-            //var code = = await GetNewCode(requestDto);
+            var code = await GetNewCode(requestDto);
 
-            //requestDto.Clave = code;
-            //var newRequest = requestDto.ToModel();
+            requestDto.Clave = code;
+            var newRequest = requestDto.ToModel();
 
-            //await _repository.Create(newRequest);
+            await _repository.Create(newRequest);
 
-            //return newRequest.Id.ToString();
-
-            return "";
+            return newRequest.Id.ToString();
         }
 
         public async Task<string> CreateWeeClinic(RequestDto requestDto)
@@ -179,6 +177,12 @@ namespace Service.MedicalRecord.Application
             newRequest.FolioWeeClinic = requestDto.FolioWeeClinic;
 
             await _repository.Create(newRequest);
+
+            var weeStudies = services.Where(x => x.CodTipoCatalogo == 4).Select(x => x.ClaveCDP);
+            var weePacks = services.Where(x => x.CodTipoCatalogo == 12).Select(x => x.ClaveCDP);
+
+            var systemStudies = await _catalogClient.GetStudiesByCode(weeStudies);
+            var systemPacks = await _catalogClient.GetPacksByCode(weePacks);
 
             //return newRequest.Id.ToString();
 
