@@ -160,11 +160,13 @@ namespace Integration.Pdf.Service
                 section.AddBorderedText(col, right: true, left: true);
             }
 
-            var hr = new StringBuilder(125).Insert(0, "-", 125).ToString();
             var s4 = new Col[]
             {
                 new Col("", 3),
-                new Col(hr, 18, ParagraphAlignment.Left),
+                new Col("", 18)
+                {
+                    Fill = TabLeader.Dashes
+                },
                 new Col("", 3, ParagraphAlignment.Right),
             };
             section.AddBorderedText(s4, right: true, left: true);
