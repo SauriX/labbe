@@ -48,30 +48,6 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/identity/api/profile/menu",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "axsishost.online"
-
-        }
-      ],
-      "UpstreamPathTemplate": "/api/profile/menu",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/LabRamos/services/identity/api/profile/me",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "axsishost.online"
-
-        }
-      ],
-      "UpstreamPathTemplate": "/api/profile/me",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
       "DownstreamPathTemplate": "/LabRamos/services/identity/api/user/{id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -129,18 +105,6 @@
         }
       ],
       "UpstreamPathTemplate": "/api/user/export/list/{search}",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/LabRamos/services/identity/api/profile/login",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "axsishost.online"
-
-        }
-      ],
-      "UpstreamPathTemplate": "/api/profile/login",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
