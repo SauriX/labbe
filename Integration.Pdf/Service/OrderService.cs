@@ -65,10 +65,7 @@ namespace Integration.Pdf.Service
 
         static void Format(Section section, RequestOrderDto order)
         {
-            var title = new Col("Laboratorio Alfonso Ramos S.A. de C.V. (HERMOSILLO)", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Right)
-            {
-                Fill = TabLeader.Dashes
-            };
+            var title = new Col("Laboratorio Alfonso Ramos S.A. de C.V. (HERMOSILLO)", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Right);
             section.AddText(title);
 
             section.AddSpace();
@@ -156,13 +153,8 @@ namespace Integration.Pdf.Service
             {
                 var col = new Col[]
                 {
-                    new Col(study.Clave, 3)
-                    {
-                         Fill = TabLeader.Dashes
-                    },
-                    new Col(study.Estudio, 18, ParagraphAlignment.Left){
-                         Fill = TabLeader.Dashes
-                    },
+                    new Col(study.Clave, 3),
+                    new Col(study.Estudio, 18, ParagraphAlignment.Left),
                     new Col(study.Precio, 3, ParagraphAlignment.Right),
                 };
                 section.AddBorderedText(col, right: true, left: true);
@@ -182,9 +174,7 @@ namespace Integration.Pdf.Service
             var discount = new Col[]
             {
                 new Col("", 3),
-                new Col("DESCUENTO", 18, ParagraphAlignment.Left){
-                         Fill = TabLeader.Dashes
-                    },
+                new Col("DESCUENTO", 18, ParagraphAlignment.Left),
                 new Col(order.Descuento, 3, ParagraphAlignment.Right),
             };
             section.AddBorderedText(discount, right: true, left: true);
@@ -193,9 +183,7 @@ namespace Integration.Pdf.Service
             var charge = new Col[]
             {
                 new Col("", 3),
-                new Col("CARGO", 18, ParagraphAlignment.Left){
-                         Fill = TabLeader.Dashes
-                    },
+                new Col("CARGO", 18, ParagraphAlignment.Left),
                 new Col(order.Cargo, 3, ParagraphAlignment.Right),
             };
             section.AddBorderedText(charge, right: true, left: true);
@@ -204,7 +192,7 @@ namespace Integration.Pdf.Service
             var points = new Col[]
             {
                 new Col("", 3),
-                new Col("PUNTOS APLICADOS", 18, ParagraphAlignment.Left) { Fill = TabLeader.Dashes },
+                new Col("PUNTOS APLICADOS", 18, ParagraphAlignment.Left),
                 new Col(order.PuntosAplicados, 3, ParagraphAlignment.Right),
             };
             section.AddBorderedText(points, right: true, left: true);
