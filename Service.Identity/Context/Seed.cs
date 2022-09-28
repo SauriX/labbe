@@ -56,6 +56,8 @@ namespace Service.Identity.Context
 
                         new Menu(31, 24, "Captura de Resultados (Clínicos)", "clinicResults","clinicResults", 100),
                          new Menu(30, 24, "Seguimientio de rutas", "RouteTracking","segRutas", 100),
+                         new Menu(31, 24, "Detalle de seguimiento de envio", "ShipmentTracking","ShipmentTracking", 100),
+
                     };
 
                     //context.CAT_Menu.AddRange(menus);
