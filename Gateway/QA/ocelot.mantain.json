@@ -41,20 +41,10 @@
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/LabRamos/services/catalogo/api/mantain",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/mantain",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "axsishost.online"
-        }
-      ],
       "UpstreamPathTemplate": "/api/mantain",
-      "UpstreamHttpMethod": [ "PUT" ]
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
+
     {
       "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/mantain/images",
       "DownstreamScheme": "https",

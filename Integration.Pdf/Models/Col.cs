@@ -20,8 +20,9 @@ namespace Integration.Pdf.Models
         public Font Fuente { get; set; }
         public ParagraphAlignment Horizontal { get; set; }
         public byte[] Imagen { get; set; }
-        public Unit ImagenTamaño { get; set; }
+        public Unit? ImagenTamaño { get; set; }
         public bool EsImagen => Imagen != null;
+        public TabLeader? Fill { get; set; }
 
         public Col() { }
 
