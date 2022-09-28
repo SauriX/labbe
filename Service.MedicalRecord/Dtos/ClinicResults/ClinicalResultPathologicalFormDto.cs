@@ -7,11 +7,12 @@ namespace Service.MedicalRecord.Dtos.ClinicResults
         public Guid Id { get; set; }
         public Guid SolicitudId { get; set; }
         public int EstudioId { get; set; }
-        public string Descripcion_Macroscopica { get; set; }
-        public string Descripcion_Microscopica { get; set; }
-        public string Imagen_Patologica { get; set; }
+        public int RequestStudyId  { get; set; }
+        public string DescripcionMacroscopica { get; set; }
+        public string DescripcionMicroscopica { get; set; }
+        public string ImagenPatologica { get; set; }
         public string Diagnostico { get; set; }
-        public string Muestra_Recibida { get; set; }
+        public string MuestraRecibida { get; set; }
         public Guid? MedicoId { get; set; }
     }
 }

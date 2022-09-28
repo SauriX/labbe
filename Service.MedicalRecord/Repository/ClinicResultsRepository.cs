@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Service.MedicalRecord.Dictionary;
 using EFCore.BulkExtensions;
+using Service.MedicalRecord.Domain;
 
 namespace Service.MedicalRecord.Repository
 {
@@ -150,9 +151,25 @@ namespace Service.MedicalRecord.Repository
             throw new NotImplementedException();
         }
 
-        public Task CreateResultPathological(Domain.ClinicResults.ClinicalResultsPathological result)
+        public async Task CreateResultPathological(ClinicalResultsPathological result)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            _context.Cat_Captura_ResultadosPatologicos.Add(result);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateResultPathologicalStudy(ClinicalResultsPathological result)
+        {
+            _context.Cat_Captura_ResultadosPatologicos.Update(result);
+
+            await _context.SaveChangesAsync();
+
+        }
+
+        public async Task<ClinicalResultsPathological> GetResultPathologicalById(int id)
+        {
+            var resultExisting = await _context.Cat_Captura_ResultadosPatologicos.Where(x => x.RequestStudyId == id).FirstOrDefaultAsync();
+            return resultExisting;
         }
     }
 }

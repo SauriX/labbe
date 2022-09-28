@@ -24,6 +24,7 @@ using MassTransit;
 using RequestTemplates = Service.MedicalRecord.Dictionary.EmailTemplates.Request;
 using EventBus.Messages.Common;
 using Service.MedicalRecord.Settings.ISettings;
+using Service.MedicalRecord.Domain;
 
 namespace Service.MedicalRecord.Application
 {
@@ -221,6 +222,23 @@ namespace Service.MedicalRecord.Application
         public Task<int> UpdateStatus(List<ClinicResultsUpdateDto> requestDto)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task SaveResultPathologicalStudy(ClinicalResultPathologicalFormDto result)
+        {
+            var newResult = result.ToClinicalResultPathological();
+            await _repository.CreateResultPathological(newResult);
+        }
+
+        public async Task UpdateResultPathologicalStudy(ClinicalResultPathologicalFormDto result)
+        {
+            var existing = await _repository.GetResultPathologicalById(result.RequestStudyId);
+            var newResult = result.ToUpdateClinicalResultPathological(existing);
+            await _repository.UpdateResultPathologicalStudy(newResult);
+        }
+        public async Task<ClinicalResultsPathological> GetResultPathological(int RequestStudyId)
+        {
+            return await _repository.GetResultPathologicalById(RequestStudyId);
         }
     }
 }

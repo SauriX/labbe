@@ -63,13 +63,39 @@ namespace Service.MedicalRecord.Mapper
                 Resultado = x.Resultado
             }).ToList();
         }
-        public static Domain.ClinicResults.ClinicalResultsPathological ToClinicalResultPathological(this ClinicalResultPathologicalFormDto dto)
+        public static ClinicalResultsPathological ToClinicalResultPathological(this ClinicalResultPathologicalFormDto dto)
         {
             if (dto == null) return null;
 
-            return new Domain.ClinicResults.ClinicalResultsPathological
+            return new ClinicalResultsPathological
             {
-                  
+                  SolicitudId = dto.SolicitudId,
+                  EstudioId = dto.EstudioId,
+                  RequestStudyId = dto.RequestStudyId,
+                  DescripcionMacroscopica = dto.DescripcionMacroscopica,
+                  DescripcionMicroscopica = dto.DescripcionMicroscopica,
+                  ImagenPatologica = dto.ImagenPatologica,
+                  Diagnostico = dto.Diagnostico,
+                  MuestraRecibida = dto.MuestraRecibida,
+                  MedicoId = dto.MedicoId,
+            };
+        }
+        public static ClinicalResultsPathological ToUpdateClinicalResultPathological(this ClinicalResultPathologicalFormDto dto, ClinicalResultsPathological model)
+        {
+            if (dto == null) return null;
+
+            return new ClinicalResultsPathological
+            {
+                Id = model.Id,
+                SolicitudId = dto.SolicitudId,
+                EstudioId = dto.EstudioId,
+                RequestStudyId = dto.RequestStudyId,
+                DescripcionMacroscopica = dto.DescripcionMacroscopica,
+                DescripcionMicroscopica = dto.DescripcionMicroscopica,
+                ImagenPatologica = dto.ImagenPatologica,
+                Diagnostico = dto.Diagnostico,
+                MuestraRecibida = dto.MuestraRecibida,
+                MedicoId = dto.MedicoId,
             };
         }
     }

@@ -1,4 +1,5 @@
-﻿using Service.MedicalRecord.Dtos;
+﻿using Service.MedicalRecord.Domain;
+using Service.MedicalRecord.Dtos;
 using Service.MedicalRecord.Dtos.ClinicResults;
 using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.RequestedStudy;
@@ -21,5 +22,7 @@ namespace Service.MedicalRecord.Application.IApplication
         Task SendTestEmail(RequestSendDto requestDto);
         Task SendTestWhatsapp(RequestSendDto requestDto);
         Task SaveResultPathologicalStudy(ClinicalResultPathologicalFormDto search);
+        Task UpdateResultPathologicalStudy(ClinicalResultPathologicalFormDto search);
+        Task<ClinicalResultsPathological> GetResultPathological(int RequestStudyId);
     }
 }

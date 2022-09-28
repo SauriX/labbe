@@ -34,6 +34,8 @@ namespace Service.MedicalRecord.Mapper
                 Registro = $"{model.FechaCreo:dd/MM/yyyy}",
                 Estudios = model.Estudios.Select(s => new RequestStudyInfoDto
                 {
+                    Id = s.Id,
+                    estudioId = s.EstudioId,
                     Clave = s.Clave,
                     Nombre = s.Nombre,
                     EstatusId = s.EstatusId,

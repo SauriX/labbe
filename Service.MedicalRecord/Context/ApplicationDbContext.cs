@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Service.MedicalRecord.Domain;
 using Service.MedicalRecord.Domain.Appointments;
 using Service.MedicalRecord.Domain.MedicalRecord;
 using Service.MedicalRecord.Domain.PriceQuote;
@@ -29,6 +30,7 @@ namespace Service.MedicalRecord.Context
         public DbSet<TrackingOrder> CAT_Seguimiento_Ruta { get; set; }
         public DbSet<TrackingOrderDetail> Relacion_Seguimiento_Solicitud { get; set; }
         public DbSet<RouteTracking> Cat_PendientesDeEnviar { get; set; }
+        public DbSet<ClinicalResultsPathological> Cat_Captura_ResultadosPatologicos { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

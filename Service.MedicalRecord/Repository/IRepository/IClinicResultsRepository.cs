@@ -1,4 +1,4 @@
-﻿using Service.MedicalRecord.Domain.ClinicResults;
+﻿using Service.MedicalRecord.Domain;
 using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Dtos.RequestedStudy;
 using System;
@@ -10,7 +10,9 @@ namespace Service.MedicalRecord.Repository.IRepository
 {
     public interface IClinicResultsRepository
     {
-        Task CreateResultPathological(Domain.ClinicResults.ClinicalResultsPathological result);
+        Task CreateResultPathological(ClinicalResultsPathological result);
+        Task UpdateResultPathologicalStudy(ClinicalResultsPathological result);
+        Task<ClinicalResultsPathological> GetResultPathologicalById(int id);
         Task<List<Request>> GetAll(RequestedStudySearchDto search);
         Task<Request> GetById(Guid id);
         Task<Request> FindAsync(Guid id);
