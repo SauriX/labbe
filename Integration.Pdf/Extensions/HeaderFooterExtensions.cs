@@ -7,7 +7,7 @@ namespace Integration.Pdf.Extensions
 {
     public static class HeaderFooterExtensions
     {
-        public static void AddText(this HeaderFooter headerFooter, Models.Col col, bool partialBold = false, bool inverted = false)
+        public static void AddText(this HeaderFooter headerFooter, Models.Col col, bool partialBold = false, bool inverted = false, int spaceAfter = 5)
         {
             Paragraph paragraph = headerFooter.AddParagraph();
             paragraph.Format.Alignment = col.Horizontal;
@@ -49,7 +49,7 @@ namespace Integration.Pdf.Extensions
             Paragraph p = headerFooter.AddParagraph();
             p.Format.LineSpacingRule = LineSpacingRule.Exactly;
             p.Format.LineSpacing = 0;
-            p.Format.SpaceBefore = Unit.FromPoint(5);
+            p.Format.SpaceBefore = Unit.FromPoint(spaceAfter);
         }
 
         public static void AddBorderedText(this HeaderFooter headerFooter, Models.Col col, bool all = true, bool top = false, bool right = false, bool bottom = false, bool left = false)
