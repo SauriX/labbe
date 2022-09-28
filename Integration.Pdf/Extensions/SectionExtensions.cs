@@ -26,7 +26,7 @@ namespace Integration.Pdf.Extensions
             {
                 string imageFilename = col.Imagen.MigraDocFilenameFromByteArray();
                 var image = paragraph.AddImage(imageFilename);
-                image.Width = col.ImagenTamaño;
+                if (col.ImagenTamaño != null) image.Width = (Unit)col.ImagenTamaño;
                 image.LockAspectRatio = true;
             }
 
@@ -34,6 +34,14 @@ namespace Integration.Pdf.Extensions
             {
                 paragraph.Format.Font.Color = Colors.White;
                 paragraph.Format.Shading.Color = Colors.DarkGray;
+            }
+
+            if (col.Fill != null)
+            {
+                float sectionWidth = section.PageSetup.PageWidth - section.PageSetup.LeftMargin - section.PageSetup.RightMargin;
+                paragraph.AddSpace(1);
+                paragraph.Format.TabStops.AddTabStop(sectionWidth - 5, (TabAlignment.Right), (TabLeader)col.Fill);
+                paragraph.AddTab();
             }
 
             Paragraph p = section.AddParagraph();
@@ -76,8 +84,16 @@ namespace Integration.Pdf.Extensions
             {
                 string imageFilename = col.Imagen.MigraDocFilenameFromByteArray();
                 var image = paragraph.AddImage(imageFilename);
-                image.Width = col.ImagenTamaño;
+                if (col.ImagenTamaño != null) image.Width = (Unit)col.ImagenTamaño;
                 image.LockAspectRatio = true;
+            }
+
+            if (col.Fill != null)
+            {
+                float sectionWidth = section.PageSetup.PageWidth - section.PageSetup.LeftMargin - section.PageSetup.RightMargin;
+                paragraph.AddSpace(1);
+                paragraph.Format.TabStops.AddTabStop(sectionWidth - 5, (TabAlignment.Right), (TabLeader)col.Fill);
+                paragraph.AddTab();
             }
 
             Paragraph p = section.AddParagraph();
@@ -128,8 +144,15 @@ namespace Integration.Pdf.Extensions
                 {
                     string imageFilename = col.Imagen.MigraDocFilenameFromByteArray();
                     var image = paragraph.AddImage(imageFilename);
-                    image.Width = col.ImagenTamaño;
+                    if (col.ImagenTamaño != null) image.Width = (Unit)col.ImagenTamaño;
                     image.LockAspectRatio = true;
+                }
+
+                if (col.Fill != null)
+                {
+                    paragraph.AddSpace(1);
+                    paragraph.Format.TabStops.AddTabStop(columnWidth * cols[i].Tamaño - 5, (TabAlignment.Right), (TabLeader)col.Fill);
+                    paragraph.AddTab();
                 }
             }
 
@@ -205,8 +228,15 @@ namespace Integration.Pdf.Extensions
                 {
                     string imageFilename = col.Imagen.MigraDocFilenameFromByteArray();
                     var image = paragraph.AddImage(imageFilename);
-                    image.Width = col.ImagenTamaño;
+                    if (col.ImagenTamaño != null) image.Width = (Unit)col.ImagenTamaño;
                     image.LockAspectRatio = true;
+                }
+
+                if (col.Fill != null)
+                {
+                    paragraph.AddSpace(1);
+                    paragraph.Format.TabStops.AddTabStop(columnWidth * cols[i].Tamaño - 5, (TabAlignment.Right), (TabLeader)col.Fill);
+                    paragraph.AddTab();
                 }
             }
         }
