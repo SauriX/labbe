@@ -2,87 +2,87 @@
   "Routes": [
     {
       "DownstreamPathTemplate": "/api/mantain/all",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
+          "Host": "axsishost.online",
           "Port": 20347
         }
       ],
       "UpstreamPathTemplate": "/api/mantain/all",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamhttpsMethod": [ "POST" ]
     },
     {
       "DownstreamPathTemplate": "/api/mantain/equipo/{id}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
+          "Host": "axsishost.online",
          "Port": 20347
         }
       ],
       "UpstreamPathTemplate": "/api/mantain/equipo/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamhttpsMethod": [ "GET" ]
     },
     {
       "DownstreamPathTemplate": "/api/mantain/{id}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
+          "Host": "axsishost.online",
           "Port": 20347
         }
       ],
       "UpstreamPathTemplate": "/api/mantain/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamhttpsMethod": [ "GET" ]
     },
     {
       "DownstreamPathTemplate": "/api/mantain",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
+          "Host": "axsishost.online",
           "Port": 20347
         }
       ],
       "UpstreamPathTemplate": "/api/mantain",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamhttpsMethod": [ "POST" ]
     },
     {
       "DownstreamPathTemplate": "/api/mantain",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
+          "Host": "axsishost.online",
           "Port": 20347
         }
       ],
       "UpstreamPathTemplate": "/api/mantain",
-      "UpstreamHttpMethod": [ "PUT" ]
+      "UpstreamhttpsMethod": [ "PUT" ]
     },
     {
       "DownstreamPathTemplate": "/api/mantain/images",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
+          "Host": "axsishost.online",
           "Port": 20347
         }
       ],
       "UpstreamPathTemplate": "/api/mantain/images",
-      "UpstreamHttpMethod": [ "PUT" ]
+      "UpstreamhttpsMethod": [ "PUT" ]
     },
     {
       "DownstreamPathTemplate": "/api/mantain/order/{Id}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
+          "Host": "axsishost.online",
           "Port": 20347
         }
       ],
       "UpstreamPathTemplate": "/api/mantain/order/{Id}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamhttpsMethod": [ "POST" ]
     },
 
   ]
