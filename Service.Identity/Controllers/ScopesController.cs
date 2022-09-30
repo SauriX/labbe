@@ -206,7 +206,12 @@ namespace Service.Identity.Controllers
             var userId = GetUserId();
             return await _service.GetScopes(userId, ControllerNames.ClinicResults);
         }
-
+        [HttpGet(ControllerNames.ShipmentTracking)]
+        public async Task<ScopesDto> GetShipmentTrackingScopes()
+        {
+            var userId = GetUserId();
+            return await _service.GetScopes(userId, ControllerNames.ShipmentTracking);
+        }
         private Guid GetUserId()
         {
             return Guid.Parse(User.Claims.SingleOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
