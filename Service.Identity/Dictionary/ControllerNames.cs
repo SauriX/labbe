@@ -30,6 +30,7 @@
         public const string RequestedStudy = "requestedstudy";
         public const string ClinicResults = "clinicResults";
         public const string RouteTracking = "RouteTracking";
+        public const string ShipmentTracking = "ShipmentTracking";
 
     }
 }
