@@ -302,14 +302,39 @@ namespace Service.MedicalRecord.Application
             }
         }
 
-        public async Task UpdateStatusStudy(int RequestStudyId, byte status)
+        public async Task UpdateStatusStudy(int RequestStudyId, byte status, Guid usuarioId)
         {
             var existingStudy = await _repository.GetStudyById(RequestStudyId);
+
             if (existingStudy == null)
             {
                 throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
             }
+
+            if (Status.RequestStudy.Capturado == status)
+            {
+                existingStudy.FechaCaptura = DateTime.Now;
+                existingStudy.UsuarioCaptura = usuarioId.ToString();
+            }
+            if (Status.RequestStudy.Validado == status)
+            {
+                existingStudy.FechaCaptura = DateTime.Now;
+                existingStudy.UsuarioCaptura = usuarioId.ToString();
+            }
+            if (Status.RequestStudy.Liberado == status)
+            {
+                existingStudy.FechaCaptura = DateTime.Now;
+                existingStudy.UsuarioCaptura = usuarioId.ToString();
+            }
+            if (Status.RequestStudy.Enviado == status)
+            {
+                existingStudy.FechaCaptura = DateTime.Now;
+                existingStudy.UsuarioCaptura = usuarioId.ToString();
+            }
+            
+
             existingStudy.EstatusId = status;
+
             await _repository.UpdateStatusStudy(existingStudy);
         }
         public async Task<ClinicalResultsPathological> GetResultPathological(int RequestStudyId)

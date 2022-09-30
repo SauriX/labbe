@@ -74,7 +74,8 @@ namespace Service.MedicalRecord.Controllers
         [Authorize(Policies.Update)]
         public async Task UpdateStatusStudy(UpdateStatusDto updateStatus)
         {
-            await _service.UpdateStatusStudy(updateStatus.RequestStudyId, updateStatus.status);
+            updateStatus.UsuarioId = (Guid)HttpContext.Items["userId"];
+            await _service.UpdateStatusStudy(updateStatus.RequestStudyId, updateStatus.status, updateStatus.UsuarioId);
         }
     }
 }

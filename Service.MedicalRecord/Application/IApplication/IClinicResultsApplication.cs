@@ -24,7 +24,7 @@ namespace Service.MedicalRecord.Application.IApplication
         Task SendTestWhatsapp(RequestSendDto requestDto);
         Task SaveResultPathologicalStudy(ClinicalResultPathologicalFormDto search);
         Task UpdateResultPathologicalStudy(ClinicalResultPathologicalFormDto search);
-        Task UpdateStatusStudy(int RequestStudyId, byte status);
+        Task UpdateStatusStudy(int RequestStudyId, byte status, Guid idUsuario);
         Task<ClinicalResultsPathological> GetResultPathological(int RequestStudyId);
         Task<RequestStudy> GetRequestStudyById(int RequestStudyId);
     }
