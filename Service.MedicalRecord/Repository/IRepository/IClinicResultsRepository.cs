@@ -10,6 +10,12 @@ namespace Service.MedicalRecord.Repository.IRepository
 {
     public interface IClinicResultsRepository
     {
+        Task CreateResultPathological(ClinicalResultsPathological result);
+        Task UpdateResultPathologicalStudy(ClinicalResultsPathological result);
+        Task UpdateStatusStudy(RequestStudy study);
+        Task<RequestStudy> GetStudyById(int RequestStudyId);
+        Task<ClinicalResultsPathological> GetResultPathologicalById(int id);
+        Task<RequestStudy> GetRequestStudyById(int RequestStudyId);
         Task<List<Request>> GetAll(RequestedStudySearchDto search);
         Task<ClinicResults> GetById(Guid id);
         Task<List<ClinicResults>> GetByRequest(Guid requestId);

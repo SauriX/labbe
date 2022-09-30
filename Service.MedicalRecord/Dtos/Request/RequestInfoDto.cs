@@ -23,10 +23,19 @@ namespace Service.MedicalRecord.Dtos.Request
 
     public class RequestStudyInfoDto
     {
+        public int Id { get; set; }
+        public int estudioId { get; set; }
         public string Clave { get; set; }
         public string Nombre { get; set; }
         public byte EstatusId { get; set; }
         public string Estatus { get; set; }
         public string Color { get; set; }
+        public int Departamento { get; set; }
+        public string FechaTomaMuestra { get; set; }
+        public string FechaValidacion { get; set; }
+        public string FechaSolicitado{ get; set; }
+        public string FechaCaptura { get; set; }
+        public string FechaLiberado { get; set; }
+        public string FechaEnviado { get; set; }
     }
 }
