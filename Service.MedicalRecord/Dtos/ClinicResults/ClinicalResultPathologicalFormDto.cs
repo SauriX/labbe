@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections.Generic;
 
 namespace Service.MedicalRecord.Dtos.ClinicResults
 {
@@ -10,9 +12,10 @@ namespace Service.MedicalRecord.Dtos.ClinicResults
         public int RequestStudyId  { get; set; }
         public string DescripcionMacroscopica { get; set; }
         public string DescripcionMicroscopica { get; set; }
-        public string ImagenPatologica { get; set; }
+        public List<IFormFile> ImagenPatologica { get; set; }
         public string Diagnostico { get; set; }
         public string MuestraRecibida { get; set; }
         public Guid? MedicoId { get; set; }
+        public string[] ListaImagenesCargadas { get; set; }
     }
 }

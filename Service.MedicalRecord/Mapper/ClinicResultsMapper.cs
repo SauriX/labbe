@@ -74,7 +74,7 @@ namespace Service.MedicalRecord.Mapper
                   RequestStudyId = dto.RequestStudyId,
                   DescripcionMacroscopica = dto.DescripcionMacroscopica,
                   DescripcionMicroscopica = dto.DescripcionMicroscopica,
-                  ImagenPatologica = dto.ImagenPatologica,
+                  ImagenPatologica = dto.ImagenPatologica == null ? "" : string.Join(",", dto.ImagenPatologica.Select(x => x.FileName)),
                   Diagnostico = dto.Diagnostico,
                   MuestraRecibida = dto.MuestraRecibida,
                   MedicoId = dto.MedicoId,
@@ -84,6 +84,41 @@ namespace Service.MedicalRecord.Mapper
         {
             if (dto == null) return null;
 
+            string[] actualNameFiles = new string[] {};
+            if (model.ImagenPatologica != null)
+            {
+                actualNameFiles = model.ImagenPatologica.Split(",");
+            }
+            string[] newNameFiles = new string[] { };
+            if (dto.ListaImagenesCargadas != null)
+            {
+                newNameFiles = actualNameFiles.Where(name => !dto.ListaImagenesCargadas.Contains(name)).ToArray();
+
+            }
+            else
+            {
+                newNameFiles = actualNameFiles;
+            }
+
+            string fullNamesImages = null;
+
+            if(newNameFiles.Length > 0)
+            {
+                fullNamesImages = string.Join(",", newNameFiles);
+            }
+            else
+            {
+                fullNamesImages = null;
+            }
+            if (dto.ImagenPatologica == null)
+            {
+                fullNamesImages += null;
+            }
+            else
+            {
+                fullNamesImages += ","+string.Join(",", dto.ImagenPatologica.Select(x => x.FileName));
+            }
+
             return new ClinicalResultsPathological
             {
                 Id = model.Id,
@@ -92,7 +127,10 @@ namespace Service.MedicalRecord.Mapper
                 RequestStudyId = dto.RequestStudyId,
                 DescripcionMacroscopica = dto.DescripcionMacroscopica,
                 DescripcionMicroscopica = dto.DescripcionMicroscopica,
-                ImagenPatologica = dto.ImagenPatologica,
+                //ImagenPatologica = dto.ImagenPatologica == null 
+                //                    ? "" + string.Join(",", newNameFiles)  
+                //                    : string.Join(",", dto.ImagenPatologica.Select(x => x.FileName)) + string.Join(",", newNameFiles),
+                ImagenPatologica = fullNamesImages,
                 Diagnostico = dto.Diagnostico,
                 MuestraRecibida = dto.MuestraRecibida,
                 MedicoId = dto.MedicoId,

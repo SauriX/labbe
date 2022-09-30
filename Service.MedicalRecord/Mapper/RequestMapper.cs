@@ -23,7 +23,7 @@ namespace Service.MedicalRecord.Mapper
             {
                 SolicitudId = model.Id,
                 NombreMedico = model.Medico.Nombre,
-                NombreCompania = model.Compañia.Nombre,
+                NombreCompania = model.Compañia == null ? "" : model.Compañia.Nombre,
                 ClaveMedico = model.Medico.Clave,
                 Observaciones = model.Observaciones,
                 ExpedienteId = model.ExpedienteId,
@@ -42,6 +42,12 @@ namespace Service.MedicalRecord.Mapper
                     Estatus = s.Estatus.Clave,
                     Color = s.Estatus.Color,
                     Departamento = s.DepartamentoId,
+                    FechaTomaMuestra = $"{s.FechaTomaMuestra:dd/MM/yyyy}",
+                    FechaValidacion = $"{s.FechaValidacion:dd/MM/yyyy}",
+                    FechaSolicitado = $"{s.FechaSolicitado:dd/MM/yyyy}",
+                    FechaCaptura = $"{s.FechaCaptura:dd/MM/yyyy}",
+                    FechaLiberado = $"{s.FechaLiberado:dd/MM/yyyy}",
+                    FechaEnviado = $"{s.FechaEnviado:dd/MM/yyyy}",
                 })
             };
         }

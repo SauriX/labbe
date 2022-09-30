@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Domain;
+using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Dtos;
 using Service.MedicalRecord.Dtos.ClinicResults;
 using Service.MedicalRecord.Dtos.RequestedStudy;
@@ -41,23 +42,39 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("savePathological")]
         [Authorize(Policies.Create)]
-        public async Task SaveResultPathologicalStudy(ClinicalResultPathologicalFormDto result)
+        public async Task SaveResultPathologicalStudy([FromForm] ClinicalResultPathologicalFormDto result)
         {
             await _service.SaveResultPathologicalStudy(result);
         }
 
         [HttpPut("updatePathological")]
         [Authorize(Policies.Update)]
-        public async Task UpdateResultPathologicalStudy(ClinicalResultPathologicalFormDto result)
+        public async Task UpdateResultPathologicalStudy([FromForm] ClinicalResultPathologicalFormDto result)
         {
             await _service.UpdateResultPathologicalStudy(result);
         }
+
         [HttpPost("getPathological")]
         [Authorize(Policies.Access)]
-        public async Task<ClinicalResultsPathological> GetResultPathological(int RequestStudyId)
+        public async Task<ClinicalResultsPathological> GetResultPathological([FromBody] int RequestStudyId)
         {
             var clinicResults = await _service.GetResultPathological(RequestStudyId);
             return clinicResults;
+        }
+
+        [HttpPost("getRequestStudyById")]
+        [Authorize(Policies.Access)]
+        public async Task<RequestStudy> GetRequestStudyById([FromBody] int RequestStudyId)
+        {
+            var requestStudy = await _service.GetRequestStudyById(RequestStudyId);
+            return requestStudy;
+        }
+
+        [HttpPut("updateStatusStudy")]
+        [Authorize(Policies.Update)]
+        public async Task UpdateStatusStudy(UpdateStatusDto updateStatus)
+        {
+            await _service.UpdateStatusStudy(updateStatus.RequestStudyId, updateStatus.status);
         }
     }
 }

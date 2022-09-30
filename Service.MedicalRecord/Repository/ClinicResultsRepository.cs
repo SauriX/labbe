@@ -171,5 +171,29 @@ namespace Service.MedicalRecord.Repository
             var resultExisting = await _context.Cat_Captura_ResultadosPatologicos.Where(x => x.RequestStudyId == id).FirstOrDefaultAsync();
             return resultExisting;
         }
+
+
+        public async Task UpdateStatusStudy(RequestStudy study)
+        {
+            _context.Relacion_Solicitud_Estudio.Update(study);
+
+            await _context.SaveChangesAsync();
+        }
+        public async Task<RequestStudy> GetStudyById(int RequestStudyId)
+        {
+             var studies = await _context.Relacion_Solicitud_Estudio
+                 .Where(x => x.Id == RequestStudyId)
+                 .FirstOrDefaultAsync();
+            return studies;
+        }
+
+        public async Task<RequestStudy> GetRequestStudyById(int RequestStudyId)
+        {
+            var resuqestStudy = await _context.Relacion_Solicitud_Estudio
+                .Where(x => x.Id == RequestStudyId)
+                .FirstOrDefaultAsync();
+            return resuqestStudy;
+
+        }
     }
 }

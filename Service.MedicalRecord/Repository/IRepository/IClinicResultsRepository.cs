@@ -12,7 +12,10 @@ namespace Service.MedicalRecord.Repository.IRepository
     {
         Task CreateResultPathological(ClinicalResultsPathological result);
         Task UpdateResultPathologicalStudy(ClinicalResultsPathological result);
+        Task UpdateStatusStudy(RequestStudy study);
+        Task<RequestStudy> GetStudyById(int RequestStudyId);
         Task<ClinicalResultsPathological> GetResultPathologicalById(int id);
+        Task<RequestStudy> GetRequestStudyById(int RequestStudyId);
         Task<List<Request>> GetAll(RequestedStudySearchDto search);
         Task<Request> GetById(Guid id);
         Task<Request> FindAsync(Guid id);
