@@ -31,11 +31,11 @@ namespace Service.MedicalRecord.Mapper
             };
         }
 
-        public static IEnumerable<RequestInfoDto> ToRequestInfoDto(this IEnumerable<Request> model)
+        public static IEnumerable<ClinicResultsRequestDto> ToRequestInfoDto(this IEnumerable<Request> model)
         {
-            if (model == null) return new List<RequestInfoDto>();
+            if (model == null) return new List<ClinicResultsRequestDto>();
 
-            return model.Select(x => new RequestInfoDto
+            return model.Select(x => new ClinicResultsRequestDto
             {
                 SolicitudId = x.Id,
                 ExpedienteId = x.ExpedienteId,

@@ -13,11 +13,8 @@ namespace Service.MedicalRecord.Application.IApplication
     {
         Task<List<ClinicResultsDto>> GetAll(RequestedStudySearchDto search);
         Task<(byte[] file, string fileName)> ExportList(RequestedStudySearchDto search);
-        Task<IEnumerable<string>> GetImages(Guid recordId, Guid requestId);
         Task<int> UpdateStatus(List<ClinicResultsUpdateDto> requestDto);
-        /*Task<byte[]> PrintOrder(Guid recordId, Guid requestId);*/
-        Task<string> SaveImage(RequestImageDto requestDto);
-        Task DeleteImage(Guid recordId, Guid requestId, string code);
+        Task<byte[]> PrintResults(Guid recordId, Guid requestId);
         Task SendTestEmail(RequestSendDto requestDto);
         Task SendTestWhatsapp(RequestSendDto requestDto);
     }

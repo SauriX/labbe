@@ -121,51 +121,29 @@ namespace Service.MedicalRecord.Application
             }
         }
 
-        /*public async Task<ClinicResultsCaptureDto> Create(ClinicResults results)
+        public async Task Create(List<ClinicResultsCaptureDto> results)
         {
-            if (!string.IsNullOrEmpty(results.Id.ToString()))
+            if (results.Count() == 0)
             {
                 throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
             }
 
             var newResults = results.ToCaptureResults();
-
-            await CheckDuplicate(newResults);
-
             await _repository.Create(newResults);
-
-            newResults = await _repository.GetById(newResults.Id);
-
-            return newResults.ToCaptureResults();
-        }*/
-
-        private Task CheckDuplicate(object newResults)
-        {
-            throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<string>> GetImages(Guid recordId, Guid requestId)
+        public async Task<byte[]> PrintResults(Guid recordId, Guid requestId)
         {
-            throw new NotImplementedException();
-        }
+            var results = await _repository.GetByRequest(requestId);
 
-        /*public async Task<byte[]> PrintOrder(Guid recordId, Guid requestId)
-        {
-            var results = await _repository.GetById(requestId);
-
-            if (results == null || results.ExpedienteId != recordId)
+            if (results == null || !results.Any())
             {
                 throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
             }
 
-            var order = results.ToRequestDto();
+            var order = results.ToResults();
 
             return await _pdfClient.GenerateLabResults(order);
-        }*/
-
-        public Task<string> SaveImage(RequestImageDto requestDto)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task SendTestEmail(RequestSendDto requestDto)

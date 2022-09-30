@@ -22,7 +22,7 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("filter")]
         [Authorize(Policies.Access)]
-        public async Task<IEnumerable<RequestInfoDto>> GetByFilter(RequestFilterDto filter)
+        public async Task<IEnumerable<ClinicResultsRequestDto>> GetByFilter(RequestFilterDto filter)
         {
             return await _service.GetByFilter(filter);
         }
