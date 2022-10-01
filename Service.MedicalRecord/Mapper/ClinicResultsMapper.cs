@@ -17,6 +17,7 @@ namespace Service.MedicalRecord.Mapper
             return model.Select(x => new ClinicResultsDto
             {
                 Solicitud = x.Clave,
+                ExpedienteId = x.ExpedienteId,
                 Nombre = x.Expediente.NombreCompleto,
                 Registro = x.FechaCreo.ToString("G"),
                 Sucursal = x.Sucursal.Clave,
@@ -61,6 +62,79 @@ namespace Service.MedicalRecord.Mapper
                 ParametroId = x.ParametroId.ToString(),
                 Resultado = x.Resultado
             }).ToList();
+        }
+        public static ClinicalResultsPathological ToClinicalResultPathological(this ClinicalResultPathologicalFormDto dto)
+        {
+            if (dto == null) return null;
+
+            return new ClinicalResultsPathological
+            {
+                  SolicitudId = dto.SolicitudId,
+                  EstudioId = dto.EstudioId,
+                  RequestStudyId = dto.RequestStudyId,
+                  DescripcionMacroscopica = dto.DescripcionMacroscopica,
+                  DescripcionMicroscopica = dto.DescripcionMicroscopica,
+                  ImagenPatologica = dto.ImagenPatologica == null ? "" : string.Join(",", dto.ImagenPatologica.Select(x => x.FileName)),
+                  Diagnostico = dto.Diagnostico,
+                  MuestraRecibida = dto.MuestraRecibida,
+                  MedicoId = dto.MedicoId,
+            };
+        }
+        public static ClinicalResultsPathological ToUpdateClinicalResultPathological(this ClinicalResultPathologicalFormDto dto, ClinicalResultsPathological model)
+        {
+            if (dto == null) return null;
+
+            string[] actualNameFiles = new string[] {};
+            if (model.ImagenPatologica != null)
+            {
+                actualNameFiles = model.ImagenPatologica.Split(",");
+            }
+            string[] newNameFiles = new string[] { };
+            if (dto.ListaImagenesCargadas != null)
+            {
+                newNameFiles = actualNameFiles.Where(name => !dto.ListaImagenesCargadas.Contains(name)).ToArray();
+
+            }
+            else
+            {
+                newNameFiles = actualNameFiles;
+            }
+
+            string fullNamesImages = null;
+
+            if(newNameFiles.Length > 0)
+            {
+                fullNamesImages = string.Join(",", newNameFiles);
+            }
+            else
+            {
+                fullNamesImages = null;
+            }
+            if (dto.ImagenPatologica == null)
+            {
+                fullNamesImages += null;
+            }
+            else
+            {
+                fullNamesImages += ","+string.Join(",", dto.ImagenPatologica.Select(x => x.FileName));
+            }
+
+            return new ClinicalResultsPathological
+            {
+                Id = model.Id,
+                SolicitudId = dto.SolicitudId,
+                EstudioId = dto.EstudioId,
+                RequestStudyId = dto.RequestStudyId,
+                DescripcionMacroscopica = dto.DescripcionMacroscopica,
+                DescripcionMicroscopica = dto.DescripcionMicroscopica,
+                //ImagenPatologica = dto.ImagenPatologica == null 
+                //                    ? "" + string.Join(",", newNameFiles)  
+                //                    : string.Join(",", dto.ImagenPatologica.Select(x => x.FileName)) + string.Join(",", newNameFiles),
+                ImagenPatologica = fullNamesImages,
+                Diagnostico = dto.Diagnostico,
+                MuestraRecibida = dto.MuestraRecibida,
+                MedicoId = dto.MedicoId,
+            };
         }
     }
 }

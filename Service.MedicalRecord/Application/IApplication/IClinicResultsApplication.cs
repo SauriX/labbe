@@ -1,4 +1,6 @@
-﻿using Service.MedicalRecord.Dtos;
+﻿using Service.MedicalRecord.Domain;
+using Service.MedicalRecord.Domain.Request;
+using Service.MedicalRecord.Dtos;
 using Service.MedicalRecord.Dtos.ClinicResults;
 using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.RequestedStudy;
@@ -20,5 +22,10 @@ namespace Service.MedicalRecord.Application.IApplication
         Task DeleteImage(Guid recordId, Guid requestId, string code);
         Task SendTestEmail(RequestSendDto requestDto);
         Task SendTestWhatsapp(RequestSendDto requestDto);
+        Task SaveResultPathologicalStudy(ClinicalResultPathologicalFormDto search);
+        Task UpdateResultPathologicalStudy(ClinicalResultPathologicalFormDto search);
+        Task UpdateStatusStudy(int RequestStudyId, byte status, Guid idUsuario);
+        Task<ClinicalResultsPathological> GetResultPathological(int RequestStudyId);
+        Task<RequestStudy> GetRequestStudyById(int RequestStudyId);
     }
 }

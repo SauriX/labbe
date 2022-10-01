@@ -24,6 +24,9 @@ using MassTransit;
 using RequestTemplates = Service.MedicalRecord.Dictionary.EmailTemplates.Request;
 using EventBus.Messages.Common;
 using Service.MedicalRecord.Settings.ISettings;
+using Service.MedicalRecord.Domain;
+using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace Service.MedicalRecord.Application
 {
@@ -221,6 +224,127 @@ namespace Service.MedicalRecord.Application
         public Task<int> UpdateStatus(List<ClinicResultsUpdateDto> requestDto)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task SaveResultPathologicalStudy(ClinicalResultPathologicalFormDto result)
+        {
+            var newResult = result.ToClinicalResultPathological();
+
+            await _repository.CreateResultPathological(newResult);
+
+            if (result.ImagenPatologica != null)
+            {
+                for (int i = 0; i < result.ImagenPatologica.Count; i++)
+                {
+                    await SaveImageGetPath(result.ImagenPatologica[i], newResult.EstudioId);
+                }
+            }
+
+        }
+        private static async Task<string> SaveImageGetPath(IFormFile result, int id)
+        {
+            var path = Path.Combine("wwwroot/images/ResultsPathological", id.ToString());
+            var name = string.Concat(result.FileName, "");
+
+            var isSaved = await result.SaveFileAsync(path, name);
+
+
+            if (isSaved)
+            {
+                return Path.Combine(path, name);
+            }
+
+            return null;
+        }
+        private static async Task<string> DeleteImageGetPath(string result, int id)
+        {
+            var path = Path.Combine("wwwroot/images/ResultsPathological", id.ToString(), result);
+            if (File.Exists(path))
+            {
+                try
+                {
+                    File.Delete(path);
+
+                }catch(Exception ex)
+                {
+                    throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotPossible);
+                }
+            }
+
+            return path;
+
+        }
+        public async Task UpdateResultPathologicalStudy(ClinicalResultPathologicalFormDto result)
+        {
+            var existing = await _repository.GetResultPathologicalById(result.RequestStudyId);
+
+            if (existing == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
+            }
+
+            var newResult = result.ToUpdateClinicalResultPathological(existing);
+
+            await _repository.UpdateResultPathologicalStudy(newResult);
+            if (result.ListaImagenesCargadas != null)
+            {
+                for (int i = 0; i < result.ListaImagenesCargadas.Length; i++)
+                {
+                    await DeleteImageGetPath(result.ListaImagenesCargadas[i], newResult.EstudioId);
+                }
+            }
+            if (result.ImagenPatologica != null)
+            {
+                for (int i = 0; i < result.ImagenPatologica.Count; i++)
+                {
+                    await SaveImageGetPath(result.ImagenPatologica[i], newResult.EstudioId);
+                }
+            }
+        }
+
+        public async Task UpdateStatusStudy(int RequestStudyId, byte status, Guid usuarioId)
+        {
+            var existingStudy = await _repository.GetStudyById(RequestStudyId);
+
+            if (existingStudy == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
+            }
+
+            if (Status.RequestStudy.Capturado == status)
+            {
+                existingStudy.FechaCaptura = DateTime.Now;
+                existingStudy.UsuarioCaptura = usuarioId.ToString();
+            }
+            if (Status.RequestStudy.Validado == status)
+            {
+                existingStudy.FechaCaptura = DateTime.Now;
+                existingStudy.UsuarioCaptura = usuarioId.ToString();
+            }
+            if (Status.RequestStudy.Liberado == status)
+            {
+                existingStudy.FechaCaptura = DateTime.Now;
+                existingStudy.UsuarioCaptura = usuarioId.ToString();
+            }
+            if (Status.RequestStudy.Enviado == status)
+            {
+                existingStudy.FechaCaptura = DateTime.Now;
+                existingStudy.UsuarioCaptura = usuarioId.ToString();
+            }
+            
+
+            existingStudy.EstatusId = status;
+
+            await _repository.UpdateStatusStudy(existingStudy);
+        }
+        public async Task<ClinicalResultsPathological> GetResultPathological(int RequestStudyId)
+        {
+            return await _repository.GetResultPathologicalById(RequestStudyId);
+        }
+
+        public async Task<Domain.Request.RequestStudy> GetRequestStudyById(int RequestStudyId)
+        {
+            return await _repository.GetRequestStudyById(RequestStudyId);
         }
     }
 }
