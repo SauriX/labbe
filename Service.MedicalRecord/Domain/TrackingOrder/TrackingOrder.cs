@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Service.MedicalRecord.Domain.Catalogs;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -8,7 +9,9 @@ namespace Service.MedicalRecord.Domain.TrackingOrder
     {
         public Guid Id { get; set; }
         public string SucursalDestinoId { get; set; }
+
         public string SucursalOrigenId { get; set; }
+      
         public string Clave { get; set; }
         public int MaquiladorId { get; set; }
         public string RutaId { get; set; }

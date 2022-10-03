@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Service.MedicalRecord.Client.IClient;
+using Service.MedicalRecord.Dtos;
 using Service.MedicalRecord.Dtos.Scopes;
 using Shared.Error;
 using System.Net;
@@ -27,6 +28,18 @@ namespace Service.MedicalRecord.Client
             if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
             {
                 return await response.Content.ReadFromJsonAsync<ScopesDto>();
+            }
+
+            throw new CustomException(response.StatusCode, response.ReasonPhrase);
+        }
+
+        public async Task<UsersDto> GetByid(string id)
+        {
+            var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Identity")}/api/user/{id}");
+
+            if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+            {
+                return await response.Content.ReadFromJsonAsync<UsersDto>();
             }
 
             throw new CustomException(response.StatusCode, response.ReasonPhrase);

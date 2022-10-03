@@ -96,6 +96,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Medics
                 .WithOne(x => x.Medico)
                 //.HasForeignKey(x => x.ClinicaId)
                 .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }

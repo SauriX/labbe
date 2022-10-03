@@ -128,5 +128,24 @@ namespace Service.Identity.Repository
 
             return permissions;
         }
+        public async Task<RequestImage> GetImage(Guid requestId, string code)
+        {
+            var image = await _context.Relacion_User_Imagen.FirstOrDefaultAsync(x => x.UserId == requestId && x.Clave == code);
+
+            return image;
+        }
+        public async Task UpdateImage(RequestImage requestImage)
+        {
+            if (requestImage.Id == 0)
+            {
+                _context.Relacion_User_Imagen.Add(requestImage);
+            }
+            else
+            {
+                _context.Relacion_User_Imagen.Update(requestImage);
+            }
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

@@ -3,6 +3,7 @@ using ClosedXML.Report;
 using Microsoft.Extensions.Configuration;
 using Service.Identity.Application.IApplication;
 using Service.Identity.Dictionary;
+using Service.Identity.Domain.User;
 using Service.Identity.Dtos.Profile;
 using Service.Identity.Dtos.User;
 using Service.Identity.Mapper;
@@ -13,9 +14,10 @@ using Shared.Extensions;
 using Shared.Utils;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Threading.Tasks;
-
+using SharedResponses = Shared.Dictionary.Responses;
 namespace Service.Identity.Application
 {
     public class UserApplication : IUserApplication
@@ -28,7 +30,57 @@ namespace Service.Identity.Application
             key = configuration.GetValue<string>("PasswordKey");
             _repository = repository;
         }
+        private static async Task<string> SaveImageGetPath(RequestImageDto requestDto, string fileName = null)
+        {
+            var path = Path.Combine("wwwroot/images/medics", requestDto.Clave);
+            var name = string.Concat(fileName ?? requestDto.Tipo, ".png");
 
+            var isSaved = await requestDto.Imagen.SaveFileAsync(path, name);
+
+            if (isSaved)
+            {
+                return Path.Combine(path, name);
+            }
+
+            return null;
+        }
+        public async Task<string> SaveImage(RequestImageDto requestDto)
+        {
+            var request = await GetById(requestDto.SolicitudId.ToString());
+
+            var typeOk = requestDto.Tipo.In("orden", "ine", "ineReverso", "formato");
+
+            var isImage = requestDto.Imagen.IsImage();
+
+            if (!typeOk || !isImage)
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, SharedResponses.InvalidImage);
+            }
+
+            requestDto.Clave = request.Clave;
+
+
+            //var name = Helpers.GenerateRandomHex();
+            var fileName = requestDto.Imagen.FileName;
+            var name = fileName[..fileName.LastIndexOf(".")];
+
+            var existingImage = await _repository.GetImage(requestDto.SolicitudId, name);
+
+            var path = await SaveImageGetPath(requestDto, existingImage?.Clave ?? name);
+
+            var image = new RequestImage(existingImage?.Id ?? 0, requestDto.SolicitudId, existingImage?.Clave ?? name, path, "format")
+            {
+                UsuarioCreoId = existingImage?.UsuarioCreoId ?? requestDto.UsuarioId,
+                FechaCreo = existingImage?.FechaCreo ?? DateTime.Now,
+                UsuarioModificoId = existingImage == null ? null : requestDto.UsuarioId,
+                FechaModifico = existingImage == null ? null : DateTime.Now
+            };
+
+            await _repository.UpdateImage(image);
+
+            return image.Clave;
+
+        }
         public async Task<IEnumerable<UserListDto>> GetAll(string search)
         {
             var users = await _repository.GetAll(search);

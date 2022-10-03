@@ -4,6 +4,7 @@ using EventBus.Messages.Catalog;
 using MassTransit;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dictionary.Medic;
+using Service.Catalog.Domain.Medics;
 using Service.Catalog.Dtos.Medicos;
 using Service.Catalog.Mapper;
 using Service.Catalog.Repository.IRepository;
@@ -13,6 +14,7 @@ using Shared.Extensions;
 using Shared.Helpers;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -167,5 +169,7 @@ namespace Service.Catalog.Application
 
             return (template.ToByteArray(), $"Catálogo de Médicos ({medics.Clave}).xlsx");
         }
+
+
     }
 }

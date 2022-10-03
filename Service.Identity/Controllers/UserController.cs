@@ -104,5 +104,14 @@ namespace Service.Identity.Controllers
             var (file, fileName) = await _service.ExportForm(id);
             return File(file, MimeType.XLSX, fileName);
         }
+
+        [HttpPut("images")]
+        [Authorize(Policies.Update)]
+        public async Task<string> SaveImage([FromForm] RequestImageDto requestDto)
+        {
+            requestDto.UsuarioId = (Guid)HttpContext.Items["userId"];
+
+            return await _service.SaveImage(requestDto);
+        }
     }
 }

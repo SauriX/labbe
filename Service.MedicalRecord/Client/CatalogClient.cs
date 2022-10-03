@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Service.MedicalRecord.Client.IClient;
+using Service.MedicalRecord.Dtos.Branch;
 using Service.MedicalRecord.Dtos.Request;
+using Service.MedicalRecord.Dtos.Route;
 using Shared.Error;
 using Shared.Helpers;
 using System;
@@ -58,6 +60,28 @@ namespace Service.MedicalRecord.Client
             throw new NotImplementedException();
         }
 
+        public async Task<BranchFormDto> GetBranch(Guid id)
+        {
+            var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/branch/{id}");
+
+            if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+            {
+                return await response.Content.ReadFromJsonAsync<BranchFormDto>();
+            }
+
+            throw new CustomException(response.StatusCode, response.ReasonPhrase);
+        }
+        public async Task<RouteFormDto> GetRuta(Guid id)
+        {
+            var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/route/{id}");
+
+            if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+            {
+                return await response.Content.ReadFromJsonAsync<RouteFormDto>();
+            }
+
+            throw new CustomException(response.StatusCode, response.ReasonPhrase);
+        }
         public async Task<List<RequestStudyParamsDto>> GetStudies(List<int> studies)
         {
             try
