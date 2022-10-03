@@ -190,6 +190,7 @@ namespace Service.MedicalRecord.Repository
         public async Task<RequestStudy> GetRequestStudyById(int RequestStudyId)
         {
             var resuqestStudy = await _context.Relacion_Solicitud_Estudio
+                .Include(x => x.Estatus)
                 .Where(x => x.Id == RequestStudyId)
                 .FirstOrDefaultAsync();
             return resuqestStudy;

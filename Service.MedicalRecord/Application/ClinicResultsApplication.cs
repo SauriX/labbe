@@ -300,6 +300,8 @@ namespace Service.MedicalRecord.Application
                     await SaveImageGetPath(result.ImagenPatologica[i], newResult.EstudioId);
                 }
             }
+
+
         }
 
         public async Task UpdateStatusStudy(int RequestStudyId, byte status, Guid usuarioId)
@@ -318,17 +320,17 @@ namespace Service.MedicalRecord.Application
             }
             if (Status.RequestStudy.Validado == status)
             {
-                existingStudy.FechaCaptura = DateTime.Now;
+                existingStudy.FechaValidacion = DateTime.Now;
                 existingStudy.UsuarioCaptura = usuarioId.ToString();
             }
             if (Status.RequestStudy.Liberado == status)
             {
-                existingStudy.FechaCaptura = DateTime.Now;
+                existingStudy.FechaLiberado = DateTime.Now;
                 existingStudy.UsuarioCaptura = usuarioId.ToString();
             }
             if (Status.RequestStudy.Enviado == status)
             {
-                existingStudy.FechaCaptura = DateTime.Now;
+                existingStudy.FechaEnviado = DateTime.Now;
                 existingStudy.UsuarioCaptura = usuarioId.ToString();
             }
             

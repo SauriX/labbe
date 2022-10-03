@@ -42,6 +42,7 @@ namespace Service.MedicalRecord.Mapper
                     Estatus = s.Estatus.Clave,
                     Color = s.Estatus.Color,
                     Departamento = s.DepartamentoId,
+                    AreaId = s.AreaId,
                     FechaTomaMuestra = $"{s.FechaTomaMuestra:dd/MM/yyyy}",
                     FechaValidacion = $"{s.FechaValidacion:dd/MM/yyyy}",
                     FechaSolicitado = $"{s.FechaSolicitado:dd/MM/yyyy}",
