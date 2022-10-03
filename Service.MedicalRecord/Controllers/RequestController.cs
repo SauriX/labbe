@@ -22,7 +22,7 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("filter")]
         [Authorize(Policies.Access)]
-        public async Task<IEnumerable<RequestInfoDto>> GetByFilter(RequestFilterDto filter)
+        public async Task<IEnumerable<ClinicResultsRequestDto>> GetByFilter(RequestFilterDto filter)
         {
             return await _service.GetByFilter(filter);
         }
@@ -173,6 +173,15 @@ namespace Service.MedicalRecord.Controllers
             var file = await _service.PrintOrder(recordId, requestId);
 
             return File(file, MimeType.PDF, "order.pdf");
+        }
+
+        [HttpPost("tags/{recordId}/{requestId}")]
+        //[Authorize(Policies.Print)]
+        public async Task<IActionResult> PrintTags(Guid recordId, Guid requestId, List<RequestTagDto> tags)
+        {
+            var file = await _service.PrintTags(recordId, requestId, tags);
+
+            return File(file, MimeType.PDF, "tags.pdf");
         }
 
         [HttpPut("images")]

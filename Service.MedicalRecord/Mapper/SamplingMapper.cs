@@ -32,10 +32,10 @@ namespace Service.MedicalRecord.Mapper
         {
             return model.Select(x => new StudyDto
             {
-                Id = x.EstudioId,
+                EstudioId = x.EstudioId,
                 Nombre = x.Nombre,
                 Area = "",
-                Status = x.EstatusId,
+                EstatusId = x.EstatusId,
                 Registro = x.FechaCreo.ToString(),
                 Entrega = x.FechaCreo.AddDays((double)x.Dias).ToString(),
                 Seleccion = false,

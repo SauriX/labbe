@@ -22,6 +22,10 @@ namespace Service.MedicalRecord.Mapper
             return new RequestDto
             {
                 SolicitudId = model.Id,
+                NombreMedico = model.Medico.Nombre,
+                NombreCompania = model.Compañia == null ? "" : model.Compañia.Nombre,
+                ClaveMedico = model.Medico.Clave,
+                Observaciones = model.Observaciones,
                 ExpedienteId = model.ExpedienteId,
                 SucursalId = model.SucursalId,
                 Clave = model.Clave,
@@ -31,11 +35,11 @@ namespace Service.MedicalRecord.Mapper
             };
         }
 
-        public static IEnumerable<RequestInfoDto> ToRequestInfoDto(this IEnumerable<Request> model)
+        public static IEnumerable<ClinicResultsRequestDto> ToRequestInfoDto(this IEnumerable<Request> model)
         {
-            if (model == null) return new List<RequestInfoDto>();
+            if (model == null) return new List<ClinicResultsRequestDto>();
 
-            return model.Select(x => new RequestInfoDto
+            return model.Select(x => new ClinicResultsRequestDto
             {
                 SolicitudId = x.Id,
                 ExpedienteId = x.ExpedienteId,

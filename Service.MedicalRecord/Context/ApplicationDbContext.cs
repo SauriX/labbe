@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Service.MedicalRecord.Domain;
 using Service.MedicalRecord.Domain.Appointments;
 using Service.MedicalRecord.Domain.MedicalRecord;
 using Service.MedicalRecord.Domain.PriceQuote;
@@ -18,6 +19,7 @@ namespace Service.MedicalRecord.Context
         public DbSet<MedicalRecordTaxData> Relacion_Expediente_Factura { get; set; }
         public DbSet<Request> CAT_Solicitud { get; set; }
         public DbSet<RequestStudy> Relacion_Solicitud_Estudio { get; set; }
+        public DbSet<ClinicResults> ClinicResults { get; set; }
         public DbSet<RequestPack> Relacion_Solicitud_Paquete { get; set; }
         public DbSet<RequestImage> Relacion_Solicitud_Imagen { get; set; }
         public DbSet<AppointmentLab> CAT_Cita_Lab { get; set; }
@@ -29,6 +31,7 @@ namespace Service.MedicalRecord.Context
         public DbSet<TrackingOrder> CAT_Seguimiento_Ruta { get; set; }
         public DbSet<TrackingOrderDetail> Relacion_Seguimiento_Solicitud { get; set; }
         public DbSet<RouteTracking> Cat_PendientesDeEnviar { get; set; }
+        public DbSet<ClinicalResultsPathological> Cat_Captura_ResultadosPatologicos { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

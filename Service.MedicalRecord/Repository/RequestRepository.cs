@@ -221,7 +221,7 @@ namespace Service.MedicalRecord.Repository
             }
             else
             {
-                _context.Relacion_Solicitud_Imagen.Update(requestImage);
+                _context.Relacion_Solicitud_Imagen.Update(requestImage); 
             }
 
             await _context.SaveChangesAsync();

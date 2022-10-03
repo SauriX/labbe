@@ -7,8 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Service.MedicalRecord.Dictionary;
 using EFCore.BulkExtensions;
+using Service.MedicalRecord.Domain;
 
 namespace Service.MedicalRecord.Repository
 {
@@ -26,6 +26,28 @@ namespace Service.MedicalRecord.Repository
             var report = _context.CAT_Solicitud
                    .Include(x => x.Estudios);
             var request = await _context.CAT_Solicitud.FindAsync(id);
+
+            return request;
+        }
+
+        public async Task<ClinicResults> GetById(Guid id)
+        {
+            var request = await _context.ClinicResults
+                .Include(x => x.Solicitud)
+                .Include(x => x.Solicitud).ThenInclude(x => x.Expediente)
+                .Include(x => x.Estudio).ThenInclude(x => x.Estatus)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            return request;
+        }
+
+        public async Task<List<ClinicResults>> GetByRequest(Guid requestId)
+        {
+            var request = await _context.ClinicResults
+                .Include(x => x.Solicitud)
+                .Include(x => x.Solicitud).ThenInclude(x => x.Expediente)
+                .Include(x => x.Estudio).ThenInclude(x => x.Estatus)
+                .Where(x => x.SolicitudId == requestId).ToListAsync();
 
             return request;
         }
@@ -91,19 +113,6 @@ namespace Service.MedicalRecord.Repository
             return await report.ToListAsync();
         }
 
-        public async Task<Request> GetById(Guid id)
-        {
-            var request = await _context.CAT_Solicitud
-                .Include(x => x.Expediente)
-                .Include(x => x.Medico)
-                .Include(x => x.Estudios).ThenInclude(x => x.Estatus)
-                .Include(x => x.Sucursal)
-                .Include(x => x.Compañia)
-               .FirstOrDefaultAsync(x => x.Id == id);
-
-            return request;
-        }
-
         public async Task BulkUpdateStudies(Guid requestId, List<RequestStudy> studies)
         {
             var config = new BulkConfig();
@@ -121,33 +130,57 @@ namespace Service.MedicalRecord.Repository
             return studies;
         }
 
-        public async Task<RequestImage> GetImage(Guid requestId, string code)
+        public async Task Create(List<ClinicResults> newParameter)
         {
-            var image = await _context.Relacion_Solicitud_Imagen.FirstOrDefaultAsync(x => x.SolicitudId == requestId && x.Clave == code);
+            _context.BulkInsertOrUpdate(newParameter);
 
-            return image;
+            await _context.SaveChangesAsync();
         }
 
-        public async Task<List<RequestImage>> GetImages(Guid requestId)
+        public async Task CreateResultPathological(ClinicalResultsPathological result)
         {
-            var images = await _context.Relacion_Solicitud_Imagen.Where(x => x.SolicitudId == requestId).ToListAsync();
-
-            return images;
+            //throw new NotImplementedException();
+            _context.Cat_Captura_ResultadosPatologicos.Add(result);
+            await _context.SaveChangesAsync();
         }
 
-        public Task UpdateImage(RequestImage requestImage)
+        public async Task UpdateResultPathologicalStudy(ClinicalResultsPathological result)
         {
-            throw new NotImplementedException();
+            _context.Cat_Captura_ResultadosPatologicos.Update(result);
+
+            await _context.SaveChangesAsync();
+
         }
 
-        public Task DeleteImage(Guid requestId, string code)
+        public async Task<ClinicalResultsPathological> GetResultPathologicalById(int id)
         {
-            throw new NotImplementedException();
+            var resultExisting = await _context.Cat_Captura_ResultadosPatologicos.Where(x => x.RequestStudyId == id).FirstOrDefaultAsync();
+            return resultExisting;
         }
 
-        public Task Create(object newParameter)
+
+        public async Task UpdateStatusStudy(RequestStudy study)
         {
-            throw new NotImplementedException();
+            _context.Relacion_Solicitud_Estudio.Update(study);
+
+            await _context.SaveChangesAsync();
+        }
+        public async Task<RequestStudy> GetStudyById(int RequestStudyId)
+        {
+             var studies = await _context.Relacion_Solicitud_Estudio
+                 .Where(x => x.Id == RequestStudyId)
+                 .FirstOrDefaultAsync();
+            return studies;
+        }
+
+        public async Task<RequestStudy> GetRequestStudyById(int RequestStudyId)
+        {
+            var resuqestStudy = await _context.Relacion_Solicitud_Estudio
+                .Include(x => x.Estatus)
+                .Where(x => x.Id == RequestStudyId)
+                .FirstOrDefaultAsync();
+            return resuqestStudy;
+
         }
     }
 }

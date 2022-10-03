@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Service.MedicalRecord.Dtos.Request
 {
-    public class RequestInfoDto
+    public class ClinicResultsRequestDto
     {
         public Guid SolicitudId { get; set; }
         public Guid ExpedienteId { get; set; }
@@ -23,10 +23,20 @@ namespace Service.MedicalRecord.Dtos.Request
 
     public class RequestStudyInfoDto
     {
+        public int Id { get; set; }
+        public int EstudioId { get; set; }
         public string Clave { get; set; }
         public string Nombre { get; set; }
         public byte EstatusId { get; set; }
         public string Estatus { get; set; }
         public string Color { get; set; }
+        public int Departamento { get; set; }
+        public int AreaId { get; set; }
+        public string FechaTomaMuestra { get; set; }
+        public string FechaValidacion { get; set; }
+        public string FechaSolicitado{ get; set; }
+        public string FechaCaptura { get; set; }
+        public string FechaLiberado { get; set; }
+        public string FechaEnviado { get; set; }
     }
 }

@@ -280,6 +280,50 @@ namespace Service.MedicalRecord.Migrations
                     b.ToTable("ClinicResults");
                 });
 
+            modelBuilder.Entity("Service.MedicalRecord.Domain.ClinicalResultsPathological", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("DescripcionMacroscopica")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DescripcionMicroscopica")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Diagnostico")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EstudioId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImagenPatologica")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("MedicoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("MuestraRecibida")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RequestStudyId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("SolicitudId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EstudioId");
+
+                    b.HasIndex("MedicoId");
+
+                    b.HasIndex("SolicitudId");
+
+                    b.ToTable("Cat_Captura_ResultadosPatologicos");
+                });
+
             modelBuilder.Entity("Service.MedicalRecord.Domain.MedicalRecord.MedicalRecord", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1187,6 +1231,31 @@ namespace Service.MedicalRecord.Migrations
                         .IsRequired();
 
                     b.Navigation("Estudio");
+
+                    b.Navigation("Solicitud");
+                });
+
+            modelBuilder.Entity("Service.MedicalRecord.Domain.ClinicalResultsPathological", b =>
+                {
+                    b.HasOne("Service.MedicalRecord.Domain.Request.RequestStudy", "Estudio")
+                        .WithMany()
+                        .HasForeignKey("EstudioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Service.MedicalRecord.Domain.Catalogs.Medic", "Medico")
+                        .WithMany()
+                        .HasForeignKey("MedicoId");
+
+                    b.HasOne("Service.MedicalRecord.Domain.Request.Request", "Solicitud")
+                        .WithMany()
+                        .HasForeignKey("SolicitudId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Estudio");
+
+                    b.Navigation("Medico");
 
                     b.Navigation("Solicitud");
                 });

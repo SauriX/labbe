@@ -7,7 +7,7 @@ namespace Service.MedicalRecord.Application.IApplication
 {
     public interface IRequestApplication
     {
-        Task<IEnumerable<RequestInfoDto>> GetByFilter(RequestFilterDto filter);
+        Task<IEnumerable<ClinicResultsRequestDto>> GetByFilter(RequestFilterDto filter);
         Task<RequestDto> GetById(Guid recordId, Guid requestId);
         Task<RequestGeneralDto> GetGeneral(Guid recordId, Guid requestId);
         Task<RequestStudyUpdateDto> GetStudies(Guid recordId, Guid requestId);
@@ -26,6 +26,7 @@ namespace Service.MedicalRecord.Application.IApplication
         Task AddPartiality(RequestPartialityDto requestDto);
         Task<byte[]> PrintTicket(Guid recordId, Guid requestId);
         Task<byte[]> PrintOrder(Guid recordId, Guid requestId);
+        Task<byte[]> PrintTags(Guid recordId, Guid requestId, List<RequestTagDto> tags);
         Task<string> SaveImage(RequestImageDto requestDto);
         Task DeleteImage(Guid recordId, Guid requestId, string code);
     }

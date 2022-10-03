@@ -300,6 +300,12 @@ namespace Service.MedicalRecord
                     context.Context.Response.Headers["Pragma"] = "no-cache";
                     context.Context.Response.Headers["Expires"] = "-1";
                 }
+            });         
+            
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(System.IO.Path.Combine(env.ContentRootPath, "wwwroot/layout/consent")),
+                RequestPath = "/consents",
             });
 
             app.UseMiddleware<ErrorMiddleware>();
