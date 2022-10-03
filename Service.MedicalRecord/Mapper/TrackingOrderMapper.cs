@@ -8,6 +8,36 @@ namespace Service.MedicalRecord.Mapper
 {
     public static class TrackingOrderMapper
     {
+        public static TrackingOrderFormDto toTrackingOrderFormDto(this TrackingOrder model)
+        {
+            return new TrackingOrderFormDto
+            {
+                
+                MuestraId = model.MuestraId,
+                Temperatura = model.Temperatura,
+                SucursalDestinoId = model.SucursalDestinoId,
+                SucursalOrigenId = model.SucursalOrigenId,
+                Activo = model.Activo,
+                EscaneoCodigoBarras = model.EscaneoCodigoBarras,
+                MaquiladorId = model.MaquiladorId,
+                RutaId = model.RutaId,
+                Clave = model.Clave,
+                Estudios = model.Estudios.Select(x => new StudiesRequestRouteDto
+                {
+                    SolicitudId = x.SolicitudId,
+                    EstudioId = x.EstudioId,
+                    //Estudio = x.Estudio,
+                    ExpedienteId = x.ExpedienteId,
+                    NombrePaciente = x.NombrePaciente,
+                    Temperatura = x.Temperatura,
+                    Escaneado = x.Escaneado,
+
+
+                }).ToArray()
+
+
+            };
+        }
         public static TrackingOrder ToModel(this TrackingOrderFormDto dto)
         {
             if (dto == null) return null;
