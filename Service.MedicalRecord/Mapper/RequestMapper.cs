@@ -31,24 +31,7 @@ namespace Service.MedicalRecord.Mapper
                 Clave = model.Clave,
                 Parcialidad = model.Parcialidad,
                 EsNuevo = model.EsNuevo,
-                Registro = $"{model.FechaCreo:dd/MM/yyyy}",
-                Estudios = model.Estudios.Select(s => new RequestStudyInfoDto
-                {
-                    Id = s.Id,
-                    EstudioId = s.EstudioId,
-                    Clave = s.Clave,
-                    Nombre = s.Nombre,
-                    EstatusId = s.EstatusId,
-                    Estatus = s.Estatus.Clave,
-                    Color = s.Estatus.Color,
-                    Departamento = s.DepartamentoId,
-                    FechaTomaMuestra = $"{s.FechaTomaMuestra:dd/MM/yyyy}",
-                    FechaValidacion = $"{s.FechaValidacion:dd/MM/yyyy}",
-                    FechaSolicitado = $"{s.FechaSolicitado:dd/MM/yyyy}",
-                    FechaCaptura = $"{s.FechaCaptura:dd/MM/yyyy}",
-                    FechaLiberado = $"{s.FechaLiberado:dd/MM/yyyy}",
-                    FechaEnviado = $"{s.FechaEnviado:dd/MM/yyyy}",
-                })
+                Registro = $"{model.FechaCreo:dd/MM/yyyy}"
             };
         }
 
