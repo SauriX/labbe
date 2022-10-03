@@ -315,6 +315,7 @@ namespace Service.MedicalRecord.Application
 
             await _repository.UpdateStatusStudy(existingStudy);
         }
+
         public async Task<ClinicalResultsPathological> GetResultPathological(int RequestStudyId)
         {
             return await _repository.GetResultPathologicalById(RequestStudyId);

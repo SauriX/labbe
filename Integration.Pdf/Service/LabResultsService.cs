@@ -72,7 +72,9 @@ namespace Integration.Pdf.Service
 
             var headerParagraph = "ALFONSO RAMOS SALAZAR, QBP, MSC, DBC\nUNIVERSIDAD Y HOSPITAL GENERAL DE TORONTO\nCED. DGP No. 703973 REG. S.S.A. 10-86\nDGP F-370, No. REG. 0111\nwww.laboratorioramos.com.mx";
 
-            var header = new Col[]
+            var header = section.Headers.Primary;
+
+            var headerInfo = new Col[]
             {
                 new Col(LabRamosImage),
                 new Col(headerParagraph),
@@ -81,7 +83,8 @@ namespace Integration.Pdf.Service
                     ImagenTamaño = Unit.FromCentimeter(4)
                 },
             };
-            section.AddText(header);
+            
+            header.AddText(headerInfo);
 
             var title = new Col("Laboratorio Alfonso Ramos S.A. de C.V. (HERMOSILLO)", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Right);
             section.AddText(title);
@@ -159,6 +162,22 @@ namespace Integration.Pdf.Service
                 };
                 section.AddBorderedText(col, right: true, left: true);
             }
+
+            var footer = section.Footers.Primary;
+
+            var footerInfo = new Col[]
+            {
+                new Col(results.SolicitudInfo.FechaAdmision, 5, ParagraphAlignment.Left),
+                new Col(results.SolicitudInfo.FechaAdmision, 5, ParagraphAlignment.Left),
+            };
+
+            footer.AddText(footerInfo);
+            section.AddSpace(5);
+
+            var footerBranches = new Col[]
+            {
+                new Col("")
+            };
         }
     }
 }

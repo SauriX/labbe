@@ -8,7 +8,7 @@ namespace Integration.Pdf.Dtos
     public class ClinicResultsPdfDto
     {
         public List<ClinicResultsCaptureDto> CapturaResultados { get; set; }
-        public ClinicResultsRequestDto SolicitudInfo { get; set; }
+        public ClinicResultsRequestDto SolicitudInfo { get; set; } 
     }
 
     public class ClinicResultsCaptureDto
