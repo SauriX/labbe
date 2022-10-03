@@ -35,7 +35,7 @@ namespace Service.MedicalRecord.Mapper
                 Estudios = model.Estudios.Select(s => new RequestStudyInfoDto
                 {
                     Id = s.Id,
-                    estudioId = s.EstudioId,
+                    EstudioId = s.EstudioId,
                     Clave = s.Clave,
                     Nombre = s.Nombre,
                     EstatusId = s.EstatusId,

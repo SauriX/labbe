@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace Integration.Pdf.Dtos
+﻿namespace Service.MedicalRecord.Dtos.Request
 {
     public class RequestTagDto
     {
