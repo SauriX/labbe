@@ -68,7 +68,12 @@ namespace Service.MedicalRecord.Application
 
         public async Task<RequestDto> GetById(Guid recordId, Guid requestId)
         {
-            var request = await GetExistingRequest(recordId, requestId);
+            var request = await _repository.GetById(requestId);
+
+            if (request == null || request.ExpedienteId != recordId)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
+            }
 
             return request.ToRequestDto();
         }
@@ -361,6 +366,8 @@ namespace Service.MedicalRecord.Application
                 request.CopagoTipo = requestDto.Total.CopagoTipo;
                 request.Total = requestDto.Total.Total;
                 request.Saldo = requestDto.Total.Saldo;
+                request.UsuarioModificoId = requestDto.UsuarioId;
+                request.FechaModifico = DateTime.Now;
 
                 await _repository.Update(request);
 
@@ -530,8 +537,8 @@ namespace Service.MedicalRecord.Application
             var order = request.ToRequestOrderDto();
 
             return await _pdfClient.GenerateOrder(order);
-        }     
-        
+        }
+
         public async Task<byte[]> PrintTags(Guid recordId, Guid requestId, List<RequestTagDto> tags)
         {
             var request = await _repository.GetById(requestId);

@@ -130,9 +130,6 @@ namespace Service.MedicalRecord.Mapper
                 RequestStudyId = dto.RequestStudyId,
                 DescripcionMacroscopica = dto.DescripcionMacroscopica,
                 DescripcionMicroscopica = dto.DescripcionMicroscopica,
-                //ImagenPatologica = dto.ImagenPatologica == null 
-                //                    ? "" + string.Join(",", newNameFiles)  
-                //                    : string.Join(",", dto.ImagenPatologica.Select(x => x.FileName)) + string.Join(",", newNameFiles),
                 ImagenPatologica = fullNamesImages,
                 Diagnostico = dto.Diagnostico,
                 MuestraRecibida = dto.MuestraRecibida,
