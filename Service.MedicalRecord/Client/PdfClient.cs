@@ -6,6 +6,7 @@ using Service.MedicalRecord.Dtos.Request;
 using Shared.Error;
 using Shared.Helpers;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -84,6 +85,33 @@ namespace Service.MedicalRecord.Client
                 var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
                 var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Pdf")}/api/pdf/order", stringContent);
+
+                if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+                {
+                    return await response.Content.ReadAsByteArrayAsync();
+                }
+
+                var error = await response.Content.ReadFromJsonAsync<ServerException>();
+
+                var ex = Exceptions.GetException(error);
+
+                throw ex;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<byte[]> GenerateTags(List<RequestTagDto> tags)
+        {
+            try
+            {
+                var json = JsonConvert.SerializeObject(tags);
+
+                var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Pdf")}/api/pdf/tags", stringContent);
 
                 if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
                 {

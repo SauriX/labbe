@@ -47,6 +47,13 @@ namespace Shared.Dictionary
         public class Role
         {
             public static readonly Guid ADMIN = new("3f06a33f-b077-4470-99b9-5dd487e81b9f");
+            public static readonly Guid JEFELAB = new("7bc1e103-15df-438c-99aa-65a771cc0112");
+            public static readonly Guid JEFEREC = new("5c00a5a6-5d46-4fcd-887d-6cc0cce45bea");
+            public static readonly Guid CONTA = new("ccaf773b-3432-4eb7-8b36-9f2a19f7c60b");
+            public static readonly Guid FACT = new("95fbaad8-9aae-45b3-ad89-ddc13c419ae0");
+            public static readonly Guid PROC = new("bdda7aba-8241-4f96-b2e2-3bff4afa8038");
+            public static readonly Guid ALM = new("891b8852-0eca-471b-b477-328af34205f3");
+            public static readonly Guid RECIMP = new("8a51bff5-4edb-4526-a022-34219248ae98");
         }
     }
 }
