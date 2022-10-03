@@ -2,6 +2,7 @@
 using Integration.Pdf.Extensions;
 using Integration.Pdf.Models;
 using MigraDoc.DocumentObjectModel;
+using MigraDoc.DocumentObjectModel.Tables;
 using MigraDoc.Rendering;
 using System;
 using System.IO;
@@ -70,8 +71,8 @@ namespace Integration.Pdf.Service
             var LabRamosImage = File.ReadAllBytes(logoLab);
             var ISOImage = File.ReadAllBytes(logoISO);
 
-            var headerParagraph = "ALFONSO RAMOS SALAZAR, QBP, MSC, DBC\nUNIVERSIDAD Y HOSPITAL GENERAL DE TORONTO\nCED. DGP No. 703973 REG. S.S.A. 10-86\nDGP F-370, No. REG. 0111\nwww.laboratorioramos.com.mx";
-
+            var headerParagraph = "ALFONSO RAMOS SALAZAR, QBP, MSC, DBC\nUNIVERSIDAD Y HOSPITAL GENERAL DE TORONTO\nCED. DGP No. 703973 REG. S.S.A. 10-86\nDGP F-370, No. REG. 0111";
+            var headerUrl = new Col("www.laboratorioramos.com.mx", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Center);
             var header = section.Headers.Primary;
 
             var headerInfo = new Col[]
@@ -83,11 +84,11 @@ namespace Integration.Pdf.Service
                     ImagenTamaño = Unit.FromCentimeter(4)
                 },
             };
-            
+
             header.AddText(headerInfo);
 
-            var title = new Col("Laboratorio Alfonso Ramos S.A. de C.V. (HERMOSILLO)", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Right);
-            section.AddText(title);
+            /*var title = new Col("Laboratorio Alfonso Ramos S.A. de C.V. (HERMOSILLO)", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Right);
+            section.AddText(title);*/
 
             section.AddSpace();
 
@@ -126,7 +127,7 @@ namespace Integration.Pdf.Service
                 new Col($": {results.SolicitudInfo.FechaAdmision}", 8, Col.FONT_BOLD, ParagraphAlignment.Left),
                 new Col("", 1),
                 new Col("Fecha de Entrega", 3, ParagraphAlignment.Left),
-                new Col($": {results.SolicitudInfo.FechaAdmision}", 9, Col.FONT_BOLD, ParagraphAlignment.Left),
+                new Col($": {results.SolicitudInfo.FechaEntrega}", 9, Col.FONT_BOLD, ParagraphAlignment.Left),
             };
             section.AddBorderedText(line4, right: true, left: true);
 
@@ -162,21 +163,31 @@ namespace Integration.Pdf.Service
                 };
                 section.AddBorderedText(col, right: true, left: true);
             }
+            section.AddSpace(5);
 
             var footer = section.Footers.Primary;
 
             var footerInfo = new Col[]
             {
-                new Col(results.SolicitudInfo.FechaAdmision, 5, ParagraphAlignment.Left),
-                new Col(results.SolicitudInfo.FechaAdmision, 5, ParagraphAlignment.Left),
+                new Col("Toma de Muestra" + results.SolicitudInfo.FechaAdmision + " " + " " + results.SolicitudInfo.User, 5, ParagraphAlignment.Left),
+                new Col("Liberó: " + results.SolicitudInfo.FechaEntrega + " " + " " + results.SolicitudInfo.User, 5, ParagraphAlignment.Left),
             };
 
             footer.AddText(footerInfo);
             section.AddSpace(5);
 
+            var footerTitleBranches = new Col[]
+            {
+                new Col("CD. OBREGÓN, SON.", 4, new Font("Calibri", 13) { Bold = true },  ParagraphAlignment.Center),
+                new Col("GUAYMAS, SON.", 1, new Font("Calibri", 13) { Bold = true },  ParagraphAlignment.Center),
+                new Col("HERMOSILLO, SON.", 3, new Font("Calibri", 13) { Bold = true },  ParagraphAlignment.Center),
+            };
+
+            footer.AddText(footerTitleBranches);
+
             var footerBranches = new Col[]
             {
-                new Col("")
+                new Col("UNIDAD CENTRO",   new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center)
             };
         }
     }

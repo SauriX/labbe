@@ -10,6 +10,8 @@ namespace Service.Catalog.Domain.Parameter
         public string Nombre { get; set; }
         public decimal ValorInicial { get; set; }
         public decimal ValorFinal { get; set; }
+        public decimal CriticoMinimo { get; set; }
+        public decimal CriticoMaximo { get; set; }
         public decimal ValorInicialNumerico { get; set; }
         public decimal ValorFinalNumerico { get; set; }
         public int RangoEdadInicial { get; set; }

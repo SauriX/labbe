@@ -35,5 +35,7 @@ namespace Integration.Pdf.Dtos
         public string Sexo { get; set; }
         public string Expediente { get; set; }
         public string FechaAdmision { get; set; }
+        public string FechaEntrega { get; set; }
+        public string User { get; set; }
     }
 }

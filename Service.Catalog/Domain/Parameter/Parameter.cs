@@ -24,6 +24,9 @@ namespace Service.Catalog.Domain.Parameter
         public string FCSI { get; set; }
         public bool Activo { get; set; }
         public bool Requerido { get; set; }
+        public bool DeltaCheck { get; set; }
+        public bool MostrarFormato { get; set; }
+        public bool ValorCriticos { get; set; }
         public Guid UsuarioCreoId { get; set; }
         public DateTime FechaCreo { get; set; }
         public Guid UsuarioModificoId { get; set; }

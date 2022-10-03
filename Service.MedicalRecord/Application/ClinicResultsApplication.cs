@@ -48,11 +48,6 @@ namespace Service.MedicalRecord.Application
             _rabbitMQSettings = rabbitMQSettings;
         }
 
-        public Task DeleteImage(Guid recordId, Guid requestId, string code)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<(byte[] file, string fileName)> ExportList(RequestedStudySearchDto search)
         {
             var studies = await GetAll(search);

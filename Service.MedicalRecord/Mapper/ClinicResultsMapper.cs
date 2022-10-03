@@ -158,6 +158,8 @@ namespace Service.MedicalRecord.Mapper
                 Edad = requestInfo.Solicitud.Expediente.Edad,
                 Sexo = requestInfo.Solicitud.Expediente.Genero,
                 FechaAdmision = requestInfo.Solicitud.FechaCreo.ToString("d"),
+                FechaEntrega = requestInfo.Solicitud.Estudios.Max(x => x.FechaEntrega).ToString("d"),
+                User = requestInfo.Solicitud.UsuarioCreo
             };
 
             var data = new ClinicResultsPdfDto
