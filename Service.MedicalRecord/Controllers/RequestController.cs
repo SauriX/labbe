@@ -175,6 +175,15 @@ namespace Service.MedicalRecord.Controllers
             return File(file, MimeType.PDF, "order.pdf");
         }
 
+        [HttpPost("tags/{recordId}/{requestId}")]
+        //[Authorize(Policies.Print)]
+        public async Task<IActionResult> PrintTags(Guid recordId, Guid requestId, List<RequestTagDto> tags)
+        {
+            var file = await _service.PrintTags(recordId, requestId, tags);
+
+            return File(file, MimeType.PDF, "tags.pdf");
+        }
+
         [HttpPut("images")]
         [Authorize(Policies.Update)]
         public async Task<string> SaveImage([FromForm] RequestImageDto requestDto)

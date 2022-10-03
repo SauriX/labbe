@@ -530,6 +530,25 @@ namespace Service.MedicalRecord.Application
             var order = request.ToRequestOrderDto();
 
             return await _pdfClient.GenerateOrder(order);
+        }     
+        
+        public async Task<byte[]> PrintTags(Guid recordId, Guid requestId, List<RequestTagDto> tags)
+        {
+            var request = await _repository.GetById(requestId);
+
+            if (request == null || request.ExpedienteId != recordId)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
+            }
+
+            foreach (var tag in tags)
+            {
+                tag.Clave = request.Clave;
+                tag.ClaveEtiqueta = request.Clave;
+                tag.Paciente = request.Expediente.NombreCompleto;
+            }
+
+            return await _pdfClient.GenerateTags(tags);
         }
 
         public async Task<string> SaveImage(RequestImageDto requestDto)

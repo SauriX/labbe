@@ -1,4 +1,5 @@
-﻿using EFCore.BulkExtensions;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using Service.Identity.Domain.Menu;
 using Service.Identity.Domain.Role;
@@ -6,8 +7,11 @@ using Service.Identity.Domain.User;
 using Shared.Utils;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Roles = Shared.Dictionary.Catalogs.Role;
 
 namespace Service.Identity.Context
 {
@@ -15,61 +19,30 @@ namespace Service.Identity.Context
     {
         public static async Task SeedData(ApplicationDbContext context, string key)
         {
-            //if (!context.CAT_Menu.Any())
-            if (true)
+            if (!context.CAT_Menu.Any())
             {
                 using var transaction = context.Database.BeginTransaction();
 
                 try
                 {
-                    var menus = new List<Menu>
-                    {
-                        new Menu(id: 1, menuPadreId: null, descripcion: "Configuración", controlador: "cat", ruta: "", orden: 100),
-                        new Menu(2, 1, "Roles", "role", "roles", 1001),
-                        new Menu(3, 1, "Usuarios", "user", "users", 1002),
-                        new Menu(4, 1, "Sucursales", "branch", "branches", 1003),
-                        new Menu(5, 1, "Compañias", "company", "companies", 1004),
-                        new Menu(6, 1, "Médicos", "medic", "medics", 1005),
-                        new Menu(7, 1, "Estudios", "study", "studies", 1006),
-                        new Menu(8, 1, "Reactivos", "reagent", "reagents", 1007),
-                        new Menu(9, 1, "Indicaciones", "indication", "indications", 1008),
-                        new Menu(10, 1, "Parámetros", "parameter", "parameters", 1009),
-                        new Menu(11, 1, "General", "catalog", "catalogs", 1010),
-                        new Menu(12, 1, "Listas de precios", "price", "prices", 1011),
-                        new Menu(13, 1, "Paquetes", "pack", "packs", 1012),
-                        new Menu(14, 1, "Promociones en listas de precios", "promo", "promos", 1013),
-                        new Menu(15, 1, "Lealtades", "loyalty", "loyalties", 1014),
-                        new Menu(16, 1, "Etiquetas", "tag", "tags", 1015),
-                        new Menu(17, 1, "Rutas", "route", "routes", 1016),
-                        new Menu(18, 1, "Maquilador", "maquila", "maquila", 1017),
-                        new Menu(19, 24, "Expedientes", "expedientes", "expedientes", 2401),
-                        new Menu(20, null, "Parámetros de sistema", "configuration", "configuration", 2000),
-                        new Menu(21, 24, "Cotización", "cotizacion", "cotizacion", 2402),
-                        new Menu(22, 24, "Reportes" , "report", "reports", 2403),
-                        new Menu(23, 24, "Citas","appointments", "appointments", 2404),
-                        new Menu(24, null, "Recepción",  "reception", "configuration", 2400),
-                        new Menu(25, 24, "Toma de muestra", "samplings", "samplings", 2405),
-                        new Menu(26, 24, "Registrar Solicitud", "requestedstudy", "requestedstudy", 2406),
-                        new Menu(27, 24, "Solicitudes", "request", "requests", 2407),
-                        new Menu(28, 1, "Admin. Equipos", "equipment", "equipment", 1018),
-                        new Menu(29, 1, "Mantenimiento", "mantain","equipmentMantain", 100),
+                    var menus = GetMenus();
+                    var menu = new Menu();
 
-                        new Menu(31, 24, "Captura de Resultados (Clínicos)", "clinicResults","clinicResults", 100),
-                         new Menu(30, 24, "Seguimientio de rutas", "RouteTracking","segRutas", 100),
-                         new Menu(32, 24, "Detalle de seguimiento de envio", "ShipmentTracking","ShipmentTracking", 100),
+                    var script = MergeGenerator.Build(
+                        nameof(context.CAT_Menu),
+                        menus,
+                        nameof(menu.Id),
+                        nameof(menu.MenuPadreId),
+                        nameof(menu.Descripcion),
+                        nameof(menu.Controlador),
+                        nameof(menu.Icono),
+                        nameof(menu.Ruta),
+                        nameof(menu.Orden),
+                        nameof(menu.Activo));
 
-                    };
-
-                    //context.CAT_Menu.AddRange(menus);
-
-                    //context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Menu ON;");
-                    //await context.SaveChangesAsync();
-                    var config = new BulkConfig
-                    {
-                        PreserveInsertOrder = true,
-                    };
-                    await context.BulkInsertOrUpdateAsync(menus, config);
-                    //context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Menu OFF;");
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Menu)} ON;");
+                    context.Database.ExecuteSqlRaw(script);
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Menu)} OFF;");
 
                     transaction.Commit();
                 }
@@ -80,49 +53,27 @@ namespace Service.Identity.Context
                 }
             }
 
-            var roleId = Guid.NewGuid();
-
             if (!context.CAT_Rol.Any())
             {
                 using var transaction = context.Database.BeginTransaction();
+
                 try
                 {
-                    var role = new Role
-                    {
-                        Id = roleId,
-                        Nombre = "Administrador",
-                        Activo = true,
-                        FechaCreo = DateTime.Now,
-                    };
+                    var roles = GetRoles();
+                    var role = new Role();
 
-                    context.CAT_Rol.Add(role);
-                    //context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Rol ON;");
-                    await context.SaveChangesAsync();
-                    //context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Rol OFF;");
+                    var script = MergeGenerator.Build(
+                        nameof(context.CAT_Rol),
+                        roles,
+                        nameof(role.Id),
+                        nameof(role.Nombre),
+                        nameof(role.Activo));
 
-                    var permissions = new List<RolePermission>
-                    {
+                    context.Database.ExecuteSqlRaw(script);
 
-                        new RolePermission(roleId, 2, true, true, true, true, true, true, true),
-                        new RolePermission(roleId, 3, true, true, true, true, true, true, true),
-                        new RolePermission(roleId, 4, true, true, true, true, true, true, true),
-                        new RolePermission(roleId, 5, true, true, true, true, true, true, true),
-                        new RolePermission(roleId, 6, true, true, true, true, true, true, true),
-                        new RolePermission(roleId, 7, true, true, true, true, true, true, true),
-                        new RolePermission(roleId, 8, true, true, true, true, true, true, true),
-                        new RolePermission(roleId, 9, true, true, true, true, true, true, true),
-                        new RolePermission(roleId, 10, true, true, true, true, true, true, true),
-                        new RolePermission(roleId, 11, true, true, true, true, true, true, true),
-                        new RolePermission(roleId, 12, true, true, true, true, true, true, true),
-                        new RolePermission(roleId, 13, true, true, true, true, true, true, true),
-                        new RolePermission(roleId, 14, true, true, true, true, true, true, true),
-                        new RolePermission(roleId, 15, true, true, true, true, true, true, true),
-                        new RolePermission(roleId, 16, true, true, true, true, true, true, true),
-                        new RolePermission(roleId, 17, true, true, true, true, true, true, true),
-                    };
+                    var permissions = GetMenus().Select(x => new RolePermission(Roles.ADMIN, x.Id, true, true, true, true, true, true, true)).ToList();
 
-                    context.CAT_Rol_Permiso.AddRange(permissions);
-                    await context.SaveChangesAsync();
+                    await context.BulkInsertOrUpdateOrDeleteAsync(permissions);
 
                     transaction.Commit();
                 }
@@ -143,10 +94,10 @@ namespace Service.Identity.Context
                     var user = new User
                     {
                         Id = userId,
-                        Clave = "Admin",
-                        Nombre = "Administrador",
-                        PrimerApellido = "Sistema",
-                        RolId = roleId,
+                        Clave = "ADMIN",
+                        Nombre = "ADMINISTRADOR",
+                        PrimerApellido = "SISTEMA",
+                        RolId = Roles.ADMIN,
                         SucursalId = Guid.Empty,
                         Contraseña = Crypto.EncryptString("12345678", key),
                         FlagPassword = true,
@@ -155,30 +106,9 @@ namespace Service.Identity.Context
                     };
 
                     context.CAT_Usuario.Add(user);
-                    //context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Usuario ON;");
                     await context.SaveChangesAsync();
-                    //context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.CAT_Usuario OFF;");
 
-                    var permissions = new List<UserPermission>
-                    {
-                        new UserPermission(userId, 1, true, true, true, true, true, true, true),
-                        new UserPermission(userId, 2, true, true, true, true, true, true, true),
-                        new UserPermission(userId, 3, true, true, true, true, true, true, true),
-                        new UserPermission(userId, 4, true, true, true, true, true, true, true),
-                        new UserPermission(userId, 5, true, true, true, true, true, true, true),
-                        new UserPermission(userId, 6, true, true, true, true, true, true, true),
-                        new UserPermission(userId, 7, true, true, true, true, true, true, true),
-                        new UserPermission(userId, 8, true, true, true, true, true, true, true),
-                        new UserPermission(userId, 9, true, true, true, true, true, true, true),
-                        new UserPermission(userId, 10, true, true, true, true, true, true, true),
-                        new UserPermission(userId, 11, true, true, true, true, true, true, true),
-                        new UserPermission(userId, 12, true, true, true, true, true, true, true),
-                        new UserPermission(userId, 13, true, true, true, true, true, true, true),
-                        new UserPermission(userId, 14, true, true, true, true, true, true, true),
-                        new UserPermission(userId, 15, true, true, true, true, true, true, true),
-                        new UserPermission(userId, 16, true, true, true, true, true, true, true),
-                        new UserPermission(userId, 17, true, true, true, true, true, true, true),
-                    };
+                    var permissions = GetMenus().Select(x => new UserPermission(userId, x.Id, true, true, true, true, true, true, true)).ToList();
 
                     context.CAT_Usuario_Permiso.AddRange(permissions);
                     await context.SaveChangesAsync();
@@ -191,6 +121,64 @@ namespace Service.Identity.Context
                     throw;
                 }
             }
+        }
+
+        private static List<Menu> GetMenus()
+        {
+            var menus = new List<Menu>
+            {
+                new Menu(1, null, "Configuración", "cat", "", 1000),
+                new Menu(2, 1, "Roles", "role", "roles", 1001),
+                new Menu(3, 1, "Usuarios", "user", "users", 1002),
+                new Menu(4, 1, "Sucursales", "branch", "branches", 1003),
+                new Menu(5, 1, "Compañias", "company", "companies", 1004),
+                new Menu(6, 1, "Médicos", "medic", "medics", 1005),
+                new Menu(7, 1, "Estudios", "study", "studies", 1006),
+                new Menu(8, 1, "Reactivos", "reagent", "reagents", 1007),
+                new Menu(9, 1, "Indicaciones", "indication", "indications", 1008),
+                new Menu(10, 1, "Parámetros", "parameter", "parameters", 1009),
+                new Menu(11, 1, "General", "catalog", "catalogs", 1010),
+                new Menu(12, 1, "Listas de precios", "price", "prices", 1011),
+                new Menu(13, 1, "Paquetes", "pack", "packs", 1012),
+                new Menu(14, 1, "Promociones en listas de precios", "promo", "promos", 1013),
+                new Menu(15, 1, "Lealtades", "loyalty", "loyalties", 1014),
+                new Menu(16, 1, "Etiquetas", "tag", "tags", 1015),
+                new Menu(17, 1, "Rutas", "route", "routes", 1016),
+                new Menu(18, 1, "Maquilador", "maquila", "maquila", 1017),
+                new Menu(19, 24, "Expedientes", "expedientes", "expedientes", 2401),
+                new Menu(20, null, "Parámetros de sistema", "configuration", "configuration", 2000),
+                new Menu(21, 24, "Cotización", "cotizacion", "cotizacion", 2402),
+                new Menu(22, 24, "Reportes" , "report", "reports", 2403),
+                new Menu(23, 24, "Citas","appointments", "appointments", 2404),
+                new Menu(24, null, "Recepción",  "reception", "configuration", 2400),
+                new Menu(25, 24, "Toma de muestra", "samplings", "samplings", 2405),
+                new Menu(26, 24, "Registrar Solicitud", "requestedstudy", "requestedstudy", 2406),
+                new Menu(27, 24, "Solicitudes", "request", "requests", 2407),
+                new Menu(28, 1, "Admin. Equipos", "equipment", "equipment", 1018),
+                new Menu(29, 1, "Mantenimiento", "mantain","equipmentMantain", 100),
+                new Menu(30, 24, "Captura de Resultados (Clínicos)", "clinicResults","clinicResults", 100),
+                new Menu(31, 24, "Seguimientio de rutas", "RouteTracking","segRutas", 100),
+                new Menu(32, 24, "Detalle de seguimiento de envio", "ShipmentTracking","ShipmentTracking", 100),
+            };
+
+            return menus;
+        }
+
+        private static List<Role> GetRoles()
+        {
+            var roles = new List<Role>
+            {
+                new Role(Roles.ADMIN, "ADMINISTRADOR"),
+                new Role(Roles.JEFELAB, "JEFE DE LABORATORIO"),
+                new Role(Roles.JEFEREC, "JEFE DE RECEPCION (Coordinador de Operaciones)"),
+                new Role(Roles.CONTA, "CONTABILIDAD"),
+                new Role(Roles.FACT, "FACTURACION CONVENIOS"),
+                new Role(Roles.PROC, "PROCESO (Proceso Analitico)"),
+                new Role(Roles.ALM, "ALMACEN"),
+                new Role(Roles.RECIMP, "RECEPCIÓN (Atencion y Caja)"),
+            };
+
+            return roles;
         }
     }
 }

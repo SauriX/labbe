@@ -79,6 +79,7 @@ namespace Integration.Pdf.Controllers
 
             return result;
         }
+
         [HttpPost]
         [Route("mantain")]
         public HttpResponseMessage Mantain(MantainDto order)
@@ -101,6 +102,7 @@ namespace Integration.Pdf.Controllers
 
             return result;
         }
+
         [HttpPost]
         [Route("tags")]
         public HttpResponseMessage Tag(List<RequestTagDto> tags)
@@ -115,7 +117,7 @@ namespace Integration.Pdf.Controllers
             result.Content.Headers.ContentDisposition =
                 new ContentDispositionHeaderValue("attachment")
                 {
-                    FileName = "order.pdf"
+                    FileName = "labels.pdf"
                 };
 
             result.Content.Headers.ContentType =
