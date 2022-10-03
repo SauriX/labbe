@@ -8,6 +8,6 @@ namespace Service.MedicalRecord.Application.IApplication
     public interface IShipmentTrackingApplication
     {
         Task<ShipmentTrackingDto> getByid(Guid id);
-        Task<TrackingOrderDto> getorder(Guid id);
+        Task<TrackingOrderFormDto> getorder(Guid id);
     }
 }

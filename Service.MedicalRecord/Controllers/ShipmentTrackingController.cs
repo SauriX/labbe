@@ -33,7 +33,7 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpGet("{id}")]
         //[Authorize(Policies.Access)]
-        public async Task<TrackingOrderDto> getorder(Guid id)
+        public async Task<TrackingOrderFormDto> getorder(Guid id)
         {
             var requestedStudy = await _service.getorder(id);
             return requestedStudy;

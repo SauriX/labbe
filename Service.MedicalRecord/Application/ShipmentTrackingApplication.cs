@@ -48,11 +48,11 @@ namespace Service.MedicalRecord.Application
             return shipment;
         }
 
-        public async Task<TrackingOrderDto> getorder(Guid id) { 
+        public async Task<TrackingOrderFormDto> getorder(Guid id) { 
         
             var order  = await _repository.getTrackingOrder(id);
 
-            return order.ToTrackingOrderFormDto();
+            return order.toTrackingOrderFormDtos();
 
         }
     }

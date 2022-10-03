@@ -8,11 +8,11 @@ namespace Service.MedicalRecord.Mapper
 {
     public static class TrackingOrderMapper
     {
-        public static TrackingOrderFormDto toTrackingOrderFormDto(this TrackingOrder model)
+        public static TrackingOrderFormDto toTrackingOrderFormDtos(this TrackingOrder model)
         {
             return new TrackingOrderFormDto
             {
-                
+                DiaRecoleccion = model.DiaRecoleccion,
                 MuestraId = model.MuestraId,
                 Temperatura = model.Temperatura,
                 SucursalDestinoId = model.SucursalDestinoId,
@@ -22,6 +22,7 @@ namespace Service.MedicalRecord.Mapper
                 MaquiladorId = model.MaquiladorId,
                 RutaId = model.RutaId,
                 Clave = model.Clave,
+                Fecha=model.FechaCreo,
                 Estudios = model.Estudios.Select(x => new StudiesRequestRouteDto
                 {
                     SolicitudId = x.SolicitudId,
