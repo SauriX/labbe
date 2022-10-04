@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Service.MedicalRecord.Dtos.Request
 {
-    public class ClinicResultsRequestDto
+    public class RequestInfoDto
     {
         public Guid SolicitudId { get; set; }
         public Guid ExpedienteId { get; set; }
