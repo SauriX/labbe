@@ -26,6 +26,7 @@ namespace Service.Catalog.Mapper
                 EspecialidadId = model.EspecialidadId,
                 Especialidad = model.Especialidad.Nombre,
                 Activo = model.Activo
+                
             };
         }
         public static IEnumerable<MedicsListDto> ToMedicsListDto(this List<Medics> model)
@@ -70,7 +71,8 @@ namespace Service.Catalog.Mapper
                 Observaciones = model.Observaciones.Trim(),
                 EspecialidadId = model.EspecialidadId,
                 Activo = model.Activo,
-                Clinicas = model.Clinicas.Select(x => x.Clinica).ToList().ToCatalogListDto()
+                Clinicas = model.Clinicas.Select(x => x.Clinica).ToList().ToCatalogListDto(),
+                Password=model.Password
             };
         }
 
@@ -105,6 +107,7 @@ namespace Service.Catalog.Mapper
                     FechaCreo = DateTime.Now,
                     UsuarioCreoId = dto.IdUsuario,
                 }).ToList(),
+                Password = dto.Password,
             };
         }
 
@@ -144,6 +147,7 @@ namespace Service.Catalog.Mapper
                     UsuarioCreoId = model.UsuarioCreoId,
                     FechaMod = DateTime.Now,
                 }).ToList(),
+                Password= dto.Password,
             };
         }
 

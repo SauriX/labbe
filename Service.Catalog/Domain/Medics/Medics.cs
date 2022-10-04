@@ -11,7 +11,7 @@ namespace Service.Catalog.Domain.Medics
         public Guid IdMedico { get; set; }
         public string Clave { get; set; }
         public string Nombre { get; set; }
-        public string Contraseña { get; set; }
+        public string Password { get; set; }
         public string PrimerApellido { get; set; }
         public string SegundoApellido { get; set; }
         public int EspecialidadId { get; set; }
