@@ -131,6 +131,44 @@ namespace Service.Identity.Migrations
                     b.ToTable("CAT_Rol_Permiso");
                 });
 
+            modelBuilder.Entity("Service.Identity.Domain.User.RequestImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Clave")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaModifico")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Ruta")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Tipo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsuarioCreoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UsuarioModificoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Relacion_User_Imagen");
+                });
+
             modelBuilder.Entity("Service.Identity.Domain.User.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -259,6 +297,17 @@ namespace Service.Identity.Migrations
                     b.Navigation("Rol");
                 });
 
+            modelBuilder.Entity("Service.Identity.Domain.User.RequestImage", b =>
+                {
+                    b.HasOne("Service.Identity.Domain.User.User", "User")
+                        .WithMany("Imagenes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Service.Identity.Domain.User.User", b =>
                 {
                     b.HasOne("Service.Identity.Domain.Role.Role", "Rol")
@@ -301,6 +350,8 @@ namespace Service.Identity.Migrations
 
             modelBuilder.Entity("Service.Identity.Domain.User.User", b =>
                 {
+                    b.Navigation("Imagenes");
+
                     b.Navigation("Permisos");
                 });
 #pragma warning restore 612, 618

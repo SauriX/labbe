@@ -15,7 +15,7 @@ namespace Service.Identity.Context
         public DbSet<UserPermission> CAT_Usuario_Permiso { get; set; }
         public DbSet<Role> CAT_Rol { get; set; }
         public DbSet<RolePermission> CAT_Rol_Permiso { get; set; }
-
+        public DbSet<RequestImage> Relacion_User_Imagen { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

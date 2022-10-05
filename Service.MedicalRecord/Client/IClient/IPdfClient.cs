@@ -1,5 +1,4 @@
-﻿using Service.MedicalRecord.Dtos;
-using Service.MedicalRecord.Dtos.ClinicResults;
+﻿using Service.MedicalRecord.Dtos.ClinicResults;
 using Service.MedicalRecord.Dtos.Request;
 using System.Collections.Generic;
 using System.Threading.Tasks;

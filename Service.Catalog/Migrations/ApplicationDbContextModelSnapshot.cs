@@ -1362,6 +1362,9 @@ namespace Service.Catalog.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PrimerApellido")
                         .IsRequired()
                         .HasMaxLength(100)

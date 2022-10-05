@@ -14,5 +14,7 @@ namespace Service.Identity.Repository.IRepository
         Task<bool> IsDuplicate(User role);
         Task Create(User user);
         Task Update(User user, bool updatePermission = true);
+        Task<RequestImage> GetImage(Guid requestId, string code);
+        Task UpdateImage(RequestImage requestImage);
     }
 }

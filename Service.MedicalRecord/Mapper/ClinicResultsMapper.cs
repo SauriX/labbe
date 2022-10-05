@@ -144,7 +144,7 @@ namespace Service.MedicalRecord.Mapper
             var results = ResultsGeneric(model);
             var requestInfo = model.First();
 
-            var request = new Dtos.ClinicResults.ClinicResultsRequestDto
+            var request = new ClinicResultsRequestDto
             {
                 Id = (Guid)(requestInfo.Solicitud.Id),
                 Clave = requestInfo.Solicitud.Clave,

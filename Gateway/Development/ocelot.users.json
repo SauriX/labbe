@@ -167,6 +167,18 @@
       ],
       "UpstreamPathTemplate": "/api/user/password",
       "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/user/images",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 45216
+        }
+      ],
+      "UpstreamPathTemplate": "/api/user/images",
+      "UpstreamHttpMethod": [ "PUT" ]
     }
   ]
 }

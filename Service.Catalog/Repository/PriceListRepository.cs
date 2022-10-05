@@ -39,7 +39,7 @@ namespace Service.Catalog.Repository
             return await indications.ToListAsync();
         }
 
-        public async Task<PriceList_Study> GetPriceStudyById(int studyId, Guid branchId, Guid? companyId, Guid? doctorId)
+        public async Task<PriceList_Study> GetPriceStudyById(int studyId, Guid branchId, Guid companyId)
         {
             var prices = _context.Relacion_ListaP_Estudio
                 .Include(x => x.Estudio.Parameters).ThenInclude(x => x.Parametro.Area.Departamento)
@@ -48,41 +48,14 @@ namespace Service.Catalog.Repository
                 .Include(x => x.PrecioLista)
                 .Where(x => x.EstudioId == studyId);
 
-            if (companyId != null && companyId != Guid.Empty)
-            {
-                var companyPrice = await
-                    (from p in prices
-                     join cp in _context.CAT_ListaP_Compañia.Where(x => x.CompañiaId == companyId) on p.PrecioListaId equals cp.PrecioListaId
-                     where cp.Activo
-                     select p).FirstOrDefaultAsync();
-
-                if (companyPrice != null)
-                {
-                    return companyPrice;
-                }
-            }
-
-            if (doctorId != null && doctorId != Guid.Empty)
-            {
-                var doctorPrice = await
-                    (from p in prices
-                     join dp in _context.CAT_ListaP_Medicos.Where(x => x.MedicoId == doctorId) on p.PrecioListaId equals dp.PrecioListaId
-                     where dp.Activo
-                     select p).FirstOrDefaultAsync();
-
-                if (doctorPrice != null)
-                {
-                    return doctorPrice;
-                }
-            }
-
-            var branchPrice = await
+            var companyPrice = await
                 (from p in prices
+                 join cp in _context.CAT_ListaP_Compañia.Where(x => x.CompañiaId == companyId) on p.PrecioListaId equals cp.PrecioListaId
                  join dp in _context.CAT_ListaP_Sucursal.Where(x => x.SucursalId == branchId) on p.PrecioListaId equals dp.PrecioListaId
-                 where dp.Activo
+                 where cp.Activo && dp.Activo
                  select p).FirstOrDefaultAsync();
 
-            return branchPrice;
+            return companyPrice;
         }
 
         public async Task<List<PriceList_Study>> GetPriceStudyById(Guid priceList, IEnumerable<int> studyId)
@@ -97,7 +70,7 @@ namespace Service.Catalog.Repository
             return prices;
         }
 
-        public async Task<PriceList_Packet> GetPricePackById(int packId, Guid branchId, Guid? companyId, Guid? doctorId)
+        public async Task<PriceList_Packet> GetPricePackById(int packId, Guid branchId, Guid companyId)
         {
             var prices = _context.Relacion_ListaP_Paquete
                 .Include(x => x.Paquete.studies).ThenInclude(x => x.Estudio.Tapon)
@@ -106,41 +79,14 @@ namespace Service.Catalog.Repository
                 .Include(x => x.PrecioLista)
                 .Where(x => x.PaqueteId == packId);
 
-            if (companyId != null && companyId != Guid.Empty)
-            {
-                var companyPrice = await
-                    (from p in prices
-                     join cp in _context.CAT_ListaP_Compañia.Where(x => x.CompañiaId == companyId) on p.PrecioListaId equals cp.PrecioListaId
-                     where cp.Activo
-                     select p).FirstOrDefaultAsync();
-
-                if (companyPrice != null)
-                {
-                    return companyPrice;
-                }
-            }
-
-            if (doctorId != null && doctorId != Guid.Empty)
-            {
-                var doctorPrice = await
-                    (from p in prices
-                     join dp in _context.CAT_ListaP_Medicos.Where(x => x.MedicoId == doctorId) on p.PrecioListaId equals dp.PrecioListaId
-                     where dp.Activo
-                     select p).FirstOrDefaultAsync();
-
-                if (doctorPrice != null)
-                {
-                    return doctorPrice;
-                }
-            }
-
-            var branchPrice = await
+            var companyPrice = await
                 (from p in prices
+                 join cp in _context.CAT_ListaP_Compañia.Where(x => x.CompañiaId == companyId) on p.PrecioListaId equals cp.PrecioListaId
                  join dp in _context.CAT_ListaP_Sucursal.Where(x => x.SucursalId == branchId) on p.PrecioListaId equals dp.PrecioListaId
-                 where dp.Activo
+                 where cp.Activo && dp.Activo
                  select p).FirstOrDefaultAsync();
 
-            return branchPrice;
+            return companyPrice;
         }
 
         public async Task<PriceList> GetById(Guid Id)
@@ -268,10 +214,10 @@ namespace Service.Catalog.Repository
         {
             var company = false;
             var branch = false;
-           // var precios = _context.CAT_ListaPrecio.Include(x=>x.Sucursales).Include(x=>x.Compañia).AsQueryable();
+            // var precios = _context.CAT_ListaPrecio.Include(x=>x.Sucursales).Include(x=>x.Compañia).AsQueryable();
 
-           // var coincidencias = await precios.AnyAsync(x => x.Sucursales.SequenceEqual(price.Sucursales) && x.Compañia.SequenceEqual(price.Compañia));
-           foreach (var compañia in price.Compañia)
+            // var coincidencias = await precios.AnyAsync(x => x.Sucursales.SequenceEqual(price.Sucursales) && x.Compañia.SequenceEqual(price.Compañia));
+            foreach (var compañia in price.Compañia)
             {
                 var compañias = await _context.CAT_ListaP_Compañia.AnyAsync(x => x.CompañiaId == compañia.CompañiaId && x.PrecioListaId != price.Id);
                 if (compañias)
@@ -289,7 +235,8 @@ namespace Service.Catalog.Repository
                     break;
                 }
             }
-            if (!branch && !company) {
+            if (!branch && !company)
+            {
                 return false;
             }
             return true;

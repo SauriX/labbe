@@ -8,6 +8,6 @@ namespace Service.Catalog.Dtos.PriceList
         public int? PaqueteId { get; set; }
         public Guid SucursalId { get; set; }
         public Guid? MedicoId { get; set; }
-        public Guid? CompañiaId { get; set; }
+        public Guid CompañiaId { get; set; }
     }
 }

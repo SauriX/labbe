@@ -89,7 +89,7 @@ namespace Integration.Pdf.Service
                     var imgPar = section.AddParagraph();
                     imgPar.Format.Alignment = ParagraphAlignment.Center;
                     var barcode = imgPar.AddImage(imageFilename);
-                    barcode.Width = Unit.FromCentimeter(5);
+                    barcode.Width = Unit.FromCentimeter(4.8);
 
                     var orderNo = new Col(tag.Clave, new Font("Arial", 10) { Bold = true });
                     section.AddText(orderNo, spaceAfter: 0);
@@ -112,11 +112,11 @@ namespace Integration.Pdf.Service
 
                     var textFramePar = textFrame.AddParagraph();
                     textFramePar.AddFormattedText($"ORI90\nMONTERREY\nSBAUTISTA\n{date}\nNormal\n49 años M", new Font("Arial", 4));
-                }
 
-                if (i < tags.Count - 1)
-                {
-                    section.AddPageBreak();
+                    if (i < tags.Count - 1)
+                    {
+                        section.AddPageBreak();
+                    }
                 }
             }
         }

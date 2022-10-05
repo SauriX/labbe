@@ -59,7 +59,7 @@ namespace Service.MedicalRecord.Application
             _rabbitMQSettings = rabbitMQSettings;
         }
 
-        public async Task<IEnumerable<ClinicResultsRequestDto>> GetByFilter(RequestFilterDto filter)
+        public async Task<IEnumerable<RequestInfoDto>> GetByFilter(RequestFilterDto filter)
         {
             var request = await _repository.GetByFilter(filter);
 
