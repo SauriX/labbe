@@ -20,7 +20,7 @@ namespace Service.MedicalRecord.Dtos.Request
     public class RequestStudyDto
     {
         private DateTime fechaEntrega;
-
+        public int Id { get; set; }
         public string Type => "study";
         public Guid SolicitudId { get; set; }
         public int EstudioId { get; set; }
@@ -50,6 +50,7 @@ namespace Service.MedicalRecord.Dtos.Request
         public decimal Descuento { get; set; }
         public decimal DescuentoPorcentaje { get; set; }
         public decimal PrecioFinal { get; set; }
+        public string FechaActualizacion { get; set; }
         public List<ParameterListDto> Parametros { get; set; }
         public List<IndicationListDto> Indicaciones { get; set; }
     }

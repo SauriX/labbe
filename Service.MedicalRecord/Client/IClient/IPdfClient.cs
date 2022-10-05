@@ -12,6 +12,7 @@ namespace Service.MedicalRecord.Client.IClient
         Task<byte[]> GenerateQuotation();
         Task<byte[]> GenerateOrder(RequestOrderDto order);
         Task<byte[]> GenerateTags(List<RequestTagDto> tags);
-        Task<byte[]> GenerateLabResults(ClinicResultsPdfDto order);
+        Task<byte[]> GenerateLabResults(PathologicalResultsDto order);
+        Task<byte[]> GeneratePathologicalResults(ClinicResultPathologicalPdfDto order);
     }
 }
