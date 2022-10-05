@@ -19,6 +19,7 @@ namespace Integration.Pdf.Dtos
         public int EstudioId { get; set; }
         public string ParametroId { get; set; }
         public int TipoValor { get; set; }
+        public string Unidades { get; set; }
         public int ValorInicial { get; set; }
         public int ValorFinal { get; set; }
         public string Resultado { get; set; }

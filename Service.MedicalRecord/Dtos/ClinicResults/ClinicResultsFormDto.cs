@@ -6,7 +6,7 @@ using Service.MedicalRecord.Dtos.Sampling;
 
 namespace Service.MedicalRecord.Dtos.ClinicResults
 {
-    public class ClinicResultsCaptureDto
+    public class ClinicResultsFormDto
     {
         public Guid Id { get; set; }
         public string Nombre { get; set; }
@@ -14,6 +14,7 @@ namespace Service.MedicalRecord.Dtos.ClinicResults
         public int EstudioId { get; set; }
         public string ParametroId { get; set; }
         public int TipoValor { get; set; }
+        public string Unidades { get; set; }
         public int ValorInicial { get; set; }
         public int ValorFinal { get; set; }
         public string Resultado { get; set; }

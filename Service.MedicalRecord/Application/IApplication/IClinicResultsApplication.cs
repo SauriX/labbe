@@ -15,7 +15,6 @@ namespace Service.MedicalRecord.Application.IApplication
     {
         Task<List<ClinicResultsDto>> GetAll(RequestedStudySearchDto search);
         Task<(byte[] file, string fileName)> ExportList(RequestedStudySearchDto search);
-        Task<int> UpdateStatus(List<ClinicResultsUpdateDto> requestDto);
         Task<byte[]> PrintResults(Guid recordId, Guid requestId);
         Task SendTestEmail(RequestSendDto requestDto);
         Task SendTestWhatsapp(RequestSendDto requestDto);

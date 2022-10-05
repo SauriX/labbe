@@ -40,6 +40,14 @@ namespace Service.Catalog.Mapper
                 Departamento = x.Area.Departamento.Nombre,
                 Activo = x.Activo,
                 Requerido = x.Requerido,
+                Unidades = x.Unidades,
+                TipoValor = x.TipoValor,
+                DeltaCheck = x.DeltaCheck,
+                MostrarFormato = x.MostrarFormato,
+                ValorInicial = x.ValorInicial,
+                ValorFinal = x.ValorFinal,
+                CriticoMinimo = x.CriticoMinimo,
+                CriticoMaximo = x.CriticoMaximo
             });
         }
 
