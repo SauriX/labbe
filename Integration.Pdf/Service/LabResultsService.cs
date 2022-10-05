@@ -53,8 +53,8 @@ namespace Integration.Pdf.Service
             section.PageSetup.Orientation = Orientation.Portrait;
             section.PageSetup.PageFormat = PageFormat.A4;
 
-            section.PageSetup.TopMargin = Unit.FromCentimeter(1);
-            section.PageSetup.BottomMargin = Unit.FromCentimeter(1);
+            section.PageSetup.TopMargin = Unit.FromCentimeter(5);
+            section.PageSetup.BottomMargin = Unit.FromCentimeter(5);
             section.PageSetup.LeftMargin = Unit.FromCentimeter(1);
             section.PageSetup.RightMargin = Unit.FromCentimeter(1);
 

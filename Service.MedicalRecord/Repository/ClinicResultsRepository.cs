@@ -130,12 +130,19 @@ namespace Service.MedicalRecord.Repository
             return studies;
         }
 
-        public async Task Create(List<ClinicResults> newParameter)
+        public async Task CreateLabResults(List<ClinicResults> newParameter)
         {
             _context.BulkInsertOrUpdate(newParameter);
 
             await _context.SaveChangesAsync();
         }
+        public async Task UpdateLabResults(List<ClinicResults> newParameter)
+        {
+            _context.BulkInsertOrUpdateOrDelete(newParameter);
+
+            await _context.SaveChangesAsync();
+        }
+
 
         public async Task CreateResultPathological(ClinicalResultsPathological result)
         {

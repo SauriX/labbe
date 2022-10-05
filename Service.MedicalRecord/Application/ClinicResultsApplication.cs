@@ -150,7 +150,7 @@ namespace Service.MedicalRecord.Application
             return data;
         }
 
-        public async Task Create(List<ClinicResultsFormDto> results)
+        public async Task SaveLabResults(List<ClinicResultsFormDto> results)
         {
             if (results.Count() == 0)
             {
@@ -158,7 +158,18 @@ namespace Service.MedicalRecord.Application
             }
 
             var newResults = results.ToCaptureResults();
-            await _repository.Create(newResults);
+            await _repository.CreateLabResults(newResults);
+        }
+
+        public async Task UpdateLabResults(List<ClinicResultsFormDto> results)
+        {
+            if (results.Count() == 0)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
+            }
+
+            var newResults = results.ToCaptureResults();
+            await _repository.CreateLabResults(newResults);
         }
 
         public async Task<byte[]> PrintResults(Guid recordId, Guid requestId)

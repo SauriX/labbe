@@ -18,10 +18,13 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<byte[]> PrintResults(Guid recordId, Guid requestId);
         Task SendTestEmail(RequestSendDto requestDto);
         Task SendTestWhatsapp(RequestSendDto requestDto);
+        Task SaveLabResults(List<ClinicResultsFormDto> results);
+        Task UpdateLabResults(List<ClinicResultsFormDto> results);
         Task SaveResultPathologicalStudy(ClinicalResultPathologicalFormDto search);
         Task UpdateResultPathologicalStudy(ClinicalResultPathologicalFormDto search);
         Task UpdateStatusStudy(int RequestStudyId, byte status, Guid idUsuario);
         Task<ClinicalResultsPathological> GetResultPathological(int RequestStudyId);
         Task<RequestStudy> GetRequestStudyById(int RequestStudyId);
+        Task<RequestStudyUpdateDto> GetStudies(Guid recordId, Guid requestId);
     }
 }

@@ -22,6 +22,7 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task<Request> FindAsync(Guid id);
         Task<List<RequestStudy>> GetStudyById(Guid requestId, IEnumerable<int> studiesIds);
         Task BulkUpdateStudies(Guid requestId, List<RequestStudy> studies);
-        Task Create(List<ClinicResults> newParameter);
+        Task CreateLabResults(List<ClinicResults> newParameter);
+        Task UpdateLabResults(List<ClinicResults> newParameter);
     }
 }
