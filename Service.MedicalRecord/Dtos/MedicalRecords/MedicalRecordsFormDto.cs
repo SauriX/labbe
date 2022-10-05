@@ -11,6 +11,7 @@ namespace Service.MedicalRecord.Dtos.MedicalRecords
         public string Expediente { get; set; }
         public string Sexo { get; set; }
         public DateTime FechaNacimiento { get; set; }
+        public string FechaNacimientoFormat { get; set; }
         public int Edad { get; set; }
         public string Telefono { get; set; }
         public string Correo { get; set; }

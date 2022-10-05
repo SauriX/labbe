@@ -125,5 +125,28 @@ namespace Integration.Pdf.Controllers
 
             return result;
         }
+
+        [HttpPost]
+        [Route("pathologicalResults")]
+        public HttpResponseMessage PathologicalResults(PathologicalResultsDto results)
+        {
+            var file = PathologicalResultService.GeneratePathologicalResultPdf(results);
+
+            var result = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new ByteArrayContent(file)
+            };
+
+            result.Content.Headers.ContentDisposition =
+                new ContentDispositionHeaderValue("attachment")
+                {
+                    FileName = "labels.pdf"
+                };
+
+            result.Content.Headers.ContentType =
+                new MediaTypeHeaderValue("application/pdf");
+
+            return result;
+        }
     }
 }

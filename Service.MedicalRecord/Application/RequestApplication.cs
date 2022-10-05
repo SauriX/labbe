@@ -710,5 +710,10 @@ namespace Service.MedicalRecord.Application
                 patCode == null && citCode != null ? citCode :
                 $"{patCode}, {citCode}";
         }
+
+        //Task<IEnumerable<RequestInfoDto>> IRequestApplication.GetByFilter(RequestFilterDto filter)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

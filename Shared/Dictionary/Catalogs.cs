@@ -8,6 +8,11 @@ namespace Shared.Dictionary
 {
     public class Catalogs
     {
+        public class Company
+        {
+            public static readonly Guid PARTICULARES = new("1b84fa7e-9b41-41fa-b8e0-f1d029bb94d4");
+        }
+
         public class Department
         {
             public const int PAQUETES = 1;

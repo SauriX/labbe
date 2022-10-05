@@ -63,7 +63,7 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.NotFound, "No se seleccionó un estudio");
             }
 
-            var price = await _repository.GetPriceStudyById((int)filterDto.EstudioId, filterDto.SucursalId, filterDto.CompañiaId, filterDto.MedicoId);
+            var price = await _repository.GetPriceStudyById((int)filterDto.EstudioId, filterDto.SucursalId, filterDto.CompañiaId);
 
             if (price == null || price.Precio <= 0)
             {
@@ -77,14 +77,20 @@ namespace Service.Catalog.Application
 
             var priceDto = price.ToPriceListInfoStudyDto();
 
-            var promo = await _promotionRepository.GetStudyPromo(price.PrecioListaId, filterDto.SucursalId, (int)filterDto.EstudioId);
+            var promos = await _promotionRepository.GetStudyPromos(price.PrecioListaId, filterDto.SucursalId, filterDto.MedicoId, (int)filterDto.EstudioId);
 
-            if (promo != null)
+            if (promos != null && promos.Count > 0)
             {
-                priceDto.PromocionId = promo.PromotionId;
-                priceDto.Promocion = promo.Promotion.Nombre;
-                priceDto.Descuento = promo.DiscountNumeric;
-                priceDto.DescuentoPorcentaje = promo.Discountporcent;
+                foreach (var promo in promos)
+                {
+                    priceDto.Promociones.Add(new PriceListInfoPromo
+                    {
+                        PromocionId = promo.PromotionId,
+                        Promocion = promo.Promotion.Nombre,
+                        Descuento = promo.DiscountNumeric,
+                        DescuentoPorcentaje = promo.Discountporcent
+                    });
+                }
             }
 
             return priceDto;
@@ -97,7 +103,7 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.NotFound, "No se seleccionó un paquete");
             }
 
-            var price = await _repository.GetPricePackById((int)filterDto.PaqueteId, filterDto.SucursalId, filterDto.CompañiaId, filterDto.MedicoId);
+            var price = await _repository.GetPricePackById((int)filterDto.PaqueteId, filterDto.SucursalId, filterDto.CompañiaId);
 
             if (price == null || price.Precio <= 0)
             {
@@ -130,14 +136,20 @@ namespace Service.Catalog.Application
                 study.Precio = (decimal)studyPrice;
             }
 
-            var promo = await _promotionRepository.GetPackPromo(price.PrecioListaId, filterDto.SucursalId, (int)filterDto.PaqueteId);
+            var promos = await _promotionRepository.GetPackPromos(price.PrecioListaId, filterDto.SucursalId, filterDto.MedicoId, (int)filterDto.PaqueteId);
 
-            if (promo != null)
+            if (promos != null && promos.Count > 0)
             {
-                priceDto.PromocionId = promo.PromotionId;
-                priceDto.Promocion = promo.Promotion.Nombre;
-                priceDto.Descuento = promo.DiscountNumeric;
-                priceDto.DescuentoPorcentaje = promo.Discountporcent;
+                foreach (var promo in promos)
+                {
+                    priceDto.Promociones.Add(new PriceListInfoPromo
+                    {
+                        PromocionId = promo.PromotionId,
+                        Promocion = promo.Promotion.Nombre,
+                        Descuento = promo.DiscountNumeric,
+                        DescuentoPorcentaje = promo.Discountporcent
+                    });
+                }
             }
 
             return priceDto;

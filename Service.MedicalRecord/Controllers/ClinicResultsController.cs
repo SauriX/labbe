@@ -51,6 +51,7 @@ namespace Service.MedicalRecord.Controllers
         [Authorize(Policies.Update)]
         public async Task UpdateResultPathologicalStudy([FromForm] ClinicalResultPathologicalFormDto result)
         {
+            result.UsuarioId = (Guid)HttpContext.Items["userId"];
             await _service.UpdateResultPathologicalStudy(result);
         }
 
@@ -76,6 +77,15 @@ namespace Service.MedicalRecord.Controllers
         {
             updateStatus.UsuarioId = (Guid)HttpContext.Items["userId"];
             await _service.UpdateStatusStudy(updateStatus.RequestStudyId, updateStatus.status, updateStatus.UsuarioId);
+        }
+
+        [HttpPost("printSelectedStudies")]
+        //[Authorize(Policies.Print)]
+        public async Task<IActionResult> PrintSelectedStudies(ConfigurationToPrintStudies configuration)
+        {
+            var file = await _service.PrintSelectedStudies(configuration);
+
+            return File(file, MimeType.PDF, "Estudios.pdf");
         }
 
         [HttpPost("download/results/pdf")]

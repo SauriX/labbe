@@ -60,6 +60,7 @@ namespace Service.MedicalRecord.Mapper
                 Expediente = model.Expediente,
                 Sexo = model.Genero,
                 FechaNacimiento = model.FechaDeNacimiento,
+                FechaNacimientoFormat = model.FechaDeNacimiento.ToString("MM/dd/yyyy"),
                 Edad = model.Edad,
                 Telefono = model.Telefono,
                 Correo = model.Correo,

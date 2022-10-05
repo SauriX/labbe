@@ -156,6 +156,7 @@
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Dtos\ClinicResultsPdfDto.cs" />
     <Compile Include="Dtos\MantainDto.cs" />
+    <Compile Include="Dtos\PathologicalResultsDto.cs" />
     <Compile Include="Dtos\RequestTagDto.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Extensions\HeaderFooterExtensions.cs" />
@@ -176,6 +177,7 @@
     <Compile Include="Service\LabResultsService.cs" />
     <Compile Include="Service\MantainService.cs" />
     <Compile Include="Service\OrderService.cs" />
+    <Compile Include="Service\PathologicalResultService.cs" />
     <Compile Include="Service\QuotationService.cs" />
     <Compile Include="Service\ReportService.cs" />
     <Compile Include="Service\TagService.cs" />
@@ -183,6 +185,7 @@
     <Compile Include="Utils\BarCode.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\firmaEjemplo.png" />
     <Content Include="Assets\ISOLogo.png" />
     <Content Include="Assets\LabRamosLogo.png" />
     <Content Include="favicon.ico" />
