@@ -289,30 +289,122 @@ namespace Service.MedicalRecord.Application
         {
             var existing = await _repository.GetResultPathologicalById(result.RequestStudyId);
 
+            var existingStudy = await _repository.GetStudyById(result.EstudioId);
+
             if (existing == null)
             {
                 throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
             }
-
-            var newResult = result.ToUpdateClinicalResultPathological(existing);
-
-            await _repository.UpdateResultPathologicalStudy(newResult);
-            if (result.ListaImagenesCargadas != null)
+            if (existingStudy.EstatusId == Status.RequestStudy.Solicitado)
             {
-                for (int i = 0; i < result.ListaImagenesCargadas.Length; i++)
+
+                var newResult = result.ToUpdateClinicalResultPathological(existing);
+
+                await _repository.UpdateResultPathologicalStudy(newResult);
+
+                if (result.ListaImagenesCargadas != null)
                 {
-                    await DeleteImageGetPath(result.ListaImagenesCargadas[i], newResult.EstudioId);
+                    for (int i = 0; i < result.ListaImagenesCargadas.Length; i++)
+                    {
+                        await DeleteImageGetPath(result.ListaImagenesCargadas[i], newResult.EstudioId);
+                    }
+                }
+                if (result.ImagenPatologica != null)
+                {
+                    for (int i = 0; i < result.ImagenPatologica.Count; i++)
+                    {
+                        await SaveImageGetPath(result.ImagenPatologica[i], newResult.EstudioId);
+                    }
                 }
             }
-            if (result.ImagenPatologica != null)
+            if (result.Estatus == Status.RequestStudy.Liberado)
             {
-                for (int i = 0; i < result.ImagenPatologica.Count; i++)
-                {
-                    await SaveImageGetPath(result.ImagenPatologica[i], newResult.EstudioId);
-                }
+                await this.DeliverFilesMedicalResults(result.SolicitudId, result.EstudioId, result.DepartamentoEstudio);
+                //validate partial or not
+            }
+            await this.UpdateStatusStudy(result.EstudioId, result.Estatus, result.UsuarioId);
+
+        }
+        public async Task<byte[]> PrintSelectedStudies(ConfigurationToPrintStudies configuration)
+        {
+            //throw new NotImplementedException();
+            //List<ClinicalResultsPathological> results = new List<ClinicalResultsPathological> { };
+            //foreach (var item in configuration.Estudios)
+            //{
+
+            //    var existingResultPath = await _repository.GetResultPathologicalById(item);
+
+            //    if (existingResultPath == null)
+            //    {
+            //        throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
+            //    }
+            //    results.Add(existingResultPath);
+
+            //}
+            var tasks = configuration.Estudios.Select(x => _repository.GetResultPathologicalById(x));
+            var resultsTask = await Task.WhenAll(tasks);
+
+            
+            var existingResultPathologyPdf = resultsTask.ToList().toInformationPdfResult(configuration.ImprimirLogos);
+            byte[] pdfBytes = await _pdfClient.GeneratePathologicalResults(existingResultPathologyPdf);
+            return pdfBytes;
+        }
+        private async Task<bool> DeliverFilesMedicalResults(Guid requestId, int estudioId, string DepartamentoEstudio)
+        {
+
+            var existingRequest = await _repository.GetRequestById(requestId);
+
+            if (existingRequest == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
             }
 
+            if (existingRequest.Parcialidad)
+            {
+                if(DepartamentoEstudio == "HISTOPATOLÓGICO" || DepartamentoEstudio == "CITOLÓGICO")
+                {
 
+                    var existingResultPath = await _repository.GetResultPathologicalById(estudioId);
+
+
+                    if (existingResultPath == null)
+                    {
+                        throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
+                    }
+
+                    var existingResultPathPdf = existingResultPath.toInformationPdf(existingRequest, DepartamentoEstudio, true);
+
+                    byte[] pdfBytes = await _pdfClient.GeneratePathologicalResults(existingResultPathPdf);
+
+                }
+
+            }
+            else
+            {
+                if (existingRequest.Estudios.All(estudio => estudio.EstatusId == Status.RequestStudy.Liberado))
+                {
+                    existingRequest.Estudios.ForEach(async (estudio) =>
+                    {
+                        if (DepartamentoEstudio == "HISTOPATOLÓGICO" || DepartamentoEstudio == "CITOLÓGICO")
+                        {
+
+                            var existingResultPath = await _repository.GetResultPathologicalById(estudio.EstudioId);
+
+                            if (existingResultPath == null)
+                            {
+                                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
+                            }
+
+                            var existingResultPathPdf = existingResultPath.toInformationPdf(existingRequest, DepartamentoEstudio, true);
+
+                            byte[] pdfBytes = await _pdfClient.GeneratePathologicalResults(existingResultPathPdf);
+                        }
+                    });
+                }
+
+            }
+            
+            return true;
         }
 
         public async Task UpdateStatusStudy(int RequestStudyId, byte status, Guid usuarioId)
@@ -360,5 +452,7 @@ namespace Service.MedicalRecord.Application
         {
             return await _repository.GetRequestStudyById(RequestStudyId);
         }
+
+        
     }
 }

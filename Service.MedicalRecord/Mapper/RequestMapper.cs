@@ -172,8 +172,10 @@ namespace Service.MedicalRecord.Mapper
         {
             if (model == null) return new List<RequestStudyDto>();
 
+
             return model.Select(x => new RequestStudyDto
             {
+                Id = x.Id,
                 SolicitudId = x.SolicitudId,
                 EstudioId = x.EstudioId,
                 Clave = x.Clave,
@@ -201,6 +203,17 @@ namespace Service.MedicalRecord.Mapper
                 Descuento = x.Descuento,
                 DescuentoPorcentaje = x.DescuentoPorcentaje,
                 PrecioFinal = x.PrecioFinal,
+                FechaActualizacion = x.EstatusId == Status.RequestStudy.Capturado
+                    ? x.FechaCaptura?.ToString("dd/MM/yyyy")
+                    : x.EstatusId == Status.RequestStudy.Validado
+                    ? x.FechaValidacion?.ToString("dd/MM/yyyy")
+                    : x.EstatusId == Status.RequestStudy.Liberado
+                    ? x.FechaLiberado?.ToString("dd/MM/yyyy")
+                    : x.EstatusId == Status.RequestStudy.Enviado
+                    ? x.FechaEnviado?.ToString("dd/MM/yyyy")
+                    : "",
+                
+
             }).ToList();
         }
 

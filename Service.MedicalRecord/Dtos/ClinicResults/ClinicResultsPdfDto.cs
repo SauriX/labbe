@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Service.MedicalRecord.Dtos.ClinicResults
 {
-    public class ClinicResultsPdfDto
+    public class PathologicalResultsDto
     {
         public List<ClinicResultsFormDto> CapturaResultados { get; set; }
         public ClinicResultsRequestDto SolicitudInfo { get; set; }

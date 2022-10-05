@@ -146,7 +146,6 @@ namespace Service.MedicalRecord.Repository
 
         public async Task CreateResultPathological(ClinicalResultsPathological result)
         {
-            //throw new NotImplementedException();
             _context.Cat_Captura_ResultadosPatologicos.Add(result);
             await _context.SaveChangesAsync();
         }
@@ -161,7 +160,12 @@ namespace Service.MedicalRecord.Repository
 
         public async Task<ClinicalResultsPathological> GetResultPathologicalById(int id)
         {
-            var resultExisting = await _context.Cat_Captura_ResultadosPatologicos.Where(x => x.RequestStudyId == id).FirstOrDefaultAsync();
+            var resultExisting = await _context.Cat_Captura_ResultadosPatologicos
+                .Where(x => x.RequestStudyId == id)
+                .Include(x => x.Medico)
+                .Include(x => x.Estudio)
+                .Include(x => x.Solicitud).ThenInclude(y => y.Expediente)
+                .FirstOrDefaultAsync();
             return resultExisting;
         }
 
@@ -188,6 +192,20 @@ namespace Service.MedicalRecord.Repository
                 .FirstOrDefaultAsync();
             return resuqestStudy;
 
+        }
+
+        public async Task<Request> GetRequestById(Guid id)
+        {
+            var request = await _context.CAT_Solicitud
+                .Include(x => x.Expediente)
+                .Include(x => x.Sucursal)
+                .Include(x => x.Compañia)
+                .Include(x => x.Medico)
+                .Include(x => x.Estudios.Where(x => x.PaqueteId == null))
+                .Include(x => x.Paquetes).ThenInclude(x => x.Estudios)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            return request;
         }
     }
 }

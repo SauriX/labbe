@@ -131,7 +131,7 @@ namespace Service.MedicalRecord.Client
             }
         }
 
-        public async Task<byte[]> GenerateLabResults(ClinicResultsPdfDto order)
+        public async Task<byte[]> GenerateLabResults(PathologicalResultsDto order)
         {
             try
             {
@@ -140,6 +140,33 @@ namespace Service.MedicalRecord.Client
                 var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
                 var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Pdf")}/api/pdf/lab_results", stringContent);
+
+                if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+                {
+                    return await response.Content.ReadAsByteArrayAsync();
+                }
+
+                var error = await response.Content.ReadFromJsonAsync<ServerException>();
+
+                var ex = Exceptions.GetException(error);
+
+                throw ex;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<byte[]> GeneratePathologicalResults(ClinicResultPathologicalPdfDto order)
+        {
+            try
+            {
+                var json = JsonConvert.SerializeObject(order);
+
+                var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Pdf")}/api/pdf/pathologicalResults", stringContent);
 
                 if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
                 {

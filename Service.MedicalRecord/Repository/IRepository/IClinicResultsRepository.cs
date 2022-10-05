@@ -1,5 +1,6 @@
 ﻿using Service.MedicalRecord.Domain;
 using Service.MedicalRecord.Domain.Request;
+using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.RequestedStudy;
 using System;
 using System.Collections.Generic;
@@ -24,5 +25,7 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task BulkUpdateStudies(Guid requestId, List<RequestStudy> studies);
         Task CreateLabResults(List<ClinicResults> newParameter);
         Task UpdateLabResults(List<ClinicResults> newParameter);
+        Task Create(List<ClinicResults> newParameter);
+        Task<Request> GetRequestById(Guid id);
     }
 }
