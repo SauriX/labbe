@@ -175,9 +175,9 @@ namespace Service.Catalog.Mapper
                     Departamento = x.Paquete.Area.Departamento.Nombre,
                     Precio = x.Precio,
                     Activo = x.Activo,
-                   DescuenNum=x.DescuenNum,
-                   Descuento=x.Descuento,
-                   PrecioFinal=x.PrecioFinal,
+                    DescuenNum = x.DescuenNum,
+                    Descuento = x.Descuento,
+                    PrecioFinal = x.PrecioFinal,
                     Pack = x.Paquete.studies.Select(x => new PackStudyDto
                     {
                         Id = x.EstudioId,
@@ -237,6 +237,7 @@ namespace Service.Catalog.Mapper
                 Precio = model.Precio,
                 Parametros = model.Estudio.Parameters.Select(x => x.Parametro).ToParameterListDto(),
                 Indicaciones = model.Estudio.Indications.Select(x => x.Indicacion).ToIndicationListDto(),
+                Promociones = new List<PriceListInfoPromo>()
             };
         }
 
@@ -254,8 +255,10 @@ namespace Service.Catalog.Mapper
                 DepartamentoId = model.Paquete.DepartamentoId,
                 AreaId = model.Paquete.AreaId,
                 Precio = model.Precio,
-                Descuento= model.DescuenNum,
-                DescuentoPorcentaje=model.Descuento,
+                Descuento = model.DescuenNum,
+                DescuentoPorcentaje = model.Descuento,
+                PrecioFinal = model.PrecioFinal,
+                Promociones = new List<PriceListInfoPromo>(),
                 Estudios = model.Paquete.studies.Select(x => new PriceListInfoStudyDto
                 {
                     ListaPrecioId = model.PrecioListaId,
@@ -300,9 +303,9 @@ namespace Service.Catalog.Mapper
                     PaqueteId = x.Id,
                     Precio = x.Precio,
                     Activo = x.Activo,
-                    Descuento= x.Descuento,
-                    DescuenNum=x.DescuenNum,
-                    PrecioFinal=x.PrecioFinal
+                    Descuento = x.Descuento,
+                    DescuenNum = x.DescuenNum,
+                    PrecioFinal = x.PrecioFinal
                 })?.ToList(),
                 Compañia = dto?.Compañia?.Select(x => new Price_Company
                 {
@@ -357,7 +360,7 @@ namespace Service.Catalog.Mapper
                     Activo = x.Activo,
                     Descuento = x.Descuento,
                     DescuenNum = x.DescuenNum,
-                    PrecioFinal=x.PrecioFinal
+                    PrecioFinal = x.PrecioFinal
                 })?.ToList(),
                 Compañia = dto?.Compañia?.Select(x => new Price_Company
                 {

@@ -32,7 +32,7 @@ namespace Service.Identity.Application
         }
         private static async Task<string> SaveImageGetPath(RequestImageDto requestDto, string fileName = null)
         {
-            var path = Path.Combine("wwwroot/images/medics", requestDto.Clave);
+            var path = Path.Combine("wwwroot/images/users", requestDto.Clave);
             var name = string.Concat(fileName ?? requestDto.Tipo, ".png");
 
             var isSaved = await requestDto.Imagen.SaveFileAsync(path, name);
