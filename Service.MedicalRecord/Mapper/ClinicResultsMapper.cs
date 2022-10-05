@@ -5,6 +5,8 @@ using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Dtos.Sampling;
 using Service.MedicalRecord.Dtos.ClinicResults;
 using Service.MedicalRecord.Domain;
+using System;
+using Service.MedicalRecord.Dtos.Request;
 
 namespace Service.MedicalRecord.Mapper
 {
@@ -29,6 +31,7 @@ namespace Service.MedicalRecord.Mapper
                 Procedencia = x.Procedencia,
                 SucursalNombre = x.Sucursal.Nombre,
                 NombreMedico = x.Medico.Nombre,
+                UsuarioCreo = x.UsuarioCreo
             }).ToList();
         }
 
@@ -36,10 +39,10 @@ namespace Service.MedicalRecord.Mapper
         {
             return model.Select(x => new StudyDto
             {
-                Id = x.EstudioId,
+                EstudioId = x.EstudioId,
                 Nombre = x.Nombre,
                 Area = "",
-                Status = x.EstatusId,
+                EstatusId = x.EstatusId,
                 Registro = x.FechaCreo.ToString("G"),
                 Entrega = x.FechaCreo.AddDays((double)x.Dias).ToString("G"),
                 Seleccion = false,
@@ -48,18 +51,18 @@ namespace Service.MedicalRecord.Mapper
             }).ToList();
         }
 
-        public static List<ClinicResultsCaptureDto> ToCaptureResults(this ICollection<ClinicResults> model)
+        public static List<ClinicResults> ToCaptureResults(this List<ClinicResultsCaptureDto> model)
         {
-            return model.Select(x => new ClinicResultsCaptureDto
+            return model.Select(x => new ClinicResults
             {
                 Id = x.Id,
                 Nombre = x.Nombre,
-                Edad = x.Solicitud.Expediente.Edad,
-                ClaveSolicitud = x.Solicitud.Clave,
-                TipoValor = x.TipoValorId,
+                SolicitudId = x.SolicitudId,
+                EstudioId = x.EstudioId,
+                TipoValorId = x.TipoValor,
                 ValorInicial = x.ValorInicial,
                 ValorFinal = x.ValorFinal,
-                ParametroId = x.ParametroId.ToString(),
+                ParametroId = Guid.Parse(x.ParametroId),
                 Resultado = x.Resultado
             }).ToList();
         }
@@ -127,14 +130,58 @@ namespace Service.MedicalRecord.Mapper
                 RequestStudyId = dto.RequestStudyId,
                 DescripcionMacroscopica = dto.DescripcionMacroscopica,
                 DescripcionMicroscopica = dto.DescripcionMicroscopica,
-                //ImagenPatologica = dto.ImagenPatologica == null 
-                //                    ? "" + string.Join(",", newNameFiles)  
-                //                    : string.Join(",", dto.ImagenPatologica.Select(x => x.FileName)) + string.Join(",", newNameFiles),
                 ImagenPatologica = fullNamesImages,
                 Diagnostico = dto.Diagnostico,
                 MuestraRecibida = dto.MuestraRecibida,
                 MedicoId = dto.MedicoId,
             };
+        }
+
+        public static ClinicResultsPdfDto ToResults(this IEnumerable<ClinicResults> model)
+        {
+            if (model == null || !model.Any()) return new ClinicResultsPdfDto();
+
+            var results = ResultsGeneric(model);
+            var requestInfo = model.First();
+
+            var request = new ClinicResultsRequestDto
+            {
+                Id = (Guid)(requestInfo.Solicitud.Id),
+                Clave = requestInfo.Solicitud.Clave,
+                Paciente = requestInfo.Solicitud.Expediente.NombrePaciente,
+                Medico = requestInfo.Solicitud.Medico.Nombre,
+                Compañia = requestInfo.Solicitud.Compañia.Nombre,
+                Expediente = requestInfo.Solicitud.Expediente.Expediente,
+                Edad = requestInfo.Solicitud.Expediente.Edad,
+                Sexo = requestInfo.Solicitud.Expediente.Genero,
+                FechaAdmision = requestInfo.Solicitud.FechaCreo.ToString("d"),
+                FechaEntrega = requestInfo.Solicitud.Estudios.Max(x => x.FechaEntrega).ToString("d"),
+                User = requestInfo.Solicitud.UsuarioCreo
+            };
+
+            var data = new ClinicResultsPdfDto
+            {
+                CapturaResultados = results,
+                SolicitudInfo = request,
+            };
+
+            return data;
+        }
+
+        public static List<ClinicResultsCaptureDto> ResultsGeneric(this IEnumerable<ClinicResults> model)
+        {
+            return model.Select(results =>
+            {
+                return new ClinicResultsCaptureDto
+                {
+                    Nombre = results.NombreParametro,
+                    TipoValor = results.TipoValorId,
+                    ValorInicial = results.ValorInicial,
+                    ValorFinal = results.ValorInicial,
+                    ParametroId = results.ParametroId.ToString(),
+                    Resultado = results.Resultado,
+                };
+            }).ToList();
         }
     }
 }

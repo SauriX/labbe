@@ -1,7 +1,7 @@
-﻿{
+{
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/RouteTracking/order/{id}",
+      "DownstreamPathTemplate": "/api/ShipmentTracking/order/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -9,11 +9,11 @@
           "Port": 24048
         }
       ],
-      "UpstreamPathTemplate": "/api/RouteTracking/order/{id}",
+      "UpstreamPathTemplate": "/api/ShipmentTracking/order/{id}",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/RouteTracking/{id}",
+      "DownstreamPathTemplate": "/api/ShipmentTracking/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -21,11 +21,8 @@
           "Port": 24048
         }
       ],
-      "UpstreamPathTemplate": "/api/RouteTracking/{id}",
+      "UpstreamPathTemplate": "/api/ShipmentTracking/{id}",
       "UpstreamHttpMethod": [ "GET" ]
     }
-
-
   ]
 }
-

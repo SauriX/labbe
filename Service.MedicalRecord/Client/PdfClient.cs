@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Service.MedicalRecord.Client.IClient;
 using Service.MedicalRecord.Dtos;
+using Service.MedicalRecord.Dtos.ClinicResults;
 using Service.MedicalRecord.Dtos.Request;
 using Shared.Error;
 using Shared.Helpers;
@@ -130,7 +131,7 @@ namespace Service.MedicalRecord.Client
             }
         }
 
-        public async Task<byte[]> GenerateLabResults(ClinicResultsDto order)
+        public async Task<byte[]> GenerateLabResults(ClinicResultsPdfDto order)
         {
             try
             {

@@ -77,5 +77,13 @@ namespace Service.MedicalRecord.Controllers
             updateStatus.UsuarioId = (Guid)HttpContext.Items["userId"];
             await _service.UpdateStatusStudy(updateStatus.RequestStudyId, updateStatus.status, updateStatus.UsuarioId);
         }
+
+        [HttpPost("download/results/pdf")]
+        [Authorize(Policies.Download)]
+        public async Task<IActionResult> LabResultsPDF(Guid recordId, Guid requestId)
+        {
+            var file = await _service.PrintResults(recordId, requestId);
+            return File(file, MimeType.PDF, $"Resultados - {requestId}.pdf");
+        }
     }
 }

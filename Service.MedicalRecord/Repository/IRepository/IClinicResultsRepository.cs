@@ -17,14 +17,11 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task<ClinicalResultsPathological> GetResultPathologicalById(int id);
         Task<RequestStudy> GetRequestStudyById(int RequestStudyId);
         Task<List<Request>> GetAll(RequestedStudySearchDto search);
-        Task<Request> GetById(Guid id);
+        Task<ClinicResults> GetById(Guid id);
+        Task<List<ClinicResults>> GetByRequest(Guid requestId);
         Task<Request> FindAsync(Guid id);
         Task<List<RequestStudy>> GetStudyById(Guid requestId, IEnumerable<int> studiesIds);
         Task BulkUpdateStudies(Guid requestId, List<RequestStudy> studies);
-        Task<RequestImage> GetImage(Guid requestId, string code);
-        Task<List<RequestImage>> GetImages(Guid requestId);
-        Task UpdateImage(RequestImage requestImage);
-        Task DeleteImage(Guid requestId, string code);
-        Task Create(object newParameter);
+        Task Create(List<ClinicResults> newParameter);
     }
 }

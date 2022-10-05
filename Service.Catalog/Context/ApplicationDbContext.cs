@@ -85,6 +85,7 @@ namespace Service.Catalog.Context
         public DbSet<EquipmentBranch> Relacion_Equipo_Sucursal { get; set; }
         public DbSet<Mantain> CAT_Mantenimiento_Equipo { get; set; }
         public DbSet<MantainImages> CAT_Mantenimiento_Equipo_Images { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder builder)
         {
 

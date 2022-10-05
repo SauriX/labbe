@@ -19,6 +19,7 @@ namespace Service.MedicalRecord.Context
         public DbSet<MedicalRecordTaxData> Relacion_Expediente_Factura { get; set; }
         public DbSet<Request> CAT_Solicitud { get; set; }
         public DbSet<RequestStudy> Relacion_Solicitud_Estudio { get; set; }
+        public DbSet<ClinicResults> ClinicResults { get; set; }
         public DbSet<RequestPack> Relacion_Solicitud_Paquete { get; set; }
         public DbSet<RequestImage> Relacion_Solicitud_Imagen { get; set; }
         public DbSet<AppointmentLab> CAT_Cita_Lab { get; set; }

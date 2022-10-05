@@ -24,6 +24,9 @@ namespace Service.Catalog.Dtos.Parameter
         public string Fcsi { get; set; }
         public bool Activo { get; set; }
         public bool Requerido { get; set; }
+        public bool DeltaCheck { get; set; }
+        public bool MostrarFormato { get; set; }
+        public bool ValoresCriticos { get; set; }
         public Guid UsuarioId { get; set; }
         public IEnumerable<ParameterStudyDto> Estudios { get; set; }
         public IEnumerable<ReagentListDto> Reactivos { get; set; }

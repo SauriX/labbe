@@ -1362,6 +1362,9 @@ namespace Service.Catalog.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PrimerApellido")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -1491,6 +1494,9 @@ namespace Service.Catalog.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<bool>("DeltaCheck")
+                        .HasColumnType("bit");
+
                     b.Property<int>("DepartamentoId")
                         .HasColumnType("int");
 
@@ -1514,6 +1520,9 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("Formula")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<bool>("MostrarFormato")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Nombre")
                         .HasMaxLength(100)
@@ -1544,6 +1553,9 @@ namespace Service.Catalog.Migrations
 
                     b.Property<Guid>("UsuarioModificoId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("ValorCriticos")
+                        .HasColumnType("bit");
 
                     b.Property<decimal>("ValorInicial")
                         .HasMaxLength(100)
@@ -1628,6 +1640,12 @@ namespace Service.Catalog.Migrations
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
+
+                    b.Property<decimal>("CriticoMaximo")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("CriticoMinimo")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("DescripcionParrafo")
                         .HasColumnType("nvarchar(max)");

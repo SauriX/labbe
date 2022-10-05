@@ -154,7 +154,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\PdfController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
-    <Compile Include="Dtos\LabResultsDto.cs" />
+    <Compile Include="Dtos\ClinicResultsPdfDto.cs" />
     <Compile Include="Dtos\MantainDto.cs" />
     <Compile Include="Dtos\RequestTagDto.cs" />
     <Compile Include="Extensions\Extensions.cs" />
@@ -183,6 +183,7 @@
     <Compile Include="Utils\BarCode.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\ISOLogo.png" />
     <Content Include="Assets\LabRamosLogo.png" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />

@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
+using Service.Catalog.Dtos.Medicos;
 namespace Service.Catalog.Repository.IRepository
 {
 
@@ -14,6 +14,7 @@ namespace Service.Catalog.Repository.IRepository
         Task<List<Medics>> GetAll(string search = null);
         Task<List<Medics>> GetActive();
         Task<Medics> GetByCode(string code);
+
 
     }
 

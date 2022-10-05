@@ -17,6 +17,7 @@ namespace Service.Identity.Application.IApplication
         Task UpdatePassword(ChangePasswordFormDto data);
         Task<(byte[] file, string fileName)> ExportForm(string id);
         Task<(byte[] file, string fileName)> ExportList(string search = null);
+        Task<string> SaveImage(RequestImageDto requestDto);
     }
 }
 

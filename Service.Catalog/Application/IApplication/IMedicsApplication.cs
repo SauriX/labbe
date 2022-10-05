@@ -14,6 +14,7 @@ namespace Service.Catalog.Application.IApplication
         Task<IEnumerable<MedicsListDto>> GetActive();
         Task<(byte[] file, string fileName)> ExportList(string search);
         Task<(byte[] file, string fileName)> ExportForm(Guid id);
+        
         //Task<string> GenerateCode(MedicsClaveDto medics, string suffix = null);
 
     }

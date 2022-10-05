@@ -31,6 +31,7 @@ namespace Service.MedicalRecord.Dtos.Request
         public string Estatus { get; set; }
         public string Color { get; set; }
         public int Departamento { get; set; }
+        public int AreaId { get; set; }
         public string FechaTomaMuestra { get; set; }
         public string FechaValidacion { get; set; }
         public string FechaSolicitado{ get; set; }

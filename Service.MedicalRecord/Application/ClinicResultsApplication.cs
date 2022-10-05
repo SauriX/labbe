@@ -48,11 +48,6 @@ namespace Service.MedicalRecord.Application
             _rabbitMQSettings = rabbitMQSettings;
         }
 
-        public Task DeleteImage(Guid recordId, Guid requestId, string code)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<(byte[] file, string fileName)> ExportList(RequestedStudySearchDto search)
         {
             var studies = await GetAll(search);
@@ -124,51 +119,29 @@ namespace Service.MedicalRecord.Application
             }
         }
 
-        /*public async Task<ClinicResultsCaptureDto> Create(ClinicResults results)
+        public async Task Create(List<ClinicResultsCaptureDto> results)
         {
-            if (!string.IsNullOrEmpty(results.Id.ToString()))
+            if (results.Count() == 0)
             {
                 throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
             }
 
             var newResults = results.ToCaptureResults();
-
-            await CheckDuplicate(newResults);
-
             await _repository.Create(newResults);
-
-            newResults = await _repository.GetById(newResults.Id);
-
-            return newResults.ToCaptureResults();
-        }*/
-
-        private Task CheckDuplicate(object newResults)
-        {
-            throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<string>> GetImages(Guid recordId, Guid requestId)
+        public async Task<byte[]> PrintResults(Guid recordId, Guid requestId)
         {
-            throw new NotImplementedException();
-        }
+            var results = await _repository.GetByRequest(requestId);
 
-        /*public async Task<byte[]> PrintOrder(Guid recordId, Guid requestId)
-        {
-            var results = await _repository.GetById(requestId);
-
-            if (results == null || results.ExpedienteId != recordId)
+            if (results == null || !results.Any())
             {
                 throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
             }
 
-            var order = results.ToRequestDto();
+            var order = results.ToResults();
 
             return await _pdfClient.GenerateLabResults(order);
-        }*/
-
-        public Task<string> SaveImage(RequestImageDto requestDto)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task SendTestEmail(RequestSendDto requestDto)
@@ -300,6 +273,8 @@ namespace Service.MedicalRecord.Application
                     await SaveImageGetPath(result.ImagenPatologica[i], newResult.EstudioId);
                 }
             }
+
+
         }
 
         public async Task UpdateStatusStudy(int RequestStudyId, byte status, Guid usuarioId)
@@ -318,17 +293,17 @@ namespace Service.MedicalRecord.Application
             }
             if (Status.RequestStudy.Validado == status)
             {
-                existingStudy.FechaCaptura = DateTime.Now;
+                existingStudy.FechaValidacion = DateTime.Now;
                 existingStudy.UsuarioCaptura = usuarioId.ToString();
             }
             if (Status.RequestStudy.Liberado == status)
             {
-                existingStudy.FechaCaptura = DateTime.Now;
+                existingStudy.FechaLiberado = DateTime.Now;
                 existingStudy.UsuarioCaptura = usuarioId.ToString();
             }
             if (Status.RequestStudy.Enviado == status)
             {
-                existingStudy.FechaCaptura = DateTime.Now;
+                existingStudy.FechaEnviado = DateTime.Now;
                 existingStudy.UsuarioCaptura = usuarioId.ToString();
             }
             
@@ -337,6 +312,7 @@ namespace Service.MedicalRecord.Application
 
             await _repository.UpdateStatusStudy(existingStudy);
         }
+
         public async Task<ClinicalResultsPathological> GetResultPathological(int RequestStudyId)
         {
             return await _repository.GetResultPathologicalById(RequestStudyId);
