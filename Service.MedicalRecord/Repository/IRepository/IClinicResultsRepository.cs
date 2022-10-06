@@ -16,6 +16,7 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task UpdateStatusStudy(RequestStudy study);
         Task<RequestStudy> GetStudyById(int RequestStudyId);
         Task<ClinicalResultsPathological> GetResultPathologicalById(int id);
+        Task<ClinicResults> GetLabResultsById(int id);
         Task<RequestStudy> GetRequestStudyById(int RequestStudyId);
         Task<List<Request>> GetAll(RequestedStudySearchDto search);
         Task<ClinicResults> GetById(Guid id);
@@ -25,7 +26,6 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task BulkUpdateStudies(Guid requestId, List<RequestStudy> studies);
         Task CreateLabResults(List<ClinicResults> newParameter);
         Task UpdateLabResults(List<ClinicResults> newParameter);
-        Task Create(List<ClinicResults> newParameter);
         Task<Request> GetRequestById(Guid id);
     }
 }

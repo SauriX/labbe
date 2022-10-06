@@ -169,6 +169,16 @@ namespace Service.MedicalRecord.Repository
             return resultExisting;
         }
 
+        public async Task<ClinicResults> GetLabResultsById(int id)
+        {
+            var resultExisting = await _context.ClinicResults
+                .Where(x => x.EstudioId == id)
+                .Include(x => x.Estudio)
+                .Include(x => x.Solicitud).ThenInclude(y => y.Expediente)
+                .FirstOrDefaultAsync();
+            return resultExisting;
+        }
+
 
         public async Task UpdateStatusStudy(RequestStudy study)
         {

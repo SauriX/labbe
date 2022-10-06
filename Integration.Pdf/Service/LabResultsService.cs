@@ -75,7 +75,9 @@ namespace Integration.Pdf.Service
             var headerUrl = new Col("www.laboratorioramos.com.mx", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Center);
             var header = section.Headers.Primary;
 
-            var headerInfo = new Col[]
+            if (results.ImprimrLogos)
+            {
+                var headerInfo = new Col[]
             {
                 new Col(LabRamosImage, 6, ParagraphAlignment.Left),
                 new Col(headerParagraph, 3, ParagraphAlignment.Center),
@@ -85,16 +87,17 @@ namespace Integration.Pdf.Service
                 },
             };
 
-            header.AddText(headerInfo);
+                header.AddText(headerInfo);
 
-            var headerURL = new Col[]
-            {
+                var headerURL = new Col[]
+                {
                 new Col("", 6),
                 headerUrl,
                 new Col("", 4),
-            };
+                };
 
-            header.AddText(headerURL);
+                header.AddText(headerURL);
+            }
 
             section.AddSpace(2);
 

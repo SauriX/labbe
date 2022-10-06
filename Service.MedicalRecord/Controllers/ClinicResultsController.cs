@@ -48,7 +48,7 @@ namespace Service.MedicalRecord.Controllers
             await _service.SaveLabResults(results);
         }
 
-        [HttpPost("updateResults")]
+        [HttpPut("updateResults")]
         [Authorize(Policies.Create)]
         public async Task UpdateLabResults(List<ClinicResultsFormDto> results)
         {
@@ -110,12 +110,12 @@ namespace Service.MedicalRecord.Controllers
             return File(file, MimeType.PDF, "Estudios.pdf");
         }
 
-        [HttpPost("download/results/pdf")]
+        /*[HttpPost("download/results/pdf")]
         [Authorize(Policies.Download)]
         public async Task<IActionResult> LabResultsPDF(Guid recordId, Guid requestId)
         {
             var file = await _service.PrintResults(recordId, requestId);
             return File(file, MimeType.PDF, $"Resultados - {requestId}.pdf");
-        }
+        }*/
     }
 }

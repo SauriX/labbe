@@ -66,6 +66,7 @@ namespace Service.MedicalRecord.Mapper
                 Resultado = x.Resultado
             }).ToList();
         }
+
         public static ClinicalResultsPathological ToClinicalResultPathological(this ClinicalResultPathologicalFormDto dto)
         {
             if (dto == null) return null;
@@ -137,9 +138,9 @@ namespace Service.MedicalRecord.Mapper
             };
         }
 
-        public static PathologicalResultsDto ToResults(this IEnumerable<ClinicResults> model)
+        public static ClinicResultsPdfDto ToResults(this IEnumerable<ClinicResults> model, bool ImprimirLogos)
         {
-            if (model == null || !model.Any()) return new PathologicalResultsDto();
+            if (model == null || !model.Any()) return new ClinicResultsPdfDto();
 
             var results = ResultsGeneric(model);
             var requestInfo = model.First();
@@ -159,10 +160,11 @@ namespace Service.MedicalRecord.Mapper
                 User = requestInfo.Solicitud.UsuarioCreo
             };
 
-            var data = new PathologicalResultsDto
+            var data = new ClinicResultsPdfDto
             {
                 CapturaResultados = results,
                 SolicitudInfo = request,
+                ImprimrLogos = ImprimirLogos,
             };
 
             return data;
@@ -206,6 +208,7 @@ namespace Service.MedicalRecord.Mapper
                 
             };
         } 
+
         public static ClinicResultPathologicalPdfDto toInformationPdf(this ClinicalResultsPathological result, Request request, string Departamento, bool ImprimirLogos)
         {
             return new ClinicResultPathologicalPdfDto

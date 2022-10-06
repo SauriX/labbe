@@ -15,7 +15,7 @@ namespace Service.MedicalRecord.Application.IApplication
     {
         Task<List<ClinicResultsDto>> GetAll(RequestedStudySearchDto search);
         Task<(byte[] file, string fileName)> ExportList(RequestedStudySearchDto search);
-        Task<byte[]> PrintResults(Guid recordId, Guid requestId);
+       /* Task<byte[]> PrintResults(Guid recordId, Guid requestId);*/
         Task SendTestEmail(RequestSendDto requestDto);
         Task SendTestWhatsapp(RequestSendDto requestDto);
         Task SaveLabResults(List<ClinicResultsFormDto> results);
@@ -27,6 +27,5 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<RequestStudy> GetRequestStudyById(int RequestStudyId);
         Task<RequestStudyUpdateDto> GetStudies(Guid recordId, Guid requestId);
         Task<byte[]> PrintSelectedStudies(ConfigurationToPrintStudies configuration);
-
     }
 }
