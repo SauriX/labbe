@@ -53,8 +53,8 @@ namespace Integration.Pdf.Service
             section.PageSetup.Orientation = Orientation.Portrait;
             section.PageSetup.PageFormat = PageFormat.A4;
 
-            section.PageSetup.TopMargin = Unit.FromCentimeter(1);
-            section.PageSetup.BottomMargin = Unit.FromCentimeter(1);
+            section.PageSetup.TopMargin = Unit.FromCentimeter(5);
+            section.PageSetup.BottomMargin = Unit.FromCentimeter(5);
             section.PageSetup.LeftMargin = Unit.FromCentimeter(1);
             section.PageSetup.RightMargin = Unit.FromCentimeter(1);
 
@@ -75,22 +75,31 @@ namespace Integration.Pdf.Service
             var headerUrl = new Col("www.laboratorioramos.com.mx", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Center);
             var header = section.Headers.Primary;
 
-            var headerInfo = new Col[]
+            if (results.ImprimrLogos)
             {
-                new Col(LabRamosImage),
-                new Col(headerParagraph),
-                new Col(ISOImage)
+                var headerInfo = new Col[]
+            {
+                new Col(LabRamosImage, 6, ParagraphAlignment.Left),
+                new Col(headerParagraph, 3, ParagraphAlignment.Center),
+                new Col(ISOImage, 4, ParagraphAlignment.Right)
                 {
                     ImagenTamaño = Unit.FromCentimeter(4)
                 },
             };
 
-            header.AddText(headerInfo);
+                header.AddText(headerInfo);
 
-            /*var title = new Col("Laboratorio Alfonso Ramos S.A. de C.V. (HERMOSILLO)", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Right);
-            section.AddText(title);*/
+                var headerURL = new Col[]
+                {
+                new Col("", 6),
+                headerUrl,
+                new Col("", 4),
+                };
 
-            section.AddSpace();
+                header.AddText(headerURL);
+            }
+
+            section.AddSpace(2);
 
             var line1 = new Col[]
             {
@@ -185,10 +194,33 @@ namespace Integration.Pdf.Service
 
             footer.AddText(footerTitleBranches);
 
-            var footerBranches = new Col[]
+            var footerBranchesUnits = new Col[]
             {
-                new Col("UNIDAD CENTRO",   new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center)
+                new Col("UNIDAD CENTRO", 1,new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
+                new Col("UNIDAD 200", 1, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
+                new Col("UNIDAD 300", 1, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
+                new Col("CENTRO MÉDICO\nSUR SONORA", 1, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
+                new Col("UNIDAD GUAYMAS", 1, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
+                new Col("CENTRO MÉDICO\nDEL RÍO", 1, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
+                new Col("MORELOS", 1, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
+                new Col("NAVARRETE", 1, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
             };
+
+            footer.AddText(footerBranchesUnits);
+
+            var footerBranchesAddress = new Col[]
+            {
+                new Col("Sinaloa No. 144 Sur Col. Centro\nTels. (664) 415-16-92,\n414-08-41, 414-08-42, 415-31-39\ny 415-31-40", 1,new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
+                new Col("Calle 200 Casi\nEsq. con Michoacán\nTels. (644)412-31-56\ny 416-14-07", 1, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
+                new Col("Jalisco No. 2250 Esq.\nCalle 300 Plaza Perisur\nCd. Obregón, Son.\nTel. (644) 444-66-69", 1, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
+                new Col("Calle Norte No. 749 Ote.\nEsq. con Sonora\nTel(644) 415-06-66", 1, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
+                new Col("Calzada Agustín García López\nLocal 6 esq. Paseo de las Villas\nFracc. Las Villas\nTel. (622) 221-9183", 1, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
+                new Col("Reforma No. 273 Sur\nTel. (662) 213-6866", 1, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
+                new Col("Blvd. Morelos No. 357\nCol. El Bachoco\nTels. (662) 267-8635 y 37", 1, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
+                new Col("Blvd. Navarrete No. 292\nCol. Raquet Club\nTel. (662) 216-3342", 1, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
+            };  
+
+            footer.AddText(footerBranchesAddress);
         }
     }
 }
