@@ -155,6 +155,8 @@ namespace Service.MedicalRecord.Repository
         {
             var studies = await _context.Relacion_Solicitud_Estudio
                 .Include(x => x.Paquete)
+                .Include(x => x.Tapon)
+                .Include(x => x.Estatus)
                 .Where(x => x.SolicitudId == requestId)
                 .ToListAsync();
 

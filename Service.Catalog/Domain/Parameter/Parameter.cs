@@ -13,7 +13,10 @@ namespace Service.Catalog.Domain.Parameter
         public decimal ValorFinal { get; set; }
         public string TipoValor { get; set; }
         public string NombreCorto { get; set; }
-        public int Unidades { get; set; }
+        public int UnidadId { get; set; }
+        public virtual Units Unidad { get; set; }
+        public int UnidadSiId { get; set; }
+        public virtual Units UnidadSi { get; set; }
         public string Formula { get; set; }
         public int DepartamentoId { get; set; }
         public virtual Department Departmento { get; set; }
@@ -21,7 +24,6 @@ namespace Service.Catalog.Domain.Parameter
         public virtual Area Area { get; set; }
         public int FormatoImpresionId { get; set; }
         public virtual Format FormatoImpresion { get; set; }
-        public int UnidadSi { get; set; }
         public string FCSI { get; set; }
         public bool Activo { get; set; }
         public bool Requerido { get; set; }

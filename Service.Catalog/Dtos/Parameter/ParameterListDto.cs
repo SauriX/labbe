@@ -14,6 +14,7 @@
         public bool ValoresCriticos { get; set; }
         public bool MostrarFormato { get; set; }
         public int Unidades { get; set; }
+        public string UnidadNombre { get; set; }
         public string TipoValor { get; set; }
         public decimal ValorInicial { get; set; }
         public decimal ValorFinal { get; set; }
