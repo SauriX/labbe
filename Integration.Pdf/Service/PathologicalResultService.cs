@@ -53,8 +53,15 @@ namespace Integration.Pdf.Service
 
             section.PageSetup.Orientation = Orientation.Portrait;
             section.PageSetup.PageFormat = PageFormat.A4;
+            if (results.ImprimrLogos)
+            {
+                section.PageSetup.TopMargin = Unit.FromCentimeter(5);
 
-            section.PageSetup.TopMargin = Unit.FromCentimeter(5);
+            }
+            else
+            {
+                section.PageSetup.TopMargin = Unit.FromCentimeter(2);
+            }
             section.PageSetup.BottomMargin = Unit.FromCentimeter(1);
             section.PageSetup.LeftMargin = Unit.FromCentimeter(1);
             section.PageSetup.RightMargin = Unit.FromCentimeter(1);
@@ -107,7 +114,7 @@ namespace Integration.Pdf.Service
                     new Col("Fecha de entrega: ", 3, ParagraphAlignment.Left),
                     new Col($"{result.Information[i].FechaEntrega}", 21, Col.FONT_BOLD, ParagraphAlignment.Left)
                 };
-                section.AddBorderedText(line1, top: true, right: true, left: true);
+                section.AddText(line1);
 
                 var line2 = new Col[]
                 {
@@ -116,7 +123,7 @@ namespace Integration.Pdf.Service
                     new Col("Edad: ", 1, ParagraphAlignment.Left),
                     new Col($"{result.Information[i].Edad}", 3, Col.FONT_BOLD, ParagraphAlignment.Left)
                 };
-                section.AddBorderedText(line2, right: true, left: true);
+                section.AddText(line2);
 
                 var line3 = new Col[]
                 {
@@ -124,14 +131,14 @@ namespace Integration.Pdf.Service
                     new Col($"{result.Information[i].Estudio}", 8, Col.FONT_BOLD, ParagraphAlignment.Left)
                 };
 
-                section.AddBorderedText(line3, right: true, left: true);
+                section.AddText(line3);
 
                 var line4 = new Col[]
                 {
                     new Col($"{result.Information[i].Clave}", 8, Col.FONT_BOLD, ParagraphAlignment.Left)
                 };
 
-                section.AddBorderedText(line4, right: true, left: true);
+                section.AddText(line4);
 
                 var line5 = new Col[]
                 {
@@ -139,56 +146,57 @@ namespace Integration.Pdf.Service
                     new Col($"REPORTE DE ESTUDIO HISTOPATOLÓGICO", 10, Col.FONT_BOLD, ParagraphAlignment.Center)
                 };
 
-                section.AddBorderedText(line5, right: true, left: true);
+                section.AddText(line5);
 
                 var line6 = new Col[]
                 {
                     new Col($"Muestra recibida: {result.Information[i].MuestraRecibida}", 8, Col.FONT_BOLD, ParagraphAlignment.Left)
                 };
 
-                section.AddBorderedText(line6, right: true, left: true);
+                section.AddText(line6);
 
                 var line7 = new Col[]
                 {
                     new Col($"DESCRIPCIÓN MACROSCÓPICA", 10, Col.FONT_BOLD, ParagraphAlignment.Left)
                 };
 
-                section.AddBorderedText(line7, right: true, left: true);
+                section.AddText(line7);
 
                 var line8 = new Col[]
                 {
                     new Col($"{result.Information[i].DescripcionMacroscopica}", 8, Col.FONT_BOLD, ParagraphAlignment.Left)
                 };
 
-                section.AddBorderedText(line8, right: true, left: true);
+                section.AddText(line8);
 
                 var line9 = new Col[]
                 {
                     new Col($"DESCRIPCIÓN MICROSCÓPICA", 10, Col.FONT_BOLD, ParagraphAlignment.Left)
                 };
 
-                section.AddBorderedText(line9, right: true, left: true);
+                section.AddText(line9);
 
                 var line10 = new Col[]
                {
                     new Col($"{result.Information[i].DescripcionMicroscopica}", 8, Col.FONT_BOLD, ParagraphAlignment.Left)
                };
 
-                section.AddBorderedText(line10, right: true, left: true);
+                section.AddText(line10);
 
                 var line11 = new Col[]
                 {
                     new Col($"DIAGNÓSTICO", 10, Col.FONT_BOLD, ParagraphAlignment.Left)
                 };
 
-                section.AddBorderedText(line11, right: true, left: true);
+                section.AddText(line11);
 
                 var line12 = new Col[]
                 {
-                        new Col($"{result.Information[i].Diagnostico}", 8, Col.FONT_BOLD, ParagraphAlignment.Left)
+                        new Col($"{result.Information[i].Diagnostico}")
                 };
 
-                section.AddBorderedText(line12, right: true, left: true);
+                //section.AddText(line12);
+                section.AddRichTextFormat(line12);
 
                 var firmaLine = new Col[]
                 {
@@ -196,21 +204,21 @@ namespace Integration.Pdf.Service
 
                 };
 
-                section.AddBorderedText(firmaLine, right: true, left: true);
+                section.AddText(firmaLine);
 
                 var line13 = new Col[]
                 {
                     new Col($"ATENTAMENTE", 10, Col.FONT_BOLD, ParagraphAlignment.Center)
                 };
 
-                section.AddBorderedText(line13, right: true, left: true);
+                section.AddText(line13);
 
                 var line14 = new Col[]
                 {
                         new Col($"{result.Information[i].NombreFirma}", 8, Col.FONT_BOLD, ParagraphAlignment.Center)
                 };
 
-                section.AddBorderedText(line14, right: true, left: true);
+                section.AddText(line14);
 
                 if (i < result.Information.Count - 1)
                 {
@@ -218,6 +226,7 @@ namespace Integration.Pdf.Service
                 }
                 
             }
+
             
 
             

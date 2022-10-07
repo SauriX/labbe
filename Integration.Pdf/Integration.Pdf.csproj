@@ -158,6 +158,7 @@
     <Compile Include="Dtos\MantainDto.cs" />
     <Compile Include="Dtos\PathologicalResultsDto.cs" />
     <Compile Include="Dtos\RequestTagDto.cs" />
+    <Compile Include="Dtos\RichTextFormatRAWDto.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Extensions\HeaderFooterExtensions.cs" />
     <Compile Include="Extensions\SectionExtensions.cs" />
