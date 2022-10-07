@@ -131,7 +131,7 @@ namespace Service.MedicalRecord.Client
             }
         }
 
-        public async Task<byte[]> GenerateLabResults(PathologicalResultsDto order)
+        public async Task<byte[]> GenerateLabResults(ClinicResultsPdfDto order)
         {
             try
             {

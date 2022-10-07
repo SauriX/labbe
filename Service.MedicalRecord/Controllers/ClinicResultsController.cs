@@ -5,6 +5,7 @@ using Service.MedicalRecord.Domain;
 using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Dtos;
 using Service.MedicalRecord.Dtos.ClinicResults;
+using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.RequestedStudy;
 using Shared.Dictionary;
 using System;
@@ -38,6 +39,26 @@ namespace Service.MedicalRecord.Controllers
         {
             var (file, fileName) = await _service.ExportList(search);
             return File(file, MimeType.XLSX, fileName);
+        }
+
+        [HttpPost("saveResults")]
+        [Authorize(Policies.Create)]
+        public async Task SaveLabResults(List<ClinicResultsFormDto> results)
+        {
+            await _service.SaveLabResults(results);
+        }
+
+        [HttpPut("updateResults")]
+        [Authorize(Policies.Create)]
+        public async Task UpdateLabResults(List<ClinicResultsFormDto> results)
+        {
+            await _service.UpdateLabResults(results);
+        }
+
+        [HttpGet("studies_params/{recordId}/{requestId}")]
+        public async Task<RequestStudyUpdateDto> GetStudies(Guid recordId, Guid requestId)
+        {
+            return await _service.GetStudies(recordId, requestId);
         }
 
         [HttpPost("savePathological")]
@@ -79,6 +100,7 @@ namespace Service.MedicalRecord.Controllers
             await _service.UpdateStatusStudy(updateStatus.RequestStudyId, updateStatus.status, updateStatus.UsuarioId);
         }
 
+        [HttpPost("labResults/{recordId}/{requestId}")]
         [HttpPost("printSelectedStudies")]
         //[Authorize(Policies.Print)]
         public async Task<IActionResult> PrintSelectedStudies(ConfigurationToPrintStudies configuration)
@@ -88,12 +110,12 @@ namespace Service.MedicalRecord.Controllers
             return File(file, MimeType.PDF, "Estudios.pdf");
         }
 
-        [HttpPost("download/results/pdf")]
+        /*[HttpPost("download/results/pdf")]
         [Authorize(Policies.Download)]
         public async Task<IActionResult> LabResultsPDF(Guid recordId, Guid requestId)
         {
             var file = await _service.PrintResults(recordId, requestId);
             return File(file, MimeType.PDF, $"Resultados - {requestId}.pdf");
-        }
+        }*/
     }
 }

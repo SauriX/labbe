@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221005152129_AgregarCamposParametros")]
+    partial class AgregarCamposParametros
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1548,10 +1550,10 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasDefaultValue("0");
 
-                    b.Property<int>("UnidadId")
+                    b.Property<int>("UnidadSi")
                         .HasColumnType("int");
 
-                    b.Property<int>("UnidadSiId")
+                    b.Property<int>("Unidades")
                         .HasColumnType("int");
 
                     b.Property<Guid>("UsuarioCreoId")
@@ -1577,10 +1579,6 @@ namespace Service.Catalog.Migrations
                     b.HasIndex("DepartmentoId");
 
                     b.HasIndex("FormatoImpresionId");
-
-                    b.HasIndex("UnidadId");
-
-                    b.HasIndex("UnidadSiId");
 
                     b.ToTable("CAT_Parametro");
                 });
@@ -3013,27 +3011,11 @@ namespace Service.Catalog.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Service.Catalog.Domain.Catalog.Units", "Unidad")
-                        .WithMany()
-                        .HasForeignKey("UnidadId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Service.Catalog.Domain.Catalog.Units", "UnidadSi")
-                        .WithMany()
-                        .HasForeignKey("UnidadSiId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Area");
 
                     b.Navigation("Departmento");
 
                     b.Navigation("FormatoImpresion");
-
-                    b.Navigation("Unidad");
-
-                    b.Navigation("UnidadSi");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Parameter.ParameterReagent", b =>

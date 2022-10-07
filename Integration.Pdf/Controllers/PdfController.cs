@@ -148,5 +148,28 @@ namespace Integration.Pdf.Controllers
 
             return result;
         }
+
+        [HttpPost]
+        [Route("labResults")]
+        public HttpResponseMessage LabResults(ClinicResultsPdfDto results)
+        {
+            var file = LabResultsService.Generate(results);
+
+            var result = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new ByteArrayContent(file)
+            };
+
+            result.Content.Headers.ContentDisposition =
+                new ContentDispositionHeaderValue("attachment")
+                {
+                    FileName = "labels.pdf"
+                };
+
+            result.Content.Headers.ContentType =
+                new MediaTypeHeaderValue("application/pdf");
+
+            return result;
+        }
     }
 }

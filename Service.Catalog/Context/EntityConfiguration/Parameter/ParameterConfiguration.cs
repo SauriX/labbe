@@ -31,9 +31,10 @@ namespace Service.Catalog.Context.EntityConfiguration.Parameter
                 .IsRequired(true)
                 .HasMaxLength(50);
 
-            /*builder
-                .Property(x => x.Unidades)
-                .IsRequired(true);*/
+            builder
+                .HasOne(x => x.Unidad)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder
                 .Property(x => x.Formula)

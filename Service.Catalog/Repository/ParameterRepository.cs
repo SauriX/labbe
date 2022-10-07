@@ -21,7 +21,7 @@ namespace Service.Catalog.Repository
 
         public async Task<List<Parameter>> GetAll(string search)
         {
-            var parameters = _context.CAT_Parametro.Include(x => x.Area).ThenInclude(x => x.Departamento).AsQueryable();
+            var parameters = _context.CAT_Parametro.Include(x => x.Area).ThenInclude(x => x.Departamento).Include(x => x.Unidad).AsQueryable();
 
             search = search.Trim().ToLower();
 
@@ -35,7 +35,7 @@ namespace Service.Catalog.Repository
 
         public async Task<List<Parameter>> GetActive()
         {
-            var parameters = await _context.CAT_Parametro.Where(x => x.Activo).Where(x => x.Requerido).Include(x => x.Area).ThenInclude(x => x.Departamento).ToListAsync();
+            var parameters = await _context.CAT_Parametro.Where(x => x.Activo).Where(x => x.Requerido).Include(x => x.Area).ThenInclude(x => x.Departamento).Include(x => x.Unidad).ToListAsync();
 
             return parameters;
         }
@@ -46,6 +46,7 @@ namespace Service.Catalog.Repository
                 .Include(x => x.Estudios).ThenInclude(x => x.Estudio)
                 .Include(x => x.Area).ThenInclude(x => x.Departamento)
                 .Include(x => x.Reactivos).ThenInclude(x => x.Reactivo)
+                .Include(x => x.Unidad)
                 .Include(x => x.FormatoImpresion)
                 .FirstOrDefaultAsync(x => x.Id == id);
 

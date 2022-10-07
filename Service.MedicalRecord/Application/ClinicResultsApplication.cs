@@ -32,16 +32,20 @@ namespace Service.MedicalRecord.Application
 {
     public class ClinicResultsApplication : IClinicResultsApplication
     {
-        public readonly IClinicResultsRepository _repository;
+        private readonly IClinicResultsRepository _repository;
+        private readonly IRequestRepository _request;
+        private readonly ICatalogClient _catalogClient;
         private readonly IPdfClient _pdfClient;
         private readonly ISendEndpointProvider _sendEndpointProvider;
         private readonly IRabbitMQSettings _rabbitMQSettings;
         private readonly IQueueNames _queueNames;
 
-        public ClinicResultsApplication(IClinicResultsRepository repository, IPdfClient pdfClient, ISendEndpointProvider sendEndpoint, IRabbitMQSettings rabbitMQSettings,
+        public ClinicResultsApplication(IClinicResultsRepository repository, IRequestRepository request, ICatalogClient catalogClient, IPdfClient pdfClient, ISendEndpointProvider sendEndpoint, IRabbitMQSettings rabbitMQSettings,
             IQueueNames queueNames)
         {
             _repository = repository;
+            _request = request;
+            _catalogClient = catalogClient;
             _sendEndpointProvider = sendEndpoint;
             _pdfClient = pdfClient;
             _queueNames = queueNames;
@@ -119,7 +123,34 @@ namespace Service.MedicalRecord.Application
             }
         }
 
-        public async Task Create(List<ClinicResultsCaptureDto> results)
+        public async Task<RequestStudyUpdateDto> GetStudies(Guid recordId, Guid requestId)
+        {
+            var request = await GetExistingRequest(recordId, requestId);
+
+            var studies = await _request.GetAllStudies(request.Id);
+            var studiesDto = studies.ToRequestStudyDto();
+
+            var ids = studiesDto.Select(x => x.EstudioId).ToList();
+            var studiesParams = await _catalogClient.GetStudies(ids);
+
+            foreach (var study in studiesDto)
+            {
+                var st = studiesParams.FirstOrDefault(x => x.Id == study.EstudioId);
+                if (st == null) continue;
+
+                study.Parametros = st.Parametros;
+                study.Indicaciones = st.Indicaciones;
+            }
+
+            var data = new RequestStudyUpdateDto()
+            {
+                Estudios = studiesDto,
+            };
+
+            return data;
+        }
+
+        public async Task SaveLabResults(List<ClinicResultsFormDto> results)
         {
             if (results.Count() == 0)
             {
@@ -127,10 +158,32 @@ namespace Service.MedicalRecord.Application
             }
 
             var newResults = results.ToCaptureResults();
-            await _repository.Create(newResults);
+            await _repository.CreateLabResults(newResults);
         }
 
-        public async Task<byte[]> PrintResults(Guid recordId, Guid requestId)
+        public async Task UpdateLabResults(List<ClinicResultsFormDto> results)
+        {
+            if (results.Count() == 0)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
+            }
+
+            var newResults = results.ToCaptureResults();
+            await _repository.UpdateLabResults(newResults);
+
+            foreach (var result in results)
+            {
+                if (result.Estatus == Status.RequestStudy.Liberado)
+                {
+                    await this.DeliverFilesMedicalResults(result.SolicitudId, result.EstudioId, result.DepartamentoEstudio);
+                    //validate partial or not
+                }
+                await this.UpdateStatusStudy(result.EstudioId, result.Estatus, result.UsuarioId);
+            }
+
+        }
+
+        /*public async Task<byte[]> PrintResults(Guid recordId, Guid requestId)
         {
             var results = await _repository.GetByRequest(requestId);
 
@@ -142,7 +195,7 @@ namespace Service.MedicalRecord.Application
             var order = results.ToResults();
 
             return await _pdfClient.GenerateLabResults(order);
-        }
+        }*/
 
         public async Task SendTestEmail(RequestSendDto requestDto)
         {
@@ -194,11 +247,6 @@ namespace Service.MedicalRecord.Application
             await endpoint.Send(emailToSend);
         }
 
-        public Task<int> UpdateStatus(List<ClinicResultsUpdateDto> requestDto)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task SaveResultPathologicalStudy(ClinicalResultPathologicalFormDto result)
         {
             var newResult = result.ToClinicalResultPathological();
@@ -238,7 +286,8 @@ namespace Service.MedicalRecord.Application
                 {
                     File.Delete(path);
 
-                }catch(Exception ex)
+                }
+                catch (Exception ex)
                 {
                     throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotPossible);
                 }
@@ -303,12 +352,36 @@ namespace Service.MedicalRecord.Application
             //    results.Add(existingResultPath);
 
             //}
-            var tasks = configuration.Estudios.Select(x => _repository.GetResultPathologicalById(x));
+
+            List<int> labResults = new List<int> { };
+            List<int> pathologicalResults = new List<int> { };
+
+            foreach (var config in configuration.Estudios)
+            {
+                if (config.Tipo == "LABORATORY")
+                {
+                    labResults.Add(config.Id);
+                }
+
+                if (config.Tipo == "PATHOLOGICAL")
+                {
+                    pathologicalResults.Add(config.Id);
+                }
+            }
+
+            var tasks = pathologicalResults.Select(x => _repository.GetResultPathologicalById(x));
             var resultsTask = await Task.WhenAll(tasks);
 
-            
+
             var existingResultPathologyPdf = resultsTask.ToList().toInformationPdfResult(configuration.ImprimirLogos);
-            byte[] pdfBytes = await _pdfClient.GeneratePathologicalResults(existingResultPathologyPdf);
+
+            var taskLab = labResults.Select(x => _repository.GetLabResultsById(x));
+            var labResultsTasks = await Task.WhenAll(taskLab);
+
+
+            var existingLabResultPdf = labResultsTasks.ToList().ToResults(configuration.ImprimirLogos);
+
+            byte[] pdfBytes = await _pdfClient.GenerateLabResults(existingLabResultPdf);
             return pdfBytes;
         }
         private async Task<bool> DeliverFilesMedicalResults(Guid requestId, int estudioId, string DepartamentoEstudio)
@@ -323,7 +396,7 @@ namespace Service.MedicalRecord.Application
 
             if (existingRequest.Parcialidad)
             {
-                if(DepartamentoEstudio == "HISTOPATOLÓGICO" || DepartamentoEstudio == "CITOLÓGICO")
+                if (DepartamentoEstudio == "HISTOPATOLÓGICO" || DepartamentoEstudio == "CITOLÓGICO")
                 {
 
                     var existingResultPath = await _repository.GetResultPathologicalById(estudioId);
@@ -365,7 +438,7 @@ namespace Service.MedicalRecord.Application
                 }
 
             }
-            
+
             return true;
         }
 
@@ -398,7 +471,7 @@ namespace Service.MedicalRecord.Application
                 existingStudy.FechaEnviado = DateTime.Now;
                 existingStudy.UsuarioCaptura = usuarioId.ToString();
             }
-            
+
 
             existingStudy.EstatusId = status;
 
@@ -415,6 +488,6 @@ namespace Service.MedicalRecord.Application
             return await _repository.GetRequestStudyById(RequestStudyId);
         }
 
-        
+
     }
 }
