@@ -47,34 +47,39 @@ namespace Service.MedicalRecord.Application
 
         public async Task<int> UpdateStatus(List<RequestedStudyUpdateDto> requestDto)
         {
-            int studyCount = 0;
-            foreach (var item in requestDto)
+            try
             {
-                var ruteOrder = await _repository.getById(item.SolicitudId);
-                var route = new RouteTracking
+                int studyCount = 0;
+                foreach (var item in requestDto)
                 {
-                         Id = Guid.NewGuid(),
+                    var ruteOrder = await _repository.getById(item.SolicitudId);
+                    var route = new RouteTracking
+                    {
+                        Id = Guid.NewGuid(),
                         SegumientoId = Guid.Parse(ruteOrder.Estudios.FirstOrDefault().SeguimientoId.ToString()),
                         RutaId = Guid.Parse(ruteOrder.RutaId),
                         SucursalId = Guid.Parse(ruteOrder.SucursalDestinoId),
                         FechaDeEntregaEstimada = ruteOrder.FechaCreo,
                         SolicitudId = ruteOrder.Estudios.FirstOrDefault().SolicitudId,
                         HoraDeRecoleccion = ruteOrder.FechaCreo,
-                        UsuarioCreoId= ruteOrder.UsuarioCreoId,
+                        UsuarioCreoId = ruteOrder.UsuarioCreoId,
                         FechaCreo = DateTime.Now,
 
-                };
+                    };
 
-                await _repository.Create(route);
+                    await _repository.Create(route);
 
+                }
+
+                return studyCount;
             }
-
-            return studyCount;
+            catch(Exception  ex) {
+                throw ex;
+            }
         }
         public async Task<(byte[] file, string fileName)> ExportForm(Guid id)
         {
 
-            try
             {
 
                 var order = await GetByid(id);
