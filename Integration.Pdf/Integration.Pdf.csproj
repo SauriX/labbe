@@ -157,6 +157,11 @@
     <Compile Include="Dtos\ClinicResultsPdfDto.cs" />
     <Compile Include="Dtos\MantainDto.cs" />
     <Compile Include="Dtos\PathologicalResultsDto.cs" />
+    <Compile Include="Dtos\PendingRecive\ExtraEstudyDto.cs" />
+    <Compile Include="Dtos\PendingRecive\PendingReciveDto.cs" />
+    <Compile Include="Dtos\PendingRecive\PendingSearchDto.cs" />
+    <Compile Include="Dtos\PendingRecive\ReciveStudyDto.cs" />
+    <Compile Include="Dtos\PendingRecive\StatusDto.cs" />
     <Compile Include="Dtos\RequestTagDto.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Extensions\HeaderFooterExtensions.cs" />
@@ -178,6 +183,7 @@
     <Compile Include="Service\MantainService.cs" />
     <Compile Include="Service\OrderService.cs" />
     <Compile Include="Service\PathologicalResultService.cs" />
+    <Compile Include="Service\PendingRecive.cs" />
     <Compile Include="Service\QuotationService.cs" />
     <Compile Include="Service\ReportService.cs" />
     <Compile Include="Service\TagService.cs" />

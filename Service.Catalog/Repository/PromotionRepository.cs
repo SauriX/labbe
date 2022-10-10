@@ -53,7 +53,7 @@ namespace Service.Catalog.Repository
              .ThenInclude(x => x.Pack.Area.Departamento)
              .Include(x => x.studies)
              .ThenInclude(x => x.Study.Area.Departamento)
-             .Include(x => x.medics)
+             .Include(x => x.medics).ThenInclude(x=>x.Medic)
              .AsQueryable()
             .FirstOrDefaultAsync(x => x.Id == id);
 

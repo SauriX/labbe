@@ -39,6 +39,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="Development\ocelot.mantain.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Update="Development\ocelot.maquilador.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
