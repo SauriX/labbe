@@ -172,7 +172,7 @@ namespace Integration.Pdf.Controllers
         }
 
         [HttpPost]
-        [Route("labResults")]
+        [Route("lab_results")]
         public HttpResponseMessage LabResults(ClinicResultsPdfDto results)
         {
             var file = LabResultsService.Generate(results);

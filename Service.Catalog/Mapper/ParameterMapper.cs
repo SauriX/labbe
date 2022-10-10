@@ -52,7 +52,7 @@ namespace Service.Catalog.Mapper
                 Requerido = x.Requerido,
                 ValoresCriticos = x.ValorCriticos,
                 Unidades = x.UnidadId,
-                UnidadNombre = x.Unidad.Nombre,
+                UnidadNombre = x.Unidad?.Nombre,
                 TipoValor = x.TipoValor,
                 DeltaCheck = x.DeltaCheck,
                 MostrarFormato = x.MostrarFormato,
