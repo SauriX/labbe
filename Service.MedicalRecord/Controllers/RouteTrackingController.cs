@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.MedicalRecord.Application.IApplication;
+using Service.MedicalRecord.Dtos.PendingRecive;
 using Service.MedicalRecord.Dtos.RequestedStudy;
 using Service.MedicalRecord.Dtos.RouteTracking;
 using Shared.Dictionary;
@@ -34,7 +35,7 @@ namespace Service.MedicalRecord.Controllers
       //  [Authorize(Policies.Update)]
         public async Task UpdateStatus(List<RequestedStudyUpdateDto> requestDto)
         {
-           // await _service.UpdateStatus(requestDto);
+            await _service.UpdateStatus(requestDto);
         }
         [HttpPost("export/form/{order}")]
         //[Authorize(Policies.Download)]
@@ -42,6 +43,21 @@ namespace Service.MedicalRecord.Controllers
         {
             var (file, fileName) = await _service.ExportForm(order);
             return File(file, MimeType.XLSX, fileName);
+        }
+        [HttpPost("allrecive")]
+        [Authorize(Policies.Access)]
+        public async Task<List<PendingReciveDto>> GetAllRecive(PendingSearchDto search) {
+            var requestedStudy = await _service.GetAllRecive(search);
+            return requestedStudy;
+        }
+
+        [HttpPost("report")]
+        //[Authorize(Policies.Print)]
+        public async Task<IActionResult> PrintOrder(PendingSearchDto search)
+        {
+            var file = await _service.Print(search);
+
+            return File(file, MimeType.PDF, "Pendientes a recibir.pdf");
         }
     }
 }

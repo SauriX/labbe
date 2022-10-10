@@ -69,18 +69,19 @@ namespace Service.MedicalRecord.Repository
 
             if (search.Sucursal!=null && search.Sucursal.Count >0)
             {
-                routeTrackingList = routeTrackingList.Where(x => search.Sucursal.Contains(x.SucursalOrigenId) && x.SucursalDestinoId==search.Sucursaldest);
+                routeTrackingList = routeTrackingList.Where(x => search.Sucursal.Contains(x.SucursalOrigenId));
             }
 
             if (!string.IsNullOrEmpty(search.Busqueda))
             {
                 routeTrackingList = routeTrackingList.Where(x => search.Busqueda.Contains(x.Clave));
             }
+            routeTrackingList = routeTrackingList.Where(x =>  x.SucursalDestinoId == search.Sucursaldest);
             return await routeTrackingList.ToListAsync();
         }
 
         public async Task<RouteTracking> GetTracking(Guid Id) {
-            var routeTracking =  _context.Cat_PendientesDeEnviar.Include(x => x.Solicitud.Sucursal).FirstOrDefault(x=>x.SegumientoId==Id);
+            var routeTracking =   _context.Cat_PendientesDeEnviar.Include(x => x.Solicitud.Sucursal).FirstOrDefault(x=>x.SegumientoId==Id);
             return routeTracking;
         
         }

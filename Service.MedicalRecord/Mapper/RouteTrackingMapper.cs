@@ -18,7 +18,7 @@ namespace Service.MedicalRecord.Mapper
             return model.Select(x => new RouteTrackingListDto
             {
                 Id = x.Id,
-                Seguimiento = x.Id.ToString(),
+                Seguimiento = x.Clave,
                 Clave = x.Clave,
                 Sucursal = x.Estudios.Count>0? x.Estudios.FirstOrDefault().Solicitud.Sucursal.Nombre :"",
                 Fecha = x.FechaCreo,
