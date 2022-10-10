@@ -55,11 +55,12 @@ namespace Service.MedicalRecord.Mapper
         {
             return model.Select(x => new ClinicResults
             {
-                Id = x.Id,
+                Id = Guid.NewGuid(),
                 Nombre = x.Nombre,
                 SolicitudId = x.SolicitudId,
                 EstudioId = x.EstudioId,
-                TipoValorId = x.TipoValor,
+                SolicitudEstudioId = x.SolicitudEstudioId,
+                TipoValorId = x.TipoValorId,
                 ValorInicial = x.ValorInicial,
                 ValorFinal = x.ValorFinal,
                 ParametroId = Guid.Parse(x.ParametroId),
@@ -176,8 +177,9 @@ namespace Service.MedicalRecord.Mapper
             {
                 return new ClinicResultsFormDto
                 {
-                    Nombre = results.NombreParametro,
-                    TipoValor = results.TipoValorId,
+                    SolicitudEstudioId = results.SolicitudEstudioId,
+                    Nombre = results.Nombre,
+                    TipoValorId = results.TipoValorId,
                     ValorInicial = results.ValorInicial,
                     ValorFinal = results.ValorInicial,
                     ParametroId = results.ParametroId.ToString(),

@@ -84,6 +84,14 @@ namespace Service.MedicalRecord.Controllers
             return clinicResults;
         }
 
+        [HttpPost("getLaboratoryResults")]
+        [Authorize(Policies.Access)]
+        public async Task<ClinicResults> GetLaboratoryResults([FromBody] int RequestStudyId)
+        {
+            var clinicResults = await _service.GetLaboratoryResults(RequestStudyId);
+            return clinicResults;
+        }
+
         [HttpPost("getRequestStudyById")]
         [Authorize(Policies.Access)]
         public async Task<RequestStudy> GetRequestStudyById([FromBody] int RequestStudyId)
