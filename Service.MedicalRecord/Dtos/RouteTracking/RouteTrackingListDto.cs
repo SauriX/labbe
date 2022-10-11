@@ -13,5 +13,6 @@ namespace Service.MedicalRecord.Dtos.RouteTracking
         public DateTime Fecha { get; set; }
         public string Status { get; set; }
         public List<RouteTrackingStudyListDto> Estudios { get; set; }
+
     }
 }
