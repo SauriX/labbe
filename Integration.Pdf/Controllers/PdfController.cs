@@ -1,4 +1,5 @@
 ﻿using Integration.Pdf.Dtos;
+using Integration.Pdf.Dtos.PendingRecive;
 using Integration.Pdf.Service;
 using System.Collections.Generic;
 using System.Net;
@@ -102,12 +103,79 @@ namespace Integration.Pdf.Controllers
 
             return result;
         }
+        [HttpPost]
+        [Route("pending")]
+        public HttpResponseMessage pending(List<PendingReciveDto> order)
+        {
+            var file = PendingRecive.Generate(order);
 
+            var result = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new ByteArrayContent(file)
+            };
+
+            result.Content.Headers.ContentDisposition =
+                new ContentDispositionHeaderValue("attachment")
+                {
+                    FileName = "Mantain.pdf"
+                };
+
+            result.Content.Headers.ContentType =
+                new MediaTypeHeaderValue("application/pdf");
+
+            return result;
+        }
         [HttpPost]
         [Route("tags")]
         public HttpResponseMessage Tag(List<RequestTagDto> tags)
         {
             var file = TagService.Generate(tags);
+
+            var result = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new ByteArrayContent(file)
+            };
+
+            result.Content.Headers.ContentDisposition =
+                new ContentDispositionHeaderValue("attachment")
+                {
+                    FileName = "labels.pdf"
+                };
+
+            result.Content.Headers.ContentType =
+                new MediaTypeHeaderValue("application/pdf");
+
+            return result;
+        }
+
+        [HttpPost]
+        [Route("pathologicalResults")]
+        public HttpResponseMessage PathologicalResults(PathologicalResultsDto results)
+        {
+            var file = PathologicalResultService.GeneratePathologicalResultPdf(results);
+
+            var result = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new ByteArrayContent(file)
+            };
+
+            result.Content.Headers.ContentDisposition =
+                new ContentDispositionHeaderValue("attachment")
+                {
+                    FileName = "labels.pdf"
+                };
+
+            result.Content.Headers.ContentType =
+                new MediaTypeHeaderValue("application/pdf");
+
+            return result;
+        }
+
+        [HttpPost]
+        [Route("lab_results")]
+        public HttpResponseMessage LabResults(ClinicResultsPdfDto results)
+        {
+            var file = LabResultsService.Generate(results);
 
             var result = new HttpResponseMessage(HttpStatusCode.OK)
             {

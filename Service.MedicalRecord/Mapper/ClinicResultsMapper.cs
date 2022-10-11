@@ -39,10 +39,10 @@ namespace Service.MedicalRecord.Mapper
         {
             return model.Select(x => new StudyDto
             {
-                EstudioId = x.EstudioId,
+                Id = x.EstudioId,
                 Nombre = x.Nombre,
                 Area = "",
-                EstatusId = x.EstatusId,
+                Status = x.EstatusId,
                 Registro = x.FechaCreo.ToString("G"),
                 Entrega = x.FechaCreo.AddDays((double)x.Dias).ToString("G"),
                 Seleccion = false,
@@ -51,21 +51,23 @@ namespace Service.MedicalRecord.Mapper
             }).ToList();
         }
 
-        public static List<ClinicResults> ToCaptureResults(this List<ClinicResultsCaptureDto> model)
+        public static List<ClinicResults> ToCaptureResults(this List<ClinicResultsFormDto> model)
         {
             return model.Select(x => new ClinicResults
             {
-                Id = x.Id,
+                Id = Guid.NewGuid(),
                 Nombre = x.Nombre,
                 SolicitudId = x.SolicitudId,
                 EstudioId = x.EstudioId,
-                TipoValorId = x.TipoValor,
+                SolicitudEstudioId = x.SolicitudEstudioId,
+                TipoValorId = x.TipoValorId,
                 ValorInicial = x.ValorInicial,
                 ValorFinal = x.ValorFinal,
                 ParametroId = Guid.Parse(x.ParametroId),
                 Resultado = x.Resultado
             }).ToList();
         }
+
         public static ClinicalResultsPathological ToClinicalResultPathological(this ClinicalResultPathologicalFormDto dto)
         {
             if (dto == null) return null;
@@ -137,7 +139,7 @@ namespace Service.MedicalRecord.Mapper
             };
         }
 
-        public static ClinicResultsPdfDto ToResults(this IEnumerable<ClinicResults> model)
+        public static ClinicResultsPdfDto ToResults(this IEnumerable<ClinicResults> model, bool ImprimirLogos)
         {
             if (model == null || !model.Any()) return new ClinicResultsPdfDto();
 
@@ -163,25 +165,70 @@ namespace Service.MedicalRecord.Mapper
             {
                 CapturaResultados = results,
                 SolicitudInfo = request,
+                ImprimrLogos = ImprimirLogos,
             };
 
             return data;
         }
 
-        public static List<ClinicResultsCaptureDto> ResultsGeneric(this IEnumerable<ClinicResults> model)
+        public static List<ClinicResultsFormDto> ResultsGeneric(this IEnumerable<ClinicResults> model)
         {
             return model.Select(results =>
             {
-                return new ClinicResultsCaptureDto
+                return new ClinicResultsFormDto
                 {
-                    Nombre = results.NombreParametro,
-                    TipoValor = results.TipoValorId,
+                    SolicitudEstudioId = results.SolicitudEstudioId,
+                    Nombre = results.Nombre,
+                    TipoValorId = results.TipoValorId,
                     ValorInicial = results.ValorInicial,
                     ValorFinal = results.ValorInicial,
                     ParametroId = results.ParametroId.ToString(),
                     Resultado = results.Resultado,
                 };
             }).ToList();
+        }
+        
+        public static ClinicResultPathologicalPdfDto toInformationPdfResult(this List<ClinicalResultsPathological> result, bool ImprimirLogos)
+        {
+            return new ClinicResultPathologicalPdfDto
+            {
+                Information = result.Select(res => new Information
+                {
+                    Medico = res.Medico.Nombre,
+                    FechaEntrega = DateTime.Now.ToString("MM/dd/yyyy"),
+                    Paciente = res.Solicitud.Expediente.NombrePaciente,
+                    Edad = res.Solicitud.Expediente.Edad,
+                    Estudio = res.Estudio.Clave,
+                    Departamento = res.Estudio.DepartamentoId.ToString(),
+                    MuestraRecibida = res.MuestraRecibida,
+                    DescripcionMacroscopica = res.DescripcionMacroscopica,
+                    DescripcionMicroscopica = res.DescripcionMicroscopica,
+                    Diagnostico = res.Diagnostico,
+                    NombreFirma = res.Medico.Nombre,
+                }).ToList(),
+                ImprimrLogos = ImprimirLogos
+                
+            };
+        } 
+
+        public static ClinicResultPathologicalPdfDto toInformationPdf(this ClinicalResultsPathological result, Request request, string Departamento, bool ImprimirLogos)
+        {
+            return new ClinicResultPathologicalPdfDto
+            {
+                //Medico = request.Medico.Nombre,
+                //FechaEntrega = DateTime.Now.ToString("MM/dd/yyyy"),
+                //Paciente = request.Expediente.NombrePaciente,
+                //Edad = request.Expediente.Edad,
+                //Estudio = request.Clave,
+                //Departamento = Departamento,
+                //MuestraRecibida = result.MuestraRecibida,
+                //DescripcionMacroscopica = result.DescripcionMacroscopica,
+                //DescripcionMicroscopica = result.DescripcionMicroscopica,
+                //Diagnostico = result.Diagnostico,
+                //NombreFirma = result.Medico.Nombre,
+                //ImprimrLogos = ImprimirLogos
+
+            };
         }
     }
 }

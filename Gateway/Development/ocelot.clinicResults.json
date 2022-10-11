@@ -25,6 +25,42 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
+      "DownstreamPathTemplate": "/api/clinicResults/saveResults",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/clinicResults/saveResults",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/clinicResults/updateResults",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/clinicResults/updateResults",
+      "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/clinicResults/studies_params/{recordId}/{requestId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/clinicResults/studies_params/{recordId}/{requestId}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/clinicResults/savePathological",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -57,6 +93,18 @@
           "Port": 24048
         }
       ],
+      "UpstreamPathTemplate": "/api/clinicResults/getLaboratoryResults",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/clinicResults/getLaboratoryResults",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
       "UpstreamPathTemplate": "/api/clinicResults/getPathological",
       "UpstreamHttpMethod": [ "POST" ]
     },
@@ -82,6 +130,18 @@
         }
       ],
       "UpstreamPathTemplate": "/api/clinicResults/getRequestStudyById",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/clinicResults/printSelectedStudies",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/clinicResults/printSelectedStudies",
       "UpstreamHttpMethod": [ "POST" ]
     }
   ]

@@ -5,6 +5,7 @@ using Service.MedicalRecord.Domain;
 using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Dtos;
 using Service.MedicalRecord.Dtos.ClinicResults;
+using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.RequestedStudy;
 using Shared.Dictionary;
 using System;
@@ -40,6 +41,26 @@ namespace Service.MedicalRecord.Controllers
             return File(file, MimeType.XLSX, fileName);
         }
 
+        [HttpPost("saveResults")]
+        [Authorize(Policies.Create)]
+        public async Task SaveLabResults(List<ClinicResultsFormDto> results)
+        {
+            await _service.SaveLabResults(results);
+        }
+
+        [HttpPut("updateResults")]
+        [Authorize(Policies.Create)]
+        public async Task UpdateLabResults(List<ClinicResultsFormDto> results)
+        {
+            await _service.UpdateLabResults(results);
+        }
+
+        [HttpGet("studies_params/{recordId}/{requestId}")]
+        public async Task<RequestStudyUpdateDto> GetStudies(Guid recordId, Guid requestId)
+        {
+            return await _service.GetStudies(recordId, requestId);
+        }
+
         [HttpPost("savePathological")]
         [Authorize(Policies.Create)]
         public async Task SaveResultPathologicalStudy([FromForm] ClinicalResultPathologicalFormDto result)
@@ -51,6 +72,7 @@ namespace Service.MedicalRecord.Controllers
         [Authorize(Policies.Update)]
         public async Task UpdateResultPathologicalStudy([FromForm] ClinicalResultPathologicalFormDto result)
         {
+            result.UsuarioId = (Guid)HttpContext.Items["userId"];
             await _service.UpdateResultPathologicalStudy(result);
         }
 
@@ -59,6 +81,14 @@ namespace Service.MedicalRecord.Controllers
         public async Task<ClinicalResultsPathological> GetResultPathological([FromBody] int RequestStudyId)
         {
             var clinicResults = await _service.GetResultPathological(RequestStudyId);
+            return clinicResults;
+        }
+
+        [HttpPost("getLaboratoryResults")]
+        [Authorize(Policies.Access)]
+        public async Task<ClinicResults> GetLaboratoryResults([FromBody] int RequestStudyId)
+        {
+            var clinicResults = await _service.GetLaboratoryResults(RequestStudyId);
             return clinicResults;
         }
 
@@ -78,12 +108,22 @@ namespace Service.MedicalRecord.Controllers
             await _service.UpdateStatusStudy(updateStatus.RequestStudyId, updateStatus.status, updateStatus.UsuarioId);
         }
 
-        [HttpPost("download/results/pdf")]
+        [HttpPost("labResults/{recordId}/{requestId}")]
+        [HttpPost("printSelectedStudies")]
+        //[Authorize(Policies.Print)]
+        public async Task<IActionResult> PrintSelectedStudies(ConfigurationToPrintStudies configuration)
+        {
+            var file = await _service.PrintSelectedStudies(configuration);
+
+            return File(file, MimeType.PDF, "Estudios.pdf");
+        }
+
+        /*[HttpPost("download/results/pdf")]
         [Authorize(Policies.Download)]
         public async Task<IActionResult> LabResultsPDF(Guid recordId, Guid requestId)
         {
             var file = await _service.PrintResults(recordId, requestId);
             return File(file, MimeType.PDF, $"Resultados - {requestId}.pdf");
-        }
+        }*/
     }
 }

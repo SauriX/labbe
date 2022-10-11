@@ -58,6 +58,7 @@ namespace Service.Catalog.Repository
             var reagent = await _context.CAT_Estudio
                 .Include(x => x.WorkLists).ThenInclude(x => x.WorkList)
                 .Include(x => x.Parameters).ThenInclude(x => x.Parametro).ThenInclude(x => x.Area).ThenInclude(x => x.Departamento)
+                .Include(x => x.Parameters).ThenInclude(x => x.Parametro).ThenInclude(x => x.Unidad)
                 .Include(x => x.Indications).ThenInclude(x => x.Indicacion)
                 .Include(x => x.Reagents).ThenInclude(x => x.Reagent)
                 .Include(x => x.Packets).ThenInclude(x => x.Packet)
@@ -76,6 +77,7 @@ namespace Service.Catalog.Repository
         {
             var studies = await _context.CAT_Estudio
                 .Include(x => x.Parameters).ThenInclude(x => x.Parametro).ThenInclude(x => x.Area).ThenInclude(x => x.Departamento)
+                .Include(x => x.Parameters).ThenInclude(x => x.Parametro).ThenInclude(x => x.Unidad)
                 .Include(x => x.Indications).ThenInclude(x => x.Indicacion)
                 .Where(x => ids.Contains(x.Id))
                 .ToListAsync();

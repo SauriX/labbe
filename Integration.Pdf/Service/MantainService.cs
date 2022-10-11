@@ -13,7 +13,7 @@ using System.Web;
 using ZXing;
 
 namespace Integration.Pdf.Service
-{
+{ 
     public class MantainService
     {
         public static byte[] Generate(MantainDto order)

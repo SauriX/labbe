@@ -1,4 +1,5 @@
-﻿using Service.MedicalRecord.Dtos.RequestedStudy;
+﻿using Service.MedicalRecord.Dtos.PendingRecive;
+using Service.MedicalRecord.Dtos.RequestedStudy;
 using Service.MedicalRecord.Dtos.RouteTracking;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,8 @@ namespace Service.MedicalRecord.Application.IApplication
     {
         Task<List<RouteTrackingListDto>> GetAll(RouteTrackingSearchDto search);
         Task<(byte[] file, string fileName)> ExportForm(Guid id);
-       // Task<int> UpdateStatus(List<RequestedStudyUpdateDto> requestDto);
+        Task<List<PendingReciveDto>> GetAllRecive(PendingSearchDto search);
+        Task<byte[]> Print(PendingSearchDto search);
+        Task<int> UpdateStatus(List<RequestedStudyUpdateDto> requestDto);
     }
 }

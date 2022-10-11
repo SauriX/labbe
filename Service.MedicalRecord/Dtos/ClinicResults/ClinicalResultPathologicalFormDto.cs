@@ -16,6 +16,10 @@ namespace Service.MedicalRecord.Dtos.ClinicResults
         public string Diagnostico { get; set; }
         public string MuestraRecibida { get; set; }
         public Guid? MedicoId { get; set; }
+        public string? NombreMedico { get; set; }
         public string[] ListaImagenesCargadas { get; set; }
+        public byte Estatus { get; set; }
+        public string  DepartamentoEstudio { get; set; }
+        public Guid UsuarioId { get; set; }
     }
 }

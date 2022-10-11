@@ -247,23 +247,20 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("Nombre")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NombreParametro")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<Guid>("ParametroId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Resultado")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("SolicitudEstudioId")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("SolicitudId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("TipoValorId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Unidades")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ValorFinal")
                         .HasColumnType("int");
@@ -273,7 +270,7 @@ namespace Service.MedicalRecord.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EstudioId");
+                    b.HasIndex("SolicitudEstudioId");
 
                     b.HasIndex("SolicitudId");
 
@@ -1218,9 +1215,9 @@ namespace Service.MedicalRecord.Migrations
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.ClinicResults", b =>
                 {
-                    b.HasOne("Service.MedicalRecord.Domain.Request.RequestStudy", "Estudio")
+                    b.HasOne("Service.MedicalRecord.Domain.Request.RequestStudy", "SolicitudEstudio")
                         .WithMany()
-                        .HasForeignKey("EstudioId")
+                        .HasForeignKey("SolicitudEstudioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1230,9 +1227,9 @@ namespace Service.MedicalRecord.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Estudio");
-
                     b.Navigation("Solicitud");
+
+                    b.Navigation("SolicitudEstudio");
                 });
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.ClinicalResultsPathological", b =>

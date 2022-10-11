@@ -1494,6 +1494,12 @@ namespace Service.Catalog.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<decimal>("CriticoMaximo")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("CriticoMinimo")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<bool>("DeltaCheck")
                         .HasColumnType("bit");
 
@@ -1542,10 +1548,10 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasDefaultValue("0");
 
-                    b.Property<int>("UnidadSi")
+                    b.Property<int>("UnidadId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Unidades")
+                    b.Property<int>("UnidadSiId")
                         .HasColumnType("int");
 
                     b.Property<Guid>("UsuarioCreoId")
@@ -1556,6 +1562,9 @@ namespace Service.Catalog.Migrations
 
                     b.Property<bool>("ValorCriticos")
                         .HasColumnType("bit");
+
+                    b.Property<decimal>("ValorFinal")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ValorInicial")
                         .HasMaxLength(100)
@@ -1568,6 +1577,10 @@ namespace Service.Catalog.Migrations
                     b.HasIndex("DepartmentoId");
 
                     b.HasIndex("FormatoImpresionId");
+
+                    b.HasIndex("UnidadId");
+
+                    b.HasIndex("UnidadSiId");
 
                     b.ToTable("CAT_Parametro");
                 });
@@ -3000,11 +3013,27 @@ namespace Service.Catalog.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Service.Catalog.Domain.Catalog.Units", "Unidad")
+                        .WithMany()
+                        .HasForeignKey("UnidadId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Service.Catalog.Domain.Catalog.Units", "UnidadSi")
+                        .WithMany()
+                        .HasForeignKey("UnidadSiId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Area");
 
                     b.Navigation("Departmento");
 
                     b.Navigation("FormatoImpresion");
+
+                    b.Navigation("Unidad");
+
+                    b.Navigation("UnidadSi");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Parameter.ParameterReagent", b =>

@@ -7,7 +7,8 @@ namespace Service.MedicalRecord.Dtos.ClinicResults
 {
     public class ClinicResultsPdfDto
     {
-        public List<ClinicResultsCaptureDto> CapturaResultados { get; set; }
+        public List<ClinicResultsFormDto> CapturaResultados { get; set; }
         public ClinicResultsRequestDto SolicitudInfo { get; set; }
+        public bool ImprimrLogos { get; set; }
     }
 }

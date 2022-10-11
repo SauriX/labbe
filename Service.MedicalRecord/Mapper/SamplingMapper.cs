@@ -1,4 +1,5 @@
 ﻿using Service.MedicalRecord.Domain.Request;
+using Service.MedicalRecord.Dtos.Catalogs;
 using Service.MedicalRecord.Dtos.Sampling;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,15 +33,15 @@ namespace Service.MedicalRecord.Mapper
         {
             return model.Select(x => new StudyDto
             {
-                EstudioId = x.EstudioId,
+                Id = x.EstudioId,
                 Nombre = x.Nombre,
                 Area = "",
-                EstatusId = x.EstatusId,
+                Status = x.EstatusId,
                 Registro = x.FechaCreo.ToString(),
                 Entrega = x.FechaCreo.AddDays((double)x.Dias).ToString(),
                 Seleccion = false,
                 Clave = x.Clave,
-               // NombreEstatus = x.Estatus.Nombre,
+                NombreEstatus = x.Estatus.Nombre,
             }).ToList();
         }
     }

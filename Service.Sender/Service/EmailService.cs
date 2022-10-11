@@ -66,6 +66,7 @@ namespace Service.Sender.Service
             emailMessage.Body = html.ToString();
             emailMessage.IsBodyHtml = true;
             emailMessage.Priority = MailPriority.Normal;
+            //Attachment = new Attachment(,);
             using SmtpClient MailClient = new(conf.Smtp, 587);
             MailClient.EnableSsl = true;
             if (conf.RequiereContraseña)
