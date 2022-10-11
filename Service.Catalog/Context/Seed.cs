@@ -18,6 +18,7 @@ using Service.Catalog.Domain.Indication;
 using Service.Catalog.Domain.Tapon;
 using Service.Catalog.Domain.Study;
 using RabbitMQ.Client;
+using Service.Catalog.Domain.Parameter;
 
 namespace Service.Catalog.Context
 {
@@ -1174,6 +1175,37 @@ namespace Service.Catalog.Context
             return tags;
         }
 
+        private static List<Parameter> GetParameters()
+        {
+            var path = "wwwroot/seed/CAT_PARAMETROS.xlsx";
+            var tableData = ReadAsTable(path);
+
+            var areas = GetAreas();
+
+            var parameters = tableData.AsEnumerable().Select(x =>
+            {
+                var area = areas.FirstOrDefault(a => a.Clave == x.Field<string>("Area"));
+                var type = GetValueType(x.Field<string>("TipoR"));
+
+                return new Parameter(
+                    Guid.Parse(x.Field<string>("Id")),
+                    x.Field<string>("Clave"),
+                    x.Field<string>("Nombre"),
+                    x.Field<string>("Corto"),
+                    type,
+                    x.Field<string>("Formula"),
+                    area?.Id ?? 0,
+                    area?.DepartamentoId ?? 0,
+                    1,
+                    1,
+                    x.Field<string>("Fcsi"));
+            }).ToList();
+
+            return parameters;
+        }
+
+        // Guid id, string clave, string nombre, string nombreCorto, string tipoValor, string formula, int areaId, int departamentoId, int unidadId, int unidadSiId, string fcsi
+
         private static List<Study> GetStudies()
         {
             var path = "wwwroot/seed/CAT_ESTUDIOS.xlsx";
@@ -1269,6 +1301,27 @@ namespace Service.Catalog.Context
             var ws = wb.Worksheet(1);
             DataTable dataTable = ws.RangeUsed().AsTable().AsNativeDataTable();
             return dataTable;
+        }
+
+        private static string GetValueType(string type)
+        {
+            return type switch
+            {
+                "N" => "1",
+                "NS" => "2",
+                "NR" => "3",
+                "NSR" => "4",
+                "M" => "5",
+                "NT" => "6",
+                "NT2" => "6",
+                "NT3" => "6",
+                "NT4" => "6",
+                "T" => "7",
+                "P" => "8",
+                "L" => "9",
+                "O" => "10",
+                _ => "0",
+            };
         }
     }
 }

@@ -6,6 +6,26 @@ namespace Service.Catalog.Domain.Parameter
 {
     public class Parameter
     {
+        public Parameter()
+        {
+        }
+
+        public Parameter(Guid id, string clave, string nombre, string nombreCorto, string tipoValor, string formula, int areaId, int departamentoId, int unidadId, int unidadSiId, string fcsi)
+        {
+            Id = id;
+            Clave = clave;
+            Nombre = nombre;
+            NombreCorto = nombreCorto;
+            TipoValor = tipoValor;
+            Formula = formula;
+            AreaId = areaId;
+            DepartamentoId = departamentoId;
+            UnidadId = unidadId;
+            UnidadSiId = unidadSiId;
+            FCSI = fcsi;
+            Activo = true;
+        }
+
         public Guid Id { get; set; }
         public string Clave { get; set; }
         public string Nombre { get; set; }
