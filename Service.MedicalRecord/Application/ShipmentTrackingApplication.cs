@@ -25,23 +25,28 @@ namespace Service.MedicalRecord.Application
             var sucursalDestinos = "";
             var TrackingOrder = await _repository.getTrackingOrder(id);
             var RuteTracking = await _repository.GetRouteTracking(id);
+            var shipment = TrackingOrder.toShipmentTrackingDto(RuteTracking);
+            if (!string.IsNullOrEmpty(TrackingOrder.SucursalDestinoId) && RuteTracking != null)
+            {
+                
             var usuarioorigen = await _identityClient.GetByid(RuteTracking.UsuarioCreoId.ToString());
             var ruta = await _catalogClient.GetRuta(Guid.Parse(TrackingOrder.RutaId));
-                if ( !string.IsNullOrEmpty(TrackingOrder.SucursalDestinoId) )
-            {
+
                var sucursalDestino = await _catalogClient.GetBranch(Guid.Parse(TrackingOrder.SucursalDestinoId));
                 sucursalDestinos = sucursalDestino.nombre;
+                var sucursalOrigen = await _catalogClient.GetBranch(Guid.Parse(TrackingOrder.SucursalOrigenId));
+                
+                shipment.ResponsableOrigen = $"{usuarioorigen.Nombre} {usuarioorigen.PrimerApellido} {usuarioorigen.SegundoApellido}";
+                shipment.Medioentrega = ruta.PaqueteriaId != null ? "laboratorio ramos" : ruta.PaqueteriaId.ToString();
+                shipment.Ruta = ruta.Clave;
+                shipment.Nombre = ruta.Nombre;
+                shipment.SucursalDestino = sucursalDestinos;
+                shipment.SucursalOrigen = sucursalOrigen.nombre;
             }
 
             
-            var sucursalOrigen = await _catalogClient.GetBranch(Guid.Parse(TrackingOrder.SucursalOrigenId));
-            var shipment = TrackingOrder.toShipmentTrackingDto(RuteTracking);
-            shipment.ResponsableOrigen = $"{usuarioorigen.Nombre} {usuarioorigen.PrimerApellido} {usuarioorigen.SegundoApellido}";
-            shipment.Medioentrega = ruta.PaqueteriaId != null ? "laboratorio ramos" : ruta.PaqueteriaId.ToString();
-            shipment.Ruta = ruta.Clave;
-            shipment.Nombre = ruta.Nombre;
-            shipment.SucursalDestino = sucursalDestinos;
-            shipment.SucursalOrigen = sucursalOrigen.nombre;
+
+
          
 
 

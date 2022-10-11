@@ -10,5 +10,7 @@
       public string Entrega { get; set; }
       public bool Seleccion { get; set; }
       public string Clave { get; set; }
+        public string Expedienteid { get; set; }
+        public string Solicitudid { get; set; }
     }
 }
