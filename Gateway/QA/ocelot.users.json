@@ -142,6 +142,17 @@
       ],
       "UpstreamPathTemplate": "/api/user/password",
       "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/identity/api/user/images",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/user/images",
+      "UpstreamHttpMethod": [ "PUT" ]
     }
   ]
 }
