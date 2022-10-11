@@ -80,7 +80,7 @@ namespace Service.MedicalRecord.Application
         public async Task<(byte[] file, string fileName)> ExportForm(Guid id)
         {
 
-            {
+            try{
 
                 var order = await GetByid(id);
                 //var newOrder = order.ToModel();
