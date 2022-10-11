@@ -72,18 +72,21 @@ namespace Integration.Pdf.Service
             var ISOImage = File.ReadAllBytes(logoISO);
 
             var headerParagraph = "ALFONSO RAMOS SALAZAR, QBP, MSC, DBC\nUNIVERSIDAD Y HOSPITAL GENERAL DE TORONTO\nCED. DGP No. 703973 REG. S.S.A. 10-86\nDGP F-370, No. REG. 0111";
-            var headerUrl = new Col("www.laboratorioramos.com.mx", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Center);
+            var headerUrl = new Col("www.laboratorioramos.com.mx", 4, new Font("Calibri", 8) { Bold = true }, ParagraphAlignment.Center);
             var header = section.Headers.Primary;
 
             if (results.ImprimrLogos)
             {
                 var headerInfo = new Col[]
             {
-                new Col(LabRamosImage, 6, ParagraphAlignment.Left),
-                new Col(headerParagraph, 3, ParagraphAlignment.Center),
+                new Col(LabRamosImage, 6, ParagraphAlignment.Left)
+                {
+                    ImagenTamaño = Unit.FromCentimeter(6)
+                },
+                new Col(headerParagraph, 4, new Font("Calibri", 8), ParagraphAlignment.Center),
                 new Col(ISOImage, 4, ParagraphAlignment.Right)
                 {
-                    ImagenTamaño = Unit.FromCentimeter(4)
+                    ImagenTamaño = Unit.FromCentimeter(2)
                 },
             };
 
@@ -150,16 +153,16 @@ namespace Integration.Pdf.Service
             };
             section.AddBorderedText(line5, right: true, left: true);
 
-            section.AddSpace(10);
+            section.AddSpace(25);
 
             var studyHeader = new Col[]
             {
                 new Col("EXAMEN", 17, Col.FONT_BOLD),
-                new Col("RESULTADO", 4, Col.FONT_BOLD, ParagraphAlignment.Left),
+                new Col("RESULTADO", 4, Col.FONT_BOLD),
                 new Col("UNIDADES", 3, Col.FONT_BOLD),
                 new Col("REFERENCIA", 3, Col.FONT_BOLD),
             };
-            section.AddBorderedText(studyHeader, top: true, right: true, bottom: true, left: true);
+            section.AddBorderedText(studyHeader, top: true, right: false, bottom: true, left: false);
 
             foreach (var param in results.CapturaResultados)
             {
@@ -170,54 +173,54 @@ namespace Integration.Pdf.Service
                     new Col(param.TipoValor.ToString(), 3, ParagraphAlignment.Left),
                     new Col(param.ValorInicial + " - " + param.ValorFinal, 3, ParagraphAlignment.Right),
                 };
-                section.AddBorderedText(col, right: true, left: true);
+                section.AddBorderedText(col, top: false, right: false, bottom: true, left: false);
             }
             section.AddSpace(5);
 
             var footer = section.Footers.Primary;
 
-            var footerInfo = new Col[]
-            {
-                new Col("Toma de Muestra" + results.SolicitudInfo.FechaAdmision + " " + " " + results.SolicitudInfo.User, 5, ParagraphAlignment.Left),
-                new Col("Liberó: " + results.SolicitudInfo.FechaEntrega + " " + " " + results.SolicitudInfo.User, 5, ParagraphAlignment.Left),
-            };
+            var footerToma = new Col("Toma de Muestra" + results.SolicitudInfo.FechaAdmision + " " + " " + results.SolicitudInfo.User, 5, ParagraphAlignment.Left);
+            var footerLibera = new Col("Liberó: " + results.SolicitudInfo.FechaEntrega + " " + " " + results.SolicitudInfo.User, 5, ParagraphAlignment.Left);
 
-            footer.AddText(footerInfo);
+            footer.AddText(footerToma);
+            section.AddSpace(5);
+
+            footer.AddText(footerLibera);
             section.AddSpace(5);
 
             var footerTitleBranches = new Col[]
             {
-                new Col("CD. OBREGÓN, SON.", 4, new Font("Calibri", 13) { Bold = true },  ParagraphAlignment.Center),
-                new Col("GUAYMAS, SON.", 1, new Font("Calibri", 13) { Bold = true },  ParagraphAlignment.Center),
-                new Col("HERMOSILLO, SON.", 3, new Font("Calibri", 13) { Bold = true },  ParagraphAlignment.Center),
+                new Col("CD. OBREGÓN, SON.", 4, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
+                new Col("GUAYMAS, SON.", 1, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
+                new Col("HERMOSILLO, SON.", 3, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
             };
 
             footer.AddText(footerTitleBranches);
 
             var footerBranchesUnits = new Col[]
             {
-                new Col("UNIDAD CENTRO", 1,new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
-                new Col("UNIDAD 200", 1, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
-                new Col("UNIDAD 300", 1, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
-                new Col("CENTRO MÉDICO\nSUR SONORA", 1, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
-                new Col("UNIDAD GUAYMAS", 1, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
-                new Col("CENTRO MÉDICO\nDEL RÍO", 1, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
-                new Col("MORELOS", 1, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
-                new Col("NAVARRETE", 1, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
+                new Col("UNIDAD CENTRO", 1,new Font("Calibri", 7) { Bold = true },  ParagraphAlignment.Center),
+                new Col("UNIDAD 200", 1, new Font("Calibri", 7) { Bold = true },  ParagraphAlignment.Center),
+                new Col("UNIDAD 300", 1, new Font("Calibri", 7) { Bold = true },  ParagraphAlignment.Center),
+                new Col("CENTRO MÉDICO\nSUR SONORA", 1, new Font("Calibri", 7) { Bold = true },  ParagraphAlignment.Center),
+                new Col("UNIDAD GUAYMAS", 1, new Font("Calibri", 7) { Bold = true },  ParagraphAlignment.Center),
+                new Col("CENTRO MÉDICO\nDEL RÍO", 1, new Font("Calibri", 7) { Bold = true },  ParagraphAlignment.Center),
+                new Col("MORELOS", 1, new Font("Calibri", 7) { Bold = true },  ParagraphAlignment.Center),
+                new Col("NAVARRETE", 1, new Font("Calibri", 7) { Bold = true },  ParagraphAlignment.Center),
             };
 
             footer.AddText(footerBranchesUnits);
 
             var footerBranchesAddress = new Col[]
             {
-                new Col("Sinaloa No. 144 Sur Col. Centro\nTels. (664) 415-16-92,\n414-08-41, 414-08-42, 415-31-39\ny 415-31-40", 1,new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
-                new Col("Calle 200 Casi\nEsq. con Michoacán\nTels. (644)412-31-56\ny 416-14-07", 1, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
-                new Col("Jalisco No. 2250 Esq.\nCalle 300 Plaza Perisur\nCd. Obregón, Son.\nTel. (644) 444-66-69", 1, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
-                new Col("Calle Norte No. 749 Ote.\nEsq. con Sonora\nTel(644) 415-06-66", 1, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
-                new Col("Calzada Agustín García López\nLocal 6 esq. Paseo de las Villas\nFracc. Las Villas\nTel. (622) 221-9183", 1, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
-                new Col("Reforma No. 273 Sur\nTel. (662) 213-6866", 1, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
-                new Col("Blvd. Morelos No. 357\nCol. El Bachoco\nTels. (662) 267-8635 y 37", 1, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
-                new Col("Blvd. Navarrete No. 292\nCol. Raquet Club\nTel. (662) 216-3342", 1, new Font("Calibri", 11) { Bold = true },  ParagraphAlignment.Center),
+                new Col("Sinaloa No. 144 Sur Col. Centro\nTels. (664) 415-16-92,\n414-08-41, 414-08-42, 415-31-39\ny 415-31-40", 1,new Font("Calibri", 6),  ParagraphAlignment.Center),
+                new Col("Calle 200 Casi\nEsq. con Michoacán\nTels. (644)412-31-56\ny 416-14-07", 1, new Font("Calibri", 6),  ParagraphAlignment.Center),
+                new Col("Jalisco No. 2250 Esq.\nCalle 300 Plaza Perisur\nCd. Obregón, Son.\nTel. (644) 444-66-69", 1, new Font("Calibri", 6),  ParagraphAlignment.Center),
+                new Col("Calle Norte No. 749 Ote.\nEsq. con Sonora\nTel(644) 415-06-66", 1, new Font("Calibri", 6) ,  ParagraphAlignment.Center),
+                new Col("Calzada Agustín García López\nLocal 6 esq. Paseo de las Villas\nFracc. Las Villas\nTel. (622) 221-9183", 1, new Font("Calibri", 6),  ParagraphAlignment.Center),
+                new Col("Reforma No. 273 Sur\nTel. (662) 213-6866", 1, new Font("Calibri", 6),  ParagraphAlignment.Center),
+                new Col("Blvd. Morelos No. 357\nCol. El Bachoco\nTels. (662) 267-8635 y 37", 1, new Font("Calibri", 6),  ParagraphAlignment.Center),
+                new Col("Blvd. Navarrete No. 292\nCol. Raquet Club\nTel. (662) 216-3342", 1, new Font("Calibri", 6),  ParagraphAlignment.Center),
             };  
 
             footer.AddText(footerBranchesAddress);

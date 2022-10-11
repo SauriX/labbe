@@ -84,13 +84,11 @@ namespace Service.Catalog.Mapper
                 Fcsi = model.FCSI,
                 Activo = model.Activo,
                 Requerido = model.Requerido,
-                FormatoImpresionId = model.FormatoImpresionId,
                 TipoValor = model.TipoValor,
                 Estudios = model.Estudios.ToIndicationStudyDto(),
                 Reactivos = model.Reactivos.ToReagentDto(),
                 Area = model.Area.Nombre,
                 Departamento = model.Area.Departamento.Nombre,
-                Format = model.FormatoImpresion.Nombre
             };
         }
 
@@ -273,7 +271,6 @@ namespace Service.Catalog.Mapper
                 Formula = dto.Formula,
                 DepartamentoId = dto.DepartamentoId,
                 AreaId = dto.AreaId,
-                FormatoImpresionId = dto.FormatoImpresionId,
                 UnidadSiId = dto.UnidadSi,
                 FCSI = dto.Fcsi,
                 Activo = dto.Activo,
@@ -305,7 +302,6 @@ namespace Service.Catalog.Mapper
                 Formula = dto.Formula,
                 DepartamentoId = dto.DepartamentoId,
                 AreaId = dto.AreaId,
-                FormatoImpresionId = dto.FormatoImpresionId,
                 UnidadSiId = dto.UnidadSi,
                 FCSI = dto.Fcsi,
                 Activo = dto.Activo,

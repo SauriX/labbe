@@ -48,7 +48,6 @@ namespace Service.Catalog.Repository
                 .Include(x => x.Reactivos).ThenInclude(x => x.Reactivo)
                 .Include(x => x.Unidad)
                 .Include(x => x.UnidadSi)
-                .Include(x => x.FormatoImpresion)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             return parameter;

@@ -42,6 +42,14 @@ namespace Service.Identity.Mapper
         public static UserFormDto ToUserFormDto(this User model, string key)
         {
             if (model == null) return null;
+            List<string> images = new  List<string>();
+            if (model.Imagenes != null) {   
+                foreach (var imagen in model.Imagenes)
+                {
+                    var image = imagen.Ruta.Replace("wwwroot/images/users","");
+                    images.Add(image);
+                }
+            }
 
             return new UserFormDto
             {
@@ -57,6 +65,7 @@ namespace Service.Identity.Mapper
                 ConfirmaContraseña = Crypto.DecryptString(model.Contraseña, key),
                 Activo = model.Activo,
                 Permisos = model.Permisos.ToUserPermissionDto(),
+                Images = images,
             };
         }
 

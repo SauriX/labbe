@@ -151,8 +151,8 @@ namespace Service.MedicalRecord.Mapper
                 Id = (Guid)(requestInfo.Solicitud.Id),
                 Clave = requestInfo.Solicitud.Clave,
                 Paciente = requestInfo.Solicitud.Expediente.NombrePaciente,
-                Medico = requestInfo.Solicitud.Medico.Nombre,
-                Compañia = requestInfo.Solicitud.Compañia.Nombre,
+                Medico = requestInfo.Solicitud.Medico?.Nombre,
+                Compañia = requestInfo.Solicitud.Compañia?.Nombre,
                 Expediente = requestInfo.Solicitud.Expediente.Expediente,
                 Edad = requestInfo.Solicitud.Expediente.Edad,
                 Sexo = requestInfo.Solicitud.Expediente.Genero,
@@ -177,6 +177,7 @@ namespace Service.MedicalRecord.Mapper
             {
                 return new ClinicResultsFormDto
                 {
+                    Id = results.Id,
                     SolicitudEstudioId = results.SolicitudEstudioId,
                     Nombre = results.Nombre,
                     TipoValorId = results.TipoValorId,

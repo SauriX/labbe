@@ -42,8 +42,6 @@ namespace Service.Catalog.Domain.Parameter
         public virtual Department Departmento { get; set; }
         public int AreaId { get; set; }
         public virtual Area Area { get; set; }
-        public int FormatoImpresionId { get; set; }
-        public virtual Format FormatoImpresion { get; set; }
         public string FCSI { get; set; }
         public bool Activo { get; set; }
         public bool Requerido { get; set; }
