@@ -48,6 +48,14 @@ namespace Service.MedicalRecord.Controllers
             await _service.SaveLabResults(results);
         }
 
+        [HttpPost("getLabResultsById/{id}")]
+        [Authorize(Policies.Access)]
+        public async Task<List<ClinicResultsFormDto>> GetLabResultsByid(string id)
+        {
+            var clinicResults = await _service.GetLabResultsById(id);
+            return clinicResults;
+        }
+
         [HttpPut("updateResults")]
         [Authorize(Policies.Create)]
         public async Task UpdateLabResults(List<ClinicResultsFormDto> results)
