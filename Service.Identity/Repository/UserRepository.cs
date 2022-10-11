@@ -22,7 +22,7 @@ namespace Service.Identity.Repository
 
         public async Task<List<User>> GetAll(string search)
         {
-            var users = _context.CAT_Usuario.Include(x => x.Rol).AsQueryable();
+            var users = _context.CAT_Usuario.Include(x => x.Rol).Include(x=>x.Imagenes).AsQueryable();
 
             search = search.Trim().ToLower();
 
@@ -36,7 +36,7 @@ namespace Service.Identity.Repository
 
         public async Task<User> GetById(Guid id)
         {
-            var user = await _context.CAT_Usuario.Include(x => x.Rol).FirstOrDefaultAsync(x => x.Id == id);
+            var user = await _context.CAT_Usuario.Include(x => x.Rol).Include(x => x.Imagenes).FirstOrDefaultAsync(x => x.Id == id);
 
             user.Permisos = await GetPermission(id);
 
