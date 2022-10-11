@@ -8,29 +8,53 @@ namespace Service.Catalog.Domain.Study
 {
     public class Study
     {
-        public int Id { get; set; }
-        public string Clave { get; set; }
-        public string Nombre { get; set; }
-        public int Orden { get; set; }
-        public string Titulo { get; set; }
-        public string NombreCorto { get; set; }
-        public bool Visible { get; set; }
-        public decimal DiasResultado { get; set; }
-        public int Dias { get; set; }
-        public int TiempoResultado { get; set; }
-        public int AreaId { get; set; }
-        public virtual Area Area { get; set; }
-        public int DepartamentoId { get; set; }
+        public Study()
+        {
+        }
+
+        public Study(int id, string clave, string nombre, int orden, string titulo, string corto, bool visible, int dias, int areaId, int departamentoId, int maquiladorId, int metodoId, int taponId)
+        {
+            Id = id;
+            Clave = clave;
+            Nombre = nombre;
+            Orden = orden;
+            Titulo = titulo;
+            NombreCorto = corto;
+            Visible = visible;
+            DiasResultado = dias;
+            Dias = dias;
+            TiempoResultado = dias * 24;
+            AreaId = areaId;
+            DepartamentoId = departamentoId;
+            MaquiladorId = maquiladorId;
+            MetodoId = metodoId;
+            TaponId = taponId;
+            Activo = true;
+        }
+
+        public int Id { get; set; } //---------------------------
+        public string Clave { get; set; } //---------------------------
+        public string Nombre { get; set; } //---------------------------
+        public int Orden { get; set; } //---------------------------
+        public string Titulo { get; set; }//---------------------------
+        public string NombreCorto { get; set; }//---------------------------
+        public bool Visible { get; set; }//---------------------------
+        public decimal DiasResultado { get; set; }//---------------------------
+        public int Dias { get; set; }//---------------------------
+        public int TiempoResultado { get; set; }//---------------------------
+        public int AreaId { get; set; }//---------------------------
+        public virtual Area Area { get; set; }//---------------------------
+        public int DepartamentoId { get; set; }//---------------------------
         public int FormatoId { get; set; }
         public virtual Format Formato { get; set; }
-        public int MaquiladorId { get; set; }
-        public virtual Domain.Maquila.Maquila Maquilador { get; set; }
-        public int MetodoId { get; set; }
-        public virtual Method Metodo { get; set; }
+        public int MaquiladorId { get; set; }//---------------------------
+        public virtual Domain.Maquila.Maquila Maquilador { get; set; }//---------------------------
+        public int MetodoId { get; set; }//---------------------------
+        public virtual Method Metodo { get; set; }//---------------------------
         public int SampleTypeId { get; set; }
         public virtual SampleType SampleType { get; set; }
-        public int TaponId { get; set; }
-        public virtual Domain.Tapon.Tapon Tapon { get; set; }
+        public int TaponId { get; set; }//---------------------------
+        public virtual Domain.Tapon.Tapon Tapon { get; set; }//---------------------------
         public int Cantidad { get; set; }
         public bool Prioridad { get; set; }
         public bool Urgencia { get; set; }

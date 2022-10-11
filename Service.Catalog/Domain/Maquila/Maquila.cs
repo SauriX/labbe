@@ -5,6 +5,18 @@ namespace Service.Catalog.Domain.Maquila
 {
     public class Maquila
     {
+        public Maquila()
+        {
+        }
+
+        public Maquila(int id, string clave, string nombre)
+        {
+            Id = id;
+            Clave = clave;
+            Nombre = nombre;
+            Activo = true;
+        }
+
         public int Id { set; get; }
         public string Clave { set; get; }
         public string Nombre { set; get; }

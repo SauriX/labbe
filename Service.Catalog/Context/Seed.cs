@@ -10,6 +10,14 @@ using System.Text;
 using System.Threading.Tasks;
 using DEP = Shared.Dictionary.Catalogs.Department;
 using BR = Shared.Dictionary.Catalogs.Branch;
+using Shared.Utils;
+using ClosedXML.Excel;
+using System.Data;
+using Service.Catalog.Domain.Maquila;
+using Service.Catalog.Domain.Indication;
+using Service.Catalog.Domain.Tapon;
+using Service.Catalog.Domain.Study;
+using RabbitMQ.Client;
 
 namespace Service.Catalog.Context
 {
@@ -17,6 +25,20 @@ namespace Service.Catalog.Context
     {
         public static async Task SeedData(ApplicationDbContext context, string key)
         {
+            if (true)
+            {
+                var methods = GetMethods();
+                var payment = GetPaymentForms();
+                var cfdi = GetUseOfCFDI​s();
+                var deps = GetDepartments();
+                var areas = GetAreas();
+                var maquilas = GetMaquilas();
+                var indications = GetIndications();
+                var tags = GetTags();
+                var studies = GetStudies();
+                var branches = GetBranches();
+            }
+
             if (!context.CAT_Configuracion.Any())
             {
                 using var transaction = context.Database.BeginTransaction();
@@ -153,6 +175,11 @@ namespace Service.Catalog.Context
                     transaction.Rollback();
                     throw;
                 }
+            }
+
+            if (true)
+            {
+                GetMethods();
             }
 
             if (true)
@@ -991,6 +1018,20 @@ namespace Service.Catalog.Context
             }
         }
 
+        private static List<Method> GetMethods()
+        {
+            var path = "wwwroot/seed/CAT_METODOS.xlsx";
+            var tableData = ReadAsTable(path);
+
+            var methods = tableData.AsEnumerable().Select(x => new Method(
+                Convert.ToInt32(x.Field<double>("Id")),
+                x.Field<string>("Clave"),
+                x.Field<string>("Nombre") ?? ""
+                )).ToList();
+
+            return methods;
+        }
+
         private static List<Payment> GetPaymentForms()
         {
             var paymentForms = new List<Payment>
@@ -1057,74 +1098,142 @@ namespace Service.Catalog.Context
 
         private static List<Department> GetDepartments()
         {
-            var departments = new List<Department>
-            {
-                new Department(DEP.PAQUETES, "PAQ", "PAQUETES"),
-                new Department(DEP.IMAGENOLOGIA, "IMAGENOLOGÍA", "IMAGENOLOGÍA"),
-                new Department(DEP.PATOLOGIA, "PATOLOGÍA", "PATOLOGÍA"),
-                new Department(DEP.LABORATORIO, "LABORATORIO", "LABORATORIO"),
-            };
+            var path = "wwwroot/seed/CAT_DEPARTAMENTOS.xlsx";
+            var tableData = ReadAsTable(path);
+
+            var departments = tableData.AsEnumerable().Select(x => new Department(
+                Convert.ToInt32(x.Field<double>("Id")),
+                x.Field<string>("Clave"),
+                x.Field<string>("Nombre") ?? ""
+                )).ToList();
 
             return departments;
         }
 
         private static List<Area> GetAreas()
         {
-            var areas = new List<Area>
+            var path = "wwwroot/seed/CAT_Areas.xlsx";
+            var tableData = ReadAsTable(path);
+
+            var departments = GetDepartments();
+
+            var areas = tableData.AsEnumerable().Select(x =>
             {
-                new Area(1, DEP.PAQUETES, "PAQ", "PAQUETES"),
-                new Area(2, DEP.LABORATORIO, "ANA", "AUTOINMUNIDAD"),
-                new Area(3, DEP.LABORATORIO, "APE", "ANTIGENO PROSTATICO"),
-                new Area(4, DEP.PATOLOGIA, "BACTER", "BACTERIOLOGIA"),
-                new Area(5, DEP.LABORATORIO, "BH", "BIOMETRIAS"),
-                new Area(6, DEP.LABORATORIO, "CITO", "CITOMETRIA DE FLUJO"),
-                new Area(7, DEP.LABORATORIO, "CLAMI", "CLAMIDIA"),
-                new Area(8, DEP.PATOLOGIA, "CN", "CITOLOGIA NASAL"),
-                new Area(9, DEP.LABORATORIO, "COAG", "COAGULACION"),
-                new Area(10, DEP.LABORATORIO, "CONVU", "ANTICONVULSIVANTES"),
-                new Area(11, DEP.LABORATORIO, "COPROL", "COPROLOGICOS"),
-                new Area(12, DEP.LABORATORIO, "DOP", "ANTIDOPING"),
-                new Area(13, DEP.LABORATORIO, "ELECS", "ELECTROLITOS SERICOS"),
-                new Area(14, DEP.LABORATORIO, "ELECU", "ELECTROLITOS URINARIOS"),
-                new Area(15, DEP.LABORATORIO, "ESP", "ESPERMATOBIOSCOPIA"),
-                new Area(16, DEP.LABORATORIO, "ESPE", "PRUEBAS ESPECIALES"),
-                new Area(17, DEP.LABORATORIO, "FEB", "REACCIONES FEBRILES"),
-                new Area(18, DEP.LABORATORIO, "GAS", "PRUEBAS GAS"),
-                new Area(19, DEP.LABORATORIO, "GIN", "GINECOLOGICO"),
-                new Area(20, DEP.LABORATORIO, "GRU", "GRUPO SANGUINEO"),
-                new Area(21, DEP.LABORATORIO, "HEMATO", "HEMATOLOGIA"),
-                new Area(22, DEP.LABORATORIO, "HEPA", "HEPATITIS"),
-                new Area(23, DEP.LABORATORIO, "HOR", "HORMONAS"),
-                new Area(24, DEP.LABORATORIO, "IDR", "INTRADERMORREACCIONES"),
-                new Area(25, DEP.LABORATORIO, "IG", "INMUNOGLOBULINAS"),
-                new Area(26, DEP.LABORATORIO, "LENDO1", "LENDO1"),
-                new Area(27, DEP.LABORATORIO, "LIQUI", "LIQUIDOS"),
-                new Area(28, DEP.LABORATORIO, "ONCO", "MARCADORES TUMORALES"),
-                new Area(29, DEP.LABORATORIO, "PARA", "PARASITOLOGIA"),
-                new Area(30, DEP.PATOLOGIA, "HIPATO", "HISTOPATOLOGÍA"),
-                new Area(31, DEP.LABORATORIO, "PCR", "CARGAS VIRALES"),
-                new Area(32, DEP.LABORATORIO, "PRE", "PRENUPCIALES"),
-                new Area(33, DEP.LABORATORIO, "PRU", "AREA PRUEBA"),
-                new Area(34, DEP.LABORATORIO, "QS", "QUIMICAS"),
-                new Area(35, DEP.LABORATORIO, "RIA", "EMBARAZO"),
-                new Area(36, DEP.IMAGENOLOGIA, "RX", "RAYOS X"),
-                new Area(37, DEP.LABORATORIO, "SA", "SIN AREA"),
-                new Area(38, DEP.LABORATORIO, "SERO", "SEROLOGIA"),
-                new Area(39, DEP.LABORATORIO, "TIR", "TIROIDEOS"),
-                new Area(40, DEP.LABORATORIO, "TORCH", "TORCH"),
-                new Area(41, DEP.LABORATORIO, "URI", "URIANALISIS"),
-                new Area(42, DEP.LABORATORIO, "VDRL", "VDRL"),
-                new Area(43, DEP.LABORATORIO, "XXX", "INFORMATIVA"),
-                new Area(44, DEP.LABORATORIO, "INMUNO", "INMUNO"),
-                new Area(45, DEP.LABORATORIO, "GLICO", " GLICOSILADAS"),
-                new Area(46, DEP.LABORATORIO, "ELECTR", "ELECTROFORESIS"),
-                new Area(47, DEP.LABORATORIO, "BM", "BIOLOGIA MOLECULAR"),
-                new Area(48, DEP.LABORATORIO, "PCRGEN", "PCR GENNE XPERT"),
-                new Area(49, DEP.IMAGENOLOGIA, "ULTSO", "ULTRASONIDO"),
-                new Area(50, DEP.IMAGENOLOGIA, "MASTO", "MASTOGRAFÍA"),
-            };
+                var department = departments.First(y => y.Clave == x.Field<string>("Departamento"));
+
+                return new Area(
+                    Convert.ToInt32(x.Field<double>("Id")),
+                    department.Id,
+                    x.Field<string>("Clave"),
+                    x.Field<string>("Nombre") ?? "");
+            }).ToList();
 
             return areas;
+        }
+
+        private static List<Maquila> GetMaquilas()
+        {
+            var path = "wwwroot/seed/CAT_MAQUILADORES.xlsx";
+            var tableData = ReadAsTable(path);
+
+            var maquilas = tableData.AsEnumerable().Select(x => new Maquila(
+                Convert.ToInt32(x.Field<double>("Id")),
+                x.Field<string>("Clave"),
+                x.Field<string>("Nombre") ?? ""
+                )).ToList();
+
+            return maquilas;
+        }
+
+        private static List<Indication> GetIndications()
+        {
+            var path = "wwwroot/seed/CAT_INDICACIONES.xlsx";
+            var tableData = ReadAsTable(path);
+
+            var maquilas = tableData.AsEnumerable().Select(x => new Indication(
+                Convert.ToInt32(x.Field<double>("Id")),
+                x.Field<string>("Clave"),
+                x.Field<string>("Nombre") ?? ""
+                )).ToList();
+
+            return maquilas;
+        }
+
+        private static List<Tapon> GetTags()
+        {
+            var path = "wwwroot/seed/CAT_ETIQUETAS.xlsx";
+            var tableData = ReadAsTable(path);
+
+            var tags = tableData.AsEnumerable().Select(x => new Tapon(
+                Convert.ToInt32(x.Field<double>("Id")),
+                x.Field<string>("Clave"),
+                x.Field<string>("Nombre"),
+                x.Field<string>("Color")
+                )).ToList();
+
+            return tags;
+        }
+
+        private static List<Study> GetStudies()
+        {
+            var path = "wwwroot/seed/CAT_ESTUDIOS.xlsx";
+            var tableData = ReadAsTable(path);
+
+            var areas = GetAreas();
+            var maquilas = GetMaquilas();
+            var methods = GetMethods();
+            var tags = GetTags();
+
+            var tagsR = ReadAsTable("wwwroot/seed/CAT_ESTUDIOS_ETIQ.xlsx").AsEnumerable();
+
+            var studies = tableData.AsEnumerable().Select(x =>
+            {
+                var area = areas.FirstOrDefault(a => a.Clave == x.Field<string>("Area"));
+                var maquila = maquilas.FirstOrDefault(m => m.Clave == x.Field<string>("Maquilador"));
+                var method = methods.FirstOrDefault(m => m.Clave == x.Field<string>("Metodo"));
+                var tagR = tagsR.FirstOrDefault(t => t.Field<string>("ClaveEstudio") == x.Field<string>("Clave"));
+                var tag = tags.FirstOrDefault(t => t.Clave == tagR?.Field<string>("ClaveEtiqueta"));
+
+                return new Study(
+                    Convert.ToInt32(x.Field<double>("Id")),
+                    x.Field<string>("Clave"),
+                    x.Field<string>("Nombre"),
+                    Convert.ToInt32(x.Field<double>("Orden")),
+                    x.Field<string>("Titulo"),
+                    x.Field<string>("Corto"),
+                    x.Field<string>("Visible") == "V",
+                    Convert.ToInt32(x.Field<double>("Dias")),
+                    area?.Id ?? 0,
+                    area?.DepartamentoId ?? 0,
+                    maquila?.Id ?? 0,
+                    method?.Id ?? 0,
+                    tag?.Id ?? 0);
+            }).ToList();
+
+            return studies;
+        }
+
+        private static List<IndicationStudy> GetStudiesIndications()
+        {
+            var path = "wwwroot/seed/CAT_ESTUDIOS_INDI.xlsx";
+            var tableData = ReadAsTable(path);
+
+            var indications = GetIndications();
+            var studies = GetStudies();
+
+            var studyIndications = tableData.AsEnumerable().Select(x =>
+            {
+                var study = studies.FirstOrDefault(s => s.Clave == x.Field<string>("ClaveEstudio"));
+                var indication = indications.FirstOrDefault(i => i.Clave == x.Field<string>("ClaveIndicacion"));
+
+                return new IndicationStudy(
+                    indication?.Id ?? 0,
+                    study?.Id ?? 0);
+            }).ToList();
+
+            studyIndications = studyIndications.Where(x => x.IndicacionId > 0 && x.EstudioId > 0).ToList();
+
+            return studyIndications;
         }
 
         private static List<Branch> GetBranches()
@@ -1152,6 +1261,14 @@ namespace Service.Catalog.Context
             };
 
             return branches;
+        }
+
+        public static DataTable ReadAsTable(string filePath)
+        {
+            using var wb = new XLWorkbook(filePath, XLEventTracking.Disabled);
+            var ws = wb.Worksheet(1);
+            DataTable dataTable = ws.RangeUsed().AsTable().AsNativeDataTable();
+            return dataTable;
         }
     }
 }

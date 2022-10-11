@@ -4,6 +4,17 @@ namespace Service.Catalog.Domain.Indication
 {
     public class IndicationStudy
     {
+        public IndicationStudy()
+        {
+        }
+
+        public IndicationStudy(int indicacionId, int estudioId)
+        {
+            IndicacionId = indicacionId;
+            EstudioId = estudioId;
+            Activo = true;
+        }
+
         public int IndicacionId { get; set; }
         public virtual Indication Indicacion { get; set; }
         public int EstudioId { get; set; }
