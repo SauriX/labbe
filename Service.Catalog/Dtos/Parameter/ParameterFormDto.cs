@@ -49,7 +49,6 @@ namespace Service.Catalog.Dtos.Parameter
             RuleFor(x => x.TipoValor).NotEmpty();
             RuleFor(x => x.DepartamentoId).GreaterThan(0);
             RuleFor(x => x.AreaId).GreaterThan(0);
-            RuleFor(x => x.FormatoImpresionId).GreaterThan(0);
             RuleFor(x => x.ReactivoId).Guid();
             RuleFor(x => x.Formula).MaximumLength(200);
             RuleFor(x => x.Fcsi).NotEmpty().MaximumLength(50);

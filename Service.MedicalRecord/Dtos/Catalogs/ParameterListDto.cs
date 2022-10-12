@@ -19,5 +19,6 @@
         public decimal ValorFinal { get; set; }
         public decimal CriticoMinimo { get; set; }
         public decimal CriticoMaximo { get; set; }
+        public string Resultado { get; set; }
     }
 }

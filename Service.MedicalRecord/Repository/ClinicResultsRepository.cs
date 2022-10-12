@@ -172,13 +172,28 @@ namespace Service.MedicalRecord.Repository
         public async Task<ClinicResults> GetLabResultsById(int id)
         {
             var resultExisting = await _context.ClinicResults
-                .Where(x => x.EstudioId == id)
+                .Where(x => x.SolicitudEstudioId == id)
                 .Include(x => x.SolicitudEstudio)
                 .Include(x => x.Solicitud).ThenInclude(y => y.Expediente)
+                .Include(x => x.Solicitud).ThenInclude(y => y.Medico)
+                .Include(x => x.Solicitud).ThenInclude(y => y.Estudios)
+                .Include(x => x.Solicitud).ThenInclude(y => y.Compañia)
                 .FirstOrDefaultAsync();
             return resultExisting;
         }
 
+        public async Task<List<ClinicResults>> GetResultsById(Guid id)
+        {
+            var resultExisting = await _context.ClinicResults
+                .Where(x => x.Id == id)
+                .Include(x => x.SolicitudEstudio)
+                .Include(x => x.Solicitud).ThenInclude(y => y.Expediente)
+                .Include(x => x.Solicitud).ThenInclude(y => y.Medico)
+                .Include(x => x.Solicitud).ThenInclude(y => y.Estudios)
+                .Include(x => x.Solicitud).ThenInclude(y => y.Compañia)
+                .ToListAsync();
+            return resultExisting;
+        }
 
         public async Task UpdateStatusStudy(RequestStudy study)
         {
