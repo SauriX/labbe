@@ -27,6 +27,7 @@ using Service.MedicalRecord.Settings.ISettings;
 using Service.MedicalRecord.Domain;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using Shared.Helpers;
 
 namespace Service.MedicalRecord.Application
 {
@@ -140,6 +141,11 @@ namespace Service.MedicalRecord.Application
 
                 study.Parametros = st.Parametros;
                 study.Indicaciones = st.Indicaciones;
+
+                foreach (var parameter in study.Parametros)
+                {
+                    parameter.Resultado = 
+                }
             }
 
             var data = new RequestStudyUpdateDto()
@@ -486,6 +492,20 @@ namespace Service.MedicalRecord.Application
         public async Task<ClinicalResultsPathological> GetResultPathological(int RequestStudyId)
         {
             return await _repository.GetResultPathologicalById(RequestStudyId);
+        }
+
+        public async Task<List<ClinicResultsFormDto>> GetLabResultsById(string id)
+        {
+            Helpers.ValidateGuid(id, out Guid guid);
+
+            var results = await _repository.GetResultsById(guid);
+
+            if (results == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
+            }
+
+            return results.ResultsGeneric();
         }
 
         public async Task<Domain.Request.RequestStudy> GetRequestStudyById(int RequestStudyId)

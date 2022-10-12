@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221012005648_imagesmantain")]
+    partial class imagesmantain
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1539,6 +1541,9 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaModifico")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("FormatoImpresionId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Formula")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
@@ -1591,6 +1596,8 @@ namespace Service.Catalog.Migrations
                     b.HasIndex("AreaId");
 
                     b.HasIndex("DepartmentoId");
+
+                    b.HasIndex("FormatoImpresionId");
 
                     b.HasIndex("UnidadId");
 
@@ -3021,6 +3028,12 @@ namespace Service.Catalog.Migrations
                         .WithMany()
                         .HasForeignKey("DepartmentoId");
 
+                    b.HasOne("Service.Catalog.Domain.Parameter.Format", "FormatoImpresion")
+                        .WithMany()
+                        .HasForeignKey("FormatoImpresionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Service.Catalog.Domain.Catalog.Units", "Unidad")
                         .WithMany()
                         .HasForeignKey("UnidadId")
@@ -3036,6 +3049,8 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Area");
 
                     b.Navigation("Departmento");
+
+                    b.Navigation("FormatoImpresion");
 
                     b.Navigation("Unidad");
 

@@ -53,12 +53,33 @@ namespace Service.Catalog.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task AddImage(List<MantainImages> images,Guid Id) {
 
-            var config = new BulkConfig();
-            config.SetSynchronizeFilter<MantainImages>(x => x.MantainId == Id);
-            
-            await _context.BulkInsertOrUpdateOrDeleteAsync(images,config);
+        public async Task<MantainImages> GetImage(Guid requestId, string code)
+        {
+           var image = await _context.CAT_Mantenimiento_Equipo_Images.FirstOrDefaultAsync(x => x.MantainId == requestId && x.Clave== code);
+
+            return image;
+        }
+
+        public async Task<List<MantainImages>> GetImages(Guid requestId)
+        {
+            var images =  _context.CAT_Mantenimiento_Equipo_Images.Where(x => x.MantainId == requestId);
+
+            return await images.ToListAsync();
+        }
+
+        public async Task UpdateImage(MantainImages requestImage)
+        {
+            if (requestImage.Id == 0)
+            {
+                _context.CAT_Mantenimiento_Equipo_Images.Add(requestImage);
+            }
+            else
+            {
+                _context.CAT_Mantenimiento_Equipo_Images.Update(requestImage);
+            }
+
+            await _context.SaveChangesAsync();
         }
     }
 }

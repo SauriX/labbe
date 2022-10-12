@@ -67,15 +67,11 @@ namespace Service.Catalog.Controllers
 
         [HttpPut("images")]
         [Authorize(Policies.Update)]
-        public async Task<bool> SaveImage([FromForm] MantainImageDto[] requestDto)
+        public async Task<string> SaveImage([FromForm] MantainImageDto requestDto)
         {
+            requestDto.UsuarioId = (Guid)HttpContext.Items["userId"];
 
-            List<MantainImageDto> request = new List<MantainImageDto>();
-            foreach (var image in requestDto) {
-                image.UsuarioId = (Guid)HttpContext.Items["userId"];
-                request.Add(image);
-            }
-           return await _service.SaveImage(request.ToArray());
+            return await _service.SaveImage(requestDto);
         }
         [HttpPost("order/{Id}")]
         //[Authorize(Policies.Print)]
