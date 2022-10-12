@@ -9,11 +9,12 @@ namespace Service.Catalog.Domain.Indication
         {
         }
 
-        public Indication(int id, string clave, string nombre)
+        public Indication(int id, string clave, string descripcion)
         {
             Id = id;
             Clave = clave;
-            Nombre = nombre;
+            Nombre = clave;
+            Descripcion = descripcion;
             Activo = true;
         }
 

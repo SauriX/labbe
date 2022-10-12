@@ -23,7 +23,7 @@ namespace Shared.Utils
                            StringBuilder value = new($"({GetMergeValue(x, ty, key)}, ");
                            var colVal = string.Join(", ", columns.Select(c => $"{GetMergeValue(x, ty, c)}"));
                            value.Append(colVal);
-                           value.Append(")");
+                           value.Append(')');
                            return value.ToString();
                        }));
 
@@ -33,6 +33,38 @@ namespace Shared.Utils
                 $"\nWHEN NOT MATCHED BY Target THEN" +
                 $"\n\tINSERT ({key}, {string.Join(", ", columns)})" +
                 $"\n\tVALUES (Source.{key}, {string.Join(", ", columns.Select(x => $"Source.{x}"))})" +
+                $"\nWHEN MATCHED THEN UPDATE SET" +
+                $"\n{string.Join("\n,", columns.Select(x => $"Target.{x} = Source.{x}"))};";
+
+            return script;
+        }
+
+        public static string Build<T>(string tableName, IEnumerable<T> data, string[] keys, params string[] columns)
+        {
+            if (columns == null || columns.Length == 0)
+            {
+                throw new ArgumentNullException(nameof(columns));
+            }
+
+            var allCols = keys.Concat(columns);
+
+            var values = string.Join(", " + Environment.NewLine,
+                       data.Select(x =>
+                       {
+                           var ty = x.GetType();
+                           StringBuilder value = new($"(");
+                           var colVal = string.Join(", ", allCols.Select(c => $"{GetMergeValue(x, ty, c)}"));
+                           value.Append(colVal);
+                           value.Append(')');
+                           return value.ToString();
+                       }));
+
+            string script = $"MERGE {tableName} AS Target" +
+                $"\nUSING (VALUES {values}) AS Source({string.Join(", ", allCols)})" +
+                $"\n\tON {string.Join(" AND ", keys.Select(k => $"Source.{k} = Target.{k}"))}" +
+                $"\nWHEN NOT MATCHED BY Target THEN" +
+                $"\n\tINSERT ({string.Join(", ", allCols)})" +
+                $"\n\tVALUES ({string.Join(", ", allCols.Select(x => $"Source.{x}"))})" +
                 $"\nWHEN MATCHED THEN UPDATE SET" +
                 $"\n{string.Join("\n,", columns.Select(x => $"Target.{x} = Source.{x}"))};";
 

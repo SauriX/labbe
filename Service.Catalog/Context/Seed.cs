@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DEP = Shared.Dictionary.Catalogs.Department;
+using AREAS = Shared.Dictionary.Catalogs.Area;
 using BR = Shared.Dictionary.Catalogs.Branch;
 using Shared.Utils;
 using ClosedXML.Excel;
@@ -19,6 +20,11 @@ using Service.Catalog.Domain.Tapon;
 using Service.Catalog.Domain.Study;
 using RabbitMQ.Client;
 using Service.Catalog.Domain.Parameter;
+using Service.Catalog.Domain.Packet;
+using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Service.Catalog.Domain.Medics;
+using static ClosedXML.Excel.XLPredefinedFormat;
 
 namespace Service.Catalog.Context
 {
@@ -26,18 +32,24 @@ namespace Service.Catalog.Context
     {
         public static async Task SeedData(ApplicationDbContext context, string key)
         {
-            if (true)
+            if (false)
             {
-                var methods = GetMethods();
+                //var methods = GetMethods();
                 var payment = GetPaymentForms();
                 var cfdi = GetUseOfCFDI​s();
-                var deps = GetDepartments();
-                var areas = GetAreas();
-                var maquilas = GetMaquilas();
-                var indications = GetIndications();
-                var tags = GetTags();
-                var studies = GetStudies();
-                var branches = GetBranches();
+                //var deps = GetDepartments();
+                //var areas = GetAreas();
+                //var maquilas = GetMaquilas();
+                //var indications = GetIndications();
+                //var tags = GetTags();
+                //var units = GetUnits();
+                //var paramss = GetParameters();
+                //var studies = GetStudies();
+                //var packs = GetPacks();
+                //var branches = GetBranches();
+                //var si = GetStudyIndications();
+                //var sp = GetStudyParameters();
+                //var ps = GetPackStudies();
             }
 
             if (!context.CAT_Configuracion.Any())
@@ -47,87 +59,22 @@ namespace Service.Catalog.Context
                 {
                     var configuration = new List<Configuration>()
                     {
-                        new Configuration()
-                        {
-                            Id = 1,
-                            Descripcion = "Correo",
-                        },
-                        new Configuration()
-                        {
-                            Id = 2,
-                            Descripcion = "Remitente",
-                        },
-                        new Configuration()
-                        {
-                            Id = 3,
-                            Descripcion = "SMTP",
-                        },
-                        new Configuration()
-                        {
-                            Id = 4,
-                            Descripcion = "Requiere Contraseña",
-                        },
-                        new Configuration()
-                        {
-                            Id = 5,
-                            Descripcion = "Contraseña",
-                        },
-                        new Configuration()
-                        {
-                            Id = 6,
-                            Descripcion = "Nombre Sistema",
-                        },
-                        new Configuration()
-                        {
-                            Id = 7,
-                            Descripcion = "Logo",
-                            Valor = "logo.png"
-                        },
-                        new Configuration()
-                        {
-                            Id = 8,
-                            Descripcion = "RFC",
-                        },
-                        new Configuration()
-                        {
-                            Id = 9,
-                            Descripcion = "Razón Social",
-                        },
-                        new Configuration()
-                        {
-                            Id = 10,
-                            Descripcion = "CP",
-                        },
-                        new Configuration()
-                        {
-                            Id = 11,
-                            Descripcion = "Estado",
-                        },
-                        new Configuration()
-                        {
-                            Id = 12,
-                            Descripcion = "Colonia",
-                        },
-                        new Configuration()
-                        {
-                            Id = 13,
-                            Descripcion = "Calle",
-                        },
-                        new Configuration()
-                        {
-                            Id = 14,
-                            Descripcion = "Número",
-                        },
-                        new Configuration()
-                        {
-                            Id = 15,
-                            Descripcion = "Teléfono",
-                        },
-                        new Configuration()
-                        {
-                            Id = 16,
-                            Descripcion = "Ciudad",
-                        },
+                        new Configuration(1, "Correo"),
+                        new Configuration(2, "Remitente"),
+                        new Configuration(3,"SMTP" ),
+                        new Configuration(4,"Requiere Contraseña"),
+                        new Configuration(5,"Contraseña"),
+                        new Configuration(6,"Nombre Sistema"),
+                        new Configuration(7,"Logo","logo.png"),
+                        new Configuration(8,"RFC"),
+                        new Configuration(9,"Razón Social"),
+                        new Configuration(10,"CP"),
+                        new Configuration(11,"Estado"),
+                        new Configuration(12,"Colonia"),
+                        new Configuration(13,"Calle"),
+                        new Configuration(14,"Número"),
+                        new Configuration(15,"Teléfono"),
+                        new Configuration(16,"Ciudad")
                     };
 
                     context.CAT_Configuracion.AddRange(configuration);
@@ -142,6 +89,7 @@ namespace Service.Catalog.Context
                     throw;
                 }
             }
+
             if (!context.CAT_Sucursal_Folio.Any())
             {
                 using var transaction = context.Database.BeginTransaction();
@@ -178,836 +126,452 @@ namespace Service.Catalog.Context
                 }
             }
 
-            if (true)
-            {
-                GetMethods();
-            }
-
-            if (true)
+            // Methods
+            if (false)
             {
                 using var transaction = context.Database.BeginTransaction();
+
+                try
+                {
+                    var methods = GetMethods();
+                    var method = new Method();
+
+                    var script = MergeGenerator.Build(
+                        nameof(context.CAT_Metodo),
+                        methods,
+                        nameof(method.Id),
+                        nameof(method.Clave),
+                        nameof(method.Nombre),
+                        nameof(method.Activo));
+
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Metodo)} ON;");
+                    context.Database.ExecuteSqlRaw(script);
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Metodo)} OFF;");
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+
+            // Departments
+            if (false)
+            {
+                using var transaction = context.Database.BeginTransaction();
+
                 try
                 {
                     var departments = GetDepartments();
+                    var department = new Department();
 
-                    StringBuilder script = new($@"
-                        MERGE {nameof(context.CAT_Departamento)} AS Target
-                            USING (VALUES [VALUES]) AS Source(Id, Clave, Nombre, Activo)
-                            ON Source.Id = Target.Id
-                        WHEN NOT MATCHED BY Target THEN
-                            INSERT (Id, Clave, Nombre, Activo)
-                            VALUES (Source.Id, Source.Clave, Source.Nombre, Source.Activo)
-                        WHEN MATCHED THEN UPDATE SET
-                            Target.Clave = Source.Clave, 
-	                        Target.Nombre = Source.Nombre,
-	                        Target.Activo = Source.Activo;");
+                    var script = MergeGenerator.Build(
+                        nameof(context.CAT_Departamento),
+                        departments,
+                        nameof(department.Id),
+                        nameof(department.Clave),
+                        nameof(department.Nombre),
+                        nameof(department.Activo));
 
                     context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Departamento)} ON;");
-
-                    var values = string.Join("," + Environment.NewLine,
-                        departments.Select(x => $"({x.Id}, '{x.Clave}', '{x.Nombre}', {(x.Activo ? 1 : 0)})"));
-
-                    script.Replace("[VALUES]", values);
-
-                    context.Database.ExecuteSqlRaw(script.ToString());
-
+                    context.Database.ExecuteSqlRaw(script);
                     context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Departamento)} OFF;");
 
                     transaction.Commit();
                 }
                 catch (Exception)
                 {
-                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Departamento)} OFF;");
                     transaction.Rollback();
                     throw;
                 }
             }
 
-            if (true)
+            // Areas
+            if (false)
             {
                 using var transaction = context.Database.BeginTransaction();
+
                 try
                 {
                     var areas = GetAreas();
+                    var area = new Area();
 
-                    StringBuilder script = new($@"
-                        MERGE {nameof(context.CAT_Area)} AS Target
-                            USING (VALUES [VALUES]) AS Source(Id, DepartamentoId, Clave, Nombre, Activo)
-                            ON Source.Id = Target.Id
-                        WHEN NOT MATCHED BY Target THEN
-                            INSERT (Id, DepartamentoId, Clave, Nombre, Activo)
-                            VALUES (Source.Id, Source.DepartamentoId, Source.Clave, Source.Nombre, Source.Activo)
-                        WHEN MATCHED THEN UPDATE SET
-                            Target.DepartamentoId = Source.DepartamentoId, 
-                            Target.Clave = Source.Clave, 
-	                        Target.Nombre = Source.Nombre,
-	                        Target.Activo = Source.Activo;");
+                    var script = MergeGenerator.Build(
+                        nameof(context.CAT_Area),
+                        areas,
+                        nameof(area.Id),
+                        nameof(area.DepartamentoId),
+                        nameof(area.Clave),
+                        nameof(area.Nombre),
+                        nameof(area.Activo));
 
                     context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Area)} ON;");
-
-                    var values = string.Join("," + Environment.NewLine,
-                        areas.Select(x => $"({x.Id}, {x.DepartamentoId}, '{x.Clave}', '{x.Nombre}', {(x.Activo ? 1 : 0)})"));
-
-                    script.Replace("[VALUES]", values);
-
-                    context.Database.ExecuteSqlRaw(script.ToString());
-
+                    context.Database.ExecuteSqlRaw(script);
                     context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Area)} OFF;");
 
                     transaction.Commit();
                 }
                 catch (Exception)
                 {
-                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Area)} OFF;");
                     transaction.Rollback();
                     throw;
                 }
             }
 
-            if (true)
+            // Indications
+            if (false)
             {
                 using var transaction = context.Database.BeginTransaction();
+
+                try
+                {
+                    var indications = GetIndications();
+                    var indication = new Indication();
+
+                    var script = MergeGenerator.Build(
+                        nameof(context.CAT_Indicacion),
+                        indications,
+                        nameof(indication.Id),
+                        nameof(indication.Clave),
+                        nameof(indication.Nombre),
+                        nameof(indication.Descripcion),
+                        nameof(indication.Activo));
+
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Indicacion)} ON;");
+                    context.Database.ExecuteSqlRaw(script);
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Indicacion)} OFF;");
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+
+            // Tags
+            if (false)
+            {
+                using var transaction = context.Database.BeginTransaction();
+
+                try
+                {
+                    var tags = GetTags();
+                    var tag = new Tapon();
+
+                    var script = MergeGenerator.Build(
+                        nameof(context.CAT_Tipo_Tapon),
+                        tags,
+                        nameof(tag.Id),
+                        nameof(tag.Clave),
+                        nameof(tag.Nombre),
+                        nameof(tag.Color));
+
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Tipo_Tapon)} ON;");
+                    context.Database.ExecuteSqlRaw(script);
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Tipo_Tapon)} OFF;");
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+
+            // Units
+            if (false)
+            {
+                using var transaction = context.Database.BeginTransaction();
+
+                try
+                {
+                    var units = GetUnits();
+                    var unit = new Units();
+
+                    var script = MergeGenerator.Build(
+                        nameof(context.CAT_Units),
+                        units,
+                        nameof(unit.Id),
+                        nameof(unit.Clave),
+                        nameof(unit.Nombre),
+                        nameof(unit.Descripcion),
+                        nameof(unit.Activo));
+
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Units)} ON;");
+                    context.Database.ExecuteSqlRaw(script);
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Units)} OFF;");
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+
+            // Maquilas
+            if (false)
+            {
+                using var transaction = context.Database.BeginTransaction();
+
+                try
+                {
+                    var maquilas = GetMaquilas();
+                    var maquila = new Maquila();
+
+                    var script = MergeGenerator.Build(
+                        nameof(context.CAT_Maquilador),
+                        maquilas,
+                        nameof(maquila.Id),
+                        nameof(maquila.Clave),
+                        nameof(maquila.Nombre),
+                        nameof(maquila.Activo));
+
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Maquilador)} ON;");
+                    context.Database.ExecuteSqlRaw(script);
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Maquilador)} OFF;");
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+
+            // Branches
+            if (false)
+            {
+                using var transaction = context.Database.BeginTransaction();
+
                 try
                 {
                     var branches = GetBranches();
+                    var branch = new Branch();
 
-                    StringBuilder script = new($@"
-                        MERGE {nameof(context.CAT_Sucursal)} AS Target
-                            USING (VALUES [VALUES]) AS Source(Id, Clave, Nombre, Clinicos, Telefono, Correo, Calle, NumeroExterior, NumeroInterior, Codigopostal, ColoniaId, Ciudad, Estado, Matriz, Activo)
-                            ON Source.Id = Target.Id
-                        WHEN NOT MATCHED BY Target THEN
-                            INSERT (Id, Clave, Nombre, Clinicos, Telefono, Correo, Calle, NumeroExterior, NumeroInterior, Codigopostal, ColoniaId, Ciudad, Estado, Matriz, Activo)
-                            VALUES (Source.Id, Source.Clave, Source.Nombre, Source.Clinicos, Source.Telefono, Source.Correo, Source.Calle, Source.NumeroExterior, Source.NumeroInterior, Source.Codigopostal, Source.ColoniaId, Source.Ciudad, Source.Estado, Source.Matriz, Source.Activo)
-                        WHEN MATCHED THEN UPDATE SET
-                            Target.Nombre = Source.Nombre, 
-	                        Target.Clinicos = Source.Clinicos,
-	                        Target.Telefono = Source.Telefono,
-	                        Target.Correo = Source.Correo,
-	                        Target.Calle = Source.Calle,
-	                        Target.NumeroExterior = Source.NumeroExterior,
-	                        Target.NumeroInterior = Source.NumeroInterior,
-	                        Target.Codigopostal = Source.Codigopostal,
-	                        Target.ColoniaId = Source.ColoniaId,
-	                        Target.Ciudad = Source.Ciudad,
-	                        Target.Estado = Source.Estado,
-	                        Target.Matriz = Source.Matriz,
-	                        Target.Activo = Source.Activo;");
+                    var script = MergeGenerator.Build(
+                        nameof(context.CAT_Sucursal),
+                        branches,
+                        nameof(branch.Id),
+                        nameof(branch.Clave),
+                        nameof(branch.Nombre),
+                        nameof(branch.Clinicos),
+                        nameof(branch.Telefono),
+                        nameof(branch.Correo),
+                        nameof(branch.Calle),
+                        nameof(branch.NumeroExterior),
+                        nameof(branch.NumeroInterior),
+                        nameof(branch.Codigopostal),
+                        nameof(branch.ColoniaId),
+                        nameof(branch.Ciudad),
+                        nameof(branch.Estado),
+                        nameof(branch.Matriz),
+                        nameof(branch.Activo));
 
-                    var values = string.Join("," + Environment.NewLine,
-                        branches.Select(x => $"('{x.Id}', '{x.Clave}', '{x.Nombre}', '{x.Clinicos}', '{x.Telefono}', '{x.Correo}', '{x.Calle}', '{x.NumeroExterior}', '{x.NumeroInterior}', '{x.Codigopostal}', {x.ColoniaId}, '{x.Ciudad}', '{x.Estado}', {(x.Matriz ? 1 : 0)}, {(x.Activo ? 1 : 0)})"));
-
-                    script.Replace("[VALUES]", values);
-
-                    context.Database.ExecuteSqlRaw(script.ToString());
+                    context.Database.ExecuteSqlRaw(script);
 
                     transaction.Commit();
                 }
                 catch (Exception)
                 {
-                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Area)} OFF;");
                     transaction.Rollback();
                     throw;
                 }
             }
 
-
-            if (!context.CAT_Units.Any())
+            // Parameters
+            if (false)
             {
                 using var transaction = context.Database.BeginTransaction();
+
                 try
                 {
-                    var unidades = new List<Units>
-                    {
-                       new Units{
-                        Clave = "g/24 hr",
-                        Nombre = "g/24 hr",
-                        Activo = true,
-                       },
-                       new Units{
-                        Clave = "0.2 µg/mL",
-                        Nombre = "0.2 µg/mL",
-                        Activo = true,
-                       },
-                       new Units{
-                        Clave = "2.0 µg/mL",
-                        Nombre = "2.0 µg/mL",
-                        Activo = true,
-                       },
-                       new Units{
-                            Clave = "mcg/g creatinina",
-                            Nombre = "mcg/g creatinina",
-                            Activo = true,
-                       },
-                       new Units{
-                            Clave = "Log. cop./mL",
-                            Nombre = "mLog. cop./mL",
-                            Activo = true,
-                       },
-                       new Units{
-                            Clave = "mg/24 h",
-                            Nombre = "mg/24 h",
-                            Activo = true,
-                       },
-                       new Units{
+                    var parameters = GetParameters();
+                    var parameter = new Parameter();
 
-                            Clave = "U DILUCION",
-                            Nombre = "U DILUCION",
-                            Activo = true,
-                       },
-                       new Units{
-                            Clave = "metros",
-                            Nombre = "metros",
-                            Activo = true,
-                       },
-                       new Units{
-                            Clave = "g/12 HORAS",
-                            Nombre = "g/12 HORAS",
-                            Activo = true,
-                       },
-                       new Units{
-                            Clave = "kU/I",
-                            Nombre = "kU/I",
-                            Activo = true,
-                       },
-                       new Units{
-                            Clave = "µg/24 hrs",
-                            Nombre = "µg/24 hrs",
-                            Activo = true,
-                       },
-                       new Units{
-                            Clave = "mg/g DE CREAT.",
-                            Nombre = "mg/g DE CREAT.",
-                            Activo = true,
-                       },
-                       new Units{
-                            Clave = "nM/mM CREAT",
-                            Nombre = "nM/mM CREAT",
-                            Activo = true,
-                       },
-                       new Units{
-                            Clave = "UE/mL",
-                            Nombre = "UE/mL",
-                            Activo = true,
-                       },
-                       new Units{
-                            Clave = "mg/24 horas",
-                            Nombre = "mg/24 horas",
-                            Activo = true,
-                       },
-                       new Units{
-                            Clave = "nmolBCE/mmolcr",
-                            Nombre = "nmolBCE/mmolcr",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "U.BETHESDA",
-                            Nombre = "U.BETHESDA",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "cp/mL",
-                            Nombre = "cp/mL",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "mg/2hrs",
-                            Nombre = "mg/2hrs",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "µg/24h",
-                            Nombre = "µg/24h",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "U.BETHESDA/mL",
-                            Nombre = "U.BETHESDA/mL",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "m²",
-                            Nombre = "m²",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "µmol/EYACULADO",
-                            Nombre = "µmol/EYACULADO",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "µM/L",
-                            Nombre = "µM/L",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "µg/dl DE ERIT.",
-                            Nombre = "µg/dl DE ERIT.",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "nmol",
-                            Nombre = "nmol",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "MoM",
-                            Nombre = "MoM",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "COCIENTE NORMALIZADO",
-                            Nombre = "COCIENTE NORMALIZADO",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "g/72hrs",
-                            Nombre = "g/72hrs",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "ug/min",
-                            Nombre = "ug/min",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "U/10Exp12 ERITRO",
-                            Nombre = "U/10Exp12 ERITRO",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "nM DPD/mM",
-                            Nombre = "nM DPD/mM",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "ug/ mL",
-                            Nombre = "ug/ mL",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "U/CH 50",
-                            Nombre = "U/CH 50",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "M.L.P.",
-                            Nombre = "M.L.P.",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "G.L.P.",
-                            Nombre = "G.L.P.",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "ug / 24 hr",
-                            Nombre = "ug / 24 hr",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "COI",
-                            Nombre = "COI",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "Ul/L",
-                            Nombre = "Ul/L",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "U/dL",
-                            Nombre = "U/dL",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "mmo/L",
-                            Nombre = "mmo/L",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "UI / L",
-                            Nombre = "UI / L",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "IU/ ml",
-                            Nombre = "IU/ ml",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "uM/L",
-                            Nombre = "uM/L",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "% Colesterol total",
-                            Nombre = "% Colesterol total",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "ml/24 Hrs.",
-                            Nombre = "ml/24 Hrs.",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "E.U./dl",
-                            Nombre = "E.U./dl",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "/mm³",
-                            Nombre = "/mm³",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "/mm3",
-                            Nombre = "/mm3",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "U/gHI",
-                            Nombre = "U/gHI",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "/ CAMPO",
-                            Nombre = "/ CAMPO",
-                            Activo = true,
-                        },
-                        new Units{
-                        Clave = "Celulas /uL",
-                        Nombre = "Celulas /uL",
-                        Activo = true,
-                        },
-                        new Units{
-                            Clave = "10^3/mm3",
-                            Nombre = "10^3/mm3",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "cels /uL",
-                            Nombre = "cels /uL",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "OSB",
-                            Nombre = "OSB",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "mcg/24hs",
-                            Nombre = "mcg/24hs",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "g/24 Hrs.",
-                            Nombre = "g/24 Hrs.",
-                            Activo = true,
-                        },
+                    var script = MergeGenerator.Build(
+                        nameof(context.CAT_Parametro),
+                        parameters,
+                        nameof(parameter.Id),
+                        nameof(parameter.Clave),
+                        nameof(parameter.Nombre),
+                        nameof(parameter.NombreCorto),
+                        nameof(parameter.TipoValor),
+                        nameof(parameter.Formula),
+                        nameof(parameter.AreaId),
+                        nameof(parameter.DepartamentoId),
+                        nameof(parameter.UnidadId),
+                        nameof(parameter.UnidadSiId),
+                        nameof(parameter.FCSI),
+                        nameof(parameter.Activo));
 
-                        new Units{
-                            Clave = "m2",
-                            Nombre = "m2",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "Por ml",
-                            Nombre = "Por ml",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "UROPORFIRINAS/mL DE ERITROCITOS/2hrs",
-                            Nombre = "UROPORFIRINAS/mL DE ERITROCITOS/2hrs",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "mlu/mL",
-                            Nombre = "mlu/mL",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "Log IU/mL",
-                            Nombre = "Log IU/mL",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "MICRAS/SEG",
-                            Nombre = "MICRAS/SEG",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "g.",
-                            Nombre = "g.",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "ng / mL",
-                            Nombre = "ng / mL",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "Unidades de tuberculina",
-                            Nombre = "Unidades de tuberculina",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "g/100 mL",
-                            Nombre = "g/100 mL",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "cels/ uL",
-                            Nombre = "cels/ uL",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "U/ L",
-                            Nombre = "U/ L",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "LEUCOCITOS/mL",
-                            Nombre = "LEUCOCITOS/mL",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "umoL/EYACULADO",
-                            Nombre = "umoL/EYACULADO",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "mOsmol/Kg",
-                            Nombre = "mOsmol/Kg",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "mmol/24h",
-                            Nombre = "mmol/24h",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "nMDPD/mMcr",
-                            Nombre = "nMDPD/mMcr",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "nmol DPD/mmol CREAT",
-                            Nombre = "nmol DPD/mmol CREAT",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "3",
-                            Nombre = "3",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "UFC/g",
-                            Nombre = "UFC/g",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "UFC/ g",
-                            Nombre = "UFC/ g",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "mcg/ 24 HRS",
-                            Nombre = "mcg/ 24 HRS",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "% DEL TOTAL",
-                            Nombre = "% DEL TOTAL",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "g / 5 horas",
-                            Nombre = "g / 5 horas",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "U JDF",
-                            Nombre = "U JDF",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "mg/24 hr",
-                            Nombre = "mg/24 hr",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "ULog",
-                            Nombre = "ULog",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "g/12hr",
-                            Nombre = "g/12hr",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "g/24hr",
-                            Nombre = "g/24hr",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "pg",
-                            Nombre = "pg",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "mg/2hr",
-                            Nombre = "mg/2hr",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "mg/12HRS",
-                            Nombre = "mg/12HRS",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "mg/mL",
-                            Nombre = "mg/mL",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "LEU/CAMPO",
-                            Nombre = "LEU/CAMPO",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "UI/24h",
-                            Nombre = "UI/24h",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "µ/dl",
-                            Nombre = "µ/dl",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "U MPL",
-                            Nombre = "U MPL",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "U GPL",
-                            Nombre = "U GPL",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "ERI/CAMPO",
-                            Nombre = "ERI/CAMPO",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "ugs %",
-                            Nombre = "ugs %",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "mU/L",
-                            Nombre = "mU/L",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "ml/24hr",
-                            Nombre = "ml/24hr",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "IU/I",
-                            Nombre = "IU/I",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "LogIU/mL",
-                            Nombre = "LogIU/mL",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "UFC/ml",
-                            Nombre = "UFC/ml",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "mEu/L",
-                            Nombre = "mEu/L",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "C.M.I.  ug/mL",
-                            Nombre = "C.M.I.  ug/mL",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "A.L.P.",
-                            Nombre = "A.L.P.",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "uEq/min",
-                            Nombre = "uEq/min",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "uE/min",
-                            Nombre = "uE/min",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "g/5 horas",
-                            Nombre = "g/5 horas",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "UR/mL",
-                            Nombre = "UR/mL",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "Min.",
-                            Nombre = "Min.",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "S/CO",
-                            Nombre = "S/CO",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "LEU/ml",
-                            Nombre = "LEU/ml",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "UI/dL",
-                            Nombre = "UI/dL",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "DPM",
-                            Nombre = "DPM",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "ug/mg de creatinina",
-                            Nombre = "ug/mg de creatinina",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "ug/g",
-                            Nombre = "ug/g",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "U APL",
-                            Nombre = "U APL",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "mL/24 h",
-                            Nombre = "mL/24 h",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "respiraciones/minuto",
-                            Nombre = "respiraciones/minuto",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "latidos/minuto",
-                            Nombre = "latidos/minuto",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "mg/mmol",
-                            Nombre = "mg/mmol",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "RU/mL",
-                            Nombre = "RU/mL",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "mL/min/m2",
-                            Nombre = "mL/min/m2",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "ug/24Hrs.",
-                            Nombre = "ug/24Hrs.",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "mmol / L",
-                            Nombre = "mmol / L",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "uUl/mL",
-                            Nombre = "uUl/mL",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "mg/g",
-                            Nombre = "mg/g",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "µg/mL",
-                            Nombre = "µg/mL",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "% DE ACTIVIDAD",
-                            Nombre = "% DE ACTIVIDAD",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "mcg/g",
-                            Nombre = "mcg/g",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "A.P.L",
-                            Nombre = "A.P.L",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "mg/g creatinina",
-                            Nombre = "mg/g creatinina",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "ng/24 HORAS",
-                            Nombre = "ng/24 HORAS",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "mg/g de creat",
-                            Nombre = "mg/g de creat",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "BETHESDA/mL",
-                            Nombre = "BETHESDA/mL",
-                            Activo = true,
-                        },
-                        new Units{
-                            Clave = "nM BCE/mM Cr",
-                            Nombre = "nM BCE/mM Cr",
-                            Activo = true,
-                        },
+                    context.Database.ExecuteSqlRaw(script);
 
-                    };
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
 
-                    context.CAT_Units.AddRange(unidades);
+            // Studies
+            if (false)
+            {
+                using var transaction = context.Database.BeginTransaction();
 
+                try
+                {
+                    var studies = GetStudies();
+                    var study = new Study();
 
-                    await context.SaveChangesAsync();
+                    var script = MergeGenerator.Build(
+                        nameof(context.CAT_Estudio),
+                        studies,
+                        nameof(study.Id),
+                        nameof(study.Clave),
+                        nameof(study.Nombre),
+                        nameof(study.NombreCorto),
+                        nameof(study.Orden),
+                        nameof(study.Titulo),
+                        nameof(study.AreaId),
+                        nameof(study.DepartamentoId),
+                        nameof(study.Visible),
+                        nameof(study.DiasResultado),
+                        nameof(study.Dias),
+                        nameof(study.TiempoResultado),
+                        nameof(study.MaquiladorId),
+                        nameof(study.MetodoId),
+                        nameof(study.TaponId),
+                        nameof(study.Activo));
 
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Estudio)} ON;");
+                    context.Database.ExecuteSqlRaw(script);
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Estudio)} OFF;");
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+
+            // Packs
+            if (false)
+            {
+                using var transaction = context.Database.BeginTransaction();
+
+                try
+                {
+                    var packs = GetPacks();
+                    var pack = new Packet();
+
+                    var script = MergeGenerator.Build(
+                        nameof(context.CAT_Paquete),
+                        packs,
+                        nameof(pack.Id),
+                        nameof(pack.Clave),
+                        nameof(pack.Nombre),
+                        nameof(pack.NombreLargo),
+                        nameof(pack.AreaId),
+                        nameof(pack.DepartamentoId),
+                        nameof(pack.Visibilidad),
+                        nameof(pack.Activo));
+
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Paquete)} ON;");
+                    context.Database.ExecuteSqlRaw(script);
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Paquete)} OFF;");
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+
+            // StudyIndications
+            if (false)
+            {
+                using var transaction = context.Database.BeginTransaction();
+
+                try
+                {
+                    var studyIndications = GetStudyIndications();
+                    var si = new IndicationStudy();
+
+                    var script = MergeGenerator.Build(
+                        nameof(context.Relacion_Estudio_Indicacion),
+                        studyIndications,
+                        new string[] { nameof(si.EstudioId), nameof(si.IndicacionId) },
+                        nameof(si.Activo));
+
+                    context.Database.ExecuteSqlRaw(script);
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+
+            // StudyParameters
+            if (false)
+            {
+                using var transaction = context.Database.BeginTransaction();
+
+                try
+                {
+                    var studyParameters = GetStudyIndications();
+                    var sp = new ParameterStudy();
+
+                    var script = MergeGenerator.Build(
+                        nameof(context.Relacion_Estudio_Parametro),
+                        studyParameters,
+                        new string[] { nameof(sp.EstudioId), nameof(sp.ParametroId) },
+                        nameof(sp.Activo));
+
+                    context.Database.ExecuteSqlRaw(script);
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+
+            // PackStudies
+            if (false)
+            {
+                using var transaction = context.Database.BeginTransaction();
+
+                try
+                {
+                    var packStudies = GetPackStudies();
+                    var ps = new PacketStudy();
+
+                    var script = MergeGenerator.Build(
+                        nameof(context.Relacion_Estudio_Paquete),
+                        packStudies,
+                        new string[] { nameof(ps.PacketId), nameof(ps.EstudioId) },
+                        nameof(ps.Activo));
+
+                    context.Database.ExecuteSqlRaw(script);
 
                     transaction.Commit();
                 }
@@ -1175,6 +739,21 @@ namespace Service.Catalog.Context
             return tags;
         }
 
+        private static List<Units> GetUnits()
+        {
+            var path = "wwwroot/seed/CAT_PARAMETROS.xlsx";
+            var tableData = ReadAsTable(path);
+
+            var units = tableData.AsEnumerable().Select(x => new Units(
+                    Convert.ToInt32(x.Field<double>("UnidadId")),
+                    x.Field<string>("Unidad")
+                    )).ToList();
+
+            units = units.Where(x => x.Id > 0).GroupBy(x => x.Id).Select(x => x.First()).ToList();
+
+            return units;
+        }
+
         private static List<Parameter> GetParameters()
         {
             var path = "wwwroot/seed/CAT_PARAMETROS.xlsx";
@@ -1182,10 +761,13 @@ namespace Service.Catalog.Context
 
             var areas = GetAreas();
 
+            var units = GetUnits();
+
             var parameters = tableData.AsEnumerable().Select(x =>
             {
                 var area = areas.FirstOrDefault(a => a.Clave == x.Field<string>("Area"));
                 var type = GetValueType(x.Field<string>("TipoR"));
+                var unit = units.FirstOrDefault(u => u.Clave == x.Field<string>("Unidad"));
 
                 return new Parameter(
                     Guid.Parse(x.Field<string>("Id")),
@@ -1196,15 +778,13 @@ namespace Service.Catalog.Context
                     x.Field<string>("Formula"),
                     area?.Id ?? 0,
                     area?.DepartamentoId ?? 0,
-                    1,
-                    1,
+                    unit?.Id ?? 0,
+                    unit?.Id ?? 0,
                     x.Field<string>("Fcsi"));
             }).ToList();
 
             return parameters;
         }
-
-        // Guid id, string clave, string nombre, string nombreCorto, string tipoValor, string formula, int areaId, int departamentoId, int unidadId, int unidadSiId, string fcsi
 
         private static List<Study> GetStudies()
         {
@@ -1245,27 +825,91 @@ namespace Service.Catalog.Context
             return studies;
         }
 
-        private static List<IndicationStudy> GetStudiesIndications()
+        private static List<Packet> GetPacks()
+        {
+            var path = "wwwroot/seed/CAT_PAQUETES.xlsx";
+            var tableData = ReadAsTable(path);
+
+            var packs = tableData.AsEnumerable().Select(x =>
+            {
+                return new Packet(
+                    Convert.ToInt32(x.Field<double>("Id")),
+                    x.Field<string>("Clave"),
+                    x.Field<string>("Nombre"),
+                    x.Field<string>("Titulo"),
+                    AREAS.PAQUETES,
+                    DEP.PAQUETES,
+                    x.Field<string>("Visible") == "V");
+            }).ToList();
+
+            return packs;
+        }
+
+        private static List<IndicationStudy> GetStudyIndications()
         {
             var path = "wwwroot/seed/CAT_ESTUDIOS_INDI.xlsx";
             var tableData = ReadAsTable(path);
 
-            var indications = GetIndications();
             var studies = GetStudies();
+            var indications = GetIndications();
 
             var studyIndications = tableData.AsEnumerable().Select(x =>
             {
                 var study = studies.FirstOrDefault(s => s.Clave == x.Field<string>("ClaveEstudio"));
                 var indication = indications.FirstOrDefault(i => i.Clave == x.Field<string>("ClaveIndicacion"));
 
-                return new IndicationStudy(
-                    indication?.Id ?? 0,
-                    study?.Id ?? 0);
+                return new IndicationStudy(indication?.Id ?? 0, study?.Id ?? 0);
             }).ToList();
 
             studyIndications = studyIndications.Where(x => x.IndicacionId > 0 && x.EstudioId > 0).ToList();
 
             return studyIndications;
+        }
+
+        private static List<ParameterStudy> GetStudyParameters()
+        {
+            var path = "wwwroot/seed/CAT_ESTUDIOS_GRUPOS.xlsx";
+            var tableData = ReadAsTable(path);
+
+            var studies = GetStudies();
+            var parameters = GetParameters();
+
+            var studyParameters = tableData.AsEnumerable()
+                .Where(x => !x.Field<string>("Clave").StartsWith("_") && x.Field<string>("ClaveR").StartsWith("_"))
+                .Select(x =>
+            {
+                var study = studies.FirstOrDefault(s => s.Clave == x.Field<string>("Clave"));
+                var parameter = parameters.FirstOrDefault(i => i.Clave == x.Field<string>("ClaveR"));
+
+                return new ParameterStudy(parameter?.Id ?? Guid.Empty, study?.Id ?? 0);
+            }).ToList();
+
+            studyParameters = studyParameters.Where(x => x.ParametroId != Guid.Empty && x.EstudioId > 0).ToList();
+
+            return studyParameters;
+        }
+
+        private static List<PacketStudy> GetPackStudies()
+        {
+            var path = "wwwroot/seed/CAT_ESTUDIOS_GRUPOS.xlsx";
+            var tableData = ReadAsTable(path);
+
+            var packs = GetPacks();
+            var studies = GetStudies();
+
+            var packStudies = tableData.AsEnumerable()
+                .Where(x => !x.Field<string>("Clave").StartsWith("_") && !x.Field<string>("ClaveR").StartsWith("_"))
+                .Select(x =>
+            {
+                var pack = packs.FirstOrDefault(i => i.Clave == x.Field<string>("Clave"));
+                var study = studies.FirstOrDefault(s => s.Clave == x.Field<string>("ClaveR"));
+
+                return new PacketStudy(pack?.Id ?? 0, study?.Id ?? 0);
+            }).ToList();
+
+            packStudies = packStudies.Where(x => x.PacketId > 0 && x.EstudioId > 0).ToList();
+
+            return packStudies;
         }
 
         private static List<Branch> GetBranches()

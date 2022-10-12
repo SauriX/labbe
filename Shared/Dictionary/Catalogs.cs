@@ -23,6 +23,7 @@ namespace Shared.Dictionary
 
         public class Area
         {
+            public const int PAQUETES = 1;
             public const int CITOLOGIA_NASAL = 8;
             public const int HISTOPATOLOGIA = 30;
         }
