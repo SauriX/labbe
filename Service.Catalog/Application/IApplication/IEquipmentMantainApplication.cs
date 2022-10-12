@@ -12,7 +12,7 @@ namespace Service.Catalog.Application.IApplication
         Task<MantainFormDto> GetById(Guid Id);
         Task<MantainListDto> Create(MantainFormDto mantain);
         Task<MantainListDto> Update(MantainFormDto mantain);
-        Task<bool> SaveImage(MantainImageDto[] requestDto);
+        Task<string> SaveImage(MantainImageDto requestDto);
         Task<byte[]> Print(Guid Id);
         Task<EquimentDetailDto> Getequip(int Id);
     }

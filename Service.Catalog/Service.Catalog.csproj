@@ -59,4 +59,10 @@
     <None Include="wwwroot\seed\CAT_METODOS.xlsx" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Domain\BaseModel.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+  </ItemGroup>
+
 </Project>
