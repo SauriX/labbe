@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221012004906_removeimagen")]
+    partial class removeimagen
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1032,44 +1034,6 @@ namespace Service.Catalog.Migrations
                     b.HasIndex("EquipoId");
 
                     b.ToTable("CAT_Mantenimiento_Equipo");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.EquipmentMantain.MantainImages", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Clave")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaModifico")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("MantainId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Ruta")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Tipo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("UsuarioModificoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MantainId");
-
-                    b.ToTable("CAT_Mantenimiento_Equipo_Images");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Indication.Indication", b =>
@@ -2905,17 +2869,6 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Equipo");
                 });
 
-            modelBuilder.Entity("Service.Catalog.Domain.EquipmentMantain.MantainImages", b =>
-                {
-                    b.HasOne("Service.Catalog.Domain.EquipmentMantain.Mantain", "Mantain")
-                        .WithMany("images")
-                        .HasForeignKey("MantainId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Mantain");
-                });
-
             modelBuilder.Entity("Service.Catalog.Domain.Indication.IndicationStudy", b =>
                 {
                     b.HasOne("Service.Catalog.Domain.Study.Study", "Estudio")
@@ -3486,11 +3439,6 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Contacts");
 
                     b.Navigation("Precio");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.EquipmentMantain.Mantain", b =>
-                {
-                    b.Navigation("images");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Indication.Indication", b =>

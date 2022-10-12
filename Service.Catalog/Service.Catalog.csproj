@@ -54,4 +54,10 @@
     <Folder Include="wwwroot\layout\excel\reagent\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Domain\BaseModel.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+  </ItemGroup>
+
 </Project>

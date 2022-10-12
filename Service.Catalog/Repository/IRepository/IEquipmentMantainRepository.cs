@@ -15,6 +15,7 @@ namespace Service.Catalog.Repository.IRepository
         Task Update(Mantain mantain);
         Task<Equipos> GetEquip(int Id);
 
-        Task AddImage(List<MantainImages> images, Guid Id);
+        Task<MantainImages> GetImage(Guid requestId, string code);
+        Task UpdateImage(MantainImages requestImage);
     }
 }
