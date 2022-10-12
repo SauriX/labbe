@@ -36,16 +36,24 @@ namespace Service.Catalog.Mapper
         }
 
         public static MantainFormDto ToMaquilaFormDto(this Mantain model)
-        {
+         {
             if (model == null) return null;
-
+            List<string> images = new List<string>();
+            if (model.images != null)
+            {
+                foreach (var imagen in model.images)
+                {
+                    var image = imagen.Ruta.Replace("wwwroot/images/mantain", "");
+                    images.Add(image);
+                }
+            }
             return new MantainFormDto
             {
                 Id = model.Id.ToString(),
                 IdEquipo = model.EquipoId,
                 Fecha = model.Fecha_Prog,
                 Descripcion = model.Descrip,
-                imagenUrl = model.images.Select(x=>x.UrlImg).ToList(),
+                imagenUrl = images,
                 Clave = model.clave,
                 No_serie = model.Num_Serie,
                 

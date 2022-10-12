@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221012005648_imagesmantain")]
+    partial class imagesmantain
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1539,6 +1541,9 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaModifico")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("FormatoImpresionId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Formula")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
@@ -1591,6 +1596,8 @@ namespace Service.Catalog.Migrations
                     b.HasIndex("AreaId");
 
                     b.HasIndex("DepartmentoId");
+
+                    b.HasIndex("FormatoImpresionId");
 
                     b.HasIndex("UnidadId");
 
@@ -1707,9 +1714,6 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("Opcion")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("ParameterId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("ParametroId")
                         .HasColumnType("uniqueidentifier");
 
@@ -1738,8 +1742,6 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ParameterId");
 
                     b.HasIndex("ParametroId");
 
@@ -3026,6 +3028,12 @@ namespace Service.Catalog.Migrations
                         .WithMany()
                         .HasForeignKey("DepartmentoId");
 
+                    b.HasOne("Service.Catalog.Domain.Parameter.Format", "FormatoImpresion")
+                        .WithMany()
+                        .HasForeignKey("FormatoImpresionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Service.Catalog.Domain.Catalog.Units", "Unidad")
                         .WithMany()
                         .HasForeignKey("UnidadId")
@@ -3041,6 +3049,8 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Area");
 
                     b.Navigation("Departmento");
+
+                    b.Navigation("FormatoImpresion");
 
                     b.Navigation("Unidad");
 
@@ -3087,10 +3097,6 @@ namespace Service.Catalog.Migrations
 
             modelBuilder.Entity("Service.Catalog.Domain.Parameter.ParameterValue", b =>
                 {
-                    b.HasOne("Service.Catalog.Domain.Parameter.Parameter", null)
-                        .WithMany("TipoValores")
-                        .HasForeignKey("ParameterId");
-
                     b.HasOne("Service.Catalog.Domain.Parameter.Parameter", "Parametro")
                         .WithMany()
                         .HasForeignKey("ParametroId")
@@ -3514,8 +3520,6 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Estudios");
 
                     b.Navigation("Reactivos");
-
-                    b.Navigation("TipoValores");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Price.PriceList", b =>

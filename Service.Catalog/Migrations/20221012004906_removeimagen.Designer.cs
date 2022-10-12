@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221012004906_removeimagen")]
+    partial class removeimagen
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1034,44 +1036,6 @@ namespace Service.Catalog.Migrations
                     b.ToTable("CAT_Mantenimiento_Equipo");
                 });
 
-            modelBuilder.Entity("Service.Catalog.Domain.EquipmentMantain.MantainImages", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Clave")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaModifico")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("MantainId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Ruta")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Tipo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("UsuarioModificoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MantainId");
-
-                    b.ToTable("CAT_Mantenimiento_Equipo_Images");
-                });
-
             modelBuilder.Entity("Service.Catalog.Domain.Indication.Indication", b =>
                 {
                     b.Property<int>("Id")
@@ -1539,6 +1503,9 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaModifico")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("FormatoImpresionId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Formula")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
@@ -1591,6 +1558,8 @@ namespace Service.Catalog.Migrations
                     b.HasIndex("AreaId");
 
                     b.HasIndex("DepartmentoId");
+
+                    b.HasIndex("FormatoImpresionId");
 
                     b.HasIndex("UnidadId");
 
@@ -1707,9 +1676,6 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("Opcion")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("ParameterId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("ParametroId")
                         .HasColumnType("uniqueidentifier");
 
@@ -1738,8 +1704,6 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ParameterId");
 
                     b.HasIndex("ParametroId");
 
@@ -2905,17 +2869,6 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Equipo");
                 });
 
-            modelBuilder.Entity("Service.Catalog.Domain.EquipmentMantain.MantainImages", b =>
-                {
-                    b.HasOne("Service.Catalog.Domain.EquipmentMantain.Mantain", "Mantain")
-                        .WithMany("images")
-                        .HasForeignKey("MantainId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Mantain");
-                });
-
             modelBuilder.Entity("Service.Catalog.Domain.Indication.IndicationStudy", b =>
                 {
                     b.HasOne("Service.Catalog.Domain.Study.Study", "Estudio")
@@ -3026,6 +2979,12 @@ namespace Service.Catalog.Migrations
                         .WithMany()
                         .HasForeignKey("DepartmentoId");
 
+                    b.HasOne("Service.Catalog.Domain.Parameter.Format", "FormatoImpresion")
+                        .WithMany()
+                        .HasForeignKey("FormatoImpresionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Service.Catalog.Domain.Catalog.Units", "Unidad")
                         .WithMany()
                         .HasForeignKey("UnidadId")
@@ -3041,6 +3000,8 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Area");
 
                     b.Navigation("Departmento");
+
+                    b.Navigation("FormatoImpresion");
 
                     b.Navigation("Unidad");
 
@@ -3087,10 +3048,6 @@ namespace Service.Catalog.Migrations
 
             modelBuilder.Entity("Service.Catalog.Domain.Parameter.ParameterValue", b =>
                 {
-                    b.HasOne("Service.Catalog.Domain.Parameter.Parameter", null)
-                        .WithMany("TipoValores")
-                        .HasForeignKey("ParameterId");
-
                     b.HasOne("Service.Catalog.Domain.Parameter.Parameter", "Parametro")
                         .WithMany()
                         .HasForeignKey("ParametroId")
@@ -3484,11 +3441,6 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Precio");
                 });
 
-            modelBuilder.Entity("Service.Catalog.Domain.EquipmentMantain.Mantain", b =>
-                {
-                    b.Navigation("images");
-                });
-
             modelBuilder.Entity("Service.Catalog.Domain.Indication.Indication", b =>
                 {
                     b.Navigation("Estudios");
@@ -3514,8 +3466,6 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Estudios");
 
                     b.Navigation("Reactivos");
-
-                    b.Navigation("TipoValores");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Price.PriceList", b =>
