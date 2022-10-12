@@ -63,6 +63,34 @@ namespace Service.Catalog.Mapper
             });
         }
 
+        public static IEnumerable<ParameterValueStudyDto> ToParameterValueStudyDto(this IEnumerable<Parameter> model)
+        {
+            if (model == null) return null;
+
+            return model.Select(x => new ParameterValueStudyDto
+            {
+                Id = x.Id.ToString(),
+                Clave = x.Clave,
+                Nombre = x.Nombre,
+                NombreCorto = x.NombreCorto,
+                Area = x.Area.Nombre,
+                Departamento = x.Area.Departamento.Nombre,
+                Activo = x.Activo,
+                Requerido = x.Requerido,
+                ValoresCriticos = x.ValorCriticos,
+                Unidades = x.UnidadId,
+                UnidadNombre = x.Unidad?.Nombre,
+                TipoValor = x.TipoValor,
+                DeltaCheck = x.DeltaCheck,
+                MostrarFormato = x.MostrarFormato,
+                ValorInicial = x.ValorInicial,
+                ValorFinal = x.ValorFinal,
+                CriticoMinimo = x.CriticoMinimo,
+                CriticoMaximo = x.CriticoMaximo,
+                TipoValores = x.TipoValores.Select(x => x.ToParameterValueDto()).ToList(),
+            });
+        }
+
         public static ParameterFormDto ToParameterFormDto(this Parameter model)
         {
             if (model == null) return null;

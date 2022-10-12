@@ -36,5 +36,6 @@ namespace Service.Catalog.Domain.Parameter
         public DateTime FechaModifico { get; set; }
         public virtual ICollection<ParameterStudy> Estudios { get; set; }
         public virtual ICollection<ParameterReagent> Reactivos { get; set; }
+        public virtual ICollection<ParameterValue> TipoValores { get; set; }
     }
 }
