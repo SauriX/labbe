@@ -182,7 +182,7 @@ namespace Service.MedicalRecord.Application
                     Nombre = x.Nombre,
                     TipoValorId = x.TipoValor,
                     Resultado = null,
-                    ValorInicial = x.ValorInicial,
+                    ValorInicial = x.ValorInicial ?? 0,
                     ValorFinal = x.ValorFinal,
                     ParametroId = Guid.Parse(x.Id),
                     SolicitudEstudioId = x.SolicitudEstudioId,
