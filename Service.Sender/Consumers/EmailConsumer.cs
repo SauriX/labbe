@@ -34,7 +34,7 @@ namespace Service.Sender.Consumers
 
                 if (isSingle)
                 {
-                    await _emailService.Send(message.Para, message.Asunto, message.Titulo, message.Contenido);
+                    await _emailService.Send(message.Para, message.Asunto, message.Titulo, message.Contenido, message.SenderFiles);
                 }
                 else
                 {

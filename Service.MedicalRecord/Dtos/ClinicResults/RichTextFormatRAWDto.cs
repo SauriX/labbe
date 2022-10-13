@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Web;
 
-namespace Integration.Pdf.Dtos
+namespace Service.MedicalRecord.Dtos.ClinicResults
 {
     public class RichTextFormatRAWDto
     {
@@ -19,7 +19,7 @@ namespace Integration.Pdf.Dtos
         public List<InlineStyleRanges> InlineStyleRanges { get; set; }
         public List<InlineStyleRangesList> InlineStyleRangesLists { get; set; }
         public List<EntityRanges> EntityRanges { get; set; }
-        public Data Data { get; set; }
+        public Data data { get; set; }
 
     }
     public class InlineStyleRanges
@@ -27,20 +27,22 @@ namespace Integration.Pdf.Dtos
         public int Offset { get; set; }
         public int Length { get; set; }
         private int end;
-        public int End { 
-            get { return end; } 
-            set {
+        public int End
+        {
+            get { return end; }
+            set
+            {
                 if (Offset == 0 && Length == 0)
                 {
                     end = 0;
                 }
                 else
                 {
-                    end = Offset + Length -1;
+                    end = Offset + Length - 1;
 
                 }
-            } 
-        } 
+            }
+        }
         public string Style { get; set; }
     }
     public class InlineStyleRangesList
@@ -59,7 +61,7 @@ namespace Integration.Pdf.Dtos
                 }
                 else
                 {
-                    end = Offset + Length -1;
+                    end = Offset + Length - 1;
 
                 }
             }

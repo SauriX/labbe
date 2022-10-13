@@ -164,6 +164,8 @@ namespace Service.MedicalRecord.Client
             {
                 var json = JsonConvert.SerializeObject(order);
 
+                var rtfObject = JsonConvert.DeserializeObject<RichTextFormatRAWDto>(order.Information[0].Diagnostico);
+
                 var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
                 var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Pdf")}/api/pdf/pathologicalResults", stringContent);

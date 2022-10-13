@@ -105,7 +105,7 @@ namespace Integration.Pdf.Extensions
             p.Format.SpaceBefore = Unit.FromPoint(5);
         }
 
-        public static void AddText(this Section section, Models.Col[] cols, bool partialBold = false)
+        public static void AddText(this Section section, Models.Col[] cols, bool partialBold = false, int fontSize = 0)
         {
             Table table = section.AddTable();
             table.Borders.Visible = false;
@@ -137,11 +137,11 @@ namespace Integration.Pdf.Extensions
                 if (!col.EsImagen && partialBold && split.Length == 2)
                 {
                     paragraph.AddFormattedText(split[0] + ": ", Models.Col.FONT_BOLD);
-                    paragraph.AddFormattedText(split[1], Models.Col.FONT_DEFAULT);
+                    paragraph.AddFormattedText(split[1], fontSize == 0 ? Models.Col.FONT_DEFAULT : new Font("Calibri", fontSize));
                 }
                 else if (!col.EsImagen)
                 {
-                    paragraph.AddFormattedText(col.Texto ?? "", col.Fuente);
+                    paragraph.AddFormattedText(col.Texto ?? "", fontSize == 0 ? col.Fuente : new Font("Calibri", fontSize));
                 }
                 else
                 {
@@ -270,133 +270,123 @@ namespace Integration.Pdf.Extensions
             {
                 Models.Col col = cols[i];
 
-                Paragraph paragraph = row.Cells[i].AddParagraph();
 
                 var rtfObject = JsonConvert.DeserializeObject<RichTextFormatRAWDto>(col.Texto);
 
                  foreach(var block in rtfObject.blocks)
                 {
+                    Paragraph paragraph = row.Cells[i].AddParagraph();
 
                     if (block.Type == "unordered-list-item")
                     {
+                        ListInfo listInfo = new ListInfo();
+                        listInfo.ContinuePreviousList = false;
+                        listInfo.ListType = ListType.BulletList1;
 
-                        paragraph.Format.ListInfo.ListType = ListType.BulletList1;
+                        paragraph.Format.ListInfo = listInfo;
                     }
                     if (block.Type == "ordered-list-item")
                     {
                         paragraph.Format.ListInfo.ListType = ListType.NumberList1;
+                        paragraph.Format.ListInfo.ContinuePreviousList = true;
 
                     }
-
-                    foreach (var style in block.InlineStyleRanges)
+                    if(block.Data.TextAlign == "left")
                     {
-
-                        string[] inlineStyle = style.Style.Split('-');
-
-                        string part = block.Text.Substring(style.Offset, style.Length);
-
-                        paragraph.AddFormattedText(part);
-
-                        if (inlineStyle[0] == "fontsize") paragraph.Format.Font.Size = inlineStyle[1];
-                         
-                        if (inlineStyle[0] == "BOLD") paragraph.AddFormattedText(part, Models.Col.FONT_BOLD);
-
-                        if (inlineStyle[0] == "fontfamily")
-                        {
-
-                        }
-
-                        if (inlineStyle[0] == "ITALIC")
-                        {
-                            paragraph.AddFormattedText(part, Models.Col.FONT_DEFAULT);
-
-                            paragraph.Format.Font.Italic = true;
-                        } 
-                        if (inlineStyle[0] == "UNDERLINE")
-                        {
-
-                            paragraph.AddFormattedText(part, Models.Col.FONT_DEFAULT);
-
-                            paragraph.Format.Font.Underline = Underline.Single;
-
-                        }
-                        if (inlineStyle[0] == "color")
-                        {
-                            var rgbaColor = inlineStyle[1].Substring(5, inlineStyle[1].Length - 5);
-
-                            var rgbaColorValues = rgbaColor.Split(',');
-
-                             paragraph.AddFormattedText(part, Models.Col.FONT_DEFAULT);
-
-                            paragraph.Format.Font.Color = Color.FromArgb((byte)rgbaColor[3], (byte)rgbaColor[0], (byte)rgbaColor[1], (byte)rgbaColor[2]);
-                        }
-                        if (inlineStyle[0] == "bgcolor")
-                        {
-                            var rgbaColor = inlineStyle[1].Substring(5, inlineStyle[1].Length - 5);
-
-                            var rgbaColorValues = rgbaColor.Split(',');
-
-                             paragraph.AddFormattedText(part, Models.Col.FONT_DEFAULT);
-
-                            paragraph.Format.Shading.Color = Color.FromRgb((byte)rgbaColor[0], (byte)rgbaColor[1], (byte)rgbaColor[2]);
-                        }
-
+                        paragraph.Format.Alignment = ParagraphAlignment.Left;
+                    }
+                    if (block.Data.TextAlign == "center")
+                    {
+                        paragraph.Format.Alignment = ParagraphAlignment.Center;
+                    }
+                    if(block.Data.TextAlign == "right")
+                    {
+                        paragraph.Format.Alignment = ParagraphAlignment.Right;
                     }
 
 
 
-                   //List<InlineStyleRanges> groupStyles = new List<InlineStyleRanges> { };
+                    List<InlineStyleRangesList> ranges = new List<InlineStyleRangesList>();
+                    char[] charIndex = block.Text.ToCharArray();
+                    for (int k = 0; k < charIndex.Length; k ++)
+                    {
+                        FormattedText ft = new FormattedText();
 
-                    //foreach (var style in block.InlineStyleRanges)
-                    //{
-                    //    if (groupStyles.Count > 0)
-                    //    {
-                    //        groupStyles.Add(style);
-                    //    }
-                    //    else
-                    //    {
-                    //        InlineStyleRanges foundStyle = groupStyles.Find(x => x.Offset == style.Offset && x.Length == style.Length);
-                    //        if (foundStyle != null)
-                    //        {
-                    //            foundStyle.Style = foundStyle.Style + ";" + style.Style;
-                    //        }
-                    //        else
-                    //        {
-                    //            groupStyles.Add(style);
-                    //        }
+                        ft = paragraph.AddFormattedText(charIndex[k].ToString());
 
-                    //    }
-                    //}
-                }
+                        ft.Size = 14; 
+
+                        for (int j = 0; j < block.InlineStyleRanges.Count; j++)
+                        {
+                            
+                            if (k >= block.InlineStyleRanges[j].Offset 
+                                && k <= (block.InlineStyleRanges[j].Offset + block.InlineStyleRanges[j].Length - 1))
+                            {
+
+                                    string[] inlineStyle = block.InlineStyleRanges[j].Style.Split('-');
+
+ 
+
+                                    if (inlineStyle[0] == "fontsize")
+                                    {
+                                        ft.Size = inlineStyle[1];
+
+                                    }
+
+                                    if (inlineStyle[0] == "BOLD")
+                                    {
+                                        ft.Bold = true;
+
+                                    }
+
+                                    if (inlineStyle[0] == "fontfamily")
+                                    {
+
+                                    }
+
+                                    if (inlineStyle[0] == "ITALIC")
+                                    {
+                                        
+                                        ft.Italic = true;
+                                    }
+                                    if (inlineStyle[0] == "UNDERLINE")
+                                    {
+
+                                        
+                                        ft.Underline = Underline.Single;
+
+                                    }
+                                    if (inlineStyle[0] == "color")
+                                    {
+                                        //paragraph.AddFormattedText(part);
+
+                                        var rgbaColor = inlineStyle[1].Substring(inlineStyle[1].IndexOf("(") +1 , (inlineStyle[1].Length - inlineStyle[1].IndexOf("(") - 2 ));
+
+                                        var rgbaColorValues = rgbaColor.Split(',');
+
+                                    //paragraph.Format.Font.Color = Color.FromArgb((byte)rgbaColor[3], (byte)rgbaColor[0], (byte)rgbaColor[1], (byte)rgbaColor[2]);
+                                        if (rgbaColorValues.Length >3)
+                                        {
+
+                                            ft.Color = Color.FromArgb((byte)rgbaColor[3], (byte)rgbaColor[0], (byte)rgbaColor[1], (byte)rgbaColor[2]);
+                                        }
+                                        else
+                                        {
+                                            ft.Color = Color.FromRgb((byte)rgbaColor[0], (byte)rgbaColor[1], (byte)rgbaColor[2]);
+
+                                        }
+
+                                    }
+                                    
+                            }
+                            
+                        }
+                    }
+                      
+
+                 }
 
 
-
-
-                //string[] split = (col.Texto ?? "").Split(new[] { ':' }, 2);
-
-                //if (!col.EsImagen && partialBold && split.Length == 2)
-                //{
-                //    paragraph.AddFormattedText(split[0] + ": ", Models.Col.FONT_BOLD);
-                //    paragraph.AddFormattedText(split[1], Models.Col.FONT_DEFAULT);
-                //}
-                //else if (!col.EsImagen)
-                //{
-                //    paragraph.AddFormattedText(col.Texto ?? "", col.Fuente);
-                //}
-                //else
-                //{
-                //    string imageFilename = col.Imagen.MigraDocFilenameFromByteArray();
-                //    var image = paragraph.AddImage(imageFilename);
-                //    if (col.ImagenTamaño != null) image.Width = (Unit)col.ImagenTamaño;
-                //    image.LockAspectRatio = true;
-                //}
-
-                if (col.Fill != null)
-                {
-                    paragraph.AddSpace(1);
-                    paragraph.Format.TabStops.AddTabStop(columnWidth * cols[i].Tamaño - 5, (TabAlignment.Right), (TabLeader)col.Fill);
-                    paragraph.AddTab();
-                }
             }
 
             Paragraph p = section.AddParagraph();
@@ -406,5 +396,7 @@ namespace Integration.Pdf.Extensions
             
 
         }
+
+
     }
 }

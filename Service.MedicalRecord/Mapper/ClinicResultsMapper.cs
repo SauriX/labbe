@@ -198,9 +198,13 @@ namespace Service.MedicalRecord.Mapper
                     Edad = res.Solicitud.Expediente.Edad,
                     Estudio = res.Estudio.Clave,
                     Departamento = res.Estudio.DepartamentoId.ToString(),
+                    ImagenesHistopatologicas = string.IsNullOrEmpty(res.ImagenPatologica) 
+                                ? new List<string>()
+                                : res.ImagenPatologica.Split(",").Select(imagen => $"http://localhost:24048/images/ResultsPathological/{res.EstudioId}/{imagen}").ToList(),
                     MuestraRecibida = res.MuestraRecibida,
                     DescripcionMacroscopica = res.DescripcionMacroscopica,
                     DescripcionMicroscopica = res.DescripcionMicroscopica,
+                    isHistopathologic = res.Estudio.AreaId == 30,
                     Diagnostico = res.Diagnostico,
                     NombreFirma = res.Medico.Nombre,
                 }).ToList(),

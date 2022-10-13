@@ -12,7 +12,7 @@
       "UpstreamPathTemplate": "/api/scopes/maquila",
       "UpstreamHttpMethod": [ "GET" ]
     },
-    {
+    { 
       "DownstreamPathTemplate": "/api/maquila/all/{search}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

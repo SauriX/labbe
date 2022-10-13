@@ -308,6 +308,12 @@ namespace Service.MedicalRecord
                 RequestPath = "/consents",
             });
 
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(System.IO.Path.Combine(env.ContentRootPath, "wwwroot/temp")),
+                RequestPath = "/temp",
+            });
+
             app.UseMiddleware<ErrorMiddleware>();
 
             app.UseRouting();

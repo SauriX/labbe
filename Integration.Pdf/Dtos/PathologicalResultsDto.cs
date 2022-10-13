@@ -21,6 +21,8 @@ namespace Integration.Pdf.Dtos
         public string Clave { get; set; }
         public int Departamento { get; set; }
         public string MuestraRecibida { get; set; }
+        public bool isHistopathologic { get; set; }
+        public List<string> ImagenesHistopatologicas { get; set; }
         public string DescripcionMacroscopica { get; set; }
         public string DescripcionMicroscopica { get; set; }
         public string Diagnostico { get; set; }
