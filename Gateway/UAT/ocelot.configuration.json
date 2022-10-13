@@ -1,70 +1,70 @@
 ﻿{
   "Routes": [
     {
-      "DownstreamPathTemplate": "/LabRamos-uat/services/identity/api/scopes/catalog",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/configuration/email",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/scopes/catalog",
+      "UpstreamPathTemplate": "/api/configuration/email",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos-uat/services/identity/api/scopes/price",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/configuration/general",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/scopes/price",
+      "UpstreamPathTemplate": "/api/configuration/general",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos-uat/services/identity/api/scopes/configuration",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/configuration/fiscal",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/scopes/configuration",
+      "UpstreamPathTemplate": "/api/configuration/fiscal",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos-uat/services/identity/api/scopes/study",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/configuration/email",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/scopes/study",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamPathTemplate": "/api/configuration/email",
+      "UpstreamHttpMethod": [ "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos-uat/services/identity/api/scopes/report",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/configuration/general",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/scopes/report",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamPathTemplate": "/api/configuration/general",
+      "UpstreamHttpMethod": [ "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos-uat/services/identity/api/scopes/equipment",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/configuration/fiscal",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/scopes/equipment",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamPathTemplate": "/api/configuration/fiscal",
+      "UpstreamHttpMethod": [ "PUT" ]
     }
   ]
 }

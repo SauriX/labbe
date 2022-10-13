@@ -1,25 +1,25 @@
-﻿{
+{
   "Routes": [
     {
-      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/location/getByZipCode/{zipCode}",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/ShipmentTracking/order/{id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/location/getByZipCode/{zipCode}",
+      "UpstreamPathTemplate": "/api/ShipmentTracking/order/{id}",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/location/getcity",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/ShipmentTracking/{id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/location/getcity",
+      "UpstreamPathTemplate": "/api/ShipmentTracking/{id}",
       "UpstreamHttpMethod": [ "GET" ]
     }
   ]
