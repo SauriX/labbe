@@ -12,27 +12,17 @@ namespace Service.Catalog.Context.EntityConfiguration.Parameter
 
             builder.HasKey(x => new { x.EstudioId, x.ParametroId });
 
-
-
             builder
               .Property(x => x.Activo)
               .IsRequired(true);
 
             builder
-              .Property(x => x.UsuarioCreoId)
-              .IsRequired(true);
+                .Property(x => x.FechaCreo)
+                .HasColumnType("smalldatetime");
 
             builder
-              .Property(x => x.FechaCreo)
-              .IsRequired(true);
-
-            builder
-              .Property(x => x.UsuarioModId)
-              .IsRequired(false);
-
-            builder
-              .Property(x => x.FechaMod)
-              .IsRequired(true);
+                .Property(x => x.FechaModifico)
+                .HasColumnType("smalldatetime");
 
         }
     }

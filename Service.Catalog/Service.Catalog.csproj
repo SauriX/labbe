@@ -49,9 +49,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Context\SeedData\" />
     <Folder Include="wwwroot\layout\excel\catalog\" />
     <Folder Include="wwwroot\layout\excel\equipment\" />
     <Folder Include="wwwroot\layout\excel\reagent\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\seed\CAT_METODOS.xlsx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Domain\BaseModel.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
   </ItemGroup>
 
 </Project>

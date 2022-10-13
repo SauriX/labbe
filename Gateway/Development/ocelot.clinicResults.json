@@ -25,6 +25,18 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
+      "DownstreamPathTemplate": "/api/clinicResults/getLabResultsById/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/clinicResults/getLabResultsById/{id}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/clinicResults/saveResults",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -86,6 +98,18 @@
     },
     {
       "DownstreamPathTemplate": "/api/clinicResults/getPathological",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/clinicResults/getLaboratoryResults",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/clinicResults/getLaboratoryResults",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {

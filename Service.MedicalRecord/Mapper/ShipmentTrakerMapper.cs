@@ -21,6 +21,26 @@ namespace Service.MedicalRecord.Mapper
 
         public static ShipmentTrackingDto toShipmentTrackingDto(this TrackingOrder model,RouteTracking tracking) {
 
+            if (tracking != null) { 
+
+                return new ShipmentTrackingDto
+                {
+                    Id = model.Id,
+                    SucursalOrigen = "",
+                    SucursalDestino = "",
+                    ResponsableOrigen = "",
+                    ResponsableDestino = "",
+                    Medioentrega = "",
+                    FechaEnvio = tracking.FechaCreo,
+                    HoraEnvio = tracking.FechaCreo,
+                    FechaEnestimada =  tracking.FechaDeEntregaEstimada,
+                    HoraEnestimada = tracking.FechaDeEntregaEstimada,
+                    Estudios = model.Estudios.ToList().toShipmentStudyDto().ToList(),
+                    Seguimiento = model.Clave,
+                    Ruta = "",
+                    Nombre = ""
+                };
+            }
             return new ShipmentTrackingDto
             {
                 Id = model.Id,
@@ -29,10 +49,6 @@ namespace Service.MedicalRecord.Mapper
                 ResponsableOrigen = "",
                 ResponsableDestino = "",
                 Medioentrega = "",
-                FechaEnvio = tracking.FechaCreo,
-                HoraEnvio = tracking.FechaCreo,
-                FechaEnestimada =  tracking.FechaDeEntregaEstimada,
-                HoraEnestimada = tracking.FechaDeEntregaEstimada,
                 Estudios = model.Estudios.ToList().toShipmentStudyDto().ToList(),
                 Seguimiento = model.Clave,
                 Ruta = "",

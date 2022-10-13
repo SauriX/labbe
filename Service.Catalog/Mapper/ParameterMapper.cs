@@ -19,13 +19,13 @@ namespace Service.Catalog.Mapper
                 Clave = model.Clave,
                 Nombre = model.Nombre,
                 NombreCorto = model.NombreCorto,
-                Area = model.Area.Nombre,
-                Departamento = model.Area.Departamento.Nombre,
+                Area = model.Area?.Nombre,
+                Departamento = model.Area?.Departamento?.Nombre,
                 Activo = model.Activo,
                 Requerido = model.Requerido,
                 ValoresCriticos = model.ValorCriticos,
                 Unidades = model.UnidadId,
-                UnidadNombre = model.Unidad.Nombre,
+                UnidadNombre = model.Unidad?.Nombre,
                 TipoValor = model.TipoValor,
                 DeltaCheck = model.DeltaCheck,
                 MostrarFormato = model.MostrarFormato,
@@ -46,13 +46,13 @@ namespace Service.Catalog.Mapper
                 Clave = x.Clave,
                 Nombre = x.Nombre,
                 NombreCorto = x.NombreCorto,
-                Area = x.Area.Nombre,
-                Departamento = x.Area.Departamento.Nombre,
+                Area = x.Area?.Nombre,
+                Departamento = x.Area?.Departamento?.Nombre,
                 Activo = x.Activo,
                 Requerido = x.Requerido,
                 ValoresCriticos = x.ValorCriticos,
                 Unidades = x.UnidadId,
-                UnidadNombre = x.Unidad.Nombre,
+                UnidadNombre = x.Unidad?.Nombre,
                 TipoValor = x.TipoValor,
                 DeltaCheck = x.DeltaCheck,
                 MostrarFormato = x.MostrarFormato,
@@ -60,6 +60,34 @@ namespace Service.Catalog.Mapper
                 ValorFinal = x.ValorFinal,
                 CriticoMinimo = x.CriticoMinimo,
                 CriticoMaximo = x.CriticoMaximo
+            });
+        }
+
+        public static IEnumerable<ParameterValueStudyDto> ToParameterValueStudyDto(this IEnumerable<Parameter> model)
+        {
+            if (model == null) return null;
+
+            return model.Select(x => new ParameterValueStudyDto
+            {
+                Id = x.Id.ToString(),
+                Clave = x.Clave,
+                Nombre = x.Nombre,
+                NombreCorto = x.NombreCorto,
+                Area = x.Area?.Nombre,
+                Departamento = x.Area?.Departamento?.Nombre,
+                Activo = x.Activo,
+                Requerido = x.Requerido,
+                ValoresCriticos = x.ValorCriticos,
+                Unidades = x.UnidadId,
+                UnidadNombre = x.Unidad?.Nombre,
+                TipoValor = x.TipoValor,
+                DeltaCheck = x.DeltaCheck,
+                MostrarFormato = x.MostrarFormato,
+                ValorInicial = x.ValorInicial,
+                ValorFinal = x.ValorFinal,
+                CriticoMinimo = x.CriticoMinimo,
+                CriticoMaximo = x.CriticoMaximo,
+                TipoValores = x.TipoValores.Select(x => x.ToParameterValueDto()).ToList(),
             });
         }
 
@@ -74,23 +102,21 @@ namespace Service.Catalog.Mapper
                 Nombre = model.Nombre,
                 NombreCorto = model.NombreCorto,
                 Unidades = model.UnidadId,
-                UnidadNombre = model.Unidad.Nombre,
+                UnidadNombre = model.Unidad?.Nombre,
                 Formula = model.Formula,
                 ValorInicial = model.ValorInicial,
                 DepartamentoId = model.DepartamentoId,
                 AreaId = model.AreaId,
                 UnidadSi = model.UnidadSiId,
-                UnidadSiNombre = model.UnidadSi.Nombre,
+                UnidadSiNombre = model.UnidadSi?.Nombre,
                 Fcsi = model.FCSI,
                 Activo = model.Activo,
                 Requerido = model.Requerido,
-                FormatoImpresionId = model.FormatoImpresionId,
                 TipoValor = model.TipoValor,
                 Estudios = model.Estudios.ToIndicationStudyDto(),
                 Reactivos = model.Reactivos.ToReagentDto(),
-                Area = model.Area.Nombre,
-                Departamento = model.Area.Departamento.Nombre,
-                Format = model.FormatoImpresion.Nombre
+                Area = model.Area?.Nombre,
+                Departamento = model.Area?.Departamento?.Nombre,
             };
         }
 
@@ -273,7 +299,6 @@ namespace Service.Catalog.Mapper
                 Formula = dto.Formula,
                 DepartamentoId = dto.DepartamentoId,
                 AreaId = dto.AreaId,
-                FormatoImpresionId = dto.FormatoImpresionId,
                 UnidadSiId = dto.UnidadSi,
                 FCSI = dto.Fcsi,
                 Activo = dto.Activo,
@@ -305,7 +330,6 @@ namespace Service.Catalog.Mapper
                 Formula = dto.Formula,
                 DepartamentoId = dto.DepartamentoId,
                 AreaId = dto.AreaId,
-                FormatoImpresionId = dto.FormatoImpresionId,
                 UnidadSiId = dto.UnidadSi,
                 FCSI = dto.Fcsi,
                 Activo = dto.Activo,
@@ -320,7 +344,7 @@ namespace Service.Catalog.Mapper
                     ParametroId = model.Id,
                     UsuarioCreoId = dto.UsuarioId.ToString(),
                     UsuarioModId = dto.UsuarioId.ToString(),
-                    FechaCreo = model.FechaCreo,
+                    FechaCreo = DateTime.Now,
                     FechaMod = DateTime.Now,
                 }).ToList(),
             };

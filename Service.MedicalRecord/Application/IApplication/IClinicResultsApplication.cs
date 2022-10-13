@@ -24,6 +24,8 @@ namespace Service.MedicalRecord.Application.IApplication
         Task UpdateResultPathologicalStudy(ClinicalResultPathologicalFormDto search);
         Task UpdateStatusStudy(int RequestStudyId, byte status, Guid idUsuario);
         Task<ClinicalResultsPathological> GetResultPathological(int RequestStudyId);
+        Task<ClinicResults> GetLaboratoryResults(int RequestStudyId);
+        Task<List<ClinicResultsFormDto>> GetLabResultsById(string id);
         Task<RequestStudy> GetRequestStudyById(int RequestStudyId);
         Task<RequestStudyUpdateDto> GetStudies(Guid recordId, Guid requestId);
         Task<byte[]> PrintSelectedStudies(ConfigurationToPrintStudies configuration);

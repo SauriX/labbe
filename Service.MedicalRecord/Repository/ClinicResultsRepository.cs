@@ -35,7 +35,7 @@ namespace Service.MedicalRecord.Repository
             var request = await _context.ClinicResults
                 .Include(x => x.Solicitud)
                 .Include(x => x.Solicitud).ThenInclude(x => x.Expediente)
-                .Include(x => x.Estudio).ThenInclude(x => x.Estatus)
+                .Include(x => x.SolicitudEstudio).ThenInclude(x => x.Estatus)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             return request;
@@ -46,7 +46,7 @@ namespace Service.MedicalRecord.Repository
             var request = await _context.ClinicResults
                 .Include(x => x.Solicitud)
                 .Include(x => x.Solicitud).ThenInclude(x => x.Expediente)
-                .Include(x => x.Estudio).ThenInclude(x => x.Estatus)
+                .Include(x => x.SolicitudEstudio).ThenInclude(x => x.Estatus)
                 .Where(x => x.SolicitudId == requestId).ToListAsync();
 
             return request;
@@ -172,13 +172,28 @@ namespace Service.MedicalRecord.Repository
         public async Task<ClinicResults> GetLabResultsById(int id)
         {
             var resultExisting = await _context.ClinicResults
-                .Where(x => x.EstudioId == id)
-                .Include(x => x.Estudio)
+                .Where(x => x.SolicitudEstudioId == id)
+                .Include(x => x.SolicitudEstudio)
                 .Include(x => x.Solicitud).ThenInclude(y => y.Expediente)
+                .Include(x => x.Solicitud).ThenInclude(y => y.Medico)
+                .Include(x => x.Solicitud).ThenInclude(y => y.Estudios)
+                .Include(x => x.Solicitud).ThenInclude(y => y.Compañia)
                 .FirstOrDefaultAsync();
             return resultExisting;
         }
 
+        public async Task<List<ClinicResults>> GetResultsById(Guid id)
+        {
+            var resultExisting = await _context.ClinicResults
+                .Where(x => x.Id == id)
+                .Include(x => x.SolicitudEstudio)
+                .Include(x => x.Solicitud).ThenInclude(y => y.Expediente)
+                .Include(x => x.Solicitud).ThenInclude(y => y.Medico)
+                .Include(x => x.Solicitud).ThenInclude(y => y.Estudios)
+                .Include(x => x.Solicitud).ThenInclude(y => y.Compañia)
+                .ToListAsync();
+            return resultExisting;
+        }
 
         public async Task UpdateStatusStudy(RequestStudy study)
         {

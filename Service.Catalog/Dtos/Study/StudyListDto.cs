@@ -11,7 +11,7 @@ namespace Service.Catalog.Dtos.Study
         public string Nombre { get; set; }
         public string Titulo { get; set; }
         public string Area { get; set; }
-        public int AreaId { get; set; }
+        public int? AreaId { get; set; }
         public string Departamento { get; set; }
         public string Formato { get; set; }
         public string Maquilador { get; set; }
@@ -19,5 +19,6 @@ namespace Service.Catalog.Dtos.Study
         public bool Activo { get; set; }
         public IEnumerable<ParameterListDto> Parametros { get; set; }
         public IEnumerable<IndicationListDto> Indicaciones { get; set; }
+        public IEnumerable<ParameterValueStudyDto> ParametrosValores { get; set; }
     }
 }

@@ -178,7 +178,7 @@ namespace Service.Catalog.Mapper
                     DescuenNum = x.DescuenNum,
                     Descuento = x.Descuento,
                     PrecioFinal = x.PrecioFinal,
-                    Pack = x.Paquete.studies.Select(x => new PackStudyDto
+                    Pack = x.Paquete.Estudios.Select(x => new PackStudyDto
                     {
                         Id = x.EstudioId,
                         Clave = x.Estudio.Clave,
@@ -230,6 +230,7 @@ namespace Service.Catalog.Mapper
                 Clave = model.Estudio.Clave,
                 TaponId = model.Estudio.TaponId,
                 TaponColor = model.Estudio.Tapon.Color,
+                TaponClave = model.Estudio.Tapon.Clave,
                 DepartamentoId = model.Estudio.DepartamentoId,
                 AreaId = model.Estudio.AreaId,
                 Dias = Convert.ToInt32(Math.Ceiling(model.Estudio.DiasResultado)),
@@ -259,15 +260,17 @@ namespace Service.Catalog.Mapper
                 DescuentoPorcentaje = model.Descuento,
                 PrecioFinal = model.PrecioFinal,
                 Promociones = new List<PriceListInfoPromo>(),
-                Estudios = model.Paquete.studies.Select(x => new PriceListInfoStudyDto
+                Estudios = model.Paquete.Estudios.Select(x => new PriceListInfoStudyDto
                 {
                     ListaPrecioId = model.PrecioListaId,
                     ListaPrecio = model.PrecioLista.Nombre,
                     EstudioId = x.EstudioId,
                     Nombre = x.Estudio.Nombre,
                     Clave = x.Estudio.Clave,
+                    Orden = x.Estudio.Orden,
                     TaponId = x.Estudio.TaponId,
                     TaponColor = x.Estudio.Tapon.Color,
+                    TaponClave = x.Estudio.Tapon.Clave,
                     DepartamentoId = x.Estudio.DepartamentoId,
                     AreaId = x.Estudio.AreaId,
                     Dias = Convert.ToInt32(Math.Ceiling(x.Estudio.DiasResultado)),

@@ -18,5 +18,6 @@ namespace Service.Identity.Dtos.User
         public bool Activo { get; set; }
         public Guid UsuarioId { get; set; }
         public List<UserPermissionDto> Permisos { get; set; }
+        public List<String> Images { get; set; }
     }
 }

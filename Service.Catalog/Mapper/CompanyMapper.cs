@@ -18,6 +18,7 @@ namespace Service.Catalog.Mapper
                 Clave = model.Clave.Trim(),
                 Contrasena = model.Contrasena.Trim(),
                 Procedencia = model.Procedencia.Nombre.Trim(),
+                ProcedenciaId = model.ProcedenciaId,
                 PrecioListaId = model?.PrecioListaId,
                 PrecioLista = model?.PrecioLista.Nombre,
                 Activo = model.Activo
@@ -34,6 +35,7 @@ namespace Service.Catalog.Mapper
                 Contrasena = x.Contrasena.Trim(),
                 NombreComercial = x.NombreComercial.Trim(),
                 Procedencia = x.Procedencia?.Nombre?.Trim(),
+                ProcedenciaId = x.ProcedenciaId,
                 PrecioListaId = x.PrecioListaId,
                 PrecioLista = x.PrecioLista?.Nombre,
                 Activo = x.Activo,

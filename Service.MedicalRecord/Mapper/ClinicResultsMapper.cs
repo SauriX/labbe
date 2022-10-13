@@ -55,11 +55,12 @@ namespace Service.MedicalRecord.Mapper
         {
             return model.Select(x => new ClinicResults
             {
-                Id = x.Id,
+                Id = Guid.NewGuid(),
                 Nombre = x.Nombre,
                 SolicitudId = x.SolicitudId,
                 EstudioId = x.EstudioId,
-                TipoValorId = x.TipoValor,
+                SolicitudEstudioId = x.SolicitudEstudioId,
+                TipoValorId = x.TipoValorId,
                 ValorInicial = x.ValorInicial,
                 ValorFinal = x.ValorFinal,
                 ParametroId = Guid.Parse(x.ParametroId),
@@ -150,8 +151,8 @@ namespace Service.MedicalRecord.Mapper
                 Id = (Guid)(requestInfo.Solicitud.Id),
                 Clave = requestInfo.Solicitud.Clave,
                 Paciente = requestInfo.Solicitud.Expediente.NombrePaciente,
-                Medico = requestInfo.Solicitud.Medico.Nombre,
-                Compañia = requestInfo.Solicitud.Compañia.Nombre,
+                Medico = requestInfo.Solicitud.Medico?.Nombre,
+                Compañia = requestInfo.Solicitud.Compañia?.Nombre,
                 Expediente = requestInfo.Solicitud.Expediente.Expediente,
                 Edad = requestInfo.Solicitud.Expediente.Edad,
                 Sexo = requestInfo.Solicitud.Expediente.Genero,
@@ -176,9 +177,13 @@ namespace Service.MedicalRecord.Mapper
             {
                 return new ClinicResultsFormDto
                 {
-                    Nombre = results.NombreParametro,
-                    TipoValor = results.TipoValorId,
+                    Id = results.Id,
+                    SolicitudEstudioId = results.SolicitudEstudioId,
+                    Nombre = results.Nombre,
+                    TipoValorId = results.TipoValorId,
                     ValorInicial = results.ValorInicial,
+                    SolicitudId = results.SolicitudId,
+                    EstudioId = results.EstudioId,
                     ValorFinal = results.ValorInicial,
                     ParametroId = results.ParametroId.ToString(),
                     Resultado = results.Resultado,

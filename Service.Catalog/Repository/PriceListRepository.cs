@@ -73,9 +73,9 @@ namespace Service.Catalog.Repository
         public async Task<PriceList_Packet> GetPricePackById(int packId, Guid branchId, Guid companyId)
         {
             var prices = _context.Relacion_ListaP_Paquete
-                .Include(x => x.Paquete.studies).ThenInclude(x => x.Estudio.Tapon)
-                .Include(x => x.Paquete.studies).ThenInclude(x => x.Estudio.Parameters).ThenInclude(x => x.Parametro.Area.Departamento)
-                .Include(x => x.Paquete.studies).ThenInclude(x => x.Estudio.Indications).ThenInclude(x => x.Indicacion)
+                .Include(x => x.Paquete.Estudios).ThenInclude(x => x.Estudio.Tapon)
+                .Include(x => x.Paquete.Estudios).ThenInclude(x => x.Estudio.Parameters).ThenInclude(x => x.Parametro.Area.Departamento)
+                .Include(x => x.Paquete.Estudios).ThenInclude(x => x.Estudio.Indications).ThenInclude(x => x.Indicacion)
                 .Include(x => x.PrecioLista)
                 .Where(x => x.PaqueteId == packId);
 
@@ -96,7 +96,7 @@ namespace Service.Catalog.Repository
                 .Include(x => x.Sucursales).ThenInclude(x => x.Sucursal)
                 .Include(x => x.Compañia).ThenInclude(x => x.Compañia)
                 .Include(x => x.Medicos).ThenInclude(x => x.Medico)
-                .Include(x => x.Paquete).ThenInclude(x => x.Paquete.studies).ThenInclude(x => x.Estudio.Area.Departamento)
+                .Include(x => x.Paquete).ThenInclude(x => x.Paquete.Estudios).ThenInclude(x => x.Estudio.Area.Departamento)
                 .Include(x => x.Paquete).ThenInclude(x => x.Paquete.Area.Departamento)
                 .FirstOrDefaultAsync(x => x.Id == Id);
 

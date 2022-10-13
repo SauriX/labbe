@@ -32,6 +32,17 @@
       ],
       "UpstreamPathTemplate": "/api/RouteTracking/export/form/{order}",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/RouteTracking/allrecive",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/RouteTracking/allrecive",
+      "UpstreamHttpMethod": [ "POST" ]
     }
 
   ]

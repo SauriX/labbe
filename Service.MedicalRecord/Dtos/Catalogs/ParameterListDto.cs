@@ -1,4 +1,6 @@
-﻿namespace Service.MedicalRecord.Dtos.Catalogs
+﻿using System.Collections.Generic;
+
+namespace Service.MedicalRecord.Dtos.Catalogs
 {
     public class ParameterListDto
     {
@@ -19,5 +21,9 @@
         public decimal ValorFinal { get; set; }
         public decimal CriticoMinimo { get; set; }
         public decimal CriticoMaximo { get; set; }
+        public string Resultado { get; set; }
+        public int EstudioId { get; set; }
+        public int SolicitudEstudioId { get; set; }
+        public List<ParameterValueDto> TipoValores { get; set; }
     }
 }

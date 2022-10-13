@@ -27,6 +27,8 @@ using Service.MedicalRecord.Settings.ISettings;
 using Service.MedicalRecord.Domain;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using Shared.Helpers;
+using Service.MedicalRecord.Dtos.Catalogs;
 using Microsoft.Extensions.Configuration;
 
 namespace Service.MedicalRecord.Application
@@ -139,9 +141,56 @@ namespace Service.MedicalRecord.Application
 
             var studies = await _request.GetAllStudies(request.Id);
             var studiesDto = studies.ToRequestStudyDto();
+            //var studiesIds = studiesDto.Select(x => x.Id).ToList();
 
             var ids = studiesDto.Select(x => x.EstudioId).ToList();
             var studiesParams = await _catalogClient.GetStudies(ids);
+
+            var results = await _repository.GetResultsById(requestId);
+            var resultsIds = results.Select(x => x.SolicitudEstudioId).ToList();
+            var totalParams = studiesParams.SelectMany(x => x.Parametros).Count();
+
+            if (results.Count < totalParams)
+            {
+                var missingParams = new List<ParameterListDto>();
+
+                foreach (var currentStudy in studiesParams)
+                {
+                    var parameters = currentStudy.Parametros;
+
+                    foreach (var parameter in parameters)
+                    {
+                        if (!results.Any(x => x.ParametroId.ToString() == parameter.Id && x.EstudioId == currentStudy.Id))
+                        {
+                            var study = studiesDto.FirstOrDefault(x => x.EstudioId == currentStudy.Id && !resultsIds.Contains(x.Id));
+                            parameter.SolicitudEstudioId = study.Id;
+                            parameter.EstudioId = currentStudy.Id;
+                            resultsIds.Add(study.Id);
+                            missingParams.Add(parameter);
+                        }
+                        else
+                        {
+                            results.Remove(results.First(x => x.ParametroId.ToString() == parameter.Id && x.EstudioId == currentStudy.Id));
+                        }
+                    }
+                }
+
+                var newResults = missingParams.Select(x => new ClinicResults
+                {
+                    Id = Guid.NewGuid(),
+                    SolicitudId = requestId,
+                    Nombre = x.Nombre,
+                    TipoValorId = x.TipoValor,
+                    Resultado = null,
+                    ValorInicial = x.ValorInicial,
+                    ValorFinal = x.ValorFinal,
+                    ParametroId = Guid.Parse(x.Id),
+                    SolicitudEstudioId = x.SolicitudEstudioId,
+                    EstudioId = x.EstudioId
+                });
+
+                // Crear Los que no existen
+            }
 
             foreach (var study in studiesDto)
             {
@@ -151,6 +200,8 @@ namespace Service.MedicalRecord.Application
                 study.Parametros = st.Parametros;
                 study.Indicaciones = st.Indicaciones;
             }
+
+
 
             var data = new RequestStudyUpdateDto()
             {
@@ -645,9 +696,28 @@ namespace Service.MedicalRecord.Application
             await _repository.UpdateStatusStudy(existingStudy);
         }
 
+        public async Task<ClinicResults> GetLaboratoryResults(int RequestStudyId)
+        {
+            return await _repository.GetLabResultsById(RequestStudyId);
+        }
+
         public async Task<ClinicalResultsPathological> GetResultPathological(int RequestStudyId)
         {
             return await _repository.GetResultPathologicalById(RequestStudyId);
+        }
+
+        public async Task<List<ClinicResultsFormDto>> GetLabResultsById(string id)
+        {
+            Helpers.ValidateGuid(id, out Guid guid);
+
+            var results = await _repository.GetResultsById(guid);
+
+            if (results == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
+            }
+
+            return results.ResultsGeneric();
         }
 
         public async Task<Domain.Request.RequestStudy> GetRequestStudyById(int RequestStudyId)

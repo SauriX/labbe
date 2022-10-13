@@ -13,10 +13,10 @@
         public bool DeltaCheck { get; set; }
         public bool ValoresCriticos { get; set; }
         public bool MostrarFormato { get; set; }
-        public int Unidades { get; set; }
+        public int? Unidades { get; set; }
         public string UnidadNombre { get; set; }
         public string TipoValor { get; set; }
-        public decimal ValorInicial { get; set; }
+        public decimal? ValorInicial { get; set; }
         public decimal ValorFinal { get; set; }
         public decimal CriticoMinimo { get; set; }
         public decimal CriticoMaximo { get; set; }

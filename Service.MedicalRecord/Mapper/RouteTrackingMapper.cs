@@ -18,12 +18,13 @@ namespace Service.MedicalRecord.Mapper
             return model.Select(x => new RouteTrackingListDto
             {
                 Id = x.Id,
-                Seguimiento = x.Id.ToString(),
+                Seguimiento = x.Clave,
                 Clave = x.Clave,
-                Sucursal = x.Estudios.Count>0? x.Estudios.FirstOrDefault().Solicitud.Sucursal.Nombre :"",
+                Sucursal = x.Estudios.Count > 0 ? x.Estudios.FirstOrDefault().Solicitud.Sucursal.Nombre : "",
                 Fecha = x.FechaCreo,
                 Status = x.Activo.ToString(),
-                Estudios = x.Estudios.ToList().ToStudyRouteTrackingDto()
+                Estudios = x.Estudios.ToList().ToStudyRouteTrackingDto(),
+               
             }).ToList();
         }
         public static RouteTrackingFormDto ToRouteTrackingDto(this TrackingOrder x)
@@ -60,8 +61,10 @@ namespace Service.MedicalRecord.Mapper
                 Registro = x.FechaCreo.ToString(),
                 Seleccion = false,
                 Clave = x.Solicitud.Clave,
-                // NombreEstatus = x.Estatus.Nombre,
-            }).ToList();
+                Expedienteid=x.ExpedienteId.ToString(),
+            Solicitudid =x.SolicitudId.ToString(),
+        // NombreEstatus = x.Estatus.Nombre,
+    }).ToList();
         }
     }
 }

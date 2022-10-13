@@ -19,7 +19,7 @@ namespace Service.Catalog.Mapper
                 Nombre = model.Nombre,
                 Correo = model.Correo,
                 Telefono = model.Telefono,
-                Direccion = $"{model.Calle} {model.NumeroExterior}, {model.Colonia.Colonia}, {model.Colonia.Ciudad.Ciudad}, {model.Colonia.Ciudad.Estado.Estado}",
+                Direccion = $"{model.Calle} {model.NumeroExterior}, {model.Colonia?.Colonia}, {model.Colonia?.Ciudad?.Ciudad}, {model.Colonia?.Ciudad?.Estado?.Estado}",
                 Activo = model.Activo
             };
         }
@@ -35,7 +35,7 @@ namespace Service.Catalog.Mapper
                 Nombre = x.Nombre,
                 Correo = x.Correo,
                 Telefono = x.Telefono,
-                Direccion = $"{x.Calle} {x.NumeroExterior}, {x.Colonia.Colonia}, {x.Colonia.Ciudad.Ciudad}, {x.Colonia.Ciudad.Estado.Estado}",
+                Direccion = $"{x.Calle} {x.NumeroExterior}, {x.Colonia?.Colonia}, {x.Colonia?.Ciudad?.Ciudad}, {x.Colonia?.Ciudad?.Estado?.Estado}",
                 Activo = x.Activo
             });
         }
@@ -53,10 +53,10 @@ namespace Service.Catalog.Mapper
                 Telefono = model?.Telefono?.Trim(),
                 PaginaWeb = model.PaginaWeb,
                 Calle = model.Calle,
-                CodigoPostal = model.Colonia.CodigoPostal,
+                CodigoPostal = model.Colonia?.CodigoPostal,
                 ColoniaId = model.ColoniaId,
-                Ciudad = model.Colonia.Ciudad.Ciudad,
-                Estado = model.Colonia.Ciudad.Estado.Estado,
+                Ciudad = model.Colonia?.Ciudad?.Ciudad,
+                Estado = model.Colonia?.Ciudad?.Estado?.Estado,
                 NumeroExterior = model.NumeroExterior,
                 NumeroInterior = model.NumeroInterior,
                 Activo = model.Activo,
@@ -72,7 +72,7 @@ namespace Service.Catalog.Mapper
                 Id = dto.Id,
                 Clave = dto.Clave.Trim(),
                 Nombre = dto.Nombre.Trim(),
-                NumeroExterior = dto.NumeroExterior.Trim(),
+                NumeroExterior = dto.NumeroExterior?.Trim(),
                 NumeroInterior = dto.NumeroInterior?.Trim(),
                 Calle = dto.Calle.Trim(),
                 ColoniaId = dto.ColoniaId,
@@ -94,7 +94,7 @@ namespace Service.Catalog.Mapper
                 Id = model.Id,
                 Clave = dto.Clave.Trim(),
                 Nombre = dto.Nombre.Trim(),
-                NumeroExterior = dto.NumeroExterior.Trim(),
+                NumeroExterior = dto.NumeroExterior?.Trim(),
                 NumeroInterior = dto.NumeroInterior?.Trim(),
                 Calle = dto.Calle.Trim(),
                 ColoniaId = dto.ColoniaId,

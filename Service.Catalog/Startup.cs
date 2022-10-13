@@ -53,7 +53,7 @@ namespace Service.Catalog
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-                options.UseSqlServer(Configuration.GetConnectionString("Default"));
+                options.UseSqlServer(Configuration.GetConnectionString("Default"), opt => opt.CommandTimeout(300));
                 options.EnableSensitiveDataLogging();
             }, ServiceLifetime.Scoped);
 

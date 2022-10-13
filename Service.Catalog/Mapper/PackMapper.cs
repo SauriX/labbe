@@ -33,17 +33,17 @@ namespace Service.Catalog.Mapper
                 Clave = x.Clave,
                 Nombre = x.Nombre,
                 NombreLargo = x.NombreLargo,
-                Pack = x.studies.Select(x => new PackStudyDto
+                Pack = x.Estudios.Select(x => new PackStudyDto
                 {
                     Id = x.EstudioId,
                     Clave = x.Estudio.Clave,
                     Nombre = x.Estudio.Nombre,
-                    Area = x.Estudio.Area.Nombre,
+                    Area = x.Estudio.Area?.Nombre,
                     Activo = true,
                 }).ToList(),
                 Activo = x.Activo,
-                Departamento = x.Area.Departamento.Nombre,
-                Area = x.Area.Nombre
+                Departamento = x.Area?.Departamento?.Nombre,
+                Area = x.Area?.Nombre
 
             });
         }
@@ -58,17 +58,17 @@ namespace Service.Catalog.Mapper
                 Nombre = model.Nombre,
                 NombreLargo = model.NombreLargo,
                 IdArea = model.AreaId,
-                Area = model.Area.Nombre,
+                Area = model.Area?.Nombre,
                 IdDepartamento = model.DepartamentoId,
-                Departamento = model.Area.Departamento.Nombre,
+                Departamento = model.Area?.Departamento?.Nombre,
                 Activo = model.Activo,
                 visible = model.Visibilidad,
-                Estudio = model.studies.Select(x => new PackStudyDto
+                Estudio = model.Estudios.Select(x => new PackStudyDto
                 {
                     Id = x.EstudioId,
                     Clave = x.Estudio.Clave,
                     Nombre = x.Estudio.Nombre,
-                    Area = x.Estudio.Area.Nombre,
+                    Area = x.Estudio.Area?.Nombre,
                     Activo = true,
                 }).ToList()
             };
@@ -87,15 +87,15 @@ namespace Service.Catalog.Mapper
                 DepartamentoId = dto.IdDepartamento,
                 NombreLargo = dto.NombreLargo,
                 Visibilidad = dto.visible,
-                studies = dto.Estudio.Select(x => new PacketStudy
+                Estudios = dto.Estudio.Select(x => new PacketStudy
                 {
                     PacketId = dto.Id,
                     EstudioId = x.Id,
                     Activo = x.Activo,
-                    UsuarioCreoId = "",
+                    UsuarioCreoId = Guid.Empty,
                     FechaCreo = DateTime.Now,
-                    UsuarioModId = 0,
-                    FechaMod = DateTime.Now,
+                    UsuarioModificoId = Guid.Empty,
+                    FechaModifico = DateTime.Now,
                 }).ToList(),
                 UsuarioCreoId = dto.IdUsuario,
                 FechaCreo = DateTime.Now,
@@ -117,15 +117,15 @@ namespace Service.Catalog.Mapper
                 DepartamentoId = dto.IdDepartamento,
                 NombreLargo = dto.NombreLargo,
                 Visibilidad = dto.visible,
-                studies = dto.Estudio.Select(x => new PacketStudy
+                Estudios = dto.Estudio.Select(x => new PacketStudy
                 {
                     PacketId = dto.Id,
                     EstudioId = x.Id,
                     Activo = x.Activo,
-                    UsuarioCreoId = "",
+                    UsuarioCreoId = Guid.Empty,
                     FechaCreo = DateTime.Now,
-                    UsuarioModId = 0,
-                    FechaMod = DateTime.Now,
+                    UsuarioModificoId = Guid.Empty,
+                    FechaModifico = DateTime.Now,
                 }).ToList(),
                 UsuarioCreoId = model.UsuarioCreoId,
                 FechaCreo = model.FechaCreo,
