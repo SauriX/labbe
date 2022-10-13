@@ -672,7 +672,7 @@ namespace Service.Catalog.Context
                 new Payment(19, "29", "TS", "Tarjeta de servicios"),
                 new Payment(20, "30", "AA", "Aplicación de anticipos"),
                 new Payment(21, "31", "IP", "Intermediario pagos"),
-                new Payment(21, "99", "PD", "Por definir"),
+                new Payment(22, "99", "PD", "Por definir"),
             };
 
             return paymentForms;
