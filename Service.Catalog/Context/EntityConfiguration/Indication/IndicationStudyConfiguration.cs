@@ -11,14 +11,6 @@ namespace Service.Catalog.Context.EntityConfiguration.Indication
             builder.ToTable("Relacion_Estudio_Indicacion");
 
             builder.HasKey(x => new { x.EstudioId, x.IndicacionId });
-
-            builder
-              .Property(x => x.FechaCreo)
-              .HasColumnType("smalldatetime");
-
-            builder
-              .Property(x => x.FechaMod)
-              .HasColumnType("smalldatetime");
         }
     }
 }

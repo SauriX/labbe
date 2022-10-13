@@ -23,7 +23,7 @@ namespace Service.Catalog.Repository
             return await _context.CAT_Paquete
                 .Include(x => x.Area)
                 .ThenInclude(x => x.Departamento)
-                .Include(x => x.studies)
+                .Include(x => x.Estudios)
                 .ThenInclude(x => x.Estudio)
                 .ThenInclude(x => x.Area)
                 .ThenInclude(x => x.Departamento)
@@ -34,7 +34,7 @@ namespace Service.Catalog.Repository
             var Packs = _context.CAT_Paquete
                     .Include(x => x.Area)
                     .ThenInclude(x => x.Departamento)
-                    .Include(x => x.studies)
+                    .Include(x => x.Estudios)
                     .ThenInclude(x => x.Estudio)
                     .ThenInclude(x => x.Area)
                     .ThenInclude(x => x.Departamento)
@@ -54,7 +54,7 @@ namespace Service.Catalog.Repository
             var Packs = _context.CAT_Paquete
                     .Include(x => x.Area)
                     .ThenInclude(x => x.Departamento)
-                    .Include(x => x.studies)
+                    .Include(x => x.Estudios)
                     .ThenInclude(x => x.Estudio)
                     .ThenInclude(x => x.Area)
                     .ThenInclude(x => x.Departamento)
@@ -69,9 +69,9 @@ namespace Service.Catalog.Repository
 
             try
             {
-                var studies = pack.studies.ToList();
+                var studies = pack.Estudios.ToList();
 
-                pack.studies = null;
+                pack.Estudios = null;
                 _context.CAT_Paquete.Add(pack);
 
                 await _context.SaveChangesAsync();
@@ -94,8 +94,8 @@ namespace Service.Catalog.Repository
 
         public async Task Update(Packet pack)
         {
-            var studies = pack.studies.ToList();
-            pack.studies = null;
+            var studies = pack.Estudios.ToList();
+            pack.Estudios = null;
             _context.CAT_Paquete.Update(pack);
 
             var config = new BulkConfig();

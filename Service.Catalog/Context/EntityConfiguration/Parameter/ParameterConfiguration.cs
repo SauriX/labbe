@@ -12,27 +12,35 @@ namespace Service.Catalog.Context.EntityConfiguration.Parameter
             builder.HasKey(x => x.Id);
 
             builder
-              .Property(x => x.Clave)
-              .IsRequired(false)
-              .HasMaxLength(100);
-
-            builder
-                .Property(x => x.Nombre)
+                .Property(x => x.Clave)
                 .IsRequired(false)
                 .HasMaxLength(100);
 
             builder
-                .Property(x => x.ValorInicial)
-                .IsRequired(true)
-                .HasMaxLength(100);
+                .Property(x => x.Nombre)
+                .IsRequired(false)
+                .HasMaxLength(4000);
 
             builder
                 .Property(x => x.NombreCorto)
-                .IsRequired(true)
-                .HasMaxLength(50);
+                .IsRequired(false)
+                .HasMaxLength(4000);
+
+            builder
+                .Property(x => x.FechaCreo)
+                .HasColumnType("smalldatetime");
+
+            builder
+                .Property(x => x.FechaModifico)
+                .HasColumnType("smalldatetime");
 
             builder
                 .HasOne(x => x.Unidad)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);  
+            
+            builder
+                .HasOne(x => x.UnidadSi)
                 .WithMany()
                 .OnDelete(DeleteBehavior.Restrict);
 
@@ -43,7 +51,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Parameter
 
             builder
                 .Property(x => x.TipoValor)
-                .HasDefaultValue(0)
+                .IsRequired(false)
                 .HasMaxLength(100);
 
             builder
@@ -55,11 +63,6 @@ namespace Service.Catalog.Context.EntityConfiguration.Parameter
                 .WithOne(x => x.Parametro)
                 .HasForeignKey(x => x.ParametroId)
                .OnDelete(DeleteBehavior.Restrict);
-
-            /*builder
-                .Property(x => x.UnidadSi)
-                .IsRequired(true)
-                .HasMaxLength(50);*/
 
             builder
                 .Property(x => x.FCSI)

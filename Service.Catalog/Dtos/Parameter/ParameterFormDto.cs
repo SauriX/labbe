@@ -12,16 +12,16 @@ namespace Service.Catalog.Dtos.Parameter
         public string Clave { get; set; }
         public string Nombre { get; set; }
         public string NombreCorto { get; set; }
-        public int Unidades { get; set; }
+        public int? Unidades { get; set; }
         public string UnidadNombre { get; set; }
         public string TipoValor { get; set; }
         public string Formula { get; set; }
-        public decimal ValorInicial { get; set; }
-        public int DepartamentoId { get; set; }
-        public int AreaId { get; set; }
+        public decimal? ValorInicial { get; set; }
+        public int? DepartamentoId { get; set; }
+        public int? AreaId { get; set; }
         public int FormatoImpresionId { get; set; }
         public string ReactivoId { get; set; }
-        public int UnidadSi { get; set; }
+        public int? UnidadSi { get; set; }
         public string UnidadSiNombre { get; set; }
         public string Fcsi { get; set; }
         public bool Activo { get; set; }

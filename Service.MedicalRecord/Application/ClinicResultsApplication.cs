@@ -28,6 +28,7 @@ using Service.MedicalRecord.Domain;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using Shared.Helpers;
+using Service.MedicalRecord.Dtos.Catalogs;
 
 namespace Service.MedicalRecord.Application
 {
@@ -130,9 +131,56 @@ namespace Service.MedicalRecord.Application
 
             var studies = await _request.GetAllStudies(request.Id);
             var studiesDto = studies.ToRequestStudyDto();
+            //var studiesIds = studiesDto.Select(x => x.Id).ToList();
 
             var ids = studiesDto.Select(x => x.EstudioId).ToList();
             var studiesParams = await _catalogClient.GetStudies(ids);
+
+            var results = await _repository.GetResultsById(requestId);
+            var resultsIds = results.Select(x => x.SolicitudEstudioId).ToList();
+            var totalParams = studiesParams.SelectMany(x => x.Parametros).Count();
+
+            if (results.Count < totalParams)
+            {
+                var missingParams = new List<ParameterListDto>();
+
+                foreach (var currentStudy in studiesParams)
+                {
+                    var parameters = currentStudy.Parametros;
+
+                    foreach (var parameter in parameters)
+                    {
+                        if (!results.Any(x => x.ParametroId.ToString() == parameter.Id && x.EstudioId == currentStudy.Id))
+                        {
+                            var study = studiesDto.FirstOrDefault(x => x.EstudioId == currentStudy.Id && !resultsIds.Contains(x.Id));
+                            parameter.SolicitudEstudioId = study.Id;
+                            parameter.EstudioId = currentStudy.Id;
+                            resultsIds.Add(study.Id);
+                            missingParams.Add(parameter);
+                        }
+                        else
+                        {
+                            results.Remove(results.First(x => x.ParametroId.ToString() == parameter.Id && x.EstudioId == currentStudy.Id));
+                        }
+                    }
+                }
+
+                var newResults = missingParams.Select(x => new ClinicResults
+                {
+                    Id = Guid.NewGuid(),
+                    SolicitudId = requestId,
+                    Nombre = x.Nombre,
+                    TipoValorId = x.TipoValor,
+                    Resultado = null,
+                    ValorInicial = x.ValorInicial ?? 0,
+                    ValorFinal = x.ValorFinal,
+                    ParametroId = Guid.Parse(x.Id),
+                    SolicitudEstudioId = x.SolicitudEstudioId,
+                    EstudioId = x.EstudioId
+                });
+
+                // Crear Los que no existen
+            }
 
             foreach (var study in studiesDto)
             {
@@ -141,12 +189,9 @@ namespace Service.MedicalRecord.Application
 
                 study.Parametros = st.Parametros;
                 study.Indicaciones = st.Indicaciones;
-
-                foreach (var parameter in study.Parametros)
-                {
-                    parameter.Resultado = 
-                }
             }
+
+
 
             var data = new RequestStudyUpdateDto()
             {

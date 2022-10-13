@@ -9,6 +9,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Pack
         public void Configure(EntityTypeBuilder<Packet> builder)
         {
             builder.ToTable("CAT_Paquete");
+
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Clave)
@@ -17,11 +18,11 @@ namespace Service.Catalog.Context.EntityConfiguration.Pack
 
             builder.Property(x => x.Nombre)
                 .HasMaxLength(100)
-                .IsRequired(true);
+                .IsRequired(false);
 
             builder.Property(x => x.NombreLargo)
                 .HasMaxLength(100)
-                .IsRequired(true);
+                .IsRequired(false);
 
             builder.Property(x => x.Visibilidad)
                 .IsRequired(true);
@@ -29,6 +30,13 @@ namespace Service.Catalog.Context.EntityConfiguration.Pack
             builder.Property(x => x.Activo)
                 .IsRequired(true);
 
+            builder
+                .Property(x => x.FechaCreo)
+                .HasColumnType("smalldatetime");
+
+            builder
+                .Property(x => x.FechaModifico)
+                .HasColumnType("smalldatetime");
         }
     }
 }

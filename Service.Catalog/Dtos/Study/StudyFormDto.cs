@@ -21,15 +21,15 @@ namespace Service.Catalog.Dtos.Study
         public bool Visible { get; set; }
         public int Dias { get; set; }
         public bool Activo { get; set; }
-        public int Area { get; set; }
-        public int Departamento { get; set; }
-        public int Formato { get; set; }
-        public int Maquilador { get; set; }
-        public int Metodo { get; set; }
-        public int Tipomuestra { get; set; }
+        public int? Area { get; set; }
+        public int? Departamento { get; set; }
+        public int? Formato { get; set; }
+        public int? Maquilador { get; set; }
+        public int? Metodo { get; set; }
+        public int? Tipomuestra { get; set; }
         public int Tiemporespuesta { get; set; }
         public decimal Diasrespuesta { get; set; }
-        public int Tapon { get; set; }
+        public int? Tapon { get; set; }
         public int Cantidad { get; set; }
         public bool Prioridad { get; set; }
         public bool Urgencia { get; set; }

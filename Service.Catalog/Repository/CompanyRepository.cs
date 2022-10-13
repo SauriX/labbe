@@ -21,7 +21,7 @@ namespace Service.Catalog.Repository
         }
         public async Task<List<Company>> GetActive()
         {
-            var catalogs = _context.CAT_Compañia.Where(x => x.Activo);
+            var catalogs = _context.CAT_Compañia.Include(x => x.Procedencia).Where(x => x.Activo);
 
             return await catalogs.ToListAsync();
         }

@@ -9,9 +9,9 @@ namespace Service.Catalog.Domain.Study
         public int EstudioId { get; set; }
         public virtual Study Estudio { get; set; }
         public bool Activo { get; set; }
-        public string UsuarioCreoId { get; set; }
+        public Guid UsuarioCreoId { get; set; }
         public DateTime FechaCreo { get; set; }
-        public int? UsuarioModId { get; set; }
+        public Guid? UsuarioModId { get; set; }
         public DateTime? FechaMod { get; set; }
     }
 }

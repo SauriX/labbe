@@ -1,4 +1,6 @@
-﻿namespace Service.Catalog.Domain.Catalog
+﻿using System;
+
+namespace Service.Catalog.Domain.Catalog
 {
     public class Department : GenericCatalog
     {
@@ -12,6 +14,7 @@
             Clave = clave;
             Nombre = nombre;
             Activo = true;
+            FechaCreo = DateTime.Now;
         }
     }
 }

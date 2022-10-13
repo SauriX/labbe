@@ -27,6 +27,7 @@ namespace Service.Catalog.Domain.Branch
             Estado = estado;
             Matriz = matriz == 1;
             Activo = true;
+            FechaCreo = DateTime.Now;
         }
 
         public Guid Id { get; set; }
