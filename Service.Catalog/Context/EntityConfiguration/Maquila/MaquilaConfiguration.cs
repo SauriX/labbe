@@ -28,7 +28,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Maquila
 
             builder
                 .Property(x => x.NumeroExterior)
-                .IsRequired()
+                .IsRequired(false)
                 .HasMaxLength(10);
 
             builder
@@ -38,7 +38,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Maquila
 
             builder
                 .Property(x => x.Calle)
-                .IsRequired()
+                .IsRequired(false)
                 .HasMaxLength(100);
 
             builder

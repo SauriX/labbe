@@ -31,7 +31,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Study
 
             builder
                 .Property(x => x.NombreCorto)
-                .IsRequired(true)
+                .IsRequired(false)
                 .HasMaxLength(50);
 
             builder
@@ -41,6 +41,14 @@ namespace Service.Catalog.Context.EntityConfiguration.Study
             builder
                 .Property(x => x.DiasResultado)
                 .IsRequired(true);
+
+            builder
+                .Property(x => x.FechaCreo)
+                .HasColumnType("smalldatetime");
+
+            builder
+                .Property(x => x.FechaModifico)
+                .HasColumnType("smalldatetime");
 
             builder
                 .HasOne(x => x.Area)

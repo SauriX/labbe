@@ -178,7 +178,7 @@ namespace Service.Catalog.Mapper
                     DescuenNum = x.DescuenNum,
                     Descuento = x.Descuento,
                     PrecioFinal = x.PrecioFinal,
-                    Pack = x.Paquete.studies.Select(x => new PackStudyDto
+                    Pack = x.Paquete.Estudios.Select(x => new PackStudyDto
                     {
                         Id = x.EstudioId,
                         Clave = x.Estudio.Clave,
@@ -260,7 +260,7 @@ namespace Service.Catalog.Mapper
                 DescuentoPorcentaje = model.Descuento,
                 PrecioFinal = model.PrecioFinal,
                 Promociones = new List<PriceListInfoPromo>(),
-                Estudios = model.Paquete.studies.Select(x => new PriceListInfoStudyDto
+                Estudios = model.Paquete.Estudios.Select(x => new PriceListInfoStudyDto
                 {
                     ListaPrecioId = model.PrecioListaId,
                     ListaPrecio = model.PrecioLista.Nombre,

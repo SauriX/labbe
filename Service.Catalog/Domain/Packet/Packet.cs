@@ -1,5 +1,6 @@
 ﻿using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Domain.Study;
+using System;
 using System.Collections.Generic;
 
 namespace Service.Catalog.Domain.Packet
@@ -20,6 +21,7 @@ namespace Service.Catalog.Domain.Packet
             DepartamentoId = departamentoId;
             Visibilidad = visibilidad;
             Activo = true;
+            FechaCreo = DateTime.Now;
         }
 
         public int AreaId { get; set; }
@@ -27,6 +29,6 @@ namespace Service.Catalog.Domain.Packet
         public int DepartamentoId { get; set; }
         public string NombreLargo { get; set; }
         public bool Visibilidad { get; set; }
-        public ICollection<PacketStudy> studies { get; set; }
+        public ICollection<PacketStudy> Estudios { get; set; }
     }
 }

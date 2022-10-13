@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221013040806_Modificacion IndicationStudy Fechas Usuario")]
+    partial class ModificacionIndicationStudyFechasUsuario
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1228,7 +1230,7 @@ namespace Service.Catalog.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("ColoniaId")
+                    b.Property<int>("ColoniaId")
                         .HasColumnType("int");
 
                     b.Property<string>("Correo")
@@ -1540,12 +1542,12 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Nombre")
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("NombreCorto")
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("Requerido")
                         .HasColumnType("bit");
@@ -2626,7 +2628,7 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("smalldatetime");
 
-                    b.Property<int?>("FormatoId")
+                    b.Property<int>("FormatoId")
                         .HasColumnType("int");
 
                     b.Property<int?>("MaquiladorId")
@@ -2944,7 +2946,9 @@ namespace Service.Catalog.Migrations
                 {
                     b.HasOne("Service.Catalog.Domain.Constant.Colony", "Colonia")
                         .WithMany()
-                        .HasForeignKey("ColoniaId");
+                        .HasForeignKey("ColoniaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Colonia");
                 });
@@ -3385,7 +3389,9 @@ namespace Service.Catalog.Migrations
 
                     b.HasOne("Service.Catalog.Domain.Parameter.Format", "Formato")
                         .WithMany()
-                        .HasForeignKey("FormatoId");
+                        .HasForeignKey("FormatoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Service.Catalog.Domain.Maquila.Maquila", "Maquilador")
                         .WithMany()

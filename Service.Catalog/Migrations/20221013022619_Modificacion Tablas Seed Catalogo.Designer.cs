@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221013022619_Modificacion Tablas Seed Catalogo")]
+    partial class ModificacionTablasSeedCatalogo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1121,16 +1123,16 @@ namespace Service.Catalog.Migrations
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("FechaCreo")
+                        .HasColumnType("smalldatetime");
 
-                    b.Property<DateTime?>("FechaModifico")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("FechaMod")
+                        .HasColumnType("smalldatetime");
 
                     b.Property<Guid?>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("UsuarioModificoId")
+                    b.Property<Guid?>("UsuarioModId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("EstudioId", "IndicacionId");
@@ -1228,7 +1230,7 @@ namespace Service.Catalog.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("ColoniaId")
+                    b.Property<int>("ColoniaId")
                         .HasColumnType("int");
 
                     b.Property<string>("Correo")
@@ -1529,7 +1531,7 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime?>("FechaCreo")
                         .HasColumnType("smalldatetime");
 
-                    b.Property<DateTime?>("FechaModifico")
+                    b.Property<DateTime>("FechaModifico")
                         .HasColumnType("smalldatetime");
 
                     b.Property<string>("Formula")
@@ -1540,12 +1542,12 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Nombre")
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("NombreCorto")
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("Requerido")
                         .HasColumnType("bit");
@@ -1563,7 +1565,7 @@ namespace Service.Catalog.Migrations
                     b.Property<Guid?>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("UsuarioModificoId")
+                    b.Property<Guid>("UsuarioModificoId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("ValorCriticos")
@@ -1628,16 +1630,18 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("smalldatetime");
+                        .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("FechaModifico")
-                        .HasColumnType("smalldatetime");
+                    b.Property<DateTime?>("FechaMod")
+                        .IsRequired()
+                        .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UsuarioCreoId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("UsuarioModificoId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("UsuarioModId")
+                        .HasColumnType("int");
 
                     b.HasKey("EstudioId", "ParametroId");
 
@@ -2543,16 +2547,16 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("smalldatetime");
+                        .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("FechaModifico")
-                        .HasColumnType("smalldatetime");
+                    b.Property<DateTime?>("FechaMod")
+                        .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UsuarioCreoId")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("UsuarioModificoId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("UsuarioModId")
+                        .HasColumnType("int");
 
                     b.HasKey("EstudioId", "PacketId");
 
@@ -2578,11 +2582,11 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime?>("FechaMod")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UsuarioCreoId")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("UsuarioModId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("UsuarioModId")
+                        .HasColumnType("int");
 
                     b.HasKey("EstudioId", "ReagentId");
 
@@ -2626,7 +2630,7 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("smalldatetime");
 
-                    b.Property<int?>("FormatoId")
+                    b.Property<int>("FormatoId")
                         .HasColumnType("int");
 
                     b.Property<int?>("MaquiladorId")
@@ -2709,11 +2713,11 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime?>("FechaMod")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UsuarioCreoId")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("UsuarioModId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("UsuarioModId")
+                        .HasColumnType("int");
 
                     b.HasKey("EstudioId", "WorkListId");
 
@@ -2944,7 +2948,9 @@ namespace Service.Catalog.Migrations
                 {
                     b.HasOne("Service.Catalog.Domain.Constant.Colony", "Colonia")
                         .WithMany()
-                        .HasForeignKey("ColoniaId");
+                        .HasForeignKey("ColoniaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Colonia");
                 });
@@ -3385,7 +3391,9 @@ namespace Service.Catalog.Migrations
 
                     b.HasOne("Service.Catalog.Domain.Parameter.Format", "Formato")
                         .WithMany()
-                        .HasForeignKey("FormatoId");
+                        .HasForeignKey("FormatoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Service.Catalog.Domain.Maquila.Maquila", "Maquilador")
                         .WithMany()

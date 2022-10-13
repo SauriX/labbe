@@ -10,7 +10,7 @@ namespace Service.Catalog.Domain.Parameter
         {
         }
 
-        public Parameter(Guid id, string clave, string nombre, string nombreCorto, string tipoValor, string formula, int areaId, int departamentoId, int unidadId, int unidadSiId, string fcsi)
+        public Parameter(Guid id, string clave, string nombre, string nombreCorto, string tipoValor, string formula, int? areaId, int? departamentoId, int? unidadId, int? unidadSiId, string fcsi)
         {
             Id = id;
             Clave = clave;
@@ -24,23 +24,24 @@ namespace Service.Catalog.Domain.Parameter
             UnidadSiId = unidadSiId;
             FCSI = fcsi;
             Activo = true;
+            FechaCreo = DateTime.Now;
         }
 
         public Guid Id { get; set; }
         public string Clave { get; set; }
         public string Nombre { get; set; }
-        public decimal ValorInicial { get; set; }
+        public decimal? ValorInicial { get; set; }
         public decimal ValorFinal { get; set; }
         public string TipoValor { get; set; }
         public string NombreCorto { get; set; }
-        public int UnidadId { get; set; }
+        public int? UnidadId { get; set; }
         public virtual Units Unidad { get; set; }
-        public int UnidadSiId { get; set; }
+        public int? UnidadSiId { get; set; }
         public virtual Units UnidadSi { get; set; }
         public string Formula { get; set; }
-        public int DepartamentoId { get; set; }
+        public int? DepartamentoId { get; set; }
         public virtual Department Departmento { get; set; }
-        public int AreaId { get; set; }
+        public int? AreaId { get; set; }
         public virtual Area Area { get; set; }
         public string FCSI { get; set; }
         public bool Activo { get; set; }
@@ -50,10 +51,10 @@ namespace Service.Catalog.Domain.Parameter
         public bool ValorCriticos { get; set; }
         public decimal CriticoMinimo { get; set; }
         public decimal CriticoMaximo { get; set; }
-        public Guid UsuarioCreoId { get; set; }
-        public DateTime FechaCreo { get; set; }
-        public Guid UsuarioModificoId { get; set; }
-        public DateTime FechaModifico { get; set; }
+        public Guid? UsuarioCreoId { get; set; }
+        public DateTime? FechaCreo { get; set; }
+        public Guid? UsuarioModificoId { get; set; }
+        public DateTime? FechaModifico { get; set; }
         public virtual ICollection<ParameterStudy> Estudios { get; set; }
         public virtual ICollection<ParameterReagent> Reactivos { get; set; }
         public virtual ICollection<ParameterValue> TipoValores { get; set; }

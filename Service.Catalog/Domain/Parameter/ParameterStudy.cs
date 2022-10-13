@@ -13,6 +13,7 @@ namespace Service.Catalog.Domain.Parameter
             ParametroId = parametroId;
             EstudioId = estudioId;
             Activo = true;
+            FechaCreo = DateTime.Now;
         }
 
         public Guid ParametroId { get; set; }
@@ -20,9 +21,9 @@ namespace Service.Catalog.Domain.Parameter
         public int EstudioId { get; set; }
         public virtual Domain.Study.Study Estudio { get; set; }
         public bool Activo { get; set; }
-        public string UsuarioCreoId { get; set; }
+        public Guid? UsuarioCreoId { get; set; }
         public DateTime FechaCreo { get; set; }
-        public int? UsuarioModId { get; set; }
-        public DateTime? FechaMod { get; set; }
+        public Guid? UsuarioModificoId { get; set; }
+        public DateTime? FechaModifico { get; set; }
     }
 }

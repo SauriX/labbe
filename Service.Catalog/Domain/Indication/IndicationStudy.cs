@@ -13,6 +13,7 @@ namespace Service.Catalog.Domain.Indication
             IndicacionId = indicacionId;
             EstudioId = estudioId;
             Activo = true;
+            FechaCreo = DateTime.Now;
         }
 
         public int IndicacionId { get; set; }
@@ -21,8 +22,8 @@ namespace Service.Catalog.Domain.Indication
         public virtual Domain.Study.Study Estudio { get; set; }
         public bool Activo { get; set; }
         public Guid? UsuarioCreoId { get; set; }
-        public DateTime? FechaCreo { get; set; }
-        public Guid? UsuarioModId { get; set; }
-        public DateTime? FechaMod { get; set; }
+        public DateTime FechaCreo { get; set; }
+        public Guid? UsuarioModificoId { get; set; }
+        public DateTime? FechaModifico { get; set; }
     }
 }

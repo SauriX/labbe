@@ -1,4 +1,5 @@
 ﻿using Service.Catalog.Domain.Catalog;
+using System;
 using System.Collections.Generic;
 
 namespace Service.Catalog.Domain.Indication
@@ -16,6 +17,7 @@ namespace Service.Catalog.Domain.Indication
             Nombre = clave;
             Descripcion = descripcion;
             Activo = true;
+            FechaCreo = DateTime.Now;
         }
 
         public virtual ICollection<IndicationStudy> Estudios { get; set; }

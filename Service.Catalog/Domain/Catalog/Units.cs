@@ -1,6 +1,8 @@
-﻿namespace Service.Catalog.Domain.Catalog
+﻿using System;
+
+namespace Service.Catalog.Domain.Catalog
 {
-    public class Units : GenericCatalogDescription
+    public class Units : GenericCatalog
     {
         public Units()
         {
@@ -11,8 +13,8 @@
             Id = id;
             Clave = clave;
             Nombre = clave;
-            Descripcion = clave;
             Activo = true;
+            FechaCreo = DateTime.Now;
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using DocumentFormat.OpenXml.Office2010.Excel;
 using Service.Catalog.Domain.Medics;
-using static ClosedXML.Excel.XLPredefinedFormat;
+using System;
 
 namespace Service.Catalog.Domain.Catalog
 {
@@ -16,6 +16,7 @@ namespace Service.Catalog.Domain.Catalog
             Clave = clave;
             Nombre = nombre;
             Activo = true;
+            FechaCreo = DateTime.Now;
         }
     }
 }

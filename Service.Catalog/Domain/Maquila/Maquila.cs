@@ -15,6 +15,7 @@ namespace Service.Catalog.Domain.Maquila
             Clave = clave;
             Nombre = nombre;
             Activo = true;
+            FechaCreo = DateTime.Now;
         }
 
         public int Id { set; get; }
@@ -26,11 +27,11 @@ namespace Service.Catalog.Domain.Maquila
         public string NumeroExterior { get; set; }
         public string NumeroInterior { get; set; }
         public string Calle { get; set; }
-        public int ColoniaId { get; set; }
+        public int? ColoniaId { get; set; }
         public virtual Colony Colonia { get; set; }
         public bool Activo { get; set; }
-        public Guid UsuarioCreoId { get; set; }
-        public DateTime FechaCreo { get; set; }
+        public Guid? UsuarioCreoId { get; set; }
+        public DateTime? FechaCreo { get; set; }
         public Guid? UsuarioModificoId { get; set; }
         public DateTime? FechaModifico { get; set; }
     }

@@ -110,12 +110,12 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.NotFound, "Lista de precios no configurada");
             }
 
-            if (price.Paquete.studies == null || price.Paquete.studies.Count == 0)
+            if (price.Paquete.Estudios == null || price.Paquete.Estudios.Count == 0)
             {
                 throw new CustomException(HttpStatusCode.NotFound, "El paquete no contiene estudios");
             }
 
-            if (price.Paquete.studies.Any(x => x.Estudio.Parameters == null || x.Estudio.Parameters.Count == 0))
+            if (price.Paquete.Estudios.Any(x => x.Estudio.Parameters == null || x.Estudio.Parameters.Count == 0))
             {
                 throw new CustomException(HttpStatusCode.NotFound, "Alguno de los estudios del paquete no contiene parámetros");
             }

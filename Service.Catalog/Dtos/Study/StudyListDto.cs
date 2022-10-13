@@ -11,7 +11,7 @@ namespace Service.Catalog.Dtos.Study
         public string Nombre { get; set; }
         public string Titulo { get; set; }
         public string Area { get; set; }
-        public int AreaId { get; set; }
+        public int? AreaId { get; set; }
         public string Departamento { get; set; }
         public string Formato { get; set; }
         public string Maquilador { get; set; }

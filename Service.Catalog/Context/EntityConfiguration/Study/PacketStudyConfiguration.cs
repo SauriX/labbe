@@ -15,10 +15,14 @@ namespace Service.Catalog.Context.EntityConfiguration.Study
                 x.EstudioId,
                 x.PacketId
             });
+
+            builder
+                .Property(x => x.FechaCreo)
+                .HasColumnType("smalldatetime");
+
+            builder
+                .Property(x => x.FechaModifico)
+                .HasColumnType("smalldatetime");
         }
-
-
-
-
     }
 }

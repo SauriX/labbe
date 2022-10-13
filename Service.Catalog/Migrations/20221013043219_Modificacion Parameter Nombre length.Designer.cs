@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221013043219_Modificacion Parameter Nombre length")]
+    partial class ModificacionParameterNombrelength
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2626,7 +2628,7 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("smalldatetime");
 
-                    b.Property<int?>("FormatoId")
+                    b.Property<int>("FormatoId")
                         .HasColumnType("int");
 
                     b.Property<int?>("MaquiladorId")
@@ -3385,7 +3387,9 @@ namespace Service.Catalog.Migrations
 
                     b.HasOne("Service.Catalog.Domain.Parameter.Format", "Formato")
                         .WithMany()
-                        .HasForeignKey("FormatoId");
+                        .HasForeignKey("FormatoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Service.Catalog.Domain.Maquila.Maquila", "Maquilador")
                         .WithMany()

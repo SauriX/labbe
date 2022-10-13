@@ -20,12 +20,12 @@ namespace Service.Catalog.Mapper
                 Clave = x.Clave,
                 Nombre = x.Nombre,
                 Titulo = x.Titulo,
-                Area = x.Area.Nombre,
-                AreaId = x.Area.Id,
-                Departamento = x.Area.Departamento.Nombre,
-                Formato = x.Formato.Nombre,
-                Maquilador = x.Maquilador.Nombre,
-                Metodo = x.Metodo.Nombre,
+                Area = x.Area?.Nombre,
+                AreaId = x.Area?.Id,
+                Departamento = x.Area?.Departamento?.Nombre,
+                Formato = x.Formato?.Nombre,
+                Maquilador = x.Maquilador?.Nombre,
+                Metodo = x.Metodo?.Nombre,
                 Activo = x.Activo,
             });
         }
@@ -111,26 +111,26 @@ namespace Service.Catalog.Mapper
                 Activo = model.Activo,
                 UsuarioCreoId = study.UsuarioCreoId,
                 FechaCreo = DateTime.Now,
-                UsuarioModId = model.UsuarioId,
-                FechaMod = DateTime.Now,
+                UsuarioModificoId = model.UsuarioId,
+                FechaModifico = DateTime.Now,
                 Parameters = model.Parameters.Select(x => new ParameterStudy
                 {
                     ParametroId = Guid.Parse(x.Id),
                     EstudioId = study.Id,
                     Activo = true,
-                    UsuarioCreoId = "",
+                    UsuarioCreoId = Guid.Empty,
                     FechaCreo = DateTime.Now,
-                    UsuarioModId = 1,
-                    FechaMod = DateTime.Now
+                    UsuarioModificoId = Guid.Empty,
+                    FechaModifico = DateTime.Now
                 }).ToList(),
                 WorkLists = model.WorkList.Select(x => new WorkListStudy
                 {
                     WorkListId = x.Id,
                     EstudioId = study.Id,
                     Activo = true,
-                    UsuarioCreoId = "",
+                    UsuarioCreoId = Guid.Empty,
                     FechaCreo = DateTime.Now,
-                    UsuarioModId = 1,
+                    UsuarioModId = Guid.Empty,
                     FechaMod = DateTime.Now
                 }).ToList(),
                 Indications = model.Indicaciones.Select(x => new IndicationStudy
@@ -140,17 +140,17 @@ namespace Service.Catalog.Mapper
                     Activo = true,
                     UsuarioCreoId = Guid.NewGuid(),
                     FechaCreo = DateTime.Now,
-                    UsuarioModId = Guid.NewGuid(),
-                    FechaMod = DateTime.Now
+                    UsuarioModificoId = Guid.NewGuid(),
+                    FechaModifico = DateTime.Now
                 }).ToList(),
                 Reagents = model.Reactivos.Select(x => new ReagentStudy
                 {
                     ReagentId = Guid.Parse(x.Id),
                     EstudioId = study.Id,
                     Activo = true,
-                    UsuarioCreoId = "",
+                    UsuarioCreoId = Guid.Empty,
                     FechaCreo = DateTime.Now,
-                    UsuarioModId = 1,
+                    UsuarioModId = Guid.Empty,
                     FechaMod = DateTime.Now
                 }).ToList(),
             };
@@ -183,24 +183,24 @@ namespace Service.Catalog.Mapper
                 Activo = model.Activo,
                 UsuarioCreoId = model.UsuarioId,
                 FechaCreo = DateTime.Now,
-                UsuarioModId = model.UsuarioId,
-                FechaMod = DateTime.Now,
+                UsuarioModificoId = model.UsuarioId,
+                FechaModifico = DateTime.Now,
                 Parameters = model.Parameters.Select(x => new ParameterStudy
                 {
                     ParametroId = Guid.Parse(x.Id),
                     Activo = true,
-                    UsuarioCreoId = "",
+                    UsuarioCreoId = Guid.Empty,
                     FechaCreo = DateTime.Now,
-                    UsuarioModId = 1,
-                    FechaMod = DateTime.Now
+                    UsuarioModificoId = Guid.Empty,
+                    FechaModifico = DateTime.Now
                 }).ToList(),
                 WorkLists = model.WorkList.Select(x => new WorkListStudy
                 {
                     WorkListId = x.Id,
                     Activo = true,
-                    UsuarioCreoId = "",
+                    UsuarioCreoId = Guid.Empty,
                     FechaCreo = DateTime.Now,
-                    UsuarioModId = 1,
+                    UsuarioModId = Guid.Empty,
                     FechaMod = DateTime.Now
                 }).ToList(),
                 Indications = model.Indicaciones.Select(x => new IndicationStudy
@@ -209,16 +209,16 @@ namespace Service.Catalog.Mapper
                     Activo = true,
                     UsuarioCreoId = Guid.NewGuid(),
                     FechaCreo = DateTime.Now,
-                    UsuarioModId = Guid.NewGuid(),
-                    FechaMod = DateTime.Now
+                    UsuarioModificoId = Guid.NewGuid(),
+                    FechaModifico = DateTime.Now
                 }).ToList(),
                 Reagents = model.Reactivos.Select(x => new ReagentStudy
                 {
                     ReagentId = Guid.Parse(x.Id),
                     Activo = true,
-                    UsuarioCreoId = "",
+                    UsuarioCreoId = Guid.Empty,
                     FechaCreo = DateTime.Now,
-                    UsuarioModId = 1,
+                    UsuarioModId = Guid.Empty,
                     FechaMod = DateTime.Now
                 }).ToList(),
             };

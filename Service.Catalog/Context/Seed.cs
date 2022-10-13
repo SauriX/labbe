@@ -34,22 +34,8 @@ namespace Service.Catalog.Context
         {
             if (false)
             {
-                //var methods = GetMethods();
                 var payment = GetPaymentForms();
                 var cfdi = GetUseOfCFDI​s();
-                //var deps = GetDepartments();
-                //var areas = GetAreas();
-                //var maquilas = GetMaquilas();
-                //var indications = GetIndications();
-                //var tags = GetTags();
-                //var units = GetUnits();
-                //var paramss = GetParameters();
-                //var studies = GetStudies();
-                //var packs = GetPacks();
-                //var branches = GetBranches();
-                //var si = GetStudyIndications();
-                //var sp = GetStudyParameters();
-                //var ps = GetPackStudies();
             }
 
             if (!context.CAT_Configuracion.Any())
@@ -298,8 +284,6 @@ namespace Service.Catalog.Context
                         units,
                         nameof(unit.Id),
                         nameof(unit.Clave),
-                        nameof(unit.Nombre),
-                        nameof(unit.Descripcion),
                         nameof(unit.Activo));
 
                     context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Units)} ON;");
@@ -412,7 +396,9 @@ namespace Service.Catalog.Context
                         nameof(parameter.FCSI),
                         nameof(parameter.Activo));
 
-                    context.Database.ExecuteSqlRaw(script);
+                    //context.Database.ExecuteSqlRaw(script);
+
+                    context.BulkInsertOrUpdate(parameters);
 
                     transaction.Commit();
                 }
@@ -451,6 +437,9 @@ namespace Service.Catalog.Context
                         nameof(study.MaquiladorId),
                         nameof(study.MetodoId),
                         nameof(study.TaponId),
+                        nameof(study.Cantidad),
+                        nameof(study.Prioridad),
+                        nameof(study.Urgencia),
                         nameof(study.Activo));
 
                     context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Estudio)} ON;");
@@ -517,7 +506,8 @@ namespace Service.Catalog.Context
                         new string[] { nameof(si.EstudioId), nameof(si.IndicacionId) },
                         nameof(si.Activo));
 
-                    context.Database.ExecuteSqlRaw(script);
+                    //context.Database.ExecuteSqlRaw(script);
+                    context.BulkInsertOrUpdate(studyIndications);
 
                     transaction.Commit();
                 }
@@ -535,7 +525,7 @@ namespace Service.Catalog.Context
 
                 try
                 {
-                    var studyParameters = GetStudyIndications();
+                    var studyParameters = GetStudyParameters();
                     var sp = new ParameterStudy();
 
                     var script = MergeGenerator.Build(
@@ -544,7 +534,8 @@ namespace Service.Catalog.Context
                         new string[] { nameof(sp.EstudioId), nameof(sp.ParametroId) },
                         nameof(sp.Activo));
 
-                    context.Database.ExecuteSqlRaw(script);
+                    //context.Database.ExecuteSqlRaw(script);
+                    context.BulkInsertOrUpdate(studyParameters);
 
                     transaction.Commit();
                 }
@@ -571,7 +562,8 @@ namespace Service.Catalog.Context
                         new string[] { nameof(ps.PacketId), nameof(ps.EstudioId) },
                         nameof(ps.Activo));
 
-                    context.Database.ExecuteSqlRaw(script);
+                    //context.Database.ExecuteSqlRaw(script);
+                    context.BulkInsertOrUpdate(packStudies);
 
                     transaction.Commit();
                 }
@@ -776,10 +768,10 @@ namespace Service.Catalog.Context
                     x.Field<string>("Corto"),
                     type,
                     x.Field<string>("Formula"),
-                    area?.Id ?? 0,
-                    area?.DepartamentoId ?? 0,
-                    unit?.Id ?? 0,
-                    unit?.Id ?? 0,
+                    area?.Id,
+                    area?.DepartamentoId,
+                    unit?.Id,
+                    unit?.Id,
                     x.Field<string>("Fcsi"));
             }).ToList();
 
@@ -815,11 +807,11 @@ namespace Service.Catalog.Context
                     x.Field<string>("Corto"),
                     x.Field<string>("Visible") == "V",
                     Convert.ToInt32(x.Field<double>("Dias")),
-                    area?.Id ?? 0,
-                    area?.DepartamentoId ?? 0,
-                    maquila?.Id ?? 0,
-                    method?.Id ?? 0,
-                    tag?.Id ?? 0);
+                    area?.Id,
+                    area?.DepartamentoId,
+                    maquila?.Id,
+                    method?.Id,
+                    tag?.Id);
             }).ToList();
 
             return studies;
@@ -863,6 +855,8 @@ namespace Service.Catalog.Context
 
             studyIndications = studyIndications.Where(x => x.IndicacionId > 0 && x.EstudioId > 0).ToList();
 
+            studyIndications = studyIndications.GroupBy(x => new { x.EstudioId, x.IndicacionId }).Select(x => x.First()).ToList();
+
             return studyIndications;
         }
 
@@ -886,6 +880,8 @@ namespace Service.Catalog.Context
 
             studyParameters = studyParameters.Where(x => x.ParametroId != Guid.Empty && x.EstudioId > 0).ToList();
 
+            studyParameters = studyParameters.GroupBy(x => new { x.EstudioId, x.ParametroId }).Select(x => x.First()).ToList();
+
             return studyParameters;
         }
 
@@ -908,6 +904,8 @@ namespace Service.Catalog.Context
             }).ToList();
 
             packStudies = packStudies.Where(x => x.PacketId > 0 && x.EstudioId > 0).ToList();
+
+            packStudies = packStudies.GroupBy(x => new { x.PacketId, x.EstudioId }).Select(x => x.First()).ToList();
 
             return packStudies;
         }

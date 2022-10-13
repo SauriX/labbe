@@ -15,7 +15,7 @@ namespace Service.Catalog.Dtos.Maquila
         public string NumeroExterior { get; set; }
         public string NumeroInterior { get; set; }
         public string Calle { get; set; }
-        public int ColoniaId { get; set; }
+        public int? ColoniaId { get; set; }
         public string Ciudad { get; set; }
         public string Estado { get; set; }
         public bool Activo { get; set; }

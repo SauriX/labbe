@@ -1,4 +1,6 @@
-﻿namespace Service.Catalog.Domain.Catalog
+﻿using System;
+
+namespace Service.Catalog.Domain.Catalog
 {
     public class Area : GenericCatalog
     {
@@ -13,6 +15,7 @@
             Clave = clave;
             Nombre = nombre;
             Activo = true;
+            FechaCreo = DateTime.Now;
         }
 
         public int DepartamentoId { get; set; }

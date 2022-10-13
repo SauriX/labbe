@@ -12,7 +12,7 @@ namespace Service.Catalog.Domain.Study
         {
         }
 
-        public Study(int id, string clave, string nombre, int orden, string titulo, string corto, bool visible, int dias, int areaId, int departamentoId, int maquiladorId, int metodoId, int taponId)
+        public Study(int id, string clave, string nombre, int orden, string titulo, string corto, bool visible, int dias, int? areaId, int? departamentoId, int? maquiladorId, int? metodoId, int? taponId)
         {
             Id = id;
             Clave = clave;
@@ -29,7 +29,9 @@ namespace Service.Catalog.Domain.Study
             MaquiladorId = maquiladorId;
             MetodoId = metodoId;
             TaponId = taponId;
+            Cantidad = 1;
             Activo = true;
+            FechaCreo = DateTime.Now;
         }
 
         public int Id { get; set; }
@@ -42,27 +44,27 @@ namespace Service.Catalog.Domain.Study
         public decimal DiasResultado { get; set; }
         public int Dias { get; set; }
         public int TiempoResultado { get; set; }
-        public int AreaId { get; set; }
+        public int? AreaId { get; set; }
         public virtual Area Area { get; set; }
-        public int DepartamentoId { get; set; }
-        public int FormatoId { get; set; }
+        public int? DepartamentoId { get; set; }
+        public int? FormatoId { get; set; }
         public virtual Format Formato { get; set; }
-        public int MaquiladorId { get; set; }
+        public int? MaquiladorId { get; set; }
         public virtual Domain.Maquila.Maquila Maquilador { get; set; }
-        public int MetodoId { get; set; }
+        public int? MetodoId { get; set; }
         public virtual Method Metodo { get; set; }
-        public int SampleTypeId { get; set; }
+        public int? SampleTypeId { get; set; }
         public virtual SampleType SampleType { get; set; }
-        public int TaponId { get; set; }
+        public int? TaponId { get; set; }
         public virtual Domain.Tapon.Tapon Tapon { get; set; }
         public int Cantidad { get; set; }
         public bool Prioridad { get; set; }
         public bool Urgencia { get; set; }
         public bool Activo { get; set; }
-        public Guid UsuarioCreoId { get; set; }
-        public DateTime FechaCreo { get; set; }
-        public Guid UsuarioModId { get; set; }
-        public DateTime FechaMod { get; set; }
+        public Guid? UsuarioCreoId { get; set; }
+        public DateTime? FechaCreo { get; set; }
+        public Guid? UsuarioModificoId { get; set; }
+        public DateTime? FechaModifico { get; set; }
         public virtual ICollection<ParameterStudy> Parameters { get; set; }
         public virtual ICollection<Domain.Study.WorkListStudy> WorkLists { get; set; }
         public virtual ICollection<IndicationStudy> Indications { get; set; }
