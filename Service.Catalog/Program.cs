@@ -34,8 +34,8 @@ namespace Service.Catalog
             {
                 var context = services.GetRequiredService<ApplicationDbContext>();
                 await context.Database.MigrateAsync();
-                var key = config.GetValue<string>("PasswordKey");
-                await Seed.SeedData(context, key);
+                var seedData = config.GetValue<bool>("SeedData");
+                await Seed.SeedData(context, seedData);
             }
             catch (Exception e)
             {

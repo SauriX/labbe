@@ -17,6 +17,7 @@ using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.ClinicResults;
 using System.Net;
 using SharedResponses = Shared.Dictionary.Responses;
+using SharedDepartment = Shared.Dictionary.Catalogs.Department;
 using Shared.Error;
 using Shared.Dictionary;
 using Service.MedicalRecord.Client.IClient;
@@ -140,7 +141,7 @@ namespace Service.MedicalRecord.Application
             var request = await GetExistingRequest(recordId, requestId);
 
             var studies = await _request.GetAllStudies(request.Id);
-            var studiesDto = studies.ToRequestStudyDto();
+            var studiesDto = studies.ToRequestStudyDto().Where(x => x.DepartamentoId != SharedDepartment.PATOLOGIA).ToList();
             //var studiesIds = studiesDto.Select(x => x.Id).ToList();
 
             var ids = studiesDto.Select(x => x.EstudioId).ToList();
@@ -157,21 +158,24 @@ namespace Service.MedicalRecord.Application
                 foreach (var currentStudy in studiesParams)
                 {
                     var parameters = currentStudy.Parametros;
+                    var study = studiesDto.FirstOrDefault(x => x.EstudioId == currentStudy.Id && !resultsIds.Contains(x.Id));
 
-                    foreach (var parameter in parameters)
+                    if(study != null)
                     {
-                        if (!results.Any(x => x.ParametroId.ToString() == parameter.Id && x.EstudioId == currentStudy.Id))
+                        foreach (var parameter in parameters)
                         {
-                            var study = studiesDto.FirstOrDefault(x => x.EstudioId == currentStudy.Id && !resultsIds.Contains(x.Id));
-                            parameter.SolicitudEstudioId = study.Id;
-                            parameter.EstudioId = currentStudy.Id;
-                            resultsIds.Add(study.Id);
-                            missingParams.Add(parameter);
+                            if (!results.Any(x => x.ParametroId.ToString() == parameter.Id && x.EstudioId == currentStudy.Id))
+                            {
+                                parameter.SolicitudEstudioId = study.Id;
+                                parameter.EstudioId = currentStudy.Id;
+                                missingParams.Add(parameter);
+                            }
+                            else
+                            {
+                                results.Remove(results.First(x => x.ParametroId.ToString() == parameter.Id && x.EstudioId == currentStudy.Id));
+                            }
                         }
-                        else
-                        {
-                            results.Remove(results.First(x => x.ParametroId.ToString() == parameter.Id && x.EstudioId == currentStudy.Id));
-                        }
+                        resultsIds.Add(study.Id);
                     }
                 }
 
@@ -187,9 +191,10 @@ namespace Service.MedicalRecord.Application
                     ParametroId = Guid.Parse(x.Id),
                     SolicitudEstudioId = x.SolicitudEstudioId,
                     EstudioId = x.EstudioId
-                });
+                }).ToList();
 
                 // Crear Los que no existen
+                await _repository.CreateLabResults(newResults);
             }
 
             foreach (var study in studiesDto)

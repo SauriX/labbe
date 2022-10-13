@@ -30,14 +30,8 @@ namespace Service.Catalog.Context
 {
     public class Seed
     {
-        public static async Task SeedData(ApplicationDbContext context, string key)
+        public static async Task SeedData(ApplicationDbContext context, bool update)
         {
-            if (false)
-            {
-                var payment = GetPaymentForms();
-                var cfdi = GetUseOfCFDI​s();
-            }
-
             if (!context.CAT_Configuracion.Any())
             {
                 using var transaction = context.Database.BeginTransaction();
@@ -112,8 +106,72 @@ namespace Service.Catalog.Context
                 }
             }
 
+            // Payment
+            if (update)
+            {
+                using var transaction = context.Database.BeginTransaction();
+
+                try
+                {
+                    var payments = GetPaymentForms();
+                    var payment = new Payment();
+
+                    var script = MergeGenerator.Build(
+                        nameof(context.CAT_FormaPago),
+                        payments,
+                        nameof(payment.Id),
+                        nameof(payment.Clave),
+                        nameof(payment.Nombre),
+                        nameof(payment.Descripcion),
+                        nameof(payment.Activo));
+
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_FormaPago)} ON;");
+                    context.Database.ExecuteSqlRaw(script);
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_FormaPago)} OFF;");
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+
+            // UsesOfCfdi
+            if (update)
+            {
+                using var transaction = context.Database.BeginTransaction();
+
+                try
+                {
+                    var cfdis = GetUseOfCFDIs();
+                    var cdfi = new UseOfCFDI();
+
+                    var script = MergeGenerator.Build(
+                        nameof(context.CAT_CFDI),
+                        cfdis,
+                        nameof(cdfi.Id),
+                        nameof(cdfi.Clave),
+                        nameof(cdfi.Nombre),
+                        nameof(cdfi.Descripcion),
+                        nameof(cdfi.Activo));
+
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_CFDI)} ON;");
+                    context.Database.ExecuteSqlRaw(script);
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_CFDI)} OFF;");
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+
             // Methods
-            if (false)
+            if (update)
             {
                 using var transaction = context.Database.BeginTransaction();
 
@@ -144,7 +202,7 @@ namespace Service.Catalog.Context
             }
 
             // Departments
-            if (false)
+            if (update)
             {
                 using var transaction = context.Database.BeginTransaction();
 
@@ -175,7 +233,7 @@ namespace Service.Catalog.Context
             }
 
             // Areas
-            if (false)
+            if (update)
             {
                 using var transaction = context.Database.BeginTransaction();
 
@@ -207,7 +265,7 @@ namespace Service.Catalog.Context
             }
 
             // Indications
-            if (false)
+            if (update)
             {
                 using var transaction = context.Database.BeginTransaction();
 
@@ -239,7 +297,7 @@ namespace Service.Catalog.Context
             }
 
             // Tags
-            if (false)
+            if (update)
             {
                 using var transaction = context.Database.BeginTransaction();
 
@@ -270,7 +328,7 @@ namespace Service.Catalog.Context
             }
 
             // Units
-            if (false)
+            if (update)
             {
                 using var transaction = context.Database.BeginTransaction();
 
@@ -300,7 +358,7 @@ namespace Service.Catalog.Context
             }
 
             // Maquilas
-            if (false)
+            if (update)
             {
                 using var transaction = context.Database.BeginTransaction();
 
@@ -331,7 +389,7 @@ namespace Service.Catalog.Context
             }
 
             // Branches
-            if (false)
+            if (update)
             {
                 using var transaction = context.Database.BeginTransaction();
 
@@ -371,7 +429,7 @@ namespace Service.Catalog.Context
             }
 
             // Parameters
-            if (false)
+            if (update)
             {
                 using var transaction = context.Database.BeginTransaction();
 
@@ -410,7 +468,7 @@ namespace Service.Catalog.Context
             }
 
             // Studies
-            if (false)
+            if (update)
             {
                 using var transaction = context.Database.BeginTransaction();
 
@@ -456,7 +514,7 @@ namespace Service.Catalog.Context
             }
 
             // Packs
-            if (false)
+            if (update)
             {
                 using var transaction = context.Database.BeginTransaction();
 
@@ -491,7 +549,7 @@ namespace Service.Catalog.Context
             }
 
             // StudyIndications
-            if (false)
+            if (update)
             {
                 using var transaction = context.Database.BeginTransaction();
 
@@ -519,7 +577,7 @@ namespace Service.Catalog.Context
             }
 
             // StudyParameters
-            if (false)
+            if (update)
             {
                 using var transaction = context.Database.BeginTransaction();
 
@@ -547,7 +605,7 @@ namespace Service.Catalog.Context
             }
 
             // PackStudies
-            if (false)
+            if (update)
             {
                 using var transaction = context.Database.BeginTransaction();
 
