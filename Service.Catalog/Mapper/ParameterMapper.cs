@@ -87,7 +87,7 @@ namespace Service.Catalog.Mapper
                 ValorFinal = x.ValorFinal,
                 CriticoMinimo = x.CriticoMinimo,
                 CriticoMaximo = x.CriticoMaximo,
-                TipoValores = x.TipoValores.Select(x => x.ToParameterValueDto()).ToList(),
+                TipoValores = x.TipoValores?.Select(x => x.ToParameterValueDto())?.ToList(),
             });
         }
 
