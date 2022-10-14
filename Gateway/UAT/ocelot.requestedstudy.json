@@ -1,0 +1,48 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/requestedstudy/getList",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/requestedstudy/getList",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/requestedstudy",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/requestedstudy",
+      "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/requestedstudy/order/{recordId}/{requestId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/requestedstudy/order/{recordId}/{requestId}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/requestedstudy/export/list",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/requestedstudy/export/list",
+      "UpstreamHttpMethod": [ "POST" ]
+    }
+  ]
+}

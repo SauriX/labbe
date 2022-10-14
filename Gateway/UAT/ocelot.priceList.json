@@ -23,6 +23,29 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/price/info/study",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/price/info/study",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/price/info/pack",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+
+      "UpstreamPathTemplate": "/api/price/info/pack",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
       "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/price/{id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
