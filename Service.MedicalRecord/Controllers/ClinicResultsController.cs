@@ -116,7 +116,7 @@ namespace Service.MedicalRecord.Controllers
             await _service.UpdateStatusStudy(updateStatus.RequestStudyId, updateStatus.status, updateStatus.UsuarioId);
         }
 
-        [HttpPost("labResults/{recordId}/{requestId}")]
+        //[HttpPost("labResults/{recordId}/{requestId}")]
         [HttpPost("printSelectedStudies")]
         //[Authorize(Policies.Print)]
         public async Task<IActionResult> PrintSelectedStudies(ConfigurationToPrintStudies configuration)

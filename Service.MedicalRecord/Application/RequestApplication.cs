@@ -96,28 +96,28 @@ namespace Service.MedicalRecord.Application
             var studiesDto = studies.ToRequestStudyDto();
 
             var ids = studiesDto.Select(x => x.EstudioId).Concat(packsDto.SelectMany(y => y.Estudios).Select(y => y.EstudioId)).Distinct().ToList();
-            var studiesParams = await _catalogClient.GetStudies(ids);
+            //var studiesParams = await _catalogClient.GetStudies(ids);
 
-            foreach (var pack in packsDto)
-            {
-                foreach (var study in pack.Estudios)
-                {
-                    var st = studiesParams.FirstOrDefault(x => x.Id == study.EstudioId);
-                    if (st == null) continue;
+            //foreach (var pack in packsDto)
+            //{
+            //    foreach (var study in pack.Estudios)
+            //    {
+            //        var st = studiesParams.FirstOrDefault(x => x.Id == study.EstudioId);
+            //        if (st == null) continue;
 
-                    study.Parametros = st.Parametros;
-                    study.Indicaciones = st.Indicaciones;
-                }
-            }
+            //        study.Parametros = st.Parametros;
+            //        study.Indicaciones = st.Indicaciones;
+            //    }
+            //}
 
-            foreach (var study in studiesDto)
-            {
-                var st = studiesParams.FirstOrDefault(x => x.Id == study.EstudioId);
-                if (st == null) continue;
+            //foreach (var study in studiesDto)
+            //{
+            //    var st = studiesParams.FirstOrDefault(x => x.Id == study.EstudioId);
+            //    if (st == null) continue;
 
-                study.Parametros = st.Parametros;
-                study.Indicaciones = st.Indicaciones;
-            }
+            //    study.Parametros = st.Parametros;
+            //    study.Indicaciones = st.Indicaciones;
+            //}
 
             var totals = request.ToRequestTotalDto();
 

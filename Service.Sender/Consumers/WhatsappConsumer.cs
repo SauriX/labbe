@@ -30,7 +30,20 @@ namespace Service.Sender.Consumers
             {
                 var message = context.Message;
 
-                await _emailService.Send(message.Telefono, message.Mensaje);
+                if(message.SenderFiles != null && message.SenderFiles.Count > 0)
+                {
+                    foreach (var file in message.SenderFiles)
+                    {
+                        await _emailService.SendFile(message.Telefono, file.Ruta, file.Nombre);
+
+                    }
+                }
+                else
+                {
+                    await _emailService.Send(message.Telefono, message.Mensaje);
+
+                }
+
 
                 if (message.Notificar)
                 {
