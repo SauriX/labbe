@@ -105,7 +105,7 @@ namespace Integration.Pdf.Extensions
             p.Format.SpaceBefore = Unit.FromPoint(5);
         }
 
-        public static void AddText(this Section section, Models.Col[] cols, bool partialBold = false, int fontSize = 0)
+        public static void AddText(this Section section, Models.Col[] cols, bool partialBold = false, int fontSize = 0, bool bold = false)
         {
             Table table = section.AddTable();
             table.Borders.Visible = false;
@@ -141,7 +141,8 @@ namespace Integration.Pdf.Extensions
                 }
                 else if (!col.EsImagen)
                 {
-                    paragraph.AddFormattedText(col.Texto ?? "", fontSize == 0 ? col.Fuente : new Font("Calibri", fontSize));
+                    var fp = paragraph.AddFormattedText(col.Texto ?? "", fontSize == 0 ? col.Fuente : new Font("Calibri", fontSize));
+                    fp.Bold = bold;
                 }
                 else
                 {

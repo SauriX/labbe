@@ -201,7 +201,7 @@ namespace Service.MedicalRecord.Mapper
                     FechaEntrega = DateTime.Now.ToString("MM/dd/yyyy"),
                     Paciente = res.Solicitud.Expediente.NombrePaciente,
                     Edad = res.Solicitud.Expediente.Edad,
-                    Estudio = res.Estudio.Clave,
+                    Estudio = res.Solicitud.ClavePatologica,
                     Departamento = res.Estudio.DepartamentoId.ToString(),
                     ImagenesHistopatologicas = string.IsNullOrEmpty(res.ImagenPatologica) 
                                 ? new List<string>()
@@ -212,6 +212,7 @@ namespace Service.MedicalRecord.Mapper
                     isHistopathologic = res.Estudio.AreaId == 30,
                     Diagnostico = res.Diagnostico,
                     NombreFirma = res.Medico.Nombre,
+                    Clave = res.Solicitud.Clave
                 }).ToList(),
                 ImprimrLogos = ImprimirLogos
                 

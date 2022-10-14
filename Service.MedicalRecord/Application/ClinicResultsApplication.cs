@@ -431,9 +431,9 @@ namespace Service.MedicalRecord.Application
                     try
                     {
 
-                        await SendTestWhatsapp(files);
+                        await SendTestWhatsapp(files, existing.Solicitud.Expediente.Celular, result.UsuarioId, "PATHOLOGICAL");
 
-                        await SendTestEmail(files);
+                        await SendTestEmail(files, existing.Solicitud.Expediente.Correo, result.UsuarioId, "PATHOLOGICAL");
 
                         await UpdateStatusStudy(result.EstudioId, Status.RequestStudy.Enviado, result.UsuarioId);
                     }
@@ -451,9 +451,12 @@ namespace Service.MedicalRecord.Application
 
                     if (existingRequest.Estudios.All(estudio => estudio.EstatusId == Status.RequestStudy.Liberado))
                     {
-                        List<int> pathologicalResults = existingRequest.Estudios.Select(x => x.Id).ToList();
+                        List<int> pathologicalResults = existingRequest.Estudios
+                            .Where(x => x.AreaId == Catalogs.Area.HISTOPATOLOGIA)
+                            .Select(x => x.Id)
+                            .ToList();
 
-                        var tasks = pathologicalResults.Select(x => _repository.GetResultPathologicalById(x));
+                        //var tasks = pathologicalResults.Select(x => _repository.GetResultPathologicalById(x));
 
                         List<ClinicalResultsPathological> resultsTask = new List<ClinicalResultsPathological>();
 
@@ -484,13 +487,17 @@ namespace Service.MedicalRecord.Application
                         try
                         {
 
-                            await SendTestWhatsapp(files);
+                            await SendTestWhatsapp(files, existing.Solicitud.Expediente.Celular, result.UsuarioId, "PATHOLOGICAL");
 
-                            await SendTestEmail(files);
+                            await SendTestEmail(files, existing.Solicitud.Expediente.Correo, result.UsuarioId, "PATHOLOGICAL");
 
                             foreach(var estudio in existingRequest.Estudios)
                             {
-                                await UpdateStatusStudy(estudio.Id, Status.RequestStudy.Enviado, result.UsuarioId);
+                                if (estudio.AreaId == Catalogs.Area.HISTOPATOLOGIA)
+                                {
+                                    await UpdateStatusStudy(estudio.Id, Status.RequestStudy.Enviado, result.UsuarioId);
+
+                                }
                             }
                         }
                         catch (Exception ex)
@@ -505,24 +512,28 @@ namespace Service.MedicalRecord.Application
             }
 
         }
-        public async Task SendTestEmail(List<SenderFiles> senderFiles)
+        public async Task SendTestEmail(List<SenderFiles> senderFiles, string correo, Guid usuario, string tipo)
         {
-            
-            //var request = await GetByIdLab(requestDto.SolicitudId.ToString());
-            //var subject = RequestTemplates.Subjects.TestMessage;
-            //var title = RequestTemplates.Titles.RequestCode(request.expediente);
-            //var message = RequestTemplates.Messages.TestMessage;
+            var subject = string.Empty;
+            var title = string.Empty;
+            var message = string.Empty;
 
-            var subject = "Diagnóstico médico";
-            var title = "Diagnóstico";
-            var message = "Diagnóstico";
+            if (tipo == "PATHOLOGICAL")
+            {
+                subject = RequestTemplates.Subjects.PathologicalSubject;
+                title = RequestTemplates.Titles.PathologicalTitle;
+                message = RequestTemplates.Messages.PathologicalMessage;
 
-            //var emailToSend = new EmailContract(requestDto.Correo, null, subject, title, message)
-            var emailToSend = new EmailContract("vhernandez@axsistec.com", null, subject, title, message, senderFiles)
+            }
+
+            if (tipo == "LABORATORY")
+            {
+               //daniel
+            }
+            var emailToSend = new EmailContract(correo, null, subject, title, message, senderFiles)
             {
                 Notificar = true,
-                //RemitenteId = requestDto.UsuarioId.ToString()
-                RemitenteId = "b22d62fb-0d88-4913-82a9-08da610686a3"
+                RemitenteId = usuario.ToString()
             };
 
             var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, "/", _queueNames.Email)));
@@ -532,25 +543,27 @@ namespace Service.MedicalRecord.Application
 
         }
 
-        public async Task SendTestWhatsapp(List<SenderFiles> senderFiles)
+        public async Task SendTestWhatsapp(List<SenderFiles> senderFiles, string telefono, Guid usuario, string tipo)
         {
-            
-            //var request = await GetByIdLab(requestDto.SolicitudId.ToString());
+            var message = string.Empty;
+            if (tipo == "PATHOLOGICAL")
+            {
+                message = RequestTemplates.Subjects.PathologicalSubject;
+            }
 
-            //var message = RequestTemplates.Messages.TestMessage;
+            if (tipo == "LABORATORY")
+            {
+                //daniel
+            }
 
-            //var phone = requestDto.Telefono.Replace("-", "");
-            var message = "Message example";
-
-            var phone = "2282820960";
+            var phone = telefono.Replace("-", "");
 
             phone = phone.Length == 10 ? "52" + phone : phone;
 
             var emailToSend = new WhatsappContract(phone, message, senderFiles)
             {
                 Notificar = true,
-                //RemitenteId = requestDto.UsuarioId.ToString()
-                RemitenteId = "b22d62fb-0d88-4913-82a9-08da610686a3"
+                RemitenteId = usuario.ToString()
             };
 
             var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, "/", _queueNames.Whatsapp)));

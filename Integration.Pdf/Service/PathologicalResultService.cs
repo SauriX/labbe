@@ -154,21 +154,21 @@ namespace Integration.Pdf.Service
                     new Col(studyType, 25, Col.FONT_BOLD, ParagraphAlignment.Center)
                 };
 
-                section.AddText(line5, false, 13);
+                section.AddText(line5, false, 16, true);
 
                 var line6 = new Col[]
                 {
                     new Col($"Muestra recibida: {result.Information[i].MuestraRecibida}", 20, Col.FONT_BOLD, ParagraphAlignment.Left)
                 };
 
-                section.AddText(line6, false, 13);
+                section.AddText(line6, false, 16);
 
                 var line7 = new Col[]
                 {
-                    new Col($"DESCRIPCIÓN MACROSCÓPICA", 25, Col.FONT_BOLD, ParagraphAlignment.Left)
+                    new Col($"DESCRIPCIÓN MACROSCÓPICA", 30, Col.FONT_BOLD, ParagraphAlignment.Left)
                 };
 
-                section.AddText(line7, false, 13);
+                section.AddText(line7, false, 16, true);
 
                 var line8 = new Col[]
                 {
@@ -176,13 +176,14 @@ namespace Integration.Pdf.Service
                 };
 
                 section.AddRichTextFormat(line8);
+                section.AddText(new Col[] { new Col("") });
 
                 var line9 = new Col[]
                 {
-                    new Col($"DESCRIPCIÓN MICROSCÓPICA", 25, Col.FONT_BOLD, ParagraphAlignment.Left)
+                    new Col($"DESCRIPCIÓN MICROSCÓPICA", 30, Col.FONT_BOLD, ParagraphAlignment.Left)
                 };
 
-                section.AddText(line9, false, 13);
+                section.AddText(line9, false, 16, true);
 
                 var line10 = new Col[]
                {
@@ -190,6 +191,9 @@ namespace Integration.Pdf.Service
                };
 
                 section.AddRichTextFormat(line10);
+
+                section.AddText(new Col[] { new Col("") });
+
                 if (result.Information[i].isHistopathologic && result.Information[i].ImagenesHistopatologicas.Count > 0)
                 {
 
@@ -216,10 +220,10 @@ namespace Integration.Pdf.Service
 
                 var line11 = new Col[]
                 {
-                    new Col($"DIAGNÓSTICO", 25, Col.FONT_BOLD, ParagraphAlignment.Left)
+                    new Col($"DIAGNÓSTICO", 30, Col.FONT_BOLD, ParagraphAlignment.Left)
                 };
 
-                section.AddText(line11, false, 13);
+                section.AddText(line11, false, 16, true);
 
                 var line12 = new Col[]
                 {
@@ -228,6 +232,7 @@ namespace Integration.Pdf.Service
 
                 //section.AddText(line12);
                 section.AddRichTextFormat(line12);
+                section.AddText(new Col[] { new Col("") });
 
                 nombreMedico = result.Information[i].NombreFirma;
                 var firmaLine = new Col[]
