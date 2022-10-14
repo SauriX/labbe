@@ -150,7 +150,7 @@ namespace Service.MedicalRecord.Application
                     var parameters = currentStudy.Parametros;
                     var study = studiesDto.FirstOrDefault(x => x.EstudioId == currentStudy.Id && !resultsIds.Contains(x.Id));
 
-                    if(study != null)
+                    if (study != null)
                     {
                         foreach (var parameter in parameters)
                         {
@@ -185,6 +185,8 @@ namespace Service.MedicalRecord.Application
 
                 // Crear Los que no existen
                 await _repository.CreateLabResults(newResults);
+
+                results = await _repository.GetResultsById(requestId);
             }
 
             foreach (var study in studiesDto)
@@ -194,9 +196,13 @@ namespace Service.MedicalRecord.Application
 
                 study.Parametros = st.Parametros;
                 study.Indicaciones = st.Indicaciones;
+
+                foreach (var param in study.Parametros)
+                {
+                    var result = results.Find(x => x.SolicitudEstudioId == study.Id && x.ParametroId.ToString() == param.Id);
+                    param.Resultado = result.Resultado;
+                }
             }
-
-
 
             var data = new RequestStudyUpdateDto()
             {

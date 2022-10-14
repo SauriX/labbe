@@ -185,7 +185,7 @@ namespace Service.MedicalRecord.Repository
         public async Task<List<ClinicResults>> GetResultsById(Guid id)
         {
             var resultExisting = await _context.ClinicResults
-                .Where(x => x.Id == id)
+                .Where(x => x.SolicitudId == id)
                 .Include(x => x.SolicitudEstudio)
                 .Include(x => x.Solicitud).ThenInclude(y => y.Expediente)
                 .Include(x => x.Solicitud).ThenInclude(y => y.Medico)
