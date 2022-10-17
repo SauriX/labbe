@@ -201,13 +201,18 @@ namespace Service.MedicalRecord.Mapper
                     FechaEntrega = DateTime.Now.ToString("MM/dd/yyyy"),
                     Paciente = res.Solicitud.Expediente.NombrePaciente,
                     Edad = res.Solicitud.Expediente.Edad,
-                    Estudio = res.Estudio.Clave,
+                    Estudio = res.Solicitud.ClavePatologica,
                     Departamento = res.Estudio.DepartamentoId.ToString(),
+                    ImagenesHistopatologicas = string.IsNullOrEmpty(res.ImagenPatologica) 
+                                ? new List<string>()
+                                : res.ImagenPatologica.Split(",").Select(imagen => $"http://localhost:24048/images/ResultsPathological/{res.EstudioId}/{imagen}").ToList(),
                     MuestraRecibida = res.MuestraRecibida,
                     DescripcionMacroscopica = res.DescripcionMacroscopica,
                     DescripcionMicroscopica = res.DescripcionMicroscopica,
+                    isHistopathologic = res.Estudio.AreaId == 30,
                     Diagnostico = res.Diagnostico,
                     NombreFirma = res.Medico.Nombre,
+                    Clave = res.Solicitud.Clave
                 }).ToList(),
                 ImprimrLogos = ImprimirLogos
                 

@@ -27,7 +27,7 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("getList")]
         [Authorize(Policies.Access)]
-        public async Task<List<ClinicResultsDto>> GetAll(RequestedStudySearchDto search)
+        public async Task<List<ClinicResultsDto>> GetAll(ClinicResultSearchDto search)
         {
             var clinicResults = await _service.GetAll(search);
             return clinicResults;
@@ -35,7 +35,7 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("export/list")]
         [Authorize(Policies.Download)]
-        public async Task<IActionResult> ExportClinicsExcel(RequestedStudySearchDto search)
+        public async Task<IActionResult> ExportClinicsExcel(ClinicResultSearchDto search)
         {
             var (file, fileName) = await _service.ExportList(search);
             return File(file, MimeType.XLSX, fileName);
@@ -116,7 +116,7 @@ namespace Service.MedicalRecord.Controllers
             await _service.UpdateStatusStudy(updateStatus.RequestStudyId, updateStatus.status, updateStatus.UsuarioId);
         }
 
-        [HttpPost("labResults/{recordId}/{requestId}")]
+        //[HttpPost("labResults/{recordId}/{requestId}")]
         [HttpPost("printSelectedStudies")]
         //[Authorize(Policies.Print)]
         public async Task<IActionResult> PrintSelectedStudies(ConfigurationToPrintStudies configuration)

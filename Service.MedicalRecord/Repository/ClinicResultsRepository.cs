@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EFCore.BulkExtensions;
 using Service.MedicalRecord.Domain;
+using Service.MedicalRecord.Dtos.ClinicResults;
 
 namespace Service.MedicalRecord.Repository
 {
@@ -52,7 +53,7 @@ namespace Service.MedicalRecord.Repository
             return request;
         }
 
-        public async Task<List<Request>> GetAll(RequestedStudySearchDto search)
+        public async Task<List<Request>> GetAll(ClinicResultSearchDto search)
         {
             var report = _context.CAT_Solicitud
                 .Include(x => x.Expediente)
@@ -197,9 +198,14 @@ namespace Service.MedicalRecord.Repository
 
         public async Task UpdateStatusStudy(RequestStudy study)
         {
-            _context.Relacion_Solicitud_Estudio.Update(study);
+            var entry = _context.Entry(study);
+
+            entry.State = EntityState.Modified;
 
             await _context.SaveChangesAsync();
+
+            entry.State = EntityState.Detached;
+
         }
         public async Task<RequestStudy> GetStudyById(int RequestStudyId)
         {

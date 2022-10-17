@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace Integration.Pdf.Controllers
@@ -150,9 +151,9 @@ namespace Integration.Pdf.Controllers
 
         [HttpPost]
         [Route("pathologicalResults")]
-        public HttpResponseMessage PathologicalResults(PathologicalResultsDto results)
+        public async Task<HttpResponseMessage> PathologicalResults(PathologicalResultsDto results)
         {
-            var file = PathologicalResultService.GeneratePathologicalResultPdf(results);
+            var file = await PathologicalResultService.GeneratePathologicalResultPdf(results);
 
             var result = new HttpResponseMessage(HttpStatusCode.OK)
             {

@@ -16,6 +16,8 @@ namespace Service.MedicalRecord.Dtos.ClinicResults
         public string Estudio { get; set; }
         public string Clave { get; set; }
         public string Departamento { get; set; }
+        public bool isHistopathologic { get; set; } // validate by areaId
+        public List<string> ImagenesHistopatologicas { get; set; }
         public string MuestraRecibida { get; set; }
         public string DescripcionMacroscopica { get; set; }
         public string DescripcionMicroscopica { get; set; }
