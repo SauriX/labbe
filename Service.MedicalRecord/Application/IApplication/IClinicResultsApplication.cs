@@ -13,8 +13,8 @@ namespace Service.MedicalRecord.Application.IApplication
 {
     public interface IClinicResultsApplication
     {
-        Task<List<ClinicResultsDto>> GetAll(RequestedStudySearchDto search);
-        Task<(byte[] file, string fileName)> ExportList(RequestedStudySearchDto search);
+        Task<List<ClinicResultsDto>> GetAll(ClinicResultSearchDto search);
+        Task<(byte[] file, string fileName)> ExportList(ClinicResultSearchDto search);
        /* Task<byte[]> PrintResults(Guid recordId, Guid requestId);*/
         Task SendTestEmail(RequestSendDto requestDto);
         Task SendTestWhatsapp(RequestSendDto requestDto);
