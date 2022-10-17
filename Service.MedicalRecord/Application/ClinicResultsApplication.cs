@@ -65,7 +65,7 @@ namespace Service.MedicalRecord.Application
             MedicalRecordPath = configuration.GetValue<string>("ClientUrls:MedicalRecord");
         }
 
-        public async Task<(byte[] file, string fileName)> ExportList(RequestedStudySearchDto search)
+        public async Task<(byte[] file, string fileName)> ExportList(ClinicResultSearchDto search)
         {
             var studies = await GetAll(search);
 
@@ -123,7 +123,7 @@ namespace Service.MedicalRecord.Application
             return (template.ToByteArray(), $"Informe Captura de Resultados (Clínicos).xlsx");
         }
 
-        public async Task<List<ClinicResultsDto>> GetAll(RequestedStudySearchDto search)
+        public async Task<List<ClinicResultsDto>> GetAll(ClinicResultSearchDto search)
         {
             var clinicResults = await _repository.GetAll(search);
             if (clinicResults != null)
