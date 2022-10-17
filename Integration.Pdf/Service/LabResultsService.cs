@@ -86,15 +86,9 @@ namespace Integration.Pdf.Service
             {
                 var headerInfo = new Col[]
             {
-                new Col(LabRamosImage, 6, ParagraphAlignment.Left)
-                {
-                    ImagenTamaño = Unit.FromCentimeter(6)
-                },
+                new Col(LabRamosImage, 6, ParagraphAlignment.Left),
                 new Col(headerParagraph, 4, new Font("Calibri", 10), ParagraphAlignment.Center),
                 new Col(ISOImage, 4, ParagraphAlignment.Right)
-                {
-                    ImagenTamaño = Unit.FromCentimeter(2)
-                },
             };
 
                 header.AddText(headerInfo);

@@ -15,5 +15,6 @@ namespace Service.MedicalRecord.Client.IClient
         Task<byte[]> GenerateLabResults(ClinicResultsPdfDto order);
         Task<byte[]> GeneratePathologicalResults(ClinicResultPathologicalPdfDto order);
         Task<byte[]> PendigForm(List<PendingReciveDto> order);
+        Task<byte[]> MergeResults(ClinicResultPathologicalPdfDto order, ClinicResultsPdfDto labOrder);
     }
 }

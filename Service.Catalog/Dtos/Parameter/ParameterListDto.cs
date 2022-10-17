@@ -16,8 +16,8 @@
         public int? Unidades { get; set; }
         public string UnidadNombre { get; set; }
         public string TipoValor { get; set; }
-        public decimal? ValorInicial { get; set; }
-        public decimal ValorFinal { get; set; }
+        public string ValorInicial { get; set; }
+        public string ValorFinal { get; set; }
         public decimal CriticoMinimo { get; set; }
         public decimal CriticoMaximo { get; set; }
 

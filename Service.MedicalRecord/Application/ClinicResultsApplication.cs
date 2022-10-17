@@ -186,8 +186,8 @@ namespace Service.MedicalRecord.Application
                     Nombre = x.Nombre,
                     TipoValorId = x.TipoValor,
                     Resultado = null,
-                    ValorInicial = x.ValorInicial ?? 0,
-                    ValorFinal = x.ValorFinal,
+                    ValorInicial = x?.ValorInicial,
+                    ValorFinal = x?.ValorFinal,
                     ParametroId = Guid.Parse(x.Id),
                     SolicitudEstudioId = x.SolicitudEstudioId,
                     EstudioId = x.EstudioId
@@ -352,7 +352,7 @@ namespace Service.MedicalRecord.Application
         public static async Task<string> SavePdfGetPath(byte[] pdf, string name)
         {
             var path = "wwwroot/temp/pdf";
-            
+
             await File.WriteAllBytesAsync(Path.Combine(path, name), pdf);
 
             return Path.Combine(path, name);
@@ -575,12 +575,12 @@ namespace Service.MedicalRecord.Application
             var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, "/", _queueNames.Whatsapp)));
 
             await endpoint.Send(emailToSend);
-            
+
 
         }
         public async Task<byte[]> PrintSelectedStudies(ConfigurationToPrintStudies configuration)
         {
-            
+
 
             List<int> labResults = new List<int> { };
             List<int> pathologicalResults = new List<int> { };
@@ -599,6 +599,7 @@ namespace Service.MedicalRecord.Application
             }
 
             List<ClinicalResultsPathological> resultsTask = new List<ClinicalResultsPathological>();
+            List<ClinicResults> labResultsTask = new List<ClinicResults>();
 
             foreach (var resultPathId in pathologicalResults)
             {
@@ -607,23 +608,46 @@ namespace Service.MedicalRecord.Application
                 resultsTask.Add(finalResult);
             }
 
+            foreach (var resultLabPathId in labResults)
+            {
+                var finalResult = await _repository.GetLabResultsById(resultLabPathId);
+
+                labResultsTask.Add(finalResult);
+            }
+
             //var tasks = pathologicalResults.Select(x => _repository.GetResultPathologicalById(x));
-            
+
             //var resultsTask = await Task.WhenAll(tasks);
 
+            byte[] pdfBytes = new byte[] { };
+            byte[] pathological = new byte[] { };
+            byte[] laboratory = new byte[] { };
 
             var existingResultPathologyPdf = resultsTask.toInformationPdfResult(configuration.ImprimirLogos);
+            /*pathological = await _pdfClient.GeneratePathologicalResults(existingResultPathologyPdf);*/
 
-            byte[] pdfBytes = await _pdfClient.GeneratePathologicalResults(existingResultPathologyPdf);
-           
+            var existingLabResultPdf = labResultsTask.ToList().ToResults(configuration.ImprimirLogos);
+            /*laboratory = await _pdfClient.GenerateLabResults(existingLabResultPdf);*/
 
+            pdfBytes = await _pdfClient.MergeResults(existingResultPathologyPdf, existingLabResultPdf);
+
+            /*if (pathological.Length > 0 && laboratory.Length > 0)
+            {
+
+                pdfBytes = pathological;
+            }
+            if (pathological.Length == 0)
+            {
+                pdfBytes = laboratory;
+            }
+            if (laboratory.Length == 0)
+            {
+                pdfBytes = pathological;
+            }
+*/
             //var taskLab = labResults.Select(x => _repository.GetLabResultsById(x));
             //var labResultsTasks = await Task.WhenAll(taskLab);
 
-
-            //var existingLabResultPdf = labResultsTasks.ToList().ToResults(configuration.ImprimirLogos);
-
-            //byte[] pdfBytes = await _pdfClient.GenerateLabResults(existingLabResultPdf);
             return pdfBytes;
         }
         private async Task<bool> DeliverFilesMedicalResults(Guid requestId, int estudioId, string DepartamentoEstudio)

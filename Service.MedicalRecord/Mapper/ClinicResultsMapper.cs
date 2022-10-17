@@ -61,8 +61,8 @@ namespace Service.MedicalRecord.Mapper
                 EstudioId = x.EstudioId,
                 SolicitudEstudioId = x.SolicitudEstudioId,
                 TipoValorId = x.TipoValorId,
-                ValorInicial = x.ValorInicial,
-                ValorFinal = x.ValorFinal,
+                ValorInicial = x?.ValorInicial,
+                ValorFinal = x?.ValorFinal,
                 ParametroId = Guid.Parse(x.ParametroId),
                 Resultado = x.Resultado
             }).ToList();

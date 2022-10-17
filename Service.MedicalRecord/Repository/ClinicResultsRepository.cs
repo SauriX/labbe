@@ -167,6 +167,17 @@ namespace Service.MedicalRecord.Repository
             return resultExisting;
         }
 
+        public async Task<List<ClinicalResultsPathological>> GetListResultPathologicalById(List<int> ids)
+        {
+            var resultExisting = await _context.Cat_Captura_ResultadosPatologicos
+                .Where(x => ids.Contains(x.RequestStudyId))
+                .Include(x => x.Medico)
+                .Include(x => x.Estudio)
+                .Include(x => x.Solicitud).ThenInclude(y => y.Expediente)
+                .ToListAsync();
+            return resultExisting;
+        }
+
         public async Task<ClinicResults> GetLabResultsById(int id)
         {
             var resultExisting = await _context.ClinicResults
