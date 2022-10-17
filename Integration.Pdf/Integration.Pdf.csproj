@@ -163,6 +163,7 @@
     <Compile Include="Dtos\PendingRecive\ReciveStudyDto.cs" />
     <Compile Include="Dtos\PendingRecive\StatusDto.cs" />
     <Compile Include="Dtos\RequestTagDto.cs" />
+    <Compile Include="Dtos\WorkListDto.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Extensions\HeaderFooterExtensions.cs" />
     <Compile Include="Extensions\SectionExtensions.cs" />
@@ -181,6 +182,7 @@
     <Compile Include="Service\CashRegisterService.cs" />
     <Compile Include="Service\LabResultsService.cs" />
     <Compile Include="Service\MantainService.cs" />
+    <Compile Include="Service\WorkListService.cs" />
     <Compile Include="Service\OrderService.cs" />
     <Compile Include="Service\PathologicalResultService.cs" />
     <Compile Include="Service\PendingRecive.cs" />
