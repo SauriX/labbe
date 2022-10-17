@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Service.MedicalRecord.Dtos.RequestedStudy
+namespace Service.MedicalRecord.Dtos.ClinicResults
 {
-    public class RequestedStudySearchDto
+    public class ClinicResultSearchDto
     {
         private List<byte> estatus;
 
@@ -18,8 +16,8 @@ namespace Service.MedicalRecord.Dtos.RequestedStudy
         public List<int> Area { get; set; }
         public List<byte> TipoSolicitud { get; set; }
         public List<int> Procedencia { get; set; }
-        public List<byte> Estatus { get => estatus != null && estatus.Any() ? estatus : new List<byte> { 2, 3 }; set => estatus = value; }
-        //public List<byte> Estatus { get; set; }
+
+        public List<byte> Estatus { get; set; }
         public List<int> Estudio { get; set; }
         public List<Guid> SolicitudId { get; set; }
     }

@@ -30,8 +30,8 @@ namespace Service.Catalog.Domain.Parameter
         public Guid Id { get; set; }
         public string Clave { get; set; }
         public string Nombre { get; set; }
-        public decimal? ValorInicial { get; set; }
-        public decimal ValorFinal { get; set; }
+        public string ValorInicial { get; set; }
+        public string ValorFinal { get; set; }
         public string TipoValor { get; set; }
         public string NombreCorto { get; set; }
         public int? UnidadId { get; set; }

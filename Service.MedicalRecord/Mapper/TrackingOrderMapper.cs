@@ -70,7 +70,7 @@ namespace Service.MedicalRecord.Mapper
                     Id = new Guid(),
                     SolicitudId = x.SolicitudId,
                     EstudioId = x.EstudioId,
-                    //Estudio = x.Estudio,
+                    Estudio = x.Clave + " - " + x.Estudio,
                     ExpedienteId = x.ExpedienteId,
                     NombrePaciente = x.NombrePaciente,
                     Temperatura = x.Temperatura,

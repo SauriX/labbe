@@ -30,6 +30,7 @@ using System.IO;
 using Microsoft.AspNetCore.Http;
 using Shared.Helpers;
 using Service.MedicalRecord.Dtos.Catalogs;
+using Microsoft.Extensions.Configuration;
 
 namespace Service.MedicalRecord.Application
 {
@@ -42,9 +43,17 @@ namespace Service.MedicalRecord.Application
         private readonly ISendEndpointProvider _sendEndpointProvider;
         private readonly IRabbitMQSettings _rabbitMQSettings;
         private readonly IQueueNames _queueNames;
+        private readonly string MedicalRecordPath;
 
-        public ClinicResultsApplication(IClinicResultsRepository repository, IRequestRepository request, ICatalogClient catalogClient, IPdfClient pdfClient, ISendEndpointProvider sendEndpoint, IRabbitMQSettings rabbitMQSettings,
-            IQueueNames queueNames)
+
+        public ClinicResultsApplication(IClinicResultsRepository repository,
+            IRequestRepository request,
+            ICatalogClient catalogClient,
+            IPdfClient pdfClient,
+            ISendEndpointProvider sendEndpoint,
+            IRabbitMQSettings rabbitMQSettings,
+            IQueueNames queueNames,
+            IConfiguration configuration)
         {
             _repository = repository;
             _request = request;
@@ -53,9 +62,10 @@ namespace Service.MedicalRecord.Application
             _pdfClient = pdfClient;
             _queueNames = queueNames;
             _rabbitMQSettings = rabbitMQSettings;
+            MedicalRecordPath = configuration.GetValue<string>("ClientUrls:MedicalRecord");
         }
 
-        public async Task<(byte[] file, string fileName)> ExportList(RequestedStudySearchDto search)
+        public async Task<(byte[] file, string fileName)> ExportList(ClinicResultSearchDto search)
         {
             var studies = await GetAll(search);
 
@@ -113,7 +123,7 @@ namespace Service.MedicalRecord.Application
             return (template.ToByteArray(), $"Informe Captura de Resultados (Clínicos).xlsx");
         }
 
-        public async Task<List<ClinicResultsDto>> GetAll(RequestedStudySearchDto search)
+        public async Task<List<ClinicResultsDto>> GetAll(ClinicResultSearchDto search)
         {
             var clinicResults = await _repository.GetAll(search);
             if (clinicResults != null)
@@ -132,7 +142,6 @@ namespace Service.MedicalRecord.Application
 
             var studies = await _request.GetAllStudies(request.Id);
             var studiesDto = studies.ToRequestStudyDto().Where(x => x.DepartamentoId != SharedDepartment.PATOLOGIA).ToList();
-            //var studiesIds = studiesDto.Select(x => x.Id).ToList();
 
             var ids = studiesDto.Select(x => x.EstudioId).ToList();
             var studiesParams = await _catalogClient.GetStudies(ids);
@@ -150,7 +159,7 @@ namespace Service.MedicalRecord.Application
                     var parameters = currentStudy.Parametros;
                     var study = studiesDto.FirstOrDefault(x => x.EstudioId == currentStudy.Id && !resultsIds.Contains(x.Id));
 
-                    if(study != null)
+                    if (study != null)
                     {
                         foreach (var parameter in parameters)
                         {
@@ -169,6 +178,7 @@ namespace Service.MedicalRecord.Application
                     }
                 }
 
+
                 var newResults = missingParams.Select(x => new ClinicResults
                 {
                     Id = Guid.NewGuid(),
@@ -176,8 +186,8 @@ namespace Service.MedicalRecord.Application
                     Nombre = x.Nombre,
                     TipoValorId = x.TipoValor,
                     Resultado = null,
-                    ValorInicial = x.ValorInicial ?? 0,
-                    ValorFinal = x.ValorFinal,
+                    ValorInicial = x?.ValorInicial,
+                    ValorFinal = x?.ValorFinal,
                     ParametroId = Guid.Parse(x.Id),
                     SolicitudEstudioId = x.SolicitudEstudioId,
                     EstudioId = x.EstudioId
@@ -185,6 +195,8 @@ namespace Service.MedicalRecord.Application
 
                 // Crear Los que no existen
                 await _repository.CreateLabResults(newResults);
+
+                results = await _repository.GetResultsById(requestId);
             }
 
             foreach (var study in studiesDto)
@@ -194,9 +206,14 @@ namespace Service.MedicalRecord.Application
 
                 study.Parametros = st.Parametros;
                 study.Indicaciones = st.Indicaciones;
+
+                foreach (var param in study.Parametros)
+                {
+                    var result = results.Find(x => x.SolicitudEstudioId == study.Id && x.ParametroId.ToString() == param.Id);
+                    param.Resultado = result.Resultado;
+                    param.ResultadoId = result.Id.ToString();
+                }
             }
-
-
 
             var data = new RequestStudyUpdateDto()
             {
@@ -234,9 +251,8 @@ namespace Service.MedicalRecord.Application
                     await this.DeliverFilesMedicalResults(result.SolicitudId, result.EstudioId, result.DepartamentoEstudio);
                     //validate partial or not
                 }
-                await this.UpdateStatusStudy(result.EstudioId, result.Estatus, result.UsuarioId);
+                await UpdateStatusStudy(result.SolicitudEstudioId, result.Estatus, result.UsuarioId);
             }
-
         }
 
         /*public async Task<byte[]> PrintResults(Guid recordId, Guid requestId)
@@ -333,6 +349,14 @@ namespace Service.MedicalRecord.Application
 
             return null;
         }
+        public static async Task<string> SavePdfGetPath(byte[] pdf, string name)
+        {
+            var path = "wwwroot/temp/pdf";
+
+            await File.WriteAllBytesAsync(Path.Combine(path, name), pdf);
+
+            return Path.Combine(path, name);
+        }
         private static async Task<string> DeleteImageGetPath(string result, int id)
         {
             var path = Path.Combine("wwwroot/images/ResultsPathological", id.ToString(), result);
@@ -356,13 +380,13 @@ namespace Service.MedicalRecord.Application
         {
             var existing = await _repository.GetResultPathologicalById(result.RequestStudyId);
 
-            var existingStudy = await _repository.GetStudyById(result.EstudioId);
+            //var existingStudy = await _repository.GetStudyById(result.EstudioId);
 
             if (existing == null)
             {
                 throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
             }
-            if (existingStudy.EstatusId == Status.RequestStudy.Solicitado)
+            if (existing.Estudio.EstatusId == Status.RequestStudy.Solicitado)
             {
 
                 var newResult = result.ToUpdateClinicalResultPathological(existing);
@@ -383,31 +407,180 @@ namespace Service.MedicalRecord.Application
                         await SaveImageGetPath(result.ImagenPatologica[i], newResult.EstudioId);
                     }
                 }
+                await this.UpdateStatusStudy(result.EstudioId, result.Estatus, result.UsuarioId);
+            }
+            if (existing.Estudio.EstatusId == Status.RequestStudy.Capturado)
+            {
+                await this.UpdateStatusStudy(result.EstudioId, result.Estatus, result.UsuarioId);
             }
             if (result.Estatus == Status.RequestStudy.Liberado)
             {
-                await this.DeliverFilesMedicalResults(result.SolicitudId, result.EstudioId, result.DepartamentoEstudio);
-                //validate partial or not
+                if (existing.Solicitud.Parcialidad)
+                {
+                    await UpdateStatusStudy(result.EstudioId, result.Estatus, result.UsuarioId);
+                    List<ClinicalResultsPathological> toSendInfoPathological = new List<ClinicalResultsPathological> { existing };
+
+                    var existingResultPathologyPdf = toSendInfoPathological.toInformationPdfResult(true);
+
+                    byte[] pdfBytes = await _pdfClient.GeneratePathologicalResults(existingResultPathologyPdf);
+
+                    string namePdf = string.Concat(existing.Solicitud.Clave, ".pdf");
+
+                    string pathPdf = await SavePdfGetPath(pdfBytes, namePdf);
+
+                    var pathName = Path.Combine(MedicalRecordPath, pathPdf.Replace("wwwroot/", "")).Replace("\\", "/");
+
+                    var files = new List<SenderFiles>()
+                    {
+                        new SenderFiles(new Uri(pathName), namePdf)
+                    };
+                    try
+                    {
+
+                        await SendTestWhatsapp(files, existing.Solicitud.Expediente.Celular, result.UsuarioId, "PATHOLOGICAL");
+
+                        await SendTestEmail(files, existing.Solicitud.Expediente.Correo, result.UsuarioId, "PATHOLOGICAL");
+
+                        await UpdateStatusStudy(result.EstudioId, Status.RequestStudy.Enviado, result.UsuarioId);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("c");
+                    }
+
+                }
+                else
+                {
+                    await UpdateStatusStudy(result.EstudioId, result.Estatus, result.UsuarioId);
+
+                    var existingRequest = await _repository.GetRequestById(existing.SolicitudId);
+
+                    if (existingRequest.Estudios.All(estudio => estudio.EstatusId == Status.RequestStudy.Liberado))
+                    {
+                        List<int> pathologicalResults = existingRequest.Estudios
+                            .Where(x => x.AreaId == Catalogs.Area.HISTOPATOLOGIA)
+                            .Select(x => x.Id)
+                            .ToList();
+
+                        //var tasks = pathologicalResults.Select(x => _repository.GetResultPathologicalById(x));
+
+                        List<ClinicalResultsPathological> resultsTask = new List<ClinicalResultsPathological>();
+
+                        foreach (var resultPathId in pathologicalResults)
+                        {
+                            var finalResult = await _repository.GetResultPathologicalById(resultPathId);
+
+                            resultsTask.Add(finalResult);
+                        }
+
+
+                        var existingResultPathologyPdf = resultsTask.toInformationPdfResult(true);
+
+                        byte[] pdfBytes = await _pdfClient.GeneratePathologicalResults(existingResultPathologyPdf);
+
+                        string namePdf = string.Concat(existing.Solicitud.Clave, ".pdf");
+
+                        string pathPdf = await SavePdfGetPath(pdfBytes, namePdf);
+
+                        var pathName = Path.Combine(MedicalRecordPath, pathPdf.Replace("wwwroot/", "")).Replace("\\", "/");
+
+                        var files = new List<SenderFiles>()
+                        {
+                            new SenderFiles(new Uri(pathName), namePdf)
+                        };
+
+
+                        try
+                        {
+
+                            await SendTestWhatsapp(files, existing.Solicitud.Expediente.Celular, result.UsuarioId, "PATHOLOGICAL");
+
+                            await SendTestEmail(files, existing.Solicitud.Expediente.Correo, result.UsuarioId, "PATHOLOGICAL");
+
+                            foreach (var estudio in existingRequest.Estudios)
+                            {
+                                if (estudio.AreaId == Catalogs.Area.HISTOPATOLOGIA)
+                                {
+                                    await UpdateStatusStudy(estudio.Id, Status.RequestStudy.Enviado, result.UsuarioId);
+
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            await UpdateStatusStudy(result.EstudioId, result.Estatus, result.UsuarioId);
+                            throw new Exception("c");
+                        }
+                    }
+
+
+                }
             }
-            await this.UpdateStatusStudy(result.EstudioId, result.Estatus, result.UsuarioId);
+
+        }
+        public async Task SendTestEmail(List<SenderFiles> senderFiles, string correo, Guid usuario, string tipo)
+        {
+            var subject = string.Empty;
+            var title = string.Empty;
+            var message = string.Empty;
+
+            if (tipo == "PATHOLOGICAL")
+            {
+                subject = RequestTemplates.Subjects.PathologicalSubject;
+                title = RequestTemplates.Titles.PathologicalTitle;
+                message = RequestTemplates.Messages.PathologicalMessage;
+
+            }
+
+            if (tipo == "LABORATORY")
+            {
+                //daniel
+            }
+            var emailToSend = new EmailContract(correo, null, subject, title, message, senderFiles)
+            {
+                Notificar = true,
+                RemitenteId = usuario.ToString()
+            };
+
+            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, "/", _queueNames.Email)));
+
+            await endpoint.Send(emailToSend);
+
+
+        }
+
+        public async Task SendTestWhatsapp(List<SenderFiles> senderFiles, string telefono, Guid usuario, string tipo)
+        {
+            var message = string.Empty;
+            if (tipo == "PATHOLOGICAL")
+            {
+                message = RequestTemplates.Subjects.PathologicalSubject;
+            }
+
+            if (tipo == "LABORATORY")
+            {
+                //daniel
+            }
+
+            var phone = telefono.Replace("-", "");
+
+            phone = phone.Length == 10 ? "52" + phone : phone;
+
+            var emailToSend = new WhatsappContract(phone, message, senderFiles)
+            {
+                Notificar = true,
+                RemitenteId = usuario.ToString()
+            };
+
+            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, "/", _queueNames.Whatsapp)));
+
+            await endpoint.Send(emailToSend);
+
 
         }
         public async Task<byte[]> PrintSelectedStudies(ConfigurationToPrintStudies configuration)
         {
-            //throw new NotImplementedException();
-            //List<ClinicalResultsPathological> results = new List<ClinicalResultsPathological> { };
-            //foreach (var item in configuration.Estudios)
-            //{
 
-            //    var existingResultPath = await _repository.GetResultPathologicalById(item);
-
-            //    if (existingResultPath == null)
-            //    {
-            //        throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
-            //    }
-            //    results.Add(existingResultPath);
-
-            //}
 
             List<int> labResults = new List<int> { };
             List<int> pathologicalResults = new List<int> { };
@@ -425,19 +598,56 @@ namespace Service.MedicalRecord.Application
                 }
             }
 
-            var tasks = pathologicalResults.Select(x => _repository.GetResultPathologicalById(x));
-            var resultsTask = await Task.WhenAll(tasks);
+            List<ClinicalResultsPathological> resultsTask = new List<ClinicalResultsPathological>();
+            List<ClinicResults> labResultsTask = new List<ClinicResults>();
 
+            foreach (var resultPathId in pathologicalResults)
+            {
+                var finalResult = await _repository.GetResultPathologicalById(resultPathId);
 
-            var existingResultPathologyPdf = resultsTask.ToList().toInformationPdfResult(configuration.ImprimirLogos);
+                resultsTask.Add(finalResult);
+            }
 
-            var taskLab = labResults.Select(x => _repository.GetLabResultsById(x));
-            var labResultsTasks = await Task.WhenAll(taskLab);
+            foreach (var resultLabPathId in labResults)
+            {
+                var finalResult = await _repository.GetLabResultsById(resultLabPathId);
 
+                labResultsTask.Add(finalResult);
+            }
 
-            var existingLabResultPdf = labResultsTasks.ToList().ToResults(configuration.ImprimirLogos);
+            //var tasks = pathologicalResults.Select(x => _repository.GetResultPathologicalById(x));
 
-            byte[] pdfBytes = await _pdfClient.GenerateLabResults(existingLabResultPdf);
+            //var resultsTask = await Task.WhenAll(tasks);
+
+            byte[] pdfBytes = new byte[] { };
+            byte[] pathological = new byte[] { };
+            byte[] laboratory = new byte[] { };
+
+            var existingResultPathologyPdf = resultsTask.toInformationPdfResult(configuration.ImprimirLogos);
+            /*pathological = await _pdfClient.GeneratePathologicalResults(existingResultPathologyPdf);*/
+
+            var existingLabResultPdf = labResultsTask.ToList().ToResults(configuration.ImprimirLogos);
+            /*laboratory = await _pdfClient.GenerateLabResults(existingLabResultPdf);*/
+
+            pdfBytes = await _pdfClient.MergeResults(existingResultPathologyPdf, existingLabResultPdf);
+
+            /*if (pathological.Length > 0 && laboratory.Length > 0)
+            {
+
+                pdfBytes = pathological;
+            }
+            if (pathological.Length == 0)
+            {
+                pdfBytes = laboratory;
+            }
+            if (laboratory.Length == 0)
+            {
+                pdfBytes = pathological;
+            }
+*/
+            //var taskLab = labResults.Select(x => _repository.GetLabResultsById(x));
+            //var labResultsTasks = await Task.WhenAll(taskLab);
+
             return pdfBytes;
         }
         private async Task<bool> DeliverFilesMedicalResults(Guid requestId, int estudioId, string DepartamentoEstudio)

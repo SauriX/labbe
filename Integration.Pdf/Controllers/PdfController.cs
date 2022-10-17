@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace Integration.Pdf.Controllers
@@ -152,13 +153,16 @@ namespace Integration.Pdf.Controllers
 
         [HttpPost]
         [Route("pathologicalResults")]
-        public HttpResponseMessage PathologicalResults(PathologicalResultsDto results)
+        public async Task<HttpResponseMessage> PathologicalResults(PathologicalResultsDto results)
         {
-            var file = PathologicalResultService.GeneratePathologicalResultPdf(results);
+            var file = await PathologicalResultService.GeneratePathologicalResultPdf(results);
+            var labFile = LabResultsService.Generate(new ClinicResultsPdfDto() { SolicitudInfo = new ClinicResultsRequestDto(), CapturaResultados = new List<ClinicResultsCaptureDto>() });
+
+            var mergeFile = PathologicalResultService.MergePdf(file, labFile);
 
             var result = new HttpResponseMessage(HttpStatusCode.OK)
             {
-                Content = new ByteArrayContent(file)
+                Content = new ByteArrayContent(mergeFile)
             };
 
             result.Content.Headers.ContentDisposition =
@@ -183,6 +187,54 @@ namespace Integration.Pdf.Controllers
             {
                 Content = new ByteArrayContent(file)
             };
+
+            result.Content.Headers.ContentDisposition =
+                new ContentDispositionHeaderValue("attachment")
+                {
+                    FileName = "labels.pdf"
+                };
+
+            result.Content.Headers.ContentType =
+                new MediaTypeHeaderValue("application/pdf");
+
+            return result;
+        }
+
+        [HttpPost]
+        [Route("mergeResults")]
+        public async Task<HttpResponseMessage> MergeResults(ClinicResultsMergePdfDto mergeResults)
+        {
+            var file = await PathologicalResultService.GeneratePathologicalResultPdf(mergeResults.PathologicalResults);
+            var labFile = LabResultsService.Generate(mergeResults.LabResults);
+
+            var mergeFile = PathologicalResultService.MergePdf(file, labFile);
+
+            var result = new HttpResponseMessage();
+
+            if (file.Length > 0 && labFile.Length > 0)
+            {
+                result = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new ByteArrayContent(mergeFile)
+                };
+            }
+
+            if (file.Length == 0)
+            {
+                result = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new ByteArrayContent(labFile)
+                };
+            }
+
+            if (labFile.Length == 0)
+            {
+                result = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new ByteArrayContent(file)
+                };
+            }
+
 
             result.Content.Headers.ContentDisposition =
                 new ContentDispositionHeaderValue("attachment")
