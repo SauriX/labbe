@@ -27,7 +27,8 @@ namespace Service.MedicalRecord.Mapper
                 {
                     SolicitudId = x.SolicitudId,
                     EstudioId = x.EstudioId,
-                    //Estudio = x.Estudio,
+                    Estudio = x.Estudio,
+                    Solicitud=x.Solicitud.Clave,
                     ExpedienteId = x.ExpedienteId,
                     NombrePaciente = x.NombrePaciente,
                     Temperatura = x.Temperatura,
@@ -74,7 +75,7 @@ namespace Service.MedicalRecord.Mapper
                     ExpedienteId = x.ExpedienteId,
                     NombrePaciente = x.NombrePaciente,
                     Temperatura = x.Temperatura,
-                    Escaneado = x.Escaneado,
+                    Escaneado =false,
                     FechaCreo = DateTime.Now
                     
 

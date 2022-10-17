@@ -9,5 +9,7 @@ namespace Service.MedicalRecord.Application.IApplication
     {
         Task<ShipmentTrackingDto> getByid(Guid id);
         Task<TrackingOrderFormDto> getorder(Guid id);
+        Task<ReciveShipmentTracking> getByidRecive(Guid id);
+        Task UpdateTracking(ReciveShipmentTracking reciveShipment);
     }
 }
