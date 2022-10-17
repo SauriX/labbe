@@ -142,7 +142,6 @@ namespace Service.MedicalRecord.Application
 
             var studies = await _request.GetAllStudies(request.Id);
             var studiesDto = studies.ToRequestStudyDto().Where(x => x.DepartamentoId != SharedDepartment.PATOLOGIA).ToList();
-            //var studiesIds = studiesDto.Select(x => x.Id).ToList();
 
             var ids = studiesDto.Select(x => x.EstudioId).ToList();
             var studiesParams = await _catalogClient.GetStudies(ids);
@@ -179,6 +178,7 @@ namespace Service.MedicalRecord.Application
                     }
                 }
 
+
                 var newResults = missingParams.Select(x => new ClinicResults
                 {
                     Id = Guid.NewGuid(),
@@ -211,6 +211,7 @@ namespace Service.MedicalRecord.Application
                 {
                     var result = results.Find(x => x.SolicitudEstudioId == study.Id && x.ParametroId.ToString() == param.Id);
                     param.Resultado = result.Resultado;
+                    param.ResultadoId = result.Id.ToString();
                 }
             }
 
@@ -250,9 +251,8 @@ namespace Service.MedicalRecord.Application
                     await this.DeliverFilesMedicalResults(result.SolicitudId, result.EstudioId, result.DepartamentoEstudio);
                     //validate partial or not
                 }
-                await this.UpdateStatusStudy(result.EstudioId, result.Estatus, result.UsuarioId);
+                await UpdateStatusStudy(result.SolicitudEstudioId, result.Estatus, result.UsuarioId);
             }
-
         }
 
         /*public async Task<byte[]> PrintResults(Guid recordId, Guid requestId)
@@ -410,7 +410,7 @@ namespace Service.MedicalRecord.Application
                 await this.UpdateStatusStudy(result.EstudioId, result.Estatus, result.UsuarioId);
             }
             if (existing.Estudio.EstatusId == Status.RequestStudy.Capturado)
-            { 
+            {
                 await this.UpdateStatusStudy(result.EstudioId, result.Estatus, result.UsuarioId);
             }
             if (result.Estatus == Status.RequestStudy.Liberado)
@@ -430,8 +430,8 @@ namespace Service.MedicalRecord.Application
 
                     var pathName = Path.Combine(MedicalRecordPath, pathPdf.Replace("wwwroot/", "")).Replace("\\", "/");
 
-                    var files = new List<SenderFiles>() 
-                    { 
+                    var files = new List<SenderFiles>()
+                    {
                         new SenderFiles(new Uri(pathName), namePdf)
                     };
                     try
@@ -466,7 +466,7 @@ namespace Service.MedicalRecord.Application
 
                         List<ClinicalResultsPathological> resultsTask = new List<ClinicalResultsPathological>();
 
-                        foreach(var resultPathId in pathologicalResults)
+                        foreach (var resultPathId in pathologicalResults)
                         {
                             var finalResult = await _repository.GetResultPathologicalById(resultPathId);
 
@@ -497,7 +497,7 @@ namespace Service.MedicalRecord.Application
 
                             await SendTestEmail(files, existing.Solicitud.Expediente.Correo, result.UsuarioId, "PATHOLOGICAL");
 
-                            foreach(var estudio in existingRequest.Estudios)
+                            foreach (var estudio in existingRequest.Estudios)
                             {
                                 if (estudio.AreaId == Catalogs.Area.HISTOPATOLOGIA)
                                 {
@@ -534,7 +534,7 @@ namespace Service.MedicalRecord.Application
 
             if (tipo == "LABORATORY")
             {
-               //daniel
+                //daniel
             }
             var emailToSend = new EmailContract(correo, null, subject, title, message, senderFiles)
             {
@@ -545,7 +545,7 @@ namespace Service.MedicalRecord.Application
             var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, "/", _queueNames.Email)));
 
             await endpoint.Send(emailToSend);
-            
+
 
         }
 

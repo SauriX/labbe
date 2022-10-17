@@ -24,6 +24,7 @@ namespace Service.MedicalRecord.Dtos.Catalogs
         public string Resultado { get; set; }
         public int EstudioId { get; set; }
         public int SolicitudEstudioId { get; set; }
+        public string ResultadoId { get; set; }
         public List<ParameterValueDto> TipoValores { get; set; }
     }
 }

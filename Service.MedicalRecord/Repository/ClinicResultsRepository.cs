@@ -132,15 +132,12 @@ namespace Service.MedicalRecord.Repository
 
         public async Task CreateLabResults(List<ClinicResults> newParameter)
         {
-            _context.BulkInsertOrUpdate(newParameter);
+            await _context.BulkInsertAsync(newParameter);
 
-            await _context.SaveChangesAsync();
         }
         public async Task UpdateLabResults(List<ClinicResults> newParameter)
         {
-            _context.BulkInsertOrUpdateOrDelete(newParameter);
-
-            await _context.SaveChangesAsync();
+            await _context.BulkUpdateAsync(newParameter);
         }
 
 
@@ -197,6 +194,10 @@ namespace Service.MedicalRecord.Repository
 
         public async Task UpdateStatusStudy(RequestStudy study)
         {
+            /*_context.Relacion_Solicitud_Estudio.Update(study);
+
+            await _context.SaveChangesAsync();*/
+
             var entry = _context.Entry(study);
 
             entry.State = EntityState.Modified;
@@ -204,7 +205,6 @@ namespace Service.MedicalRecord.Repository
             await _context.SaveChangesAsync();
 
             entry.State = EntityState.Detached;
-
         }
         public async Task<RequestStudy> GetStudyById(int RequestStudyId)
         {

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.MedicalRecord.Context;
 
 namespace Service.MedicalRecord.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221014154708_DecimalValoresIFClinicResults")]
+    partial class DecimalValoresIFClinicResults
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -262,10 +264,10 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<int>("TipoValorId")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("ValorFinal")
+                    b.Property<decimal>("ValorFinal")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal?>("ValorInicial")
+                    b.Property<decimal>("ValorInicial")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");

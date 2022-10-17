@@ -57,7 +57,7 @@ namespace Service.MedicalRecord.Controllers
         }
 
         [HttpPut("updateResults")]
-        [Authorize(Policies.Create)]
+        [Authorize(Policies.Update)]
         public async Task UpdateLabResults(List<ClinicResultsFormDto> results)
         {
             await _service.UpdateLabResults(results);
@@ -116,7 +116,7 @@ namespace Service.MedicalRecord.Controllers
             await _service.UpdateStatusStudy(updateStatus.RequestStudyId, updateStatus.status, updateStatus.UsuarioId);
         }
 
-        //[HttpPost("labResults/{recordId}/{requestId}")]
+        [HttpPost("labResults/{recordId}/{requestId}")]
         [HttpPost("printSelectedStudies")]
         //[Authorize(Policies.Print)]
         public async Task<IActionResult> PrintSelectedStudies(ConfigurationToPrintStudies configuration)

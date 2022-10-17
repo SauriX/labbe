@@ -13,8 +13,8 @@ namespace Service.MedicalRecord.Domain
         public Guid ParametroId { get; set; }
         public int TipoValorId { get; set; }
         public string Nombre { get; set; }
-        public decimal ValorInicial { get; set; }
-        public decimal ValorFinal { get; set; }
+        public decimal? ValorInicial { get; set; }
+        public decimal? ValorFinal { get; set; }
         public string Resultado { get; set; }
     }
 }
