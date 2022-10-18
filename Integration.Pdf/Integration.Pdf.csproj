@@ -182,6 +182,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\PdfController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
+    <Compile Include="Dtos\ClinicResultsMergePdfDto.cs" />
     <Compile Include="Dtos\ClinicResultsPdfDto.cs" />
     <Compile Include="Dtos\MantainDto.cs" />
     <Compile Include="Dtos\PathologicalResultsDto.cs" />
@@ -192,6 +193,7 @@
     <Compile Include="Dtos\PendingRecive\StatusDto.cs" />
     <Compile Include="Dtos\RequestTagDto.cs" />
     <Compile Include="Dtos\RichTextFormatRAWDto.cs" />
+    <Compile Include="Dtos\WorkListDto.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Extensions\HeaderFooterExtensions.cs" />
     <Compile Include="Extensions\SectionExtensions.cs" />
@@ -210,6 +212,7 @@
     <Compile Include="Service\CashRegisterService.cs" />
     <Compile Include="Service\LabResultsService.cs" />
     <Compile Include="Service\MantainService.cs" />
+    <Compile Include="Service\WorkListService.cs" />
     <Compile Include="Service\OrderService.cs" />
     <Compile Include="Service\PathologicalResultService.cs" />
     <Compile Include="Service\PendingRecive.cs" />

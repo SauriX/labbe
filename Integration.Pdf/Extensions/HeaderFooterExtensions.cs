@@ -1,5 +1,6 @@
 ﻿using MigraDoc.DocumentObjectModel;
 using MigraDoc.DocumentObjectModel.Tables;
+using System;
 using System.Linq;
 using static System.Collections.Specialized.BitVector32;
 
@@ -143,7 +144,39 @@ namespace Integration.Pdf.Extensions
                 }
                 else if (!col.EsImagen)
                 {
-                    paragraph.AddFormattedText(col.Texto ?? "", col.Fuente);
+                    var message = col.Texto ?? "";
+
+                    var pageNumber = "{pageNumber}";
+                    var pageCount = "{pageCount}";
+
+                    if (!message.Contains(pageNumber) && !message.Contains(pageCount))
+                    {
+                        paragraph.AddFormattedText(message, col.Fuente);
+                    }
+                    else
+                    {
+                        while (message.Length > 0)
+                        {
+                            if (message.IndexOf(pageNumber) == 0)
+                            {
+                                paragraph.AddPageField();
+                                message = message.Remove(0, pageNumber.Length);
+                            }
+                            else if (message.IndexOf(pageCount) == 0)
+                            {
+                                paragraph.AddNumPagesField();
+                                message = message.Remove(0, pageCount.Length);
+                            }
+                            else
+                            {
+                                var text = message.Split(new string[] { pageNumber, pageCount }, StringSplitOptions.None)[0];
+                                paragraph.AddText(text);
+                                message = message.Remove(0, text.Length);
+                            }
+                        }
+
+                        paragraph.Format.Font = col.Fuente;
+                    }
                 }
                 else
                 {

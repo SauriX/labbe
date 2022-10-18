@@ -22,6 +22,7 @@ namespace Service.MedicalRecord.Dtos
         public string Departamento { get; set; }
         public string Area { get; set; }
         public string NombreMedico { get; set; }
+        public string ClavePatologica { get; set; }
         public List<StudyDto> Estudios { get; set; }
     }
 }

@@ -142,7 +142,6 @@ namespace Service.MedicalRecord.Application
 
             var studies = await _request.GetAllStudies(request.Id);
             var studiesDto = studies.ToRequestStudyDto().Where(x => x.DepartamentoId != SharedDepartment.PATOLOGIA).ToList();
-            //var studiesIds = studiesDto.Select(x => x.Id).ToList();
 
             var ids = studiesDto.Select(x => x.EstudioId).ToList();
             var studiesParams = await _catalogClient.GetStudies(ids);
@@ -160,7 +159,7 @@ namespace Service.MedicalRecord.Application
                     var parameters = currentStudy.Parametros;
                     var study = studiesDto.FirstOrDefault(x => x.EstudioId == currentStudy.Id && !resultsIds.Contains(x.Id));
 
-                    if(study != null)
+                    if (study != null)
                     {
                         foreach (var parameter in parameters)
                         {
@@ -179,6 +178,7 @@ namespace Service.MedicalRecord.Application
                     }
                 }
 
+
                 var newResults = missingParams.Select(x => new ClinicResults
                 {
                     Id = Guid.NewGuid(),
@@ -186,8 +186,8 @@ namespace Service.MedicalRecord.Application
                     Nombre = x.Nombre,
                     TipoValorId = x.TipoValor,
                     Resultado = null,
-                    ValorInicial = x.ValorInicial ?? 0,
-                    ValorFinal = x.ValorFinal,
+                    ValorInicial = x?.ValorInicial,
+                    ValorFinal = x?.ValorFinal,
                     ParametroId = Guid.Parse(x.Id),
                     SolicitudEstudioId = x.SolicitudEstudioId,
                     EstudioId = x.EstudioId
@@ -195,6 +195,8 @@ namespace Service.MedicalRecord.Application
 
                 // Crear Los que no existen
                 await _repository.CreateLabResults(newResults);
+
+                results = await _repository.GetResultsById(requestId);
             }
 
             foreach (var study in studiesDto)
@@ -204,9 +206,14 @@ namespace Service.MedicalRecord.Application
 
                 study.Parametros = st.Parametros;
                 study.Indicaciones = st.Indicaciones;
+
+                foreach (var param in study.Parametros)
+                {
+                    var result = results.Find(x => x.SolicitudEstudioId == study.Id && x.ParametroId.ToString() == param.Id);
+                    param.Resultado = result.Resultado;
+                    param.ResultadoId = result.Id.ToString();
+                }
             }
-
-
 
             var data = new RequestStudyUpdateDto()
             {
@@ -244,42 +251,8 @@ namespace Service.MedicalRecord.Application
                     await this.DeliverFilesMedicalResults(result.SolicitudId, result.EstudioId, result.DepartamentoEstudio);
                     //validate partial or not
                 }
-                await this.UpdateStatusStudy(result.EstudioId, result.Estatus, result.UsuarioId);
+                await UpdateStatusStudy(result.SolicitudEstudioId, result.Estatus, result.UsuarioId);
             }
-
-        }
-
-        /*public async Task<byte[]> PrintResults(Guid recordId, Guid requestId)
-        {
-            var results = await _repository.GetByRequest(requestId);
-
-            if (results == null || !results.Any())
-            {
-                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
-            }
-
-            var order = results.ToResults();
-
-            return await _pdfClient.GenerateLabResults(order);
-        }*/
-
-        public async Task SendTestEmail(RequestSendDto requestDto)
-        {
-            var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
-
-            var subject = RequestTemplates.Subjects.TestMessage;
-            var title = RequestTemplates.Titles.RequestCode(request.Clave);
-            var message = RequestTemplates.Messages.TestMessage;
-
-            var emailToSend = new EmailContract(requestDto.Correo, null, subject, title, message)
-            {
-                Notificar = true,
-                RemitenteId = requestDto.UsuarioId.ToString()
-            };
-
-            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, "/", _queueNames.Email)));
-
-            await endpoint.Send(emailToSend);
         }
 
         private async Task<Domain.Request.Request> GetExistingRequest(Guid recordId, Guid requestId)
@@ -292,25 +265,6 @@ namespace Service.MedicalRecord.Application
             }
 
             return request;
-        }
-
-        public async Task SendTestWhatsapp(RequestSendDto requestDto)
-        {
-            _ = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
-
-            var message = RequestTemplates.Messages.TestMessage;
-
-            var phone = requestDto.Telefono.Replace("-", "");
-            phone = phone.Length == 10 ? "52" + phone : phone;
-            var emailToSend = new WhatsappContract(phone, message)
-            {
-                Notificar = true,
-                RemitenteId = requestDto.UsuarioId.ToString()
-            };
-
-            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, "/", _queueNames.Whatsapp)));
-
-            await endpoint.Send(emailToSend);
         }
 
         public async Task SaveResultPathologicalStudy(ClinicalResultPathologicalFormDto result)
@@ -346,11 +300,12 @@ namespace Service.MedicalRecord.Application
         public static async Task<string> SavePdfGetPath(byte[] pdf, string name)
         {
             var path = "wwwroot/temp/pdf";
-            
+
             await File.WriteAllBytesAsync(Path.Combine(path, name), pdf);
 
             return Path.Combine(path, name);
         }
+
         private static async Task<string> DeleteImageGetPath(string result, int id)
         {
             var path = Path.Combine("wwwroot/images/ResultsPathological", id.ToString(), result);
@@ -404,7 +359,7 @@ namespace Service.MedicalRecord.Application
                 await this.UpdateStatusStudy(result.EstudioId, result.Estatus, result.UsuarioId);
             }
             if (existing.Estudio.EstatusId == Status.RequestStudy.Capturado)
-            { 
+            {
                 await this.UpdateStatusStudy(result.EstudioId, result.Estatus, result.UsuarioId);
             }
             if (result.Estatus == Status.RequestStudy.Liberado)
@@ -424,8 +379,8 @@ namespace Service.MedicalRecord.Application
 
                     var pathName = Path.Combine(MedicalRecordPath, pathPdf.Replace("wwwroot/", "")).Replace("\\", "/");
 
-                    var files = new List<SenderFiles>() 
-                    { 
+                    var files = new List<SenderFiles>()
+                    {
                         new SenderFiles(new Uri(pathName), namePdf)
                     };
                     try
@@ -460,7 +415,7 @@ namespace Service.MedicalRecord.Application
 
                         List<ClinicalResultsPathological> resultsTask = new List<ClinicalResultsPathological>();
 
-                        foreach(var resultPathId in pathologicalResults)
+                        foreach (var resultPathId in pathologicalResults)
                         {
                             var finalResult = await _repository.GetResultPathologicalById(resultPathId);
 
@@ -491,7 +446,7 @@ namespace Service.MedicalRecord.Application
 
                             await SendTestEmail(files, existing.Solicitud.Expediente.Correo, result.UsuarioId, "PATHOLOGICAL");
 
-                            foreach(var estudio in existingRequest.Estudios)
+                            foreach (var estudio in existingRequest.Estudios)
                             {
                                 if (estudio.AreaId == Catalogs.Area.HISTOPATOLOGIA)
                                 {
@@ -512,6 +467,7 @@ namespace Service.MedicalRecord.Application
             }
 
         }
+
         public async Task SendTestEmail(List<SenderFiles> senderFiles, string correo, Guid usuario, string tipo)
         {
             var subject = string.Empty;
@@ -523,12 +479,11 @@ namespace Service.MedicalRecord.Application
                 subject = RequestTemplates.Subjects.PathologicalSubject;
                 title = RequestTemplates.Titles.PathologicalTitle;
                 message = RequestTemplates.Messages.PathologicalMessage;
-
             }
 
             if (tipo == "LABORATORY")
             {
-               //daniel
+                //daniel
             }
             var emailToSend = new EmailContract(correo, null, subject, title, message, senderFiles)
             {
@@ -539,7 +494,7 @@ namespace Service.MedicalRecord.Application
             var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, "/", _queueNames.Email)));
 
             await endpoint.Send(emailToSend);
-            
+
 
         }
 
@@ -569,13 +524,11 @@ namespace Service.MedicalRecord.Application
             var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, "/", _queueNames.Whatsapp)));
 
             await endpoint.Send(emailToSend);
-            
+
 
         }
         public async Task<byte[]> PrintSelectedStudies(ConfigurationToPrintStudies configuration)
         {
-            
-
             List<int> labResults = new List<int> { };
             List<int> pathologicalResults = new List<int> { };
 
@@ -593,6 +546,7 @@ namespace Service.MedicalRecord.Application
             }
 
             List<ClinicalResultsPathological> resultsTask = new List<ClinicalResultsPathological>();
+            List<ClinicResults> labResultsTask = new List<ClinicResults>();
 
             foreach (var resultPathId in pathologicalResults)
             {
@@ -601,23 +555,18 @@ namespace Service.MedicalRecord.Application
                 resultsTask.Add(finalResult);
             }
 
-            //var tasks = pathologicalResults.Select(x => _repository.GetResultPathologicalById(x));
-            
-            //var resultsTask = await Task.WhenAll(tasks);
+            foreach (var resultLabPathId in labResults)
+            {
+                var finalResult = await _repository.GetLabResultsById(resultLabPathId);
 
+                labResultsTask.Add(finalResult);
+            }
 
             var existingResultPathologyPdf = resultsTask.toInformationPdfResult(configuration.ImprimirLogos);
+            var existingLabResultPdf = labResultsTask.ToList().ToResults(configuration.ImprimirLogos);
 
-            byte[] pdfBytes = await _pdfClient.GeneratePathologicalResults(existingResultPathologyPdf);
-           
+            byte[] pdfBytes = await _pdfClient.MergeResults(existingResultPathologyPdf, existingLabResultPdf);
 
-            //var taskLab = labResults.Select(x => _repository.GetLabResultsById(x));
-            //var labResultsTasks = await Task.WhenAll(taskLab);
-
-
-            //var existingLabResultPdf = labResultsTasks.ToList().ToResults(configuration.ImprimirLogos);
-
-            //byte[] pdfBytes = await _pdfClient.GenerateLabResults(existingLabResultPdf);
             return pdfBytes;
         }
         private async Task<bool> DeliverFilesMedicalResults(Guid requestId, int estudioId, string DepartamentoEstudio)
