@@ -15,12 +15,12 @@ namespace Service.MedicalRecord.Dtos.ClinicResults
         public string ParametroId { get; set; }
         public int SolicitudEstudioId { get; set; }
         public int TipoValorId { get; set; }
-        public decimal ValorInicial { get; set; }
-        public decimal ValorFinal { get; set; }
+        public string ValorInicial { get; set; }
+        public string ValorFinal { get; set; }
         public string Resultado { get; set; }
         public byte Estatus { get; set; }
         public string DepartamentoEstudio { get; set; }
         public Guid UsuarioId { get; set; }
-        public string UnidadNombre { get; set; }
+        public string UnidadesNombre { get; set; }
     }
 }
