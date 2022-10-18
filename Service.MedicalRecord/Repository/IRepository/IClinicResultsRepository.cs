@@ -1,5 +1,6 @@
 ﻿using Service.MedicalRecord.Domain;
 using Service.MedicalRecord.Domain.Request;
+using Service.MedicalRecord.Dtos.ClinicResults;
 using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.RequestedStudy;
 using System;
@@ -16,10 +17,11 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task UpdateStatusStudy(RequestStudy study);
         Task<RequestStudy> GetStudyById(int RequestStudyId);
         Task<ClinicalResultsPathological> GetResultPathologicalById(int id);
+        Task<List<ClinicalResultsPathological>> GetListResultPathologicalById(List<int> ids);
         Task<ClinicResults> GetLabResultsById(int id);
         Task<List<ClinicResults>> GetResultsById(Guid id);
         Task<RequestStudy> GetRequestStudyById(int RequestStudyId);
-        Task<List<Request>> GetAll(RequestedStudySearchDto search);
+        Task<List<Request>> GetAll(ClinicResultSearchDto search);
         Task<ClinicResults> GetById(Guid id);
         Task<List<ClinicResults>> GetByRequest(Guid requestId);
         Task<Request> FindAsync(Guid id);

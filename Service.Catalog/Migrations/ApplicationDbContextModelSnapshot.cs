@@ -1569,11 +1569,11 @@ namespace Service.Catalog.Migrations
                     b.Property<bool>("ValorCriticos")
                         .HasColumnType("bit");
 
-                    b.Property<decimal>("ValorFinal")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("ValorFinal")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("ValorInicial")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("ValorInicial")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

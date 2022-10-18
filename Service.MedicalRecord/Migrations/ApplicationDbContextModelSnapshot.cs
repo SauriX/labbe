@@ -262,11 +262,14 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<int>("TipoValorId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ValorFinal")
-                        .HasColumnType("int");
+                    b.Property<string>("Unidades")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ValorInicial")
-                        .HasColumnType("int");
+                    b.Property<string>("ValorFinal")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ValorInicial")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

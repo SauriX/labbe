@@ -253,6 +253,8 @@ namespace Service.MedicalRecord
             services.AddScoped<ITrackingOrderApplication, TrackingOrderApplication>();
             services.AddScoped<IRouteTrackingApplication, RouteTrackingApplication>();
             services.AddScoped<IShipmentTrackingApplication, ShipmentTrackingApplication>();
+            services.AddScoped<IWorkListApplication, WorkListApplication>();
+
             services.AddScoped<IMedicalRecordRepository, MedicalRecordRepository>();
             services.AddScoped<IRequestRepository, RequestRepository>();
             services.AddScoped<IPriceQuoteRepository, PriceQuoteRepository>();
@@ -306,6 +308,12 @@ namespace Service.MedicalRecord
             {
                 FileProvider = new PhysicalFileProvider(System.IO.Path.Combine(env.ContentRootPath, "wwwroot/layout/consent")),
                 RequestPath = "/consents",
+            });
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(System.IO.Path.Combine(env.ContentRootPath, "wwwroot/temp")),
+                RequestPath = "/temp",
             });
 
             app.UseMiddleware<ErrorMiddleware>();

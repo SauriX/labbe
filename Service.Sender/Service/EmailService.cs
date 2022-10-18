@@ -1,4 +1,5 @@
-﻿using Service.Sender.Dictionary;
+﻿using EventBus.Messages.Common;
+using Service.Sender.Dictionary;
 using Service.Sender.Service.IService;
 using Service.Sender.Settings.Interfaces;
 using Shared.Dictionary;
@@ -9,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,7 +36,7 @@ namespace Service.Sender.Service
             _configurationService = configurationService;
         }
 
-        public async Task Send(string to, string subject, string title, string content)
+        public async Task Send(string to, string subject, string title, string content, List<SenderFiles> filePath = null)
         {
             var conf = await _configurationService.GetEmail();
 
@@ -66,7 +68,22 @@ namespace Service.Sender.Service
             emailMessage.Body = html.ToString();
             emailMessage.IsBodyHtml = true;
             emailMessage.Priority = MailPriority.Normal;
-            //Attachment = new Attachment(,);
+
+            if (filePath != null)
+            {
+                foreach (var file in filePath)
+                {
+                    var client = new HttpClient();
+
+                    var pdf = await client.GetByteArrayAsync(file.Ruta);
+
+                    MemoryStream ms = new MemoryStream(pdf);
+
+                    emailMessage.Attachments.Add(new Attachment(ms, file.Nombre, "application/pdf"));
+
+                }
+            }
+
             using SmtpClient MailClient = new(conf.Smtp, 587);
             MailClient.EnableSsl = true;
             if (conf.RequiereContraseña)

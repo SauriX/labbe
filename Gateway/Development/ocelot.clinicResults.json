@@ -97,7 +97,7 @@
       "UpstreamHttpMethod": [ "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/api/clinicResults/getPathological",
+      "DownstreamPathTemplate": "/api/clinicResults/getLaboratoryResults",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -109,7 +109,7 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/clinicResults/getLaboratoryResults",
+      "DownstreamPathTemplate": "/api/clinicResults/getPathological",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {

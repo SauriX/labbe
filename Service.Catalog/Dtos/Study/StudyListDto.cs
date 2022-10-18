@@ -17,8 +17,7 @@ namespace Service.Catalog.Dtos.Study
         public string Maquilador { get; set; }
         public string Metodo { get; set; }
         public bool Activo { get; set; }
-        public IEnumerable<ParameterListDto> Parametros { get; set; }
+        public IEnumerable<ParameterValueStudyDto> Parametros { get; set; }
         public IEnumerable<IndicationListDto> Indicaciones { get; set; }
-        public IEnumerable<ParameterValueStudyDto> ParametrosValores { get; set; }
     }
 }
