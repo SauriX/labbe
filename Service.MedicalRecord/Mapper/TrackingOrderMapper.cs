@@ -40,6 +40,54 @@ namespace Service.MedicalRecord.Mapper
 
             };
         }
+        public static TrackingOrderCurrentDto toCurrentOrderDto(this TrackingOrder model, IEnumerable<EstudiosListDto> estudios)
+        {
+            return new TrackingOrderCurrentDto
+            {
+                DiaRecoleccion = model.DiaRecoleccion,
+                MuestraId = model.MuestraId,
+                Temperatura = model.Temperatura,
+                SucursalDestinoId = model.SucursalDestinoId,
+                SucursalOrigenId = model.SucursalOrigenId,
+                Activo = model.Activo,
+                EscaneoCodigoBarras = model.EscaneoCodigoBarras,
+                MaquiladorId = model.MaquiladorId,
+                RutaId = model.RutaId,
+                Clave = model.Clave,
+                //Fecha = model.FechaCreo,
+                EstudiosAgrupados = estudios.ToList(),
+            };
+        }
+        public static TrackingOrder toUpdateModel(this TrackingOrderFormDto dto, TrackingOrder model)
+        {
+            return new TrackingOrder
+            {
+                Id = model.Id,
+                MuestraId = dto.MuestraId,
+                Temperatura = dto.Temperatura,
+                SucursalDestinoId = dto.SucursalDestinoId,
+                SucursalOrigenId = dto.SucursalOrigenId,
+                UsuarioCreoId = dto.UsuarioCreoId,
+                FechaMod = DateTime.Now,
+                Activo = dto.Activo,
+                EscaneoCodigoBarras = dto.EscaneoCodigoBarras,
+                MaquiladorId = dto.MaquiladorId,
+                RutaId = dto.RutaId,
+                DiaRecoleccion = dto.DiaRecoleccion,
+                Clave = dto.Clave,
+                Estudios = dto.Estudios.Select(x => new TrackingOrderDetail
+                {
+                    SolicitudId = x.SolicitudId,
+                    EstudioId = x.EstudioId,
+                    Estudio = x.Clave + " - " + x.Estudio,
+                    ExpedienteId = x.ExpedienteId,
+                    NombrePaciente = x.NombrePaciente,
+                    Temperatura = x.Temperatura,
+                    Escaneado = x.Escaneado,
+                    FechaCreo = DateTime.Now
+                }).ToList()
+            };
+        }
         public static TrackingOrder ToModel(this TrackingOrderFormDto dto)
         {
             if (dto == null) return null;
