@@ -255,39 +255,6 @@ namespace Service.MedicalRecord.Application
             }
         }
 
-        /*public async Task<byte[]> PrintResults(Guid recordId, Guid requestId)
-        {
-            var results = await _repository.GetByRequest(requestId);
-
-            if (results == null || !results.Any())
-            {
-                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
-            }
-
-            var order = results.ToResults();
-
-            return await _pdfClient.GenerateLabResults(order);
-        }*/
-
-        public async Task SendTestEmail(RequestSendDto requestDto)
-        {
-            var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
-
-            var subject = RequestTemplates.Subjects.TestMessage;
-            var title = RequestTemplates.Titles.RequestCode(request.Clave);
-            var message = RequestTemplates.Messages.TestMessage;
-
-            var emailToSend = new EmailContract(requestDto.Correo, null, subject, title, message)
-            {
-                Notificar = true,
-                RemitenteId = requestDto.UsuarioId.ToString()
-            };
-
-            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, "/", _queueNames.Email)));
-
-            await endpoint.Send(emailToSend);
-        }
-
         private async Task<Domain.Request.Request> GetExistingRequest(Guid recordId, Guid requestId)
         {
             var request = await _repository.FindAsync(requestId);
@@ -298,25 +265,6 @@ namespace Service.MedicalRecord.Application
             }
 
             return request;
-        }
-
-        public async Task SendTestWhatsapp(RequestSendDto requestDto)
-        {
-            _ = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
-
-            var message = RequestTemplates.Messages.TestMessage;
-
-            var phone = requestDto.Telefono.Replace("-", "");
-            phone = phone.Length == 10 ? "52" + phone : phone;
-            var emailToSend = new WhatsappContract(phone, message)
-            {
-                Notificar = true,
-                RemitenteId = requestDto.UsuarioId.ToString()
-            };
-
-            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, "/", _queueNames.Whatsapp)));
-
-            await endpoint.Send(emailToSend);
         }
 
         public async Task SaveResultPathologicalStudy(ClinicalResultPathologicalFormDto result)
@@ -357,6 +305,7 @@ namespace Service.MedicalRecord.Application
 
             return Path.Combine(path, name);
         }
+
         private static async Task<string> DeleteImageGetPath(string result, int id)
         {
             var path = Path.Combine("wwwroot/images/ResultsPathological", id.ToString(), result);
@@ -518,6 +467,7 @@ namespace Service.MedicalRecord.Application
             }
 
         }
+
         public async Task SendTestEmail(List<SenderFiles> senderFiles, string correo, Guid usuario, string tipo)
         {
             var subject = string.Empty;
@@ -529,7 +479,6 @@ namespace Service.MedicalRecord.Application
                 subject = RequestTemplates.Subjects.PathologicalSubject;
                 title = RequestTemplates.Titles.PathologicalTitle;
                 message = RequestTemplates.Messages.PathologicalMessage;
-
             }
 
             if (tipo == "LABORATORY")
@@ -580,8 +529,6 @@ namespace Service.MedicalRecord.Application
         }
         public async Task<byte[]> PrintSelectedStudies(ConfigurationToPrintStudies configuration)
         {
-
-
             List<int> labResults = new List<int> { };
             List<int> pathologicalResults = new List<int> { };
 
@@ -615,38 +562,10 @@ namespace Service.MedicalRecord.Application
                 labResultsTask.Add(finalResult);
             }
 
-            //var tasks = pathologicalResults.Select(x => _repository.GetResultPathologicalById(x));
-
-            //var resultsTask = await Task.WhenAll(tasks);
-
-            byte[] pdfBytes = new byte[] { };
-            byte[] pathological = new byte[] { };
-            byte[] laboratory = new byte[] { };
-
             var existingResultPathologyPdf = resultsTask.toInformationPdfResult(configuration.ImprimirLogos);
-            /*pathological = await _pdfClient.GeneratePathologicalResults(existingResultPathologyPdf);*/
-
             var existingLabResultPdf = labResultsTask.ToList().ToResults(configuration.ImprimirLogos);
-            /*laboratory = await _pdfClient.GenerateLabResults(existingLabResultPdf);*/
 
-            pdfBytes = await _pdfClient.MergeResults(existingResultPathologyPdf, existingLabResultPdf);
-
-            /*if (pathological.Length > 0 && laboratory.Length > 0)
-            {
-
-                pdfBytes = pathological;
-            }
-            if (pathological.Length == 0)
-            {
-                pdfBytes = laboratory;
-            }
-            if (laboratory.Length == 0)
-            {
-                pdfBytes = pathological;
-            }
-*/
-            //var taskLab = labResults.Select(x => _repository.GetLabResultsById(x));
-            //var labResultsTasks = await Task.WhenAll(taskLab);
+            byte[] pdfBytes = await _pdfClient.MergeResults(existingResultPathologyPdf, existingLabResultPdf);
 
             return pdfBytes;
         }
