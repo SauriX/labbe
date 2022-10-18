@@ -104,6 +104,7 @@ namespace Integration.Pdf.Controllers
 
             return result;
         }
+
         [HttpPost]
         [Route("pending")]
         public HttpResponseMessage pending(List<PendingReciveDto> order)
@@ -126,6 +127,7 @@ namespace Integration.Pdf.Controllers
 
             return result;
         }
+
         [HttpPost]
         [Route("tags")]
         public HttpResponseMessage Tag(List<RequestTagDto> tags)
@@ -240,6 +242,29 @@ namespace Integration.Pdf.Controllers
                 new ContentDispositionHeaderValue("attachment")
                 {
                     FileName = "labels.pdf"
+                };
+
+            result.Content.Headers.ContentType =
+                new MediaTypeHeaderValue("application/pdf");
+
+            return result;
+        }
+
+        [HttpPost]
+        [Route("worklists")]
+        public HttpResponseMessage WorkLists(WorkListDto workList)
+        {
+            var file = WorkListService.Generate(workList);
+
+            var result = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new ByteArrayContent(file)
+            };
+
+            result.Content.Headers.ContentDisposition =
+                new ContentDispositionHeaderValue("attachment")
+                {
+                    FileName = "worklist.pdf"
                 };
 
             result.Content.Headers.ContentType =
