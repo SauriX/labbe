@@ -9,7 +9,7 @@ namespace Service.MedicalRecord.Dtos.WorkList
         public string Fecha { get; set; }
         public string HoraInicio { get; set; }
         public string HoraFin { get; set; }
-        public List<WorkListRequestDto> Solicitudes { get; set; }
+        public List<WorkListRequestDto> Solicitudes { get; set; } = new List<WorkListRequestDto>();
     }
 
     public class WorkListRequestDto
@@ -19,12 +19,13 @@ namespace Service.MedicalRecord.Dtos.WorkList
         public string Paciente { get; set; }
         public string Estatus { get; set; }
         public string HoraEstatus { get; set; }
-        public List<WorkListStudyDto> Estudios { get; set; }
+        public List<WorkListStudyDto> Estudios { get; set; } = new List<WorkListStudyDto>();
     }
 
     public class WorkListStudyDto
     {
+        public int EstudioId { get; set; }
         public string Estudio { get; set; }
-        public List<string> ListasTrabajo { get; set; }
+        public List<string> ListasTrabajo { get; set; } = new List<string>();
     }
 }

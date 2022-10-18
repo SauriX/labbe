@@ -1,13 +1,18 @@
 ﻿using ClosedXML.Excel;
 using ClosedXML.Report;
 using Service.MedicalRecord.Dictionary;
+using Service.MedicalRecord.Domain.TrackingOrder;
 using Service.MedicalRecord.Dtos.TrackingOrder;
 using Service.MedicalRecord.Mapper;
 using Service.MedicalRecord.Repository.IRepository;
+using Shared.Error;
 using Shared.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
+using SharedResponses = Shared.Dictionary.Responses;
+using System.Linq;
 
 namespace Service.MedicalRecord.Application.IApplication
 {
@@ -25,13 +30,44 @@ namespace Service.MedicalRecord.Application.IApplication
             await _repository.Create(newOrder);
             return newOrder.ToTrackingOrderFormDto();
         }
+        public async Task<TrackingOrder> GetExistingOrder(Guid orderId)
+        {
+            var order = await _repository.FindAsync(orderId);
 
+            if (order == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
+            }
+
+            return order;
+        }
+        public async Task<TrackingOrderCurrentDto> GetOrderById(Guid orderId)
+        {
+            var existingOrder = await GetExistingOrder(orderId);
+
+            var estudiosByOrder = existingOrder.Estudios.ToList().Select(x => x.EstudioId).ToList();
+
+            var findStudies = await FindEstudios(estudiosByOrder);
+
+            return existingOrder.toCurrentOrderDto(findStudies);
+
+        }
+        
+        public async Task Update(TrackingOrderFormDto order)
+        {
+            var existingOrder = await GetExistingOrder(order.Id);
+
+            var updatedOrder = order.toUpdateModel(existingOrder);
+
+            await _repository.Update(updatedOrder);
+            
+        }
 
         public async Task<IEnumerable<EstudiosListDto>> FindEstudios(List<int> estudios)
         {
             var estudiosEncontrados = await _repository.FindEstudios(estudios);
-            return estudiosEncontrados.ToStudiesRequestRouteDto(); //agregar un to para el mapper
 
+            return estudiosEncontrados.ToStudiesRequestRouteDto(); 
         }
 
         
@@ -84,5 +120,7 @@ namespace Service.MedicalRecord.Application.IApplication
             return await _repository.CancelarRecoleccion(seguimientoId);
 
         }
+
+        
     }
 }

@@ -37,6 +37,18 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
+      "DownstreamPathTemplate": "/api/TrackingOrder/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/tracking-order/{id}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/TrackingOrder/export/form",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -71,6 +83,18 @@
       ],
       "UpstreamPathTemplate": "/api/tracking-order/cancelarRecoleccion",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/TrackingOrder/general",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/tracking-order/general",
+      "UpstreamHttpMethod": [ "PUT" ]
     }
   ]
 }
