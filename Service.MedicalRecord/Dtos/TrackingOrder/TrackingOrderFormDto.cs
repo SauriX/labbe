@@ -4,7 +4,7 @@ namespace Service.MedicalRecord.Dtos.TrackingOrder
 {
     public class TrackingOrderFormDto
     {
-        //public Guid? Id { get; set; }
+        public Guid Id { get; set; }
         public string SucursalDestinoId { get; set; }
         public string SucursalDestinoNombre { get; set; }
         public string SucursalOrigenId { get; set; }
