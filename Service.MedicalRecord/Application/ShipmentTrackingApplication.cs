@@ -47,6 +47,7 @@ namespace Service.MedicalRecord.Application
                 shipment.SucursalDestino = sucursalDestinos;
                 shipment.SucursalOrigen = sucursalOrigen.nombre;
             }
+           
 
             return shipment;
         }
@@ -73,7 +74,10 @@ namespace Service.MedicalRecord.Application
                 shipment.SucursalDestino = sucursalDestinos;
                 shipment.SucursalOrigen = sucursalOrigen.nombre;
             }
-
+            if (shipment.Estudios.Any(x => x.ConfirmacionDestino)) {
+                var usuariodest = await _identityClient.GetByid(TrackingOrder.UsuarioModId.ToString());
+                shipment.ResponsableDestino = $"{usuariodest.Nombre} {usuariodest.PrimerApellido} {usuariodest.SegundoApellido}";
+            }
             return shipment;
         }
         public async Task UpdateTracking(ReciveShipmentTracking reciveShipment) {
@@ -87,12 +91,13 @@ namespace Service.MedicalRecord.Application
                     var exsistingStudy= reciveShipment.Estudios.FirstOrDefault(x=>x.Id==estudio.Id);
                     estudio.Temperatura = exsistingStudy.Temperatura;
                     estudio.Escaneado = exsistingStudy.ConfirmacionDestino;
+                    estudio.FechaMod = exsistingStudy.ConfirmacionDestino?DateTime.Now:DateTime.MinValue;
                     
                     Estudios.Add(estudio);
                 }
             
             }
-            TrackingOrder.Estudios = Estudios;
+            //TrackingOrder.Estudios = Estudios;
             TrackingOrder.FechaMod = DateTime.Now;
             TrackingOrder.UsuarioModId = reciveShipment.IdUser;
             await _repository.updateTrackingOrder(TrackingOrder);
