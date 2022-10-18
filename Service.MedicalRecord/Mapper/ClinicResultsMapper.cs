@@ -31,7 +31,8 @@ namespace Service.MedicalRecord.Mapper
                 Procedencia = x.Procedencia,
                 SucursalNombre = x.Sucursal.Nombre,
                 NombreMedico = x.Medico.Nombre,
-                UsuarioCreo = x.UsuarioCreo
+                UsuarioCreo = x.UsuarioCreo,
+                ClavePatologica = x.ClavePatologica
             }).ToList();
         }
 
@@ -64,7 +65,8 @@ namespace Service.MedicalRecord.Mapper
                 ValorInicial = x?.ValorInicial,
                 ValorFinal = x?.ValorFinal,
                 ParametroId = Guid.Parse(x.ParametroId),
-                Resultado = x.Resultado
+                Resultado = x.Resultado,
+                Unidades = x.UnidadesNombre,
             }).ToList();
         }
 
@@ -187,6 +189,7 @@ namespace Service.MedicalRecord.Mapper
                     ValorFinal = results?.ValorInicial,
                     ParametroId = results.ParametroId.ToString(),
                     Resultado = results.Resultado,
+                    UnidadesNombre = results.Unidades,
                 };
             }).ToList();
         }
@@ -211,6 +214,7 @@ namespace Service.MedicalRecord.Mapper
                     ValorFinal = x?.ValorInicial,
                     ParametroId = Guid.Parse(x.ParametroId),
                     Resultado = x.Resultado,
+                    Unidades = x.UnidadesNombre,
                 };
             }).ToList(); 
         }

@@ -210,8 +210,10 @@ namespace Integration.Pdf.Controllers
             var mergeFile = PathologicalResultService.MergePdf(file, labFile);
 
             var result = new HttpResponseMessage();
+            var infoPathological = mergeResults.PathologicalResults.Information;
+            var infoLabResults = mergeResults.LabResults.CapturaResultados;
 
-            if (file.Length > 0 && labFile.Length > 0)
+            if (infoPathological.Count > 0 && infoLabResults != null)
             {
                 result = new HttpResponseMessage(HttpStatusCode.OK)
                 {
@@ -219,7 +221,7 @@ namespace Integration.Pdf.Controllers
                 };
             }
 
-            if (file.Length == 0)
+            if (infoPathological.Count == 0)
             {
                 result = new HttpResponseMessage(HttpStatusCode.OK)
                 {
@@ -227,7 +229,7 @@ namespace Integration.Pdf.Controllers
                 };
             }
 
-            if (labFile.Length == 0)
+            if (infoLabResults == null)
             {
                 result = new HttpResponseMessage(HttpStatusCode.OK)
                 {
