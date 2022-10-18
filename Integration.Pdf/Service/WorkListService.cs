@@ -112,7 +112,7 @@ namespace Integration.Pdf.Service
                     var studyName = new Col(study.Estudio, Col.FONT_BOLD, ParagraphAlignment.Left);
                     section.AddText(studyName);
 
-                    foreach (var parameters in study.ListasTrabajo.ToChunks(10, true))
+                    foreach (var parameters in study.ListasTrabajo.ToChunks(8, true))
                     {
                         var param = parameters.Select(x => new Col(x) { Fill = string.IsNullOrEmpty(x) ? (TabLeader?)null : TabLeader.Lines }).ToArray();
                         section.AddText(param);

@@ -19,7 +19,7 @@ namespace Service.Identity.Context
     {
         public static async Task SeedData(ApplicationDbContext context, string key)
         {
-            if (!context.CAT_Menu.Any())
+            if (true)
             {
                 using var transaction = context.Database.BeginTransaction();
 
@@ -159,6 +159,7 @@ namespace Service.Identity.Context
                 new Menu(30, 24, "Captura de Resultados (Clínicos)", "clinicResults","clinicResults", 100),
                 new Menu(31, 24, "Seguimientio de rutas", "RouteTracking","segRutas", 100),
                 new Menu(32, 24, "Detalle de seguimiento de envio", "ShipmentTracking","ShipmentTracking", 100),
+                new Menu(33, 24, "Listas de trabajo", "worklist","worklists", 2410),
             };
 
             return menus;

@@ -5,7 +5,8 @@ namespace Service.MedicalRecord.Dtos.WorkList
 {
     public class WorkListFilterDto
     {
-        public int Area { get; set; }
+        public int AreaId { get; set; }
+        public string Area { get; set; }
         public DateTime Fecha { get; set; }
         public DateTime HoraInicio { get; set; }
         public DateTime HoraFin { get; set; }
