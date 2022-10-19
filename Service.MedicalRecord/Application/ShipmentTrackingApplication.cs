@@ -47,8 +47,14 @@ namespace Service.MedicalRecord.Application
                 shipment.SucursalDestino = sucursalDestinos;
                 shipment.SucursalOrigen = sucursalOrigen.nombre;
             }
-           
 
+            if (shipment.Estudios.Any(x => x.ConfirmacionDestino))
+            {
+                var usuariodest = await _identityClient.GetByid(TrackingOrder.UsuarioModId.ToString());
+                shipment.ResponsableDestino = $"{usuariodest.Nombre} {usuariodest.PrimerApellido} {usuariodest.SegundoApellido}";
+                shipment.FechaEnreal = TrackingOrder.FechaMod;
+                shipment.HoraEnreal = TrackingOrder.FechaMod;
+            }
             return shipment;
         }
         public async Task<ReciveShipmentTracking> getByidRecive(Guid id)
@@ -77,6 +83,8 @@ namespace Service.MedicalRecord.Application
             if (shipment.Estudios.Any(x => x.ConfirmacionDestino)) {
                 var usuariodest = await _identityClient.GetByid(TrackingOrder.UsuarioModId.ToString());
                 shipment.ResponsableDestino = $"{usuariodest.Nombre} {usuariodest.PrimerApellido} {usuariodest.SegundoApellido}";
+                shipment.FechaEnreal = TrackingOrder.FechaMod;
+                shipment.HoraEnreal = TrackingOrder.FechaMod;
             }
             return shipment;
         }
