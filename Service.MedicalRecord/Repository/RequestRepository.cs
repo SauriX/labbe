@@ -50,8 +50,9 @@ namespace Service.MedicalRecord.Repository
 
             if (!string.IsNullOrWhiteSpace(filter.Clave))
             {
-                requests = requests.Where(x => x.Clave.ToLower().Contains(filter.Clave.ToLower())
-                || x.ClavePatologica.ToLower().Contains(filter.Clave.ToLower()));
+                requests = requests.Where(x => x.Clave.ToLower().Contains(filter.Clave)
+                || x.ClavePatologica.ToLower().Contains(filter.Clave)
+                || (x.Expediente.NombrePaciente + " " + x.Expediente.PrimerApellido + " " + x.Expediente.SegundoApellido).ToLower().Contains(filter.Clave));
             }
 
             if (filter.Sucursales != null && filter.Sucursales.Any())
@@ -223,7 +224,7 @@ namespace Service.MedicalRecord.Repository
             }
             else
             {
-                _context.Relacion_Solicitud_Imagen.Update(requestImage); 
+                _context.Relacion_Solicitud_Imagen.Update(requestImage);
             }
 
             await _context.SaveChangesAsync();
