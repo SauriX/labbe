@@ -24,6 +24,8 @@ using RequestTemplates = Service.MedicalRecord.Dictionary.EmailTemplates.Request
 using Shared.Helpers;
 using Service.MedicalRecord.Domain.Request;
 using AREAS = Shared.Dictionary.Catalogs.Area;
+using COMPANIES = Shared.Dictionary.Catalogs.Company;
+using MEDICS = Shared.Dictionary.Catalogs.Medic;
 using DocumentFormat.OpenXml.Math;
 using Integration.WeeClinic.Services;
 
@@ -39,7 +41,7 @@ namespace Service.MedicalRecord.Application
         private readonly IRabbitMQSettings _rabbitMQSettings;
         private readonly IQueueNames _queueNames;
 
-        private const byte Compañia = 1;
+        private const byte PORCENTAJE = 1;
 
         public RequestApplication(
             ITransactionProvider transaction,
@@ -148,6 +150,11 @@ namespace Service.MedicalRecord.Application
 
             requestDto.Clave = code;
             var newRequest = requestDto.ToModel();
+            newRequest.MedicoId = MEDICS.A_QUIEN_CORRESPONDA;
+            newRequest.CompañiaId = COMPANIES.PARTICULARES;
+            newRequest.CargoTipo = PORCENTAJE;
+            newRequest.CopagoTipo = PORCENTAJE;
+            newRequest.DescuentoTipo = PORCENTAJE;
 
             await _repository.Create(newRequest);
 
@@ -246,7 +253,7 @@ namespace Service.MedicalRecord.Application
             var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
 
             request.Procedencia = requestDto.Procedencia;
-            request.CompañiaId = requestDto.Procedencia == Compañia ? requestDto.CompañiaId : null;
+            request.CompañiaId = requestDto.CompañiaId;
             request.MedicoId = requestDto.MedicoId;
             request.Afiliacion = requestDto.Afiliacion;
             request.Urgencia = requestDto.Urgencia;

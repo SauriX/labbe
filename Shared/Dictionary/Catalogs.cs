@@ -28,6 +28,11 @@ namespace Shared.Dictionary
             public const int HISTOPATOLOGIA = 30;
         }
 
+        public class Medic
+        {
+            public static readonly Guid A_QUIEN_CORRESPONDA = new("aadb8f2b-3ce1-4848-956e-3ae8ed94b44f");
+        }
+
         public class Branch
         {
             public static readonly Guid MT = new("698e416e-e5cb-4e7a-90ed-74448d408f20");
