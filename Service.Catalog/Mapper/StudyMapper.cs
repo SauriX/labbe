@@ -38,6 +38,8 @@ namespace Service.Catalog.Mapper
                 Id = x.Id,
                 Parametros = x.Parameters.Select(y => y.Parametro).ToParameterValueStudyDto(),
                 Indicaciones = x.Indications.Select(y => y.Indicacion).ToIndicationListDto(),
+               
+                Clave = x.Clave
             });
         }
 

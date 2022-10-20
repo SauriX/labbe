@@ -13,6 +13,18 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
+      "DownstreamPathTemplate": "/api/ShipmentTracking/recive/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/ShipmentTracking/recive/{id}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/ShipmentTracking/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -23,6 +35,18 @@
       ],
       "UpstreamPathTemplate": "/api/ShipmentTracking/{id}",
       "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/ShipmentTracking/recive",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/ShipmentTracking/recive",
+      "UpstreamHttpMethod": [ "PUT" ]
     }
   ]
 }

@@ -1,9 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFCore.BulkExtensions;
+using Microsoft.EntityFrameworkCore;
+
 using Service.MedicalRecord.Context;
 using Service.MedicalRecord.Domain.RouteTracking;
 using Service.MedicalRecord.Domain.TrackingOrder;
 using Service.MedicalRecord.Repository.IRepository;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Service.MedicalRecord.Repository
@@ -26,5 +29,19 @@ namespace Service.MedicalRecord.Repository
             var TrackingOrder = await _context.Cat_PendientesDeEnviar.Include(x => x.Solicitud.Compañia).Include(x => x.Solicitud.Expediente).FirstOrDefaultAsync(x => x.SegumientoId == id);
             return TrackingOrder;
         }
+
+        public async Task updateTrackingOrder(TrackingOrder trackingOrder) {
+            var estudios = trackingOrder.Estudios.ToList();
+            trackingOrder.Estudios = null;
+            _context.Update(trackingOrder);
+            await _context.SaveChangesAsync();
+            var config = new BulkConfig() { SetOutputIdentity = true };
+            config.SetSynchronizeFilter<TrackingOrderDetail>(x => x.SeguimientoId == trackingOrder.Id);
+            estudios.ForEach(x => x.SeguimientoId = trackingOrder.Id);
+            await _context.BulkInsertOrUpdateOrDeleteAsync(estudios, config);
+       
+        }
+
+    
     }
 }

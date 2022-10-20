@@ -14,11 +14,24 @@ namespace Service.MedicalRecord.Mapper
                Paciente = x.NombrePaciente,
                Solicitud = x.Solicitud.Clave,
                ConfirmacionOrigen = true,
-               ConfirmacionDestino = false,
+               ConfirmacionDestino = x.Escaneado,
 
            }).ToList();
         }
+        public static List<ReciveShipmentStudyDto> toReciveShipmentStudyDto(this List<TrackingOrderDetail> model)
+        {
+            return model.Select(x => new ReciveShipmentStudyDto
+            {
+                Id = x.Id,
+                Estudio = x.Estudio,
+                Paciente = x.NombrePaciente,
+                Solicitud = x.Solicitud.Clave,
+                ConfirmacionOrigen = true,
+                ConfirmacionDestino = x.Escaneado,
+                Temperatura = x.Temperatura,
 
+            }).ToList();
+        }
         public static ShipmentTrackingDto toShipmentTrackingDto(this TrackingOrder model,RouteTracking tracking) {
 
             if (tracking != null) { 
@@ -53,6 +66,51 @@ namespace Service.MedicalRecord.Mapper
                 Seguimiento = model.Clave,
                 Ruta = "",
                 Nombre = ""
+            };
+        }
+
+        public static ReciveShipmentTracking toReciveShipmentTrackingDto(this TrackingOrder model, RouteTracking tracking)
+        {
+
+            if (tracking != null)
+            {
+
+                return new ReciveShipmentTracking
+                {
+                    Id = model.Id,
+                    SucursalOrigen = "",
+                    SucursalDestino = "",
+                    ResponsableOrigen = "",
+                    ResponsableDestino = "",
+                    Medioentrega = "",
+                    FechaEnvio = tracking.FechaCreo,
+                    HoraEnvio = tracking.FechaCreo,
+                    FechaEnestimada = tracking.FechaDeEntregaEstimada,
+                    HoraEnestimada = tracking.FechaDeEntregaEstimada,
+                    HoraEnreal = model.FechaMod,
+                    FechaEnreal = model.FechaMod,
+                    Estudios = model.Estudios.ToList().toReciveShipmentStudyDto().ToList(),
+                    Seguimiento = model.Clave,
+                    Ruta = "",
+                    Nombre = "",
+                    Temperatura = model.Temperatura
+                };
+            }
+            return new ReciveShipmentTracking
+            {
+                Id = model.Id,
+                SucursalOrigen = "",
+                SucursalDestino = "",
+                ResponsableOrigen = "",
+                ResponsableDestino = "",
+                Medioentrega = "",
+                HoraEnreal = model.FechaMod,
+                FechaEnreal = model.FechaMod,
+                Estudios = model.Estudios.ToList().toReciveShipmentStudyDto().ToList(),
+                Seguimiento = model.Clave,
+                Ruta = "",
+                Nombre = "",
+                Temperatura = model.Temperatura
             };
         }
     }
