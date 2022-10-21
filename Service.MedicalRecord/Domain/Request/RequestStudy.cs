@@ -1,7 +1,6 @@
 ﻿using Service.MedicalRecord.Domain.Catalogs;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Service.MedicalRecord.Domain.Request
 {
@@ -48,5 +47,6 @@ namespace Service.MedicalRecord.Domain.Request
         public DateTime? FechaEnviado { get; set; }
         public string UsuarioEnviado { get; set; }
         public virtual ICollection<ClinicResults> Resultados { get; set; }
+        public virtual ICollection<ClinicalResultsPathological> ResultadosPatologicos { get; set; }
     }
 }

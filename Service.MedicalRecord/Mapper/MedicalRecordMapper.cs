@@ -249,7 +249,7 @@ namespace Service.MedicalRecord.Mapper
                 Estado = dto.Estado,
                 Ciudad = dto.Municipio,
                 Celular = dto.Celular,
-                Calle = model.Calle,
+                Calle = dto.Calle,
                 ColoniaId = dto.Colonia,
                 UsuarioModId = dto.UsuarioId,
                 FechaMod = DateTime.Now,

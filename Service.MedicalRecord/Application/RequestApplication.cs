@@ -24,8 +24,11 @@ using RequestTemplates = Service.MedicalRecord.Dictionary.EmailTemplates.Request
 using Shared.Helpers;
 using Service.MedicalRecord.Domain.Request;
 using AREAS = Shared.Dictionary.Catalogs.Area;
+using COMPANIES = Shared.Dictionary.Catalogs.Company;
+using MEDICS = Shared.Dictionary.Catalogs.Medic;
 using DocumentFormat.OpenXml.Math;
 using Integration.WeeClinic.Services;
+using Service.MedicalRecord.Dtos.Promos;
 
 namespace Service.MedicalRecord.Application
 {
@@ -39,7 +42,7 @@ namespace Service.MedicalRecord.Application
         private readonly IRabbitMQSettings _rabbitMQSettings;
         private readonly IQueueNames _queueNames;
 
-        private const byte Compañia = 1;
+        private const byte PORCENTAJE = 1;
 
         public RequestApplication(
             ITransactionProvider transaction,
@@ -96,28 +99,68 @@ namespace Service.MedicalRecord.Application
             var studiesDto = studies.ToRequestStudyDto();
 
             var ids = studiesDto.Select(x => x.EstudioId).Concat(packsDto.SelectMany(y => y.Estudios).Select(y => y.EstudioId)).Distinct().ToList();
-            //var studiesParams = await _catalogClient.GetStudies(ids);
+            var studiesParams = await _catalogClient.GetStudies(ids);
 
-            //foreach (var pack in packsDto)
-            //{
-            //    foreach (var study in pack.Estudios)
-            //    {
-            //        var st = studiesParams.FirstOrDefault(x => x.Id == study.EstudioId);
-            //        if (st == null) continue;
+            var packsPromoFilter = packs
+                .Where(x => !x.Estudios.Any(s => s.EstatusId == Status.RequestStudy.Pendiente))
+                .GroupBy(x => x.PaqueteId).Select(x => x.First())
+                .Select(x => new PriceListInfoFilterDto(0, x.PaqueteId, request.SucursalId, (Guid)request.MedicoId, (Guid)request.CompañiaId, x.ListaPrecioId))
+                .ToList();
+            var studiesPromoFilter = studies
+                .Where(x => x.EstatusId == Status.RequestStudy.Pendiente)
+                .GroupBy(x => x.EstudioId).Select(x => x.First())
+                .Select(x => new PriceListInfoFilterDto(x.EstudioId, 0, request.SucursalId, (Guid)request.MedicoId, (Guid)request.CompañiaId, x.ListaPrecioId))
+                .ToList();
 
-            //        study.Parametros = st.Parametros;
-            //        study.Indicaciones = st.Indicaciones;
-            //    }
-            //}
+            var packsPromos = new List<PriceListInfoPromoDto>();
+            var studiesPromos = new List<PriceListInfoPromoDto>();
 
-            //foreach (var study in studiesDto)
-            //{
-            //    var st = studiesParams.FirstOrDefault(x => x.Id == study.EstudioId);
-            //    if (st == null) continue;
+            if (packsPromoFilter.Any())
+            {
+                packsPromos = await _catalogClient.GetPacksPromos(packsPromoFilter);
+            }
 
-            //    study.Parametros = st.Parametros;
-            //    study.Indicaciones = st.Indicaciones;
-            //}
+            if (studiesPromoFilter.Any())
+            {
+                studiesPromos = await _catalogClient.GetStudiesPromos(studiesPromoFilter);
+            }
+
+            foreach (var pack in packsDto)
+            {
+                foreach (var study in pack.Estudios)
+                {
+                    var st = studiesParams.FirstOrDefault(x => x.Id == study.EstudioId);
+                    if (st == null) continue;
+
+                    study.Parametros = st.Parametros;
+                    study.Indicaciones = st.Indicaciones;
+                }
+
+                var promos = packsPromos.Where(x => x.PaqueteId == pack.PaqueteId).ToList();
+                pack.Promociones = promos;
+
+                if (pack.PromocionId != null && !promos.Any(x => x.PromocionId == pack.PromocionId))
+                {
+                    pack.Promociones.Add(new PriceListInfoPromoDto(0, pack.PaqueteId, pack.PromocionId, pack.Promocion, pack.Descuento, pack.DescuentoPorcentaje));
+                }
+            }
+
+            foreach (var study in studiesDto)
+            {
+                var st = studiesParams.FirstOrDefault(x => x.Id == study.EstudioId);
+                if (st == null) continue;
+
+                study.Parametros = st.Parametros;
+                study.Indicaciones = st.Indicaciones;
+
+                var promos = studiesPromos.Where(x => x.EstudioId == study.EstudioId).ToList();
+                study.Promociones = promos;
+
+                if (study.PromocionId != null && !promos.Any(x => x.PromocionId == study.PromocionId))
+                {
+                    study.Promociones.Add(new PriceListInfoPromoDto(study.EstudioId, 0, study.PromocionId, study.Promocion, study.Descuento, study.DescuentoPorcentaje));
+                }
+            }
 
             var totals = request.ToRequestTotalDto();
 
@@ -148,6 +191,11 @@ namespace Service.MedicalRecord.Application
 
             requestDto.Clave = code;
             var newRequest = requestDto.ToModel();
+            newRequest.MedicoId = MEDICS.A_QUIEN_CORRESPONDA;
+            newRequest.CompañiaId = COMPANIES.PARTICULARES;
+            newRequest.CargoTipo = PORCENTAJE;
+            newRequest.CopagoTipo = PORCENTAJE;
+            newRequest.DescuentoTipo = PORCENTAJE;
 
             await _repository.Create(newRequest);
 
@@ -186,8 +234,8 @@ namespace Service.MedicalRecord.Application
             var weeStudies = services.Where(x => x.CodTipoCatalogo == 4).Select(x => x.ClaveCDP);
             var weePacks = services.Where(x => x.CodTipoCatalogo == 12).Select(x => x.ClaveCDP);
 
-            var systemStudies = await _catalogClient.GetStudiesByCode(weeStudies);
-            var systemPacks = await _catalogClient.GetPacksByCode(weePacks);
+            //var systemStudies = await _catalogClient.GetStudiesByCode(weeStudies);
+            //var systemPacks = await _catalogClient.GetPacksByCode(weePacks);
 
             //return newRequest.Id.ToString();
 
@@ -246,7 +294,7 @@ namespace Service.MedicalRecord.Application
             var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
 
             request.Procedencia = requestDto.Procedencia;
-            request.CompañiaId = requestDto.Procedencia == Compañia ? requestDto.CompañiaId : null;
+            request.CompañiaId = requestDto.CompañiaId;
             request.MedicoId = requestDto.MedicoId;
             request.Afiliacion = requestDto.Afiliacion;
             request.Urgencia = requestDto.Urgencia;
@@ -335,12 +383,12 @@ namespace Service.MedicalRecord.Application
 
                 studiesDto.AddRange(packStudiesDto);
 
-                var duplicates = requestDto.Estudios.GroupBy(x => x.Clave).Where(x => x.Count() > 1).Select(x => x.Key);
+                //var duplicates = requestDto.Estudios.GroupBy(x => x.Clave).Where(x => x.Count() > 1).Select(x => x.Key);
 
-                if (duplicates != null && duplicates.Any())
-                {
-                    throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.RepeatedStudies(string.Join(", ", duplicates)));
-                }
+                //if (duplicates != null && duplicates.Any())
+                //{
+                //    throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.RepeatedStudies(string.Join(", ", duplicates)));
+                //}
 
                 var currentPacks = await _repository.GetPacksByRequest(requestDto.SolicitudId);
 
@@ -412,7 +460,7 @@ namespace Service.MedicalRecord.Application
         {
             var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
 
-            var studiesIds = requestDto.Estudios.Select(x => x.EstudioId);
+            var studiesIds = requestDto.Estudios.Select(x => x.Id);
 
             var allStudies = await _repository.GetAllStudies(requestDto.SolicitudId);
             var studies = await _repository.GetStudyById(requestDto.SolicitudId, studiesIds);
@@ -422,7 +470,7 @@ namespace Service.MedicalRecord.Application
             foreach (var g in groups)
             {
                 var st = (from gs in g.Where(x => x.EstatusId != Status.RequestStudy.Pendiente)
-                          join s in studies on gs.EstudioId equals s.EstudioId
+                          join s in studies on gs.Id equals s.Id
                           select s);
 
                 if (st != null && st.Any())
@@ -452,7 +500,7 @@ namespace Service.MedicalRecord.Application
         {
             var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
 
-            var studiesIds = requestDto.Estudios.Select(x => x.EstudioId);
+            var studiesIds = requestDto.Estudios.Select(x => x.Id);
             var studies = await _repository.GetStudyById(requestDto.SolicitudId, studiesIds);
 
             studies = studies.Where(x => x.EstatusId == Status.RequestStudy.Pendiente).ToList();
@@ -465,6 +513,8 @@ namespace Service.MedicalRecord.Application
             foreach (var study in studies)
             {
                 study.EstatusId = Status.RequestStudy.TomaDeMuestra;
+                study.UsuarioTomaMuestra = requestDto.Usuario;
+                study.FechaTomaMuestra = DateTime.Now;
                 study.UsuarioModificoId = requestDto.UsuarioId;
                 study.FechaModifico = DateTime.Now;
             }
@@ -478,7 +528,7 @@ namespace Service.MedicalRecord.Application
         {
             var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
 
-            var studiesIds = requestDto.Estudios.Select(x => x.EstudioId);
+            var studiesIds = requestDto.Estudios.Select(x => x.Id);
             var studies = await _repository.GetStudyById(requestDto.SolicitudId, studiesIds);
 
             studies = studies.Where(x => x.EstatusId == Status.RequestStudy.TomaDeMuestra).ToList();
@@ -491,6 +541,8 @@ namespace Service.MedicalRecord.Application
             foreach (var study in studies)
             {
                 study.EstatusId = Status.RequestStudy.Solicitado;
+                study.UsuarioSolicitado = requestDto.Usuario;
+                study.FechaSolicitado = DateTime.Now;
                 study.UsuarioModificoId = requestDto.UsuarioId;
                 study.FechaModifico = DateTime.Now;
             }
@@ -575,7 +627,6 @@ namespace Service.MedicalRecord.Application
 
             if (requestDto.Tipo == "formato")
             {
-                //var name = Helpers.GenerateRandomHex();
                 var fileName = requestDto.Imagen.FileName;
                 var name = fileName[..fileName.LastIndexOf(".")];
 

@@ -47,13 +47,13 @@ namespace Service.MedicalRecord.Repository
                 expedientes = expedientes.Where(x => x.Expediente.Contains(search.expediente) || search.expediente.Contains(x.NombrePaciente));
 
             }
-            if (search.fechaNacimiento.Date != DateTime.Now.Date)
+            if (search.fechaNacimiento.Date != DateTime.MinValue.Date)
             {
                 expedientes = expedientes.Where(x => x.FechaDeNacimiento.Date == search.fechaNacimiento.Date);
 
             }
 
-            if (search.fechaAlta.Date != DateTime.Now.Date)
+            if (search.fechaAlta.Date != DateTime.MinValue.Date)
             {
                 expedientes = expedientes.Where(x => x.FechaCreo.Date == search.fechaAlta.Date);
             }

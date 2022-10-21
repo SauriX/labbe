@@ -1,4 +1,5 @@
 ﻿using Service.MedicalRecord.Dtos.Catalogs;
+using Service.MedicalRecord.Dtos.Promos;
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
@@ -12,7 +13,8 @@ namespace Service.MedicalRecord.Dtos.Request
         public List<RequestStudyDto> Estudios { get; set; }
         public List<RequestPackDto> Paquetes { get; set; }
         public RequestTotalDto Total { get; set; }
-
+        [JsonIgnore]
+        public string Usuario { get; set; }
         [JsonIgnore]
         public Guid UsuarioId { get; set; }
     }
@@ -51,6 +53,7 @@ namespace Service.MedicalRecord.Dtos.Request
         public decimal DescuentoPorcentaje { get; set; }
         public decimal PrecioFinal { get; set; }
         public string FechaActualizacion { get; set; }
+        public List<PriceListInfoPromoDto> Promociones { get; set; }
         public List<ParameterListDto> Parametros { get; set; }
         public List<IndicationListDto> Indicaciones { get; set; }
     }
@@ -58,6 +61,7 @@ namespace Service.MedicalRecord.Dtos.Request
     public class RequestPackDto
     {
         public string Type => "pack";
+        public int Id { get; set; }
         public Guid SolicitudId { get; set; }
         public int PaqueteId { get; set; }
         public string Clave { get; set; }
@@ -77,6 +81,7 @@ namespace Service.MedicalRecord.Dtos.Request
         public decimal Descuento { get; set; }
         public decimal DescuentoPorcentaje { get; set; }
         public decimal PrecioFinal { get; set; }
+        public List<PriceListInfoPromoDto> Promociones { get; set; }
         public List<RequestStudyDto> Estudios { get; set; } = new List<RequestStudyDto>();
     }
 }

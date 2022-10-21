@@ -18,12 +18,13 @@ namespace Service.MedicalRecord.Mapper
                 Nseguimiento = x.Clave,
                 Claveroute = x.RutaId,
                 Sucursal =x.SucursalOrigenId,
-                
+                Fechareal=x.FechaMod,
                 Study = x.Estudios.Select(y=> new ReciveStudyDto {
 
                     Id = y.Id.ToString(),
                     Estudio = y.Estudio,
                     Solicitud =y.Solicitud.Clave.ToString(),
+                    Check=y.FechaMod
                 }).ToList(),
                 Status = new StatusDto {
                     Created = true,
@@ -31,6 +32,7 @@ namespace Service.MedicalRecord.Mapper
                     Route = false,
                     Entregado =false,
                 },
+
             }).ToList();
         }
     }

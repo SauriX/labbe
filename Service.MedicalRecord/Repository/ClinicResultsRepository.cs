@@ -161,7 +161,7 @@ namespace Service.MedicalRecord.Repository
             var resultExisting = await _context.Cat_Captura_ResultadosPatologicos
                 .Where(x => x.RequestStudyId == id)
                 .Include(x => x.Medico)
-                .Include(x => x.Estudio)
+                .Include(x => x.SolicitudEstudio)
                 .Include(x => x.Solicitud).ThenInclude(y => y.Expediente)
                 .FirstOrDefaultAsync();
             return resultExisting;
@@ -172,7 +172,7 @@ namespace Service.MedicalRecord.Repository
             var resultExisting = await _context.Cat_Captura_ResultadosPatologicos
                 .Where(x => ids.Contains(x.RequestStudyId))
                 .Include(x => x.Medico)
-                .Include(x => x.Estudio)
+                .Include(x => x.SolicitudEstudio)
                 .Include(x => x.Solicitud).ThenInclude(y => y.Expediente)
                 .ToListAsync();
             return resultExisting;

@@ -129,6 +129,9 @@ namespace Service.MedicalRecord.Application
                     register.Fechaen = routeTra.FechaDeEntregaEstimada;
 
                 }
+                if (item.Fechareal != DateTime.MinValue) {
+                    register.Status.Entregado = true;
+                }
                 register.Claveroute = route.Clave;
                 register.Sucursal = sucursal.nombre;
                 revefinal.Add(register);
