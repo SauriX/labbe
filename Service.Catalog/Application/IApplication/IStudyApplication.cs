@@ -14,5 +14,6 @@ namespace Service.Catalog.Application.IApplication
         Task<StudyFormDto> Update(StudyFormDto study);
         Task<(byte[] file, string fileName)> ExportList(string search = null);
         Task<(byte[] file, string fileName)> ExportForm(int id);
+        Task<IEnumerable<PriceStudyList>> GetAllPriceStudy(string search = null);
     }
 }
