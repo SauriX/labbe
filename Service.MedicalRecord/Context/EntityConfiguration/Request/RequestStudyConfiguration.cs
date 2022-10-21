@@ -45,6 +45,10 @@ namespace Service.MedicalRecord.Context.EntityConfiguration.Request
                 .Property(x => x.FechaEnviado)
                 .IsRequired(false)
                 .HasColumnType("smalldatetime");
+
+            builder.HasMany(x => x.Resultados)
+                .WithOne(x => x.SolicitudEstudio)
+                .HasForeignKey(x=> x.SolicitudEstudioId);
         }
     }
 }
