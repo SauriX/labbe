@@ -138,6 +138,12 @@ namespace Service.MedicalRecord.Controllers
         [Authorize(Policies.Update)]
         public async Task SendStudiesToSampling(RequestStudyUpdateDto requestDto)
         {
+            var userId = (Guid)HttpContext.Items["userId"];
+            var userName = HttpContext.Items["userName"].ToString();
+
+            requestDto.UsuarioId = userId;
+            requestDto.Usuario = userName;
+
             await _service.SendStudiesToSampling(requestDto);
         }
 
@@ -145,6 +151,12 @@ namespace Service.MedicalRecord.Controllers
         [Authorize(Policies.Update)]
         public async Task SendStudiesToRequest(RequestStudyUpdateDto requestDto)
         {
+            var userId = (Guid)HttpContext.Items["userId"];
+            var userName = HttpContext.Items["userName"].ToString();
+
+            requestDto.UsuarioId = userId;
+            requestDto.Usuario = userName;
+
             await _service.SendStudiesToRequest(requestDto);
         }
 

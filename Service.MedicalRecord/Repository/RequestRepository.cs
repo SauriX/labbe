@@ -146,7 +146,7 @@ namespace Service.MedicalRecord.Repository
         public async Task<List<RequestStudy>> GetStudyById(Guid requestId, IEnumerable<int> studiesIds)
         {
             var studies = await _context.Relacion_Solicitud_Estudio
-                .Where(x => x.SolicitudId == requestId && studiesIds.Contains(x.EstudioId))
+                .Where(x => x.SolicitudId == requestId && studiesIds.Contains(x.Id))
                 .ToListAsync();
 
             return studies;
@@ -265,6 +265,15 @@ namespace Service.MedicalRecord.Repository
         {
             var config = new BulkConfig();
             config.SetSynchronizeFilter<RequestStudy>(x => x.SolicitudId == requestId);
+            config.PropertiesToExclude = new List<string>
+            {
+                nameof(RequestStudy.FechaTomaMuestra), nameof(RequestStudy.UsuarioTomaMuestra),
+                nameof(RequestStudy.FechaSolicitado), nameof(RequestStudy.UsuarioSolicitado),
+                nameof(RequestStudy.FechaCaptura), nameof(RequestStudy.UsuarioCaptura),
+                nameof(RequestStudy.FechaValidacion), nameof(RequestStudy.UsuarioValidacion),
+                nameof(RequestStudy.FechaLiberado), nameof(RequestStudy.UsuarioLiberado),
+                nameof(RequestStudy.FechaEnviado), nameof(RequestStudy.UsuarioEnviado),
+            };
 
             await _context.BulkInsertOrUpdateOrDeleteAsync(studies, config);
         }
