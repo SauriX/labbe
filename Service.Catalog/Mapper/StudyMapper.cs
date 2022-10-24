@@ -52,6 +52,7 @@ namespace Service.Catalog.Mapper
                 Departamento= model.Area?.Departamento?.Nombre,
                 Activo= false,
                 Precio= 0,
+                Clave= model.Clave
 
             });
         }       

@@ -175,7 +175,7 @@ namespace Service.Catalog.Application
 
 
         public async Task<PriceListListDto> Update(PriceListFormDto price)
-        {
+            {
             Helpers.ValidateGuid(price.Id, out Guid guid);
 
             var existing = await _repository.GetById(guid);
