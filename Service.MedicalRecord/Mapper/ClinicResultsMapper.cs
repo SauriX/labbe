@@ -67,6 +67,7 @@ namespace Service.MedicalRecord.Mapper
                 ParametroId = Guid.Parse(x.ParametroId),
                 Resultado = x.Resultado,
                 Unidades = x.UnidadesNombre,
+                Formula = x?.Formula,
             }).ToList();
         }
 
@@ -190,6 +191,7 @@ namespace Service.MedicalRecord.Mapper
                     ParametroId = results.ParametroId.ToString(),
                     Resultado = results.Resultado,
                     UnidadesNombre = results.Unidades,
+                    Estudio = results.SolicitudEstudio.Nombre,
                 };
             }).ToList();
         }
@@ -215,6 +217,7 @@ namespace Service.MedicalRecord.Mapper
                     ParametroId = Guid.Parse(x.ParametroId),
                     Resultado = x.Resultado,
                     Unidades = x.UnidadesNombre,
+                    Formula = x?.Formula,
                 };
             }).ToList(); 
         }
