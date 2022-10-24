@@ -5,6 +5,7 @@ using Shared.Error;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -70,8 +71,7 @@ namespace Integration.WeeClinic
                 var url = $"{baseUrl}/API/{serviceUrl}";
 
                 using HttpClient client = new();
-
-                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
                 client.DefaultRequestHeaders.Add("TokenClienteCert", certKey);
 
@@ -83,7 +83,7 @@ namespace Integration.WeeClinic
 
                     if (!responseData.IsOk && (responseData.DsRespuesta == null || responseData.DsRespuesta.ContainsKey("Validacion")))
                     {
-                        throw new Exception(string.IsNullOrEmpty(responseData.Mensaje) ? "Ha ocurrido un error con WeeClinic" : responseData.Mensaje);
+                        throw new CustomException(HttpStatusCode.BadRequest, string.IsNullOrEmpty(responseData.Mensaje) ? "Ha ocurrido un error con WeeClinic" : responseData.Mensaje);
                     }
 
                     if (responseData.DsRespuesta.ContainsKey("Validacion"))
@@ -92,29 +92,29 @@ namespace Integration.WeeClinic
 
                         var message = string.Join(" | ", validations.SelectMany(x => x.Values));
 
-                        throw new Exception(message);
+                        throw new CustomException(HttpStatusCode.BadRequest, message);
                     }
 
                     return responseData.DsRespuesta;
                 }
 
-                if ((int)response.StatusCode == 400)
+                if (response.StatusCode == HttpStatusCode.BadRequest)
                 {
                     var error = await response.Content.ReadFromJsonAsync<ErrorResponse>();
-                    throw new Exception(string.Concat(error.Error, Environment.NewLine, "Descripción: ", error.ErrorDescription));
+                    throw new CustomException(HttpStatusCode.FailedDependency, string.Concat(error.Error, Environment.NewLine, "Descripción: ", error.ErrorDescription));
                 }
 
                 if ((int)response.StatusCode == 401 || (int)response.StatusCode == 403)
                 {
-                    throw new Exception("Error de autenticación, token invalido o sin permisos con WeeClinic");
+                    throw new CustomException(HttpStatusCode.FailedDependency, "Error de autenticación, token invalido o sin permisos con WeeClinic");
                 }
 
                 if ((int)response.StatusCode == 404)
                 {
-                    throw new Exception("No se encontró el servicio de WeeClinic");
+                    throw new CustomException(HttpStatusCode.FailedDependency, "No se encontró el URL cliente de WeeClinic");
                 }
 
-                throw new Exception("Ha ocurrido un error al buscar folio con WeeClinic");
+                throw new CustomException(HttpStatusCode.FailedDependency, "Ha ocurrido un error al consultar API WeeClinic");
             }
             catch (Exception)
             {

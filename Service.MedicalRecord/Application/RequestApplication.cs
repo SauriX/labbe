@@ -41,6 +41,7 @@ namespace Service.MedicalRecord.Application
         private readonly ISendEndpointProvider _sendEndpointProvider;
         private readonly IRabbitMQSettings _rabbitMQSettings;
         private readonly IQueueNames _queueNames;
+        private readonly IWeeClinicApplication _weeService;
 
         private const byte PORCENTAJE = 1;
 
@@ -51,7 +52,8 @@ namespace Service.MedicalRecord.Application
             IPdfClient pdfClient,
             ISendEndpointProvider sendEndpoint,
             IRabbitMQSettings rabbitMQSettings,
-            IQueueNames queueNames)
+            IQueueNames queueNames,
+            IWeeClinicApplication weeService)
         {
             _transaction = transaction;
             _repository = repository;
@@ -60,6 +62,7 @@ namespace Service.MedicalRecord.Application
             _sendEndpointProvider = sendEndpoint;
             _queueNames = queueNames;
             _rabbitMQSettings = rabbitMQSettings;
+            _weeService = weeService;
         }
 
         public async Task<IEnumerable<RequestInfoDto>> GetByFilter(RequestFilterDto filter)
@@ -209,30 +212,25 @@ namespace Service.MedicalRecord.Application
                 throw new CustomException(HttpStatusCode.BadRequest, "El Folio de WeeClinic es requerido");
             }
 
-            var serviceData = await LaboratoryService.BuscaFolioLaboratorio(requestDto.FolioWeeClinic);
+            var weeStudies = await _weeService.GetServicesByFolio(requestDto.FolioWeeClinic);
 
-            var statusData = serviceData.Datos1[0];
-            if (statusData.IsVigente == 1 && statusData.CodEstatus == 1)
+            var filter = new PriceListInfoFilterDto(0, 0, requestDto.SucursalId, MEDICS.A_QUIEN_CORRESPONDA, COMPANIES.PARTICULARES, Guid.Empty)
             {
-                throw new CustomException(HttpStatusCode.BadRequest, "El servicio no está vigente");
-            }
+                Estudios = weeStudies.Select(x => x.ClaveCDP).ToList()
+            };
 
-            var services = serviceData.Datos;
-            if (services.Count == 0)
-            {
-                throw new CustomException(HttpStatusCode.BadRequest, "El folio no contiene servicios");
-            }
+            var labStudies = await _catalogClient.GetStudiesInfo(filter);
 
             string code = await GetNewCode(requestDto);
 
-            requestDto.Clave = code;
-            var newRequest = requestDto.ToModel();
-            newRequest.FolioWeeClinic = requestDto.FolioWeeClinic;
+            //requestDto.Clave = code;
+            //var newRequest = requestDto.ToModel();
+            //newRequest.FolioWeeClinic = requestDto.FolioWeeClinic;
 
-            await _repository.Create(newRequest);
+            //await _repository.Create(newRequest);
 
-            var weeStudies = services.Where(x => x.CodTipoCatalogo == 4).Select(x => x.ClaveCDP);
-            var weePacks = services.Where(x => x.CodTipoCatalogo == 12).Select(x => x.ClaveCDP);
+            //var weeStudies = services.Where(x => x.CodTipoCatalogo == 4).Select(x => x.ClaveCDP);
+            //var weePacks = services.Where(x => x.CodTipoCatalogo == 12).Select(x => x.ClaveCDP);
 
             //var systemStudies = await _catalogClient.GetStudiesByCode(weeStudies);
             //var systemPacks = await _catalogClient.GetPacksByCode(weePacks);

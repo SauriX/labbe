@@ -21,6 +21,7 @@ namespace Service.Catalog.Application
     {
         private readonly IPriceListRepository _repository;
         private readonly IPromotionRepository _promotionRepository;
+        private readonly IStudyRepository _studyRepository;
 
         public PriceListApplication(IPriceListRepository repository, IPromotionRepository promotionRepository)
         {
@@ -100,6 +101,28 @@ namespace Service.Catalog.Application
             }
 
             return priceDto;
+        }
+
+        public async Task<List<PriceListInfoStudyDto>> GetPriceStudyByCodes(PriceListInfoFilterDto filterDto)
+        {
+            var studies = new List<PriceListInfoStudyDto>();
+
+            foreach (var item in filterDto.Estudios)
+            {
+                var studyId = await _studyRepository.GetIdByCode(item);
+
+                if (studyId == 0)
+                {
+                    throw new CustomException(HttpStatusCode.NotFound, "No se encontró el estudio " + item);
+                }
+
+                filterDto.EstudioId = studyId;
+                var info = await GetPriceStudyById(filterDto);
+
+                studies.Add(info);
+            }
+
+            return studies;
         }
 
         public async Task<PriceListInfoPackDto> GetPricePackById(PriceListInfoFilterDto filterDto)

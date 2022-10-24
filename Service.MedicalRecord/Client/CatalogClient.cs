@@ -160,5 +160,32 @@ namespace Service.MedicalRecord.Client
                 throw;
             }
         }
+
+        public async Task<List<RequestStudyDto>> GetStudiesInfo(PriceListInfoFilterDto studies)
+        {
+            try
+            {
+                var json = JsonConvert.SerializeObject(studies);
+
+                var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/study/multiple/info/study", stringContent);
+
+                if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+                {
+                    return await response.Content.ReadFromJsonAsync<List<RequestStudyDto>>();
+                }
+
+                var error = await response.Content.ReadFromJsonAsync<ServerException>();
+
+                var ex = Exceptions.GetException(error);
+
+                throw ex;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
