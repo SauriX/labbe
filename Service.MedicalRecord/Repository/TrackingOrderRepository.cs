@@ -22,7 +22,41 @@ namespace Service.MedicalRecord.Repository
         {
             _context = context;
         }
-        
+        public async Task Update(TrackingOrder order)
+        {
+            using var transaction = _context.Database.BeginTransaction();
+            try
+            {
+
+                var estudios = order.Estudios.ToList();
+
+                order.Estudios = null;
+
+                _context.CAT_Seguimiento_Ruta.Update(order);
+
+                await _context.SaveChangesAsync();
+
+                estudios.ForEach(estudio =>
+                {
+                    estudio.SeguimientoId = order.Id;
+                    estudio.Id = Guid.NewGuid();
+                });
+
+                var config = new BulkConfig();
+
+                config.SetSynchronizeFilter<TrackingOrderDetail>(x => x.SeguimientoId == order.Id);
+
+                await _context.BulkInsertOrUpdateOrDeleteAsync(estudios, config);
+
+                transaction.Commit();
+
+            }catch (System.Exception)
+            {
+                transaction.Rollback();
+                throw;
+            }
+            
+        }
         public async Task Create(TrackingOrder order)
         {
             using var transaction = _context.Database.BeginTransaction();
@@ -123,5 +157,15 @@ namespace Service.MedicalRecord.Repository
 
             return true;
         }
+
+        public async Task<TrackingOrder> FindAsync(Guid orderId)
+        {
+            return await _context.CAT_Seguimiento_Ruta
+                .Where(x => x.Id == orderId)
+                .Include(x => x.Estudios)
+                .FirstOrDefaultAsync();
+        }
+
+        
     }
 }

@@ -425,7 +425,7 @@ namespace Service.MedicalRecord.Application
             {
                 for (int i = 0; i < result.ImagenPatologica.Count; i++)
                 {
-                    await SaveImageGetPath(result.ImagenPatologica[i], newResult.EstudioId);
+                    await SaveImageGetPath(result.ImagenPatologica[i], newResult.SolicitudEstudioId);
                 }
             }
 
@@ -492,7 +492,7 @@ namespace Service.MedicalRecord.Application
             {
                 throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
             }
-            if (existing.Estudio.EstatusId == Status.RequestStudy.Solicitado)
+            if (existing.SolicitudEstudio.EstatusId == Status.RequestStudy.Solicitado)
             {
 
                 var newResult = result.ToUpdateClinicalResultPathological(existing);
@@ -503,19 +503,19 @@ namespace Service.MedicalRecord.Application
                 {
                     for (int i = 0; i < result.ListaImagenesCargadas.Length; i++)
                     {
-                        await DeleteImageGetPath(result.ListaImagenesCargadas[i], newResult.EstudioId);
+                        await DeleteImageGetPath(result.ListaImagenesCargadas[i], newResult.SolicitudEstudioId);
                     }
                 }
                 if (result.ImagenPatologica != null)
                 {
                     for (int i = 0; i < result.ImagenPatologica.Count; i++)
                     {
-                        await SaveImageGetPath(result.ImagenPatologica[i], newResult.EstudioId);
+                        await SaveImageGetPath(result.ImagenPatologica[i], newResult.SolicitudEstudioId);
                     }
                 }
                 await this.UpdateStatusStudy(result.EstudioId, result.Estatus, result.UsuarioId);
             }
-            if (existing.Estudio.EstatusId == Status.RequestStudy.Capturado)
+            if (existing.SolicitudEstudio.EstatusId == Status.RequestStudy.Capturado)
             {
                 await this.UpdateStatusStudy(result.EstudioId, result.Estatus, result.UsuarioId);
             }

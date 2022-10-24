@@ -57,12 +57,13 @@ namespace Service.MedicalRecord.Mapper
                 Id = x.EstudioId,
                 Nombre = x.Estudio,
                 Area = "",
-                Status = 1,
+                Status = x.Escaneado?2:1,
                 Registro = x.FechaCreo.ToString(),
                 Seleccion = false,
                 Clave = x.Solicitud.Clave,
                 Expedienteid=x.ExpedienteId.ToString(),
             Solicitudid =x.SolicitudId.ToString(),
+            Entrega=x.FechaMod==System.DateTime.MinValue?"":x.FechaMod.ToString()
         // NombreEstatus = x.Estatus.Nombre,
     }).ToList();
         }

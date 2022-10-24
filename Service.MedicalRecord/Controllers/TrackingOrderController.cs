@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.MedicalRecord.Application.IApplication;
+using Service.MedicalRecord.Domain.TrackingOrder;
 using Service.MedicalRecord.Dtos.TrackingOrder;
 using Shared.Dictionary;
 using System;
@@ -28,6 +29,20 @@ namespace Service.MedicalRecord.Controllers
         {
             order.UsuarioId = (Guid)HttpContext.Items["userId"];
             return await _service.Create(order);
+        }
+        [HttpGet("{id}")]
+        [Authorize(Policies.Access)]
+        public async Task<TrackingOrderCurrentDto> GetOrderById(Guid id)
+        {
+            return await _service.GetOrderById(id);
+        }
+
+        [HttpPut("general")]
+        [Authorize(Policies.Update)]
+        public async Task UpdateGeneral(TrackingOrderFormDto order)
+        {
+            order.UsuarioId = (Guid)HttpContext.Items["userId"];
+            await _service.Update(order);
         }
 
         [HttpPost("findStudies")]

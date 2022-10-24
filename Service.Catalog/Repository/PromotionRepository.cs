@@ -53,7 +53,7 @@ namespace Service.Catalog.Repository
              .ThenInclude(x => x.Pack.Area.Departamento)
              .Include(x => x.studies)
              .ThenInclude(x => x.Study.Area.Departamento)
-             .Include(x => x.medics).ThenInclude(x=>x.Medic)
+             .Include(x => x.medics).ThenInclude(x => x.Medic)
              .AsQueryable()
             .FirstOrDefaultAsync(x => x.Id == id);
 
@@ -72,10 +72,12 @@ namespace Service.Catalog.Repository
 
             var promo = await
                 (from p in _context.CAT_ListaP_Promocion.Include(x => x.Promocion).Where(x => x.PrecioListaId == priceListId)
-                 join ps in _context.Relacion_Promocion_Estudio.Include(x => x.Promotion).Include(x => x.Study).Where(x => x.StudyId == studyId) on p.PromocionId equals ps.PromotionId
-                 join pb in _context.Relacion_Promocion_Sucursal.Where(x => x.BranchId == branchId) on p.PromocionId equals pb.PromotionId
-                 join pm in _context.Relacion_Promocion_medicos.Where(x => x.MedicId == doctorId) on p.PromocionId equals pm.PromotionId
-                 where p.Activo && p.Promocion.FechaInicio.Date >= today && p.Promocion.FechaFinal.Date <= today
+                 join ps in _context.Relacion_Promocion_Estudio.Include(x => x.Promotion).Include(x => x.Study).Where(x => x.StudyId == studyId && x.Activo) on p.PromocionId equals ps.PromotionId
+                 join pb in _context.Relacion_Promocion_Sucursal.Where(x => x.BranchId == branchId) on p.PromocionId equals pb.PromotionId into lfpb
+                 from subpb in lfpb.DefaultIfEmpty()
+                 join pm in _context.Relacion_Promocion_medicos.Where(x => x.MedicId == doctorId) on p.PromocionId equals pm.PromotionId into lfpm
+                 from subpm in lfpm.DefaultIfEmpty()
+                 where p.Activo && p.Promocion.FechaInicio.Date <= today && p.Promocion.FechaFinal.Date >= today
                  && ((today.DayOfWeek == DayOfWeek.Monday && ps.Lunes)
                  || (today.DayOfWeek == DayOfWeek.Tuesday && ps.Martes)
                  || (today.DayOfWeek == DayOfWeek.Wednesday && ps.Miercoles)
@@ -83,6 +85,7 @@ namespace Service.Catalog.Repository
                  || (today.DayOfWeek == DayOfWeek.Friday && ps.Viernes)
                  || (today.DayOfWeek == DayOfWeek.Saturday && ps.Sabado)
                  || (today.DayOfWeek == DayOfWeek.Sunday && ps.Domingo))
+                 orderby subpm.MedicId descending
                  select ps).ToListAsync();
 
             return promo;
@@ -94,10 +97,12 @@ namespace Service.Catalog.Repository
 
             var promo = await
                 (from p in _context.CAT_ListaP_Promocion.Include(x => x.Promocion).Where(x => x.PrecioListaId == priceListId)
-                 join pp in _context.Relacion_Promocion_Paquete.Include(x => x.Promotion).Include(x => x.Pack).Where(x => x.PackId == packId) on p.PromocionId equals pp.PromotionId
-                 join pb in _context.Relacion_Promocion_Sucursal.Where(x => x.BranchId == branchId) on p.PromocionId equals pb.PromotionId
-                 join pm in _context.Relacion_Promocion_medicos.Where(x => x.MedicId == doctorId) on p.PromocionId equals pm.PromotionId
-                 where p.Activo && p.Promocion.FechaInicio.Date >= today && p.Promocion.FechaFinal.Date <= today
+                 join pp in _context.Relacion_Promocion_Paquete.Include(x => x.Promotion).Include(x => x.Pack).Where(x => x.PackId == packId && x.Activo) on p.PromocionId equals pp.PromotionId
+                 join pb in _context.Relacion_Promocion_Sucursal.Where(x => x.BranchId == branchId) on p.PromocionId equals pb.PromotionId into lfpb
+                 from subpb in lfpb.DefaultIfEmpty()
+                 join pm in _context.Relacion_Promocion_medicos.Where(x => x.MedicId == doctorId) on p.PromocionId equals pm.PromotionId into lfpm
+                 from subpm in lfpm.DefaultIfEmpty()
+                 where p.Activo && p.Promocion.FechaInicio.Date <= today && p.Promocion.FechaFinal.Date >= today
                  && ((today.DayOfWeek == DayOfWeek.Monday && pp.Lunes)
                  || (today.DayOfWeek == DayOfWeek.Tuesday && pp.Martes)
                  || (today.DayOfWeek == DayOfWeek.Wednesday && pp.Miercoles)
@@ -105,6 +110,7 @@ namespace Service.Catalog.Repository
                  || (today.DayOfWeek == DayOfWeek.Friday && pp.Viernes)
                  || (today.DayOfWeek == DayOfWeek.Saturday && pp.Sabado)
                  || (today.DayOfWeek == DayOfWeek.Sunday && pp.Domingo))
+                 orderby subpm.MedicId descending
                  select pp).ToListAsync();
 
             return promo;

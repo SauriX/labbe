@@ -64,8 +64,8 @@ namespace Service.MedicalRecord
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.Configure<RabbitMQSettings>(Configuration.GetSection(nameof(RabbitMQSettings)));
-            services.AddSingleton<IRabbitMQSettings>(s => s.GetRequiredService<IOptions<RabbitMQSettings>>().Value);  
-            
+            services.AddSingleton<IRabbitMQSettings>(s => s.GetRequiredService<IOptions<RabbitMQSettings>>().Value);
+
             services.Configure<QueueNames>(Configuration.GetSection(nameof(QueueNames)));
             services.AddSingleton<IQueueNames>(s => s.GetRequiredService<IOptions<QueueNames>>().Value);
 
@@ -135,14 +135,14 @@ namespace Service.MedicalRecord
                     {
                         re.Consumer<BranchConsumer>(context);
                         re.DiscardFaultedMessages();
-                    });                
-                    
+                    });
+
                     configurator.ReceiveEndpoint(queueNames.Company, re =>
                     {
                         re.Consumer<CompanyConsumer>(context);
                         re.DiscardFaultedMessages();
-                    });                
-                    
+                    });
+
                     configurator.ReceiveEndpoint(queueNames.Medic, re =>
                     {
                         re.Consumer<MedicConsumer>(context);
@@ -254,6 +254,7 @@ namespace Service.MedicalRecord
             services.AddScoped<IRouteTrackingApplication, RouteTrackingApplication>();
             services.AddScoped<IShipmentTrackingApplication, ShipmentTrackingApplication>();
             services.AddScoped<IWorkListApplication, WorkListApplication>();
+            services.AddScoped<IMassSearchApplication, MassSearchApplication>();
 
             services.AddScoped<IMedicalRecordRepository, MedicalRecordRepository>();
             services.AddScoped<IRequestRepository, RequestRepository>();
@@ -265,6 +266,8 @@ namespace Service.MedicalRecord
             services.AddScoped<ITrackingOrderRepository, TrackingOrderRepository>();
             services.AddScoped<IRouteTrackingRepository, RouteTrackingRepository>();
             services.AddScoped<IShipmentTrackingRepository, ShipmentTrackingRepository>();
+            services.AddScoped<IWorkListRepository, WorkListRepository>();
+            services.AddScoped<IMassSearchRepository, MassSearchRepository>();
         }
 
 
@@ -302,8 +305,8 @@ namespace Service.MedicalRecord
                     context.Context.Response.Headers["Pragma"] = "no-cache";
                     context.Context.Response.Headers["Expires"] = "-1";
                 }
-            });         
-            
+            });
+
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(System.IO.Path.Combine(env.ContentRootPath, "wwwroot/layout/consent")),

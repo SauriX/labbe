@@ -13,10 +13,10 @@ namespace Service.MedicalRecord.Context.EntityConfiguration.ClinicResults
         {
             builder.HasKey(x => x.Id);
 
-            builder
-                .HasOne(x => x.SolicitudEstudio)
-                .WithMany()
-                .HasForeignKey(x => x.SolicitudEstudioId);
+            //builder
+            //    .HasOne(x => x.SolicitudEstudio)
+            //    .WithMany()
+            //    .HasForeignKey(x => x.SolicitudEstudioId);
 
             builder
                .HasOne(x => x.Solicitud)

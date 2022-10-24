@@ -13,7 +13,7 @@ namespace Service.MedicalRecord.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ShipmentTrackingController
+    public class ShipmentTrackingController : ControllerBase
     {
         private readonly IShipmentTrackingApplication _service;
 
@@ -31,6 +31,13 @@ namespace Service.MedicalRecord.Controllers
             return requestedStudy;
         }
 
+        [HttpGet("recive/{id}")]
+        //[Authorize(Policies.Access)]
+        public async Task<ReciveShipmentTracking> getByidRecive(Guid id)
+        {
+            var requestedStudy = await _service.getByidRecive(id);
+            return requestedStudy;
+        }
         [HttpGet("{id}")]
         //[Authorize(Policies.Access)]
         public async Task<TrackingOrderFormDto> getorder(Guid id)
@@ -38,7 +45,13 @@ namespace Service.MedicalRecord.Controllers
             var requestedStudy = await _service.getorder(id);
             return requestedStudy;
         }
-
-
+        [HttpPut("recive")]
+        [Authorize(Policies.Update)]
+        public async Task<bool> Updateorder(ReciveShipmentTracking reciveShipment)
+        {
+            reciveShipment.IdUser = (Guid)HttpContext.Items["userId"];
+            await _service.UpdateTracking(reciveShipment);
+            return true;
+        }
     }
 }

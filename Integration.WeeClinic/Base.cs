@@ -17,7 +17,7 @@ namespace Integration.WeeClinic
     {
         protected const string baseUrl = "http://weeqp.azurewebsites.net/QP/WeeClinic";
         protected const string certKey = "693CADADEA9E51F02CCE915C6541FF99CDBE4BE494E7C5E86F3FC257CC76D851";
-        protected const string token = "XgYs3hlORbNEFuzaJPxaALzn43BN949em0tAoQ05rbz1_6engEkmw5ANLmaqPdOmji6mhuwLvfIsX7eusNNkfBZ97EkN7Br8W_gGWcjmO8BGfKOKw4mLJmGo5Pr9CyEWSDQ3N6Nt7-OFD73P8zzDQqNp3Pv_InnLPLg-BQyFLKfCCDBFxNZM3t8eEnxaZPNN2wxEs-9_4MT5sFL9JhKAel70_2YynM2x_rBMFLeRwGX6lwLqiTnkSrZ0I5kMfXNqGjpmjq_eRLqzcOYvfwFMOv-peE4RR9tpC2jGiHySyOzwd6sjtaY73CQIsZXcXtbyWjldvPC7Ore6IbuyzzpUd1JRrD37wrhIjpRd-rynQAqeJmpkRkSn6p7_2I7uppGMlQaWeVvrWMveDFbjSr5PwyV6VmS0isCWmneWKSDYWd8M0bY800nP6B3qSVNZEvbV";
+        protected const string token = "R3XaFcSbKFyBVPmX7Ctj7o17Np6rotqti1PcEjAb9JAtRMiiTnr1PSCY51flr6Xm7i29xg33jh0evqA2H9heNhcraL02OApzhtkmglEsBo1kAuq4Ue9gpTdGbNkfO6EO-SR92corHQcC40D7qZy7P-wGaVA-mSjZpWJVsb9Bkt6vkep0ROHZ9uvOm28FQSeyyVrWOuDzcg6rvAWawonhgcZSxAZKotBTBe1SubaUurIkASFYtWGQ5UP9ok77HibjXpbvE5b5yTfCfe35BzvZcEc4NhMw8yzBYwpZp72cLnG6iyXkntG8bHtG1tlMQt2GJP7PNB-zu7tFa7wgpW48jRM475mtbJoA86IZGgiW2FZqvz6mMtFyv4XliXBwl2Me_Q_Rbm1aSyy3jE-0OP3zW9zipRx6nA3EHGInlZaPMZ3IhHk9F-1FImCL_U6GOAK9";
 
         protected const string folio1 = "AD00704422003227421X";
         protected const string folio2 = "AD0070442200322751R4";

@@ -9,5 +9,6 @@ namespace Service.MedicalRecord.Repository.IRepository
     {
         Task<RouteTracking> GetRouteTracking(Guid id);
         Task<TrackingOrder> getTrackingOrder(Guid id);
+        Task updateTrackingOrder(TrackingOrder trackingOrder);
     }
 }
