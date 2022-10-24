@@ -9,6 +9,7 @@ namespace Service.Catalog.Repository.IRepository
         Task<List<Study>> GetAll(string search);
         Task<List<Study>> GetActive();
         Task<Study> GetById(int id);
+        Task<int> GetIdByCode(string code);
         Task<List<Study>> GetByIds(List<int> id);
         Task Create(Study study);
         Task Update(Study study);

@@ -9,6 +9,7 @@ using Integration.WeeClinic.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Service.MedicalRecord.Application.IApplication;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -19,6 +20,13 @@ namespace Service.MedicalRecord.Controllers
     [AllowAnonymous]
     public class WeeClinicController : ControllerBase
     {
+        private readonly IWeeClinicApplication _service;
+
+        public WeeClinicController(IWeeClinicApplication service)
+        {
+            _service = service;
+        }
+
         [HttpGet("login")]
         public async Task<LoginResponse> Login()
         {
@@ -26,10 +34,10 @@ namespace Service.MedicalRecord.Controllers
         }
 
         // Laboratorio
-        [HttpGet("Laboratorio_BusquedaFolios/{folio}")]
-        public async Task<Laboratorio_BusquedaFolios> BusquedaFolios(string folio)
+        [HttpGet("search/folio/{folio}")]
+        public async Task<Laboratorio_BusquedaFolios_0> SearchPatientByFolio(string folio)
         {
-            return await LaboratoryService.BusquedaFolios(folio);
+            return await _service.SearchPatientByFolio(folio);
         }
 
         [HttpGet("Laboratorio_BusquedaFolioLaboratorio/{folio}")]
