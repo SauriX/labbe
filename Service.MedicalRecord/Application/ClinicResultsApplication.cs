@@ -184,6 +184,7 @@ namespace Service.MedicalRecord.Application
                     Id = Guid.NewGuid(),
                     SolicitudId = requestId,
                     Nombre = x.Nombre,
+                    Clave = x.Clave,
                     TipoValorId = x.TipoValor,
                     Resultado = null,
                     ValorInicial = x?.ValorInicial,
@@ -228,11 +229,11 @@ namespace Service.MedicalRecord.Application
 
                         switch (param.TipoValor)
                         {
-                            case 1:
+                            case "1":
                                 param.ValorInicial = param.TipoValores.FirstOrDefault().ValorInicial.ToString();
                                 param.ValorFinal = param.TipoValores.FirstOrDefault().ValorFinal.ToString();
                                 break;
-                            case 2:
+                            case "2":
                                 if (request.Expediente.Genero == "F")
                                 {
                                     param.ValorInicial = string.Join(", ", param.TipoValores.Where(x => x.MujerValorInicial != 0));
@@ -244,14 +245,14 @@ namespace Service.MedicalRecord.Application
                                     param.ValorFinal = string.Join(", ", param.TipoValores.Where(x => x.HombreValorFinal != 0));
                                 }
                                 break;
-                            case 3:
+                            case "3":
                                 if (ageRange)
                                 {
                                     param.ValorInicial = param.TipoValores.FirstOrDefault().ValorInicialNumerico.ToString();
                                     param.ValorFinal = param.TipoValores.FirstOrDefault().ValorFinalNumerico.ToString();
                                 }
                                 break;
-                            case 4:
+                            case "4":
                                 if (ageRange && request.Expediente.Genero == "F")
                                 {
                                     param.ValorInicial = param.TipoValores.FirstOrDefault().MujerValorInicial.ToString();
@@ -263,20 +264,20 @@ namespace Service.MedicalRecord.Application
                                     param.ValorFinal = param.TipoValores.FirstOrDefault().HombreValorFinal.ToString();
                                 }
                                 break;
-                            case 5:
+                            case "5":
                                 param.TipoValores = param.TipoValores;
                                 break;
-                            case 6:
+                            case "6":
                                 param.ValorInicial = string.Join("\n", param.TipoValores.Where(x => x.ValorInicial != 0));
                                 break;
-                            case 7:
-                            case 10:
+                            case "7":
+                            case "10":
                                 param.ValorInicial = string.Join("\n", param.TipoValores.Where(x => x.DescripcionTexto != null));
                                 break;
-                            case 8:
+                            case "8":
                                 param.ValorInicial = string.Join("\n", param.TipoValores.Where(x => x.DescripcionParrafo != null));
                                 break;
-                            case 9:
+                            case "9":
                                 param.ValorInicial = "\n";
                                 break;
                         }
@@ -799,7 +800,7 @@ namespace Service.MedicalRecord.Application
 
             foreach (var par in parameters)
             {
-                message = formula.Replace(par.Nombre, par.Resultado.ToString());
+                message = formula.Replace(par.Clave, par.Resultado.ToString());
             }
 
             var str4 = "(" + message.Replace(" ", "").ToLower() + ")";
