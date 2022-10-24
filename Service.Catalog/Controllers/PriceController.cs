@@ -40,6 +40,13 @@ namespace Service.Catalog.Controllers
             return await _service.GetPriceStudyById(filterDto);
         }
 
+        [HttpPost("multiple/info/study")]
+        [AllowAnonymous]
+        public async Task<List<PriceListInfoStudyDto>> GetPriceStudyByCodes(PriceListInfoFilterDto filterDto)
+        {
+            return await _service.GetPriceStudyByCodes(filterDto);
+        }
+
         [HttpPost("info/pack")]
         [AllowAnonymous]
         public async Task<PriceListInfoPackDto> GetPricePackById(PriceListInfoFilterDto filterDto)

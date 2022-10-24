@@ -81,6 +81,7 @@ namespace Service.Catalog.Mapper
                 Unidades = x.UnidadId,
                 UnidadNombre = x.Unidad?.Nombre,
                 TipoValor = x.TipoValor,
+                Formula = x?.Formula,
                 DeltaCheck = x.DeltaCheck,
                 MostrarFormato = x.MostrarFormato,
                 ValorInicial = x?.ValorInicial,

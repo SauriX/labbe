@@ -254,6 +254,7 @@ namespace Service.MedicalRecord
             services.AddScoped<IRouteTrackingApplication, RouteTrackingApplication>();
             services.AddScoped<IShipmentTrackingApplication, ShipmentTrackingApplication>();
             services.AddScoped<IWorkListApplication, WorkListApplication>();
+            services.AddScoped<IWeeClinicApplication, WeeClinicApplication>();
             services.AddScoped<IMassSearchApplication, MassSearchApplication>();
 
             services.AddScoped<IMedicalRecordRepository, MedicalRecordRepository>();

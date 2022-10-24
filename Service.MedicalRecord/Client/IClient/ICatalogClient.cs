@@ -12,6 +12,7 @@ namespace Service.MedicalRecord.Client.IClient
     {
         Task<string> GetCodeRange(Guid branchId);
         Task<List<RequestStudyParamsDto>> GetStudies(List<int> studies);
+        Task<List<RequestStudyDto>> GetStudiesInfo(PriceListInfoFilterDto filter);
         Task<List<PriceListInfoPromoDto>> GetStudiesPromos(List<PriceListInfoFilterDto> studies);
         Task<List<PriceListInfoPromoDto>> GetPacksPromos(List<PriceListInfoFilterDto> packs);
         Task<BranchFormDto> GetBranch(Guid id);

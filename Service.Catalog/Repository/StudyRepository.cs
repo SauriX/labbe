@@ -73,6 +73,13 @@ namespace Service.Catalog.Repository
             return reagent;
         }
 
+        public async Task<int> GetIdByCode(string code)
+        {
+            var study = await _context.CAT_Estudio.FirstOrDefaultAsync(x => x.Clave == code);
+
+            return study?.Id ?? 0;
+        }
+
         public async Task<List<Study>> GetByIds(List<int> ids)
         {
             var studies = await _context.CAT_Estudio
@@ -163,9 +170,6 @@ namespace Service.Catalog.Repository
         public async Task<bool> ValidateClaveNamne(string clave, string nombre, int id, int orden)
         {
             return await _context.CAT_Estudio.AnyAsync(x => x.Clave == clave || x.Nombre == nombre || x.Orden == orden && x.Id != id);
-
-
-
         }
     }
 }
