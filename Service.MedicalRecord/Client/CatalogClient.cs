@@ -169,7 +169,7 @@ namespace Service.MedicalRecord.Client
 
                 var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/study/multiple/info/study", stringContent);
+                var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/price/multiple/info/study", stringContent);
 
                 if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
                 {
@@ -178,9 +178,14 @@ namespace Service.MedicalRecord.Client
 
                 var error = await response.Content.ReadFromJsonAsync<ServerException>();
 
-                var ex = Exceptions.GetException(error);
+                //var ex = Exceptions.GetException(error);
 
-                throw ex;
+                if (response.StatusCode != HttpStatusCode.InternalServerError)
+                {
+                    throw new CustomException(response.StatusCode, error.Errors);
+                }
+
+                throw new Exception();
             }
             catch (Exception)
             {
