@@ -23,7 +23,8 @@ namespace Service.MedicalRecord.Dtos.MassSearch
         public string paciente { get; set; }
         public int edad { get; set; }
         public string Genero { get; set; }
-        public string Solicitud { get; set; }
+        public Guid ExpedienteId { get; set; }
+        public string NombreEstudio { get; set; }
         public List<MassSearchParameter> Parameters { get; set; }
 
     }

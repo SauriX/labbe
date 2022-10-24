@@ -19,7 +19,7 @@ namespace Service.MedicalRecord.Repository
         {
             _context = context;
         }
-        public Task<List<Request>> GetByFilter(MassSearchFilterDto filter)
+        public async Task<List<Request>> GetByFilter(MassSearchFilterDto filter)
         {
             var requests = _context.CAT_Solicitud
                 .Include(x => x.Expediente)
@@ -27,15 +27,16 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Estudios).ThenInclude(x => x.Resultados)
                 //.Where(x => x.EstatusId >= Status.RequestStudy.Solicitado)
                 .AsQueryable();
-
-            requests = requests.Where(x => x.Estudios.Any(y => y.EstatusId >= Status.RequestStudy.Solicitado));
+            
+            requests = requests.Where(x => x.Estudios.Any(y => y.EstatusId >= Status.RequestStudy.Capturado && 
+                                                                y.EstatusId != Status.RequestStudy.Cancelado));
 
             if (filter.Sucursales != null && filter.Sucursales.Any())
             {
                 requests = requests.Where(x => filter.Sucursales.Contains(x.SucursalId));
             }
 
-            if (filter.Area != null && filter.Area > 0)
+            if (filter.Area > 0)
             {
                 requests = requests.Where(x => x.Estudios.Any(y => y.AreaId == filter.Area));
             }
@@ -55,7 +56,7 @@ namespace Service.MedicalRecord.Repository
             }
 
 
-            return requests.ToListAsync();
+            return await requests.ToListAsync();
             
         }
     }

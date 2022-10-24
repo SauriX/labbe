@@ -21,7 +21,7 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("GetByFilter")]
         [Authorize(Policies.Access)]
-        public async Task<List<MassSearchInfoDto>> GetByFilter(MassSearchFilterDto filter)
+        public async Task<MassSearchInfoDto> GetByFilter(MassSearchFilterDto filter)
         {
             return await _service.GetByFilter(filter);
         }
