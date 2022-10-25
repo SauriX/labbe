@@ -311,7 +311,7 @@ namespace Service.MedicalRecord.Application
             }
         }
 
-        public async Task<string> CreatePayment(RequestPaymentDto requestDto)
+        public async Task<RequestPaymentDto> CreatePayment(RequestPaymentDto requestDto)
         {
             await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
 
@@ -319,7 +319,7 @@ namespace Service.MedicalRecord.Application
 
             await _repository.CreatePayment(newPayment);
 
-            return newPayment.Id.ToString();
+            return newPayment.ToRequestPaymentDto();
         }
 
         public async Task UpdateGeneral(RequestGeneralDto requestDto)

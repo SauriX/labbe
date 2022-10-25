@@ -103,19 +103,28 @@ namespace Service.MedicalRecord.Mapper
             };
         }
 
+        public static RequestPaymentDto ToRequestPaymentDto(this RequestPayment model)
+        {
+            if (model == null) return null;
+
+            return new RequestPaymentDto
+            {
+                Id = model.Id,
+                FormaPago = model.FormaPago,
+                NumeroCuenta = model.NumeroCuenta,
+                FechaPago = model.FechaPago,
+                Cantidad = model.Cantidad,
+                Serie = model.Serie,
+                Numero = model.Numero,
+                UsuarioRegistra = model.UsuarioRegistra
+            };
+        }
+
         public static IEnumerable<RequestPaymentDto> ToRequestPaymentDto(this List<RequestPayment> model)
         {
             if (model == null) return null;
 
-            return model.Select(x => new RequestPaymentDto
-            {
-                Id = x.Id,
-                FormaPago = x.FormaPago,
-                NumeroCuenta = x.NumeroCuenta,
-                FechaPago = x.FechaPago,
-                Cantidad = x.Cantidad,
-                UsuarioRegistra = x.UsuarioRegistra
-            });
+            return model.Select(x => x.ToRequestPaymentDto());
         }
 
         public static RequestOrderDto ToRequestOrderDto(this Request model)
@@ -263,6 +272,8 @@ namespace Service.MedicalRecord.Mapper
                 FormaPago = dto.FormaPago,
                 NumeroCuenta = dto.NumeroCuenta,
                 Cantidad = dto.Cantidad,
+                Serie = dto.Serie,
+                Numero = dto.Numero,
                 FechaPago = DateTime.Now,
                 UsuarioRegistra = dto.UsuarioRegistra,
                 UsuarioCreoId = dto.UsuarioId,

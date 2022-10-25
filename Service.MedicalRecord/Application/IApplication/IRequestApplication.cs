@@ -18,7 +18,7 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<string> Create(RequestDto requestDto);
         Task<string> CreateWeeClinic(RequestDto requestDto);
         Task<string> Convert(RequestConvertDto requestDto);
-        Task<string> CreatePayment(RequestPaymentDto requestDto);
+        Task<RequestPaymentDto> CreatePayment(RequestPaymentDto requestDto);
         Task UpdateGeneral(RequestGeneralDto requestDto);
         Task UpdateTotals(RequestTotalDto requestDto);
         Task UpdateStudies(RequestStudyUpdateDto requestDto);

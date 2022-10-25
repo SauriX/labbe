@@ -109,7 +109,7 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("payment")]
         [Authorize(Policies.Create)]
-        public async Task<string> CreatePayment(RequestPaymentDto requestDto)
+        public async Task<RequestPaymentDto> CreatePayment(RequestPaymentDto requestDto)
         {
             requestDto.UsuarioId = (Guid)HttpContext.Items["userId"];
             requestDto.UsuarioRegistra = HttpContext.Items["userName"].ToString();

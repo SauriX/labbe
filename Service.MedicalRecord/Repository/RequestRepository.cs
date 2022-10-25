@@ -204,7 +204,7 @@ namespace Service.MedicalRecord.Repository
 
         public async Task<List<RequestPayment>> GetPayments(Guid requestId)
         {
-            var payments = await _context.Relacion_Solicitud_Pago.Where(x => x.SolicitudId == requestId).ToListAsync();
+            var payments = await _context.Relacion_Solicitud_Pago.Where(x => x.SolicitudId == requestId).OrderBy(x => x.FechaCreo).ToListAsync();
 
             return payments;
         }
