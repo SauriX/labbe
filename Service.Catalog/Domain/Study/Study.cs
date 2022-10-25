@@ -47,8 +47,6 @@ namespace Service.Catalog.Domain.Study
         public int? AreaId { get; set; }
         public virtual Area Area { get; set; }
         public int? DepartamentoId { get; set; }
-        public int? FormatoId { get; set; }
-        public virtual Format Formato { get; set; }
         public int? MaquiladorId { get; set; }
         public virtual Domain.Maquila.Maquila Maquilador { get; set; }
         public int? MetodoId { get; set; }
