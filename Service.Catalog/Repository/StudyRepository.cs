@@ -26,7 +26,6 @@ namespace Service.Catalog.Repository
             var studyes = _context.CAT_Estudio
                     .Include(x => x.Area)
                     .ThenInclude(x => x.Departamento)
-                    .Include(x => x.Formato)
                     .Include(x => x.Maquilador)
                     .Include(x => x.Metodo)
                     .AsQueryable();
@@ -45,7 +44,6 @@ namespace Service.Catalog.Repository
             var studyes = _context.CAT_Estudio
                 .Include(x => x.Area)
                 .ThenInclude(x => x.Departamento)
-                .Include(x => x.Formato)
                 .Include(x => x.Maquilador)
                 .Include(x => x.Metodo)
                 .Where(x => x.Activo);
@@ -65,7 +63,6 @@ namespace Service.Catalog.Repository
                 .Include(x => x.Packets).ThenInclude(x => x.Packet)
                 .Include(x => x.Area).ThenInclude(x => x.Departamento)
                 .Include(x => x.Tapon)
-                .Include(x => x.Formato)
                 .Include(x => x.Maquilador)
                 .Include(x => x.SampleType)
                 .Include(x => x.Metodo)
