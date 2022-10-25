@@ -43,6 +43,7 @@ namespace Service.MedicalRecord.Domain.Request
         public decimal Saldo { get; set; }
         public string UsuarioCreo { get; set; }
 
+        public virtual ICollection<RequestPayment> Pagos { get; set; }
         public virtual ICollection<RequestStudy> Estudios { get; set; }
         public virtual ICollection<RequestPack> Paquetes { get; set; }
         public virtual ICollection<RequestImage> Imagenes { get; set; }

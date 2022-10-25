@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.MedicalRecord.Context;
 
 namespace Service.MedicalRecord.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221025165243_Solicitud_Pago")]
+    partial class Solicitud_Pago
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -841,9 +843,6 @@ namespace Service.MedicalRecord.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("Cantidad")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
@@ -859,13 +858,7 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<int>("FormaPagoId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Numero")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("NumeroCuenta")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Serie")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("SolicitudId")

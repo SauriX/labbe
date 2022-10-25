@@ -47,6 +47,12 @@ namespace Service.MedicalRecord.Controllers
             return await _service.GetStudies(recordId, requestId);
         }
 
+        [HttpGet("payments/{recordId}/{requestId}")]
+        public async Task<IEnumerable<RequestPaymentDto>> GetPayments(Guid recordId, Guid requestId)
+        {
+            return await _service.GetPayments(recordId, requestId);
+        }
+
         [HttpGet("images/{recordId}/{requestId}")]
         public async Task<IEnumerable<string>> GetImages(Guid recordId, Guid requestId)
         {
@@ -90,8 +96,8 @@ namespace Service.MedicalRecord.Controllers
             requestDto.UsuarioId = (Guid)HttpContext.Items["userId"];
 
             return await _service.Create(requestDto);
-        }     
-        
+        }
+
         [HttpPost("weeClinic")]
         [Authorize(Policies.Create)]
         public async Task<string> CreateWeeClinic(RequestDto requestDto)
@@ -99,6 +105,16 @@ namespace Service.MedicalRecord.Controllers
             requestDto.UsuarioId = (Guid)HttpContext.Items["userId"];
 
             return await _service.CreateWeeClinic(requestDto);
+        }
+
+        [HttpPost("payment")]
+        [Authorize(Policies.Create)]
+        public async Task<RequestPaymentDto> CreatePayment(RequestPaymentDto requestDto)
+        {
+            requestDto.UsuarioId = (Guid)HttpContext.Items["userId"];
+            requestDto.UsuarioRegistra = HttpContext.Items["userName"].ToString();
+
+            return await _service.CreatePayment(requestDto);
         }
 
         [HttpPut("general")]

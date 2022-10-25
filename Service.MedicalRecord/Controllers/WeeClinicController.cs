@@ -46,11 +46,11 @@ namespace Service.MedicalRecord.Controllers
             return await LaboratoryService.BuscaFolioLaboratorio(folio);
         }
 
-        [HttpGet("Laboratorio_GetPreciosEstudios_ByidServicio")]
-        public async Task<Laboratorio_GetPreciosEstudios_ByidServicio> GetPreciosEstudios_ByidServicio()
-        {
-            return await LaboratoryService.GetPreciosEstudios_ByidServicio();
-        }
+        //[HttpGet("Laboratorio_GetPreciosEstudios_ByidServicio")]
+        //public async Task<Laboratorio_GetPreciosEstudios_ByidServicio> GetPreciosEstudios_ByidServicio()
+        //{
+        //    return await LaboratoryService.GetPreciosEstudios_ByidServicio();
+        //}
 
         [HttpGet("Laboratorio_ValidarCodigoPacienteLaboratorio")]
         public async Task<Laboratorio_ValidarCodigoPacienteLaboratorio> ValidarCodigoPacienteLaboratorio()

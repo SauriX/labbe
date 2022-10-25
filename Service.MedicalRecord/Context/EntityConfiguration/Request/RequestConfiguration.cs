@@ -27,6 +27,12 @@ namespace Service.MedicalRecord.Context.EntityConfiguration.Request
                 .HasDefaultValue(URGENCIA_NORMAL);
 
             builder
+                .HasMany(x => x.Pagos)
+                .WithOne(x => x.Solicitud)
+                .HasForeignKey(x => x.SolicitudId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
                 .HasMany(x => x.Estudios)
                 .WithOne(x => x.Solicitud)
                 .HasForeignKey(x => x.SolicitudId)
