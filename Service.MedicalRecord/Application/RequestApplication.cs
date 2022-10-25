@@ -29,6 +29,8 @@ using MEDICS = Shared.Dictionary.Catalogs.Medic;
 using DocumentFormat.OpenXml.Math;
 using Integration.WeeClinic.Services;
 using Service.MedicalRecord.Dtos.Promos;
+using Service.MedicalRecord.Domain.Catalogs;
+using Microsoft.VisualBasic;
 
 namespace Service.MedicalRecord.Application
 {
@@ -42,6 +44,7 @@ namespace Service.MedicalRecord.Application
         private readonly IRabbitMQSettings _rabbitMQSettings;
         private readonly IQueueNames _queueNames;
         private readonly IWeeClinicApplication _weeService;
+        private readonly IRepository<Branch> _branchRepository;
 
         private const byte PORCENTAJE = 1;
 
@@ -53,7 +56,8 @@ namespace Service.MedicalRecord.Application
             ISendEndpointProvider sendEndpoint,
             IRabbitMQSettings rabbitMQSettings,
             IQueueNames queueNames,
-            IWeeClinicApplication weeService)
+            IWeeClinicApplication weeService,
+            IRepository<Branch> branchRepository)
         {
             _transaction = transaction;
             _repository = repository;
@@ -63,6 +67,7 @@ namespace Service.MedicalRecord.Application
             _queueNames = queueNames;
             _rabbitMQSettings = rabbitMQSettings;
             _weeService = weeService;
+            _branchRepository = branchRepository;
         }
 
         public async Task<IEnumerable<RequestInfoDto>> GetByFilter(RequestFilterDto filter)
@@ -219,25 +224,33 @@ namespace Service.MedicalRecord.Application
                 Estudios = weeStudies.Select(x => x.ClaveCDP).ToList()
             };
 
+            var branch = await _branchRepository.GetOne(x => x.Id == requestDto.SucursalId);
+
             var labStudies = await _catalogClient.GetStudiesInfo(filter);
 
+            var newRequest = requestDto.ToModel();
+            var studies = labStudies.ToModel(newRequest.Id, new List<RequestStudy>(), requestDto.UsuarioId);
+
+            foreach (var study in studies)
+            {
+                var ws = weeStudies.FirstOrDefault(x => x.ClaveCDP.Trim() == study.Clave.Trim());
+                var weePrices = await _weeService.GetServicePrice(ws.IdServicio, branch.Clave);
+
+                study.EstatusId = Status.RequestStudy.Pendiente;
+                study.EstudioWeeClinic = new RequestStudyWee(ws.IdOrden, ws.IdNodo, ws.IdServicio, ws.Cubierto, ws.IsAvaliable, ws.RestanteDays, ws.Vigencia, ws.IsCancel);
+            }
+
             string code = await GetNewCode(requestDto);
+            requestDto.Clave = code;
 
-            //requestDto.Clave = code;
-            //var newRequest = requestDto.ToModel();
-            //newRequest.FolioWeeClinic = requestDto.FolioWeeClinic;
+            newRequest.MedicoId = MEDICS.A_QUIEN_CORRESPONDA;
+            newRequest.CompañiaId = COMPANIES.PARTICULARES;
+            newRequest.FolioWeeClinic = requestDto.FolioWeeClinic;
+            newRequest.Estudios = studies;
 
-            //await _repository.Create(newRequest);
+            await _repository.Create(newRequest);
 
-            //var weeStudies = services.Where(x => x.CodTipoCatalogo == 4).Select(x => x.ClaveCDP);
-            //var weePacks = services.Where(x => x.CodTipoCatalogo == 12).Select(x => x.ClaveCDP);
-
-            //var systemStudies = await _catalogClient.GetStudiesByCode(weeStudies);
-            //var systemPacks = await _catalogClient.GetPacksByCode(weePacks);
-
-            //return newRequest.Id.ToString();
-
-            return "";
+            return newRequest.Id.ToString();
         }
 
         public async Task<string> Convert(RequestConvertDto requestDto)

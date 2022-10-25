@@ -170,6 +170,7 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Paquete)
                 .Include(x => x.Tapon)
                 .Include(x => x.Estatus)
+                .Include(x => x.EstudioWeeClinic)
                 .Where(x => x.SolicitudId == requestId && x.PaqueteId == null)
                 .ToListAsync();
 

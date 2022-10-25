@@ -20,10 +20,10 @@ namespace Integration.WeeClinic.Models.Laboratorio_GetPreciosEstudios_ByidServic
         public decimal ISR { get; set; }
         [JsonPropertyName("isCubierto")]
         public int IsCubierto { get; set; }
-        public int TipoIVA { get; set; }
+        public int? TipoIVA { get; set; }
         public int Cantidad { get; set; }
         public int TipoCopago { get; set; }
-        public decimal Copago { get; set; }
+        public decimal? Copago { get; set; }
         public int? TipoDeducible { get; set; }
         public decimal Deducible { get; set; }
         public int? TipoCoaseguro { get; set; }

@@ -4,6 +4,7 @@ using Service.MedicalRecord.Dtos.Request;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace Service.MedicalRecord.Mapper
 {
@@ -233,15 +234,15 @@ namespace Service.MedicalRecord.Mapper
                 UsuarioCreoId = dto.UsuarioId,
                 FechaCreo = DateTime.Now,
             };
-        }
-
+        }    
+       
         public static List<RequestPack> ToModel(this IEnumerable<RequestPackDto> dto, Guid requestId, IEnumerable<RequestPack> packs, Guid userId)
         {
             if (dto == null) return new List<RequestPack>();
 
             return dto.Select(x =>
             {
-                var pack = packs.FirstOrDefault(s => s.Id == x.Id);
+                var pack = packs?.FirstOrDefault(s => s.Id == x.Id);
 
                 return new RequestPack
                 {
@@ -279,7 +280,7 @@ namespace Service.MedicalRecord.Mapper
 
             return dto.Select(x =>
             {
-                var study = studies.FirstOrDefault(s => s.Id == x.Id);
+                var study = studies?.FirstOrDefault(s => s.Id == x.Id);
 
                 return new RequestStudy
                 {
@@ -313,6 +314,6 @@ namespace Service.MedicalRecord.Mapper
                     FechaModifico = study == null ? null : DateTime.Now
                 };
             }).ToList();
-        }
+        }       
     }
 }
