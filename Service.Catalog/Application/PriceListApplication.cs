@@ -21,6 +21,7 @@ namespace Service.Catalog.Application
     {
         private readonly IPriceListRepository _repository;
         private readonly IPromotionRepository _promotionRepository;
+        private readonly IStudyRepository _studyRepository;
 
         public PriceListApplication(IPriceListRepository repository, IPromotionRepository promotionRepository)
         {
@@ -76,14 +77,20 @@ namespace Service.Catalog.Application
             }
 
             var priceDto = price.ToPriceListInfoStudyDto();
+            priceDto.Identificador = Helpers.GenerateRandomHex(6);
 
             var promos = await _promotionRepository.GetStudyPromos(price.PrecioListaId, filterDto.SucursalId, filterDto.MedicoId, (int)filterDto.EstudioId);
 
             if (promos != null && promos.Count > 0)
             {
+                priceDto.PromocionId = promos[0].PromotionId;
+                priceDto.Promocion = promos[0].Promotion.Nombre;
+                priceDto.Descuento = promos[0].DiscountNumeric;
+                priceDto.DescuentoPorcentaje = promos[0].Discountporcent;
+
                 foreach (var promo in promos)
                 {
-                    priceDto.Promociones.Add(new PriceListInfoPromo
+                    priceDto.Promociones.Add(new PriceListInfoPromoDto
                     {
                         PromocionId = promo.PromotionId,
                         Promocion = promo.Promotion.Nombre,
@@ -94,6 +101,28 @@ namespace Service.Catalog.Application
             }
 
             return priceDto;
+        }
+
+        public async Task<List<PriceListInfoStudyDto>> GetPriceStudyByCodes(PriceListInfoFilterDto filterDto)
+        {
+            var studies = new List<PriceListInfoStudyDto>();
+
+            foreach (var item in filterDto.Estudios)
+            {
+                var studyId = await _studyRepository.GetIdByCode(item);
+
+                if (studyId == 0)
+                {
+                    throw new CustomException(HttpStatusCode.NotFound, "No se encontró el estudio " + item);
+                }
+
+                filterDto.EstudioId = studyId;
+                var info = await GetPriceStudyById(filterDto);
+
+                studies.Add(info);
+            }
+
+            return studies;
         }
 
         public async Task<PriceListInfoPackDto> GetPricePackById(PriceListInfoFilterDto filterDto)
@@ -142,7 +171,7 @@ namespace Service.Catalog.Application
             {
                 foreach (var promo in promos)
                 {
-                    priceDto.Promociones.Add(new PriceListInfoPromo
+                    priceDto.Promociones.Add(new PriceListInfoPromoDto
                     {
                         PromocionId = promo.PromotionId,
                         Promocion = promo.Promotion.Nombre,

@@ -96,5 +96,17 @@
       "UpstreamPathTemplate": "/api/scopes/tracking-order",
       "UpstreamHttpMethod": [ "GET" ]
     },
+    {
+      "DownstreamPathTemplate": "/api/scopes/MassSearch",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 45216
+        }
+      ],
+      "UpstreamPathTemplate": "/api/scopes/MassSearch",
+      "UpstreamHttpMethod": [ "GET" ]
+    }
   ]
 }

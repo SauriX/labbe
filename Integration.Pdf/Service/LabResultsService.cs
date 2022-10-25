@@ -2,6 +2,7 @@
 using Integration.Pdf.Extensions;
 using Integration.Pdf.Models;
 using MigraDoc.DocumentObjectModel;
+using MigraDoc.DocumentObjectModel.Shapes;
 using MigraDoc.DocumentObjectModel.Tables;
 using MigraDoc.Rendering;
 using System;
@@ -75,7 +76,8 @@ namespace Integration.Pdf.Service
         static void Format(Section section, ClinicResultsPdfDto results)
         {
             var fontText = new Font("calibri", 11);
-            var fontParam = new Font("calibri", 10);
+            var fontParam = new Font("calibri", 12);
+            var fontParamAlert = new Font("calibri", 12) { Color = Color.FromRgb(255, 0, 0) };
 
             var logoLab = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets\\LabRamosLogo.png");
             var logoISO = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets\\ISOLogo.png");
@@ -86,7 +88,7 @@ namespace Integration.Pdf.Service
             var ISOImage = File.ReadAllBytes(logoISO);
 
             var headerParagraph = "ALFONSO RAMOS SALAZAR, QBP, MSC, DBC UNIVERSIDAD Y HOSPITAL GENERAL DE TORONTO CED. DGP No. 703973 REG. S.S.A. 10-86 DGP F-370, No. REG. 0111";
-            var headerUrl = new Col("www.laboratorioramos.com.mx", 4, new Font("Calibri", 10) { Bold = true }, ParagraphAlignment.Center);
+            /*var headerUrl = new Col(, 4, new Font("Calibri", 10) { Bold = true }, ParagraphAlignment.Center);*/
             var header = section.Headers.Primary;
 
             if (results.ImprimrLogos)
@@ -106,14 +108,28 @@ namespace Integration.Pdf.Service
 
                 header.AddText(headerInfo);
 
-                var headerURL = new Col[]
+                /*var headerURL = new Col[]
                 {
-                new Col("", 6),
-                headerUrl,
-                new Col("", 4)
+                    new Col("", 6),
+                    headerUrl,
+                    new Col("", 4)
                 };
 
-                header.AddText(headerURL);
+                header.AddText(headerURL);*/
+
+                var textFrame = header.AddTextFrame();
+                textFrame.RelativeHorizontal = RelativeHorizontal.Page;
+                textFrame.RelativeVertical = RelativeVertical.Page;
+
+                textFrame.WrapFormat.DistanceLeft = (section.PageSetup.PageWidth / 2) - 15;
+                textFrame.WrapFormat.DistanceTop = Unit.FromCentimeter(2.7);
+
+                textFrame.Width = 100;
+                textFrame.Height = Unit.FromCentimeter(1);
+
+                var textFramePar = textFrame.AddParagraph();
+                textFramePar.Format.Alignment = ParagraphAlignment.Center;
+                textFramePar.AddFormattedText("www.laboratorioramos.com.mx", new Font("Calibri", 10) { Bold = true });
             }
 
             section.AddSpace(5);
@@ -173,6 +189,7 @@ namespace Integration.Pdf.Service
                 new Col("REFERENCIA", 6, Col.FONT_SUBTITLE_BOLD),
             };
             section.AddBorderedText(studyHeader, top: true, right: false, bottom: true, left: false);
+            section.AddSpace(3);
 
             if (results.CapturaResultados != null)
             {
@@ -180,9 +197,11 @@ namespace Integration.Pdf.Service
                 {
                     var col = new Col[]
                     {
-                    new Col(param.Nombre, 14, fontParam, ParagraphAlignment.Left),
+                    new Col(param.Nombre, 12, fontParam, ParagraphAlignment.Left){
+                        Fill = TabLeader.Dashes
+                    },
                     new Col(param.Resultado, 7, fontParam, ParagraphAlignment.Center),
-                    new Col(param.UnidadesNombre.ToString(), 6, fontParam, ParagraphAlignment.Center),
+                    new Col(param.UnidadesNombre, 6, fontParam, ParagraphAlignment.Center),
                     new Col(param.ValorInicial == "0" ? "" : param.ValorInicial, 6, fontParam, ParagraphAlignment.Center),
                     };
                     section.AddBorderedText(col, top: false, right: false, bottom: true, left: false);
@@ -194,22 +213,19 @@ namespace Integration.Pdf.Service
 
             var firmadoPor = "MSc. Alfonso Ramos Salazar\nCED. PROF. 703973";
 
-
             var footerFirmaLibera = new Col[]
             {
-                 new Col("Toma de Muestra: " + results.SolicitudInfo?.FechaAdmision + " " + " " + results.SolicitudInfo?.User, 5, ParagraphAlignment.Left),
-                 new Col("Liberó: " + results.SolicitudInfo?.FechaEntrega + " " + " " + results.SolicitudInfo?.User, 5, ParagraphAlignment.Left),
-                 new Col(firmaImage)
+                 new Col("Toma de Muestra: " + results.SolicitudInfo?.FechaAdmision + " " + " " + results.SolicitudInfo?.User + "\nLiberó: " + results.SolicitudInfo?.FechaEntrega + " " + " " + results.SolicitudInfo?.User, 5, ParagraphAlignment.Left),
+                 new Col(firmaImage, 4)
                  {
-                     ImagenTamaño = Unit.FromCentimeter(4)
+                     ImagenTamaño = Unit.FromCentimeter(2.5)
                  },
             };
 
             var footerFirmadoPor = new Col[]
             {
-                 new Col("", 5, ParagraphAlignment.Left),
-                 new Col("", 5, ParagraphAlignment.Left),
-                 new Col(firmadoPor)
+                new Col("", 5, ParagraphAlignment.Left),
+                new Col(firmadoPor, 4)
             };
 
             footer.AddText(footerFirmaLibera);

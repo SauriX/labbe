@@ -67,6 +67,7 @@ namespace Service.MedicalRecord.Mapper
                 ParametroId = Guid.Parse(x.ParametroId),
                 Resultado = x.Resultado,
                 Unidades = x.UnidadesNombre,
+                Formula = x?.Formula,
             }).ToList();
         }
 
@@ -77,7 +78,7 @@ namespace Service.MedicalRecord.Mapper
             return new ClinicalResultsPathological
             {
                 SolicitudId = dto.SolicitudId,
-                EstudioId = dto.EstudioId,
+                SolicitudEstudioId = dto.EstudioId,
                 RequestStudyId = dto.RequestStudyId,
                 DescripcionMacroscopica = dto.DescripcionMacroscopica,
                 DescripcionMicroscopica = dto.DescripcionMicroscopica,
@@ -130,7 +131,7 @@ namespace Service.MedicalRecord.Mapper
             {
                 Id = model.Id,
                 SolicitudId = dto.SolicitudId,
-                EstudioId = dto.EstudioId,
+                SolicitudEstudioId = dto.EstudioId,
                 RequestStudyId = dto.RequestStudyId,
                 DescripcionMacroscopica = dto.DescripcionMacroscopica,
                 DescripcionMicroscopica = dto.DescripcionMicroscopica,
@@ -190,6 +191,7 @@ namespace Service.MedicalRecord.Mapper
                     ParametroId = results.ParametroId.ToString(),
                     Resultado = results.Resultado,
                     UnidadesNombre = results.Unidades,
+                    Estudio = results.SolicitudEstudio.Nombre,
                 };
             }).ToList();
         }
@@ -215,6 +217,7 @@ namespace Service.MedicalRecord.Mapper
                     ParametroId = Guid.Parse(x.ParametroId),
                     Resultado = x.Resultado,
                     Unidades = x.UnidadesNombre,
+                    Formula = x?.Formula,
                 };
             }).ToList(); 
         }
@@ -229,8 +232,8 @@ namespace Service.MedicalRecord.Mapper
                     FechaEntrega = DateTime.Now.ToString("MM/dd/yyyy"),
                     Paciente = res.Solicitud.Expediente.NombrePaciente,
                     Edad = res.Solicitud.Expediente.Edad,
-                    Estudio = res.Estudio.Clave,
-                    Departamento = res.Estudio.DepartamentoId.ToString(),
+                    Estudio = res.SolicitudEstudio.Clave,
+                    Departamento = res.SolicitudEstudio.DepartamentoId.ToString(),
                     MuestraRecibida = res.MuestraRecibida,
                     DescripcionMacroscopica = res.DescripcionMacroscopica,
                     DescripcionMicroscopica = res.DescripcionMicroscopica,

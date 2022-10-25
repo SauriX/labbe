@@ -16,7 +16,7 @@ namespace Service.MedicalRecord.Dtos.Catalogs
         public bool MostrarFormato { get; set; }
         public int? Unidades { get; set; }
         public string UnidadNombre { get; set; }
-        public int TipoValor { get; set; }
+        public string TipoValor { get; set; }
         public string ValorInicial { get; set; }
         public string ValorFinal { get; set; }
         public decimal CriticoMinimo { get; set; }
@@ -25,6 +25,7 @@ namespace Service.MedicalRecord.Dtos.Catalogs
         public int EstudioId { get; set; }
         public int SolicitudEstudioId { get; set; }
         public string ResultadoId { get; set; }
+        public string Formula { get; set; }
         public List<ParameterValueDto> TipoValores { get; set; }
     }
 }

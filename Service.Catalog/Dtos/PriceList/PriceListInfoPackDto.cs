@@ -19,7 +19,7 @@ namespace Service.Catalog.Dtos.PriceList
         public decimal Descuento { get; set; }
         public decimal DescuentoPorcentaje { get; set; }
         public decimal PrecioFinal { get; set; }
-        public List<PriceListInfoPromo> Promociones { get; set; }
+        public List<PriceListInfoPromoDto> Promociones { get; set; }
         public List<PriceListInfoStudyDto> Estudios { get; set; }
     }
 }

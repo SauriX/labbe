@@ -161,7 +161,7 @@ namespace Service.MedicalRecord.Repository
             var resultExisting = await _context.Cat_Captura_ResultadosPatologicos
                 .Where(x => x.RequestStudyId == id)
                 .Include(x => x.Medico)
-                .Include(x => x.Estudio)
+                .Include(x => x.SolicitudEstudio)
                 .Include(x => x.Solicitud).ThenInclude(y => y.Expediente)
                 .FirstOrDefaultAsync();
             return resultExisting;
@@ -172,13 +172,13 @@ namespace Service.MedicalRecord.Repository
             var resultExisting = await _context.Cat_Captura_ResultadosPatologicos
                 .Where(x => ids.Contains(x.RequestStudyId))
                 .Include(x => x.Medico)
-                .Include(x => x.Estudio)
+                .Include(x => x.SolicitudEstudio)
                 .Include(x => x.Solicitud).ThenInclude(y => y.Expediente)
                 .ToListAsync();
             return resultExisting;
         }
 
-        public async Task<ClinicResults> GetLabResultsById(int id)
+        public async Task<List<ClinicResults>> GetLabResultsById(int id)
         {
             var resultExisting = await _context.ClinicResults
                 .Where(x => x.SolicitudEstudioId == id)
@@ -187,7 +187,7 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Solicitud).ThenInclude(y => y.Medico)
                 .Include(x => x.Solicitud).ThenInclude(y => y.Estudios)
                 .Include(x => x.Solicitud).ThenInclude(y => y.Compañia)
-                .FirstOrDefaultAsync();
+                .ToListAsync();
             return resultExisting;
         }
 
