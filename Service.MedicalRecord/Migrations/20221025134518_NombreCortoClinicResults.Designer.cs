@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.MedicalRecord.Context;
 
 namespace Service.MedicalRecord.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221025134518_NombreCortoClinicResults")]
+    partial class NombreCortoClinicResults
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1012,48 +1014,6 @@ namespace Service.MedicalRecord.Migrations
                     b.ToTable("Estatus_Solicitud_Estudio");
                 });
 
-            modelBuilder.Entity("Service.MedicalRecord.Domain.Request.RequestStudyWee", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Cubierto")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("IdNodo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("IdOrden")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("IdServicio")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("IsAvailable")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IsCancel")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RestanteDays")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SolicitudEstudioId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Vigencia")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SolicitudEstudioId")
-                        .IsUnique();
-
-                    b.ToTable("Relacion_Estudio_WeeClinic");
-                });
-
             modelBuilder.Entity("Service.MedicalRecord.Domain.RouteTracking.RouteTracking", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1451,17 +1411,6 @@ namespace Service.MedicalRecord.Migrations
                     b.Navigation("Tapon");
                 });
 
-            modelBuilder.Entity("Service.MedicalRecord.Domain.Request.RequestStudyWee", b =>
-                {
-                    b.HasOne("Service.MedicalRecord.Domain.Request.RequestStudy", "SolicitudEstudio")
-                        .WithOne("EstudioWeeClinic")
-                        .HasForeignKey("Service.MedicalRecord.Domain.Request.RequestStudyWee", "SolicitudEstudioId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("SolicitudEstudio");
-                });
-
             modelBuilder.Entity("Service.MedicalRecord.Domain.RouteTracking.RouteTracking", b =>
                 {
                     b.HasOne("Service.MedicalRecord.Domain.Request.Request", "Solicitud")
@@ -1528,8 +1477,6 @@ namespace Service.MedicalRecord.Migrations
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.Request.RequestStudy", b =>
                 {
-                    b.Navigation("EstudioWeeClinic");
-
                     b.Navigation("Resultados");
 
                     b.Navigation("ResultadosPatologicos");

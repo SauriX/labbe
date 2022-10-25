@@ -75,6 +75,11 @@ namespace Service.Catalog.Context.EntityConfiguration.Parameter
                .HasForeignKey(x => x.ParametroId)
                .OnDelete(DeleteBehavior.Restrict);
 
+            builder
+               .HasMany(x => x.TipoValores)
+               .WithOne(x => x.Parametro)
+               .HasForeignKey(x => x.ParametroId);
+
         }
     }
 }
