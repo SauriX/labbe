@@ -138,7 +138,7 @@ namespace Service.MedicalRecord.Application
 
         public async Task<RequestStudyUpdateDto> GetStudies(Guid recordId, Guid requestId)
         {
-            var request = await GetExistingRequest(recordId, requestId);
+            var request = await  GetExistingRequest(recordId, requestId);
 
             var studies = await _request.GetAllStudies(request.Id);
             var studiesDto = studies.ToRequestStudyDto().Where(x => x.DepartamentoId != SharedDepartment.PATOLOGIA).ToList();
@@ -192,6 +192,7 @@ namespace Service.MedicalRecord.Application
                     ParametroId = Guid.Parse(x.Id),
                     SolicitudEstudioId = x.SolicitudEstudioId,
                     Unidades = x.UnidadNombre,
+                    NombreCorto = x.NombreCorto,
                     EstudioId = x.EstudioId
                 }).ToList();
 
@@ -223,7 +224,8 @@ namespace Service.MedicalRecord.Application
                     param.ResultadoId = result.Id.ToString();
                     param.Formula = result.Formula;
 
-                    if (param.TipoValores != null)
+
+                    if (param.TipoValores != null && param.TipoValores.Count != 0)
                     {
                         var ageRange = request.Expediente.Edad >= param.TipoValores.FirstOrDefault().RangoEdadInicial && request.Expediente.Edad <= param.TipoValores.FirstOrDefault().RangoEdadFinal;
 

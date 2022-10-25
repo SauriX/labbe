@@ -15,6 +15,7 @@ namespace Service.MedicalRecord.Domain
         public string Unidades { get; set; }
         public string Clave { get; set; }
         public string Nombre { get; set; }
+        public string NombreCorto { get; set; }
         public string ValorInicial { get; set; }
         public string ValorFinal { get; set; }
         public string Formula { get; set; }
