@@ -324,6 +324,8 @@ namespace Service.MedicalRecord.Application
             }
             else if (request.SolicitudEstudio.EstatusId == Status.RequestStudy.Capturado)
             {
+                var newResults = results.ToCaptureResults();
+                await _repository.UpdateLabResults(newResults);
                 await UpdateStatusStudy(request.SolicitudEstudioId, request.SolicitudEstudio.EstatusId, user);
             }
 
