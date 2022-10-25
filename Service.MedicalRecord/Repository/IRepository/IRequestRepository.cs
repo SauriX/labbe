@@ -20,7 +20,9 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task<List<RequestPack>> GetPacksByRequest(Guid requestId);
         Task<RequestImage> GetImage(Guid requestId, string code);
         Task<List<RequestImage>> GetImages(Guid requestId);
+        Task<List<RequestPayment>> GetPayments(Guid requestId);
         Task Create(Request request);
+        Task CreatePayment(RequestPayment request);
         Task Update(Request request);
         Task UpdateImage(RequestImage requestImage);
         Task UpdateStudy(RequestStudy study);
