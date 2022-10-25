@@ -23,10 +23,11 @@ namespace Service.Catalog.Application
         private readonly IPromotionRepository _promotionRepository;
         private readonly IStudyRepository _studyRepository;
 
-        public PriceListApplication(IPriceListRepository repository, IPromotionRepository promotionRepository)
+        public PriceListApplication(IPriceListRepository repository, IPromotionRepository promotionRepository, IStudyRepository studyRepository)
         {
             _repository = repository;
             _promotionRepository = promotionRepository;
+            _studyRepository = studyRepository;
         }
 
         public async Task<IEnumerable<PriceListListDto>> GetAll(string search)
@@ -113,7 +114,7 @@ namespace Service.Catalog.Application
 
                 if (studyId == 0)
                 {
-                    throw new CustomException(HttpStatusCode.NotFound, "No se encontró el estudio " + item);
+                    throw new CustomException(HttpStatusCode.BadRequest, "No se encontró el estudio " + item);
                 }
 
                 filterDto.EstudioId = studyId;

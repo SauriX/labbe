@@ -7,26 +7,26 @@ namespace Shared.Helpers
     {
         public static Exception GetException(ServerException error)
         {
-            var message = error.ExceptionMessage + " / " + error.Message;
-            if (!string.IsNullOrWhiteSpace(error.StackTrace))
-            {
-                message = string.Concat(message, Environment.NewLine, error.StackTrace.Trim().Split(Environment.NewLine)[0]);
-            }
+            //var message = error.ExceptionMessage + " / " + error.Message;
+            //if (!string.IsNullOrWhiteSpace(error.StackTrace))
+            //{
+            //    message = string.Concat(message, Environment.NewLine, error.StackTrace.Trim().Split(Environment.NewLine)[0]);
+            //}
 
-            string innerMessage;
-            if (error.InnerException != null)
-            {
-                innerMessage = error.InnerException.ExceptionMessage + " / " + error.InnerException.Message;
+            //string innerMessage;
+            //if (error.InnerException != null)
+            //{
+            //    innerMessage = error.InnerException.ExceptionMessage + " / " + error.InnerException.Message;
 
-                if (!string.IsNullOrWhiteSpace(error.InnerException.StackTrace))
-                {
-                    innerMessage = string.Concat(innerMessage, Environment.NewLine, error.InnerException.StackTrace.Trim().Split(Environment.NewLine)[0]);
-                }
+            //    if (!string.IsNullOrWhiteSpace(error.InnerException.StackTrace))
+            //    {
+            //        innerMessage = string.Concat(innerMessage, Environment.NewLine, error.InnerException.StackTrace.Trim().Split(Environment.NewLine)[0]);
+            //    }
 
-                return new Exception(message, new Exception(innerMessage));
-            }
+            //    return new Exception(message, new Exception(innerMessage));
+            //}
 
-            return new Exception(message);
+            return new Exception("");
         }
 
         public static string GetMessage(Exception ex)

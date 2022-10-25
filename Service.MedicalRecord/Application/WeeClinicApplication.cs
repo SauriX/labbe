@@ -1,8 +1,10 @@
 ﻿using Integration.WeeClinic.Models.Laboratorio_BusquedaFolioLaboratorio;
 using Integration.WeeClinic.Models.Laboratorio_BusquedaFolios;
+using Integration.WeeClinic.Models.Laboratorio_GetPreciosEstudios_ByidServicio;
 using Integration.WeeClinic.Services;
 using Service.MedicalRecord.Application.IApplication;
 using Shared.Error;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -11,6 +13,9 @@ namespace Service.MedicalRecord.Application
 {
     public class WeeClinicApplication : IWeeClinicApplication
     {
+        private const string COD_ESTATUS_SELECCIONAR_ESTUDIO = "14";
+        private const string COD_ESTATUS_LIBERAR_ESTUDIO = "1";
+
         public async Task<Laboratorio_BusquedaFolios_0> SearchPatientByFolio(string folio)
         {
             var response = await LaboratoryService.BusquedaFolios(folio);
@@ -47,6 +52,20 @@ namespace Service.MedicalRecord.Application
             }
 
             return services;
+        }
+
+        public async Task<Laboratorio_GetPreciosEstudios_ByidServicio> GetServicePrice(string serviceId, string branch)
+        {
+            var response = await LaboratoryService.GetPreciosEstudios_ByidServicio(serviceId, branch, COD_ESTATUS_SELECCIONAR_ESTUDIO);
+
+            return response;
+        }
+
+        public async Task<Laboratorio_GetPreciosEstudios_ByidServicio_0> ReleaseService(string serviceId)
+        {
+            var response = await LaboratoryService.GetPreciosEstudios_ByidServicio(serviceId, null, COD_ESTATUS_LIBERAR_ESTUDIO);
+
+            return response.Datos[0];
         }
     }
 }

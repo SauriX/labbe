@@ -47,6 +47,12 @@ namespace Service.MedicalRecord.Context.EntityConfiguration.Request
                 .HasColumnType("smalldatetime");
 
             builder
+                .HasOne(x => x.EstudioWeeClinic)
+                .WithOne(x => x.SolicitudEstudio)
+                .HasForeignKey<RequestStudyWee>(x => x.SolicitudEstudioId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
                 .HasMany(x => x.Resultados)
                 .WithOne(x => x.SolicitudEstudio)
                 .HasForeignKey(x => x.SolicitudEstudioId)

@@ -170,6 +170,7 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Paquete)
                 .Include(x => x.Tapon)
                 .Include(x => x.Estatus)
+                .Include(x => x.EstudioWeeClinic)
                 .Where(x => x.SolicitudId == requestId && x.PaqueteId == null)
                 .ToListAsync();
 
@@ -201,10 +202,23 @@ namespace Service.MedicalRecord.Repository
             return images;
         }
 
+        public async Task<List<RequestPayment>> GetPayments(Guid requestId)
+        {
+            var payments = await _context.Relacion_Solicitud_Pago.Where(x => x.SolicitudId == requestId).OrderBy(x => x.FechaCreo).ToListAsync();
+
+            return payments;
+        }
 
         public async Task Create(Request request)
         {
             _context.CAT_Solicitud.Add(request);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task CreatePayment(RequestPayment request)
+        {
+            _context.Relacion_Solicitud_Pago.Add(request);
 
             await _context.SaveChangesAsync();
         }

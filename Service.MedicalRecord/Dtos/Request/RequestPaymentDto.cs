@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 
-namespace Service.MedicalRecord.Domain.Request
+namespace Service.MedicalRecord.Dtos.Request
 {
-    public class RequestPayment : BaseModel
+    public class RequestPaymentDto
     {
         public Guid Id { get; set; }
+        public Guid ExpedienteId { get; set; }
         public Guid SolicitudId { get; set; }
-        public virtual Request Solicitud { get; set; }
         public int FormaPagoId { get; set; }
         public string FormaPago { get; set; }
         public string NumeroCuenta { get; set; }
@@ -15,5 +16,7 @@ namespace Service.MedicalRecord.Domain.Request
         public string Numero { get; set; }
         public DateTime FechaPago { get; set; }
         public string UsuarioRegistra { get; set; }
+        [JsonIgnore]
+        public Guid UsuarioId { get; set; }
     }
 }
