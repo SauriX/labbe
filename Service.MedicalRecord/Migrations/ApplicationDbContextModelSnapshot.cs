@@ -241,10 +241,19 @@ namespace Service.MedicalRecord.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Clave")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("EstudioId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Formula")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NombreCorto")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("ParametroId")
@@ -259,8 +268,8 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<Guid>("SolicitudId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("TipoValorId")
-                        .HasColumnType("int");
+                    b.Property<string>("TipoValorId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Unidades")
                         .HasColumnType("nvarchar(max)");
@@ -295,9 +304,6 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("Diagnostico")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("EstudioId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ImagenPatologica")
                         .HasColumnType("nvarchar(max)");
 
@@ -310,14 +316,17 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<int>("RequestStudyId")
                         .HasColumnType("int");
 
+                    b.Property<int>("SolicitudEstudioId")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("SolicitudId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EstudioId");
-
                     b.HasIndex("MedicoId");
+
+                    b.HasIndex("SolicitudEstudioId");
 
                     b.HasIndex("SolicitudId");
 
@@ -693,6 +702,8 @@ namespace Service.MedicalRecord.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CompañiaId");
+
+                    b.HasIndex("EstatusId");
 
                     b.HasIndex("ExpedienteId");
 
@@ -1219,9 +1230,9 @@ namespace Service.MedicalRecord.Migrations
             modelBuilder.Entity("Service.MedicalRecord.Domain.ClinicResults", b =>
                 {
                     b.HasOne("Service.MedicalRecord.Domain.Request.RequestStudy", "SolicitudEstudio")
-                        .WithMany()
+                        .WithMany("Resultados")
                         .HasForeignKey("SolicitudEstudioId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Service.MedicalRecord.Domain.Request.Request", "Solicitud")
@@ -1237,15 +1248,15 @@ namespace Service.MedicalRecord.Migrations
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.ClinicalResultsPathological", b =>
                 {
-                    b.HasOne("Service.MedicalRecord.Domain.Request.RequestStudy", "Estudio")
-                        .WithMany()
-                        .HasForeignKey("EstudioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Service.MedicalRecord.Domain.Catalogs.Medic", "Medico")
                         .WithMany()
                         .HasForeignKey("MedicoId");
+
+                    b.HasOne("Service.MedicalRecord.Domain.Request.RequestStudy", "SolicitudEstudio")
+                        .WithMany("ResultadosPatologicos")
+                        .HasForeignKey("SolicitudEstudioId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Service.MedicalRecord.Domain.Request.Request", "Solicitud")
                         .WithMany()
@@ -1253,11 +1264,11 @@ namespace Service.MedicalRecord.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Estudio");
-
                     b.Navigation("Medico");
 
                     b.Navigation("Solicitud");
+
+                    b.Navigation("SolicitudEstudio");
                 });
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.MedicalRecord.MedicalRecordTaxData", b =>
@@ -1309,6 +1320,12 @@ namespace Service.MedicalRecord.Migrations
                         .WithMany()
                         .HasForeignKey("CompañiaId");
 
+                    b.HasOne("Service.MedicalRecord.Domain.Request.RequestStatus", "Estatus")
+                        .WithMany()
+                        .HasForeignKey("EstatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Service.MedicalRecord.Domain.MedicalRecord.MedicalRecord", "Expediente")
                         .WithMany()
                         .HasForeignKey("ExpedienteId")
@@ -1326,6 +1343,8 @@ namespace Service.MedicalRecord.Migrations
                         .IsRequired();
 
                     b.Navigation("Compañia");
+
+                    b.Navigation("Estatus");
 
                     b.Navigation("Expediente");
 
@@ -1452,6 +1471,13 @@ namespace Service.MedicalRecord.Migrations
             modelBuilder.Entity("Service.MedicalRecord.Domain.Request.RequestPack", b =>
                 {
                     b.Navigation("Estudios");
+                });
+
+            modelBuilder.Entity("Service.MedicalRecord.Domain.Request.RequestStudy", b =>
+                {
+                    b.Navigation("Resultados");
+
+                    b.Navigation("ResultadosPatologicos");
                 });
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.TrackingOrder.TrackingOrder", b =>

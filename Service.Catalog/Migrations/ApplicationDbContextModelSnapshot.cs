@@ -1694,9 +1694,6 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("Opcion")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("ParameterId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("ParametroId")
                         .HasColumnType("uniqueidentifier");
 
@@ -1725,8 +1722,6 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ParameterId");
 
                     b.HasIndex("ParametroId");
 
@@ -3067,12 +3062,8 @@ namespace Service.Catalog.Migrations
 
             modelBuilder.Entity("Service.Catalog.Domain.Parameter.ParameterValue", b =>
                 {
-                    b.HasOne("Service.Catalog.Domain.Parameter.Parameter", null)
-                        .WithMany("TipoValores")
-                        .HasForeignKey("ParameterId");
-
                     b.HasOne("Service.Catalog.Domain.Parameter.Parameter", "Parametro")
-                        .WithMany()
+                        .WithMany("TipoValores")
                         .HasForeignKey("ParametroId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

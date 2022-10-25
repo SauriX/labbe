@@ -138,7 +138,7 @@ namespace Service.MedicalRecord.Application
 
         public async Task<RequestStudyUpdateDto> GetStudies(Guid recordId, Guid requestId)
         {
-            var request = await GetExistingRequest(recordId, requestId);
+            var request = await  GetExistingRequest(recordId, requestId);
 
             var studies = await _request.GetAllStudies(request.Id);
             var studiesDto = studies.ToRequestStudyDto().Where(x => x.DepartamentoId != SharedDepartment.PATOLOGIA).ToList();
@@ -184,12 +184,15 @@ namespace Service.MedicalRecord.Application
                     Id = Guid.NewGuid(),
                     SolicitudId = requestId,
                     Nombre = x.Nombre,
+                    Clave = x.Clave,
                     TipoValorId = x.TipoValor,
                     Resultado = null,
                     ValorInicial = x?.ValorInicial,
                     ValorFinal = x?.ValorFinal,
                     ParametroId = Guid.Parse(x.Id),
                     SolicitudEstudioId = x.SolicitudEstudioId,
+                    Unidades = x.UnidadNombre,
+                    NombreCorto = x.NombreCorto,
                     EstudioId = x.EstudioId
                 }).ToList();
 
@@ -210,8 +213,77 @@ namespace Service.MedicalRecord.Application
                 foreach (var param in study.Parametros)
                 {
                     var result = results.Find(x => x.SolicitudEstudioId == study.Id && x.ParametroId.ToString() == param.Id);
-                    param.Resultado = result.Resultado;
+                    if (result.Formula != null)
+                    {
+                        param.Resultado = GetFormula(results, result.Formula);
+                    }
+                    else
+                    {
+                        param.Resultado = result.Resultado;
+                    }
                     param.ResultadoId = result.Id.ToString();
+                    param.Formula = result.Formula;
+
+
+                    if (param.TipoValores != null && param.TipoValores.Count != 0)
+                    {
+                        var ageRange = request.Expediente.Edad >= param.TipoValores.FirstOrDefault().RangoEdadInicial && request.Expediente.Edad <= param.TipoValores.FirstOrDefault().RangoEdadFinal;
+
+                        switch (param.TipoValor)
+                        {
+                            case "1":
+                                param.ValorInicial = param.TipoValores.FirstOrDefault().ValorInicial.ToString();
+                                param.ValorFinal = param.TipoValores.FirstOrDefault().ValorFinal.ToString();
+                                break;
+                            case "2":
+                                if (request.Expediente.Genero == "F")
+                                {
+                                    param.ValorInicial = string.Join(", ", param.TipoValores.Where(x => x.MujerValorInicial != 0));
+                                    param.ValorFinal = string.Join(", ", param.TipoValores.Where(x => x.MujerValorFinal != 0));
+                                }
+                                else if (request.Expediente.Genero == "M")
+                                {
+                                    param.ValorInicial = string.Join(", ", param.TipoValores.Where(x => x.HombreValorInicial != 0));
+                                    param.ValorFinal = string.Join(", ", param.TipoValores.Where(x => x.HombreValorFinal != 0));
+                                }
+                                break;
+                            case "3":
+                                if (ageRange)
+                                {
+                                    param.ValorInicial = param.TipoValores.FirstOrDefault().ValorInicialNumerico.ToString();
+                                    param.ValorFinal = param.TipoValores.FirstOrDefault().ValorFinalNumerico.ToString();
+                                }
+                                break;
+                            case "4":
+                                if (ageRange && request.Expediente.Genero == "F")
+                                {
+                                    param.ValorInicial = param.TipoValores.FirstOrDefault().MujerValorInicial.ToString();
+                                    param.ValorFinal = param.TipoValores.FirstOrDefault().MujerValorFinal.ToString();
+                                }
+                                else if (ageRange && request.Expediente.Genero == "M")
+                                {
+                                    param.ValorInicial = param.TipoValores.FirstOrDefault().HombreValorInicial.ToString();
+                                    param.ValorFinal = param.TipoValores.FirstOrDefault().HombreValorFinal.ToString();
+                                }
+                                break;
+                            case "5":
+                                param.TipoValores = param.TipoValores;
+                                break;
+                            case "6":
+                                param.ValorInicial = string.Join("\n", param.TipoValores.Where(x => x.ValorInicial != 0));
+                                break;
+                            case "7":
+                            case "10":
+                                param.ValorInicial = string.Join("\n", param.TipoValores.Where(x => x.DescripcionTexto != null));
+                                break;
+                            case "8":
+                                param.ValorInicial = string.Join("\n", param.TipoValores.Where(x => x.DescripcionParrafo != null));
+                                break;
+                            case "9":
+                                param.ValorInicial = "\n";
+                                break;
+                        }
+                    }
                 }
             }
 
@@ -236,22 +308,101 @@ namespace Service.MedicalRecord.Application
 
         public async Task UpdateLabResults(List<ClinicResultsFormDto> results)
         {
+            var request = (await _repository.GetLabResultsById(results.First().SolicitudEstudioId)).FirstOrDefault();
+            var user = results.First().UsuarioId;
+
             if (results.Count() == 0)
             {
                 throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
             }
 
-            var newResults = results.ToCaptureResults();
-            await _repository.UpdateLabResults(newResults);
-
-            foreach (var result in results)
+            if (request.SolicitudEstudio.EstatusId == Status.RequestStudy.Solicitado)
             {
-                if (result.Estatus == Status.RequestStudy.Liberado)
+                var newResults = results.ToCaptureResults();
+                await _repository.UpdateLabResults(newResults);
+                await UpdateStatusStudy(request.SolicitudEstudioId, request.SolicitudEstudio.EstatusId, user);
+            }
+            else if (request.SolicitudEstudio.EstatusId == Status.RequestStudy.Capturado)
+            {
+                await UpdateStatusStudy(request.SolicitudEstudioId, request.SolicitudEstudio.EstatusId, user);
+            }
+
+            else if (request.SolicitudEstudio.EstatusId == Status.RequestStudy.Liberado)
+            {
+                if (request.Solicitud.Parcialidad)
                 {
-                    await this.DeliverFilesMedicalResults(result.SolicitudId, result.EstudioId, result.DepartamentoEstudio);
-                    //validate partial or not
+                    List<ClinicResults> toSendInfoLab = new List<ClinicResults> { request };
+                    var existingLabResultsPdf = toSendInfoLab.ToResults(true);
+
+                    byte[] pdfBytes = await _pdfClient.GenerateLabResults(existingLabResultsPdf);
+                    string namePdf = string.Concat(request.Solicitud.Clave, ".pdf");
+                    string pathPdf = await SaveResulstPdfPath(pdfBytes, namePdf);
+
+                    var pathName = Path.Combine(MedicalRecordPath, pathPdf.Replace("wwwroot/", "")).Replace("\\", "/");
+
+                    var files = new List<SenderFiles>()
+                        {
+                            new SenderFiles(new Uri(pathName), namePdf)
+                        };
+
+                    try
+                    {
+                        await SendTestWhatsapp(files, request.Solicitud.Expediente.Celular, user, "LABORATORY");
+                        await SendTestEmail(files, request.Solicitud.Expediente.Correo, user, "LABORATORY");
+                        await UpdateStatusStudy(request.SolicitudEstudioId, Status.RequestStudy.Enviado, user);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Error");
+                    }
                 }
-                await UpdateStatusStudy(result.SolicitudEstudioId, result.Estatus, result.UsuarioId);
+                else
+                {
+                    var existingRequest = await _repository.GetRequestById(request.SolicitudId);
+
+                    if (existingRequest.Estudios.All(estudio => estudio.EstatusId == Status.RequestStudy.Liberado))
+                    {
+                        List<int> labResults = existingRequest.Estudios.Where(x => x.DepartamentoId != SharedDepartment.PATOLOGIA).Select(x => x.Id).ToList();
+                        List<ClinicResults> resultsTask = new List<ClinicResults>();
+
+                        foreach (var resultPath in labResults)
+                        {
+                            var finalResult = await _repository.GetLabResultsById(resultPath);
+                            resultsTask.AddRange(finalResult);
+                        }
+
+                        var existingLabResultsPdf = resultsTask.ToResults(true);
+
+                        byte[] pdfBytes = await _pdfClient.GenerateLabResults(existingLabResultsPdf);
+                        string namePdf = string.Concat(request.Solicitud.Clave, ".pdf");
+                        string pathPdf = await SaveResulstPdfPath(pdfBytes, namePdf);
+
+                        var pathName = Path.Combine(MedicalRecordPath, pathPdf.Replace("wwwroot/", "")).Replace("\\", "/");
+
+                        var files = new List<SenderFiles>()
+                            {
+                            new SenderFiles(new Uri(pathName), namePdf)
+                            };
+
+                        try
+                        {
+                            await SendTestWhatsapp(files, request.Solicitud.Expediente.Celular, user, "LABORATORY");
+                            await SendTestEmail(files, request.Solicitud.Expediente.Correo, user, "LABORATORY");
+                            foreach (var estudio in existingRequest.Estudios)
+                            {
+                                if (estudio.DepartamentoId != SharedDepartment.PATOLOGIA)
+                                {
+                                    await UpdateStatusStudy(request.SolicitudEstudioId, Status.RequestStudy.Enviado, user);
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            await UpdateStatusStudy(request.SolicitudEstudioId, request.SolicitudEstudio.EstatusId, user);
+                            throw new Exception("Error");
+                        }
+                    }
+                }
             }
         }
 
@@ -277,7 +428,7 @@ namespace Service.MedicalRecord.Application
             {
                 for (int i = 0; i < result.ImagenPatologica.Count; i++)
                 {
-                    await SaveImageGetPath(result.ImagenPatologica[i], newResult.EstudioId);
+                    await SaveImageGetPath(result.ImagenPatologica[i], newResult.SolicitudEstudioId);
                 }
             }
 
@@ -300,6 +451,15 @@ namespace Service.MedicalRecord.Application
         public static async Task<string> SavePdfGetPath(byte[] pdf, string name)
         {
             var path = "wwwroot/temp/pdf";
+
+            await File.WriteAllBytesAsync(Path.Combine(path, name), pdf);
+
+            return Path.Combine(path, name);
+        }
+
+        public static async Task<string> SaveResulstPdfPath(byte[] pdf, string name)
+        {
+            var path = "wwwroot/temp/labResults";
 
             await File.WriteAllBytesAsync(Path.Combine(path, name), pdf);
 
@@ -335,7 +495,7 @@ namespace Service.MedicalRecord.Application
             {
                 throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
             }
-            if (existing.Estudio.EstatusId == Status.RequestStudy.Solicitado)
+            if (existing.SolicitudEstudio.EstatusId == Status.RequestStudy.Solicitado)
             {
 
                 var newResult = result.ToUpdateClinicalResultPathological(existing);
@@ -346,19 +506,19 @@ namespace Service.MedicalRecord.Application
                 {
                     for (int i = 0; i < result.ListaImagenesCargadas.Length; i++)
                     {
-                        await DeleteImageGetPath(result.ListaImagenesCargadas[i], newResult.EstudioId);
+                        await DeleteImageGetPath(result.ListaImagenesCargadas[i], newResult.SolicitudEstudioId);
                     }
                 }
                 if (result.ImagenPatologica != null)
                 {
                     for (int i = 0; i < result.ImagenPatologica.Count; i++)
                     {
-                        await SaveImageGetPath(result.ImagenPatologica[i], newResult.EstudioId);
+                        await SaveImageGetPath(result.ImagenPatologica[i], newResult.SolicitudEstudioId);
                     }
                 }
                 await this.UpdateStatusStudy(result.EstudioId, result.Estatus, result.UsuarioId);
             }
-            if (existing.Estudio.EstatusId == Status.RequestStudy.Capturado)
+            if (existing.SolicitudEstudio.EstatusId == Status.RequestStudy.Capturado)
             {
                 await this.UpdateStatusStudy(result.EstudioId, result.Estatus, result.UsuarioId);
             }
@@ -483,9 +643,11 @@ namespace Service.MedicalRecord.Application
 
             if (tipo == "LABORATORY")
             {
-                //daniel
+                subject = RequestTemplates.Subjects.PathologicalSubject;
+                title = RequestTemplates.Titles.PathologicalTitle;
+                message = RequestTemplates.Messages.PathologicalMessage;
             }
-            var emailToSend = new EmailContract(correo, null, subject, title, message, senderFiles)
+            var emailToSend = new EmailContract("dgonzalez@axsistec.com", null, subject, title, message, senderFiles)
             {
                 Notificar = true,
                 RemitenteId = usuario.ToString()
@@ -508,12 +670,12 @@ namespace Service.MedicalRecord.Application
 
             if (tipo == "LABORATORY")
             {
-                //daniel
+                message = RequestTemplates.Subjects.PathologicalSubject;
             }
 
             var phone = telefono.Replace("-", "");
 
-            phone = phone.Length == 10 ? "52" + phone : phone;
+            phone = phone.Length == 10 ? "52" + "8115543677" : "8115543677";
 
             var emailToSend = new WhatsappContract(phone, message, senderFiles)
             {
@@ -558,8 +720,7 @@ namespace Service.MedicalRecord.Application
             foreach (var resultLabPathId in labResults)
             {
                 var finalResult = await _repository.GetLabResultsById(resultLabPathId);
-
-                labResultsTask.Add(finalResult);
+                labResultsTask.AddRange(finalResult.Where(x => x.SolicitudEstudioId == resultLabPathId));
             }
 
             var existingResultPathologyPdf = resultsTask.toInformationPdfResult(configuration.ImprimirLogos);
@@ -568,63 +729,6 @@ namespace Service.MedicalRecord.Application
             byte[] pdfBytes = await _pdfClient.MergeResults(existingResultPathologyPdf, existingLabResultPdf);
 
             return pdfBytes;
-        }
-        private async Task<bool> DeliverFilesMedicalResults(Guid requestId, int estudioId, string DepartamentoEstudio)
-        {
-
-            var existingRequest = await _repository.GetRequestById(requestId);
-
-            if (existingRequest == null)
-            {
-                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
-            }
-
-            if (existingRequest.Parcialidad)
-            {
-                if (DepartamentoEstudio == "HISTOPATOLÓGICO" || DepartamentoEstudio == "CITOLÓGICO")
-                {
-
-                    var existingResultPath = await _repository.GetResultPathologicalById(estudioId);
-
-
-                    if (existingResultPath == null)
-                    {
-                        throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
-                    }
-
-                    var existingResultPathPdf = existingResultPath.toInformationPdf(existingRequest, DepartamentoEstudio, true);
-
-                    byte[] pdfBytes = await _pdfClient.GeneratePathologicalResults(existingResultPathPdf);
-
-                }
-
-            }
-            else
-            {
-                if (existingRequest.Estudios.All(estudio => estudio.EstatusId == Status.RequestStudy.Liberado))
-                {
-                    existingRequest.Estudios.ForEach(async (estudio) =>
-                    {
-                        if (DepartamentoEstudio == "HISTOPATOLÓGICO" || DepartamentoEstudio == "CITOLÓGICO")
-                        {
-
-                            var existingResultPath = await _repository.GetResultPathologicalById(estudio.EstudioId);
-
-                            if (existingResultPath == null)
-                            {
-                                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
-                            }
-
-                            var existingResultPathPdf = existingResultPath.toInformationPdf(existingRequest, DepartamentoEstudio, true);
-
-                            byte[] pdfBytes = await _pdfClient.GeneratePathologicalResults(existingResultPathPdf);
-                        }
-                    });
-                }
-
-            }
-
-            return true;
         }
 
         public async Task UpdateStatusStudy(int RequestStudyId, byte status, Guid usuarioId)
@@ -663,10 +767,10 @@ namespace Service.MedicalRecord.Application
             await _repository.UpdateStatusStudy(existingStudy);
         }
 
-        public async Task<ClinicResults> GetLaboratoryResults(int RequestStudyId)
+        /*public async Task<ClinicResults> GetLaboratoryResults(int RequestStudyId)
         {
             return await _repository.GetLabResultsById(RequestStudyId);
-        }
+        }*/
 
         public async Task<ClinicalResultsPathological> GetResultPathological(int RequestStudyId)
         {
@@ -692,6 +796,115 @@ namespace Service.MedicalRecord.Application
             return await _repository.GetRequestStudyById(RequestStudyId);
         }
 
+        private string GetFormula(List<ClinicResults> parameters, string formula)
+        {
+            var message = string.Empty;
+
+            foreach (var par in parameters)
+            {
+                message = formula.Replace(par.Clave, par.Resultado.ToString());
+            }
+
+            var str4 = "(" + message.Replace(" ", "").ToLower() + ")";
+            str4 = str4.Replace(")(", ")*(");
+
+            while (str4.Contains('('))
+            {
+                Console.WriteLine(str4);
+
+                var sub1 = str4[(str4.LastIndexOf("(") + 1)..];
+                var sub1Bef = str4[..(str4.IndexOf(sub1) - 1)];
+
+                var isRound = sub1Bef.EndsWith("round");
+                var isFormat = sub1Bef.EndsWith("format");
+
+                var sub = sub1[..sub1.IndexOf(isRound || isFormat ? "," : ")")];
+                var sub2 = sub;
+
+                string str21 = sub2.Replace("^", "~^~").Replace("/", "~/~").Replace("*", "~*~").Replace("+", "~+~").Replace("-", "~-~");
+                List<string> str31 = str21.Split('~').ToList();
+
+                while (str31.Count > 1)
+                {
+                    str31 = str31.Where(x => !string.IsNullOrEmpty(x)).ToList();
+
+                    if (str31.Contains("-"))
+                    {
+                        for (int i = 0; i < str31.Count; i++)
+                        {
+                            if (str31[i] == "-" && (i == 0 || str31[i - 1].In("-", "+", "*", "/")))
+                            {
+                                str31[i + 1] = "-" + str31[i + 1];
+                                str31.RemoveRange(i, 1);
+                                i--;
+                            }
+                        }
+                    }
+
+                    while (str31.Contains("*"))
+                    {
+                        for (int i = 0; i < str31.Count; i++)
+                        {
+                            if (str31[i] == "*")
+                            {
+                                var val = Convert.ToDecimal(str31[i - 1]) * Convert.ToDecimal(str31[i + 1]);
+                                str31.RemoveRange(i - 1, 3);
+                                str31.Insert(i - 1, val.ToString());
+                            }
+                        }
+                    }
+                    while (str31.Contains("/"))
+                    {
+                        for (int i = 0; i < str31.Count; i++)
+                        {
+                            if (str31[i] == "/")
+                            {
+                                var val = Convert.ToDecimal(str31[i - 1]) / Convert.ToDecimal(str31[i + 1]);
+                                str31.RemoveRange(i - 1, 3);
+                                str31.Insert(i - 1, val.ToString());
+                            }
+                        }
+                    }
+                    while (str31.Contains("+"))
+                    {
+                        for (int i = 0; i < str31.Count; i++)
+                        {
+                            if (str31[i] == "+")
+                            {
+                                var val = Convert.ToDecimal(str31[i - 1]) + Convert.ToDecimal(str31[i + 1]);
+                                str31.RemoveRange(i - 1, 3);
+                                str31.Insert(i - 1, val.ToString());
+                            }
+                        }
+                    }
+                    while (str31.Contains("-"))
+                    {
+                        for (int i = 0; i < str31.Count; i++)
+                        {
+                            if (str31[i] == "-")
+                            {
+                                var val = Convert.ToDecimal(str31[i - 1]) - Convert.ToDecimal(str31[i + 1]);
+                                str31.RemoveRange(i - 1, 3);
+                                str31.Insert(i - 1, val.ToString());
+                            }
+                        }
+                    }
+                }
+
+                if (isRound || isFormat)
+                {
+                    var formVal = sub1.Substring(sub1.IndexOf(",") + 1, sub1.IndexOf(")") - sub1.IndexOf(",") - 1);
+                    str31[0] = Math.Round(Convert.ToDecimal(str31[0]), Convert.ToInt32(formVal)).ToString();
+                    str4 = str4.Replace((isRound ? "round" : "format") + "(" + sub + $",{formVal})", str31[0].ToString());
+                }
+                else
+                {
+                    str4 = str4.Replace("(" + sub + ")", str31[0].ToString());
+                }
+            }
+
+            return str4;
+        }
 
     }
 }

@@ -42,7 +42,20 @@ namespace Service.Catalog.Mapper
                 Clave = x.Clave
             });
         }
+        public static IEnumerable<PriceStudyList> toPriceStudyList(this List<Study> models) {
+            if (models == null) return null;
+            return models.Select(model => new PriceStudyList {
+                Id = model.Id,
+                EstudioId = model.Id,
+                Nombre= model.Nombre,
+                Area= model.Area?.Nombre,
+                Departamento= model.Area?.Departamento?.Nombre,
+                Activo= false,
+                Precio= 0,
+                Clave= model.Clave
 
+            });
+        }       
         public static StudyFormDto ToStudyFormDto(this Study model)
         {
             if (model == null) return null;

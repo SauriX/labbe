@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Service.MedicalRecord.Client.IClient;
 using Service.MedicalRecord.Dtos.Branch;
+using Service.MedicalRecord.Dtos.Promos;
 using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.Route;
 using Shared.Error;
@@ -55,11 +56,6 @@ namespace Service.MedicalRecord.Client
             }
         }
 
-        public Task<List<RequestInfoPackDto>> GetPacksByCode(IEnumerable<string> codes)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<BranchFormDto> GetBranch(Guid id)
         {
             var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/branch/{id}");
@@ -71,6 +67,7 @@ namespace Service.MedicalRecord.Client
 
             throw new CustomException(response.StatusCode, response.ReasonPhrase);
         }
+
         public async Task<RouteFormDto> GetRuta(Guid id)
         {
             var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/route/{id}");
@@ -82,6 +79,7 @@ namespace Service.MedicalRecord.Client
 
             throw new CustomException(response.StatusCode, response.ReasonPhrase);
         }
+
         public async Task<List<RequestStudyParamsDto>> GetStudies(List<int> studies)
         {
             try
@@ -109,9 +107,85 @@ namespace Service.MedicalRecord.Client
             }
         }
 
-        public Task<List<RequestInfoStudyDto>> GetStudiesByCode(IEnumerable<string> codes)
+        public async Task<List<PriceListInfoPromoDto>> GetStudiesPromos(List<PriceListInfoFilterDto> studies)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var json = JsonConvert.SerializeObject(studies);
+
+                var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/promo/info/study", stringContent);
+
+                if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+                {
+                    return await response.Content.ReadFromJsonAsync<List<PriceListInfoPromoDto>>();
+                }
+
+                var error = await response.Content.ReadFromJsonAsync<ServerException>();
+
+                var ex = Exceptions.GetException(error);
+
+                throw ex;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<PriceListInfoPromoDto>> GetPacksPromos(List<PriceListInfoFilterDto> packs)
+        {
+            try
+            {
+                var json = JsonConvert.SerializeObject(packs);
+
+                var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/promo/info/pack", stringContent);
+
+                if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+                {
+                    return await response.Content.ReadFromJsonAsync<List<PriceListInfoPromoDto>>();
+                }
+
+                var error = await response.Content.ReadFromJsonAsync<ServerException>();
+
+                var ex = Exceptions.GetException(error);
+
+                throw ex;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<RequestStudyDto>> GetStudiesInfo(PriceListInfoFilterDto studies)
+        {
+            try
+            {
+                var json = JsonConvert.SerializeObject(studies);
+
+                var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/study/multiple/info/study", stringContent);
+
+                if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+                {
+                    return await response.Content.ReadFromJsonAsync<List<RequestStudyDto>>();
+                }
+
+                var error = await response.Content.ReadFromJsonAsync<ServerException>();
+
+                var ex = Exceptions.GetException(error);
+
+                throw ex;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

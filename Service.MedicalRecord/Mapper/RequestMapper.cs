@@ -145,6 +145,7 @@ namespace Service.MedicalRecord.Mapper
 
             return model.Select(x => new RequestPackDto
             {
+                Id = x.Id,
                 SolicitudId = x.SolicitudId,
                 PaqueteId = x.PaqueteId,
                 Clave = x.Clave,
@@ -171,7 +172,6 @@ namespace Service.MedicalRecord.Mapper
         public static List<RequestStudyDto> ToRequestStudyDto(this IEnumerable<RequestStudy> model)
         {
             if (model == null) return new List<RequestStudyDto>();
-
 
             return model.Select(x => new RequestStudyDto
             {
@@ -212,7 +212,6 @@ namespace Service.MedicalRecord.Mapper
                     : x.EstatusId == Status.RequestStudy.Enviado
                     ? x.FechaEnviado?.ToString("dd/MM/yyyy")
                     : "",
-                
 
             }).ToList();
         }
@@ -242,10 +241,11 @@ namespace Service.MedicalRecord.Mapper
 
             return dto.Select(x =>
             {
-                var pack = packs.FirstOrDefault(s => s.PaqueteId == x.PaqueteId);
+                var pack = packs.FirstOrDefault(s => s.Id == x.Id);
 
                 return new RequestPack
                 {
+                    Id = x.Id,
                     SolicitudId = requestId,
                     PaqueteId = x.PaqueteId,
                     Clave = x.Clave,
@@ -279,10 +279,11 @@ namespace Service.MedicalRecord.Mapper
 
             return dto.Select(x =>
             {
-                var study = studies.FirstOrDefault(s => s.EstudioId == x.EstudioId);
+                var study = studies.FirstOrDefault(s => s.Id == x.Id);
 
                 return new RequestStudy
                 {
+                    Id = x.Id,
                     SolicitudId = requestId,
                     EstudioId = x.EstudioId,
                     Clave = x.Clave,

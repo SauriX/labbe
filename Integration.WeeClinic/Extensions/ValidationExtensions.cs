@@ -18,10 +18,10 @@ namespace Integration.WeeClinic.Extensions
                 throw new CustomException(HttpStatusCode.FailedDependency, "La respuesta no contiene el parametro Datos");
             }
 
-            if (keys.All(x => response[x].Count == 0))
-            {
-                throw new CustomException(HttpStatusCode.FailedDependency, "La respuesta no contiene datos");
-            }
+            //if (keys.All(x => response[x].Count == 0))
+            //{
+            //    throw new CustomException(HttpStatusCode.FailedDependency, "La respuesta no contiene datos");
+            //}
         }
     }
 }

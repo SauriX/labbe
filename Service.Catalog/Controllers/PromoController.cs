@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Catalog.Application.IApplication;
+using Service.Catalog.Dtos.PriceList;
 using Service.Catalog.Dtos.Promotion;
 using Shared.Dictionary;
 using System;
@@ -14,24 +16,36 @@ namespace Service.Catalog.Controllers
     public class PromoController : ControllerBase
     {
 
-        private readonly IPromotionApplication _Service;
+        private readonly IPromotionApplication _service;
 
         public PromoController(IPromotionApplication indicationService)
         {
-            _Service = indicationService;
+            _service = indicationService;
         }
         [HttpGet("all/{search?}")]
         [Authorize(Policies.Access)]
         public async Task<IEnumerable<PromotionListDto>> GetAll(string search = null)
         {
-            return await _Service.GetAll(search);
+            return await _service.GetAll(search);
         }
 
         [HttpGet("{id}")]
         [Authorize(Policies.Access)]
         public async Task<PromotionFormDto> GetById(int id)
         {
-            return await _Service.GetById(id);
+            return await _service.GetById(id);
+        }
+
+        [HttpPost("info/study")]
+        public async Task<List<PriceListInfoPromoDto>> GetStudyPromos(List<PriceListInfoFilterDto> filter)
+        {
+            return await _service.GetStudyPromos(filter);
+        }
+
+        [HttpPost("info/pack")]
+        public async Task<List<PriceListInfoPromoDto>> GetPackPromos(List<PriceListInfoFilterDto> filter)
+        {
+            return await _service.GetPackPromos(filter);
         }
 
         [HttpPost]
@@ -39,7 +53,7 @@ namespace Service.Catalog.Controllers
         public async Task<PromotionListDto> Create(PromotionFormDto branch)
         {
             branch.UsuarioId = (Guid)HttpContext.Items["userId"];
-            return await _Service.Create(branch);
+            return await _service.Create(branch);
         }
 
         [HttpPut]
@@ -47,14 +61,14 @@ namespace Service.Catalog.Controllers
         public async Task<PromotionListDto> Update(PromotionFormDto branch)
         {
             branch.UsuarioId = (Guid)HttpContext.Items["userId"];
-            return await _Service.Update(branch);
+            return await _service.Update(branch);
         }
 
         [HttpPost("export/list/{search?}")]
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportListBranch(string search = null)
         {
-            var (file, fileName) = await _Service.ExportList(search);
+            var (file, fileName) = await _service.ExportList(search);
             return File(file, MimeType.XLSX, fileName);
         }
 
@@ -62,14 +76,14 @@ namespace Service.Catalog.Controllers
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportFormBranch(int id)
         {
-            var (file, fileName) = await _Service.ExportForm(id);
+            var (file, fileName) = await _service.ExportForm(id);
             return File(file, MimeType.XLSX, fileName);
         }
 
         [HttpGet("active")]
         public async Task<IEnumerable<PromotionListDto>> GetActive()
         {
-            return await _Service.GetActive();
+            return await _service.GetActive();
         }
     }
 }

@@ -238,7 +238,7 @@ namespace Service.Catalog.Mapper
                 Precio = model.Precio,
                 Parametros = model.Estudio.Parameters.Select(x => x.Parametro).ToParameterListDto(),
                 Indicaciones = model.Estudio.Indications.Select(x => x.Indicacion).ToIndicationListDto(),
-                Promociones = new List<PriceListInfoPromo>()
+                Promociones = new List<PriceListInfoPromoDto>()
             };
         }
 
@@ -259,7 +259,7 @@ namespace Service.Catalog.Mapper
                 Descuento = model.DescuenNum,
                 DescuentoPorcentaje = model.Descuento,
                 PrecioFinal = model.PrecioFinal,
-                Promociones = new List<PriceListInfoPromo>(),
+                Promociones = new List<PriceListInfoPromoDto>(),
                 Estudios = model.Paquete.Estudios.Select(x => new PriceListInfoStudyDto
                 {
                     ListaPrecioId = model.PrecioListaId,

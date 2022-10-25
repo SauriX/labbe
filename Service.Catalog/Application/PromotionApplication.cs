@@ -1,8 +1,11 @@
 ﻿using ClosedXML.Excel;
 using ClosedXML.Report;
+using DocumentFormat.OpenXml.Vml.Office;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dictionary;
 using Service.Catalog.Domain.Promotion;
+using Service.Catalog.Domain.Study;
+using Service.Catalog.Dtos.PriceList;
 using Service.Catalog.Dtos.Promotion;
 using Service.Catalog.Mapper;
 using Service.Catalog.Repository.IRepository;
@@ -54,6 +57,51 @@ namespace Service.Catalog.Application
             return promotions.ToPromotionListDto();
         }
 
+        public async Task<List<PriceListInfoPromoDto>> GetStudyPromos(List<PriceListInfoFilterDto> filters)
+        {
+            var promosDto = new List<PriceListInfoPromoDto>();
+
+            foreach (var filter in filters)
+            {
+                var promo = await _repository.GetStudyPromos(filter.ListaPrecioId, filter.SucursalId, filter.MedicoId, (int)filter.EstudioId);
+
+                var promoDto = promo.Select(x => new PriceListInfoPromoDto
+                {
+                    EstudioId = x.StudyId,
+                    PromocionId = x.PromotionId,
+                    Promocion = x.Promotion.Nombre,
+                    Descuento = x.DiscountNumeric,
+                    DescuentoPorcentaje = x.Discountporcent
+                }).ToList();
+
+                promosDto.AddRange(promoDto);
+            }
+
+            return promosDto;
+        }
+
+        public async Task<List<PriceListInfoPromoDto>> GetPackPromos(List<PriceListInfoFilterDto> filters)
+        {
+            var promosDto = new List<PriceListInfoPromoDto>();
+
+            foreach (var filter in filters)
+            {
+                var promos = await _repository.GetPackPromos(filter.ListaPrecioId, filter.SucursalId, filter.MedicoId, (int)filter.PaqueteId);
+
+                var promoDto = promos.Select(x => new PriceListInfoPromoDto
+                {
+                    PaqueteId = x.PackId,
+                    PromocionId = x.PromotionId,
+                    Promocion = x.Promotion.Nombre,
+                    Descuento = x.DiscountNumeric,
+                    DescuentoPorcentaje = x.Discountporcent
+                }).ToList();
+
+                promosDto.AddRange(promoDto);
+            }
+
+            return promosDto;
+        }
 
         public async Task<PromotionListDto> Create(PromotionFormDto parameter)
         {
@@ -62,7 +110,7 @@ namespace Service.Catalog.Application
             var newParameter = parameter.ToModel();
 
             await CheckDuplicate(newParameter);
-           // await CheckPromotionPackActive(newParameter);
+            // await CheckPromotionPackActive(newParameter);
             await _repository.Create(newParameter);
 
             newParameter = await _repository.GetById(newParameter.Id);

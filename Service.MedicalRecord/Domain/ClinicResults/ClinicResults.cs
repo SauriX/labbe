@@ -11,11 +11,14 @@ namespace Service.MedicalRecord.Domain
         public int EstudioId { get; set; }
         public virtual Request.RequestStudy SolicitudEstudio { get; set; }
         public Guid ParametroId { get; set; }
-        public int TipoValorId { get; set; }
+        public string TipoValorId { get; set; }
         public string Unidades { get; set; }
+        public string Clave { get; set; }
         public string Nombre { get; set; }
+        public string NombreCorto { get; set; }
         public string ValorInicial { get; set; }
         public string ValorFinal { get; set; }
+        public string Formula { get; set; }
         public string Resultado { get; set; }
     }
 }

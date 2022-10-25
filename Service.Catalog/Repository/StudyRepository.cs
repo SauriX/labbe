@@ -59,6 +59,7 @@ namespace Service.Catalog.Repository
                 .Include(x => x.WorkLists).ThenInclude(x => x.WorkList)
                 .Include(x => x.Parameters).ThenInclude(x => x.Parametro).ThenInclude(x => x.Area).ThenInclude(x => x.Departamento)
                 .Include(x => x.Parameters).ThenInclude(x => x.Parametro).ThenInclude(x => x.Unidad)
+                .Include(x => x.Parameters).ThenInclude(x => x.Parametro).ThenInclude(x => x.TipoValores)
                 .Include(x => x.Indications).ThenInclude(x => x.Indicacion)
                 .Include(x => x.Reagents).ThenInclude(x => x.Reagent)
                 .Include(x => x.Packets).ThenInclude(x => x.Packet)
@@ -73,11 +74,19 @@ namespace Service.Catalog.Repository
             return reagent;
         }
 
+        public async Task<int> GetIdByCode(string code)
+        {
+            var study = await _context.CAT_Estudio.FirstOrDefaultAsync(x => x.Clave == code);
+
+            return study?.Id ?? 0;
+        }
+
         public async Task<List<Study>> GetByIds(List<int> ids)
         {
             var studies = await _context.CAT_Estudio
                 .Include(x => x.Parameters).ThenInclude(x => x.Parametro).ThenInclude(x => x.Area).ThenInclude(x => x.Departamento)
                 .Include(x => x.Parameters).ThenInclude(x => x.Parametro).ThenInclude(x => x.Unidad)
+                .Include(x => x.Parameters).ThenInclude(x => x.Parametro).ThenInclude(x => x.TipoValores)
                 .Include(x => x.Indications).ThenInclude(x => x.Indicacion)
                 .Where(x => ids.Contains(x.Id))
                 .ToListAsync();
@@ -103,19 +112,19 @@ namespace Service.Catalog.Repository
                 var config = new BulkConfig();
                 config.SetSynchronizeFilter<Domain.Study.ReagentStudy>(x => x.EstudioId == study.Id);
                 reagents.ForEach(x => x.EstudioId = study.Id);
-                await _context.BulkInsertOrUpdateOrDeleteAsync(reagents);
+                await _context.BulkInsertOrUpdateOrDeleteAsync(reagents, config);
 
                 config.SetSynchronizeFilter<Domain.Study.WorkListStudy>(x => x.EstudioId == study.Id);
                 workList.ForEach(x => x.EstudioId = study.Id);
-                await _context.BulkInsertOrUpdateOrDeleteAsync(workList);
+                await _context.BulkInsertOrUpdateOrDeleteAsync(workList, config);
 
                 config.SetSynchronizeFilter<ParameterStudy>(x => x.EstudioId == study.Id);
                 parameters.ForEach(x => x.EstudioId = study.Id);
-                await _context.BulkInsertOrUpdateOrDeleteAsync(parameters);
+                await _context.BulkInsertOrUpdateOrDeleteAsync(parameters, config);
 
                 config.SetSynchronizeFilter<IndicationStudy>(x => x.EstudioId == study.Id);
                 indications.ForEach(x => x.EstudioId = study.Id);
-                await _context.BulkInsertOrUpdateOrDeleteAsync(indications);
+                await _context.BulkInsertOrUpdateOrDeleteAsync(indications, config);
                 transaction.Commit();
 
 
@@ -163,9 +172,6 @@ namespace Service.Catalog.Repository
         public async Task<bool> ValidateClaveNamne(string clave, string nombre, int id, int orden)
         {
             return await _context.CAT_Estudio.AnyAsync(x => x.Clave == clave || x.Nombre == nombre || x.Orden == orden && x.Id != id);
-
-
-
         }
     }
 }

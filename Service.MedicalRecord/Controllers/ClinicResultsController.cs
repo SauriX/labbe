@@ -60,6 +60,7 @@ namespace Service.MedicalRecord.Controllers
         [Authorize(Policies.Update)]
         public async Task UpdateLabResults(List<ClinicResultsFormDto> results)
         {
+            results.First().UsuarioId = (Guid)HttpContext.Items["userId"];
             await _service.UpdateLabResults(results);
         }
 
@@ -92,13 +93,13 @@ namespace Service.MedicalRecord.Controllers
             return clinicResults;
         }
 
-        [HttpPost("getLaboratoryResults")]
+        /*[HttpPost("getLaboratoryResults")]
         [Authorize(Policies.Access)]
         public async Task<ClinicResults> GetLaboratoryResults([FromBody] int RequestStudyId)
         {
             var clinicResults = await _service.GetLaboratoryResults(RequestStudyId);
             return clinicResults;
-        }
+        }*/
 
         [HttpPost("getRequestStudyById")]
         [Authorize(Policies.Access)]
@@ -116,6 +117,7 @@ namespace Service.MedicalRecord.Controllers
             await _service.UpdateStatusStudy(updateStatus.RequestStudyId, updateStatus.status, updateStatus.UsuarioId);
         }
 
+        //[HttpPost("labResults/{recordId}/{requestId}")]
         [HttpPost("printSelectedStudies")]
         //[Authorize(Policies.Print)]
         public async Task<IActionResult> PrintSelectedStudies(ConfigurationToPrintStudies configuration)

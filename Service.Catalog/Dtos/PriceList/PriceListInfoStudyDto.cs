@@ -7,8 +7,13 @@ namespace Service.Catalog.Dtos.PriceList
 {
     public class PriceListInfoStudyDto
     {
+        public string Identificador { get; set; }
         public Guid ListaPrecioId { get; set; }
         public string ListaPrecio { get; set; }
+        public int? PromocionId { get; set; }
+        public string Promocion { get; set; }
+        public decimal Descuento { get; set; }
+        public decimal DescuentoPorcentaje { get; set; }
         public int EstudioId { get; set; }
         public string Clave { get; set; }
         public string Nombre { get; set; }
@@ -21,13 +26,17 @@ namespace Service.Catalog.Dtos.PriceList
         public int Horas { get; set; }
         public int Orden { get; set; }
         public decimal Precio { get; set; }
-        public List<PriceListInfoPromo> Promociones { get; set; }
+        public decimal PrecioFinal => Precio - Descuento;
+        public DateTime FechaEntrega => DateTime.Now.AddHours(Horas);
+        public List<PriceListInfoPromoDto> Promociones { get; set; }
         public IEnumerable<ParameterListDto> Parametros { get; set; }
         public IEnumerable<IndicationListDto> Indicaciones { get; set; }
     }
 
-    public class PriceListInfoPromo
+    public class PriceListInfoPromoDto
     {
+        public int EstudioId { get; set; }
+        public int PaqueteId { get; set; }
         public int? PromocionId { get; set; }
         public string Promocion { get; set; }
         public decimal Descuento { get; set; }

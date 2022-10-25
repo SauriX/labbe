@@ -1,7 +1,7 @@
 ﻿{
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/weeClinic/Laboratorio_BusquedaFolios/{folio}",
+      "DownstreamPathTemplate": "/api/weeClinic/search/folio/{folio}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -9,7 +9,7 @@
           "Port": 24048
         }
       ],
-      "UpstreamPathTemplate": "/api/weeClinic/Laboratorio_BusquedaFolios/{folio}",
+      "UpstreamPathTemplate": "/api/weeClinic/search/folio/{folio}",
       "UpstreamHttpMethod": [ "GET" ]
     }
   ]

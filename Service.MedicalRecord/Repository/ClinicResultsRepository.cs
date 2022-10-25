@@ -25,10 +25,11 @@ namespace Service.MedicalRecord.Repository
         public async Task<Request> FindAsync(Guid id)
         {
             var report = _context.CAT_Solicitud
-                   .Include(x => x.Estudios);
-            var request = await _context.CAT_Solicitud.FindAsync(id);
+                .Include(x => x.Expediente)
+                .Include(x => x.Estudios).ThenInclude(x => x.Estatus)
+                .FirstOrDefault(x => x.Id == id);
 
-            return request;
+            return report;
         }
 
         public async Task<ClinicResults> GetById(Guid id)
@@ -161,7 +162,7 @@ namespace Service.MedicalRecord.Repository
             var resultExisting = await _context.Cat_Captura_ResultadosPatologicos
                 .Where(x => x.RequestStudyId == id)
                 .Include(x => x.Medico)
-                .Include(x => x.Estudio)
+                .Include(x => x.SolicitudEstudio)
                 .Include(x => x.Solicitud).ThenInclude(y => y.Expediente)
                 .FirstOrDefaultAsync();
             return resultExisting;
@@ -172,13 +173,13 @@ namespace Service.MedicalRecord.Repository
             var resultExisting = await _context.Cat_Captura_ResultadosPatologicos
                 .Where(x => ids.Contains(x.RequestStudyId))
                 .Include(x => x.Medico)
-                .Include(x => x.Estudio)
+                .Include(x => x.SolicitudEstudio)
                 .Include(x => x.Solicitud).ThenInclude(y => y.Expediente)
                 .ToListAsync();
             return resultExisting;
         }
 
-        public async Task<ClinicResults> GetLabResultsById(int id)
+        public async Task<List<ClinicResults>> GetLabResultsById(int id)
         {
             var resultExisting = await _context.ClinicResults
                 .Where(x => x.SolicitudEstudioId == id)
@@ -187,7 +188,7 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Solicitud).ThenInclude(y => y.Medico)
                 .Include(x => x.Solicitud).ThenInclude(y => y.Estudios)
                 .Include(x => x.Solicitud).ThenInclude(y => y.Compañia)
-                .FirstOrDefaultAsync();
+                .ToListAsync();
             return resultExisting;
         }
 
@@ -220,9 +221,9 @@ namespace Service.MedicalRecord.Repository
         }
         public async Task<RequestStudy> GetStudyById(int RequestStudyId)
         {
-             var studies = await _context.Relacion_Solicitud_Estudio
-                 .Where(x => x.Id == RequestStudyId)
-                 .FirstOrDefaultAsync();
+            var studies = await _context.Relacion_Solicitud_Estudio
+                .Where(x => x.Id == RequestStudyId)
+                .FirstOrDefaultAsync();
             return studies;
         }
 
