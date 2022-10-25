@@ -103,6 +103,21 @@ namespace Service.MedicalRecord.Mapper
             };
         }
 
+        public static IEnumerable<RequestPaymentDto> ToRequestPaymentDto(this List<RequestPayment> model)
+        {
+            if (model == null) return null;
+
+            return model.Select(x => new RequestPaymentDto
+            {
+                Id = x.Id,
+                FormaPago = x.FormaPago,
+                NumeroCuenta = x.NumeroCuenta,
+                FechaPago = x.FechaPago,
+                Cantidad = x.Cantidad,
+                UsuarioRegistra = x.UsuarioRegistra
+            });
+        }
+
         public static RequestOrderDto ToRequestOrderDto(this Request model)
         {
             if (model == null) return null;
@@ -234,8 +249,27 @@ namespace Service.MedicalRecord.Mapper
                 UsuarioCreoId = dto.UsuarioId,
                 FechaCreo = DateTime.Now,
             };
-        }    
-       
+        }
+
+        public static RequestPayment ToModel(this RequestPaymentDto dto)
+        {
+            if (dto == null) return null;
+
+            return new RequestPayment
+            {
+                Id = Guid.NewGuid(),
+                SolicitudId = dto.SolicitudId,
+                FormaPagoId = dto.FormaPagoId,
+                FormaPago = dto.FormaPago,
+                NumeroCuenta = dto.NumeroCuenta,
+                Cantidad = dto.Cantidad,
+                FechaPago = DateTime.Now,
+                UsuarioRegistra = dto.UsuarioRegistra,
+                UsuarioCreoId = dto.UsuarioId,
+                FechaCreo = DateTime.Now,
+            };
+        }
+
         public static List<RequestPack> ToModel(this IEnumerable<RequestPackDto> dto, Guid requestId, IEnumerable<RequestPack> packs, Guid userId)
         {
             if (dto == null) return new List<RequestPack>();
@@ -314,6 +348,6 @@ namespace Service.MedicalRecord.Mapper
                     FechaModifico = study == null ? null : DateTime.Now
                 };
             }).ToList();
-        }       
+        }
     }
 }

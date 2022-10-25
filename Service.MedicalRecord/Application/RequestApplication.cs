@@ -182,6 +182,17 @@ namespace Service.MedicalRecord.Application
             return data;
         }
 
+        public async Task<IEnumerable<RequestPaymentDto>> GetPayments(Guid recordId, Guid requestId)
+        {
+            await GetExistingRequest(recordId, requestId);
+
+            var payments = await _repository.GetPayments(requestId);
+
+            var paymentsDto = payments.ToRequestPaymentDto();
+
+            return paymentsDto;
+        }
+
         public async Task<IEnumerable<string>> GetImages(Guid recordId, Guid requestId)
         {
             var request = await GetExistingRequest(recordId, requestId);
@@ -298,6 +309,17 @@ namespace Service.MedicalRecord.Application
                 _transaction.RollbackTransaction();
                 throw;
             }
+        }
+
+        public async Task<string> CreatePayment(RequestPaymentDto requestDto)
+        {
+            await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
+
+            var newPayment = requestDto.ToModel();
+
+            await _repository.CreatePayment(newPayment);
+
+            return newPayment.Id.ToString();
         }
 
         public async Task UpdateGeneral(RequestGeneralDto requestDto)

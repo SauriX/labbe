@@ -11,12 +11,14 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<RequestDto> GetById(Guid recordId, Guid requestId);
         Task<RequestGeneralDto> GetGeneral(Guid recordId, Guid requestId);
         Task<RequestStudyUpdateDto> GetStudies(Guid recordId, Guid requestId);
+        Task<IEnumerable<RequestPaymentDto>> GetPayments(Guid recordId, Guid requestId);
         Task<IEnumerable<string>> GetImages(Guid recordId, Guid requestId);
         Task SendTestEmail(RequestSendDto requestDto);
         Task SendTestWhatsapp(RequestSendDto requestDto);
         Task<string> Create(RequestDto requestDto);
         Task<string> CreateWeeClinic(RequestDto requestDto);
         Task<string> Convert(RequestConvertDto requestDto);
+        Task<string> CreatePayment(RequestPaymentDto requestDto);
         Task UpdateGeneral(RequestGeneralDto requestDto);
         Task UpdateTotals(RequestTotalDto requestDto);
         Task UpdateStudies(RequestStudyUpdateDto requestDto);

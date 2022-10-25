@@ -202,10 +202,23 @@ namespace Service.MedicalRecord.Repository
             return images;
         }
 
+        public async Task<List<RequestPayment>> GetPayments(Guid requestId)
+        {
+            var payments = await _context.Relacion_Solicitud_Pago.Where(x => x.SolicitudId == requestId).ToListAsync();
+
+            return payments;
+        }
 
         public async Task Create(Request request)
         {
             _context.CAT_Solicitud.Add(request);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task CreatePayment(RequestPayment request)
+        {
+            _context.Relacion_Solicitud_Pago.Add(request);
 
             await _context.SaveChangesAsync();
         }
