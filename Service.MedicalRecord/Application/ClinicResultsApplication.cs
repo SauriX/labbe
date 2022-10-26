@@ -223,6 +223,7 @@ namespace Service.MedicalRecord.Application
                     }
                     param.ResultadoId = result.Id.ToString();
                     param.Formula = result.Formula;
+                    param.UnidadNombre = result.Unidades;
 
 
                     if (param.TipoValores != null && param.TipoValores.Count != 0)

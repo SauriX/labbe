@@ -187,7 +187,7 @@ namespace Service.MedicalRecord.Mapper
                     ValorInicial = results?.ValorInicial,
                     SolicitudId = results.SolicitudId,
                     EstudioId = results.EstudioId,
-                    ValorFinal = results?.ValorInicial,
+                    ValorFinal = results?.ValorFinal,
                     ParametroId = results.ParametroId.ToString(),
                     Resultado = results.Resultado,
                     UnidadesNombre = results.Unidades,
