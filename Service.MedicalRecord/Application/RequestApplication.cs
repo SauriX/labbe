@@ -252,7 +252,7 @@ namespace Service.MedicalRecord.Application
             }
 
             string code = await GetNewCode(requestDto);
-            requestDto.Clave = code;
+            newRequest.Clave = code;
 
             newRequest.MedicoId = MEDICS.A_QUIEN_CORRESPONDA;
             newRequest.CompañiaId = COMPANIES.PARTICULARES;
