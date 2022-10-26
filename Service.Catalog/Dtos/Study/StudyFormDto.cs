@@ -23,6 +23,7 @@ namespace Service.Catalog.Dtos.Study
         public bool Activo { get; set; }
         public int? Area { get; set; }
         public int? Departamento { get; set; }
+        public string WorkLists { get; set; }
         public int? Maquilador { get; set; }
         public int? Metodo { get; set; }
         public int? Tipomuestra { get; set; }

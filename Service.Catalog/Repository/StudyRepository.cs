@@ -136,7 +136,7 @@ namespace Service.Catalog.Repository
         public async Task Update(Study study)
         {
             var reagents = study.Reagents.ToList();
-            var workList = study.WorkLists.ToList();
+           
             var parameters = study.Parameters.ToList();
             var indications = study.Indications.ToList();
             study.Reagents = null;
@@ -151,9 +151,7 @@ namespace Service.Catalog.Repository
             reagents.ForEach(x => x.EstudioId = study.Id);
             await _context.BulkInsertOrUpdateOrDeleteAsync(reagents, config);
 
-            config.SetSynchronizeFilter<Domain.Study.WorkListStudy>(x => x.EstudioId == study.Id);
-            workList.ForEach(x => x.EstudioId = study.Id);
-            await _context.BulkInsertOrUpdateOrDeleteAsync(workList, config);
+
 
             config.SetSynchronizeFilter<ParameterStudy>(x => x.EstudioId == study.Id);
             parameters.ForEach(x => x.EstudioId = study.Id);
