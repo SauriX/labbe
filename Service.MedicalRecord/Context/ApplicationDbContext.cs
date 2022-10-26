@@ -5,6 +5,7 @@ using Service.MedicalRecord.Domain.MedicalRecord;
 using Service.MedicalRecord.Domain.PriceQuote;
 using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Domain.RouteTracking;
+using Service.MedicalRecord.Domain.Status;
 using Service.MedicalRecord.Domain.TaxData;
 using Service.MedicalRecord.Domain.TrackingOrder;
 using System.Reflection;
@@ -28,8 +29,9 @@ namespace Service.MedicalRecord.Context
         public DbSet<AppointmentDom> CAT_Cita_Dom { get; set; }
         public DbSet<PriceQuote> CAT_Cotizaciones { get; set; }
         public DbSet<CotizacionStudy> cotizacionStudies { get; set; }
-        public DbSet<RequestStatus> Estatus_Solicitud { get; set; }
-        public DbSet<RequestStudyStatus> Estatus_Solicitud_Estudio { get; set; }
+        public DbSet<StatusRequest> Estatus_Solicitud { get; set; }
+        public DbSet<StatusRequestStudy> Estatus_Solicitud_Estudio { get; set; }
+        public DbSet<StatusRequestPayment> Estatus_Solicitud_Pago { get; set; }
         public DbSet<TrackingOrder> CAT_Seguimiento_Ruta { get; set; }
         public DbSet<TrackingOrderDetail> Relacion_Seguimiento_Solicitud { get; set; }
         public DbSet<RouteTracking> Cat_PendientesDeEnviar { get; set; }

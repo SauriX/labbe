@@ -81,7 +81,7 @@ namespace Service.Catalog.Mapper
                 Cantidad = model.Cantidad,
                 Prioridad = model.Prioridad,
                 Urgencia = model.Urgencia,
-                WorkList = model.WorkLists.Select(y => y.WorkList).ToList().ToCatalogListDto(),
+                WorkLists =model.WorkList,
                 Parameters = model.Parameters.Select(y => y.Parametro).ToList().ToParameterListDto(),
                 Indicaciones = model.Indications.Select(y => y.Indicacion).ToList().ToIndicationListDto(),
                 Reactivos = model.Reagents.Select(y => y.Reagent).ToList().ToReagentListDto(),
@@ -133,16 +133,7 @@ namespace Service.Catalog.Mapper
                     UsuarioModificoId = Guid.Empty,
                     FechaModifico = DateTime.Now
                 }).ToList(),
-                WorkLists = model.WorkList.Select(x => new WorkListStudy
-                {
-                    WorkListId = x.Id,
-                    EstudioId = study.Id,
-                    Activo = true,
-                    UsuarioCreoId = Guid.Empty,
-                    FechaCreo = DateTime.Now,
-                    UsuarioModId = Guid.Empty,
-                    FechaMod = DateTime.Now
-                }).ToList(),
+                WorkList = model.WorkLists,
                 Indications = model.Indicaciones.Select(x => new IndicationStudy
                 {
                     IndicacionId = x.Id,
@@ -203,15 +194,7 @@ namespace Service.Catalog.Mapper
                     UsuarioModificoId = Guid.Empty,
                     FechaModifico = DateTime.Now
                 }).ToList(),
-                WorkLists = model.WorkList.Select(x => new WorkListStudy
-                {
-                    WorkListId = x.Id,
-                    Activo = true,
-                    UsuarioCreoId = Guid.Empty,
-                    FechaCreo = DateTime.Now,
-                    UsuarioModId = Guid.Empty,
-                    FechaMod = DateTime.Now
-                }).ToList(),
+                WorkList = model.WorkLists,
                 Indications = model.Indicaciones.Select(x => new IndicationStudy
                 {
                     IndicacionId = x.Id,

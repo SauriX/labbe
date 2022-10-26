@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Service.MedicalRecord.Domain.Status;
+using System;
 
 namespace Service.MedicalRecord.Domain.Request
 {
@@ -15,5 +16,7 @@ namespace Service.MedicalRecord.Domain.Request
         public string Numero { get; set; }
         public DateTime FechaPago { get; set; }
         public string UsuarioRegistra { get; set; }
+        public byte EstatusId { get; set; }
+        public virtual StatusRequestPayment Estatus { get; set; }
     }
 }

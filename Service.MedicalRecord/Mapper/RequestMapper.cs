@@ -116,7 +116,8 @@ namespace Service.MedicalRecord.Mapper
                 Cantidad = model.Cantidad,
                 Serie = model.Serie,
                 Numero = model.Numero,
-                UsuarioRegistra = model.UsuarioRegistra
+                UsuarioRegistra = model.UsuarioRegistra,
+                EstatusId = model.EstatusId
             };
         }
 
@@ -275,6 +276,7 @@ namespace Service.MedicalRecord.Mapper
                 Serie = dto.Serie,
                 Numero = dto.Numero,
                 FechaPago = DateTime.Now,
+                EstatusId = Status.RequestPayment.Pagado,
                 UsuarioRegistra = dto.UsuarioRegistra,
                 UsuarioCreoId = dto.UsuarioId,
                 FechaCreo = DateTime.Now,
