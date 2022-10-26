@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Service.MedicalRecord.Domain.Request;
+using Service.MedicalRecord.Domain.Status;
 
-namespace Service.MedicalRecord.Context.EntityConfiguration.Request
+namespace Service.MedicalRecord.Context.EntityConfiguration.Status
 {
-    public class RequestStudyStatusConfiguration : IEntityTypeConfiguration<RequestStudyStatus>
+    public class StatusRequestStudyConfiguration : IEntityTypeConfiguration<StatusRequestStudy>
     {
-        public void Configure(EntityTypeBuilder<RequestStudyStatus> builder)
+        public void Configure(EntityTypeBuilder<StatusRequestStudy> builder)
         {
             builder.ToTable("Estatus_Solicitud_Estudio");
 

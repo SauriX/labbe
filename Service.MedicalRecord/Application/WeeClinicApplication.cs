@@ -39,10 +39,10 @@ namespace Service.MedicalRecord.Application
 
             var validationData = response.Datos1[0];
 
-            //if (validationData.CodEstatus == 1 || validationData.IsVigente == 1)
-            //{
-            //    throw new CustomException(HttpStatusCode.BadRequest, "El folio no se encuentra vigente");
-            //}
+            if (validationData.CodEstatus == 1 && validationData.IsVigente == 1)
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "El folio no se encuentra vigente");
+            }
 
             var services = response.Datos;
 

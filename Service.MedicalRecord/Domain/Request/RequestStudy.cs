@@ -1,4 +1,5 @@
 ﻿using Service.MedicalRecord.Domain.Catalogs;
+using Service.MedicalRecord.Domain.Status;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -22,7 +23,7 @@ namespace Service.MedicalRecord.Domain.Request
         public int DepartamentoId { get; set; }
         public int AreaId { get; set; }
         public byte EstatusId { get; set; }
-        public virtual RequestStudyStatus Estatus { get; set; }
+        public virtual StatusRequestStudy Estatus { get; set; }
         public decimal Dias { get; set; }
         public int Horas { get; set; }
         public DateTime FechaEntrega { get; set; }

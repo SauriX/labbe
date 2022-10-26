@@ -252,7 +252,7 @@ namespace Service.MedicalRecord.Application
             }
 
             string code = await GetNewCode(requestDto);
-            requestDto.Clave = code;
+            newRequest.Clave = code;
 
             newRequest.MedicoId = MEDICS.A_QUIEN_CORRESPONDA;
             newRequest.CompañiaId = COMPANIES.PARTICULARES;
@@ -529,6 +529,42 @@ namespace Service.MedicalRecord.Application
             await _repository.BulkUpdateStudies(requestDto.SolicitudId, studies);
         }
 
+        public async Task<List<RequestPaymentDto>> CancelPayment(Guid recordId, Guid requestId, List<RequestPaymentDto> paymentsDto)
+        {
+            var request = await GetExistingRequest(recordId, requestId);
+
+            var payments = await _repository.GetPayments(requestId);
+
+            var paymentsToCancel = payments.Where(x => paymentsDto.Select(p => p.Id).Contains(x.Id)
+            && (x.EstatusId == Status.RequestPayment.Pagado || x.EstatusId == Status.RequestPayment.Facturado))
+                .ToList();
+
+            if (!paymentsToCancel.Any())
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.NoPaymentSelected);
+            }
+
+            var userId = paymentsDto.First().UsuarioId;
+            var userName = paymentsDto.First().UsuarioRegistra;
+
+            foreach (var payment in paymentsToCancel)
+            {
+                payment.EstatusId = Status.RequestPayment.Cancelado;
+                payment.UsuarioRegistra = userName;
+                payment.UsuarioModificoId = userId;
+                payment.FechaModifico = DateTime.Now;
+            }
+
+            await _repository.BulkUpdatePayments(requestId, paymentsToCancel);
+
+            foreach (var payment in paymentsDto)
+            {
+                payment.EstatusId = Status.RequestPayment.Cancelado;
+            }
+
+            return paymentsDto;
+        }
+
         public async Task<int> SendStudiesToSampling(RequestStudyUpdateDto requestDto)
         {
             var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
@@ -553,7 +589,7 @@ namespace Service.MedicalRecord.Application
             }
 
             await _repository.BulkUpdateStudies(requestDto.SolicitudId, studies);
-
+            ;
             return studies.Count;
         }
 
