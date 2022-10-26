@@ -251,6 +251,13 @@ namespace Service.MedicalRecord.Repository
             await _context.SaveChangesAsync();
         }
 
+        public async Task UpdatePayment(RequestPayment payment)
+        {
+            _context.Relacion_Solicitud_Pago.Update(payment);
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task BulkUpdatePacks(Guid requestId, List<RequestPack> packs)
         {
             var config = new BulkConfig();
@@ -273,6 +280,14 @@ namespace Service.MedicalRecord.Repository
             config.SetSynchronizeFilter<RequestStudy>(x => x.SolicitudId == requestId);
 
             await _context.BulkInsertOrUpdateAsync(studies, config);
+        }       
+        
+        public async Task BulkUpdatePayments(Guid requestId, List<RequestPayment> payments)
+        {
+            var config = new BulkConfig();
+            config.SetSynchronizeFilter<RequestStudy>(x => x.SolicitudId == requestId);
+
+            await _context.BulkUpdateAsync(payments, config);
         }
 
         public async Task BulkUpdateDeleteStudies(Guid requestId, List<RequestStudy> studies)
