@@ -23,7 +23,6 @@ namespace Service.Catalog.Mapper
                 Area = x.Area?.Nombre,
                 AreaId = x.Area?.Id,
                 Departamento = x.Area?.Departamento?.Nombre,
-                Formato = x.Formato?.Nombre,
                 Maquilador = x.Maquilador?.Nombre,
                 Metodo = x.Metodo?.Nombre,
                 Activo = x.Activo,
@@ -42,7 +41,20 @@ namespace Service.Catalog.Mapper
                 Clave = x.Clave
             });
         }
+        public static IEnumerable<PriceStudyList> toPriceStudyList(this List<Study> models) {
+            if (models == null) return null;
+            return models.Select(model => new PriceStudyList {
+                Id = model.Id,
+                EstudioId = model.Id,
+                Nombre= model.Nombre,
+                Area= model.Area?.Nombre,
+                Departamento= model.Area?.Departamento?.Nombre,
+                Activo= false,
+                Precio= 0,
+                Clave= model.Clave
 
+            });
+        }       
         public static StudyFormDto ToStudyFormDto(this Study model)
         {
             if (model == null) return null;
@@ -60,7 +72,6 @@ namespace Service.Catalog.Mapper
                 Activo = model.Activo,
                 Area = model.AreaId,
                 Departamento = model.DepartamentoId,
-                Formato = model.FormatoId,
                 Maquilador = model.MaquiladorId,
                 Metodo = model.MetodoId,
                 Tipomuestra = model.SampleTypeId,
@@ -77,7 +88,6 @@ namespace Service.Catalog.Mapper
                 Paquete = model.Packets.Select(y => y.Packet).ToList().ToCatalogListDto(),
                 Areas = model.Area,
                 Maquila = model.Maquilador,
-                Format = model.Formato,
                 Method = model.Metodo,
                 SampleType = model.SampleType,
                 Tapa = model.Tapon
@@ -101,7 +111,6 @@ namespace Service.Catalog.Mapper
                 TiempoResultado = model.Tiemporespuesta,
                 AreaId = model.Area,
                 DepartamentoId = model.Departamento,
-                FormatoId = model.Formato,
                 MaquiladorId = model.Maquilador,
                 MetodoId = model.Metodo,
                 SampleTypeId = model.Tipomuestra,
@@ -173,7 +182,6 @@ namespace Service.Catalog.Mapper
                 TiempoResultado = model.Tiemporespuesta,
                 AreaId = model.Area,
                 DepartamentoId = model.Departamento,
-                FormatoId = model.Formato,
                 MaquiladorId = model.Maquilador,
                 MetodoId = model.Metodo,
                 SampleTypeId = model.Tipomuestra,

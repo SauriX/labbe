@@ -39,7 +39,12 @@ namespace Service.Catalog.Controllers
         {
             return await _Service.GetAll(search);
         }
-
+        [HttpGet("allprice/{search?}")]
+        [Authorize(Policies.Access)]
+        public async Task<IEnumerable<PriceStudyList>> GetAllPrice(string search = null)
+        {
+            return await _Service.GetAllPriceStudy(search);
+        }
         [HttpGet("active")]
         public async Task<IEnumerable<StudyListDto>> GetActive()
         {

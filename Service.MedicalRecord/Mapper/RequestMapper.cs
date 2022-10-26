@@ -4,6 +4,7 @@ using Service.MedicalRecord.Dtos.Request;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace Service.MedicalRecord.Mapper
 {
@@ -100,6 +101,31 @@ namespace Service.MedicalRecord.Mapper
                 Total = model.Total,
                 Saldo = model.Saldo,
             };
+        }
+
+        public static RequestPaymentDto ToRequestPaymentDto(this RequestPayment model)
+        {
+            if (model == null) return null;
+
+            return new RequestPaymentDto
+            {
+                Id = model.Id,
+                FormaPago = model.FormaPago,
+                NumeroCuenta = model.NumeroCuenta,
+                FechaPago = model.FechaPago,
+                Cantidad = model.Cantidad,
+                Serie = model.Serie,
+                Numero = model.Numero,
+                UsuarioRegistra = model.UsuarioRegistra,
+                EstatusId = model.EstatusId
+            };
+        }
+
+        public static IEnumerable<RequestPaymentDto> ToRequestPaymentDto(this List<RequestPayment> model)
+        {
+            if (model == null) return null;
+
+            return model.Select(x => x.ToRequestPaymentDto());
         }
 
         public static RequestOrderDto ToRequestOrderDto(this Request model)
@@ -235,13 +261,35 @@ namespace Service.MedicalRecord.Mapper
             };
         }
 
+        public static RequestPayment ToModel(this RequestPaymentDto dto)
+        {
+            if (dto == null) return null;
+
+            return new RequestPayment
+            {
+                Id = Guid.NewGuid(),
+                SolicitudId = dto.SolicitudId,
+                FormaPagoId = dto.FormaPagoId,
+                FormaPago = dto.FormaPago,
+                NumeroCuenta = dto.NumeroCuenta,
+                Cantidad = dto.Cantidad,
+                Serie = dto.Serie,
+                Numero = dto.Numero,
+                FechaPago = DateTime.Now,
+                EstatusId = Status.RequestPayment.Pagado,
+                UsuarioRegistra = dto.UsuarioRegistra,
+                UsuarioCreoId = dto.UsuarioId,
+                FechaCreo = DateTime.Now,
+            };
+        }
+
         public static List<RequestPack> ToModel(this IEnumerable<RequestPackDto> dto, Guid requestId, IEnumerable<RequestPack> packs, Guid userId)
         {
             if (dto == null) return new List<RequestPack>();
 
             return dto.Select(x =>
             {
-                var pack = packs.FirstOrDefault(s => s.Id == x.Id);
+                var pack = packs?.FirstOrDefault(s => s.Id == x.Id);
 
                 return new RequestPack
                 {
@@ -279,7 +327,7 @@ namespace Service.MedicalRecord.Mapper
 
             return dto.Select(x =>
             {
-                var study = studies.FirstOrDefault(s => s.Id == x.Id);
+                var study = studies?.FirstOrDefault(s => s.Id == x.Id);
 
                 return new RequestStudy
                 {

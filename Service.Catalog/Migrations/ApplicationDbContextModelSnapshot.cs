@@ -1694,9 +1694,6 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("Opcion")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("ParameterId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("ParametroId")
                         .HasColumnType("uniqueidentifier");
 
@@ -1725,8 +1722,6 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ParameterId");
 
                     b.HasIndex("ParametroId");
 
@@ -2626,9 +2621,6 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("smalldatetime");
 
-                    b.Property<int?>("FormatoId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("MaquiladorId")
                         .HasColumnType("int");
 
@@ -2678,8 +2670,6 @@ namespace Service.Catalog.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AreaId");
-
-                    b.HasIndex("FormatoId");
 
                     b.HasIndex("MaquiladorId");
 
@@ -3067,12 +3057,8 @@ namespace Service.Catalog.Migrations
 
             modelBuilder.Entity("Service.Catalog.Domain.Parameter.ParameterValue", b =>
                 {
-                    b.HasOne("Service.Catalog.Domain.Parameter.Parameter", null)
-                        .WithMany("TipoValores")
-                        .HasForeignKey("ParameterId");
-
                     b.HasOne("Service.Catalog.Domain.Parameter.Parameter", "Parametro")
-                        .WithMany()
+                        .WithMany("TipoValores")
                         .HasForeignKey("ParametroId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -3383,10 +3369,6 @@ namespace Service.Catalog.Migrations
                         .WithMany()
                         .HasForeignKey("AreaId");
 
-                    b.HasOne("Service.Catalog.Domain.Parameter.Format", "Formato")
-                        .WithMany()
-                        .HasForeignKey("FormatoId");
-
                     b.HasOne("Service.Catalog.Domain.Maquila.Maquila", "Maquilador")
                         .WithMany()
                         .HasForeignKey("MaquiladorId");
@@ -3404,8 +3386,6 @@ namespace Service.Catalog.Migrations
                         .HasForeignKey("TaponId");
 
                     b.Navigation("Area");
-
-                    b.Navigation("Formato");
 
                     b.Navigation("Maquilador");
 

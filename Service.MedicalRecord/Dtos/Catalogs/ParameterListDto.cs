@@ -16,7 +16,7 @@ namespace Service.MedicalRecord.Dtos.Catalogs
         public bool MostrarFormato { get; set; }
         public int? Unidades { get; set; }
         public string UnidadNombre { get; set; }
-        public int TipoValor { get; set; }
+        public string TipoValor { get; set; }
         public string ValorInicial { get; set; }
         public string ValorFinal { get; set; }
         public decimal CriticoMinimo { get; set; }

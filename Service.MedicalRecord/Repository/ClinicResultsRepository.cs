@@ -25,10 +25,11 @@ namespace Service.MedicalRecord.Repository
         public async Task<Request> FindAsync(Guid id)
         {
             var report = _context.CAT_Solicitud
-                   .Include(x => x.Estudios);
-            var request = await _context.CAT_Solicitud.FindAsync(id);
+                .Include(x => x.Expediente)
+                .Include(x => x.Estudios).ThenInclude(x => x.Estatus)
+                .FirstOrDefault(x => x.Id == id);
 
-            return request;
+            return report;
         }
 
         public async Task<ClinicResults> GetById(Guid id)
@@ -220,9 +221,9 @@ namespace Service.MedicalRecord.Repository
         }
         public async Task<RequestStudy> GetStudyById(int RequestStudyId)
         {
-             var studies = await _context.Relacion_Solicitud_Estudio
-                 .Where(x => x.Id == RequestStudyId)
-                 .FirstOrDefaultAsync();
+            var studies = await _context.Relacion_Solicitud_Estudio
+                .Where(x => x.Id == RequestStudyId)
+                .FirstOrDefaultAsync();
             return studies;
         }
 

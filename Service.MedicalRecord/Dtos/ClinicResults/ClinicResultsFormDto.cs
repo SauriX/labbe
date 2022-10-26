@@ -15,7 +15,7 @@ namespace Service.MedicalRecord.Dtos.ClinicResults
         public string ParametroId { get; set; }
         public int SolicitudEstudioId { get; set; }
         public string Estudio { get; set; }
-        public int TipoValorId { get; set; }
+        public string TipoValorId { get; set; }
         public string ValorInicial { get; set; }
         public string ValorFinal { get; set; }
         public string Resultado { get; set; }

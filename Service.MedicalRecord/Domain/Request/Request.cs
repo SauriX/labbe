@@ -1,4 +1,5 @@
 ﻿using Service.MedicalRecord.Domain.Catalogs;
+using Service.MedicalRecord.Domain.Status;
 using System;
 using System.Collections.Generic;
 
@@ -15,7 +16,7 @@ namespace Service.MedicalRecord.Domain.Request
         public string ClavePatologica { get; set; }
         public string FolioWeeClinic { get; set; }
         public byte EstatusId { get; set; }
-        public virtual RequestStatus Estatus { get; set; }
+        public virtual StatusRequest Estatus { get; set; }
         public byte Procedencia { get; set; }
         public string Afiliacion { get; set; }
         public Guid? CompañiaId { get; set; }
@@ -43,6 +44,7 @@ namespace Service.MedicalRecord.Domain.Request
         public decimal Saldo { get; set; }
         public string UsuarioCreo { get; set; }
 
+        public virtual ICollection<RequestPayment> Pagos { get; set; }
         public virtual ICollection<RequestStudy> Estudios { get; set; }
         public virtual ICollection<RequestPack> Paquetes { get; set; }
         public virtual ICollection<RequestImage> Imagenes { get; set; }

@@ -51,7 +51,7 @@ namespace Integration.WeeClinic.Models.Laboratorio_BusquedaFolioLaboratorio
         public decimal CantidadSolicitada { get; set; }
         public int Vigencia { get; set; }
         public int CodCubierto { get; set; }
-        public string Cubiertov { get; set; }
+        public string Cubierto { get; set; }
         public int RestanteDays { get; set; }
         [JsonPropertyName("isUploadEstudio")]
         public int IsUploadEstudio { get; set; }

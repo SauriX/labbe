@@ -55,10 +55,6 @@ namespace Service.Catalog.Context.EntityConfiguration.Study
                 .WithMany();
 
             builder
-                .HasOne(x => x.Formato)
-                .WithMany();
-
-            builder
                 .HasOne(x => x.Maquilador)
                 .WithMany();
 

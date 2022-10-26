@@ -1,12 +1,12 @@
-﻿namespace Service.MedicalRecord.Domain.Request
+﻿namespace Service.MedicalRecord.Domain.Status
 {
-    public class RequestStudyStatus
+    public class StatusRequestStudy
     {
-        public RequestStudyStatus()
+        public StatusRequestStudy()
         {
         }
 
-        public RequestStudyStatus(byte id, string clave, string nombre, string color)
+        public StatusRequestStudy(byte id, string clave, string nombre, string color)
         {
             Id = id;
             Clave = clave;

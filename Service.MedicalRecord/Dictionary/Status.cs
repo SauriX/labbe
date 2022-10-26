@@ -23,5 +23,13 @@
             public const byte Entregado = 10;
             public const byte Urgente = 11;
         }
+
+        public class RequestPayment
+        {
+            public const byte Pagado = 1;
+            public const byte Facturado = 2;
+            public const byte Cancelado = 3;
+            public const byte FacturaCancelada = 4;
+        }
     }
 }

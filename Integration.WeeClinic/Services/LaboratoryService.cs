@@ -22,9 +22,6 @@ namespace Integration.WeeClinic.Services
 {
     public class LaboratoryService : Base
     {
-        private static readonly int codEstatus_Seleccionar_Estudio = 14;
-        private static readonly int codEstatus_Liberar_Estudio = 1;
-
         //AD007044220041013DW5
         //AD007044220041014O01
         //AD007044220041015272
@@ -41,6 +38,10 @@ namespace Integration.WeeClinic.Services
         //AD00704422004349120V
         //AD007044220043508P67
         //AD007044220043509F1J
+
+        //AD007044220043512J1V
+        //AD007044220043513M09
+        //AD007044220043522EE6
 
         // Servcio 1. Consulta de folios
         public static async Task<Laboratorio_BusquedaFolios> BusquedaFolios(string folio)
@@ -87,23 +88,25 @@ namespace Integration.WeeClinic.Services
         }
 
         // Servicio 3. Consulta de precios por estudio
-        public static async Task<Laboratorio_GetPreciosEstudios_ByidServicio> GetPreciosEstudios_ByidServicio()
+        public static async Task<Laboratorio_GetPreciosEstudios_ByidServicio> GetPreciosEstudios_ByidServicio(string serviceId, string branch, string status)
         {
             var url = "api/Inventarios/GetPreciosEstudios_ByidServicio";
 
             var data = new Dictionary<string, string>()
             {
-                ["idNodo"] = "00000000-0000-0000-0000-000000000000",
-                ["idServicio"] = "139e9018-39b8-43c4-94de-0940b526d35b",
-                ["ClaveSucursal"] = "",
-                ["codEstatus"] = codEstatus_Seleccionar_Estudio.ToString()
+                ["idNodo"] = Guid.Empty.ToString(),
+                ["idServicio"] = serviceId,
+                ["ClaveSucursal"] = branch,
+                ["codEstatus"] = status
             };
 
             var response = await PostService<string>(url, data);
 
-            var folios = response.Transform<Laboratorio_GetPreciosEstudios_ByidServicio>();
+            response.ValidateNotEmpty("Datos");
 
-            return folios;
+            var prices = response.Transform<Laboratorio_GetPreciosEstudios_ByidServicio>();
+
+            return prices;
         }
 
         // Servicio 4. Enviar token de validación de estudios
