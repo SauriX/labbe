@@ -20,6 +20,7 @@ namespace Service.MedicalRecord.Application
         public async Task<MassSearchInfoDto> GetByFilter(MassSearchFilterDto filter)
         {
             var request = await _repository.GetByFilter(filter);
+
             return request.ToMassSearchInfoDto();
         }
     }

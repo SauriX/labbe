@@ -21,6 +21,8 @@ namespace Service.MedicalRecord.Repository
         }
         public async Task<List<Request>> GetByFilter(MassSearchFilterDto filter)
         {
+
+
             var requests = _context.CAT_Solicitud
                 .Include(x => x.Expediente)
                 .Include(x => x.Sucursal)
