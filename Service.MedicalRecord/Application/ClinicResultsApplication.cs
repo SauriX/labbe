@@ -193,7 +193,8 @@ namespace Service.MedicalRecord.Application
                     SolicitudEstudioId = x.SolicitudEstudioId,
                     Unidades = x.UnidadNombre,
                     NombreCorto = x.NombreCorto,
-                    EstudioId = x.EstudioId
+                    EstudioId = x.EstudioId,
+                    Formula = x.Formula,
                 }).ToList();
 
                 // Crear Los que no existen
@@ -213,7 +214,7 @@ namespace Service.MedicalRecord.Application
                 foreach (var param in study.Parametros)
                 {
                     var result = results.Find(x => x.SolicitudEstudioId == study.Id && x.ParametroId.ToString() == param.Id);
-                    if (result.Formula != null)
+                    if (result.Formula != null && result.Resultado != null)
                     {
                         param.Resultado = GetFormula(results, result.Formula);
                     }
@@ -223,8 +224,6 @@ namespace Service.MedicalRecord.Application
                     }
                     param.ResultadoId = result.Id.ToString();
                     param.Formula = result.Formula;
-                    param.UnidadNombre = result.Unidades;
-
 
                     if (param.TipoValores != null && param.TipoValores.Count != 0)
                     {
