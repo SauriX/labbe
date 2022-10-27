@@ -61,6 +61,7 @@ namespace Service.MedicalRecord.Controllers
         public async Task UpdateLabResults(List<ClinicResultsFormDto> results)
         {
             results.First().UsuarioId = (Guid)HttpContext.Items["userId"];
+            results.First().Usuario = HttpContext.Items["userName"].ToString();
             await _service.UpdateLabResults(results);
         }
 
@@ -82,6 +83,7 @@ namespace Service.MedicalRecord.Controllers
         public async Task UpdateResultPathologicalStudy([FromForm] ClinicalResultPathologicalFormDto result)
         {
             result.UsuarioId = (Guid)HttpContext.Items["userId"];
+            result.Usuario = HttpContext.Items["userName"].ToString();
             await _service.UpdateResultPathologicalStudy(result);
         }
 
@@ -114,7 +116,8 @@ namespace Service.MedicalRecord.Controllers
         public async Task UpdateStatusStudy(UpdateStatusDto updateStatus)
         {
             updateStatus.UsuarioId = (Guid)HttpContext.Items["userId"];
-            await _service.UpdateStatusStudy(updateStatus.RequestStudyId, updateStatus.status, updateStatus.UsuarioId);
+            updateStatus.Usuario = HttpContext.Items["userName"].ToString();
+            await _service.UpdateStatusStudy(updateStatus.RequestStudyId, updateStatus.status, updateStatus.Usuario);
         }
 
         //[HttpPost("labResults/{recordId}/{requestId}")]

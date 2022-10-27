@@ -7,5 +7,6 @@ namespace Service.MedicalRecord.Dtos.ClinicResults
         public int RequestStudyId { get; set; }
         public byte status { get; set; }
         public Guid UsuarioId { get; set; }
+        public string Usuario { get; set; }
     }
 }
