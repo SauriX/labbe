@@ -7,7 +7,7 @@ namespace Integration.Pdf.Dtos
 {
     public class ClinicResultsPdfDto
     {
-        public List<ClinicResultsCaptureDto> CapturaResultados { get; set; }
+        public IEnumerable<ClinicResultsCaptureDto> CapturaResultados { get; set; }
         public ClinicResultsRequestDto SolicitudInfo { get; set; }
         public bool ImprimrLogos { get; set; }
     }
@@ -18,9 +18,10 @@ namespace Integration.Pdf.Dtos
         public string Nombre { get; set; }
         public Guid SolicitudId { get; set; }
         public int EstudioId { get; set; }
+        public string Estudio { get; set; }
         public string ParametroId { get; set; }
-        public int TipoValor { get; set; }
-        public string UnidadesNombre { get; set; }
+        public int TipoValorId { get; set; }
+        public string UnidadNombre { get; set; }
         public string ValorInicial { get; set; }
         public string ValorFinal { get; set; }
         public string Resultado { get; set; }

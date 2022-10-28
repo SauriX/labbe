@@ -1,4 +1,5 @@
-﻿using Integration.WeeClinic.Models.Laboratorio_BusquedaFolioLaboratorio;
+﻿using Integration.WeeClinic.Dtos;
+using Integration.WeeClinic.Models.Laboratorio_BusquedaFolioLaboratorio;
 using Integration.WeeClinic.Models.Laboratorio_BusquedaFolios;
 using Integration.WeeClinic.Models.Laboratorio_GetPreciosEstudios_ByidServicio;
 using System;
@@ -9,9 +10,9 @@ namespace Service.MedicalRecord.Application.IApplication
 {
     public interface IWeeClinicApplication
     {
-        Task<Laboratorio_BusquedaFolios_0> SearchPatientByFolio(string folio);
-        Task<List<Laboratorio_BusquedaFolioLaboratorio_0>> GetServicesByFolio(string folio);
-        Task<Laboratorio_GetPreciosEstudios_ByidServicio> GetServicePrice(string serviceId, string branch);
+        Task<WeePatientInfoDto> SearchPatientByFolio(string folio);
+        Task<List<WeeServiceDto>> GetServicesByFolio(string folio);
+        Task<WeeServicePricesDto> GetServicePrice(string serviceId, string branch);
         Task<Laboratorio_GetPreciosEstudios_ByidServicio_0> ReleaseService(string serviceId);
     }
 }
