@@ -32,6 +32,7 @@ namespace Service.MedicalRecord.Mapper
                 Clave = model.Clave,
                 Parcialidad = model.Parcialidad,
                 EsNuevo = model.EsNuevo,
+                FolioWeeClinic = model.FolioWeeClinic,
                 Registro = $"{model.FechaCreo:dd/MM/yyyy}"
             };
         }
@@ -55,6 +56,7 @@ namespace Service.MedicalRecord.Mapper
                 Descuento = x.DescuentoTipo == DESCUENTO_DINERO ? x.Descuento : x.Total * x.Descuento,
                 Total = x.Total,
                 Saldo = x.Saldo,
+                FolioWeeClinic = x.FolioWeeClinic,
                 Estudios = x.Estudios.Select(s => new RequestStudyInfoDto
                 {
                     Clave = s.Clave,

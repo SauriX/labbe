@@ -32,6 +32,7 @@ namespace Service.MedicalRecord.Dtos.Request
         public bool Parcialidad { get; set; }
         public bool EsNuevo { get; set; }
         public string FolioWeeClinic { get; set; }
+        public bool EsWeeClinic => !string.IsNullOrEmpty(FolioWeeClinic);
         [JsonIgnore]
         public string Usuario { get; set; }
         [JsonIgnore]

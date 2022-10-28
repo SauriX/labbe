@@ -49,6 +49,7 @@ namespace Service.MedicalRecord.Application
         private readonly IRepository<Branch> _branchRepository;
 
         private const byte PORCENTAJE = 1;
+        private const byte CANTIDAD = 2;
 
         public RequestApplication(
             ITransactionProvider transaction,
@@ -214,9 +215,9 @@ namespace Service.MedicalRecord.Application
             var newRequest = requestDto.ToModel();
             newRequest.MedicoId = MEDICS.A_QUIEN_CORRESPONDA;
             newRequest.CompañiaId = COMPANIES.PARTICULARES;
-            newRequest.CargoTipo = PORCENTAJE;
-            newRequest.CopagoTipo = PORCENTAJE;
-            newRequest.DescuentoTipo = PORCENTAJE;
+            newRequest.CargoTipo = CANTIDAD;
+            newRequest.CopagoTipo = CANTIDAD;
+            newRequest.DescuentoTipo = CANTIDAD;
             newRequest.UsuarioCreo = requestDto.Usuario;
 
             await _repository.Create(newRequest);
@@ -255,6 +256,9 @@ namespace Service.MedicalRecord.Application
                 weePrices.Add(weePrice);
 
                 study.EstatusId = Status.RequestStudy.Pendiente;
+                study.Precio = weePrice.Paciente.Total + weePrice.Aseguradora.Total;
+                study.PrecioFinal = weePrice.Paciente.Total + weePrice.Aseguradora.Total;
+                study.AplicaCopago = weePrice.Total.Copago > 0;
                 study.EstudioWeeClinic = new RequestStudyWee(ws.IdOrden, ws.IdNodo, ws.IdServicio, ws.Cubierto, ws.IsAvaliable, ws.RestanteDays, ws.Vigencia, ws.IsCancel);
             }
 
@@ -270,15 +274,15 @@ namespace Service.MedicalRecord.Application
             newRequest.FolioWeeClinic = requestDto.FolioWeeClinic;
             newRequest.Estudios = studies;
 
-            newRequest.TotalEstudios = weePrices.Sum(x => x.Total.PrecioUnitario);
-            newRequest.Descuento = weePrices.Sum(x => x.Total.Descuento);
-            newRequest.DescuentoTipo = PORCENTAJE;
+            newRequest.TotalEstudios = weePrices.Sum(x => x.Paciente.Total + x.Aseguradora.Total);
+            newRequest.Descuento = weePrices.Sum(x => x.Paciente.Descuento + x.Paciente.Descuento);
+            newRequest.DescuentoTipo = CANTIDAD;
             newRequest.Cargo = 0;
-            newRequest.CargoTipo = PORCENTAJE;
-            newRequest.Copago = weePrices.Sum(x => x.Total.Copago ?? 0);
-            newRequest.CopagoTipo = PORCENTAJE;
-            newRequest.Total = weePrices.Sum(x => x.Total.PrecioUnitario) - newRequest.Descuento - newRequest.Copago;
-            newRequest.Saldo = newRequest.Total;
+            newRequest.CargoTipo = CANTIDAD;
+            newRequest.Copago = weePrices.Sum(x => x.Paciente.Total);
+            newRequest.CopagoTipo = CANTIDAD;
+            newRequest.Total = newRequest.TotalEstudios - (newRequest.TotalEstudios - newRequest.Copago);
+            newRequest.Saldo = newRequest.Copago;
             newRequest.UsuarioModificoId = requestDto.UsuarioId;
             newRequest.FechaModifico = DateTime.Now;
 
