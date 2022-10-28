@@ -6,6 +6,8 @@ using MigraDoc.DocumentObjectModel.Shapes;
 using MigraDoc.DocumentObjectModel.Tables;
 using MigraDoc.Rendering;
 using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 namespace Integration.Pdf.Service
@@ -75,9 +77,9 @@ namespace Integration.Pdf.Service
 
         static void Format(Section section, ClinicResultsPdfDto results)
         {
-            var fontText = new Font("calibri", 11);
+            var fontText = new Font("calibri", 12);
             var fontParam = new Font("calibri", 12);
-            var fontParamAlert = new Font("calibri", 12) { Color = Color.FromRgb(255, 0, 0) };
+            var fontTitle = new Font("calibri", 14);
 
             var logoLab = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets\\LabRamosLogo.png");
             var logoISO = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets\\ISOLogo.png");
@@ -88,7 +90,7 @@ namespace Integration.Pdf.Service
             var ISOImage = File.ReadAllBytes(logoISO);
 
             var headerParagraph = "ALFONSO RAMOS SALAZAR, QBP, MSC, DBC UNIVERSIDAD Y HOSPITAL GENERAL DE TORONTO CED. DGP No. 703973 REG. S.S.A. 10-86 DGP F-370, No. REG. 0111";
-            /*var headerUrl = new Col(, 4, new Font("Calibri", 10) { Bold = true }, ParagraphAlignment.Center);*/
+
             var header = section.Headers.Primary;
 
             if (results.ImprimrLogos)
@@ -107,15 +109,6 @@ namespace Integration.Pdf.Service
             };
 
                 header.AddText(headerInfo);
-
-                /*var headerURL = new Col[]
-                {
-                    new Col("", 6),
-                    headerUrl,
-                    new Col("", 4)
-                };
-
-                header.AddText(headerURL);*/
 
                 var textFrame = header.AddTextFrame();
                 textFrame.RelativeHorizontal = RelativeHorizontal.Page;
@@ -136,46 +129,46 @@ namespace Integration.Pdf.Service
 
             var line1 = new Col[]
             {
-                new Col("Doctor (a)", 8, fontText, ParagraphAlignment.Left),
-                new Col($": {results.SolicitudInfo?.Medico}", 21, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
-                new Col("Expediente", 8, fontText, ParagraphAlignment.Left),
-                new Col($": {results.SolicitudInfo?.Clave}", 21, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left)
+                new Col("Doctor (a)", 12, fontText, ParagraphAlignment.Left),
+                new Col($": {results.SolicitudInfo?.Medico}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
+                new Col("Expediente", 12, fontText, ParagraphAlignment.Left),
+                new Col($": {results.SolicitudInfo?.Clave}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left)
             };
             section.AddBorderedText(line1, top: true, right: false, left: false);
 
             var line2 = new Col[]
             {
-                new Col("Paciente", 8, fontText, ParagraphAlignment.Left),
-                new Col($": {results.SolicitudInfo?.Paciente}", 21, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
-                new Col("Edad", 8, fontText, ParagraphAlignment.Left),
-                new Col($": {results.SolicitudInfo?.Edad}", 21, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left)
+                new Col("Paciente", 12, fontText, ParagraphAlignment.Left),
+                new Col($": {results.SolicitudInfo?.Paciente}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
+                new Col("Edad", 12, fontText, ParagraphAlignment.Left),
+                new Col($": {results.SolicitudInfo?.Edad}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left)
             };
             section.AddBorderedText(line2, right: false, left: false);
 
             var line3 = new Col[]
             {
-                new Col("Paciente Número", 8, fontText, ParagraphAlignment.Left),
-                new Col($": {results.SolicitudInfo?.Expediente}", 21, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
-                new Col("Sexo", 8, fontText, ParagraphAlignment.Left),
-                new Col($": {results.SolicitudInfo?.Sexo}", 21, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
+                new Col("Paciente Número", 12, fontText, ParagraphAlignment.Left),
+                new Col($": {results.SolicitudInfo?.Expediente}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
+                new Col("Sexo", 12, fontText, ParagraphAlignment.Left),
+                new Col($": {results.SolicitudInfo?.Sexo}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
             };
             section.AddBorderedText(line3, right: false, left: false);
 
             var line4 = new Col[]
             {
-                new Col("Fecha de Admisión", 8, fontText, ParagraphAlignment.Left),
-                new Col($": {results.SolicitudInfo?.FechaAdmision}", 21, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
-                new Col("Fecha de Entrega", 8, fontText, ParagraphAlignment.Left),
-                new Col($": {results.SolicitudInfo?.FechaEntrega}", 21, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
+                new Col("Fecha de Admisión", 12, fontText, ParagraphAlignment.Left),
+                new Col($": {results.SolicitudInfo?.FechaAdmision}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
+                new Col("Fecha de Entrega", 12, fontText, ParagraphAlignment.Left),
+                new Col($": {results.SolicitudInfo?.FechaEntrega}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
             };
             section.AddBorderedText(line4, right: false, left: false);
 
             var line5 = new Col[]
             {
-                new Col("Compañía", 8, fontText, ParagraphAlignment.Left),
-                new Col($": {(results.SolicitudInfo?.Compañia == null ? "Particulares" : results.SolicitudInfo.Compañia)}", 21, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
-                new Col("Impreso a las", 8, fontText, ParagraphAlignment.Left),
-                new Col($": {DateTime.Now.ToString("t")}", 21, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
+                new Col("Compañía", 12, fontText, ParagraphAlignment.Left),
+                new Col($": {(results.SolicitudInfo?.Compañia == null ? "Particulares" : results.SolicitudInfo.Compañia)}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
+                new Col("Impreso a las", 12, fontText, ParagraphAlignment.Left),
+                new Col($": {DateTime.Now.ToString("t")}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
             };
             section.AddBorderedText(line5, right: false, left: false);
 
@@ -189,23 +182,43 @@ namespace Integration.Pdf.Service
                 new Col("REFERENCIA", 6, Col.FONT_SUBTITLE_BOLD),
             };
             section.AddBorderedText(studyHeader, top: true, right: false, bottom: true, left: false);
-            section.AddSpace(3);
+            section.AddSpace(5);
 
             if (results.CapturaResultados != null)
             {
-                foreach (var param in results.CapturaResultados)
+                var study = results.CapturaResultados.Select(x => x.Estudio).Distinct().ToList();
+
+                var studyParameter = results.CapturaResultados.GroupBy(x => x.Estudio).ToList();
+
+                foreach (var studyParam in studyParameter)
                 {
-                    var col = new Col[]
+                    var studyName = new Col("****" + studyParam.Key, 14, fontTitle, ParagraphAlignment.Left);
+                    section.AddText(studyName);
+
+                    foreach (var param in studyParam)
                     {
+
+                        var checkResult = false;
+                        var typeValueText = param.TipoValorId == 9 || param.TipoValorId == 10;
+
+                        if (param.Resultado != null && param.TipoValorId == 1)
+                        {
+                            checkResult = decimal.Parse(param.Resultado) > decimal.Parse(param.ValorFinal) || decimal.Parse(param.Resultado) < decimal.Parse(param.ValorInicial);
+                        }
+
+                        var col = new Col[]
+                        {
                     new Col(param.Nombre, 12, fontParam, ParagraphAlignment.Left){
-                        Fill = TabLeader.Dashes
+                        Fill = typeValueText ? TabLeader.Spaces : TabLeader.Dots
                     },
-                    new Col(param.Resultado, 7, fontParam, ParagraphAlignment.Center),
-                    new Col(param.UnidadesNombre, 6, fontParam, ParagraphAlignment.Center),
-                    new Col(param.ValorInicial == "0" ? "" : param.ValorInicial, 6, fontParam, ParagraphAlignment.Center),
-                    };
-                    section.AddBorderedText(col, top: false, right: false, bottom: true, left: false);
+                    new Col(checkResult ? $"*{param.Resultado}" : param.Resultado, 7, fontParam, ParagraphAlignment.Center),
+                    new Col(param.UnidadNombre, 6, fontParam, ParagraphAlignment.Center),
+                    new Col(typeValueText ? "" : $"{param.ValorInicial} - {param.ValorFinal}", 6, fontParam, ParagraphAlignment.Center),
+                        };
+                        section.AddBorderedText(col, top: false, right: false, bottom: false, left: false);
+                    }
                 }
+
                 section.AddSpace(5);
             }
 
@@ -218,7 +231,7 @@ namespace Integration.Pdf.Service
                  new Col("Toma de Muestra: " + results.SolicitudInfo?.FechaAdmision + " " + " " + results.SolicitudInfo?.User + "\nLiberó: " + results.SolicitudInfo?.FechaEntrega + " " + " " + results.SolicitudInfo?.User, 5, ParagraphAlignment.Left),
                  new Col(firmaImage, 4)
                  {
-                     ImagenTamaño = Unit.FromCentimeter(2.5)
+                     ImagenTamaño = Unit.FromCentimeter(3)
                  },
             };
 
@@ -261,7 +274,7 @@ namespace Integration.Pdf.Service
                 new Col("Calle 200 Casi Esq. con Michoacán Tels. (644)412-31-56 y 416-14-07", 1, new Font("Calibri", 6),  ParagraphAlignment.Center),
                 new Col("Jalisco No. 2250 Esq. Calle 300 Plaza Perisur Cd. Obregón, Son. Tel. (644) 444-66-69", 1, new Font("Calibri", 6),  ParagraphAlignment.Center),
                 new Col("Calle Norte No. 749 Ote. Esq. con Sonora Tel(644) 415-06-66", 1, new Font("Calibri", 6) ,  ParagraphAlignment.Center),
-                new Col("Calzada Agustín García López Local 6 esq. Paseo de las Villas Fracc. Las Villas Tel. (622) 221-9183", 1, new Font("Calibri", 6),  ParagraphAlignment.Center),
+                new Col("Calzada Agustín García López Local 6 esq. Paseo de las Villas Fracc. Las Villas Tel. (622) 218-9183", 1, new Font("Calibri", 6),  ParagraphAlignment.Center),
                 new Col("Reforma No. 273 Sur Tel. (662) 213-6866", 1, new Font("Calibri", 6),  ParagraphAlignment.Center),
                 new Col("Blvd. Morelos No. 357 Col. El Bachoco Tels. (662) 267-8635 y 37", 1, new Font("Calibri", 6),  ParagraphAlignment.Center),
                 new Col("Blvd. Navarrete No. 292 Col. Raquet Club Tel. (662) 216-3342", 1, new Font("Calibri", 6),  ParagraphAlignment.Center),

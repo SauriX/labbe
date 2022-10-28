@@ -20,9 +20,11 @@ namespace Service.MedicalRecord.Dtos.ClinicResults
         public string ValorFinal { get; set; }
         public string Resultado { get; set; }
         public string Formula { get; set; }
+        public string NombreCorto { get; set; }
         public byte Estatus { get; set; }
         public string DepartamentoEstudio { get; set; }
         public Guid UsuarioId { get; set; }
-        public string UnidadesNombre { get; set; }
+        public string Usuario { get; set; }
+        public string UnidadNombre { get; set; }
     }
 }
