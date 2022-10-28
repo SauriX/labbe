@@ -1,4 +1,5 @@
 ﻿using Integration.WeeClinic;
+using Integration.WeeClinic.Dtos;
 using Integration.WeeClinic.Models.Laboratorio_BusquedaFolioLaboratorio;
 using Integration.WeeClinic.Models.Laboratorio_BusquedaFolios;
 using Integration.WeeClinic.Models.Laboratorio_GetPreciosEstudios_ByidServicio;
@@ -35,7 +36,7 @@ namespace Service.MedicalRecord.Controllers
 
         // Laboratorio
         [HttpGet("search/folio/{folio}")]
-        public async Task<Laboratorio_BusquedaFolios_0> SearchPatientByFolio(string folio)
+        public async Task<WeePatientInfoDto> SearchPatientByFolio(string folio)
         {
             return await _service.SearchPatientByFolio(folio);
         }
@@ -46,11 +47,11 @@ namespace Service.MedicalRecord.Controllers
             return await LaboratoryService.BuscaFolioLaboratorio(folio);
         }
 
-        //[HttpGet("Laboratorio_GetPreciosEstudios_ByidServicio")]
-        //public async Task<Laboratorio_GetPreciosEstudios_ByidServicio> GetPreciosEstudios_ByidServicio()
-        //{
-        //    return await LaboratoryService.GetPreciosEstudios_ByidServicio();
-        //}
+        [HttpGet("Laboratorio_GetPreciosEstudios_ByidServicio/{serviceId}")]
+        public async Task<Laboratorio_GetPreciosEstudios_ByidServicio> GetPreciosEstudios_ByidServicio(string serviceId, string branch, string status)
+        {
+            return await LaboratoryService.GetPreciosEstudios_ByidServicio(serviceId, branch, "14");
+        }
 
         [HttpGet("Laboratorio_ValidarCodigoPacienteLaboratorio")]
         public async Task<Laboratorio_ValidarCodigoPacienteLaboratorio> ValidarCodigoPacienteLaboratorio()

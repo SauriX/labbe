@@ -258,6 +258,7 @@ namespace Service.MedicalRecord.Mapper
                 EstatusId = VIGENTE,
                 UsuarioCreoId = dto.UsuarioId,
                 FechaCreo = DateTime.Now,
+                Activo = true,
             };
         }
 
