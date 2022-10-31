@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221026174138_worklist")]
+    partial class worklist
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1506,6 +1508,12 @@ namespace Service.Catalog.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<decimal>("CriticoMaximo")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("CriticoMinimo")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<bool>("DeltaCheck")
                         .HasColumnType("bit");
 
@@ -1559,6 +1567,9 @@ namespace Service.Catalog.Migrations
 
                     b.Property<Guid?>("UsuarioModificoId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("ValorCriticos")
+                        .HasColumnType("bit");
 
                     b.Property<string>("ValorFinal")
                         .HasColumnType("nvarchar(max)");
@@ -1649,19 +1660,7 @@ namespace Service.Catalog.Migrations
                     b.Property<decimal>("CriticoMaximo")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("CriticoMaximoHombre")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("CriticoMaximoMujer")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<decimal>("CriticoMinimo")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("CriticoMinimoHombre")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("CriticoMinimoMujer")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("DescripcionParrafo")

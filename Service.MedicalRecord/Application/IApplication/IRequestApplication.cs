@@ -24,6 +24,7 @@ namespace Service.MedicalRecord.Application.IApplication
         Task UpdateStudies(RequestStudyUpdateDto requestDto);
         Task CancelRequest(Guid recordId, Guid requestId, Guid userId);
         Task CancelStudies(RequestStudyUpdateDto requestDto);
+        Task<List<RequestPaymentDto>> CancelPayment(Guid recordId, Guid requestId, List<RequestPaymentDto> requestDto);
         Task<int> SendStudiesToSampling(RequestStudyUpdateDto requestDto);
         Task<int> SendStudiesToRequest(RequestStudyUpdateDto requestDto);
         Task AddPartiality(RequestPartialityDto requestDto);

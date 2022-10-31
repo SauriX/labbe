@@ -22,7 +22,7 @@ namespace Service.MedicalRecord.Repository
         }
         public async Task<List<AppointmentLab>> GetAllLab(SearchAppointment search)
         {
-            var citasLab = _context.CAT_Cita_Lab.Include(x => x.Expediente).AsQueryable();
+            var citasLab = _context.CAT_Cita_Lab.Include(x => x.Expediente).Include(x=> x.Estudios).AsQueryable();
             if (!string.IsNullOrEmpty(search.nombre) || search.fecha.Length > 0)
             {
                 citasLab = citasLab.Where(x => x.NombrePaciente.Contains(search.nombre) || x.FechaCita.Date <= search.fecha[1].Date && x.FechaCreo.Date >= search.fecha[0].Date);

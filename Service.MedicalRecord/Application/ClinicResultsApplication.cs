@@ -193,7 +193,8 @@ namespace Service.MedicalRecord.Application
                     SolicitudEstudioId = x.SolicitudEstudioId,
                     Unidades = x.UnidadNombre,
                     NombreCorto = x.NombreCorto,
-                    EstudioId = x.EstudioId
+                    EstudioId = x.EstudioId,
+                    Formula = x.Formula,
                 }).ToList();
 
                 // Crear Los que no existen
@@ -213,7 +214,7 @@ namespace Service.MedicalRecord.Application
                 foreach (var param in study.Parametros)
                 {
                     var result = results.Find(x => x.SolicitudEstudioId == study.Id && x.ParametroId.ToString() == param.Id);
-                    if (result.Formula != null)
+                    if (result.Formula != null && result.Resultado != null)
                     {
                         param.Resultado = GetFormula(results, result.Formula);
                     }
@@ -223,7 +224,6 @@ namespace Service.MedicalRecord.Application
                     }
                     param.ResultadoId = result.Id.ToString();
                     param.Formula = result.Formula;
-
 
                     if (param.TipoValores != null && param.TipoValores.Count != 0)
                     {
@@ -309,7 +309,8 @@ namespace Service.MedicalRecord.Application
         public async Task UpdateLabResults(List<ClinicResultsFormDto> results)
         {
             var request = (await _repository.GetLabResultsById(results.First().SolicitudEstudioId)).FirstOrDefault();
-            var user = results.First().UsuarioId;
+            var user = results.First().Usuario;
+            var userId = results.First().UsuarioId;
 
             if (results.Count() == 0)
             {
@@ -324,6 +325,8 @@ namespace Service.MedicalRecord.Application
             }
             else if (request.SolicitudEstudio.EstatusId == Status.RequestStudy.Capturado)
             {
+                var newResults = results.ToCaptureResults();
+                await _repository.UpdateLabResults(newResults);
                 await UpdateStatusStudy(request.SolicitudEstudioId, request.SolicitudEstudio.EstatusId, user);
             }
 
@@ -347,8 +350,8 @@ namespace Service.MedicalRecord.Application
 
                     try
                     {
-                        await SendTestWhatsapp(files, request.Solicitud.Expediente.Celular, user, "LABORATORY");
-                        await SendTestEmail(files, request.Solicitud.Expediente.Correo, user, "LABORATORY");
+                        await SendTestWhatsapp(files, request.Solicitud.Expediente.Celular, userId, "LABORATORY");
+                        await SendTestEmail(files, request.Solicitud.Expediente.Correo, userId, "LABORATORY");
                         await UpdateStatusStudy(request.SolicitudEstudioId, Status.RequestStudy.Enviado, user);
                     }
                     catch (Exception ex)
@@ -386,8 +389,8 @@ namespace Service.MedicalRecord.Application
 
                         try
                         {
-                            await SendTestWhatsapp(files, request.Solicitud.Expediente.Celular, user, "LABORATORY");
-                            await SendTestEmail(files, request.Solicitud.Expediente.Correo, user, "LABORATORY");
+                            await SendTestWhatsapp(files, request.Solicitud.Expediente.Celular, userId, "LABORATORY");
+                            await SendTestEmail(files, request.Solicitud.Expediente.Correo, userId, "LABORATORY");
                             foreach (var estudio in existingRequest.Estudios)
                             {
                                 if (estudio.DepartamentoId != SharedDepartment.PATOLOGIA)
@@ -516,17 +519,17 @@ namespace Service.MedicalRecord.Application
                         await SaveImageGetPath(result.ImagenPatologica[i], newResult.SolicitudEstudioId);
                     }
                 }
-                await this.UpdateStatusStudy(result.EstudioId, result.Estatus, result.UsuarioId);
+                await this.UpdateStatusStudy(result.EstudioId, result.Estatus, result.Usuario);
             }
             if (existing.SolicitudEstudio.EstatusId == Status.RequestStudy.Capturado)
             {
-                await this.UpdateStatusStudy(result.EstudioId, result.Estatus, result.UsuarioId);
+                await this.UpdateStatusStudy(result.EstudioId, result.Estatus, result.Usuario);
             }
             if (result.Estatus == Status.RequestStudy.Liberado)
             {
                 if (existing.Solicitud.Parcialidad)
                 {
-                    await UpdateStatusStudy(result.EstudioId, result.Estatus, result.UsuarioId);
+                    await UpdateStatusStudy(result.EstudioId, result.Estatus, result.Usuario);
                     List<ClinicalResultsPathological> toSendInfoPathological = new List<ClinicalResultsPathological> { existing };
 
                     var existingResultPathologyPdf = toSendInfoPathological.toInformationPdfResult(true);
@@ -550,7 +553,7 @@ namespace Service.MedicalRecord.Application
 
                         await SendTestEmail(files, existing.Solicitud.Expediente.Correo, result.UsuarioId, "PATHOLOGICAL");
 
-                        await UpdateStatusStudy(result.EstudioId, Status.RequestStudy.Enviado, result.UsuarioId);
+                        await UpdateStatusStudy(result.EstudioId, Status.RequestStudy.Enviado, result.Usuario);
                     }
                     catch (Exception ex)
                     {
@@ -560,7 +563,7 @@ namespace Service.MedicalRecord.Application
                 }
                 else
                 {
-                    await UpdateStatusStudy(result.EstudioId, result.Estatus, result.UsuarioId);
+                    await UpdateStatusStudy(result.EstudioId, result.Estatus, result.Usuario);
 
                     var existingRequest = await _repository.GetRequestById(existing.SolicitudId);
 
@@ -610,14 +613,14 @@ namespace Service.MedicalRecord.Application
                             {
                                 if (estudio.AreaId == Catalogs.Area.HISTOPATOLOGIA)
                                 {
-                                    await UpdateStatusStudy(estudio.Id, Status.RequestStudy.Enviado, result.UsuarioId);
+                                    await UpdateStatusStudy(estudio.Id, Status.RequestStudy.Enviado, result.Usuario);
 
                                 }
                             }
                         }
                         catch (Exception ex)
                         {
-                            await UpdateStatusStudy(result.EstudioId, result.Estatus, result.UsuarioId);
+                            await UpdateStatusStudy(result.EstudioId, result.Estatus, result.Usuario);
                             throw new Exception("c");
                         }
                     }
@@ -731,7 +734,7 @@ namespace Service.MedicalRecord.Application
             return pdfBytes;
         }
 
-        public async Task UpdateStatusStudy(int RequestStudyId, byte status, Guid usuarioId)
+        public async Task UpdateStatusStudy(int RequestStudyId, byte status, string usuario)
         {
             var existingStudy = await _repository.GetStudyById(RequestStudyId);
 
@@ -743,22 +746,22 @@ namespace Service.MedicalRecord.Application
             if (Status.RequestStudy.Capturado == status)
             {
                 existingStudy.FechaCaptura = DateTime.Now;
-                existingStudy.UsuarioCaptura = usuarioId.ToString();
+                existingStudy.UsuarioCaptura = usuario.ToString();
             }
             if (Status.RequestStudy.Validado == status)
             {
                 existingStudy.FechaValidacion = DateTime.Now;
-                existingStudy.UsuarioCaptura = usuarioId.ToString();
+                existingStudy.UsuarioCaptura = usuario.ToString();
             }
             if (Status.RequestStudy.Liberado == status)
             {
                 existingStudy.FechaLiberado = DateTime.Now;
-                existingStudy.UsuarioCaptura = usuarioId.ToString();
+                existingStudy.UsuarioCaptura = usuario.ToString();
             }
             if (Status.RequestStudy.Enviado == status)
             {
                 existingStudy.FechaEnviado = DateTime.Now;
-                existingStudy.UsuarioCaptura = usuarioId.ToString();
+                existingStudy.UsuarioCaptura = usuario.ToString();
             }
 
 

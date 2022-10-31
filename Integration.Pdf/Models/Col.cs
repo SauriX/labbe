@@ -13,7 +13,7 @@ namespace Integration.Pdf.Models
             Color = Colors.Black,
             Bold = true
         };
-        public readonly static Font FONT_SUBTITLE_BOLD = new Font("Calibri", 11)
+        public readonly static Font FONT_SUBTITLE_BOLD = new Font("Calibri", 12)
         {
             Color = Colors.Black,
             Bold = true

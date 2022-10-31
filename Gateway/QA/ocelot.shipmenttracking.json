@@ -21,6 +21,29 @@
       ],
       "UpstreamPathTemplate": "/api/ShipmentTracking/{id}",
       "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/ShipmentTracking/recive/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/ShipmentTracking/recive/{id}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/ShipmentTracking/recive",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/ShipmentTracking/recive",
+      "UpstreamHttpMethod": [ "PUT" ]
     }
   ]
 }

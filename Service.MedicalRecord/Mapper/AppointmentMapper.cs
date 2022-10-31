@@ -24,7 +24,8 @@ namespace Service.MedicalRecord.Mapper
                 Edad = x.Edad.ToString(),
                 Sexo = x.Genero,
                 Tipo = x.Status,
-                Expediente= x.Expediente.Expediente
+                Expediente= x.Expediente.Expediente,
+              //  Estudios = 
             };
         }
         public static AppointmentList ToApointmentListDtoDom(this AppointmentDom x)
@@ -57,7 +58,8 @@ namespace Service.MedicalRecord.Mapper
                 Edad = x.Edad.ToString(),
                 Sexo = x.Genero,
                 Tipo = x.Status,
-                Expediente = x.Expediente.Expediente
+                Expediente = x.Expediente.Expediente,
+                Estudios = x.Estudios.Count()>0?x.Estudios.First().Clave:"",
             }).ToList();
         }
 
@@ -311,7 +313,7 @@ namespace Service.MedicalRecord.Mapper
                     Clave = x.Nombre
                 }),
                 Status = dto.status,
-                Cita = model.Cita
+                        Cita = model.Cita
         };
 
            

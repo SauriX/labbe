@@ -23,7 +23,6 @@ namespace Service.Catalog.Mapper
                 Departamento = model.Area?.Departamento?.Nombre,
                 Activo = model.Activo,
                 Requerido = model.Requerido,
-                ValoresCriticos = model.ValorCriticos,
                 Unidades = model.UnidadId,
                 UnidadNombre = model.Unidad?.Nombre,
                 TipoValor = model.TipoValor,
@@ -31,8 +30,6 @@ namespace Service.Catalog.Mapper
                 MostrarFormato = model.MostrarFormato,
                 ValorInicial = model?.ValorInicial,
                 ValorFinal = model.ValorFinal,
-                CriticoMinimo = model.CriticoMinimo,
-                CriticoMaximo = model.CriticoMaximo
             };
         }
 
@@ -50,7 +47,6 @@ namespace Service.Catalog.Mapper
                 Departamento = x.Area?.Departamento?.Nombre,
                 Activo = x.Activo,
                 Requerido = x.Requerido,
-                ValoresCriticos = x.ValorCriticos,
                 Unidades = x.UnidadId,
                 UnidadNombre = x.Unidad?.Nombre,
                 TipoValor = x.TipoValor,
@@ -58,8 +54,6 @@ namespace Service.Catalog.Mapper
                 MostrarFormato = x.MostrarFormato,
                 ValorInicial = x.ValorInicial,
                 ValorFinal = x.ValorFinal,
-                CriticoMinimo = x.CriticoMinimo,
-                CriticoMaximo = x.CriticoMaximo
             });
         }
 
@@ -77,7 +71,6 @@ namespace Service.Catalog.Mapper
                 Departamento = x.Area?.Departamento?.Nombre,
                 Activo = x.Activo,
                 Requerido = x.Requerido,
-                ValoresCriticos = x.ValorCriticos,
                 Unidades = x.UnidadId,
                 UnidadNombre = x.Unidad?.Nombre,
                 TipoValor = x.TipoValor,
@@ -86,8 +79,6 @@ namespace Service.Catalog.Mapper
                 MostrarFormato = x.MostrarFormato,
                 ValorInicial = x?.ValorInicial,
                 ValorFinal = x.ValorFinal,
-                CriticoMinimo = x.CriticoMinimo,
-                CriticoMaximo = x.CriticoMaximo,
                 TipoValores = x.TipoValores?.Select(x => x.ToParameterValueDto())?.ToList(),
             });
         }
@@ -164,6 +155,12 @@ namespace Service.Catalog.Mapper
                 HombreValorFinal = model.HombreValorFinal,
                 MujerValorInicial = model.MujerValorInicial,
                 MujerValorFinal = model.MujerValorFinal,
+                CriticoMinimo = model.CriticoMinimo,
+                CriticoMaximo = model.CriticoMaximo,
+                HombreCriticoMinimo = model.CriticoMinimoHombre,
+                HombreCriticoMaximo = model.CriticoMaximoHombre,
+                MujerCriticoMinimo = model.CriticoMinimoMujer,
+                MujerCriticoMaximo = model.CriticoMaximoMujer,
                 MedidaTiempoId = model.MedidaTiempoId,
                 Opcion = model.Opcion,
                 DescripcionTexto = model.DescripcionTexto,
@@ -216,6 +213,12 @@ namespace Service.Catalog.Mapper
                 HombreValorFinal = dto.HombreValorFinal,
                 MujerValorInicial = dto.MujerValorInicial,
                 MujerValorFinal = dto.MujerValorFinal,
+                CriticoMinimo = dto.CriticoMinimo,
+                CriticoMaximo = dto.CriticoMaximo,
+                CriticoMinimoHombre = dto.HombreCriticoMinimo,
+                CriticoMaximoHombre = dto.HombreCriticoMaximo,
+                CriticoMinimoMujer = dto.MujerCriticoMinimo,
+                CriticoMaximoMujer = dto.MujerCriticoMaximo,
                 MedidaTiempoId = dto.MedidaTiempoId,
                 Opcion = dto.Opcion?.ToString(),
                 DescripcionTexto = dto.DescripcionTexto?.ToString(),
@@ -244,6 +247,12 @@ namespace Service.Catalog.Mapper
                 HombreValorFinal = x.HombreValorFinal,
                 MujerValorInicial = x.MujerValorInicial,
                 MujerValorFinal = x.MujerValorFinal,
+                CriticoMinimo = x.CriticoMinimo,
+                CriticoMaximo = x.CriticoMaximo,
+                CriticoMinimoHombre = x.HombreCriticoMinimo,
+                CriticoMaximoHombre = x.HombreCriticoMaximo,
+                CriticoMinimoMujer = x.MujerCriticoMinimo,
+                CriticoMaximoMujer = x.MujerCriticoMaximo,
                 MedidaTiempoId = x.MedidaTiempoId,
                 Opcion = x.Opcion?.ToString(),
                 DescripcionTexto = x.DescripcionTexto?.ToString(),
@@ -272,6 +281,12 @@ namespace Service.Catalog.Mapper
                 HombreValorFinal = dto.HombreValorFinal,
                 MujerValorInicial = dto.MujerValorInicial,
                 MujerValorFinal = dto.MujerValorFinal,
+                CriticoMinimo = dto.CriticoMinimo,
+                CriticoMaximo = dto.CriticoMaximo,
+                CriticoMinimoHombre = dto.HombreCriticoMinimo,
+                CriticoMaximoHombre = dto.HombreCriticoMaximo,
+                CriticoMinimoMujer = dto.MujerCriticoMinimo,
+                CriticoMaximoMujer = dto.MujerCriticoMaximo,
                 MedidaTiempoId = dto.MedidaTiempoId,
                 Opcion = dto.Opcion.ToString(),
                 DescripcionTexto = dto.DescripcionTexto.ToString(),

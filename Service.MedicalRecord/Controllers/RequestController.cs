@@ -94,6 +94,7 @@ namespace Service.MedicalRecord.Controllers
         public async Task<string> Create(RequestDto requestDto)
         {
             requestDto.UsuarioId = (Guid)HttpContext.Items["userId"];
+            requestDto.Usuario = HttpContext.Items["userName"].ToString();
 
             return await _service.Create(requestDto);
         }
@@ -103,6 +104,7 @@ namespace Service.MedicalRecord.Controllers
         public async Task<string> CreateWeeClinic(RequestDto requestDto)
         {
             requestDto.UsuarioId = (Guid)HttpContext.Items["userId"];
+            requestDto.Usuario = HttpContext.Items["userName"].ToString();
 
             return await _service.CreateWeeClinic(requestDto);
         }
@@ -156,6 +158,19 @@ namespace Service.MedicalRecord.Controllers
         public async Task CancelStudies(RequestStudyUpdateDto requestDto)
         {
             await _service.CancelStudies(requestDto);
+        }
+
+        [HttpPut("payment/cancel/{recordId}/{requestId}")]
+        [Authorize(Policies.Update)]
+        public async Task<List<RequestPaymentDto>> CancelPayment(Guid recordId, Guid requestId, List<RequestPaymentDto> paymentsDto)
+        {
+            foreach (var paymentDto in paymentsDto)
+            {
+                paymentDto.UsuarioId = (Guid)HttpContext.Items["userId"];
+                paymentDto.UsuarioRegistra = HttpContext.Items["userName"].ToString();
+            }
+
+            return await _service.CancelPayment(recordId, requestId, paymentsDto);
         }
 
         [HttpPut("studies/sampling")]
