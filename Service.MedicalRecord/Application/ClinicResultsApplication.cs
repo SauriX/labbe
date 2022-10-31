@@ -189,6 +189,8 @@ namespace Service.MedicalRecord.Application
                     Resultado = null,
                     ValorInicial = x?.ValorInicial,
                     ValorFinal = x?.ValorFinal,
+                    CriticoMinimo = x.TipoValores.FirstOrDefault().CriticoMinimo,
+                    CriticoMaximo = x.TipoValores.FirstOrDefault().CriticoMaximo,
                     ParametroId = Guid.Parse(x.Id),
                     SolicitudEstudioId = x.SolicitudEstudioId,
                     Unidades = x.UnidadNombre,
@@ -234,17 +236,23 @@ namespace Service.MedicalRecord.Application
                             case "1":
                                 param.ValorInicial = param.TipoValores.FirstOrDefault().ValorInicial.ToString();
                                 param.ValorFinal = param.TipoValores.FirstOrDefault().ValorFinal.ToString();
+                                param.CriticoMinimo = param.TipoValores.FirstOrDefault().CriticoMinimo.ToString();
+                                param.CriticoMaximo = param.TipoValores.FirstOrDefault().CriticoMaximo.ToString();
                                 break;
                             case "2":
                                 if (request.Expediente.Genero == "F")
                                 {
                                     param.ValorInicial = string.Join(", ", param.TipoValores.Where(x => x.MujerValorInicial != 0));
                                     param.ValorFinal = string.Join(", ", param.TipoValores.Where(x => x.MujerValorFinal != 0));
+                                    param.CriticoMinimo = string.Join(",", param.TipoValores.Where(x => x.MujerCriticoMinimo != 0));
+                                    param.CriticoMaximo = string.Join(",", param.TipoValores.Where(x => x.MujerCriticoMaximo != 0));
                                 }
                                 else if (request.Expediente.Genero == "M")
                                 {
                                     param.ValorInicial = string.Join(", ", param.TipoValores.Where(x => x.HombreValorInicial != 0));
                                     param.ValorFinal = string.Join(", ", param.TipoValores.Where(x => x.HombreValorFinal != 0));
+                                    param.CriticoMinimo = string.Join(",", param.TipoValores.Where(x => x.HombreCriticoMinimo != 0));
+                                    param.CriticoMaximo = string.Join(",", param.TipoValores.Where(x => x.HombreCriticoMaximo != 0));
                                 }
                                 break;
                             case "3":
@@ -259,11 +267,15 @@ namespace Service.MedicalRecord.Application
                                 {
                                     param.ValorInicial = param.TipoValores.FirstOrDefault().MujerValorInicial.ToString();
                                     param.ValorFinal = param.TipoValores.FirstOrDefault().MujerValorFinal.ToString();
+                                    param.CriticoMinimo = string.Join(",", param.TipoValores.Where(x => x.MujerCriticoMinimo != 0));
+                                    param.CriticoMaximo = string.Join(",", param.TipoValores.Where(x => x.MujerCriticoMaximo != 0));
                                 }
                                 else if (ageRange && request.Expediente.Genero == "M")
                                 {
                                     param.ValorInicial = param.TipoValores.FirstOrDefault().HombreValorInicial.ToString();
                                     param.ValorFinal = param.TipoValores.FirstOrDefault().HombreValorFinal.ToString();
+                                    param.CriticoMinimo = string.Join(",", param.TipoValores.Where(x => x.HombreCriticoMinimo != 0));
+                                    param.CriticoMaximo = string.Join(",", param.TipoValores.Where(x => x.HombreCriticoMaximo != 0));
                                 }
                                 break;
                             case "5":
