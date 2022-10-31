@@ -20,7 +20,7 @@ namespace Service.MedicalRecord.Application.IApplication
         Task SaveResultPathologicalStudy(ClinicalResultPathologicalFormDto search);
         Task UpdateResultPathologicalStudy(ClinicalResultPathologicalFormDto search);
         Task UpdateStatusStudy(int RequestStudyId, byte status, Guid idUsuario);
-        Task<ClinicalResultsPathological> GetResultPathological(int RequestStudyId);
+        Task<ClinicResultsPathologicalInfoDto> GetResultPathological(int RequestStudyId);
         /*Task<ClinicResults> GetLaboratoryResults(int RequestStudyId);*/
         Task<List<ClinicResultsFormDto>> GetLabResultsById(string id);
         Task<RequestStudy> GetRequestStudyById(int RequestStudyId);

@@ -88,6 +88,23 @@ namespace Service.MedicalRecord.Mapper
                 MedicoId = dto.MedicoId,
             };
         }
+        public static ClinicResultsPathologicalInfoDto ToPathologicalInfoDto(this ClinicalResultsPathological model)
+        {
+            return new ClinicResultsPathologicalInfoDto
+            {
+                Id = model.Id,
+                SolicitudId = model.SolicitudId,
+                //DepartamentoEstudio = model.SolicitudEstudio.DepartamentoId,
+                DescripcionMacroscopica = model.DescripcionMacroscopica,
+                DescripcionMicroscopica = model.DescripcionMicroscopica,
+                Diagnostico = model.Diagnostico,
+                MedicoId = model.MedicoId,
+                MuestraRecibida = model.MuestraRecibida,
+                ImagenPatologica = model.ImagenPatologica,
+                
+
+            };
+        }
         public static ClinicalResultsPathological ToUpdateClinicalResultPathological(this ClinicalResultPathologicalFormDto dto, ClinicalResultsPathological model)
         {
             if (dto == null) return null;

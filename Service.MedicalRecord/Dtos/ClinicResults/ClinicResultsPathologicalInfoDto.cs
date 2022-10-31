@@ -13,7 +13,7 @@ namespace Service.MedicalRecord.Dtos.ClinicResults
         public string ImagenPatologica { get; set; }
         public string Diagnostico { get; set; }
         public string MuestraRecibida { get; set; }
-        public string MedicoId { get; set; }
+        public Guid? MedicoId { get; set; }
         public int Estatus { get; set; }
         public string DepartamentoEstudio { get; set; }
 
