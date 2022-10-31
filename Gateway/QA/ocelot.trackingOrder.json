@@ -65,6 +65,17 @@
       ],
       "UpstreamPathTemplate": "/api/tracking-order/cancelarRecoleccion",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/TrackingOrder/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/tracking-order/{id}",
+      "UpstreamHttpMethod": [ "GET" ]
     }
   ]
 }
