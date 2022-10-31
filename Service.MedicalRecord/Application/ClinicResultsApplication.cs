@@ -787,9 +787,10 @@ namespace Service.MedicalRecord.Application
             return await _repository.GetLabResultsById(RequestStudyId);
         }*/
 
-        public async Task<ClinicalResultsPathological> GetResultPathological(int RequestStudyId)
+        public async Task<ClinicResultsPathologicalInfoDto> GetResultPathological(int RequestStudyId)
         {
-            return await _repository.GetResultPathologicalById(RequestStudyId);
+            var results = await _repository.GetResultPathologicalById(RequestStudyId);
+            return results.ToPathologicalInfoDto();
         }
 
         public async Task<List<ClinicResultsFormDto>> GetLabResultsById(string id)

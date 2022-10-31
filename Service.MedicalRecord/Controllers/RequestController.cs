@@ -94,6 +94,7 @@ namespace Service.MedicalRecord.Controllers
         public async Task<string> Create(RequestDto requestDto)
         {
             requestDto.UsuarioId = (Guid)HttpContext.Items["userId"];
+            requestDto.Usuario = HttpContext.Items["userName"].ToString();
 
             return await _service.Create(requestDto);
         }
@@ -103,6 +104,7 @@ namespace Service.MedicalRecord.Controllers
         public async Task<string> CreateWeeClinic(RequestDto requestDto)
         {
             requestDto.UsuarioId = (Guid)HttpContext.Items["userId"];
+            requestDto.Usuario = HttpContext.Items["userName"].ToString();
 
             return await _service.CreateWeeClinic(requestDto);
         }
