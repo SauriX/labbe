@@ -16,6 +16,7 @@ namespace Service.MedicalRecord.Mapper
             var parameters = model.SelectMany(x => x.Estudios)
                 .SelectMany(x => x.Resultados)
                 .Distinct()
+                .Where(x => x.TipoValorId != "9")
                 .ToList();
 
             List<MassSearchResult> results = new List<MassSearchResult>() { };
@@ -37,9 +38,10 @@ namespace Service.MedicalRecord.Mapper
                             Genero = solicitud.Expediente.Genero,
                             NombreEstudio = estudios[j].Clave,
                             ExpedienteId = solicitud.ExpedienteId,
-                            Parameters = estudios[j].Resultados.Select(x => new MassSearchParameter
+                            Parameters = estudios[j].Resultados.Where(x => x.TipoValorId != "9").Select(x => new MassSearchParameter
                             {
-                                Nombre = x.Nombre,
+
+                                Nombre = x.NombreCorto,
                                 unidades = x.Unidades,
                                 Valor = x.Resultado
                             }).ToList(),
@@ -51,7 +53,8 @@ namespace Service.MedicalRecord.Mapper
                 {
                     Parameters = parameters.Select(x => new MassSearchParameter
                     {
-                        Nombre = x.Nombre,
+                        
+                        Nombre = x.NombreCorto,
                         unidades = x.Unidades,
 
                     }).ToList(),
