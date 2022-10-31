@@ -31,6 +31,8 @@ using Integration.WeeClinic.Services;
 using Service.MedicalRecord.Dtos.Promos;
 using Service.MedicalRecord.Domain.Catalogs;
 using Microsoft.VisualBasic;
+using Integration.WeeClinic.Models.Laboratorio_GetPreciosEstudios_ByidServicio;
+using Integration.WeeClinic.Dtos;
 
 namespace Service.MedicalRecord.Application
 {
@@ -47,6 +49,7 @@ namespace Service.MedicalRecord.Application
         private readonly IRepository<Branch> _branchRepository;
 
         private const byte PORCENTAJE = 1;
+        private const byte CANTIDAD = 2;
 
         public RequestApplication(
             ITransactionProvider transaction,
@@ -212,9 +215,10 @@ namespace Service.MedicalRecord.Application
             var newRequest = requestDto.ToModel();
             newRequest.MedicoId = MEDICS.A_QUIEN_CORRESPONDA;
             newRequest.CompañiaId = COMPANIES.PARTICULARES;
-            newRequest.CargoTipo = PORCENTAJE;
-            newRequest.CopagoTipo = PORCENTAJE;
-            newRequest.DescuentoTipo = PORCENTAJE;
+            newRequest.CargoTipo = CANTIDAD;
+            newRequest.CopagoTipo = CANTIDAD;
+            newRequest.DescuentoTipo = CANTIDAD;
+            newRequest.UsuarioCreo = requestDto.Usuario;
 
             await _repository.Create(newRequest);
 
@@ -242,12 +246,19 @@ namespace Service.MedicalRecord.Application
             var newRequest = requestDto.ToModel();
             var studies = labStudies.ToModel(newRequest.Id, new List<RequestStudy>(), requestDto.UsuarioId);
 
+            var weePrices = new List<WeeServicePricesDto>();
+
             foreach (var study in studies)
             {
                 var ws = weeStudies.FirstOrDefault(x => x.ClaveCDP.Trim() == study.Clave.Trim());
-                var weePrices = await _weeService.GetServicePrice(ws.IdServicio, branch.Clave);
+
+                var weePrice = await _weeService.GetServicePrice(ws.IdServicio, branch.Clave);
+                weePrices.Add(weePrice);
 
                 study.EstatusId = Status.RequestStudy.Pendiente;
+                study.Precio = weePrice.Paciente.Total + weePrice.Aseguradora.Total;
+                study.PrecioFinal = weePrice.Paciente.Total + weePrice.Aseguradora.Total;
+                study.AplicaCopago = weePrice.Total.Copago > 0;
                 study.EstudioWeeClinic = new RequestStudyWee(ws.IdOrden, ws.IdNodo, ws.IdServicio, ws.Cubierto, ws.IsAvaliable, ws.RestanteDays, ws.Vigencia, ws.IsCancel);
             }
 
@@ -256,8 +267,24 @@ namespace Service.MedicalRecord.Application
 
             newRequest.MedicoId = MEDICS.A_QUIEN_CORRESPONDA;
             newRequest.CompañiaId = COMPANIES.PARTICULARES;
+            newRequest.CargoTipo = PORCENTAJE;
+            newRequest.CopagoTipo = PORCENTAJE;
+            newRequest.DescuentoTipo = PORCENTAJE;
+            newRequest.UsuarioCreo = requestDto.Usuario;
             newRequest.FolioWeeClinic = requestDto.FolioWeeClinic;
             newRequest.Estudios = studies;
+
+            newRequest.TotalEstudios = weePrices.Sum(x => x.Paciente.Total + x.Aseguradora.Total);
+            newRequest.Descuento = weePrices.Sum(x => x.Paciente.Descuento + x.Paciente.Descuento);
+            newRequest.DescuentoTipo = CANTIDAD;
+            newRequest.Cargo = 0;
+            newRequest.CargoTipo = CANTIDAD;
+            newRequest.Copago = weePrices.Sum(x => x.Paciente.Total);
+            newRequest.CopagoTipo = CANTIDAD;
+            newRequest.Total = newRequest.TotalEstudios - (newRequest.TotalEstudios - newRequest.Copago);
+            newRequest.Saldo = newRequest.Copago;
+            newRequest.UsuarioModificoId = requestDto.UsuarioId;
+            newRequest.FechaModifico = DateTime.Now;
 
             await _repository.Create(newRequest);
 

@@ -32,6 +32,7 @@ namespace Service.MedicalRecord.Mapper
                 Clave = model.Clave,
                 Parcialidad = model.Parcialidad,
                 EsNuevo = model.EsNuevo,
+                FolioWeeClinic = model.FolioWeeClinic,
                 Registro = $"{model.FechaCreo:dd/MM/yyyy}"
             };
         }
@@ -55,6 +56,7 @@ namespace Service.MedicalRecord.Mapper
                 Descuento = x.DescuentoTipo == DESCUENTO_DINERO ? x.Descuento : x.Total * x.Descuento,
                 Total = x.Total,
                 Saldo = x.Saldo,
+                FolioWeeClinic = x.FolioWeeClinic,
                 Estudios = x.Estudios.Select(s => new RequestStudyInfoDto
                 {
                     Clave = s.Clave,
@@ -230,15 +232,23 @@ namespace Service.MedicalRecord.Mapper
                 DescuentoPorcentaje = x.DescuentoPorcentaje,
                 PrecioFinal = x.PrecioFinal,
                 FechaActualizacion = x.EstatusId == Status.RequestStudy.Capturado
-                    ? x.FechaCaptura?.ToString("dd/MM/yyyy")
+                    ? x.FechaCaptura?.ToString("dd/MM/yyyy HH:mm")
                     : x.EstatusId == Status.RequestStudy.Validado
-                    ? x.FechaValidacion?.ToString("dd/MM/yyyy")
+                    ? x.FechaValidacion?.ToString("dd/MM/yyyy HH:mm")
                     : x.EstatusId == Status.RequestStudy.Liberado
-                    ? x.FechaLiberado?.ToString("dd/MM/yyyy")
+                    ? x.FechaLiberado?.ToString("dd/MM/yyyy HH:mm")
                     : x.EstatusId == Status.RequestStudy.Enviado
-                    ? x.FechaEnviado?.ToString("dd/MM/yyyy")
+                    ? x.FechaEnviado?.ToString("dd/MM/yyyy HH:mm")
                     : "",
-
+                UsuarioActualizacion = x.EstatusId == Status.RequestStudy.Capturado
+                    ? x.UsuarioCaptura
+                    : x.EstatusId == Status.RequestStudy.Validado
+                    ? x.UsuarioValidacion
+                    : x.EstatusId == Status.RequestStudy.Liberado
+                    ? x.UsuarioLiberado
+                    : x.EstatusId == Status.RequestStudy.Enviado
+                    ? x.UsuarioEnviado
+                    : "",
             }).ToList();
         }
 
@@ -258,6 +268,7 @@ namespace Service.MedicalRecord.Mapper
                 EstatusId = VIGENTE,
                 UsuarioCreoId = dto.UsuarioId,
                 FechaCreo = DateTime.Now,
+                Activo = true,
             };
         }
 

@@ -46,7 +46,7 @@ namespace Service.MedicalRecord.Controllers
         }
         [HttpPost("allrecive")]
         [Authorize(Policies.Access)]
-        public async Task<List<PendingReciveDto>> GetAllRecive(PendingSearchDto search) {
+        public async Task<List<PendingReciveDto>> GetAllRecive(PendingSearchDto search)     {
             var requestedStudy = await _service.GetAllRecive(search);
             return requestedStudy;
         }

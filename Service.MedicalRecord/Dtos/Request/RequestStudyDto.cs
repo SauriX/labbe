@@ -53,6 +53,7 @@ namespace Service.MedicalRecord.Dtos.Request
         public decimal DescuentoPorcentaje { get; set; }
         public decimal PrecioFinal { get; set; }
         public string FechaActualizacion { get; set; }
+        public string UsuarioActualizacion { get; set; }
         public List<PriceListInfoPromoDto> Promociones { get; set; }
         public List<ParameterListDto> Parametros { get; set; }
         public List<IndicationListDto> Indicaciones { get; set; }

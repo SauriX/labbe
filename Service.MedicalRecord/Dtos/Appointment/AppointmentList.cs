@@ -13,5 +13,7 @@ namespace Service.MedicalRecord.Dtos.Appointment
         public string Edad { get; set; }
         public string Sexo { get; set; }
         public int Tipo { get; set; }
+        public string Estudios { get; set; }
+        public string Contacto { get; set; }
     }
 }
