@@ -4,6 +4,9 @@ using Service.MedicalRecord.Repository.IRepository;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Service.MedicalRecord.Mapper;
+using System;
+using Service.MedicalRecord.Domain.Request;
+
 namespace Service.MedicalRecord.Application
 {
     public class MassSearchApplication : IMassSearchApplication
@@ -14,9 +17,10 @@ namespace Service.MedicalRecord.Application
         {
             _repository = repository;
         }
-        public async Task<List<MassSearchInfoDto>> GetByFilter(MassSearchFilterDto filter)
+        public async Task<MassSearchInfoDto> GetByFilter(MassSearchFilterDto filter)
         {
             var request = await _repository.GetByFilter(filter);
+
             return request.ToMassSearchInfoDto();
         }
     }

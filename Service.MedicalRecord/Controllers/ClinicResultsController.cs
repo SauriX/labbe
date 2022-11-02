@@ -89,7 +89,8 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("getPathological")]
         [Authorize(Policies.Access)]
-        public async Task<ClinicalResultsPathological> GetResultPathological([FromBody] int RequestStudyId)
+        //public async Task<ClinicalResultsPathological> GetResultPathological([FromBody] int RequestStudyId)
+        public async Task<ClinicResultsPathologicalInfoDto> GetResultPathological([FromBody] int RequestStudyId)
         {
             var clinicResults = await _service.GetResultPathological(RequestStudyId);
             return clinicResults;
