@@ -33,10 +33,10 @@ namespace Service.Identity.Repository
         {
             var menus = await _context.CAT_Usuario
                 .Include(x => x.Permisos).ThenInclude(x => x.Menu)
-                .Where(x => x.Id == userId)
+                .Where(x => x.Id == userId )
                 .SelectMany(x => x.Permisos.Where(y => y.Acceder || x.Permisos.Select(p => p.Menu.MenuPadreId).Contains(y.Menu.Id)))
-                .Select(x => x.Menu)
-                .ToListAsync();
+                .Select(x => x.Menu).Where(x=> x.Id!=29)
+               .ToListAsync();
 
             foreach (var menu in menus)
             {
