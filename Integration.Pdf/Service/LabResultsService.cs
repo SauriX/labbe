@@ -79,7 +79,8 @@ namespace Integration.Pdf.Service
         {
             var fontText = new Font("calibri", 12);
             var fontParam = new Font("calibri", 12);
-            var fontTitle = new Font("calibri", 14);
+            var fontCritic = new Font("calibri", 12) { Bold = true };
+            var fontTitle = new Font("calibri", 14) { Bold = true };
 
             var logoLab = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets\\LabRamosLogo.png");
             var logoISO = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets\\ISOLogo.png");
@@ -195,27 +196,99 @@ namespace Integration.Pdf.Service
                     var studyName = new Col("****" + studyParam.Key, 14, fontTitle, ParagraphAlignment.Left);
                     section.AddText(studyName);
 
+                    var checkCritics = studyParam.Any(x => decimal.Parse(x.Resultado) > x.CriticoMaximo || decimal.Parse(x.Resultado) < x.CriticoMinimo);
+
                     foreach (var param in studyParam)
                     {
-
                         var checkResult = false;
                         var typeValueText = param.TipoValorId == 9 || param.TipoValorId == 10;
 
-                        if (param.Resultado != null && param.TipoValorId == 1)
+                        if (param.Resultado != null && param.TipoValorId == 1 && param.TipoValorId == 2 && param.TipoValorId == 3 && param.TipoValorId == 4)
                         {
                             checkResult = decimal.Parse(param.Resultado) > decimal.Parse(param.ValorFinal) || decimal.Parse(param.Resultado) < decimal.Parse(param.ValorInicial);
                         }
 
                         var col = new Col[]
                         {
-                    new Col(param.Nombre, 12, fontParam, ParagraphAlignment.Left){
-                        Fill = typeValueText ? TabLeader.Spaces : TabLeader.Dots
-                    },
-                    new Col(checkResult ? $"*{param.Resultado}" : param.Resultado, 7, fontParam, ParagraphAlignment.Center),
-                    new Col(param.UnidadNombre, 6, fontParam, ParagraphAlignment.Center),
-                    new Col(typeValueText ? "" : $"{param.ValorInicial} - {param.ValorFinal}", 6, fontParam, ParagraphAlignment.Center),
+                            new Col(param.Nombre, 14, fontParam, ParagraphAlignment.Left){
+                                Fill = typeValueText ? TabLeader.Spaces : TabLeader.Dots
+                            },
+                            new Col(checkResult ? $"*{param.Resultado}" : param.Resultado, 7, checkResult ? fontCritic : fontParam, ParagraphAlignment.Center),
+                            new Col(param.UnidadNombre, 6, fontParam, ParagraphAlignment.Center),
+                            new Col(typeValueText ? "" : $"{param.ValorInicial} - {param.ValorFinal}", 6, fontParam, ParagraphAlignment.Center),
                         };
                         section.AddBorderedText(col, top: false, right: false, bottom: false, left: false);
+                    }
+                    section.AddSpace(5);
+
+                    if (checkCritics)
+                    {
+                        var criticTitle = new Col("VALORES CRÍTICOS", 14, fontTitle, ParagraphAlignment.Left);
+                        section.AddText(criticTitle);
+                        section.AddSpace(5);
+
+                        var criticHeader = new Col[]
+                        {
+                            new Col("EXAMEN", 14, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
+                            new Col("RESULTADO CRÍTICO", 7, Col.FONT_SUBTITLE_BOLD),
+                            new Col("UNIDADES", 6, Col.FONT_SUBTITLE_BOLD),
+                            new Col("REFERENCIAS CRÍTICAS", 6, Col.FONT_SUBTITLE_BOLD),
+                        };
+                        section.AddBorderedText(criticHeader, top: true, right: false, bottom: true, left: false);
+                        section.AddSpace(5);
+
+                        foreach (var param in studyParam)
+                        {
+                            if (decimal.Parse(param.Resultado) > param.CriticoMaximo || decimal.Parse(param.Resultado) < param.CriticoMinimo)
+                            {
+                                var col = new Col[]
+                                {
+                                    new Col(param.Nombre, 14, fontParam, ParagraphAlignment.Left){
+                                        Fill = TabLeader.Dots
+                                    },
+                                    new Col(param.Resultado, 7, fontCritic, ParagraphAlignment.Center),
+                                    new Col(param.UnidadNombre, 6, fontParam, ParagraphAlignment.Center),
+                                    new Col($"< {param.CriticoMinimo} - {param.ValorFinal} >", 6, fontParam, ParagraphAlignment.Center)
+                                };
+                                section.AddBorderedText(col, top: false, right: false, bottom: false, left: false);
+                            }
+                        }
+                        var alert = new Col("ATIENDASE DE MANERA INMEDIATA", 20, fontTitle, ParagraphAlignment.Center);
+                        section.AddText(alert);
+                    }
+
+                    if (studyParam.Any(x => x.DeltaCheck))
+                    {
+                        var criticTitle = new Col("RESULTADOS PREVIOS", 14, fontTitle, ParagraphAlignment.Left);
+                        section.AddText(criticTitle);
+                        section.AddSpace(5);
+
+                        var deltaCheckHeader = new Col[]
+                        {
+                            new Col("EXAMEN", 14, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
+                            new Col("RESULTADO ACTUAL", 7, Col.FONT_SUBTITLE_BOLD),
+                            new Col("RESULTADO PREVIO", 7, Col.FONT_SUBTITLE_BOLD),
+                            new Col("UNIDADES", 7, Col.FONT_SUBTITLE_BOLD),
+                        };
+                        section.AddBorderedText(deltaCheckHeader, top: true, right: false, bottom: true, left: false);
+                        section.AddSpace(5);
+
+                        foreach (var param in studyParam)
+                        {
+                            if (param.DeltaCheck)
+                            {
+                                var col = new Col[]
+                                {
+                                    new Col(param.Nombre, 14, fontParam, ParagraphAlignment.Left){
+                                        Fill = TabLeader.Dots
+                                    },
+                                    new Col(param.Resultado, 7, fontCritic, ParagraphAlignment.Center),
+                                    new Col(param.UltimoResultado, 7, fontParam, ParagraphAlignment.Center),
+                                    new Col(param.UnidadNombre, 7, fontParam, ParagraphAlignment.Center),
+                                };
+                                section.AddBorderedText(col, top: false, right: false, bottom: false, left: false);
+                            }
+                        }
                     }
                 }
 

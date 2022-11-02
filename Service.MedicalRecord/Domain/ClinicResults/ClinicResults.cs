@@ -22,5 +22,7 @@ namespace Service.MedicalRecord.Domain
         public decimal? CriticoMaximo { get; set; }
         public string Formula { get; set; }
         public string Resultado { get; set; }
+        public bool DeltaCheck { get; set; }
+        public string UltimoResultado { get; set; }
     }
 }

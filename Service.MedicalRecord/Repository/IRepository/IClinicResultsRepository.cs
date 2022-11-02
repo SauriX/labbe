@@ -20,6 +20,7 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task<List<ClinicalResultsPathological>> GetListResultPathologicalById(List<int> ids);
         Task<List<ClinicResults>> GetLabResultsById(int id);
         Task<List<ClinicResults>> GetResultsById(Guid id);
+        Task<List<Request>> GetSecondLastRequest(Guid recordId);
         Task<RequestStudy> GetRequestStudyById(int RequestStudyId);
         Task<List<Request>> GetAll(ClinicResultSearchDto search);
         Task<ClinicResults> GetById(Guid id);

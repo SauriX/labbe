@@ -28,5 +28,7 @@ namespace Service.MedicalRecord.Dtos.ClinicResults
         public Guid UsuarioId { get; set; }
         public string Usuario { get; set; }
         public string UnidadNombre { get; set; }
+        public string UltimoResultado { get; set; }
+        public bool DeltaCheck { get; set; }
     }
 }

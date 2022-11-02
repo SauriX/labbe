@@ -19,12 +19,13 @@ namespace Service.MedicalRecord.Dtos.Catalogs
         public string TipoValor { get; set; }
         public string ValorInicial { get; set; }
         public string ValorFinal { get; set; }
-        public string CriticoMinimo { get; set; }
-        public string CriticoMaximo { get; set; }
+        public decimal CriticoMinimo { get; set; }
+        public decimal CriticoMaximo { get; set; }
         public string Resultado { get; set; }
         public int EstudioId { get; set; }
         public int SolicitudEstudioId { get; set; }
         public string ResultadoId { get; set; }
+        public string UltimoResultado { get; set; }
         public string Formula { get; set; }
         public List<ParameterValueDto> TipoValores { get; set; }
     }

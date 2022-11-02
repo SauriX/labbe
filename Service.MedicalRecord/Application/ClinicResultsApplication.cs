@@ -138,7 +138,7 @@ namespace Service.MedicalRecord.Application
 
         public async Task<RequestStudyUpdateDto> GetStudies(Guid recordId, Guid requestId)
         {
-            var request = await  GetExistingRequest(recordId, requestId);
+            var request = await GetExistingRequest(recordId, requestId);
 
             var studies = await _request.GetAllStudies(request.Id);
             var studiesDto = studies.ToRequestStudyDto().Where(x => x.DepartamentoId != SharedDepartment.PATOLOGIA).ToList();
@@ -187,16 +187,18 @@ namespace Service.MedicalRecord.Application
                     Clave = x.Clave,
                     TipoValorId = x.TipoValor,
                     Resultado = null,
-                    ValorInicial = x?.ValorInicial,
-                    ValorFinal = x?.ValorFinal,
-                    CriticoMinimo = x.TipoValores.FirstOrDefault().CriticoMinimo,
-                    CriticoMaximo = x.TipoValores.FirstOrDefault().CriticoMaximo,
+                    ValorInicial = x.TipoValores.FirstOrDefault()?.ValorInicial.ToString(),
+                    ValorFinal = x.TipoValores.FirstOrDefault()?.ValorFinal.ToString(),
+                    CriticoMinimo = x.TipoValores.FirstOrDefault()?.CriticoMinimo,
+                    CriticoMaximo = x.TipoValores.FirstOrDefault()?.CriticoMaximo,
                     ParametroId = Guid.Parse(x.Id),
                     SolicitudEstudioId = x.SolicitudEstudioId,
                     Unidades = x.UnidadNombre,
                     NombreCorto = x.NombreCorto,
                     EstudioId = x.EstudioId,
                     Formula = x.Formula,
+                    UltimoResultado = x?.UltimoResultado,
+                    DeltaCheck = x.DeltaCheck,
                 }).ToList();
 
                 // Crear Los que no existen
@@ -216,16 +218,34 @@ namespace Service.MedicalRecord.Application
                 foreach (var param in study.Parametros)
                 {
                     var result = results.Find(x => x.SolicitudEstudioId == study.Id && x.ParametroId.ToString() == param.Id);
-                    if (result.Formula != null && result.Resultado != null)
+                    /*if (result.Formula != null && result.Resultado != null)
                     {
                         param.Resultado = GetFormula(results, result.Formula);
                     }
                     else
-                    {
-                        param.Resultado = result.Resultado;
-                    }
+                    {*/
+                    param.Resultado = result.Resultado;
+                    /*}*/
                     param.ResultadoId = result.Id.ToString();
                     param.Formula = result.Formula;
+
+                    if (param.DeltaCheck)
+                    {
+                        var listRequests = await _repository.GetSecondLastRequest(result.Solicitud.ExpedienteId);
+                        if (listRequests.Count > 1)
+                        {
+                            listRequests.RemoveAt(0);
+                            var previousResult = listRequests.SelectMany(x => x.Estudios)
+                                .Where(x => x.EstudioId == st.Id)
+                                .SelectMany(x => x.Resultados)
+                                .Where(x => x.ParametroId.ToString() == param.Id).FirstOrDefault().Resultado;
+                            param.UltimoResultado = previousResult;
+                        }
+                        else
+                        {
+                            param.UltimoResultado = null;
+                        }
+                    }
 
                     if (param.TipoValores != null && param.TipoValores.Count != 0)
                     {
@@ -236,23 +256,23 @@ namespace Service.MedicalRecord.Application
                             case "1":
                                 param.ValorInicial = param.TipoValores.FirstOrDefault().ValorInicial.ToString();
                                 param.ValorFinal = param.TipoValores.FirstOrDefault().ValorFinal.ToString();
-                                param.CriticoMinimo = param.TipoValores.FirstOrDefault().CriticoMinimo.ToString();
-                                param.CriticoMaximo = param.TipoValores.FirstOrDefault().CriticoMaximo.ToString();
+                                param.CriticoMinimo = param.TipoValores.FirstOrDefault().CriticoMinimo;
+                                param.CriticoMaximo = param.TipoValores.FirstOrDefault().CriticoMaximo;
                                 break;
                             case "2":
                                 if (request.Expediente.Genero == "F")
                                 {
                                     param.ValorInicial = string.Join(", ", param.TipoValores.Where(x => x.MujerValorInicial != 0));
                                     param.ValorFinal = string.Join(", ", param.TipoValores.Where(x => x.MujerValorFinal != 0));
-                                    param.CriticoMinimo = string.Join(",", param.TipoValores.Where(x => x.MujerCriticoMinimo != 0));
-                                    param.CriticoMaximo = string.Join(",", param.TipoValores.Where(x => x.MujerCriticoMaximo != 0));
+                                    param.CriticoMinimo = param.TipoValores.FirstOrDefault().MujerCriticoMinimo;
+                                    param.CriticoMaximo = param.TipoValores.FirstOrDefault().MujerCriticoMaximo;
                                 }
                                 else if (request.Expediente.Genero == "M")
                                 {
                                     param.ValorInicial = string.Join(", ", param.TipoValores.Where(x => x.HombreValorInicial != 0));
                                     param.ValorFinal = string.Join(", ", param.TipoValores.Where(x => x.HombreValorFinal != 0));
-                                    param.CriticoMinimo = string.Join(",", param.TipoValores.Where(x => x.HombreCriticoMinimo != 0));
-                                    param.CriticoMaximo = string.Join(",", param.TipoValores.Where(x => x.HombreCriticoMaximo != 0));
+                                    param.CriticoMinimo = param.TipoValores.FirstOrDefault().HombreCriticoMinimo;
+                                    param.CriticoMaximo = param.TipoValores.FirstOrDefault().HombreCriticoMaximo;
                                 }
                                 break;
                             case "3":
@@ -267,15 +287,15 @@ namespace Service.MedicalRecord.Application
                                 {
                                     param.ValorInicial = param.TipoValores.FirstOrDefault().MujerValorInicial.ToString();
                                     param.ValorFinal = param.TipoValores.FirstOrDefault().MujerValorFinal.ToString();
-                                    param.CriticoMinimo = string.Join(",", param.TipoValores.Where(x => x.MujerCriticoMinimo != 0));
-                                    param.CriticoMaximo = string.Join(",", param.TipoValores.Where(x => x.MujerCriticoMaximo != 0));
+                                    param.CriticoMinimo = param.TipoValores.FirstOrDefault().MujerCriticoMinimo;
+                                    param.CriticoMaximo = param.TipoValores.FirstOrDefault().MujerCriticoMaximo;
                                 }
                                 else if (ageRange && request.Expediente.Genero == "M")
                                 {
                                     param.ValorInicial = param.TipoValores.FirstOrDefault().HombreValorInicial.ToString();
                                     param.ValorFinal = param.TipoValores.FirstOrDefault().HombreValorFinal.ToString();
-                                    param.CriticoMinimo = string.Join(",", param.TipoValores.Where(x => x.HombreCriticoMinimo != 0));
-                                    param.CriticoMaximo = string.Join(",", param.TipoValores.Where(x => x.HombreCriticoMaximo != 0));
+                                    param.CriticoMinimo = param.TipoValores.FirstOrDefault().HombreCriticoMinimo;
+                                    param.CriticoMaximo = param.TipoValores.FirstOrDefault().HombreCriticoMaximo;
                                 }
                                 break;
                             case "5":
@@ -285,7 +305,6 @@ namespace Service.MedicalRecord.Application
                                 param.ValorInicial = string.Join("\n", param.TipoValores.Where(x => x.ValorInicial != 0));
                                 break;
                             case "7":
-                            case "10":
                                 param.ValorInicial = string.Join("\n", param.TipoValores.Where(x => x.DescripcionTexto != null));
                                 break;
                             case "8":
