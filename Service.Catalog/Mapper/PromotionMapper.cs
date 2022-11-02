@@ -18,7 +18,7 @@ namespace Service.Catalog.Mapper
                 Id = model.Id,
                 Clave = model.Clave,
                 Nombre = model.Nombre,
-                Periodo = $"{model.FechaInicio}-{model.FechaInicio}",
+                Periodo = $"{model.FechaInicio.ToShortDateString()}---{model.FechaInicio.Date.ToShortDateString()}",
                 NombreListaPrecio = listaDeprecios,
                 Activo = model.Activo,
             };
