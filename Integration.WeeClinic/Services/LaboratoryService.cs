@@ -42,6 +42,10 @@ namespace Integration.WeeClinic.Services
         //AD007044220043513M09
         //AD007044220043522EE6
 
+        //AD007044220043560EE6
+        //AD0070442200435613JL
+        //AD007044220043562XJ3
+
         // Servcio 1. Consulta de folios
         public static async Task<Laboratorio_BusquedaFolios> BusquedaFolios(string folio)
         {
