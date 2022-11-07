@@ -94,11 +94,26 @@ namespace Integration.Pdf.Service
                     var orderNo = new Col(tag.Clave, new Font("Arial", 10) { Bold = true });
                     section.AddText(orderNo, spaceAfter: 0);
 
-                    var patient = new Col(tag.Paciente, new Font("Arial", 5), ParagraphAlignment.Left);
-                    section.AddText(patient, spaceAfter: 0);
+                    //var patient = new Col(tag.Paciente, new Font("Arial", 5) { Bold = true }, ParagraphAlignment.Left);
+                    //section.AddText(patient, spaceAfter: 0);
 
-                    var studies = new Col(tag.Estudios, new Font("Arial", 5), ParagraphAlignment.Left);
-                    section.AddText(studies, spaceAfter: 0);
+                    //var studies = new Col(tag.Estudios, new Font("Arial", 5) { Bold = true }, ParagraphAlignment.Left);
+                    //section.AddText(studies, spaceAfter: 0);
+
+                    var textFrame1 = section.AddTextFrame();
+                    textFrame1.RelativeHorizontal = RelativeHorizontal.Page;
+                    textFrame1.RelativeVertical = RelativeVertical.Page;
+
+                    textFrame1.WrapFormat.DistanceLeft = Unit.FromMillimeter(2);
+                    textFrame1.WrapFormat.DistanceTop = Unit.FromCentimeter(1.54);
+
+                    textFrame1.Width = Unit.FromCentimeter(2.81);
+                    textFrame1.Height = Unit.FromCentimeter(1);
+
+                    var textFrame1Par = textFrame1.AddParagraph();
+                    textFrame1Par.AddFormattedText(tag.Paciente, new Font("Arial", 5) { Bold = true });
+                    textFrame1Par.AddLineBreak();
+                    textFrame1Par.AddFormattedText(tag.Estudios, new Font("Arial", 5) { Bold = true });
 
                     var textFrame = section.AddTextFrame();
                     textFrame.RelativeHorizontal = RelativeHorizontal.Page;
@@ -111,7 +126,7 @@ namespace Integration.Pdf.Service
                     textFrame.Height = Unit.FromCentimeter(1);
 
                     var textFramePar = textFrame.AddParagraph();
-                    textFramePar.AddFormattedText($"ORI90\nMONTERREY\nSBAUTISTA\n{date}\nNormal\n49 años M", new Font("Arial", 4));
+                    textFramePar.AddFormattedText($"ORI90\nMONTERREY\nSBAUTISTA\n{date}\nNormal\n49 años M", new Font("Arial", 4) { Bold = true });
 
                     if (i < tags.Count - 1)
                     {
