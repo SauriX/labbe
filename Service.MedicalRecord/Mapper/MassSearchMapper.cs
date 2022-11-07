@@ -62,5 +62,35 @@ namespace Service.MedicalRecord.Mapper
                     
             };
         }
+        public static List<RequestsInfoDto> ToDeliverResultInfoDto(this List<Request> model)
+        {
+            if(model == null) return new List<RequestsInfoDto>();
+
+            return model.Select(x => new RequestsInfoDto
+            {
+                SolicitudId = x.Id,
+                Solicitud = $"{x.Clave} - {x.ClavePatologica}",
+                Nombre = x.Expediente.NombreCompleto,
+                Registro = x.FechaCreo.ToString("dd/MM/YY"),
+                Sucursal = x.Sucursal.Nombre,
+                Edad = x.Expediente.Edad,
+                Sexo = x.Expediente.Genero == "F" ? "Femenino" : "Masculino",
+                Compania = x.Compañia.Nombre,
+                Estudios = x.Estudios.Select(y => new RequestsStudiesInfoDto {
+                    Estudio = y.Nombre,
+                    MedioSolicitado = "",
+                    FechaEntrega = y.FechaEntrega.ToString("dd/MM/yy"),
+                    Estatus = y.Estatus.Nombre,
+                    Registro = y.EstatusId == 6 
+                            ? $"{y.UsuarioLiberado} - {y.FechaLiberado?.ToString("dd/MM/yy")}" 
+                            : y.EstatusId == 7 
+                            ? $"{y.UsuarioEnviado} - {y.FechaEnviado?.ToString("dd/MM/yy")}" 
+                            : ""
+
+
+                }).ToList(),
+            }).ToList();
+        }
     }
+    
 }

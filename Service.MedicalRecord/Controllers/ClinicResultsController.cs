@@ -138,5 +138,8 @@ namespace Service.MedicalRecord.Controllers
             var file = await _service.PrintResults(recordId, requestId);
             return File(file, MimeType.PDF, $"Resultados - {requestId}.pdf");
         }*/
+        
+
+
     }
 }

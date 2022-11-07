@@ -4,6 +4,7 @@ using Service.MedicalRecord.Dictionary;
 using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Dtos.MassSearch;
 using Service.MedicalRecord.Repository.IRepository;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -19,6 +20,64 @@ namespace Service.MedicalRecord.Repository
         {
             _context = context;
         }
+
+        public async Task<List<Request>> GetAllCaptureResults(DeliverResultsFilterDto filter)
+        {
+            var requests = _context.CAT_Solicitud
+                .Include(x => x.Expediente)
+                .Include(x => x.Compañia)
+                .Include(x => x.Sucursal)
+                .Include(x => x.Estudios).ThenInclude(x => x.Estatus)
+                .AsQueryable();
+
+            if (filter.TipoFecha != null && filter.TipoFecha == 1 && filter.FechaInicial != null && filter.FechaFinal != null)
+            {
+                requests = requests.Where(x => ((DateTime)filter.FechaInicial).Date <= x.FechaCreo.Date && ((DateTime)filter.FechaFinal).Date >= x.FechaCreo.Date);
+            }
+            if (filter.TipoFecha != null && filter.TipoFecha == 2 && filter.FechaInicial != null && filter.FechaFinal != null)
+            {
+                requests = requests.Where(x => x.Estudios.Any(x => ((DateTime)filter.FechaInicial).Date <= x.FechaEntrega && ((DateTime)filter.FechaFinal).Date >= x.FechaEntrega));
+            }
+            if (filter.Sucursales != null && filter.Sucursales.Any())
+            {
+                requests = requests.Where(x => filter.Sucursales.Contains(x.SucursalId));
+            }
+
+            if (filter.Companias != null && filter.Companias.Any())
+            {
+                requests = requests.Where(x => x.CompañiaId != null && filter.Companias.Contains((Guid)x.CompañiaId));
+            }
+
+            if (filter.Medicos != null && filter.Medicos.Any())
+            {
+                requests = requests.Where(x => x.MedicoId != null && filter.Medicos.Contains((Guid)x.MedicoId));
+            }
+
+            if (filter.Procedencias != null && filter.Procedencias.Any())
+            {
+                requests = requests.Where(x => filter.Procedencias.Contains(x.Procedencia));
+            }
+
+            if (filter.TipoSolicitud != null && filter.TipoSolicitud.Any())
+            {
+                requests = requests.Where(x => filter.TipoSolicitud.Contains(x.Urgencia));
+            }
+
+            if (filter.Estatus != null && filter.Estatus.Any())
+            {
+                requests = requests.Where(x => x.Estudios.Any(y => filter.Estatus.Contains(y.EstatusId)));
+            }
+
+            if (filter.Departamentos != null && filter.Departamentos.Any())
+            {
+                requests = requests.Where(x => x.Estudios.Any(y => filter.Departamentos.Contains(y.DepartamentoId)));
+            }
+
+            //validar medio de entrega
+
+            return await requests.ToListAsync();
+        }
+
         public async Task<List<Request>> GetByFilter(MassSearchFilterDto filter)
         {
 
