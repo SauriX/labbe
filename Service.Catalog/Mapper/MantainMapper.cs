@@ -1,4 +1,4 @@
-﻿using Service.Catalog.Domain.Catalog;
+﻿ using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Domain.EquipmentMantain;
 using Service.Catalog.Dtos.Equipmentmantain;
 using System;
@@ -56,8 +56,8 @@ namespace Service.Catalog.Mapper
                 imagenUrl = images,
                 Clave = model.clave,
                 No_serie = model.Num_Serie,
-                
 
+                ide = model.Equipo.Equipment.Id
             };
         }
         public static EquimentDetailDto ToDetailDto(this Equipos model)

@@ -6,6 +6,6 @@ namespace Service.MedicalRecord.Application.IApplication
 {
     public interface IMassSearchApplication
     {
-        Task<List<MassSearchInfoDto>> GetByFilter(MassSearchFilterDto filter);
+        Task<MassSearchInfoDto> GetByFilter(MassSearchFilterDto filter);
     }
 }

@@ -212,6 +212,12 @@ namespace Service.Identity.Controllers
             var userId = GetUserId();
             return await _service.GetScopes(userId, ControllerNames.ShipmentTracking);
         }
+        [HttpGet(ControllerNames.MassSearch)]
+        public async Task<ScopesDto> GetMassSearchScopes()
+        {
+            var userId = GetUserId();
+            return await _service.GetScopes(userId, ControllerNames.MassSearch);
+        }
         private Guid GetUserId()
         {
             return Guid.Parse(User.Claims.SingleOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);

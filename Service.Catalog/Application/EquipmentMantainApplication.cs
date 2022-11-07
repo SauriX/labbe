@@ -50,7 +50,7 @@ namespace Service.Catalog.Application
         {
             var newParameter = mantain.ToModel();
             var equipment = await _service.GetEquip(mantain.ide);
-            var clave = $"M{equipment.Nombre}{mantain.Fecha.Day}{mantain.Fecha.Month}{mantain.Fecha.Year}";
+            var clave = $"M{equipment.Nombre}-{mantain.Fecha.Day}{mantain.Fecha.Month}{mantain.Fecha.Year}";
             newParameter.clave = clave;
 
             newParameter.Num_Serie = equipment.Valores.AsQueryable().Last().Num_Serie.ToString();
