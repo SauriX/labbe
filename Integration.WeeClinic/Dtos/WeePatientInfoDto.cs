@@ -27,6 +27,9 @@ namespace Integration.WeeClinic.Dtos
         public string Genero { get; set; }
         public string RFC { get; set; }
         public int Edad { get; set; }
+        public DateTime? FechaNacimiento { get; set; }
+        public string Correo { get; set; }
+        public string Telefono { get; set; }
         public string Busqueda { get; set; }
         public string TPA { get; set; }
         public int IsEstatus { get; set; }
@@ -34,5 +37,15 @@ namespace Integration.WeeClinic.Dtos
         public int IsTyC { get; set; }
         public string NombreCompleto_Medico { get; set; }
         public int EstatusVigencia { get; set; }
+    }
+
+    public class WeePatientInfoStudyDto
+    {
+        public string IdServicio { get; set; }
+        public string IdNodo { get; set; }
+        public string IdOrden { get; set; }
+        public string Clave { get; set; }
+        public string Nombre { get; set; }
+        public string DescripcionWeeClinic { get; set; }
     }
 }
