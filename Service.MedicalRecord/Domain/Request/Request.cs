@@ -14,7 +14,6 @@ namespace Service.MedicalRecord.Domain.Request
         public virtual Branch Sucursal { get; set; }
         public string Clave { get; set; }
         public string ClavePatologica { get; set; }
-        public string FolioWeeClinic { get; set; }
         public byte EstatusId { get; set; }
         public virtual StatusRequest Estatus { get; set; }
         public byte Procedencia { get; set; }
@@ -43,6 +42,12 @@ namespace Service.MedicalRecord.Domain.Request
         public decimal Total { get; set; }
         public decimal Saldo { get; set; }
         public string UsuarioCreo { get; set; }
+
+        public string FolioWeeClinic { get; set; }
+        public bool TokenValidado { get; set; }
+        public string IdOrden { get; set; }
+        public string IdPersona { get; set; }
+
 
         public virtual ICollection<RequestPayment> Pagos { get; set; }
         public virtual ICollection<RequestStudy> Estudios { get; set; }

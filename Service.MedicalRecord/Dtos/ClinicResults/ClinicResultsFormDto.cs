@@ -18,6 +18,8 @@ namespace Service.MedicalRecord.Dtos.ClinicResults
         public string TipoValorId { get; set; }
         public string ValorInicial { get; set; }
         public string ValorFinal { get; set; }
+        public decimal? CriticoMinimo { get; set; }
+        public decimal? CriticoMaximo { get; set; }
         public string Resultado { get; set; }
         public string Formula { get; set; }
         public string NombreCorto { get; set; }
@@ -26,5 +28,7 @@ namespace Service.MedicalRecord.Dtos.ClinicResults
         public Guid UsuarioId { get; set; }
         public string Usuario { get; set; }
         public string UnidadNombre { get; set; }
+        public string UltimoResultado { get; set; }
+        public bool DeltaCheck { get; set; }
     }
 }

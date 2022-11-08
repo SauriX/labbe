@@ -25,6 +25,10 @@ namespace Integration.Pdf.Dtos
         public string ValorInicial { get; set; }
         public string ValorFinal { get; set; }
         public string Resultado { get; set; }
+        public string UltimoResultado { get; set; }
+        public decimal? CriticoMinimo { get; set; }
+        public decimal? CriticoMaximo { get; set; }
+        public bool DeltaCheck { get; set; }
     }
 
     public class ClinicResultsRequestDto
