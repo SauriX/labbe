@@ -233,6 +233,7 @@ namespace Service.MedicalRecord.Application
             }
 
             var weeStudies = await _weeService.GetServicesByFolio(requestDto.FolioWeeClinic);
+            weeStudies = weeStudies.Where(x => requestDto.Servicios.Contains(x.IdServicio)).ToList();
 
             var filter = new PriceListInfoFilterDto(0, 0, requestDto.SucursalId, MEDICS.A_QUIEN_CORRESPONDA, COMPANIES.PARTICULARES, Guid.Empty)
             {
@@ -259,7 +260,7 @@ namespace Service.MedicalRecord.Application
                 study.Precio = weePrice.Paciente.Total + weePrice.Aseguradora.Total;
                 study.PrecioFinal = weePrice.Paciente.Total + weePrice.Aseguradora.Total;
                 study.AplicaCopago = weePrice.Total.Copago > 0;
-                study.EstudioWeeClinic = new RequestStudyWee(ws.IdOrden, ws.IdNodo, ws.IdServicio, ws.Cubierto, ws.IsAvaliable, ws.RestanteDays, ws.Vigencia, ws.IsCancel);
+                study.EstudioWeeClinic = new RequestStudyWee(ws.IdNodo, ws.IdServicio, ws.Cubierto, ws.IsAvaliable, ws.RestanteDays, ws.Vigencia, ws.IsCancel);
             }
 
             string code = await GetNewCode(requestDto);
@@ -271,7 +272,12 @@ namespace Service.MedicalRecord.Application
             newRequest.CopagoTipo = PORCENTAJE;
             newRequest.DescuentoTipo = PORCENTAJE;
             newRequest.UsuarioCreo = requestDto.Usuario;
+
+            var weeData = weeStudies.First();
+
             newRequest.FolioWeeClinic = requestDto.FolioWeeClinic;
+            newRequest.IdPersona = weeData.IdPersona;
+            newRequest.IdOrden = weeData.IdOrden;
             newRequest.Estudios = studies;
 
             newRequest.TotalEstudios = weePrices.Sum(x => x.Paciente.Total + x.Aseguradora.Total);
