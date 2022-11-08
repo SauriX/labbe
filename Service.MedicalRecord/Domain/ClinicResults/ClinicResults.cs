@@ -18,7 +18,11 @@ namespace Service.MedicalRecord.Domain
         public string NombreCorto { get; set; }
         public string ValorInicial { get; set; }
         public string ValorFinal { get; set; }
+        public decimal? CriticoMinimo { get; set; }
+        public decimal? CriticoMaximo { get; set; }
         public string Formula { get; set; }
         public string Resultado { get; set; }
+        public bool DeltaCheck { get; set; }
+        public string UltimoResultado { get; set; }
     }
 }

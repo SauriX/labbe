@@ -109,6 +109,8 @@ namespace Service.Catalog.Mapper
                 Reactivos = model.Reactivos.ToReagentDto(),
                 Area = model.Area?.Nombre,
                 Departamento = model.Area?.Departamento?.Nombre,
+                DeltaCheck = model.DeltaCheck,
+                MostrarFormato = model.MostrarFormato,
             };
         }
 
@@ -187,6 +189,12 @@ namespace Service.Catalog.Mapper
                 HombreValorFinal = x.HombreValorFinal,
                 MujerValorInicial = x.MujerValorInicial,
                 MujerValorFinal = x.MujerValorFinal,
+                CriticoMinimo = x.CriticoMinimo,
+                CriticoMaximo = x.CriticoMaximo,
+                HombreCriticoMinimo = x.CriticoMinimoHombre,
+                HombreCriticoMaximo = x.CriticoMaximoHombre,
+                MujerCriticoMinimo = x.CriticoMinimoMujer,
+                MujerCriticoMaximo = x.CriticoMaximoMujer,
                 MedidaTiempoId = x.MedidaTiempoId,
                 Opcion = x.Opcion,
                 DescripcionTexto = x.DescripcionTexto,
@@ -354,6 +362,8 @@ namespace Service.Catalog.Mapper
                 FechaCreo = model.FechaCreo,
                 UsuarioModificoId = dto.UsuarioId,
                 FechaModifico = DateTime.Now,
+                DeltaCheck = dto.DeltaCheck,
+                MostrarFormato = dto.MostrarFormato,
                 Reactivos = dto.Reactivos.Select(x => new ParameterReagent
                 {
                     ReactivoId = Guid.Parse(x.Id),

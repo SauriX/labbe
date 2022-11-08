@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Service.MedicalRecord.Dtos.Catalogs;
+using System;
 using System.Collections.Generic;
 
 namespace Service.MedicalRecord.Dtos.Sampling
@@ -8,6 +9,7 @@ namespace Service.MedicalRecord.Dtos.Sampling
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string Area { get; set; }
+        public AreaListDto Areas { get; set; }
         public int Status { get; set; }
         public string Registro { get; set; }
         public string Entrega { get; set; }

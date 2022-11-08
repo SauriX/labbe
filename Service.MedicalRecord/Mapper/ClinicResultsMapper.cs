@@ -32,7 +32,7 @@ namespace Service.MedicalRecord.Mapper
                 SucursalNombre = x.Sucursal.Nombre,
                 NombreMedico = x.Medico.Nombre,
                 UsuarioCreo = x.UsuarioCreo,
-                ClavePatologica = x.ClavePatologica
+                ClavePatologica = x.ClavePatologica,
             }).ToList();
         }
 
@@ -64,11 +64,16 @@ namespace Service.MedicalRecord.Mapper
                 TipoValorId = x.TipoValorId,
                 ValorInicial = x?.ValorInicial,
                 ValorFinal = x?.ValorFinal,
+                CriticoMinimo = x.CriticoMinimo,
+                CriticoMaximo = x.CriticoMaximo,
                 ParametroId = Guid.Parse(x.ParametroId),
                 Resultado = x.Resultado,
                 Unidades = x.UnidadNombre,
                 Formula = x?.Formula,
-                NombreCorto = x?.NombreCorto
+                NombreCorto = x?.NombreCorto,
+                DeltaCheck = x.DeltaCheck,
+                UltimoResultado = x?.UltimoResultado
+
             }).ToList();
         }
 
@@ -206,10 +211,14 @@ namespace Service.MedicalRecord.Mapper
                     SolicitudId = results.SolicitudId,
                     EstudioId = results.EstudioId,
                     ValorFinal = results?.ValorFinal,
+                    CriticoMinimo = results.CriticoMinimo,
+                    CriticoMaximo = results.CriticoMaximo,
                     ParametroId = results.ParametroId.ToString(),
                     Resultado = results.Resultado,
                     UnidadNombre = results.Unidades,
                     Estudio = results.SolicitudEstudio.Nombre,
+                    UltimoResultado = results.UltimoResultado,
+                    DeltaCheck = results.DeltaCheck
                 };
             }).ToList();
         }
@@ -232,6 +241,8 @@ namespace Service.MedicalRecord.Mapper
                     SolicitudId = x.SolicitudId,
                     EstudioId = x.EstudioId,
                     ValorFinal = x?.ValorInicial,
+                    CriticoMinimo = x.CriticoMinimo,
+                    CriticoMaximo = x.CriticoMaximo,
                     ParametroId = Guid.Parse(x.ParametroId),
                     Resultado = x.Resultado,
                     Unidades = x.UnidadNombre,

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.MedicalRecord.Context;
 
 namespace Service.MedicalRecord.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221102172828_UltimoResultadoClinicResults")]
+    partial class UltimoResultadoClinicResults
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -662,12 +664,6 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("FolioWeeClinic")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("IdOrden")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("IdPersona")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<Guid?>("MedicoId")
                         .HasColumnType("uniqueidentifier");
 
@@ -696,9 +692,6 @@ namespace Service.MedicalRecord.Migrations
 
                     b.Property<Guid>("SucursalId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("TokenValidado")
-                        .HasColumnType("bit");
 
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(18,2)");
@@ -1063,6 +1056,9 @@ namespace Service.MedicalRecord.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IdNodo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IdOrden")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IdServicio")

@@ -8,6 +8,7 @@ using Integration.WeeClinic.Responses;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Shared.Error;
+using Shared.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,6 +42,18 @@ namespace Integration.WeeClinic.Services
         //AD007044220043512J1V
         //AD007044220043513M09
         //AD007044220043522EE6
+
+        //AD007044220043560EE6
+        //AD0070442200435613JL
+        //AD007044220043562XJ3
+
+        //AD007044220043575H9L
+        //AD007044220043576Y5E
+        //AD007044220043577T42
+
+        public const string ENVIAR_CODIGO_NUEVO = "1";
+        public const string COMPARAR_CODIGO = "2";
+        public const string REENVIAR_CODIGO_VIGENTE = "3";
 
         // Servcio 1. Consulta de folios
         public static async Task<Laboratorio_BusquedaFolios> BusquedaFolios(string folio)
@@ -109,17 +122,17 @@ namespace Integration.WeeClinic.Services
         }
 
         // Servicio 4. Enviar token de validación de estudios
-        public static async Task<Laboratorio_ValidarCodigoPacienteLaboratorio> ValidarCodigoPacienteLaboratorio()
+        public static async Task<Laboratorio_ValidarCodigoPacienteLaboratorio> ValidarCodigoPacienteLaboratorio(string personId, string actionCode, string code)
         {
             var url = "api/Sesion/ValidarCodigoPacienteLaboratorio";
 
             var data = new Dictionary<string, string>()
             {
-                ["idPersona"] = "88a2db0b-0e7a-4e6e-9865-c7a8d1752312",
-                ["CodAccion"] = "2",
-                ["CodAcceso"] = "629726",
-                ["CodMotivo"] = "3",
-                ["idServicio"] = "f6d7c607-6da9-4ca6-b075-1a69719d39e9"
+                ["idPersona"] = personId,
+                ["CodAccion"] = actionCode,
+                ["CodAcceso"] = actionCode == COMPARAR_CODIGO ? code : null,
+                ["CodMotivo"] = "5",
+                ["idServicio"] = "00000000-0000-0000-0000-000000000000"
             };
 
             var response = await PostService<string>(url, data);
@@ -130,16 +143,16 @@ namespace Integration.WeeClinic.Services
         }
 
         // Servicio 5. Validación de Token
-        public static async Task<Laboratorio_ValidaToken> Laboratorio_ValidaToken()
+        public static async Task<Laboratorio_ValidaToken> Laboratorio_ValidaToken(string personId, string orderId, string code, string branch)
         {
             var url = "api/Servicio/Laboratorio_ValidaToken";
 
             var data = new Dictionary<string, string>()
             {
-                ["idPersona"] = "88a2db0b-0e7a-4e6e-9865-c7a8d1752312",
-                ["idOrden"] = "b6e542dd-0386-4b94-b50b-06cd8ced0100",
-                ["Token"] = "34234234",
-                ["ClaveSucursal"] = ""
+                ["idPersona"] = personId,
+                ["idOrden"] = orderId,
+                ["Token"] = code,
+                ["ClaveSucursal"] = branch
             };
 
             var response = await PostService<string>(url, data);
