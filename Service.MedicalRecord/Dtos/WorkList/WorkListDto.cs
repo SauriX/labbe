@@ -17,8 +17,6 @@ namespace Service.MedicalRecord.Dtos.WorkList
         public string Solicitud { get; set; }
         public string HoraSolicitud { get; set; }
         public string Paciente { get; set; }
-        public string Estatus { get; set; }
-        public string HoraEstatus { get; set; }
         public List<WorkListStudyDto> Estudios { get; set; } = new List<WorkListStudyDto>();
     }
 
@@ -26,6 +24,8 @@ namespace Service.MedicalRecord.Dtos.WorkList
     {
         public int EstudioId { get; set; }
         public string Estudio { get; set; }
+        public string Estatus { get; set; }
+        public string HoraEstatus { get; set; }
         public List<string> ListasTrabajo { get; set; } = new List<string>();
     }
 }

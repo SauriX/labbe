@@ -43,6 +43,16 @@ namespace Service.MedicalRecord.Application
               tempSt.Telefono_Paciente.Length != 10 ? tempSt.Telefono_Paciente :
               Regex.Replace(tempSt.Telefono_Paciente, @"^(...)(...)(..)(..)$", "$1-$2-$3-$4");
 
+            data.Estudios = services.Select(x => new WeePatientInfoStudyDto
+            {
+                IdServicio = x.IdServicio,
+                IdNodo = x.IdNodo,
+                Clave = x.ClaveCDP,
+                Nombre = x.CDPNombre,
+                DescripcionWeeClinic = x.DescripcionInterna,
+                Cantidad = Convert.ToInt32(x.CantidadSolicitada)
+            });
+
             return data;
         }
 
@@ -98,6 +108,11 @@ namespace Service.MedicalRecord.Application
             var response = await LaboratoryService.GetPreciosEstudios_ByidServicio(serviceId, null, COD_ESTATUS_LIBERAR_ESTUDIO);
 
             return response.Datos[0];
+        }
+
+        public async Task ValidateToken(string folio, string token)
+        {
+            //var response = await LaboratoryService.ValidarCodigoPacienteLaboratorio();
         }
     }
 }

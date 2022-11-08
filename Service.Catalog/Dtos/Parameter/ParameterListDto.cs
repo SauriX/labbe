@@ -11,15 +11,11 @@
         public bool Activo { get; set; }
         public bool Requerido { get; set; }
         public bool DeltaCheck { get; set; }
-        public bool ValoresCriticos { get; set; }
         public bool MostrarFormato { get; set; }
         public int? Unidades { get; set; }
         public string UnidadNombre { get; set; }
         public string TipoValor { get; set; }
         public string ValorInicial { get; set; }
         public string ValorFinal { get; set; }
-        public decimal CriticoMinimo { get; set; }
-        public decimal CriticoMaximo { get; set; }
-
     }
 }

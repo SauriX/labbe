@@ -205,6 +205,16 @@ namespace Service.MedicalRecord.Repository
             return resultExisting;
         }
 
+        public async Task<List<Request>> GetSecondLastRequest(Guid recordId)
+        {
+            var resultExisting = await _context.CAT_Solicitud
+                .Where(x => x.ExpedienteId == recordId)
+                .Include(x => x.Estudios).ThenInclude(x => x.Resultados)
+                .OrderByDescending(x => x.FechaCreo)
+                .ToListAsync();
+            return resultExisting;
+        }
+
         public async Task UpdateStatusStudy(RequestStudy study)
         {
             /*_context.Relacion_Solicitud_Estudio.Update(study);
@@ -232,6 +242,7 @@ namespace Service.MedicalRecord.Repository
             var resuqestStudy = await _context.Relacion_Solicitud_Estudio
                 .Include(x => x.Estatus)
                 .Where(x => x.Id == RequestStudyId)
+                .Where(x => x.EstatusId != 9)
                 .FirstOrDefaultAsync();
             return resuqestStudy;
 

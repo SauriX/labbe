@@ -73,7 +73,6 @@ namespace Integration.Pdf.Service
 
             return document;
         }
-
         public static byte[] MergePdf(params byte[][] pdfs)
         {
             List<PdfSharp.Pdf.PdfDocument> lstDocuments = new List<PdfSharp.Pdf.PdfDocument>();

@@ -213,7 +213,7 @@ namespace Service.Catalog.Application
 
             if (isDuplicate)
             {
-                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave"));
             }
         }
     }

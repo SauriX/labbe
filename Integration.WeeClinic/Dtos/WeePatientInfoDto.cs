@@ -37,15 +37,16 @@ namespace Integration.WeeClinic.Dtos
         public int IsTyC { get; set; }
         public string NombreCompleto_Medico { get; set; }
         public int EstatusVigencia { get; set; }
+        public IEnumerable<WeePatientInfoStudyDto> Estudios { get; set; }
     }
 
     public class WeePatientInfoStudyDto
     {
         public string IdServicio { get; set; }
         public string IdNodo { get; set; }
-        public string IdOrden { get; set; }
         public string Clave { get; set; }
         public string Nombre { get; set; }
         public string DescripcionWeeClinic { get; set; }
+        public int Cantidad { get; set; }
     }
 }

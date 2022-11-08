@@ -87,7 +87,7 @@ namespace Service.Catalog.Repository
 
         public async Task<bool> IsDuplicate(Parameter parameter)
         {
-            var isDuplicate = await _context.CAT_Parametro.AnyAsync(x => x.Id != parameter.Id && (x.Clave == parameter.Clave || x.Nombre == parameter.Nombre));
+            var isDuplicate = await _context.CAT_Parametro.AnyAsync(x => x.Id != parameter.Id && (x.Clave == parameter.Clave));
 
             return isDuplicate;
         }

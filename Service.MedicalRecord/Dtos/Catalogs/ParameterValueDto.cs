@@ -20,6 +20,12 @@ namespace Service.MedicalRecord.Dtos.Catalogs
         public decimal HombreValorFinal { get; set; }
         public decimal MujerValorInicial { get; set; }
         public decimal MujerValorFinal { get; set; }
+        public decimal CriticoMinimo { get; set; }
+        public decimal CriticoMaximo { get; set; }
+        public decimal HombreCriticoMinimo { get; set; }
+        public decimal HombreCriticoMaximo { get; set; }
+        public decimal MujerCriticoMinimo { get; set; }
+        public decimal MujerCriticoMaximo { get; set; }
         public byte MedidaTiempoId { get; set; }
         public string Opcion { get; set; }
         public string DescripcionTexto { get; set; }

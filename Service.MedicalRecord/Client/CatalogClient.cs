@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Service.MedicalRecord.Client.IClient;
 using Service.MedicalRecord.Dtos.Branch;
+using Service.MedicalRecord.Dtos.Catalogs;
 using Service.MedicalRecord.Dtos.Promos;
 using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.Route;
@@ -75,6 +76,18 @@ namespace Service.MedicalRecord.Client
             if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
             {
                 return await response.Content.ReadFromJsonAsync<RouteFormDto>();
+            }
+
+            throw new CustomException(response.StatusCode, response.ReasonPhrase);
+        }
+
+        public async Task<AreaListDto> GetArea(int id)
+        {
+            var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/area/{id}");
+
+            if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+            {
+                return await response.Content.ReadFromJsonAsync<AreaListDto>();
             }
 
             throw new CustomException(response.StatusCode, response.ReasonPhrase);

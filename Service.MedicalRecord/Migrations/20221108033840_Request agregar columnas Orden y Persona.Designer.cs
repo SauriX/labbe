@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.MedicalRecord.Context;
 
 namespace Service.MedicalRecord.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221108033840_Request agregar columnas Orden y Persona")]
+    partial class RequestagregarcolumnasOrdenyPersona
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -244,15 +246,6 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("Clave")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("CriticoMaximo")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("CriticoMinimo")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<bool>("DeltaCheck")
-                        .HasColumnType("bit");
-
                     b.Property<int>("EstudioId")
                         .HasColumnType("int");
 
@@ -278,9 +271,6 @@ namespace Service.MedicalRecord.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TipoValorId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UltimoResultado")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Unidades")
@@ -990,9 +980,6 @@ namespace Service.MedicalRecord.Migrations
 
                     b.Property<Guid>("ListaPrecioId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("MedioSolicitado")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nombre")
                         .HasColumnType("nvarchar(max)");
