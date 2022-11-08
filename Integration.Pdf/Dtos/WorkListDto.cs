@@ -20,8 +20,6 @@ namespace Integration.Pdf.Dtos
         public string Solicitud { get; set; }
         public string HoraSolicitud { get; set; }
         public string Paciente { get; set; }
-        public string Estatus { get; set; }
-        public string HoraEstatus { get; set; }
         public List<WorkListStudyDto> Estudios { get; set; }
     }
 
@@ -29,5 +27,7 @@ namespace Integration.Pdf.Dtos
     {
         public string Estudio { get; set; }
         public List<string> ListasTrabajo { get; set; }
+        public string Estatus { get; set; }
+        public string HoraEstatus { get; set; }
     }
 }

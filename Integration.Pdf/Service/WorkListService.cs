@@ -86,44 +86,54 @@ namespace Integration.Pdf.Service
 
             var headers = new Col[]
             {
-                new Col("SOILICTUD", 1, Col.FONT_BOLD, ParagraphAlignment.Left),
-                new Col("HORA", 1, Col.FONT_BOLD, ParagraphAlignment.Center),
-                new Col("NOMBRE DEL PACIENTE", 4, Col.FONT_BOLD, ParagraphAlignment.Left),
-                new Col("ESTATUS", 1, Col.FONT_BOLD, ParagraphAlignment.Center),
-                new Col("HORA", 1, Col.FONT_BOLD, ParagraphAlignment.Center),
+                new Col("SOILICTUD", 2, Col.FONT_BOLD, ParagraphAlignment.Left),
+                new Col("HORA", 2, Col.FONT_BOLD, ParagraphAlignment.Center),
+                new Col("NOMBRE DEL PACIENTE", 7, Col.FONT_BOLD, ParagraphAlignment.Left),
+                new Col("ESTATUS", 3, Col.FONT_BOLD, ParagraphAlignment.Center),
+                new Col("HORA", 3, Col.FONT_BOLD, ParagraphAlignment.Center),
             };
             header.AddBorderedText(headers, top: true, bottom: true);
 
+            var table = section.AddTable();
+
+            var column = table.AddColumn();
+
             for (int i = 0; i < workList.Solicitudes.Count; i++)
             {
+                var row = table.AddRow();
+
                 WorkListRequestDto request = workList.Solicitudes[i];
                 var requestInfo = new Col[]
                 {
-                    new Col(request.Solicitud, 1, ParagraphAlignment.Left),
-                    new Col(request.HoraSolicitud, 1, ParagraphAlignment.Center),
-                    new Col(request.Paciente, 4, ParagraphAlignment.Left),
-                    new Col(request.Estatus, 1, ParagraphAlignment.Center),
-                    new Col(request.HoraEstatus, 1, ParagraphAlignment.Center),
+                    new Col(request.Solicitud, 2, ParagraphAlignment.Left),
+                    new Col(request.HoraSolicitud, 2, ParagraphAlignment.Center),
+                    new Col(request.Paciente, 7, ParagraphAlignment.Left),
+                    new Col("", 3),
+                    new Col("", 3),
                 };
-                section.AddText(requestInfo);
+                row.AddText(requestInfo);
 
                 foreach (var study in request.Estudios)
                 {
-                    var studyName = new Col(study.Estudio, Col.FONT_BOLD, ParagraphAlignment.Left);
-                    section.AddText(studyName);
+                    var studyName = new Col[] {
+                        new Col(study.Estudio, 11, Col.FONT_BOLD, ParagraphAlignment.Left),
+                        new Col(study.Estatus, 3, Col.FONT_BOLD),
+                        new Col(study.HoraEstatus, 3, Col.FONT_BOLD)
+                    };
+                    row.AddText(studyName);
 
                     foreach (var parameters in study.ListasTrabajo.ToChunks(8, true))
                     {
                         var param = parameters.Select(x => new Col(x) { Fill = string.IsNullOrEmpty(x) ? (TabLeader?)null : TabLeader.Lines }).ToArray();
-                        section.AddText(param);
+                        row.AddText(param);
                     }
                 }
 
                 if (i < workList.Solicitudes.Count - 1)
                 {
-                    section.AddSpace(8);
-                    section.AddDivider(2, Colors.DarkGray);
-                    section.AddSpace(8);
+                    row.AddSpace(8);
+                    row.AddDivider(2, Colors.DarkGray);
+                    row.AddSpace(8);
                 }
             }
 
