@@ -56,13 +56,13 @@ namespace Service.MedicalRecord.Controllers
         [HttpGet("Laboratorio_ValidarCodigoPacienteLaboratorio")]
         public async Task<Laboratorio_ValidarCodigoPacienteLaboratorio> ValidarCodigoPacienteLaboratorio()
         {
-            return await LaboratoryService.ValidarCodigoPacienteLaboratorio();
+            return await LaboratoryService.ValidarCodigoPacienteLaboratorio(null, null, null);
         }
 
         [HttpGet("servicio5")]
         public async Task<Laboratorio_ValidaToken> Laboratorio_ValidaToken()
         {
-            return await LaboratoryService.Laboratorio_ValidaToken();
+            return await LaboratoryService.Laboratorio_ValidaToken(null, null, null, null);
         }
 
         [HttpGet("servicio6")]
