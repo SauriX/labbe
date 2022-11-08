@@ -33,7 +33,8 @@ namespace Service.MedicalRecord.Mapper
                 Parcialidad = model.Parcialidad,
                 EsNuevo = model.EsNuevo,
                 FolioWeeClinic = model.FolioWeeClinic,
-                Registro = $"{model.FechaCreo:dd/MM/yyyy}"
+                Registro = $"{model.FechaCreo:dd/MM/yyyy}",
+                TokenValidado = model.TokenValidado
             };
         }
 
