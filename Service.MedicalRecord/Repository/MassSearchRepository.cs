@@ -72,7 +72,19 @@ namespace Service.MedicalRecord.Repository
             {
                 requests = requests.Where(x => x.Estudios.Any(y => filter.Departamentos.Contains(y.DepartamentoId)));
             }
+            if (filter.MediosEntrega != null)
+            {
+                if (filter.MediosEntrega.Contains(1))
+                {
 
+                    requests = requests.Where(x => !string.IsNullOrEmpty(x.EnvioWhatsApp));
+                }
+                if (filter.MediosEntrega.Contains(2))
+                {
+
+                    requests = requests.Where(x => !string.IsNullOrEmpty(x.EnvioCorreo));
+                }
+            }
             //validar medio de entrega
 
             return await requests.ToListAsync();
