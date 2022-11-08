@@ -43,11 +43,7 @@ namespace Service.Catalog.Dtos.Parameter
         {
             RuleFor(x => x.Clave).NotEmpty().MaximumLength(100);
             RuleFor(x => x.Nombre).NotEmpty().MaximumLength(100);
-            RuleFor(x => x.NombreCorto).NotEmpty().MaximumLength(50);
-            RuleFor(x => x.Unidades).GreaterThan(0);
             RuleFor(x => x.TipoValor).NotEmpty();
-            RuleFor(x => x.DepartamentoId).GreaterThan(0);
-            RuleFor(x => x.AreaId).GreaterThan(0);
             RuleFor(x => x.ReactivoId).Guid();
             RuleFor(x => x.Formula).MaximumLength(200);
 

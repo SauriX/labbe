@@ -231,6 +231,7 @@ namespace Service.MedicalRecord.Mapper
                 Descuento = x.Descuento,
                 DescuentoPorcentaje = x.DescuentoPorcentaje,
                 PrecioFinal = x.PrecioFinal,
+                NombreEstatus = x.Estatus.Nombre,
                 FechaActualizacion = x.EstatusId == Status.RequestStudy.Capturado
                     ? x.FechaCaptura?.ToString("dd/MM/yyyy HH:mm")
                     : x.EstatusId == Status.RequestStudy.Validado
@@ -369,7 +370,7 @@ namespace Service.MedicalRecord.Mapper
                     UsuarioCreoId = study?.UsuarioCreoId ?? userId,
                     FechaCreo = study?.FechaCreo ?? DateTime.Now,
                     UsuarioModificoId = study == null ? null : userId,
-                    FechaModifico = study == null ? null : DateTime.Now
+                    FechaModifico = study == null ? null : DateTime.Now,
                 };
             }).ToList();
         }

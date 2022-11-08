@@ -242,6 +242,7 @@ namespace Service.MedicalRecord.Repository
             var resuqestStudy = await _context.Relacion_Solicitud_Estudio
                 .Include(x => x.Estatus)
                 .Where(x => x.Id == RequestStudyId)
+                .Where(x => x.EstatusId != 9)
                 .FirstOrDefaultAsync();
             return resuqestStudy;
 

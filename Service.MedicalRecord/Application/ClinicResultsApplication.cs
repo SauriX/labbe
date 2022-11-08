@@ -232,19 +232,13 @@ namespace Service.MedicalRecord.Application
                     if (param.DeltaCheck)
                     {
                         var listRequests = await _repository.GetSecondLastRequest(result.Solicitud.ExpedienteId);
-                        if (listRequests.Count > 1)
-                        {
-                            listRequests.RemoveAt(0);
-                            var previousResult = listRequests.SelectMany(x => x.Estudios)
-                                .Where(x => x.EstudioId == st.Id)
-                                .SelectMany(x => x.Resultados)
-                                .Where(x => x.ParametroId.ToString() == param.Id).FirstOrDefault().Resultado;
-                            param.UltimoResultado = previousResult;
-                        }
-                        else
-                        {
-                            param.UltimoResultado = null;
-                        }
+                        var previousResult = listRequests.Where(x => x.Id != result.SolicitudId)
+                            .Where(x => x.FechaCreo < result.Solicitud.FechaCreo)
+                            .SelectMany(x => x.Estudios)
+                            .Where(x => x.EstudioId == st.Id)
+                            .SelectMany(x => x.Resultados)
+                            .Where(x => x.ParametroId.ToString() == param.Id).FirstOrDefault()?.Resultado;
+                        param.UltimoResultado = previousResult == null ? null : previousResult;
                     }
 
                     if (param.TipoValores != null && param.TipoValores.Count != 0)
@@ -262,15 +256,15 @@ namespace Service.MedicalRecord.Application
                             case "2":
                                 if (request.Expediente.Genero == "F")
                                 {
-                                    param.ValorInicial = string.Join(", ", param.TipoValores.Where(x => x.MujerValorInicial != 0));
-                                    param.ValorFinal = string.Join(", ", param.TipoValores.Where(x => x.MujerValorFinal != 0));
+                                    param.ValorInicial = param.TipoValores.FirstOrDefault().MujerValorInicial.ToString();
+                                    param.ValorFinal = param.TipoValores.FirstOrDefault().MujerValorFinal.ToString();
                                     param.CriticoMinimo = param.TipoValores.FirstOrDefault().MujerCriticoMinimo;
                                     param.CriticoMaximo = param.TipoValores.FirstOrDefault().MujerCriticoMaximo;
                                 }
                                 else if (request.Expediente.Genero == "M")
                                 {
-                                    param.ValorInicial = string.Join(", ", param.TipoValores.Where(x => x.HombreValorInicial != 0));
-                                    param.ValorFinal = string.Join(", ", param.TipoValores.Where(x => x.HombreValorFinal != 0));
+                                    param.ValorInicial = param.TipoValores.FirstOrDefault().HombreValorInicial.ToString();
+                                    param.ValorFinal = param.TipoValores.FirstOrDefault().HombreValorFinal.ToString();
                                     param.CriticoMinimo = param.TipoValores.FirstOrDefault().HombreCriticoMinimo;
                                     param.CriticoMaximo = param.TipoValores.FirstOrDefault().HombreCriticoMaximo;
                                 }

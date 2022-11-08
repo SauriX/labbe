@@ -183,7 +183,7 @@ namespace Integration.Pdf.Service
                 new Col("REFERENCIA", 6, Col.FONT_SUBTITLE_BOLD),
             };
             section.AddBorderedText(studyHeader, top: true, right: false, bottom: true, left: false);
-            section.AddSpace(5);
+            section.AddSpace(7);
 
             if (results.CapturaResultados != null)
             {
@@ -196,14 +196,15 @@ namespace Integration.Pdf.Service
                     var studyName = new Col("****" + studyParam.Key, 14, fontTitle, ParagraphAlignment.Left);
                     section.AddText(studyName);
 
-                    var checkCritics = studyParam.Any(x => decimal.Parse(x.Resultado) > x.CriticoMaximo || decimal.Parse(x.Resultado) < x.CriticoMinimo);
+                    var checkCritics = studyParam.Where(x => x.Resultado != null && x.TipoValorId != 10).Any(x => decimal.Parse(x.Resultado) > x.CriticoMaximo || decimal.Parse(x.Resultado) < x.CriticoMinimo);
+                    var checkResultNotNull = studyParam.Where(x => x.Resultado != null);
 
                     foreach (var param in studyParam)
                     {
                         var checkResult = false;
                         var typeValueText = param.TipoValorId == 9 || param.TipoValorId == 10;
 
-                        if (param.Resultado != null && param.TipoValorId == 1 && param.TipoValorId == 2 && param.TipoValorId == 3 && param.TipoValorId == 4)
+                        if (param.Resultado != null && param.TipoValorId == 1 || param.TipoValorId == 2 || param.TipoValorId == 3 || param.TipoValorId == 4)
                         {
                             checkResult = decimal.Parse(param.Resultado) > decimal.Parse(param.ValorFinal) || decimal.Parse(param.Resultado) < decimal.Parse(param.ValorInicial);
                         }
@@ -219,7 +220,7 @@ namespace Integration.Pdf.Service
                         };
                         section.AddBorderedText(col, top: false, right: false, bottom: false, left: false);
                     }
-                    section.AddSpace(5);
+                    section.AddSpace(10);
 
                     if (checkCritics)
                     {
@@ -237,9 +238,9 @@ namespace Integration.Pdf.Service
                         section.AddBorderedText(criticHeader, top: true, right: false, bottom: true, left: false);
                         section.AddSpace(5);
 
-                        foreach (var param in studyParam)
+                        foreach (var param in studyParam.Where(x => x.Resultado != null && x.TipoValorId != 10))
                         {
-                            if (decimal.Parse(param.Resultado) > param.CriticoMaximo || decimal.Parse(param.Resultado) < param.CriticoMinimo)
+                            if (param.Resultado != null && (decimal.Parse(param.Resultado) > param.CriticoMaximo || decimal.Parse(param.Resultado) < param.CriticoMinimo))
                             {
                                 var col = new Col[]
                                 {
@@ -257,7 +258,7 @@ namespace Integration.Pdf.Service
                         section.AddText(alert);
                     }
 
-                    if (studyParam.Any(x => x.DeltaCheck))
+                    if (studyParam.Where(x => x.UltimoResultado != null && x.Resultado != null).Any(x => x.DeltaCheck))
                     {
                         var criticTitle = new Col("RESULTADOS PREVIOS", 14, fontTitle, ParagraphAlignment.Left);
                         section.AddText(criticTitle);
