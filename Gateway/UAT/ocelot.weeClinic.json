@@ -1,0 +1,15 @@
+﻿{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/weeClinic/search/folio/{folio}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/weeClinic/search/folio/{folio}",
+      "UpstreamHttpMethod": [ "GET" ]
+    }
+  ]
+}
