@@ -165,7 +165,7 @@ namespace Service.MedicalRecord.Mapper
             };
         }
 
-        public static ClinicResultsPdfDto ToResults(this IEnumerable<ClinicResults> model, bool ImprimirLogos)
+        public static ClinicResultsPdfDto ToResults(this IEnumerable<ClinicResults> model, bool ImprimirLogos, bool ImprimirCriticos, bool ImprimirPrevios)
         {
             if (model == null || !model.Any()) return new ClinicResultsPdfDto();
 
@@ -192,6 +192,8 @@ namespace Service.MedicalRecord.Mapper
                 CapturaResultados = results,
                 SolicitudInfo = request,
                 ImprimrLogos = ImprimirLogos,
+                ImprimirCriticos = ImprimirCriticos,
+                ImprimirPrevios = ImprimirPrevios
             };
 
             return data;

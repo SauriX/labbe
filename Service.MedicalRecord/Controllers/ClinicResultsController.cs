@@ -62,6 +62,7 @@ namespace Service.MedicalRecord.Controllers
         {
             results.First().UsuarioId = (Guid)HttpContext.Items["userId"];
             results.First().Usuario = HttpContext.Items["userName"].ToString();
+           /* results.First().UsuarioClave = HttpContext.Items["userName"].ToString();*/
             await _service.UpdateLabResults(results);
         }
 
@@ -138,5 +139,8 @@ namespace Service.MedicalRecord.Controllers
             var file = await _service.PrintResults(recordId, requestId);
             return File(file, MimeType.PDF, $"Resultados - {requestId}.pdf");
         }*/
+        
+
+
     }
 }

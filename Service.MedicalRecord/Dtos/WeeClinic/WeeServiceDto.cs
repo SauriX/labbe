@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Integration.WeeClinic.Dtos
+namespace Service.MedicalRecord.Dtos.WeeClinic
 {
     public class WeeServiceDto
     {

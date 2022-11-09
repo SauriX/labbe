@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Dtos.Request;
+using Service.MedicalRecord.Dtos.WeeClinic;
 using Shared.Dictionary;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,10 @@ namespace Service.MedicalRecord.Controllers
     public class RequestController : ControllerBase
     {
         private readonly IRequestApplication _service;
+
+        public const string ENVIAR_CODIGO_NUEVO = "1";
+        public const string COMPARAR_CODIGO = "2";
+        public const string REENVIAR_CODIGO_VIGENTE = "3";
 
         public RequestController(IRequestApplication service)
         {
@@ -248,6 +253,29 @@ namespace Service.MedicalRecord.Controllers
         public async Task DeleteImage(Guid recordId, Guid requestId, string code)
         {
             await _service.DeleteImage(recordId, requestId, code);
+        }
+
+        [HttpPost("wee/sendToken")]
+        [Authorize(Policies.Update)]
+        public async Task<WeeTokenValidationDto> SendWeeToken(RequestTokenDto requestDto)
+        {
+            return await _service.SendCompareToken(requestDto, requestDto.Reenviar ? REENVIAR_CODIGO_VIGENTE : ENVIAR_CODIGO_NUEVO);
+        }
+
+        [HttpPost("wee/compareToken")]
+        [Authorize(Policies.Update)]
+        public async Task<WeeTokenValidationDto> CompareWeeToken(RequestTokenDto requestDto)
+        {
+            return await _service.SendCompareToken(requestDto, COMPARAR_CODIGO);
+        }
+
+        [HttpPost("wee/verifyToken")]
+        [Authorize(Policies.Update)]
+        public async Task<WeeTokenVerificationDto> VerifyWeeToken(RequestTokenDto requestDto)
+        {
+            requestDto.UsuarioId = (Guid)HttpContext.Items["userId"];
+
+            return await _service.VerifyWeeToken(requestDto);
         }
     }
 }

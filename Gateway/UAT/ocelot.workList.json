@@ -1,0 +1,15 @@
+﻿{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/workList/print",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/workList/print",
+      "UpstreamHttpMethod": [ "POST" ]
+    }
+  ]
+}

@@ -1,9 +1,9 @@
-﻿using Integration.WeeClinic.Dtos;
-using Integration.WeeClinic.Models.Laboratorio_BusquedaFolioLaboratorio;
+﻿using Integration.WeeClinic.Models.Laboratorio_BusquedaFolioLaboratorio;
 using Integration.WeeClinic.Models.Laboratorio_BusquedaFolios;
 using Integration.WeeClinic.Models.Laboratorio_GetPreciosEstudios_ByidServicio;
 using MassTransit;
 using Newtonsoft.Json;
+using Service.MedicalRecord.Dtos.WeeClinic;
 using Shared.Extensions;
 using System;
 using System.Collections.Generic;
@@ -12,9 +12,9 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Integration.WeeClinic.Mapper
+namespace Service.MedicalRecord.Mapper
 {
-    public static class LaboratoryMapper
+    public static class WeeMapper
     {
         public static WeePatientInfoDto ToWeePatientInfoDto(this Laboratorio_BusquedaFolios_0 weeData)
         {

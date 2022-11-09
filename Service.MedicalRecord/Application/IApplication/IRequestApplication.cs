@@ -1,4 +1,5 @@
 ﻿using Service.MedicalRecord.Dtos.Request;
+using Service.MedicalRecord.Dtos.WeeClinic;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,6 +18,8 @@ namespace Service.MedicalRecord.Application.IApplication
         Task SendTestWhatsapp(RequestSendDto requestDto);
         Task<string> Create(RequestDto requestDto);
         Task<string> CreateWeeClinic(RequestDto requestDto);
+        Task<WeeTokenValidationDto> SendCompareToken(RequestTokenDto requestDto, string actionCode);
+        Task<WeeTokenVerificationDto> VerifyWeeToken(RequestTokenDto requestDto);
         Task<string> Convert(RequestConvertDto requestDto);
         Task<RequestPaymentDto> CreatePayment(RequestPaymentDto requestDto);
         Task UpdateGeneral(RequestGeneralDto requestDto);

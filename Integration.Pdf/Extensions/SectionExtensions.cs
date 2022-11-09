@@ -166,18 +166,20 @@ namespace Integration.Pdf.Extensions
             p.Format.SpaceBefore = Unit.FromPoint(5);
         }
 
-        public static void AddBorderedText(this Section section, Models.Col[] cols, bool all = false, bool top = false, bool right = false, bool bottom = false, bool left = false)
+        public static void AddBorderedText(this Section section, Models.Col[] cols, bool all = false, bool top = false, bool right = false, bool bottom = false, bool left = false, Unit? marginSize = null)
         {
+            if (marginSize == null) marginSize = Unit.FromPoint(2.5);
+
             Table table = section.AddTable();
             if (!all && !top && !right && !bottom && !left)
             {
                 table.Borders.Visible = false;
             }
 
-            table.TopPadding = Unit.FromPoint(2.5);
-            table.RightPadding = Unit.FromPoint(2.5);
-            table.BottomPadding = Unit.FromPoint(2.5);
-            table.LeftPadding = Unit.FromPoint(2.5);
+            table.TopPadding = (Unit)marginSize;
+            table.RightPadding = (Unit)marginSize;
+            table.BottomPadding = (Unit)marginSize;
+            table.LeftPadding = (Unit)marginSize;
 
             float sectionWidth = section.PageSetup.PageWidth - section.PageSetup.LeftMargin - section.PageSetup.RightMargin;
             float columnWidth = sectionWidth / cols.Sum(x => x.Tamaño);

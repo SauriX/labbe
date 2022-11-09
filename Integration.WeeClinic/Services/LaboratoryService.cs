@@ -137,6 +137,8 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
+            response.ValidateNotEmpty("Datos");
+
             var folios = response.Transform<Laboratorio_ValidarCodigoPacienteLaboratorio>();
 
             return folios;
@@ -156,6 +158,8 @@ namespace Integration.WeeClinic.Services
             };
 
             var response = await PostService<string>(url, data);
+
+            response.ValidateNotEmpty("Datos");
 
             var folios = response.Transform<Laboratorio_ValidaToken>();
 
