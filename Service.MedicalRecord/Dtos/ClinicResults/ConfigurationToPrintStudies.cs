@@ -8,6 +8,8 @@ namespace Service.MedicalRecord.Dtos.ClinicResults
         public Guid SolicitudId { get; set; }
         public List<ConfigurationTypeResults> Estudios { get; set; }
         public bool ImprimirLogos { get; set; }
+        public bool ImprimirCriticos { get; set; }
+        public bool ImprimirPrevios { get; set; }
     }
 
     public class ConfigurationTypeResults

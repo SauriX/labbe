@@ -10,6 +10,8 @@ namespace Integration.Pdf.Dtos
         public IEnumerable<ClinicResultsCaptureDto> CapturaResultados { get; set; }
         public ClinicResultsRequestDto SolicitudInfo { get; set; }
         public bool ImprimrLogos { get; set; }
+        public bool ImprimirCriticos { get; set; }
+        public bool ImprimirPrevios { get; set; }
     }
 
     public class ClinicResultsCaptureDto
@@ -28,7 +30,8 @@ namespace Integration.Pdf.Dtos
         public string UltimoResultado { get; set; }
         public decimal? CriticoMinimo { get; set; }
         public decimal? CriticoMaximo { get; set; }
-        public bool DeltaCheck { get; set; }
+        public bool ImprimirCriticos { get; set; }
+        public bool ImprimirPrevios { get; set; }
     }
 
     public class ClinicResultsRequestDto
