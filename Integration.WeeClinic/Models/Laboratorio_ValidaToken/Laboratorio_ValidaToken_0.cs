@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Integration.WeeClinic.Models.Laboratorio_ValidaToken
 {
-    internal class Laboratorio_ValidaToken_0
+    public class Laboratorio_ValidaToken_0
     {
+        public string Mensaje { get; set; }
+        public int OK { get; set; }
     }
 }
