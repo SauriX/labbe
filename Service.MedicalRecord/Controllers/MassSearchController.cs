@@ -26,5 +26,13 @@ namespace Service.MedicalRecord.Controllers
             return await _service.GetByFilter(filter);
         }
 
+        [HttpPost("GetAllCaptureResults")]
+        [Authorize(Policies.Access)]
+        public async Task<List<RequestsInfoDto>> GetAllCaptureResults(DeliverResultsFilterDto search)
+        {
+            var clinicResults = await _service.GetAllCaptureResults(search);
+            return clinicResults;
+        }
+
     }
 }

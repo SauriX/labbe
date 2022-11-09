@@ -22,7 +22,7 @@ namespace Service.MedicalRecord.Repository
         {
             var requests = await _context.CAT_Solicitud
                 .Include(x => x.Expediente)
-                .Include(x => x.Estudios.Where(s => s.AreaId == areaId))
+                .Include(x => x.Estudios.Where(s => s.AreaId == areaId)).ThenInclude(x => x.Estatus)
                 .Where(x => branchesId.Contains(x.SucursalId) && x.FechaCreo.Date == date.Date && x.FechaCreo.TimeOfDay >= startTime.TimeOfDay && x.FechaCreo.TimeOfDay <= endTime.TimeOfDay)
                 .Where(x => x.Estudios.Select(s => s.AreaId).Contains(areaId))
                 .ToListAsync();

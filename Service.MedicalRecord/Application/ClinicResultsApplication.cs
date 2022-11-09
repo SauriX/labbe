@@ -224,6 +224,10 @@ namespace Service.MedicalRecord.Application
                     }
                     else
                     {*/
+                    if(result == null) {
+                        continue;
+                    }
+
                     param.Resultado = result.Resultado;
                     /*}*/
                     param.ResultadoId = result.Id.ToString();
@@ -360,7 +364,7 @@ namespace Service.MedicalRecord.Application
                 if (request.Solicitud.Parcialidad)
                 {
                     List<ClinicResults> toSendInfoLab = new List<ClinicResults> { request };
-                    var existingLabResultsPdf = toSendInfoLab.ToResults(true);
+                    var existingLabResultsPdf = toSendInfoLab.ToResults(true, true, true);
 
                     byte[] pdfBytes = await _pdfClient.GenerateLabResults(existingLabResultsPdf);
                     string namePdf = string.Concat(request.Solicitud.Clave, ".pdf");
@@ -399,7 +403,7 @@ namespace Service.MedicalRecord.Application
                             resultsTask.AddRange(finalResult);
                         }
 
-                        var existingLabResultsPdf = resultsTask.ToResults(true);
+                        var existingLabResultsPdf = resultsTask.ToResults(true, true, true);
 
                         byte[] pdfBytes = await _pdfClient.GenerateLabResults(existingLabResultsPdf);
                         string namePdf = string.Concat(request.Solicitud.Clave, ".pdf");
@@ -752,7 +756,7 @@ namespace Service.MedicalRecord.Application
             }
 
             var existingResultPathologyPdf = resultsTask.toInformationPdfResult(configuration.ImprimirLogos);
-            var existingLabResultPdf = labResultsTask.ToList().ToResults(configuration.ImprimirLogos);
+            var existingLabResultPdf = labResultsTask.ToList().ToResults(configuration.ImprimirLogos, configuration.ImprimirCriticos, configuration.ImprimirPrevios);
 
             byte[] pdfBytes = await _pdfClient.MergeResults(existingResultPathologyPdf, existingLabResultPdf);
 
@@ -776,17 +780,17 @@ namespace Service.MedicalRecord.Application
             if (Status.RequestStudy.Validado == status)
             {
                 existingStudy.FechaValidacion = DateTime.Now;
-                existingStudy.UsuarioCaptura = usuario.ToString();
+                existingStudy.UsuarioValidacion = usuario.ToString();
             }
             if (Status.RequestStudy.Liberado == status)
             {
                 existingStudy.FechaLiberado = DateTime.Now;
-                existingStudy.UsuarioCaptura = usuario.ToString();
+                existingStudy.UsuarioLiberado = usuario.ToString();
             }
             if (Status.RequestStudy.Enviado == status)
             {
                 existingStudy.FechaEnviado = DateTime.Now;
-                existingStudy.UsuarioCaptura = usuario.ToString();
+                existingStudy.UsuarioEnviado = usuario.ToString();
             }
 
 

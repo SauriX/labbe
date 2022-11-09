@@ -1,5 +1,4 @@
 ﻿using Integration.WeeClinic;
-using Integration.WeeClinic.Dtos;
 using Integration.WeeClinic.Models.Laboratorio_BusquedaFolioLaboratorio;
 using Integration.WeeClinic.Models.Laboratorio_BusquedaFolios;
 using Integration.WeeClinic.Models.Laboratorio_GetPreciosEstudios_ByidServicio;
@@ -11,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.MedicalRecord.Application.IApplication;
+using Service.MedicalRecord.Dtos.WeeClinic;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -53,16 +53,16 @@ namespace Service.MedicalRecord.Controllers
             return await LaboratoryService.GetPreciosEstudios_ByidServicio(serviceId, branch, "14");
         }
 
-        [HttpGet("Laboratorio_ValidarCodigoPacienteLaboratorio")]
-        public async Task<Laboratorio_ValidarCodigoPacienteLaboratorio> ValidarCodigoPacienteLaboratorio()
+        [HttpGet("Laboratorio_ValidarCodigoPacienteLaboratorio/{personId}/{actionCode}/{code}")]
+        public async Task<Laboratorio_ValidarCodigoPacienteLaboratorio> ValidarCodigoPacienteLaboratorio(string personId, string actionCode, string code)
         {
-            return await LaboratoryService.ValidarCodigoPacienteLaboratorio(null, null, null);
+            return await LaboratoryService.ValidarCodigoPacienteLaboratorio(personId, actionCode, code);
         }
 
-        [HttpGet("servicio5")]
-        public async Task<Laboratorio_ValidaToken> Laboratorio_ValidaToken()
+        [HttpGet("Laboratorio_ValidaToken/{personId}/{orderId}/{code}")]
+        public async Task<Laboratorio_ValidaToken> Laboratorio_ValidaToken(string personId, string orderId, string code)
         {
-            return await LaboratoryService.Laboratorio_ValidaToken(null, null, null, null);
+            return await LaboratoryService.Laboratorio_ValidaToken(personId, orderId, code, null);
         }
 
         [HttpGet("servicio6")]
