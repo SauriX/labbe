@@ -62,6 +62,7 @@ namespace Service.MedicalRecord.Controllers
         {
             results.First().UsuarioId = (Guid)HttpContext.Items["userId"];
             results.First().Usuario = HttpContext.Items["userName"].ToString();
+           /* results.First().UsuarioClave = HttpContext.Items["userName"].ToString();*/
             await _service.UpdateLabResults(results);
         }
 

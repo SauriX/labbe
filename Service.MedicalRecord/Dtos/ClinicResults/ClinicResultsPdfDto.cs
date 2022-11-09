@@ -10,5 +10,7 @@ namespace Service.MedicalRecord.Dtos.ClinicResults
         public List<ClinicResultsFormDto> CapturaResultados { get; set; }
         public ClinicResultsRequestDto SolicitudInfo { get; set; }
         public bool ImprimrLogos { get; set; }
+        public bool ImprimirCriticos { get; set; }
+        public bool ImprimirPrevios { get; set; }
     }
 }
