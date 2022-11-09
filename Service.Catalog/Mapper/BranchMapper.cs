@@ -22,8 +22,9 @@ namespace Service.Catalog.Mapper
                 ubicacion = x.Calle.Trim() + " " + x.NumeroExterior?.Trim() + ", " + x.Colonia?.Colonia?.Trim() + ", " + x.Colonia.Ciudad.Ciudad.Trim() + ", " + x.Colonia.Ciudad.Estado.Estado.Trim(),
                 clinico = "test",
                 activo = x.Activo,
-                codigoPostal = x.Codigopostal
-            });
+                codigoPostal = x.Codigopostal,
+                ciudad= x.Colonia.Ciudad.Ciudad.Trim()
+             });
         }
         public static Branch ToModel(this BranchFormDto dto)
         {
