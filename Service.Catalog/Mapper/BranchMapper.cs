@@ -11,7 +11,7 @@ namespace Service.Catalog.Mapper
         public static IEnumerable<BranchInfoDto> ToBranchListDto(this List<Branch> model)
         {
             if (model == null) return null;
-            return model.Select(x => new BranchInfoDto
+             return model.Select(x => new BranchInfoDto
             {
                 idSucursal = x.Id.ToString(),
                 clave = x.Clave,
@@ -19,7 +19,7 @@ namespace Service.Catalog.Mapper
                 correo = x.Correo,
                 telefono = x.Telefono,
                 //ubicacion = $"{x.Calle} {x.NumeroExterior} {x.Ciudad}",
-                ubicacion = x.Calle.Trim() + " " + x.NumeroExterior.Trim() + ", " + x.Colonia?.Colonia?.Trim() + ", " + x.Colonia.Ciudad.Ciudad.Trim() + ", " + x.Colonia.Ciudad.Estado.Estado.Trim(),
+                ubicacion = x.Calle.Trim() + " " + x.NumeroExterior?.Trim() + ", " + x.Colonia?.Colonia?.Trim() + ", " + x.Colonia.Ciudad.Ciudad.Trim() + ", " + x.Colonia.Ciudad.Estado.Estado.Trim(),
                 clinico = "test",
                 activo = x.Activo,
                 codigoPostal = x.Codigopostal

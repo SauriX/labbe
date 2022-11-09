@@ -142,7 +142,7 @@ namespace Integration.Pdf.Extensions
                 else if (!col.EsImagen)
                 {
                     var fp = paragraph.AddFormattedText(col.Texto ?? "", fontSize == 0 ? col.Fuente : new Font("Calibri", fontSize));
-                    fp.Bold = bold;
+                    fp.Bold = col.Fuente.Bold || bold;
                 }
                 else
                 {

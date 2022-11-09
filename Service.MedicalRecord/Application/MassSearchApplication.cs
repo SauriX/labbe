@@ -17,6 +17,14 @@ namespace Service.MedicalRecord.Application
         {
             _repository = repository;
         }
+
+        public async Task<List<RequestsInfoDto>> GetAllCaptureResults(DeliverResultsFilterDto search)
+        {
+
+            var requests = await _repository.GetAllCaptureResults(search);
+            return requests.ToDeliverResultInfoDto();
+        }
+
         public async Task<MassSearchInfoDto> GetByFilter(MassSearchFilterDto filter)
         {
             var request = await _repository.GetByFilter(filter);
