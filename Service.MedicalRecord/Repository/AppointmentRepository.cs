@@ -28,7 +28,9 @@ namespace Service.MedicalRecord.Repository
                 citasLab = citasLab.Where(x => x.NombrePaciente.Contains(search.nombre) || x.FechaCita.Date <= search.fecha[1].Date && x.FechaCreo.Date >= search.fecha[0].Date);
             }
 
-
+            if (search.expediente != null || !string.IsNullOrEmpty(search.expediente)) {
+                citasLab = citasLab.Where(x=> x.Expediente.Expediente==search.expediente);
+            }
             return await citasLab.ToListAsync();
         }
         public async Task<List<AppointmentDom>> GetAllDom(SearchAppointment search)
@@ -38,7 +40,10 @@ namespace Service.MedicalRecord.Repository
             {
                 citasDom = citasDom.Where(x => x.NombrePaciente.Contains(search.nombre) || x.FechaCita.Date <= search.fecha[1].Date && x.FechaCreo.Date >= search.fecha[0].Date);
             }
-
+            if (search.expediente != null || !string.IsNullOrEmpty(search.expediente))
+            {
+                citasDom = citasDom.Where(x => x.Expediente.Expediente == search.expediente);
+            }
             return await citasDom.ToListAsync();
         }
 
