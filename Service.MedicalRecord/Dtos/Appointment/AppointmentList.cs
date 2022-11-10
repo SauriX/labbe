@@ -15,5 +15,6 @@ namespace Service.MedicalRecord.Dtos.Appointment
         public int Tipo { get; set; }
         public string Estudios { get; set; }
         public string Contacto { get; set; }
+        public string Type { get; set; }
     }
 }
