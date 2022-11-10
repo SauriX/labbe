@@ -1,4 +1,5 @@
-﻿using Integration.WeeClinic.Models.Laboratorio_BusquedaFolioLaboratorio;
+﻿using Integration.WeeClinic.Dtos;
+using Integration.WeeClinic.Models.Laboratorio_BusquedaFolioLaboratorio;
 using Integration.WeeClinic.Models.Laboratorio_BusquedaFolios;
 using Integration.WeeClinic.Models.Laboratorio_GetPreciosEstudios_ByidServicio;
 using Service.MedicalRecord.Dtos.WeeClinic;
@@ -15,5 +16,6 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<WeeServicePricesDto> GetServicePrice(string serviceId, string branch);
         Task<WeeTokenValidationDto> OperateToken(string personId, string actionCode, string code = null);
         Task<WeeTokenVerificationDto> VerifyToken(string personId, string orderId, string code, string branch);
+        Task<List<WeeServiceAssignmentDto>> AssignServices(List<WeeServiceNodeDto> services, string branch);
     }
 }

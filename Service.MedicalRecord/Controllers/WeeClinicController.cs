@@ -65,17 +65,17 @@ namespace Service.MedicalRecord.Controllers
             return await LaboratoryService.Laboratorio_ValidaToken(personId, orderId, code, null);
         }
 
-        [HttpGet("servicio6")]
-        public async Task<string> Laboratorio_AsignaEstudio()
-        {
-            return await LaboratoryService.Laboratorio_AsignaEstudio();
-        }
+        //[HttpGet("servicio6")]
+        //public async Task<string> Laboratorio_AsignaEstudio()
+        //{
+        //    return await LaboratoryService.Laboratorio_AsignaEstudio();
+        //}
 
-        [HttpGet("servicio7")]
-        public async Task<string> Laboratorio_CancelaEstudios_ByProveedor()
-        {
-            return await LaboratoryService.Laboratorio_CancelaEstudios_ByProveedor();
-        }
+        //[HttpGet("servicio7")]
+        //public async Task<string> Laboratorio_CancelaEstudios_ByProveedor()
+        //{
+        //    return await LaboratoryService.Laboratorio_CancelaEstudios_ByProveedor();
+        //}
 
         [HttpPost("servicio8")]
         public async Task<string> UploadFileAzure(IFormFile file)

@@ -1,4 +1,5 @@
-﻿using Integration.WeeClinic.Models.Laboratorio_BusquedaFolioLaboratorio;
+﻿using Integration.WeeClinic.Dtos;
+using Integration.WeeClinic.Models.Laboratorio_BusquedaFolioLaboratorio;
 using Integration.WeeClinic.Models.Laboratorio_BusquedaFolios;
 using Integration.WeeClinic.Models.Laboratorio_GetPreciosEstudios_ByidServicio;
 using Integration.WeeClinic.Services;
@@ -45,9 +46,7 @@ namespace Service.MedicalRecord.Application
             var tempSt = services.First();
             data.FechaNacimiento = string.IsNullOrEmpty(tempSt.FechaNacimiento) ? null : DateTime.ParseExact(tempSt.FechaNacimiento, "dd/MM/yyyy", CultureInfo.InvariantCulture);
             data.Correo = tempSt.Correo_Paciente;
-            data.Telefono = string.IsNullOrEmpty(tempSt.Telefono_Paciente) ? null :
-              tempSt.Telefono_Paciente.Length != 10 ? tempSt.Telefono_Paciente :
-              Regex.Replace(tempSt.Telefono_Paciente, @"^(...)(...)(..)(..)$", "$1-$2-$3-$4");
+            data.Telefono = string.IsNullOrEmpty(tempSt.Telefono_Paciente) ? null : tempSt.Telefono_Paciente.Length != 10 ? tempSt.Telefono_Paciente : Regex.Replace(tempSt.Telefono_Paciente, @"^(...)(...)(..)(..)$", "$1-$2-$3-$4");
 
             data.Estudios = services.Select(x => new WeePatientInfoStudyDto
             {
@@ -152,6 +151,17 @@ namespace Service.MedicalRecord.Application
             };
 
             return validation;
+        }
+
+        public async Task<List<WeeServiceAssignmentDto>> AssignServices(List<WeeServiceNodeDto> services, string branch)
+        {
+            var response = await LaboratoryService.Laboratorio_AsignaEstudio(services, branch);
+
+            var data = response.Datos;
+
+            var assignments = data.ToWeeServiceAssignmentDto();
+
+            return assignments;
         }
     }
 }

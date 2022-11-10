@@ -214,8 +214,8 @@ namespace Service.MedicalRecord.Application
 
             requestDto.Clave = code;
             var newRequest = requestDto.ToModel();
-            newRequest.MedicoId = MEDICS.A_QUIEN_CORRESPONDA;
-            newRequest.CompañiaId = COMPANIES.PARTICULARES;
+            newRequest.MedicoId = null; //MEDICS.A_QUIEN_CORRESPONDA;
+            newRequest.CompañiaId = null; //COMPANIES.PARTICULARES;
             newRequest.CargoTipo = CANTIDAD;
             newRequest.CopagoTipo = CANTIDAD;
             newRequest.DescuentoTipo = CANTIDAD;
@@ -296,45 +296,6 @@ namespace Service.MedicalRecord.Application
             await _repository.Create(newRequest);
 
             return newRequest.Id.ToString();
-        }
-
-        public async Task<WeeTokenValidationDto> SendCompareToken(RequestTokenDto requestDto, string actionCode)
-        {
-            var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
-
-            if (request.FolioWeeClinic == null || request.IdPersona == null || request.IdOrden == null)
-            {
-                throw new CustomException(HttpStatusCode.BadRequest, "La solicitud no pertenece a WeeClinic");
-            }
-
-            var validation = await _weeService.OperateToken(request.IdPersona, actionCode, requestDto.Token);
-
-            return validation;
-        }
-
-        public async Task<WeeTokenVerificationDto> VerifyWeeToken(RequestTokenDto requestDto)
-        {
-            var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
-
-            if (request.FolioWeeClinic == null || request.IdPersona == null || request.IdOrden == null)
-            {
-                throw new CustomException(HttpStatusCode.BadRequest, "La solicitud no pertenece a WeeClinic");
-            }
-
-            var branch = await _branchRepository.GetOne(x => x.Id == request.SucursalId);
-
-            var validation = await _weeService.VerifyToken(request.IdPersona, request.IdOrden, requestDto.Token, branch?.Clave);
-
-            if (validation.Verificado)
-            {
-                request.TokenValidado = true;
-                request.UsuarioModificoId = requestDto.UsuarioId;
-                request.FechaModifico = DateTime.Now;
-
-                await _repository.Update(request);
-            }
-
-            return validation;
         }
 
         public async Task<string> Convert(RequestConvertDto requestDto)
@@ -902,6 +863,45 @@ namespace Service.MedicalRecord.Application
                 patCode != null && citCode == null ? patCode :
                 patCode == null && citCode != null ? citCode :
                 $"{patCode}, {citCode}";
+        }
+
+        public async Task<WeeTokenValidationDto> SendCompareToken(RequestTokenDto requestDto, string actionCode)
+        {
+            var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
+
+            if (request.FolioWeeClinic == null || request.IdPersona == null || request.IdOrden == null)
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "La solicitud no pertenece a WeeClinic");
+            }
+
+            var validation = await _weeService.OperateToken(request.IdPersona, actionCode, requestDto.Token);
+
+            return validation;
+        }
+
+        public async Task<WeeTokenVerificationDto> VerifyWeeToken(RequestTokenDto requestDto)
+        {
+            var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
+
+            if (request.FolioWeeClinic == null || request.IdPersona == null || request.IdOrden == null)
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "La solicitud no pertenece a WeeClinic");
+            }
+
+            var branch = await _branchRepository.GetOne(x => x.Id == request.SucursalId);
+
+            var validation = await _weeService.VerifyToken(request.IdPersona, request.IdOrden, requestDto.Token, branch?.Clave);
+
+            if (validation.Verificado)
+            {
+                request.TokenValidado = true;
+                request.UsuarioModificoId = requestDto.UsuarioId;
+                request.FechaModifico = DateTime.Now;
+
+                await _repository.Update(request);
+            }
+
+            return validation;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Integration.WeeClinic.Models.Laboratorio_BusquedaFolioLaboratorio;
+﻿using Integration.WeeClinic.Models.Laboratorio_AsignaEstudio;
+using Integration.WeeClinic.Models.Laboratorio_BusquedaFolioLaboratorio;
 using Integration.WeeClinic.Models.Laboratorio_BusquedaFolios;
 using Integration.WeeClinic.Models.Laboratorio_GetPreciosEstudios_ByidServicio;
 using MassTransit;
@@ -90,6 +91,16 @@ namespace Service.MedicalRecord.Mapper
                     Total = insurance.TotalAseguradora
                 }
             };
+        }
+
+        public static List<WeeServiceAssignmentDto> ToWeeServiceAssignmentDto(this List<Laboratorio_AsignaEstudio_0> weeData)
+        {
+            return weeData.Select(x => new WeeServiceAssignmentDto
+            {
+                IdServicio = x.IdServicio,
+                Estatus = x.Estatus,
+                Mensaje = x.Mensaje
+            }).ToList();
         }
     }
 }
