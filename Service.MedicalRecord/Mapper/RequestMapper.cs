@@ -10,7 +10,7 @@ namespace Service.MedicalRecord.Mapper
 {
     public static class RequestMapper
     {
-        private const byte VIGENTE = 1;
+        private const byte VIGENTE   = 1;
         private const byte PARTICULAR = 2;
         private const byte URGENCIA_NORMAL = 1;
         //private const byte DESCUENTO_PORCENTAJE = 1;

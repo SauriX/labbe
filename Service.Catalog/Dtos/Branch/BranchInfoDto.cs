@@ -11,5 +11,6 @@
         public string clinico { get; set; }
         public bool activo { get; set; }
         public string codigoPostal { get; set; }
+        public string? ciudad { get; set; }
     }
 }
