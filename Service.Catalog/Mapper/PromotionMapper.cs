@@ -18,7 +18,7 @@ namespace Service.Catalog.Mapper
                 Id = model.Id,
                 Clave = model.Clave,
                 Nombre = model.Nombre,
-                Periodo = $"{model.FechaInicio.ToShortDateString()}---{model.FechaInicio.Date.ToShortDateString()}",
+                Periodo = $"{model.FechaInicio.ToShortDateString()}---{model.FechaFinal.Date.ToShortDateString()}",
                 NombreListaPrecio = listaDeprecios,
                 Activo = model.Activo,
             };
@@ -33,7 +33,7 @@ namespace Service.Catalog.Mapper
                 Id = x.Id,
                 Clave = x.Clave,
                 Nombre = x.Nombre,
-                Periodo = $"{x.FechaInicio.ToShortDateString()}---{x.FechaInicio.Date.ToShortDateString()}",
+                Periodo = $"{x.FechaInicio.ToShortDateString()}---{x.FechaFinal.Date.ToShortDateString()}",
                 NombreListaPrecio = x?.prices?.AsQueryable()?.Where(x => x.Activo == true)?.FirstOrDefault()?.PrecioLista.Nombre,
                 Activo = x.Activo,
             });
