@@ -1,4 +1,5 @@
-﻿using Service.MedicalRecord.Dtos.Request;
+﻿using Integration.WeeClinic.Dtos;
+using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.WeeClinic;
 using System;
 using System.Collections.Generic;
@@ -36,5 +37,6 @@ namespace Service.MedicalRecord.Application.IApplication
         Task DeleteImage(Guid recordId, Guid requestId, string code);
         Task<WeeTokenValidationDto> SendCompareToken(RequestTokenDto requestDto, string actionCode);
         Task<WeeTokenVerificationDto> VerifyWeeToken(RequestTokenDto requestDto);
+        Task<List<WeeServiceAssignmentDto>> AssignServices(Guid recordId, Guid requestId, Guid userId);
     }
 }
