@@ -8,5 +8,7 @@ namespace Service.MedicalRecord.Dtos.Appointment
         public string nombre { get; set; }
 
         public string tipo { get; set; }
+
+        public string expediente { get; set; }
     }
 }
