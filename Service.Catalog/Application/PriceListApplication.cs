@@ -265,12 +265,25 @@ namespace Service.Catalog.Application
             template.AddVariable("Titulo", "Lista de Precios");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
             template.AddVariable("Precios", price);
-            template.AddVariable("Estudios", price.Estudios.Concat(price.Paquete));
+            template.AddVariable("Estudios", price.Estudios);
+            template.AddVariable("Paquetes", price.Paquete);
             template.AddVariable("Sucursales", price.Sucursales);
-            template.AddVariable("Medicos", price.Medicos);
             template.AddVariable("Compañias", price.Compañia);
             template.Generate();
+            var range = template.Workbook.Worksheet("Estudios").Range("Estudios");
+            var table = template.Workbook.Worksheet("Estudios").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
+            table.Theme = XLTableTheme.TableStyleMedium2;
 
+            var rangep = template.Workbook.Worksheet("Paquetes").Range("Paquetes");
+            var tablep = template.Workbook.Worksheet("Paquetes").Range("$A$3:" + rangep.RangeAddress.LastAddress).CreateTable();
+            tablep.Theme = XLTableTheme.TableStyleMedium2;
+
+            var ranges = template.Workbook.Worksheet("Sucursales").Range("Sucursales");
+            var tables = template.Workbook.Worksheet("Sucursales").Range("$A$3:" + ranges.RangeAddress.LastAddress).CreateTable();
+            tables.Theme = XLTableTheme.TableStyleMedium2;
+            var rangec = template.Workbook.Worksheet("Compañias").Range("Compañias");
+            var tablec = template.Workbook.Worksheet("Compañias").Range("$A$3:" + rangec.RangeAddress.LastAddress).CreateTable();
+            tablec.Theme = XLTableTheme.TableStyleMedium2;
             template.Format();
 
             return (template.ToByteArray(), $"Catálogo de lista de Precios ({price.Clave}).xlsx");
