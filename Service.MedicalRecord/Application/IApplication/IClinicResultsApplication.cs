@@ -2,6 +2,7 @@
 using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Dtos;
 using Service.MedicalRecord.Dtos.ClinicResults;
+using Service.MedicalRecord.Dtos.MassSearch;
 using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.RequestedStudy;
 using System;
@@ -19,6 +20,7 @@ namespace Service.MedicalRecord.Application.IApplication
         Task UpdateLabResults(List<ClinicResultsFormDto> results);
         Task SaveResultPathologicalStudy(ClinicalResultPathologicalFormDto search);
         Task UpdateResultPathologicalStudy(ClinicalResultPathologicalFormDto search);
+        Task SendResultFile(DeliverResultsStudiesDto estudios);
         Task UpdateStatusStudy(int RequestStudyId, byte status, string idUsuario);
         Task<ClinicResultsPathologicalInfoDto> GetResultPathological(int RequestStudyId);
         /*Task<ClinicResults> GetLaboratoryResults(int RequestStudyId);*/
