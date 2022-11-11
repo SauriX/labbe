@@ -8,5 +8,6 @@ namespace Integration.WeeClinic.Models.Laboratorio_ValidaToken
 {
     public class Laboratorio_ValidaToken
     {
+        public List<Laboratorio_ValidaToken_0> Datos { get; set; }
     }
 }

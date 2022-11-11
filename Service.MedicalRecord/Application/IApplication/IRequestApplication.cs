@@ -1,4 +1,5 @@
 ﻿using Service.MedicalRecord.Dtos.Request;
+using Service.MedicalRecord.Dtos.WeeClinic;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -33,5 +34,7 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<byte[]> PrintTags(Guid recordId, Guid requestId, List<RequestTagDto> tags);
         Task<string> SaveImage(RequestImageDto requestDto);
         Task DeleteImage(Guid recordId, Guid requestId, string code);
+        Task<WeeTokenValidationDto> SendCompareToken(RequestTokenDto requestDto, string actionCode);
+        Task<WeeTokenVerificationDto> VerifyWeeToken(RequestTokenDto requestDto);
     }
 }

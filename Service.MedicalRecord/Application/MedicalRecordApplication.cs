@@ -80,7 +80,7 @@ namespace Service.MedicalRecord.Application
 
             var consecutive = RequestCodes.GetCode(codeRange, lastCode);
             var code = $"{consecutive}{date}";
-                
+            newprice.Expediente = code;   
             await _repository.Create(newprice, expediente.TaxData);
 
             newprice = await _repository.GetById(newprice.Id);

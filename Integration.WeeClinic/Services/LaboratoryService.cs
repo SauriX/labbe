@@ -1,4 +1,6 @@
-﻿using Integration.WeeClinic.Extensions;
+﻿using Integration.WeeClinic.Dtos;
+using Integration.WeeClinic.Extensions;
+using Integration.WeeClinic.Models.Laboratorio_AsignaEstudio;
 using Integration.WeeClinic.Models.Laboratorio_BusquedaFolioLaboratorio;
 using Integration.WeeClinic.Models.Laboratorio_BusquedaFolios;
 using Integration.WeeClinic.Models.Laboratorio_GetPreciosEstudios_ByidServicio;
@@ -94,9 +96,9 @@ namespace Integration.WeeClinic.Services
 
             response.ValidateNotEmpty("Datos", "Datos1");
 
-            var folios = response.Transform<Laboratorio_BusquedaFolioLaboratorio>();
+            var services = response.Transform<Laboratorio_BusquedaFolioLaboratorio>();
 
-            return folios;
+            return services;
         }
 
         // Servicio 3. Consulta de precios por estudio
@@ -137,9 +139,11 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            var folios = response.Transform<Laboratorio_ValidarCodigoPacienteLaboratorio>();
+            response.ValidateNotEmpty("Datos");
 
-            return folios;
+            var validation = response.Transform<Laboratorio_ValidarCodigoPacienteLaboratorio>();
+
+            return validation;
         }
 
         // Servicio 5. Validación de Token
@@ -157,29 +161,37 @@ namespace Integration.WeeClinic.Services
 
             var response = await PostService<string>(url, data);
 
-            var folios = response.Transform<Laboratorio_ValidaToken>();
+            response.ValidateNotEmpty("Datos");
 
-            return folios;
+            var verification = response.Transform<Laboratorio_ValidaToken>();
+
+            return verification;
         }
 
         // Servicio 6. Asignación de estudios
-        public static async Task<string> Laboratorio_AsignaEstudio()
+        public static async Task<Laboratorio_AsignaEstudio> Laboratorio_AsignaEstudio(List<WeeServiceNodeDto> services, string branch)
         {
             var url = "api/Laboratorio/Laboratorio_AsignaEstudio";
 
+            var servicesData = string.Join("|", services.Select(x => string.Concat(x.IdServicio, ",", x.IdNodo, ",0,0")));
+
             var data = new Dictionary<string, string>()
             {
-                ["Servicios"] = "35caf363-e8d4-430e-b22e-1f8d005fb4dd,00000000-0000-0000-0000-000000000000,0,0|",
-                ["ClaveSucursal"] = "MT"
+                ["Servicios"] = servicesData,
+                ["ClaveSucursal"] = branch
             };
 
             var response = await PostService<string>(url, data);
 
-            return "";
+            response.ValidateNotEmpty("Datos");
+
+            var results = response.Transform<Laboratorio_AsignaEstudio>();
+
+            return results;
         }
 
         // Servicio 7. Cancelación de estudio
-        public static async Task<string> Laboratorio_CancelaEstudios_ByProveedor()
+        public static async Task<string> Laboratorio_CancelaEstudios_ByProveedor(string serviceId, string nodeId, string branch)
         {
             var url = "api/Laboratorio/Laboratorio_CancelaEstudios_ByProveedor";
 
