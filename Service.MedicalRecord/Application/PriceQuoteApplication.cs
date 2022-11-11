@@ -30,6 +30,7 @@ namespace Service.MedicalRecord.Application
         private readonly ISendEndpointProvider _sendEndpointProvider;
         private readonly IRabbitMQSettings _rabbitMQSettings;
         private readonly IQueueNames _queueNames;
+
         public PriceQuoteApplication(IPriceQuoteRepository repository, ICatalogClient catalogClient, IPdfClient pdfClient, ISendEndpointProvider sendEndpointProvider,
            IRabbitMQSettings rabbitMQSettings, IQueueNames queueNames )
         {
@@ -40,12 +41,14 @@ namespace Service.MedicalRecord.Application
             _rabbitMQSettings = rabbitMQSettings;
             _queueNames = queueNames;
         }
-        public async Task<List<PriceQuoteListDto>> GetNow(PriceQuoteSearchDto search)
+
+        public async Task<List<PriceQuoteListDto>> GetByFilter(PriceQuoteFilterDto filter)
         {
-            var expedientes = await _repository.GetNow(search);
+            var expedientes = await _repository.GetByFilter(filter);
 
             return expedientes.ToPriceQuoteListDto();
         }
+
         public async Task<List<PriceQuoteListDto>> GetActive()
         {
             var expedientes = await _repository.GetActive();
@@ -59,6 +62,7 @@ namespace Service.MedicalRecord.Application
 
             return expediente.ToPriceQuoteFormDto();
         }
+
         public async Task<PriceQuoteListDto> Create(PriceQuoteFormDto priceQuote)
         {
             if (!string.IsNullOrEmpty(priceQuote.Id))
@@ -78,6 +82,7 @@ namespace Service.MedicalRecord.Application
 
             return newprice.ToPriceQuoteListDto();
         }
+
         public async Task<PriceQuoteListDto> Update(PriceQuoteFormDto expediente)
         {
             // Helpers.ValidateGuid(parameter.Id, out Guid guid);
@@ -104,19 +109,21 @@ namespace Service.MedicalRecord.Application
 
             return updatedPack.ToPriceQuoteListDto();
         }
+
         public async Task<List<MedicalRecordsListDto>> GetMedicalRecord(PriceQuoteExpedienteSearch search)
         {
             var record = await _repository.GetMedicalRecord(search);
             return record.ToMedicalRecordsListDto();
         }
+
         public async Task<byte[]> GetTicket()
         {
             return await _pdfClient.GenerateTicket(new Dtos.Request.RequestOrderDto());
         }
 
-        public async Task<(byte[] file, string fileName)> ExportList(PriceQuoteSearchDto search)
+        public async Task<(byte[] file, string fileName)> ExportList(PriceQuoteFilterDto search)
         {
-            var studys = await GetNow(search);
+            var studys = await GetByFilter(search);
 
             var path = Assets.CotizacionList;
 

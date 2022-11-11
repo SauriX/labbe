@@ -1,15 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Service.MedicalRecord.Dtos.PriceQuote
 {
-    public class PriceQuoteSearchDto
+    public class PriceQuoteFilterDto
     {
-        public string Presupuesto { get; set; }
-        public bool Activo { get; set; }
-        public string Telefono { get; set; }
-        public DateTime FechaAlta { get; set; }
-        public string Ciudad { get; set; }
-        public string Sucursal { get; set; }
-        public string Email { get; set; }
+        public DateTime? FechaAInicial { get; set; }
+        public DateTime? FechaAFinal { get; set; }
+        public List<string> Sucursales { get; set; }
+        public string CorreoTelefono { get; set; }
+        public DateTime? FechaNInicial { get; set; }
+        public DateTime? FechaNFinal { get; set; }
+        public string Expediente { get; set; }
     }
 }
