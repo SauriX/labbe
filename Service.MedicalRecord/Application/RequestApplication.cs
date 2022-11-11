@@ -822,7 +822,7 @@ namespace Service.MedicalRecord.Application
             return validation;
         }
 
-        public async Task<List<WeeServiceAssignmentDto>> AssignServices(Guid recordId, Guid requestId, Guid userId)
+        public async Task<List<WeeServiceAssignmentDto>> AssignWeeServices(Guid recordId, Guid requestId, Guid userId)
         {
             var request = await GetExistingRequest(recordId, requestId);
 
@@ -849,7 +849,6 @@ namespace Service.MedicalRecord.Application
             }
 
             return results;
-
         }
 
         private static async Task<string> SaveImageGetPath(RequestImageDto requestDto, string fileName = null)

@@ -280,11 +280,11 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPut("wee/assignServices/{recordId}/{requestId}")]
         [Authorize(Policies.Update)]
-        public async Task<List<WeeServiceAssignmentDto>> VerifyWeeToken(Guid recordId, Guid requestId)
+        public async Task<List<WeeServiceAssignmentDto>> AssignWeeServices(Guid recordId, Guid requestId)
         {
             var userId = (Guid)HttpContext.Items["userId"];
 
-            return await _service.AssignServices(recordId, requestId, userId);
+            return await _service.AssignWeeServices(recordId, requestId, userId);
         }
     }
 }
