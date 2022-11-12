@@ -89,7 +89,10 @@ namespace Service.MedicalRecord.Repository
             {
                 requests = requests.Where(x => x.Estudios.Any(y => filter.Departamentos.Contains(y.DepartamentoId)));
             }
-
+            if (filter.Expediente != null)
+            {
+                requests = requests.Where(x => x.Expediente.Expediente == filter.Expediente);
+            }
             return await requests.ToListAsync();
         }
 

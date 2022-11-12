@@ -60,6 +60,7 @@ namespace Service.MedicalRecord.Mapper
                 Tipo = x.Status,
                 Expediente = x.Expediente.Expediente,
                 Estudios = x.Estudios.Count()>0?x.Estudios.First().Clave:"",
+                Type = "laboratorio",
             }).ToList();
         }
 
@@ -76,7 +77,8 @@ namespace Service.MedicalRecord.Mapper
                 Nombre = x.NombrePaciente,
                 Tipo = x.Status,
                 Sexo = x.Genero,
-                Expediente = x.Expediente.Expediente
+                Expediente = x.Expediente.Expediente,
+                Type  = "domicilio"
             }).ToList();
         }
 

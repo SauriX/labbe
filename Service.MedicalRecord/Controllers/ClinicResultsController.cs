@@ -5,6 +5,7 @@ using Service.MedicalRecord.Domain;
 using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Dtos;
 using Service.MedicalRecord.Dtos.ClinicResults;
+using Service.MedicalRecord.Dtos.MassSearch;
 using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.RequestedStudy;
 using Shared.Dictionary;
@@ -87,6 +88,15 @@ namespace Service.MedicalRecord.Controllers
             result.Usuario = HttpContext.Items["userName"].ToString();
             await _service.UpdateResultPathologicalStudy(result);
         }
+        [HttpPut("sendResultFile")]
+        [Authorize(Policies.Update)]
+        public async Task SendResultFile([FromForm] DeliverResultsStudiesDto estudios)
+        {
+            estudios.UsuarioId = (Guid)HttpContext.Items["userId"];
+            estudios.Usuario = HttpContext.Items["userName"].ToString();
+            await _service.SendResultFile(estudios);
+        }
+
 
         [HttpPost("getPathological")]
         [Authorize(Policies.Access)]
