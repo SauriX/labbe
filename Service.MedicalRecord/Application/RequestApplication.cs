@@ -836,16 +836,29 @@ namespace Service.MedicalRecord.Application
 
             var services = studies.Select(x => new WeeServiceNodeDto(x.EstudioWeeClinic.IdServicio, x.EstudioWeeClinic.IdNodo)).ToList();
 
-            var results = await _weeService.AssignServices(services, branch.Clave);
+            var assignments = await _weeService.AssignServices(services, branch.Clave);
 
-            foreach (var result in results)
+            var results = new List<WeeServiceAssignmentDto>();
+
+            foreach (var assignment in assignments)
             {
-                var study = studies.FirstOrDefault(x => x.EstudioWeeClinic.IdServicio == result.IdServicio);
+                var servicesIds = assignment.IdServicio.Split("|").Select(x => x.Split(",").FirstOrDefault());
 
-                if (study == null) continue;
+                foreach (var serviceId in servicesIds)
+                {
+                    var study = studies.FirstOrDefault(x => x.EstudioWeeClinic.IdServicio == serviceId);
 
-                result.Clave = study.Clave;
-                result.Nombre = study.Nombre;
+                    if (study == null) continue;
+
+                    results.Add(new WeeServiceAssignmentDto
+                    {
+                        IdServicio = serviceId,
+                        Estatus = assignment.Estatus,
+                        Mensaje = assignment.Mensaje,
+                        Clave = study.Clave,
+                        Nombre = study.Nombre
+                    });
+                }
             }
 
             return results;
