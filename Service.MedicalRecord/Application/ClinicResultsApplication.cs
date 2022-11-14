@@ -396,45 +396,6 @@ namespace Service.MedicalRecord.Application
 
                     if (existingRequest.Estudios.All(estudio => estudio.EstatusId == Status.RequestStudy.Liberado))
                     {
-                        //List<int> labResults = existingRequest.Estudios.Where(x => x.DepartamentoId != SharedDepartment.PATOLOGIA).Select(x => x.Id).ToList();
-                        //List<ClinicResults> resultsTask = new List<ClinicResults>();
-
-                        //foreach (var resultPath in labResults)
-                        //{
-                        //    var finalResult = await _repository.GetLabResultsById(resultPath);
-                        //    resultsTask.AddRange(finalResult);
-                        //}
-
-                        //var existingLabResultsPdf = resultsTask.ToResults(true, true, true);
-
-                        //byte[] pdfBytes = await _pdfClient.GenerateLabResults(existingLabResultsPdf);
-                        //string namePdf = string.Concat(request.Solicitud.Clave, ".pdf");
-                        //string pathPdf = await SaveResulstPdfPath(pdfBytes, namePdf);
-
-                        //var pathName = Path.Combine(MedicalRecordPath, pathPdf.Replace("wwwroot/", "")).Replace("\\", "/");
-
-                        //var files = new List<SenderFiles>()
-                        //    {
-                        //    new SenderFiles(new Uri(pathName), namePdf)
-                        //    };
-
-                        //try
-                        //{
-                        //    await SendTestWhatsapp(files, request.Solicitud.Expediente.Celular, userId);
-                        //    await SendTestEmail(files, request.Solicitud.Expediente.Correo, userId);
-                        //    foreach (var estudio in existingRequest.Estudios)
-                        //    {
-                        //        if (estudio.DepartamentoId != SharedDepartment.PATOLOGIA)
-                        //        {
-                        //            await UpdateStatusStudy(request.SolicitudEstudioId, Status.RequestStudy.Enviado, user);
-                        //        }
-                        //    }
-                        //}
-                        //catch (Exception ex)
-                        //{
-                        //    await UpdateStatusStudy(request.SolicitudEstudioId, request.SolicitudEstudio.EstatusId, user);
-                        //    throw new Exception("Error");
-                        //}
                         await SendResultsFiles(request.SolicitudId, userId, user);
                     }
                 }
@@ -602,72 +563,6 @@ namespace Service.MedicalRecord.Application
 
                     if (existingRequest.Estudios.All(estudio => estudio.EstatusId == Status.RequestStudy.Liberado))
                     {
-                        //List<int> pathologicalResults = existingRequest.Estudios
-                        //    .Where(x => x.AreaId == Catalogs.Area.HISTOPATOLOGIA)
-                        //    .Select(x => x.Id)
-                        //    .ToList();
-
-                        ////var tasks = pathologicalResults.Select(x => _repository.GetResultPathologicalById(x));
-
-                        //List<ClinicalResultsPathological> resultsTask = new List<ClinicalResultsPathological>();
-
-                        //foreach (var resultPathId in pathologicalResults)
-                        //{
-                        //    var finalResult = await _repository.GetResultPathologicalById(resultPathId);
-
-                        //    resultsTask.Add(finalResult);
-                        //}
-
-                        //var files = new List<SenderFiles>();
-
-                        //foreach (var resultTask in resultsTask)
-                        //{
-                        //    List<ClinicalResultsPathological> resultsTaskUnique = new List<ClinicalResultsPathological>();
-
-                        //    resultsTaskUnique.Add(resultTask);
-
-                        //    var existingResultPathologyPdf = resultsTaskUnique.toInformationPdfResult(true);
-
-                        //    byte[] pdfBytes = await _pdfClient.GeneratePathologicalResults(existingResultPathologyPdf);
-
-                        //    string namePdf = string.Concat(existing.Solicitud.Clave, "-", resultTask.SolicitudEstudio.Id, "-", resultTask.SolicitudEstudio.Clave, ".pdf");
-
-                        //    string pathPdf = await SavePdfGetPath(pdfBytes, namePdf);
-
-                        //    var pathName = Path.Combine(MedicalRecordPath, pathPdf.Replace("wwwroot/", "")).Replace("\\", "/");
-
-                        //    files.Add(new SenderFiles(new Uri(pathName), namePdf));
-                        //}
-
-                        ////var files = new List<SenderFiles>()
-                        ////{
-                        ////    new SenderFiles(new Uri(pathName), namePdf)
-                        ////};
-
-
-                        //try
-                        //{
-
-                        //    await SendTestWhatsapp(files, existing.Solicitud.Expediente.Celular, result.UsuarioId);
-
-                        //    await SendTestEmail(files, existing.Solicitud.Expediente.Correo, result.UsuarioId);
-
-                        //    foreach (var estudio in existingRequest.Estudios)
-                        //    {
-                        //        if (estudio.AreaId == Catalogs.Area.HISTOPATOLOGIA)
-                        //        {
-                        //            await UpdateStatusStudy(estudio.Id, Status.RequestStudy.Enviado, result.Usuario);
-
-                        //        }
-                        //    }
-                        //}
-                        //catch (Exception ex)
-                        //{
-                        //    await UpdateStatusStudy(result.EstudioId, result.Estatus, result.Usuario);
-                        //    throw new Exception("c");
-                        //}
-                        //funcionDanielPdf();
-                        //funcionVictorPdf();
                         await SendResultsFiles(existing.SolicitudId, result.UsuarioId, result.Usuario);
                     }
 
