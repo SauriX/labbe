@@ -892,7 +892,7 @@ namespace Service.MedicalRecord.Application
             var branch = await _branchRepository.GetOne(x => x.Id == requestDto.SucursalId);
             var lastCode = await _repository.GetLastCode(requestDto.SucursalId, date);
 
-            var consecutive = RequestCodes.GetCode(branch.Clinicos, lastCode);
+            var consecutive = Codes.GetCode(branch.Clinicos, lastCode);
             var code = $"{consecutive}{date}";
             return code;
         }
@@ -919,7 +919,7 @@ namespace Service.MedicalRecord.Application
             if (isCitologic && citCode == null)
             {
                 var lastCode = await _repository.GetLastPathologicalCode(request.SucursalId, date, "C");
-                citCode = RequestCodes.GetPathologicalCode("C", lastCode);
+                citCode = Codes.GetPathologicalCode("C", lastCode);
             }
             else if (!isCitologic)
             {
@@ -928,7 +928,7 @@ namespace Service.MedicalRecord.Application
             if (isPathologic && patCode == null)
             {
                 var lastCode = await _repository.GetLastPathologicalCode(request.SucursalId, date, "LR");
-                patCode = RequestCodes.GetPathologicalCode("LR", lastCode);
+                patCode = Codes.GetPathologicalCode("LR", lastCode);
             }
             else if (!isPathologic)
             {

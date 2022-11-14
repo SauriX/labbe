@@ -17,7 +17,7 @@ namespace Service.MedicalRecord.Application.IApplication
         //Task SendTestEmail(PriceQuoteSendDto priceQuoteDto);
         //Task SendTestWhatsapp(PriceQuoteSendDto priceQuoteDto);
         //Task<byte[]> PrinPriceQuote(Guid id);
-        ////Task<(byte[] file, string fileName)> ExportList(PriceQuoteFilterDto search);
-        ////Task<(byte[] file, string fileName)> ExportForm(Guid id);
+        //Task<(byte[] file, string fileName)> ExportList(PriceQuoteFilterDto search);
+        //Task<(byte[] file, string fileName)> ExportForm(Guid id);
     }
 }

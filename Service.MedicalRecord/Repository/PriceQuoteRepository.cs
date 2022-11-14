@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MoreLinq;
 using Service.MedicalRecord.Context;
 using Service.MedicalRecord.Domain.PriceQuote;
+using Service.MedicalRecord.Domain.PriceQuote;
 using Service.MedicalRecord.Dtos.PriceQuote;
 using Service.MedicalRecord.Repository.IRepository;
 using System;
@@ -97,6 +98,35 @@ namespace Service.MedicalRecord.Repository
             return priceQuote?.Clave;
         }
 
+        public async Task<List<PriceQuoteStudy>> GetStudyById(Guid priceQuoteId, IEnumerable<int> studiesIds)
+        {
+            var studies = await _context.Relacion_Cotizacion_Estudio
+                //.Where(x => x.CotizacionId == priceQuoteId && studiesIds.Contains(x.Id))
+                .ToListAsync();
+
+            return studies;
+        }
+
+        public async Task<List<PriceQuoteStudy>> GetStudiesByPriceQuote(Guid priceQuoteId)
+        {
+            var studies = await _context.Relacion_Cotizacion_Estudio
+                .Include(x => x.Paquete)
+                .Where(x => x.CotizacionId == priceQuoteId && x.PaqueteId == null)
+                .ToListAsync();
+
+            return studies;
+        }
+
+        public async Task<List<PriceQuotePack>> GetPacksByPriceQuote(Guid priceQuoteId)
+        {
+            //var studies = await _context.Relacion_Cotizacion_Estudio
+            //    .Include(x => x.Estudios).ThenInclude(x => x.Estatus)
+            //    .Where(x => x.SolicitudId == priceQuoteId)
+            //    .ToListAsync();
+
+            return new List<PriceQuotePack>();
+        }
+
         public async Task Create(PriceQuote priceQuote)
         {
             _context.CAT_Cotizaciones.Add(priceQuote);
@@ -109,6 +139,26 @@ namespace Service.MedicalRecord.Repository
             _context.CAT_Cotizaciones.Update(expediente);
 
             await _context.SaveChangesAsync();
+        }
+
+        public Task BulkUpdatePacks(Guid priceQuoteId, List<PriceQuotePack> studies)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task BulkUpdateDeletePacks(Guid priceQuoteId, List<PriceQuotePack> studies)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task BulkUpdateStudies(Guid priceQuoteId, List<PriceQuoteStudy> studies)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task BulkUpdateDeleteStudies(Guid priceQuoteId, List<PriceQuoteStudy> studies)
+        {
+            throw new NotImplementedException();
         }
     }
 }

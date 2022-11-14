@@ -50,7 +50,7 @@ namespace Service.MedicalRecord.Repository
         public async Task<AppointmentLab> GetByIdLab(string id) {
 
             var citas= await _context.CAT_Cita_Lab.Include(x=>x.Expediente).FirstOrDefaultAsync(x => x.Id == Guid.Parse(id));
-            var estudios = await _context.cotizacionStudies.Where(x => x.CotizacionId == citas.Id).ToListAsync();
+            var estudios = await _context.Relacion_Cotizacion_Estudio.Where(x => x.CotizacionId == citas.Id).ToListAsync();
 
 
 
@@ -62,7 +62,7 @@ namespace Service.MedicalRecord.Repository
         {
 
             var citas = await _context.CAT_Cita_Dom.Include(x => x.Expediente).FirstOrDefaultAsync(x => x.Id == Guid.Parse(id));
-            var estudios =await  _context.cotizacionStudies.Where(x => x.CotizacionId == citas.Id).ToListAsync();
+            var estudios =await  _context.Relacion_Cotizacion_Estudio.Where(x => x.CotizacionId == citas.Id).ToListAsync();
             citas.Estudios = estudios;
             return citas;
         }

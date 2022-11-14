@@ -32,5 +32,26 @@ namespace Service.MedicalRecord.Mapper
                 }) ?? new List<PriceQuoteStudyInfoDto>()
             });
         }
+
+        public static PriceQuoteDto ToPriceQuoteDto(this PriceQuote model)
+        {
+            if (model == null) return null;
+
+            return new PriceQuoteDto();
+        }
+
+        public static PriceQuoteGeneralDto ToPriceQuoteGeneralDto(this PriceQuote model)
+        {
+            if (model == null) return null;
+
+            return new PriceQuoteGeneralDto();
+        }
+
+        public static PriceQuote ToModel(this PriceQuoteDto model)
+        {
+            if (model == null) return null;
+
+            return new PriceQuote();
+        }
     }
 }

@@ -1,7 +1,10 @@
-﻿namespace Service.MedicalRecord.Dtos.PriceQuote
+﻿using System;
+
+namespace Service.MedicalRecord.Dtos.PriceQuote
 {
     public class PriceQuoteGeneralDto
     {
+        public Guid CotizacionId { get; set; }
         public string Procedencia { get; set; }
         public string Compañia { get; set; }
         public string Medico { get; set; }

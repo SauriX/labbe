@@ -31,5 +31,12 @@
             public const byte Cancelado = 3;
             public const byte FacturaCancelada = 4;
         }
+
+        public class PriceQuote
+        {
+            public const byte Vigente = 1;
+            public const byte Vencido = 2;
+            public const byte Cancelado = 3;
+        }
     }
 }
