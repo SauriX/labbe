@@ -13,14 +13,14 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task<List<PriceQuote>> GetActive();
         Task<PriceQuote> GetById(Guid id);
         Task<string> GetLastCode(Guid branchId, string date);
-        Task<List<PriceQuoteStudy>> GetStudyById(Guid priceQuoteId, IEnumerable<int> studiesIds);
-        Task<List<PriceQuoteStudy>> GetStudiesByPriceQuote(Guid priceQuoteId);
+        //Task<List<PriceQuoteStudy>> GetStudyById(Guid priceQuoteId, IEnumerable<int> studiesIds);
+        //Task<List<PriceQuoteStudy>> GetStudiesByPriceQuote(Guid priceQuoteId);
         Task<List<PriceQuotePack>> GetPacksByPriceQuote(Guid priceQuoteId);
         Task Create(PriceQuote priceQuote);
         Task Update(PriceQuote priceQuote);
         Task BulkUpdatePacks(Guid priceQuoteId, List<PriceQuotePack> studies);
         Task BulkUpdateDeletePacks(Guid priceQuoteId, List<PriceQuotePack> studies);
-        Task BulkUpdateStudies(Guid priceQuoteId, List<PriceQuoteStudy> studies);
-        Task BulkUpdateDeleteStudies(Guid priceQuoteId, List<PriceQuoteStudy> studies);
+        //Task BulkUpdateStudies(Guid priceQuoteId, List<PriceQuoteStudy> studies);
+        //Task BulkUpdateDeleteStudies(Guid priceQuoteId, List<PriceQuoteStudy> studies);
     }
 }

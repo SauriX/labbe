@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.MedicalRecord.Context;
 
 namespace Service.MedicalRecord.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221114214042_Borrar tabla Cotizaicon_Estudios para cambio de Id")]
+    partial class BorrartablaCotizaicon_EstudiosparacambiodeId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -467,11 +469,8 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
 
-                    b.Property<decimal>("Cargo")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<byte>("CargoTipo")
-                        .HasColumnType("tinyint");
+                    b.Property<int>("Cargo")
+                        .HasColumnType("int");
 
                     b.Property<string>("Clave")
                         .HasColumnType("nvarchar(max)");
@@ -479,16 +478,17 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<Guid?>("CompañiaId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("Edad")
+                        .HasColumnType("int");
+
                     b.Property<string>("EnvioCorreo")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EnvioWhatsapp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte>("EstatusId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint")
-                        .HasDefaultValue((byte)1);
+                    b.Property<string>("Estatus")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("ExpedienteId")
                         .HasColumnType("uniqueidentifier");
@@ -496,40 +496,46 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("FechaModifico")
+                    b.Property<DateTime?>("FechaMod")
                         .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaNacimiento")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaPropuesta")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Genero")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("MedicoId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("NombrePaciente")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Observaciones")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte>("Procedencia")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint")
-                        .HasDefaultValue((byte)2);
+                    b.Property<string>("Procedencia")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("SucursalId")
+                    b.Property<Guid?>("SucursalId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("Total")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("TotalEstudios")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("Tipo")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("UsuarioModificoId")
+                    b.Property<Guid?>("UsuarioModId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CompañiaId");
-
-                    b.HasIndex("EstatusId");
 
                     b.HasIndex("ExpedienteId");
 
@@ -537,130 +543,7 @@ namespace Service.MedicalRecord.Migrations
 
                     b.HasIndex("SucursalId");
 
-                    b.ToTable("CAT_Cotizacion");
-                });
-
-            modelBuilder.Entity("Service.MedicalRecord.Domain.PriceQuote.PriceQuotePack", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("AplicaCargo")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Clave")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("CotizacionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Dias")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaModifico")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Horas")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ListaPrecio")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("ListaPrecioId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PaqueteId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Precio")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("PrecioFinal")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("UsuarioModificoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CotizacionId");
-
-                    b.ToTable("Relacion_Cotizacion_Paquete");
-                });
-
-            modelBuilder.Entity("Service.MedicalRecord.Domain.PriceQuote.PriceQuoteStudy", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("AplicaCargo")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Clave")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("CotizacionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Dias")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("EstudioId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaModifico")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Horas")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ListaPrecio")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("ListaPrecioId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("PaqueteId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Precio")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("PrecioFinal")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("UsuarioModificoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CotizacionId");
-
-                    b.HasIndex("PaqueteId");
-
-                    b.ToTable("Relacion_Cotizacion_Estudio");
+                    b.ToTable("CAT_Cotizaciones");
                 });
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.Request.Request", b =>
@@ -1203,25 +1086,6 @@ namespace Service.MedicalRecord.Migrations
                     b.ToTable("Cat_PendientesDeEnviar");
                 });
 
-            modelBuilder.Entity("Service.MedicalRecord.Domain.Status.StatusPriceQuote", b =>
-                {
-                    b.Property<byte>("Id")
-                        .HasColumnType("tinyint");
-
-                    b.Property<string>("Clave")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Color")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Estatus_Cotizacion");
-                });
-
             modelBuilder.Entity("Service.MedicalRecord.Domain.Status.StatusRequest", b =>
                 {
                     b.Property<byte>("Id")
@@ -1517,12 +1381,6 @@ namespace Service.MedicalRecord.Migrations
                         .WithMany()
                         .HasForeignKey("CompañiaId");
 
-                    b.HasOne("Service.MedicalRecord.Domain.Status.StatusPriceQuote", "Estatus")
-                        .WithMany()
-                        .HasForeignKey("EstatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Service.MedicalRecord.Domain.MedicalRecord.MedicalRecord", "Expediente")
                         .WithMany()
                         .HasForeignKey("ExpedienteId");
@@ -1533,48 +1391,15 @@ namespace Service.MedicalRecord.Migrations
 
                     b.HasOne("Service.MedicalRecord.Domain.Catalogs.Branch", "Sucursal")
                         .WithMany()
-                        .HasForeignKey("SucursalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SucursalId");
 
                     b.Navigation("Compañia");
-
-                    b.Navigation("Estatus");
 
                     b.Navigation("Expediente");
 
                     b.Navigation("Medico");
 
                     b.Navigation("Sucursal");
-                });
-
-            modelBuilder.Entity("Service.MedicalRecord.Domain.PriceQuote.PriceQuotePack", b =>
-                {
-                    b.HasOne("Service.MedicalRecord.Domain.PriceQuote.PriceQuote", "Cotizacion")
-                        .WithMany("Paquetes")
-                        .HasForeignKey("CotizacionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Cotizacion");
-                });
-
-            modelBuilder.Entity("Service.MedicalRecord.Domain.PriceQuote.PriceQuoteStudy", b =>
-                {
-                    b.HasOne("Service.MedicalRecord.Domain.PriceQuote.PriceQuote", "Cotizacion")
-                        .WithMany("Estudios")
-                        .HasForeignKey("CotizacionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Service.MedicalRecord.Domain.PriceQuote.PriceQuotePack", "Paquete")
-                        .WithMany("Estudios")
-                        .HasForeignKey("PaqueteId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Cotizacion");
-
-                    b.Navigation("Paquete");
                 });
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.Request.Request", b =>
@@ -1735,18 +1560,6 @@ namespace Service.MedicalRecord.Migrations
             modelBuilder.Entity("Service.MedicalRecord.Domain.MedicalRecord.MedicalRecord", b =>
                 {
                     b.Navigation("TaxData");
-                });
-
-            modelBuilder.Entity("Service.MedicalRecord.Domain.PriceQuote.PriceQuote", b =>
-                {
-                    b.Navigation("Estudios");
-
-                    b.Navigation("Paquetes");
-                });
-
-            modelBuilder.Entity("Service.MedicalRecord.Domain.PriceQuote.PriceQuotePack", b =>
-                {
-                    b.Navigation("Estudios");
                 });
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.Request.Request", b =>

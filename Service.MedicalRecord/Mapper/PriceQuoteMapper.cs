@@ -23,13 +23,13 @@ namespace Service.MedicalRecord.Mapper
                 Whatsapp = x.EnvioWhatsapp,
                 Fecha = x.FechaCreo,
                 Activo = x.Activo,
-                Estudios = x.Estudios?.Select(s => new PriceQuoteStudyInfoDto
-                {
-                    Id = s.Id,
-                    EstudioId = s.EstudioId,
-                    Clave = s.Clave,
-                    Nombre = s.Nombre
-                }) ?? new List<PriceQuoteStudyInfoDto>()
+                //Estudios = x.Estudios?.Select(s => new PriceQuoteStudyInfoDto
+                //{
+                //    Id = s.Id,
+                //    EstudioId = s.EstudioId,
+                //    Clave = s.Clave,
+                //    Nombre = s.Nombre
+                //}) ?? new List<PriceQuoteStudyInfoDto>()
             });
         }
 

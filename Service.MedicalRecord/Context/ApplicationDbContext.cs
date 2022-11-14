@@ -27,11 +27,13 @@ namespace Service.MedicalRecord.Context
         public DbSet<RequestImage> Relacion_Solicitud_Imagen { get; set; }
         public DbSet<AppointmentLab> CAT_Cita_Lab { get; set; }
         public DbSet<AppointmentDom> CAT_Cita_Dom { get; set; }
-        public DbSet<PriceQuote> CAT_Cotizaciones { get; set; }
+        public DbSet<PriceQuote> CAT_Cotizacion { get; set; }
         public DbSet<PriceQuoteStudy> Relacion_Cotizacion_Estudio { get; set; }
+        public DbSet<PriceQuotePack> Relacion_Cotizacion_Paquete { get; set; }
         public DbSet<StatusRequest> Estatus_Solicitud { get; set; }
         public DbSet<StatusRequestStudy> Estatus_Solicitud_Estudio { get; set; }
         public DbSet<StatusRequestPayment> Estatus_Solicitud_Pago { get; set; }
+        public DbSet<StatusPriceQuote> Estatus_Cotizacion { get; set; }
         public DbSet<TrackingOrder> CAT_Seguimiento_Ruta { get; set; }
         public DbSet<TrackingOrderDetail> Relacion_Seguimiento_Solicitud { get; set; }
         public DbSet<RouteTracking> Cat_PendientesDeEnviar { get; set; }

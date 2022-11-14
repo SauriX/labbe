@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Service.MedicalRecord.Domain.PriceQuote;
+using Service.MedicalRecord.Domain.Request;
 
 namespace Service.MedicalRecord.Context.EntityConfiguration.PriceQuote
 {
@@ -8,10 +9,9 @@ namespace Service.MedicalRecord.Context.EntityConfiguration.PriceQuote
     {
         public void Configure(EntityTypeBuilder<PriceQuoteStudy> builder)
         {
-            builder.ToTable("cotizacionStudies");
+            builder.ToTable("Relacion_Cotizacion_Estudio");
+
             builder.HasKey(x => x.Id);
-
-
         }
     }
 }

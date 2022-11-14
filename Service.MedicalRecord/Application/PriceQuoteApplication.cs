@@ -295,18 +295,18 @@ namespace Service.MedicalRecord.Application
 
         public async Task DeleteStudies(PriceQuoteStudyUpdateDto priceQuoteDto)
         {
-            var priceQuote = await GetExistingPriceQuote(priceQuoteDto.CotizacionId);
+            //var priceQuote = await GetExistingPriceQuote(priceQuoteDto.CotizacionId);
 
-            var studiesIds = priceQuoteDto.Estudios.Select(x => x.Id);
+            //var studiesIds = priceQuoteDto.Estudios.Select(x => x.Id);
 
-            var studies = await _repository.GetStudyById(priceQuoteDto.CotizacionId, studiesIds);
+            //var studies = await _repository.GetStudyById(priceQuoteDto.CotizacionId, studiesIds);
 
-            if (studies == null || studies.Count == 0)
-            {
-                throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.PriceQuote.NoStudySelected);
-            }
+            //if (studies == null || studies.Count == 0)
+            //{
+            //    throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.PriceQuote.NoStudySelected);
+            //}
 
-            await _repository.BulkUpdateDeleteStudies(Guid.NewGuid(), studies);
+            //await _repository.BulkUpdateDeleteStudies(Guid.NewGuid(), studies);
         }
 
         public async Task<byte[]> PrinPriceQuote(Guid id)

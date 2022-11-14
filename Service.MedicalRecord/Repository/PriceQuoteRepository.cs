@@ -24,16 +24,16 @@ namespace Service.MedicalRecord.Repository
 
         public async Task<PriceQuote> FindAsync(Guid id)
         {
-            var priceQuote = await _context.CAT_Cotizaciones.FindAsync(id);
+            var priceQuote = await _context.CAT_Cotizacion.FindAsync(id);
 
             return priceQuote;
         }
 
         public async Task<List<PriceQuote>> GetByFilter(PriceQuoteFilterDto filter)
         {
-            var priceQuotes = _context.CAT_Cotizaciones
+            var priceQuotes = _context.CAT_Cotizacion
                 .Include(x => x.Expediente)
-                .Include(x => x.Estudios)
+                //.Include(x => x.Estudios)
                 .AsQueryable();
 
             if (filter.FechaAInicial != null && filter.FechaAFinal != null)
@@ -73,16 +73,16 @@ namespace Service.MedicalRecord.Repository
 
         public async Task<List<PriceQuote>> GetActive()
         {
-            var priceQuotes = await _context.CAT_Cotizaciones.Where(x => x.Activo).ToListAsync();
+            var priceQuotes = await _context.CAT_Cotizacion.Where(x => x.Activo).ToListAsync();
 
             return priceQuotes;
         }
 
         public async Task<PriceQuote> GetById(Guid id)
         {
-            var priceQuote = await _context.CAT_Cotizaciones
+            var priceQuote = await _context.CAT_Cotizacion
                 .Include(x => x.Expediente)
-                .Include(x => x.Estudios)
+                //.Include(x => x.Estudios)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             return priceQuote;
@@ -91,31 +91,31 @@ namespace Service.MedicalRecord.Repository
 
         public async Task<string> GetLastCode(Guid branchId, string date)
         {
-            var priceQuote = await _context.CAT_Cotizaciones
+            var priceQuote = await _context.CAT_Cotizacion
                 .OrderBy(x => x.FechaCreo)
                 .LastOrDefaultAsync(x => x.SucursalId == branchId && x.Clave.EndsWith(date));
 
             return priceQuote?.Clave;
         }
 
-        public async Task<List<PriceQuoteStudy>> GetStudyById(Guid priceQuoteId, IEnumerable<int> studiesIds)
-        {
-            var studies = await _context.Relacion_Cotizacion_Estudio
-                //.Where(x => x.CotizacionId == priceQuoteId && studiesIds.Contains(x.Id))
-                .ToListAsync();
+        //public async Task<List<PriceQuoteStudy>> GetStudyById(Guid priceQuoteId, IEnumerable<int> studiesIds)
+        //{
+        //    var studies = await _context.Relacion_Cotizacion_Estudio
+        //        //.Where(x => x.CotizacionId == priceQuoteId && studiesIds.Contains(x.Id))
+        //        .ToListAsync();
 
-            return studies;
-        }
+        //    return studies;
+        //}
 
-        public async Task<List<PriceQuoteStudy>> GetStudiesByPriceQuote(Guid priceQuoteId)
-        {
-            var studies = await _context.Relacion_Cotizacion_Estudio
-                .Include(x => x.Paquete)
-                .Where(x => x.CotizacionId == priceQuoteId && x.PaqueteId == null)
-                .ToListAsync();
+        //public async Task<List<PriceQuoteStudy>> GetStudiesByPriceQuote(Guid priceQuoteId)
+        //{
+        //    var studies = await _context.Relacion_Cotizacion_Estudio
+        //        .Include(x => x.Paquete)
+        //        .Where(x => x.CotizacionId == priceQuoteId && x.PaqueteId == null)
+        //        .ToListAsync();
 
-            return studies;
-        }
+        //    return studies;
+        //}
 
         public async Task<List<PriceQuotePack>> GetPacksByPriceQuote(Guid priceQuoteId)
         {
@@ -129,14 +129,14 @@ namespace Service.MedicalRecord.Repository
 
         public async Task Create(PriceQuote priceQuote)
         {
-            _context.CAT_Cotizaciones.Add(priceQuote);
+            _context.CAT_Cotizacion.Add(priceQuote);
 
             await _context.SaveChangesAsync();
         }
 
         public async Task Update(PriceQuote expediente)
         {
-            _context.CAT_Cotizaciones.Update(expediente);
+            _context.CAT_Cotizacion.Update(expediente);
 
             await _context.SaveChangesAsync();
         }
@@ -151,14 +151,14 @@ namespace Service.MedicalRecord.Repository
             throw new NotImplementedException();
         }
 
-        public Task BulkUpdateStudies(Guid priceQuoteId, List<PriceQuoteStudy> studies)
-        {
-            throw new NotImplementedException();
-        }
+        //public Task BulkUpdateStudies(Guid priceQuoteId, List<PriceQuoteStudy> studies)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public Task BulkUpdateDeleteStudies(Guid priceQuoteId, List<PriceQuoteStudy> studies)
-        {
-            throw new NotImplementedException();
-        }
+        //public Task BulkUpdateDeleteStudies(Guid priceQuoteId, List<PriceQuoteStudy> studies)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

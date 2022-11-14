@@ -10,6 +10,31 @@ namespace Service.MedicalRecord.Context
     {
         public static async Task SeedData(ApplicationDbContext context)
         {
+            if (!context.Estatus_Solicitud.Any())
+            {
+                using var transaction = context.Database.BeginTransaction();
+                try
+                {
+                    var status = new List<StatusRequest>()
+                    {
+                        new StatusRequest(1, "V", "Vigente", "#345454"),
+                        new StatusRequest(2, "CO", "Completado", "#345454"),
+                        new StatusRequest(3, "CA", "Cancelado", "#345454")
+                    };
+
+                    context.Estatus_Solicitud.AddRange(status);
+
+                    await context.SaveChangesAsync();
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+
             if (!context.Estatus_Solicitud_Estudio.Any())
             {
                 using var transaction = context.Database.BeginTransaction();
@@ -43,31 +68,6 @@ namespace Service.MedicalRecord.Context
                 }
             }
 
-            if (!context.Estatus_Solicitud.Any())
-            {
-                using var transaction = context.Database.BeginTransaction();
-                try
-                {
-                    var status = new List<StatusRequest>()
-                    {
-                        new StatusRequest(1, "V", "Vigente", "#345454"),
-                        new StatusRequest(2, "CO", "Completado", "#345454"),
-                        new StatusRequest(3, "CA", "Cancelado", "#345454")
-                    };
-
-                    context.Estatus_Solicitud.AddRange(status);
-
-                    await context.SaveChangesAsync();
-
-                    transaction.Commit();
-                }
-                catch (Exception)
-                {
-                    transaction.Rollback();
-                    throw;
-                }
-            }
-
             if (!context.Estatus_Solicitud_Pago.Any())
             {
                 using var transaction = context.Database.BeginTransaction();
@@ -82,6 +82,31 @@ namespace Service.MedicalRecord.Context
                     };
 
                     context.Estatus_Solicitud_Pago.AddRange(status);
+
+                    await context.SaveChangesAsync();
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+
+            if (!context.Estatus_Cotizacion.Any())
+            {
+                using var transaction = context.Database.BeginTransaction();
+                try
+                {
+                    var status = new List<StatusPriceQuote>()
+                    {
+                        new StatusPriceQuote(1, "V", "Vigente", "#345454"),
+                        new StatusPriceQuote(2, "VO", "Vencido", "#345454"),
+                        new StatusPriceQuote(3, "CA", "Cancelado", "#345454")
+                    };
+
+                    context.Estatus_Cotizacion.AddRange(status);
 
                     await context.SaveChangesAsync();
 
