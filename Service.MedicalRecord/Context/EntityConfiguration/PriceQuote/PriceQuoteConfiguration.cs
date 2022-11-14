@@ -17,8 +17,9 @@ namespace Service.MedicalRecord.Context.EntityConfiguration.PriceQuote
 
             builder
                 .HasMany(x => x.Estudios)
-                .WithOne();
-
+                .WithOne(x => x.Cotizacion)
+                .HasForeignKey(x => x.CotizacionId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
