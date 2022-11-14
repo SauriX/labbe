@@ -21,131 +21,94 @@ namespace Service.MedicalRecord.Repository
             _context = context;
         }
 
+        public async Task<PriceQuote> FindAsync(Guid id)
+        {
+            var priceQuote = await _context.CAT_Cotizaciones.FindAsync(id);
+
+            return priceQuote;
+        }
+
         public async Task<List<PriceQuote>> GetByFilter(PriceQuoteFilterDto filter)
         {
-            var quotations = _context.CAT_Cotizaciones
+            var priceQuotes = _context.CAT_Cotizaciones
                 .Include(x => x.Expediente)
                 .Include(x => x.Estudios)
                 .AsQueryable();
 
             if (filter.FechaAInicial != null && filter.FechaAFinal != null)
             {
-                quotations = quotations.Where(x => x.FechaCreo.Date <= ((DateTime)filter.FechaAInicial).Date
+                priceQuotes = priceQuotes.Where(x => x.FechaCreo.Date <= ((DateTime)filter.FechaAInicial).Date
                 && x.FechaCreo.Date >= ((DateTime)filter.FechaAFinal));
             }
 
             if (filter.Sucursales != null && filter.Sucursales.Count > 0)
             {
-                //quotations = quotations.Where(x => filter.Sucursales.Contains(x.SucursalId));
+                priceQuotes = priceQuotes.Where(x => x.Sucursal != null && filter.Sucursales.Contains((Guid)x.SucursalId));
             }
 
             if (filter.FechaNInicial != null && filter.FechaNFinal != null)
             {
-                quotations = quotations.Where(x => x.Expediente != null
+                priceQuotes = priceQuotes.Where(x => x.Expediente != null
                 && x.Expediente.FechaDeNacimiento.Date <= ((DateTime)filter.FechaNInicial).Date
                 && x.Expediente.FechaDeNacimiento.Date >= ((DateTime)filter.FechaNFinal));
             }
 
             if (!string.IsNullOrWhiteSpace(filter.CorreoTelefono))
             {
-                quotations = quotations.Where(x => (x.Correo != null && x.Correo.ToLower().Contains(filter.CorreoTelefono))
-                || (x.Whatsapp != null && x.Whatsapp.ToLower().Contains(filter.CorreoTelefono)));
+                priceQuotes = priceQuotes.Where(x => (x.EnvioCorreo != null && x.EnvioCorreo.ToLower().Contains(filter.CorreoTelefono))
+                || (x.EnvioWhatsapp != null && x.EnvioWhatsapp.ToLower().Contains(filter.CorreoTelefono)));
             }
 
             if (!string.IsNullOrWhiteSpace(filter.Expediente))
             {
-                quotations = quotations
+                priceQuotes = priceQuotes
                     .Where(x => x.Expediente != null
                     && ((x.Expediente.NombrePaciente + " " + x.Expediente.PrimerApellido + " " + x.Expediente.SegundoApellido).ToLower().Contains(filter.Expediente.ToLower())
                     || (x.Expediente != null && x.Expediente.Expediente.ToLower().Contains(filter.Expediente.ToLower()))));
             }
 
-            return await quotations.ToListAsync();
+            return await priceQuotes.ToListAsync();
         }
 
-        public async Task<List<MedicalRecord.Domain.MedicalRecord.MedicalRecord>> GetMedicalRecord(PriceQuoteExpedienteSearch search)
-        {
-            var expedientes = _context.CAT_Expedientes.AsQueryable();
-
-            if (!string.IsNullOrEmpty(search.Buscar))
-            {
-
-                expedientes = expedientes.Where(x => x.NombrePaciente.Contains(search.Buscar) || x.PrimerApellido.Contains(search.Buscar) || x.Expediente.Contains(search.Buscar));
-
-
-            }
-            if (!string.IsNullOrEmpty(search.Telefono))
-            {
-
-                expedientes = expedientes.Where(x => x.Telefono == search.Telefono);
-
-
-            }
-            if (search.FechaInicial.Date != DateTime.Now.Date && search.FechaFinal.Date != DateTime.Now.Date)
-            {
-
-                expedientes = expedientes.Where(x => (x.FechaCreo >= search.FechaInicial.Date && x.FechaCreo.Date <= search.FechaFinal.Date));
-
-
-            }
-
-            if (!string.IsNullOrEmpty(search.Email))
-            {
-
-                expedientes = expedientes.Where(x => x.Correo.Contains(search.Email));
-
-
-            }
-            return expedientes.ToList(); ;
-        }
-        public async Task<string> GetLastCode(string date)
-        {
-            var lastRequest = await _context.CAT_Cotizaciones
-                .OrderBy(x => x.FechaCreo)
-                .LastOrDefaultAsync(x => x.Afiliacion.EndsWith(date));
-
-            return lastRequest?.Afiliacion;
-        }
-
-        public async Task Create(PriceQuote expediente)
-        {
-            var estudios = expediente.Estudios.ToList();
-            expediente.Estudios = null;
-            _context.CAT_Cotizaciones.Add(expediente);
-            await _context.SaveChangesAsync();
-
-            var config = new BulkConfig();
-            config.SetSynchronizeFilter<CotizacionStudy>(x => x.CotizacionId == expediente.Id);
-            estudios.ForEach(x => x.CotizacionId = expediente.Id);
-            estudios.ForEach(x => x.id = Guid.NewGuid());
-            await _context.BulkInsertOrUpdateOrDeleteAsync(estudios, config);
-        }
-        public async Task Update(PriceQuote expediente)
-        {
-            var estudios = expediente.Estudios.ToList();
-            expediente.Estudios = null;
-            _context.CAT_Cotizaciones.Update(expediente);
-            await _context.SaveChangesAsync();
-
-            var config = new BulkConfig();
-            config.SetSynchronizeFilter<CotizacionStudy>(x => x.CotizacionId == expediente.Id);
-            estudios.ForEach(x => x.CotizacionId = expediente.Id);
-            estudios.ForEach(x => x.id = Guid.NewGuid());
-            await _context.BulkInsertOrUpdateOrDeleteAsync(estudios, config);
-        }
         public async Task<List<PriceQuote>> GetActive()
         {
-            var expedientes = await _context.CAT_Cotizaciones.Where(x => x.Activo).ToListAsync();
+            var priceQuotes = await _context.CAT_Cotizaciones.Where(x => x.Activo).ToListAsync();
 
-            return expedientes;
+            return priceQuotes;
         }
 
         public async Task<PriceQuote> GetById(Guid id)
         {
-            var expedientes = await _context.CAT_Cotizaciones.Include(x => x.Expediente).FirstOrDefaultAsync(x => x.Id == id);
-            var estudios = await _context.cotizacionStudies.Where(x => x.CotizacionId == expedientes.Id).ToListAsync();
-            expedientes.Estudios = estudios;
-            return expedientes;
+            var priceQuote = await _context.CAT_Cotizaciones
+                .Include(x => x.Expediente)
+                .Include(x => x.Estudios)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            return priceQuote;
+        }
+
+
+        public async Task<string> GetLastCode(Guid branchId, string date)
+        {
+            var priceQuote = await _context.CAT_Cotizaciones
+                .OrderBy(x => x.FechaCreo)
+                .LastOrDefaultAsync(x => x.SucursalId == branchId && x.Clave.EndsWith(date));
+
+            return priceQuote?.Clave;
+        }
+
+        public async Task Create(PriceQuote priceQuote)
+        {
+            _context.CAT_Cotizaciones.Add(priceQuote);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task Update(PriceQuote expediente)
+        {
+            _context.CAT_Cotizaciones.Update(expediente);
+
+            await _context.SaveChangesAsync();
         }
     }
 }

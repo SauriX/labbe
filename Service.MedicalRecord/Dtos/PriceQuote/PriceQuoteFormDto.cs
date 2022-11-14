@@ -1,22 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Service.MedicalRecord.Dtos.PriceQuote
 {
-    public class PriceQuoteFormDto
+    public class PriceQuoteDto
     {
         public string Id { get; set; }
-        public string expediente { get; set; }
-        public string expedienteid { get; set; }
-        public string nomprePaciente { get; set; }
-        public int edad { get; set; }
-        public int cargo { get; set; }
-        public int typo { get; set; }
-        public DateTime fechaNacimiento { get; set; }
-        public List<QuotetPrice> estudy { get; set; }
-        public PriceQuoteGeneralDto generales { get; set; }
-        public string Genero { get; set; }
-        public Guid UserId { get; set; }
+        public string Clave { get; set; }
         public Guid SucursalId { get; set; }
+        public string Expediente { get; set; }
+        public string ExpedienteId { get; set; }
+        public string NombrePaciente { get; set; }
+        public int Edad { get; set; }
+        public int Cargo { get; set; }
+        public int Tipo { get; set; }
+        public DateTime FechaNacimiento { get; set; }
+        public string Genero { get; set; }
+        [JsonIgnore]
+        public string Usuario { get; set; }
+        [JsonIgnore]
+        public Guid UsuarioId { get; set; }
+        public IEnumerable<PriceQuoteStudyInfoDto> Estudios { get; set; }
     }
 }

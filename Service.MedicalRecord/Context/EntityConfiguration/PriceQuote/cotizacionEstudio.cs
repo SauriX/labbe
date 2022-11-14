@@ -4,12 +4,12 @@ using Service.MedicalRecord.Domain.PriceQuote;
 
 namespace Service.MedicalRecord.Context.EntityConfiguration.PriceQuote
 {
-    public class cotizacionEstudio : IEntityTypeConfiguration<CotizacionStudy>
+    public class cotizacionEstudio : IEntityTypeConfiguration<PriceQuoteStudy>
     {
-        public void Configure(EntityTypeBuilder<CotizacionStudy> builder)
+        public void Configure(EntityTypeBuilder<PriceQuoteStudy> builder)
         {
             builder.ToTable("cotizacionStudies");
-            builder.HasKey(x => x.id);
+            builder.HasKey(x => x.Id);
 
 
         }

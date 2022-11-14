@@ -72,9 +72,9 @@ namespace Service.MedicalRecord.Repository
             _context.CAT_Cita_Lab.Add(appointmentLab);
             await _context.SaveChangesAsync();
             var config = new BulkConfig();
-            config.SetSynchronizeFilter<CotizacionStudy>(x => x.CotizacionId == appointmentLab.Id);
+            config.SetSynchronizeFilter<PriceQuoteStudy>(x => x.CotizacionId == appointmentLab.Id);
             estudios.ForEach(x => x.CotizacionId = appointmentLab.Id);
-            estudios.ForEach(x => x.id = Guid.NewGuid());
+            estudios.ForEach(x => x.Id = Guid.NewGuid());
 
 
             await _context.BulkInsertOrUpdateOrDeleteAsync(estudios, config);
@@ -88,9 +88,9 @@ namespace Service.MedicalRecord.Repository
             _context.CAT_Cita_Dom.Add(appointmentDom);
             await _context.SaveChangesAsync();
             var config = new BulkConfig();
-            config.SetSynchronizeFilter<CotizacionStudy>(x => x.CotizacionId == appointmentDom.Id);
+            config.SetSynchronizeFilter<PriceQuoteStudy>(x => x.CotizacionId == appointmentDom.Id);
             estudios.ForEach(x => x.CotizacionId = appointmentDom.Id);
-            estudios.ForEach(x => x.id = Guid.NewGuid());
+            estudios.ForEach(x => x.Id = Guid.NewGuid());
             await _context.BulkInsertOrUpdateOrDeleteAsync(estudios, config);
 
         }
@@ -102,9 +102,9 @@ namespace Service.MedicalRecord.Repository
             await _context.SaveChangesAsync();
 
             var config = new BulkConfig();
-            config.SetSynchronizeFilter<CotizacionStudy>(x => x.CotizacionId == appointmentLab.Id);
+            config.SetSynchronizeFilter<PriceQuoteStudy>(x => x.CotizacionId == appointmentLab.Id);
             estudios.ForEach(x => x.CotizacionId = appointmentLab.Id);
-            estudios.ForEach(x => x.id = Guid.NewGuid());
+            estudios.ForEach(x => x.Id = Guid.NewGuid());
             await _context.BulkInsertOrUpdateOrDeleteAsync(estudios, config);
         }
 
@@ -116,9 +116,9 @@ namespace Service.MedicalRecord.Repository
             _context.CAT_Cita_Dom.Update(appointmentDom);
             await _context.SaveChangesAsync();
             var config = new BulkConfig();
-            config.SetSynchronizeFilter<CotizacionStudy>(x => x.CotizacionId == appointmentDom.Id);
+            config.SetSynchronizeFilter<PriceQuoteStudy>(x => x.CotizacionId == appointmentDom.Id);
             estudios.ForEach(x => x.CotizacionId = appointmentDom.Id);
-            estudios.ForEach(x => x.id = Guid.NewGuid());
+            estudios.ForEach(x => x.Id = Guid.NewGuid());
             await _context.BulkInsertOrUpdateOrDeleteAsync(estudios, config);
 
         }
@@ -127,9 +127,9 @@ namespace Service.MedicalRecord.Repository
         {
             var lastRequest = await _context.CAT_Cotizaciones
                 .OrderBy(x => x.FechaCreo)
-                .LastOrDefaultAsync(x => x.Afiliacion.EndsWith(date));
+                .LastOrDefaultAsync(x => x.Clave.EndsWith(date));
 
-            return lastRequest?.Afiliacion;
+            return lastRequest?.Clave;
         }
     }
 }

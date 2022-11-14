@@ -220,6 +220,7 @@ namespace Service.MedicalRecord.Application
             newRequest.CargoTipo = CANTIDAD;
             newRequest.CopagoTipo = CANTIDAD;
             newRequest.DescuentoTipo = CANTIDAD;
+            newRequest.UsuarioCreoId = requestDto.UsuarioId;
             newRequest.UsuarioCreo = requestDto.Usuario;
 
             await _repository.Create(newRequest);
@@ -450,13 +451,6 @@ namespace Service.MedicalRecord.Application
                 }
 
                 studiesDto.AddRange(packStudiesDto);
-
-                //var duplicates = requestDto.Estudios.GroupBy(x => x.Clave).Where(x => x.Count() > 1).Select(x => x.Key);
-
-                //if (duplicates != null && duplicates.Any())
-                //{
-                //    throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.RepeatedStudies(string.Join(", ", duplicates)));
-                //}
 
                 var currentPacks = await _repository.GetPacksByRequest(requestDto.SolicitudId);
 
@@ -895,10 +889,10 @@ namespace Service.MedicalRecord.Application
         {
             var date = DateTime.Now.ToString("ddMMyy");
 
-            var codeRange = await _catalogClient.GetCodeRange(requestDto.SucursalId);
+            var branch = await _branchRepository.GetOne(x => x.Id == requestDto.SucursalId);
             var lastCode = await _repository.GetLastCode(requestDto.SucursalId, date);
 
-            var consecutive = RequestCodes.GetCode(codeRange, lastCode);
+            var consecutive = RequestCodes.GetCode(branch.Clinicos, lastCode);
             var code = $"{consecutive}{date}";
             return code;
         }

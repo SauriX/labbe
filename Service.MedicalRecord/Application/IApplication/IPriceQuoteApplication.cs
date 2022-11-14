@@ -9,16 +9,15 @@ namespace Service.MedicalRecord.Application.IApplication
 {
     public interface IPriceQuoteApplication
     {
-        Task<List<PriceQuoteListDto>> GetByFilter(PriceQuoteFilterDto filter);
-        Task<List<PriceQuoteListDto>> GetActive();
-        Task<PriceQuoteFormDto> GetById(Guid id);
-        Task<PriceQuoteListDto> Create(PriceQuoteFormDto priceQuote);
-        Task<PriceQuoteListDto> Update(PriceQuoteFormDto expediente);
-        Task<(byte[] file, string fileName)> ExportList(PriceQuoteFilterDto search);
-        Task<(byte[] file, string fileName)> ExportForm(Guid id);
-        Task<List<MedicalRecordsListDto>> GetMedicalRecord(PriceQuoteExpedienteSearch search);
-        Task<byte[]> GetTicket();
-        Task SendTestEmail(RequestSendDto requestDto);
-        Task SendTestWhatsapp(RequestSendDto requestDto);
+        //Task<IEnumerable<PriceQuoteInfoDto>> GetByFilter(PriceQuoteFilterDto filter);
+        //Task<IEnumerable<PriceQuoteInfoDto>> GetActive();
+        //Task<PriceQuoteDto> GetById(Guid id);
+        //Task<PriceQuoteInfoDto> Create(PriceQuoteDto priceQuoteDto);
+        //Task<PriceQuoteInfoDto> Update(PriceQuoteDto priceQuoteDto);
+        //Task SendTestEmail(PriceQuoteSendDto priceQuoteDto);
+        //Task SendTestWhatsapp(PriceQuoteSendDto priceQuoteDto);
+        //Task<byte[]> PrinPriceQuote(Guid id);
+        ////Task<(byte[] file, string fileName)> ExportList(PriceQuoteFilterDto search);
+        ////Task<(byte[] file, string fileName)> ExportForm(Guid id);
     }
 }

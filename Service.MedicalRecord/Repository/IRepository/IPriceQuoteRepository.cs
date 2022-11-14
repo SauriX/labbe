@@ -8,12 +8,12 @@ namespace Service.MedicalRecord.Repository.IRepository
 {
     public interface IPriceQuoteRepository
     {
+        Task<PriceQuote> FindAsync(Guid id);
         Task<List<PriceQuote>> GetByFilter(PriceQuoteFilterDto filter);
-        Task<PriceQuote> GetById(Guid id);
-        public Task Create(PriceQuote expediente);
+        Task<string> GetLastCode(Guid branchId, string date);
         Task<List<PriceQuote>> GetActive();
-        Task Update(PriceQuote expediente);
-        Task<List<MedicalRecord.Domain.MedicalRecord.MedicalRecord>> GetMedicalRecord(PriceQuoteExpedienteSearch search);
-        Task<string> GetLastCode(string date);
+        Task<PriceQuote> GetById(Guid id);
+        Task Create(PriceQuote priceQuote);
+        Task Update(PriceQuote priceQuote);
     }
 }
