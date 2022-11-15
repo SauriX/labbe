@@ -38,7 +38,7 @@ namespace Service.MedicalRecord.Repository
             if (filter.FechaAInicial != null && filter.FechaAFinal != null)
             {
                 quotations = quotations.Where(x => x.FechaCreo.Date <= ((DateTime)filter.FechaAInicial).Date
-                && x.FechaCreo.Date >= ((DateTime)filter.FechaAFinal));
+                && x.FechaCreo.Date >= ((DateTime)filter.FechaAFinal).Date);
             }
 
             if (filter.Sucursales != null && filter.Sucursales.Count > 0)
@@ -50,7 +50,7 @@ namespace Service.MedicalRecord.Repository
             {
                 quotations = quotations.Where(x => x.Expediente != null
                 && x.Expediente.FechaDeNacimiento.Date <= ((DateTime)filter.FechaNInicial).Date
-                && x.Expediente.FechaDeNacimiento.Date >= ((DateTime)filter.FechaNFinal));
+                && x.Expediente.FechaDeNacimiento.Date >= ((DateTime)filter.FechaNFinal).Date);
             }
 
             if (!string.IsNullOrWhiteSpace(filter.CorreoTelefono))

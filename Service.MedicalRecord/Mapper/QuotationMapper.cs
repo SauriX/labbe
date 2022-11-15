@@ -42,8 +42,8 @@ namespace Service.MedicalRecord.Mapper
             {
                 CotizacionId = x.Id,
                 Clave = x.Clave,
-                Paciente = x.Expediente.NombreCompleto,
-                Expediente = x.Expediente.Expediente,
+                Paciente = x.Expediente?.NombreCompleto,
+                Expediente = x.Expediente?.Expediente,
                 Correo = x.EnvioCorreo,
                 Whatsapp = x.EnvioWhatsApp,
                 Fecha = x.FechaCreo,

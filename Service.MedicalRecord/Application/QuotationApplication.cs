@@ -66,23 +66,23 @@ namespace Service.MedicalRecord.Application
 
         public async Task<IEnumerable<QuotationInfoDto>> GetByFilter(QuotationFilterDto filter)
         {
-            var expedientes = await _repository.GetByFilter(filter);
+            var quotations = await _repository.GetByFilter(filter);
 
-            return expedientes.ToQuotationInfoDto();
+            return quotations.ToQuotationInfoDto();
         }
 
         public async Task<IEnumerable<QuotationInfoDto>> GetActive()
         {
-            var expedientes = await _repository.GetActive();
+            var quotations = await _repository.GetActive();
 
-            return expedientes.ToQuotationInfoDto();
+            return quotations.ToQuotationInfoDto();
         }
 
         public async Task<QuotationDto> GetById(Guid quotationId)
         {
-            var expediente = await _repository.GetById(quotationId);
+            var quotation = await _repository.GetById(quotationId);
 
-            return expediente.ToQuotationDto();
+            return quotation.ToQuotationDto();
         }
 
         public async Task<QuotationGeneralDto> GetGeneral(Guid quotationId)
