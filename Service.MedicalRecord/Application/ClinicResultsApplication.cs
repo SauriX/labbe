@@ -486,8 +486,6 @@ namespace Service.MedicalRecord.Application
         {
             var existing = await _repository.GetResultPathologicalById(result.RequestStudyId);
 
-            //var existingStudy = await _repository.GetStudyById(result.EstudioId);
-
             if (existing == null)
             {
                 throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
@@ -586,7 +584,6 @@ namespace Service.MedicalRecord.Application
                 foreach (var estudioId in estudiosSeleccionados.EstudiosId)
                 {
                     
-                    //var existingStudy = await _repository.GetRequestStudyById(estudioId);
 
                     if (estudioId.Tipo == Catalogs.Area.HISTOPATOLOGIA)
                     {
@@ -608,7 +605,6 @@ namespace Service.MedicalRecord.Application
 
                         files.Add(new SenderFiles(new Uri(pathName), namePdf));
 
-                        //pathologicalStudies.Add(existingStudy);
                     }
                     else
                     {
@@ -653,9 +649,6 @@ namespace Service.MedicalRecord.Application
 
                     throw new Exception("c");
                 }
-
-
-
             }
 
 
@@ -705,19 +698,11 @@ namespace Service.MedicalRecord.Application
                     var pathName = Path.Combine(MedicalRecordPath, pathPdf.Replace("wwwroot/", "")).Replace("\\", "/");
 
                     files.Add(new SenderFiles(new Uri(pathName), namePdf));
-                }
-
-                //var files = new List<SenderFiles>()
-                //{
-                //    new SenderFiles(new Uri(pathName), namePdf)
-                //};
-
-
-                
+                }            
             }
+
             if (labResults.Count > 0)
             {
-                //List<int> labResults = existingRequest.Estudios.Where(x => x.DepartamentoId != SharedDepartment.PATOLOGIA).Select(x => x.Id).ToList();
                 List<ClinicResults> resultsTask = new List<ClinicResults>();
 
                 foreach (var resultPath in labResults)
@@ -769,7 +754,7 @@ namespace Service.MedicalRecord.Application
             var message = RequestTemplates.Messages.PathologicalMessage;
 
             
-            var emailToSend = new EmailContract("vhernandez@axsistec.com", null, subject, title, message, senderFiles)
+            var emailToSend = new EmailContract(correo, null, subject, title, message, senderFiles)
             {
                 Notificar = true,
                 RemitenteId = usuario.ToString()
@@ -789,9 +774,7 @@ namespace Service.MedicalRecord.Application
 
 
             var phone = telefono.Replace("-", "");
-
-            //phone = phone.Length == 10 ? "52" + "8115543677" : "8115543677";
-            phone = phone.Length == 10 ? "52" + "2282820960" : "2282820960";
+            phone = phone.Length == 10 ? "52" + phone : phone;
 
             var emailToSend = new WhatsappContract(phone, message, senderFiles)
             {
@@ -882,11 +865,6 @@ namespace Service.MedicalRecord.Application
 
             await _repository.UpdateStatusStudy(existingStudy);
         }
-
-        /*public async Task<ClinicResults> GetLaboratoryResults(int RequestStudyId)
-        {
-            return await _repository.GetLabResultsById(RequestStudyId);
-        }*/
 
         public async Task<ClinicResultsPathologicalInfoDto> GetResultPathological(int RequestStudyId)
         {
