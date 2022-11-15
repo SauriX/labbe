@@ -1,7 +1,7 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/PriceQuote/now",
+      "DownstreamPathTemplate": "/api/PriceQuote/filter",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -9,7 +9,7 @@
           "Port": 24048
         }
       ],
-      "UpstreamPathTemplate": "/api/PriceQuote/now",
+      "UpstreamPathTemplate": "/api/PriceQuote/filter",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {

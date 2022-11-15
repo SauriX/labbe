@@ -1,14 +1,14 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/LabRamos/services/records/api/PriceQuote/now",
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/PriceQuote/filter",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/PriceQuote/now",
+      "UpstreamPathTemplate": "/api/PriceQuote/filter",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {

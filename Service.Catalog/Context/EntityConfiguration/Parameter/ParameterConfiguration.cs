@@ -66,7 +66,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Parameter
 
             builder
                 .Property(x => x.FCSI)
-                .IsRequired(true)
+                .IsRequired(false)
                 .HasMaxLength(50);
 
             builder

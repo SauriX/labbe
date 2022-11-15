@@ -173,7 +173,7 @@ namespace Integration.WeeClinic.Services
         {
             var url = "api/Laboratorio/Laboratorio_AsignaEstudio";
 
-            var servicesData = string.Join("|", services.Select(x => string.Concat(x.IdServicio, ",", x.IdNodo, ",0,0")));
+            var servicesData = string.Join("|", services.Select(x => string.Concat(x.IdServicio, ",", x.IdNodo, ",0,0"))) + "|";
 
             var data = new Dictionary<string, string>()
             {
