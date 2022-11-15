@@ -1,7 +1,7 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/LabRamos-uat/services/gateway/api/pack/all/{search}",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/pack/all/{search}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
