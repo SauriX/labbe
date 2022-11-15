@@ -1,4 +1,4 @@
-﻿using Service.MedicalRecord.Domain.PriceQuote;
+﻿using Service.MedicalRecord.Domain.Quotation;
 using System;
 using System.Collections.Generic;
 

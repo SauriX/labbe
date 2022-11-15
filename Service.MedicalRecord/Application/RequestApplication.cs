@@ -28,7 +28,7 @@ using COMPANIES = Shared.Dictionary.Catalogs.Company;
 using MEDICS = Shared.Dictionary.Catalogs.Medic;
 using DocumentFormat.OpenXml.Math;
 using Integration.WeeClinic.Services;
-using Service.MedicalRecord.Dtos.Promos;
+using Service.MedicalRecord.Dtos.Promotion;
 using Service.MedicalRecord.Domain.Catalogs;
 using Microsoft.VisualBasic;
 using Integration.WeeClinic.Models.Laboratorio_GetPreciosEstudios_ByidServicio;
@@ -555,7 +555,7 @@ namespace Service.MedicalRecord.Application
                 study.FechaModifico = DateTime.Now;
             }
 
-            await _repository.BulkUpdateStudies(requestDto.SolicitudId, studies);
+            await _repository.BulkInsertUpdateStudies(requestDto.SolicitudId, studies);
         }
 
         public async Task<List<RequestPaymentDto>> CancelPayment(Guid recordId, Guid requestId, List<RequestPaymentDto> paymentsDto)
@@ -617,7 +617,7 @@ namespace Service.MedicalRecord.Application
                 study.FechaModifico = DateTime.Now;
             }
 
-            await _repository.BulkUpdateStudies(requestDto.SolicitudId, studies);
+            await _repository.BulkInsertUpdateStudies(requestDto.SolicitudId, studies);
             ;
             return studies.Count;
         }
@@ -645,7 +645,7 @@ namespace Service.MedicalRecord.Application
                 study.FechaModifico = DateTime.Now;
             }
 
-            await _repository.BulkUpdateStudies(requestDto.SolicitudId, studies);
+            await _repository.BulkInsertUpdateStudies(requestDto.SolicitudId, studies);
 
             return studies.Count;
         }

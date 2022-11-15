@@ -39,7 +39,5 @@ namespace Service.MedicalRecord.Dtos.Request
         public string Usuario { get; set; }
         [JsonIgnore]
         public Guid UsuarioId { get; set; }
-
-        public IEnumerable<RequestStudyInfoDto> Estudios { get; set; }
     }
 }

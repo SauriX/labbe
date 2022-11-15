@@ -32,7 +32,7 @@
             public const byte FacturaCancelada = 4;
         }
 
-        public class PriceQuote
+        public class Quotation
         {
             public const byte Vigente = 1;
             public const byte Vencido = 2;

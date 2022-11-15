@@ -2,7 +2,7 @@
 using Service.MedicalRecord.Domain;
 using Service.MedicalRecord.Domain.Appointments;
 using Service.MedicalRecord.Domain.MedicalRecord;
-using Service.MedicalRecord.Domain.PriceQuote;
+using Service.MedicalRecord.Domain.Quotation;
 using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Domain.RouteTracking;
 using Service.MedicalRecord.Domain.Status;
@@ -27,9 +27,9 @@ namespace Service.MedicalRecord.Context
         public DbSet<RequestImage> Relacion_Solicitud_Imagen { get; set; }
         public DbSet<AppointmentLab> CAT_Cita_Lab { get; set; }
         public DbSet<AppointmentDom> CAT_Cita_Dom { get; set; }
-        public DbSet<PriceQuote> CAT_Cotizacion { get; set; }
-        public DbSet<PriceQuoteStudy> Relacion_Cotizacion_Estudio { get; set; }
-        public DbSet<PriceQuotePack> Relacion_Cotizacion_Paquete { get; set; }
+        public DbSet<Quotation> CAT_Cotizacion { get; set; }
+        public DbSet<QuotationStudy> Relacion_Cotizacion_Estudio { get; set; }
+        public DbSet<QuotationPack> Relacion_Cotizacion_Paquete { get; set; }
         public DbSet<StatusRequest> Estatus_Solicitud { get; set; }
         public DbSet<StatusRequestStudy> Estatus_Solicitud_Estudio { get; set; }
         public DbSet<StatusRequestPayment> Estatus_Solicitud_Pago { get; set; }
@@ -38,6 +38,7 @@ namespace Service.MedicalRecord.Context
         public DbSet<TrackingOrderDetail> Relacion_Seguimiento_Solicitud { get; set; }
         public DbSet<RouteTracking> Cat_PendientesDeEnviar { get; set; }
         public DbSet<ClinicalResultsPathological> Cat_Captura_ResultadosPatologicos { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

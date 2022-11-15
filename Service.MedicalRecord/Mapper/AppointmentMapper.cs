@@ -1,7 +1,7 @@
 ﻿using Service.MedicalRecord.Domain.Appointments;
-using Service.MedicalRecord.Domain.PriceQuote;
+using Service.MedicalRecord.Domain.Quotation;
 using Service.MedicalRecord.Dtos.Appointment;
-using Service.MedicalRecord.Dtos.PriceQuote;
+using Service.MedicalRecord.Dtos.Quotation;
 using System;
 using System.Collections.Generic;
 using System.Linq;

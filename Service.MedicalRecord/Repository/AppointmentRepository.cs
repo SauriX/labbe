@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Service.MedicalRecord.Context;
 using Service.MedicalRecord.Domain.Appointments;
-using Service.MedicalRecord.Domain.PriceQuote;
+using Service.MedicalRecord.Domain.Quotation;
 using Service.MedicalRecord.Dtos.Appointment;
 using Service.MedicalRecord.Repository.IRepository;
 using System;

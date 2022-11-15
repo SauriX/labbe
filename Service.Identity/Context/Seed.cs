@@ -147,7 +147,7 @@ namespace Service.Identity.Context
                 new Menu(18, 1, "Maquilador", "maquila", "maquila", 1017),
                 new Menu(19, 24, "Expedientes", "expedientes", "expedientes", 2401),
                 new Menu(20, null, "Parámetros de sistema", "configuration", "configuration", 2000),
-                new Menu(21, 24, "Cotización", "cotizacion", "cotizacion", 2402),
+                new Menu(21, 24, "Cotización", "quotation", "cotizacion", 2402),
                 new Menu(22, 24, "Reportes" , "report", "reports", 2403),
                 new Menu(23, 24, "Citas","appointments", "appointments", 2404),
                 new Menu(24, null, "Recepción",  "reception", "configuration", 2400),
