@@ -19,7 +19,7 @@ namespace Service.MedicalRecord.Dtos.Quotation
 
     public class QuotationStudyInfoDto
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public int EstudioId { get; set; }
         public string Clave { get; set; }
         public string Nombre { get; set; }
