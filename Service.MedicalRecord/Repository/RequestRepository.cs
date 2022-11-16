@@ -149,6 +149,7 @@ namespace Service.MedicalRecord.Repository
         public async Task<List<RequestStudy>> GetStudyById(Guid requestId, IEnumerable<int> studiesIds)
         {
             var studies = await _context.Relacion_Solicitud_Estudio
+                .Include(x => x.EstudioWeeClinic)
                 .Where(x => x.SolicitudId == requestId && studiesIds.Contains(x.Id))
                 .ToListAsync();
 
@@ -308,6 +309,11 @@ namespace Service.MedicalRecord.Repository
             };
 
             await _context.BulkInsertOrUpdateOrDeleteAsync(studies, config);
+        }
+
+        public async Task BulkUpdateWeeStudies(Guid requestId, List<RequestStudyWee> studies)
+        {
+            await _context.BulkUpdateAsync(studies);
         }
 
         public async Task DeleteImage(Guid requestId, string code)

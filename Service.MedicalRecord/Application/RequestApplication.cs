@@ -160,6 +160,8 @@ namespace Service.MedicalRecord.Application
 
             foreach (var study in studiesDto)
             {
+                if (string.IsNullOrEmpty(request.FolioWeeClinic)) study.Asignado = true;
+
                 var st = studiesParams.FirstOrDefault(x => x.Id == study.EstudioId);
                 if (st == null) continue;
 
@@ -263,7 +265,7 @@ namespace Service.MedicalRecord.Application
                 study.Precio = weePrice.Paciente.Total + weePrice.Aseguradora.Total;
                 study.PrecioFinal = weePrice.Paciente.Total + weePrice.Aseguradora.Total;
                 study.AplicaCopago = weePrice.Total.Copago > 0;
-                study.EstudioWeeClinic = new RequestStudyWee(ws.IdNodo, ws.IdServicio, ws.Cubierto, ws.IsAvaliable, ws.RestanteDays, ws.Vigencia, ws.IsCancel);
+                study.EstudioWeeClinic = new RequestStudyWee(ws.IdNodo, ws.IdServicio, ws.Cubierto, weePrice.Paciente.Total, weePrice.Aseguradora.Total, ws.IsAvaliable, ws.RestanteDays, ws.Vigencia, ws.IsCancel);
             }
 
             string code = await GetNewCode(requestDto);
@@ -548,8 +550,32 @@ namespace Service.MedicalRecord.Application
                 throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.NoStudySelected);
             }
 
+            var branch = await _branchRepository.GetOne(x => x.Id == request.SucursalId);
+
+            var weeServices = new List<WeeServiceDto>();
+
             foreach (var study in studies)
             {
+                if (!string.IsNullOrEmpty(request.FolioWeeClinic))
+                {
+                    if (study.EstudioWeeClinic == null)
+                    {
+                        throw new CustomException(HttpStatusCode.BadRequest, $"El estudio {study.Clave} no contiene información de WeeClinic, favor de contactar a su administrador de sistema");
+                    }
+
+                    if (study.EstudioWeeClinic.IsCancel == 0)
+                    {
+                        throw new CustomException(HttpStatusCode.BadRequest, $"No es posible cancelar el estudio {study.Clave} a traves de WeeClinic");
+                    }
+
+                    var weeCancelled = await _weeService.CancelService(study.EstudioWeeClinic.IdServicio, study.EstudioWeeClinic.IdNodo, branch.Clave);
+
+                    if (!weeCancelled.Cancelado)
+                    {
+                        throw new CustomException(HttpStatusCode.BadRequest, $"No fue posible cancelar el estudio {study.Clave} a traves de WeeClinic");
+                    }
+                }
+
                 study.EstatusId = Status.RequestStudy.Cancelado;
                 study.UsuarioModificoId = requestDto.UsuarioId;
                 study.FechaModifico = DateTime.Now;
@@ -818,44 +844,83 @@ namespace Service.MedicalRecord.Application
 
         public async Task<List<WeeServiceAssignmentDto>> AssignWeeServices(Guid recordId, Guid requestId, Guid userId)
         {
-            var request = await GetExistingRequest(recordId, requestId);
-
-            if (request.FolioWeeClinic == null || request.IdPersona == null || request.IdOrden == null)
+            try
             {
-                throw new CustomException(HttpStatusCode.BadRequest, "La solicitud no pertenece a WeeClinic");
-            }
+                _transaction.BeginTransaction();
+                var request = await GetExistingRequest(recordId, requestId);
 
-            var branch = await _branchRepository.GetOne(x => x.Id == request.SucursalId);
-            var studies = await _repository.GetStudiesByRequest(requestId);
-
-            var services = studies.Select(x => new WeeServiceNodeDto(x.EstudioWeeClinic.IdServicio, x.EstudioWeeClinic.IdNodo)).ToList();
-
-            var assignments = await _weeService.AssignServices(services, branch.Clave);
-
-            var results = new List<WeeServiceAssignmentDto>();
-
-            foreach (var assignment in assignments)
-            {
-                var servicesIds = assignment.IdServicio.Split("|").Select(x => x.Split(",").FirstOrDefault());
-
-                foreach (var serviceId in servicesIds)
+                if (request.FolioWeeClinic == null || request.IdPersona == null || request.IdOrden == null)
                 {
-                    var study = studies.FirstOrDefault(x => x.EstudioWeeClinic.IdServicio == serviceId);
-
-                    if (study == null) continue;
-
-                    results.Add(new WeeServiceAssignmentDto
-                    {
-                        IdServicio = serviceId,
-                        Estatus = assignment.Estatus,
-                        Mensaje = assignment.Mensaje,
-                        Clave = study.Clave,
-                        Nombre = study.Nombre
-                    });
+                    throw new CustomException(HttpStatusCode.BadRequest, "La solicitud no pertenece a WeeClinic");
                 }
-            }
 
-            return results;
+                var branch = await _branchRepository.GetOne(x => x.Id == request.SucursalId);
+                var studies = await _repository.GetStudiesByRequest(requestId);
+
+                var services = studies.Select(x => new WeeServiceNodeDto(x.EstudioWeeClinic.IdServicio, x.EstudioWeeClinic.IdNodo)).ToList();
+
+                var assignments = await _weeService.AssignServices(services, branch.Clave);
+
+                var results = new List<WeeServiceAssignmentDto>();
+
+                foreach (var assignment in assignments)
+                {
+                    var servicesIds = assignment.IdServicio.Split("|").Select(x => x.Split(",").FirstOrDefault());
+
+                    foreach (var serviceId in servicesIds)
+                    {
+                        var study = studies.FirstOrDefault(x => x.EstudioWeeClinic.IdServicio == serviceId);
+
+                        if (study == null) continue;
+
+                        results.Add(new WeeServiceAssignmentDto
+                        {
+                            IdServicio = serviceId,
+                            Estatus = assignment.Estatus,
+                            Mensaje = assignment.Mensaje,
+                            Clave = study.Clave,
+                            Nombre = study.Nombre
+                        });
+                    }
+                }
+
+                foreach (var study in studies)
+                {
+                    var result = results.FirstOrDefault(x => x.IdServicio == study.EstudioWeeClinic.IdServicio);
+
+                    if (result.Asignado)
+                    {
+                        study.EstudioWeeClinic.Asignado = true;
+                    }
+                }
+
+                var assigned = studies.Where(x => x.EstudioWeeClinic.Asignado).ToList();
+
+                request.TotalEstudios = assigned.Sum(x => x.PrecioFinal);
+                request.Descuento = assigned.Sum(x => x.Descuento);
+                request.DescuentoTipo = CANTIDAD;
+                request.Cargo = 0;
+                request.CargoTipo = CANTIDAD;
+                request.Copago = assigned.Sum(x => x.EstudioWeeClinic.TotalPaciente);
+                request.CopagoTipo = CANTIDAD;
+                request.Total = request.TotalEstudios - (request.TotalEstudios - request.Copago);
+                request.Saldo = request.Copago;
+                request.UsuarioModificoId = userId;
+                request.FechaModifico = DateTime.Now;
+
+                await _repository.Update(request);
+
+                await _repository.BulkUpdateWeeStudies(requestId, studies.Select(x => x.EstudioWeeClinic).ToList());
+
+                _transaction.CommitTransaction();
+
+                return results;
+            }
+            catch (Exception)
+            {
+                _transaction.RollbackTransaction();
+                throw;
+            }
         }
 
         private static async Task<string> SaveImageGetPath(RequestImageDto requestDto, string fileName = null)

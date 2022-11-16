@@ -8,11 +8,13 @@ namespace Service.MedicalRecord.Domain.Request
         {
         }
 
-        public RequestStudyWee(string idNodo, string idServicio, string cubierto, int isAvailable, int restanteDays, int vigencia, int isCancel)
+        public RequestStudyWee(string idNodo, string idServicio, string cubierto, decimal totalPaciente, decimal totalAseguradora, int isAvailable, int restanteDays, int vigencia, int isCancel)
         {
             IdNodo = idNodo;
             IdServicio = idServicio;
             Cubierto = cubierto;
+            TotalPaciente = totalPaciente;
+            TotalAseguradora = totalAseguradora;
             IsAvailable = isAvailable;
             RestanteDays = restanteDays;
             Vigencia = vigencia;
@@ -25,9 +27,13 @@ namespace Service.MedicalRecord.Domain.Request
         public string IdNodo { get; set; }
         public string IdServicio { get; set; }
         public string Cubierto { get; set; }
+        public decimal TotalPaciente { get; set; }
+        public decimal TotalAseguradora { get; set; }
+        public decimal Total => TotalPaciente + TotalAseguradora;
         public int IsAvailable { get; set; }
         public int RestanteDays { get; set; }
         public int Vigencia { get; set; }
         public int IsCancel { get; set; }
+        public bool Asignado { get; set; }
     }
 }
