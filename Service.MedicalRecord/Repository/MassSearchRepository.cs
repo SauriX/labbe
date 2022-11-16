@@ -42,6 +42,10 @@ namespace Service.MedicalRecord.Repository
             {
                 requests = requests.Where(x => filter.Sucursales.Contains(x.SucursalId));
             }
+            if (filter.Ciudades != null && filter.Ciudades.Any())
+            {
+                requests = requests.Where(x => filter.Ciudades.Contains(x.Sucursal.CiudadId));
+            }
 
             if (filter.Companias != null && filter.Companias.Any())
             {
@@ -74,12 +78,12 @@ namespace Service.MedicalRecord.Repository
             }
             if (filter.MediosEntrega != null)
             {
-                if (filter.MediosEntrega.Contains(1))
+                if (filter.MediosEntrega.Contains("Whatsapp"))
                 {
 
                     requests = requests.Where(x => !string.IsNullOrEmpty(x.EnvioWhatsApp));
                 }
-                if (filter.MediosEntrega.Contains(2))
+                if (filter.MediosEntrega.Contains("Correo"))
                 {
 
                     requests = requests.Where(x => !string.IsNullOrEmpty(x.EnvioCorreo));

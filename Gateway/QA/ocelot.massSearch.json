@@ -1,48 +1,44 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/MassSearch/",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/MassSearch/",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 24048
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/MassSearch/",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/MassSearch/GetByFilter",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/MassSearch/GetByFilter",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 24048
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/MassSearch/GetByFilter",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/MassSearch/GetAllCaptureResults",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/MassSearch/GetAllCaptureResults",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 24048
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/MassSearch/GetAllCaptureResults",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/MassSearch/list",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/MassSearch/list",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 24048
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/MassSearch/list",

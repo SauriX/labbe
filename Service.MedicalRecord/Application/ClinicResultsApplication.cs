@@ -392,9 +392,11 @@ namespace Service.MedicalRecord.Application
                 }
                 else
                 {
+                    await UpdateStatusStudy(request.SolicitudEstudioId, Status.RequestStudy.Liberado, user);
+
                     var existingRequest = await _repository.GetRequestById(request.SolicitudId);
 
-                    if (existingRequest.Estudios.All(estudio => estudio.EstatusId == Status.RequestStudy.Liberado))
+                        if (existingRequest.Estudios.All(estudio => estudio.EstatusId == Status.RequestStudy.Liberado))
                     {
                         //List<int> labResults = existingRequest.Estudios.Where(x => x.DepartamentoId != SharedDepartment.PATOLOGIA).Select(x => x.Id).ToList();
                         //List<ClinicResults> resultsTask = new List<ClinicResults>();
@@ -426,7 +428,7 @@ namespace Service.MedicalRecord.Application
                         //    {
                         //        if (estudio.DepartamentoId != SharedDepartment.PATOLOGIA)
                         //        {
-                        //            await UpdateStatusStudy(request.SolicitudEstudioId, Status.RequestStudy.Enviado, user);
+                        //await UpdateStatusStudy(request.SolicitudEstudioId, Status.RequestStudy.Enviado, user);
                         //        }
                         //    }
                         //}
@@ -682,8 +684,11 @@ namespace Service.MedicalRecord.Application
             foreach (var estudiosSeleccionados in estudios.Estudios)
             {
                 var existingRequest = await _repository.GetRequestById(estudiosSeleccionados.SolicitudId);
+
                 var files = new List<SenderFiles>();
+
                 List<RequestStudy> pathologicalStudies = new List<RequestStudy>();
+
                 List<RequestStudy> labStudies = new List<RequestStudy>();
 
                 List<ClinicResults> resultsTask = new List<ClinicResults>();
@@ -713,6 +718,9 @@ namespace Service.MedicalRecord.Application
 
                         files.Add(new SenderFiles(new Uri(pathName), namePdf));
 
+
+
+
                         //pathologicalStudies.Add(existingStudy);
                     }
                     else
@@ -720,6 +728,30 @@ namespace Service.MedicalRecord.Application
                         var finalResult = await _repository.GetLabResultsById(estudioId.EstudioId);
                         resultsTask.AddRange(finalResult);
                     }
+
+                    RequestStudy estudioActual = await _repository.GetRequestStudyById(estudioId.EstudioId);
+
+                    
+                    List<string> mediosActuales = estudioActual.MedioSolicitado == null ? new List<string>() : estudioActual.MedioSolicitado?.Split(",").ToList();
+                    
+
+                    if (estudios.MediosEnvio.Contains("Whatsapp") && !mediosActuales.Contains("Whatsapp"))
+                    {
+                        mediosActuales.Add("Whatsapp");
+                    }
+                    if (estudios.MediosEnvio.Contains("Correo") && !mediosActuales.Contains("Correo"))
+                    {
+                        mediosActuales.Add("Correo");
+                    }
+                    if (estudios.MediosEnvio.Contains("Fisico") && !mediosActuales.Contains("Fisico"))
+                    {
+                        mediosActuales.Add("Fisico");
+                    }
+
+                    estudioActual.MedioSolicitado = String.Join(",", mediosActuales).Trim();
+
+                    await _repository.UpdateMedioSolicitado(estudioActual);
+
 
                 }
                 if (resultsTask.Count > 0)
@@ -741,10 +773,17 @@ namespace Service.MedicalRecord.Application
                 {
                     if (files.Count > 0)
                     {
+                        if (estudios.MediosEnvio.Contains("Whatsapp"))
+                        {
+                            await SendTestWhatsapp(files, existingRequest.Expediente.Celular, estudios.UsuarioId);
 
-                        await SendTestWhatsapp(files, existingRequest.Expediente.Celular, estudios.UsuarioId);
+                        }
 
-                        await SendTestEmail(files, existingRequest.Expediente.Correo, estudios.UsuarioId);
+                        if (estudios.MediosEnvio.Contains("Correo"))
+                        {
+
+                            await SendTestEmail(files, existingRequest.Expediente.Correo, estudios.UsuarioId);
+                        }
 
                         foreach (var estudio in existingRequest.Estudios)
                         {
@@ -774,7 +813,8 @@ namespace Service.MedicalRecord.Application
                 .Select(x => x.Id).ToList();
 
             List<int> pathologicalResults = existingRequest.Estudios
-                            .Where(x => x.AreaId == Catalogs.Area.HISTOPATOLOGIA)
+                            //.Where(x => x.AreaId == Catalogs.Area.HISTOPATOLOGIA)
+                            .Where(x => x.DepartamentoId == SharedDepartment.PATOLOGIA)
                             .Select(x => x.Id)
                             .ToList();
 
@@ -874,7 +914,8 @@ namespace Service.MedicalRecord.Application
             var message = RequestTemplates.Messages.PathologicalMessage;
 
             
-            var emailToSend = new EmailContract("vhernandez@axsistec.com", null, subject, title, message, senderFiles)
+            //var emailToSend = new EmailContract("vhernandez@axsistec.com", null, subject, title, message, senderFiles)
+            var emailToSend = new EmailContract("cass.estrada2108@gmail.com", null, subject, title, message, senderFiles)
             {
                 Notificar = true,
                 RemitenteId = usuario.ToString()
@@ -896,7 +937,7 @@ namespace Service.MedicalRecord.Application
             var phone = telefono.Replace("-", "");
 
             //phone = phone.Length == 10 ? "52" + "8115543677" : "8115543677";
-            phone = phone.Length == 10 ? "52" + "2282820960" : "2282820960";
+            phone = phone.Length == 10 ? "52" + "8132504612" : "8132504612";
 
             var emailToSend = new WhatsappContract(phone, message, senderFiles)
             {
