@@ -20,36 +20,79 @@ namespace Service.MedicalRecord.Repository
         {
             _context = context;
         }
+
+        public async Task<List<PriceQuote>> GetByFilter(PriceQuoteFilterDto filter)
+        {
+            var quotations = _context.CAT_Cotizaciones
+                .Include(x => x.Expediente)
+                .Include(x => x.Estudios)
+                .AsQueryable();
+
+            if (filter.FechaAInicial != null && filter.FechaAFinal != null)
+            {
+                quotations = quotations.Where(x => x.FechaCreo.Date <= ((DateTime)filter.FechaAInicial).Date
+                && x.FechaCreo.Date >= ((DateTime)filter.FechaAFinal));
+            }
+
+            if (filter.Sucursales != null && filter.Sucursales.Count > 0)
+            {
+                //quotations = quotations.Where(x => filter.Sucursales.Contains(x.SucursalId));
+            }
+
+            if (filter.FechaNInicial != null && filter.FechaNFinal != null)
+            {
+                quotations = quotations.Where(x => x.Expediente != null
+                && x.Expediente.FechaDeNacimiento.Date <= ((DateTime)filter.FechaNInicial).Date
+                && x.Expediente.FechaDeNacimiento.Date >= ((DateTime)filter.FechaNFinal));
+            }
+
+            if (!string.IsNullOrWhiteSpace(filter.CorreoTelefono))
+            {
+                quotations = quotations.Where(x => (x.Correo != null && x.Correo.ToLower().Contains(filter.CorreoTelefono))
+                || (x.Whatsapp != null && x.Whatsapp.ToLower().Contains(filter.CorreoTelefono)));
+            }
+
+            if (!string.IsNullOrWhiteSpace(filter.Expediente))
+            {
+                quotations = quotations
+                    .Where(x => x.Expediente != null
+                    && ((x.Expediente.NombrePaciente + " " + x.Expediente.PrimerApellido + " " + x.Expediente.SegundoApellido).ToLower().Contains(filter.Expediente.ToLower())
+                    || (x.Expediente != null && x.Expediente.Expediente.ToLower().Contains(filter.Expediente.ToLower()))));
+            }
+
+            return await quotations.ToListAsync();
+        }
+
         public async Task<List<MedicalRecord.Domain.MedicalRecord.MedicalRecord>> GetMedicalRecord(PriceQuoteExpedienteSearch search)
         {
-            var expedientes =  _context.CAT_Expedientes.AsQueryable();
+            var expedientes = _context.CAT_Expedientes.AsQueryable();
 
             if (!string.IsNullOrEmpty(search.Buscar))
             {
 
-                 expedientes =expedientes.Where(x => x.NombrePaciente.Contains(search.Buscar) || x.PrimerApellido.Contains(search.Buscar) || x.Expediente.Contains(search.Buscar));
-
-                
-            }
-            if ( !string.IsNullOrEmpty(search.Telefono) )
-            {
-
-                expedientes = expedientes.Where(x => x.Telefono == search.Telefono  );
+                expedientes = expedientes.Where(x => x.NombrePaciente.Contains(search.Buscar) || x.PrimerApellido.Contains(search.Buscar) || x.Expediente.Contains(search.Buscar));
 
 
             }
-            if ( search.FechaInicial.Date != DateTime.Now.Date && search.FechaFinal.Date != DateTime.Now.Date )
+            if (!string.IsNullOrEmpty(search.Telefono))
             {
 
-                expedientes = expedientes.Where(x =>  (x.FechaCreo >= search.FechaInicial.Date && x.FechaCreo.Date <= search.FechaFinal.Date));
+                expedientes = expedientes.Where(x => x.Telefono == search.Telefono);
+
+
+            }
+            if (search.FechaInicial.Date != DateTime.Now.Date && search.FechaFinal.Date != DateTime.Now.Date)
+            {
+
+                expedientes = expedientes.Where(x => (x.FechaCreo >= search.FechaInicial.Date && x.FechaCreo.Date <= search.FechaFinal.Date));
 
 
             }
 
-            if ( !string.IsNullOrEmpty(search.Email))
+            if (!string.IsNullOrEmpty(search.Email))
             {
 
-                expedientes = expedientes.Where(x => x.Correo.Contains(search.Email)) ;
+                expedientes = expedientes.Where(x => x.Correo.Contains(search.Email));
 
 
             }
@@ -63,39 +106,7 @@ namespace Service.MedicalRecord.Repository
 
             return lastRequest?.Afiliacion;
         }
-        public async Task<List<PriceQuote>> GetNow(PriceQuoteSearchDto search)
-        {
 
-            if (!string.IsNullOrEmpty(search.Presupuesto) || !string.IsNullOrEmpty(search.Email) || !string.IsNullOrEmpty(search.Ciudad) || !string.IsNullOrEmpty(search.Sucursal) || !string.IsNullOrEmpty(search.Telefono) || search.Activo || search.FechaAlta.Date != DateTime.Now.Date)
-            {
-                var sucursal = Guid.Empty;
-                if (!string.IsNullOrEmpty(search.Sucursal))
-                {
-                    sucursal = Guid.Parse(search.Sucursal);
-                }
-                var expedientes = await _context.CAT_Cotizaciones.Include(x => x.Expediente).Where(x => x.Expediente.Ciudad == search.Ciudad || x.NombrePaciente.Contains(search.Presupuesto) || x.Expediente.Expediente.Contains(search.Presupuesto) || x.FechaCreo.Date == search.FechaAlta.Date || x.Expediente.IdSucursal == sucursal).ToListAsync();
-
-                return expedientes.Select(x =>
-                {
-                    var estudios = _context.cotizacionStudies.Where(y => y.CotizacionId == x.Id);
-                    x.Estudios = estudios;
-                    return x;
-                }).ToList();
-            }
-            else
-            {
-
-
-                var expedientes = await _context.CAT_Cotizaciones.Include(x => x.Expediente).Where(x => x.FechaCreo.Date <= DateTime.Now.Date && x.FechaCreo.Date > DateTime.Now.AddDays(-1).Date).ToListAsync();
-
-                return expedientes.Select(x =>
-                {
-                    var estudios = _context.cotizacionStudies.Where(y => y.CotizacionId == x.Id);
-                    x.Estudios = estudios;
-                    return x;
-                }).ToList();
-            }
-        }
         public async Task Create(PriceQuote expediente)
         {
             var estudios = expediente.Estudios.ToList();
@@ -132,7 +143,7 @@ namespace Service.MedicalRecord.Repository
         public async Task<PriceQuote> GetById(Guid id)
         {
             var expedientes = await _context.CAT_Cotizaciones.Include(x => x.Expediente).FirstOrDefaultAsync(x => x.Id == id);
-            var estudios = _context.cotizacionStudies.Where(x => x.CotizacionId == expedientes.Id);
+            var estudios = await _context.cotizacionStudies.Where(x => x.CotizacionId == expedientes.Id).ToListAsync();
             expedientes.Estudios = estudios;
             return expedientes;
         }

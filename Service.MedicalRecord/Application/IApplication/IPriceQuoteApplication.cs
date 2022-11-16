@@ -9,12 +9,12 @@ namespace Service.MedicalRecord.Application.IApplication
 {
     public interface IPriceQuoteApplication
     {
-        Task<List<PriceQuoteListDto>> GetNow(PriceQuoteSearchDto search);
+        Task<List<PriceQuoteListDto>> GetByFilter(PriceQuoteFilterDto filter);
         Task<List<PriceQuoteListDto>> GetActive();
         Task<PriceQuoteFormDto> GetById(Guid id);
         Task<PriceQuoteListDto> Create(PriceQuoteFormDto priceQuote);
         Task<PriceQuoteListDto> Update(PriceQuoteFormDto expediente);
-        Task<(byte[] file, string fileName)> ExportList(PriceQuoteSearchDto search);
+        Task<(byte[] file, string fileName)> ExportList(PriceQuoteFilterDto search);
         Task<(byte[] file, string fileName)> ExportForm(Guid id);
         Task<List<MedicalRecordsListDto>> GetMedicalRecord(PriceQuoteExpedienteSearch search);
         Task<byte[]> GetTicket();
