@@ -53,7 +53,7 @@ namespace Service.MedicalRecord.Repository
 
             }
 
-            if (search.fechaAlta[0].Date != DateTime.MinValue.Date&& search.fechaAlta[1].Date != DateTime.MinValue.Date)
+            if (search.fechaAlta[0].Date != DateTime.MinValue.Date && search.fechaAlta[1].Date != DateTime.MinValue.Date)
             {
                 expedientes = expedientes.Where(x => x.FechaCreo.Date >= search.fechaAlta[0].Date && x.FechaCreo.Date <= search.fechaAlta[1].Date);
             }

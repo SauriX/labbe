@@ -73,7 +73,7 @@ namespace Service.MedicalRecord.Repository
                 {
                     sucursal = Guid.Parse(search.Sucursal);
                 }
-                var expedientes = await _context.CAT_Cotizaciones.Include(x => x.Expediente).Where(x => x.Expediente.Ciudad == search.Ciudad || x.NombrePaciente.Contains(search.Presupuesto) || x.FechaCreo.Date == search.FechaAlta.Date || x.Expediente.IdSucursal == sucursal).ToListAsync();
+                var expedientes = await _context.CAT_Cotizaciones.Include(x => x.Expediente).Where(x => x.Expediente.Ciudad == search.Ciudad || x.NombrePaciente.Contains(search.Presupuesto) || x.Expediente.Expediente.Contains(search.Presupuesto) || x.FechaCreo.Date == search.FechaAlta.Date || x.Expediente.IdSucursal == sucursal).ToListAsync();
 
                 return expedientes.Select(x =>
                 {
