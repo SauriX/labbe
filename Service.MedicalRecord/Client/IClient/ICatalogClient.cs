@@ -1,5 +1,5 @@
 ﻿using Service.MedicalRecord.Dtos.Branch;
-using Service.MedicalRecord.Dtos.Promos;
+using Service.MedicalRecord.Dtos.Promotion;
 using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.Route;
 using System;

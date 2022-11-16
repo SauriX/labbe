@@ -12,6 +12,8 @@ namespace Service.MedicalRecord.Context.EntityConfiguration.Request
 
         public void Configure(EntityTypeBuilder<Domain.Request.Request> builder)
         {
+            builder.ToTable("CAT_Solicitud");
+
             builder.HasKey(x => x.Id);
 
             builder

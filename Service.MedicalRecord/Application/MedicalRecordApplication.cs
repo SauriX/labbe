@@ -78,7 +78,7 @@ namespace Service.MedicalRecord.Application
             var codeRange = await _catalogClient.GetCodeRange(Guid.Parse(expediente.sucursal));
             var lastCode = await _repository.GetLastCode(Guid.Parse(expediente.sucursal), date);
 
-            var consecutive = RequestCodes.GetCode(codeRange, lastCode);
+            var consecutive = Codes.GetCode(codeRange, lastCode);
             var code = $"{consecutive}{date}";
             newprice.Expediente = code;   
             await _repository.Create(newprice, expediente.TaxData);

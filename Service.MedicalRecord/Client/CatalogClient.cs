@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using Service.MedicalRecord.Client.IClient;
 using Service.MedicalRecord.Dtos.Branch;
 using Service.MedicalRecord.Dtos.Catalogs;
-using Service.MedicalRecord.Dtos.Promos;
+using Service.MedicalRecord.Dtos.Promotion;
 using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.Route;
 using Shared.Error;
