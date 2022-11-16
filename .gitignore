@@ -373,3 +373,5 @@ Service.MedicalRecord/wwwroot/images/ResultsPathological/
 Service.MedicalRecord/wwwroot/temp/labResults/
 
 Service.MedicalRecord/wwwroot/temp/pdf/
+
+Gateway/ocelot.json

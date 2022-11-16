@@ -65,6 +65,17 @@
       ],
       "UpstreamPathTemplate": "/api/scopes/equipment",
       "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/identity/api/scopes/MassSearch",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/scopes/MassSearch",
+      "UpstreamHttpMethod": [ "GET" ]
     }
   ]
 }
