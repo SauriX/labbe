@@ -17,23 +17,19 @@ namespace Service.MedicalRecord.Controllers
     {
         private readonly IPriceQuoteApplication _Service;
         private readonly IRequestApplication _ServiceRequest;
+
         public PriceQuoteController(IPriceQuoteApplication Service, IRequestApplication request)
         {
             _Service = Service;
             _ServiceRequest = request;
         }
 
-
-
-
-        [HttpPost("now")]
+        [HttpPost("filter")]
         //[Authorize(Policies.Access)]
-        public async Task<List<PriceQuoteListDto>> GetNow(PriceQuoteSearchDto search = null)
+        public async Task<List<PriceQuoteListDto>> GetByFilter(PriceQuoteFilterDto filter)
         {
-            return await _Service.GetNow(search);
+            return await _Service.GetByFilter(filter);
         }
-
-
 
         [HttpGet("active")]
         //[Authorize(Policies.Access)]
@@ -74,7 +70,7 @@ namespace Service.MedicalRecord.Controllers
         }
         [HttpPost("export/list")]
         //[Authorize(Policies.Download)]
-        public async Task<IActionResult> ExportListPriceList(PriceQuoteSearchDto search = null)
+        public async Task<IActionResult> ExportListPriceList(PriceQuoteFilterDto search = null)
         {
             var (file, fileName) = await _Service.ExportList(search);
             return File(file, MimeType.XLSX, fileName);
@@ -104,8 +100,8 @@ namespace Service.MedicalRecord.Controllers
 
 
         [HttpGet("email/{requestId}/{email}")]
-       // [Authorize(Policies.Mail)]
-        public async Task SendTestEmail( Guid requestId, string email)
+        // [Authorize(Policies.Mail)]
+        public async Task SendTestEmail(Guid requestId, string email)
         {
             var requestDto = new RequestSendDto
             {
@@ -119,8 +115,8 @@ namespace Service.MedicalRecord.Controllers
         }
 
         [HttpGet("whatsapp/{requestId}/{phone}")]
-       // [Authorize(Policies.Wapp)] 
-        public async Task SendTestWhatsapp( Guid requestId, string phone)
+        // [Authorize(Policies.Wapp)] 
+        public async Task SendTestWhatsapp(Guid requestId, string phone)
         {
             var requestDto = new RequestSendDto
             {

@@ -307,6 +307,17 @@
       ],
       "UpstreamPathTemplate": "/api/request/wee/verifyToken",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/request/wee/assignServices/{recordId}/{requestId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/request/wee/assignServices/{recordId}/{requestId}",
+      "UpstreamHttpMethod": [ "PUT" ]
     }
   ]
 }

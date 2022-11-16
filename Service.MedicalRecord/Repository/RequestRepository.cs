@@ -283,8 +283,8 @@ namespace Service.MedicalRecord.Repository
             config.SetSynchronizeFilter<RequestStudy>(x => x.SolicitudId == requestId);
 
             await _context.BulkInsertOrUpdateAsync(studies, config);
-        }       
-        
+        }
+
         public async Task BulkUpdatePayments(Guid requestId, List<RequestPayment> payments)
         {
             var config = new BulkConfig();

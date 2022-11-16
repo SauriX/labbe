@@ -34,6 +34,7 @@ using Microsoft.VisualBasic;
 using Integration.WeeClinic.Models.Laboratorio_GetPreciosEstudios_ByidServicio;
 using Service.MedicalRecord.Dtos.WeeClinic;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Integration.WeeClinic.Dtos;
 
 namespace Service.MedicalRecord.Application
 {
@@ -782,6 +783,87 @@ namespace Service.MedicalRecord.Application
             await _repository.DeleteImage(requestId, code);
         }
 
+        public async Task<WeeTokenValidationDto> SendCompareToken(RequestTokenDto requestDto, string actionCode)
+        {
+            var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
+
+            if (request.FolioWeeClinic == null || request.IdPersona == null || request.IdOrden == null)
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "La solicitud no pertenece a WeeClinic");
+            }
+
+            var validation = await _weeService.OperateToken(request.IdPersona, actionCode, requestDto.Token);
+
+            return validation;
+        }
+
+        public async Task<WeeTokenVerificationDto> VerifyWeeToken(RequestTokenDto requestDto)
+        {
+            var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
+
+            if (request.FolioWeeClinic == null || request.IdPersona == null || request.IdOrden == null)
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "La solicitud no pertenece a WeeClinic");
+            }
+
+            var branch = await _branchRepository.GetOne(x => x.Id == request.SucursalId);
+
+            var validation = await _weeService.VerifyToken(request.IdPersona, request.IdOrden, requestDto.Token, branch?.Clave);
+
+            if (validation.Verificado)
+            {
+                request.TokenValidado = true;
+                request.UsuarioModificoId = requestDto.UsuarioId;
+                request.FechaModifico = DateTime.Now;
+
+                await _repository.Update(request);
+            }
+
+            return validation;
+        }
+
+        public async Task<List<WeeServiceAssignmentDto>> AssignWeeServices(Guid recordId, Guid requestId, Guid userId)
+        {
+            var request = await GetExistingRequest(recordId, requestId);
+
+            if (request.FolioWeeClinic == null || request.IdPersona == null || request.IdOrden == null)
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "La solicitud no pertenece a WeeClinic");
+            }
+
+            var branch = await _branchRepository.GetOne(x => x.Id == request.SucursalId);
+            var studies = await _repository.GetStudiesByRequest(requestId);
+
+            var services = studies.Select(x => new WeeServiceNodeDto(x.EstudioWeeClinic.IdServicio, x.EstudioWeeClinic.IdNodo)).ToList();
+
+            var assignments = await _weeService.AssignServices(services, branch.Clave);
+
+            var results = new List<WeeServiceAssignmentDto>();
+
+            foreach (var assignment in assignments)
+            {
+                var servicesIds = assignment.IdServicio.Split("|").Select(x => x.Split(",").FirstOrDefault());
+
+                foreach (var serviceId in servicesIds)
+                {
+                    var study = studies.FirstOrDefault(x => x.EstudioWeeClinic.IdServicio == serviceId);
+
+                    if (study == null) continue;
+
+                    results.Add(new WeeServiceAssignmentDto
+                    {
+                        IdServicio = serviceId,
+                        Estatus = assignment.Estatus,
+                        Mensaje = assignment.Mensaje,
+                        Clave = study.Clave,
+                        Nombre = study.Nombre
+                    });
+                }
+            }
+
+            return results;
+        }
+
         private static async Task<string> SaveImageGetPath(RequestImageDto requestDto, string fileName = null)
         {
             var path = Path.Combine("wwwroot/images/requests", requestDto.Clave);
@@ -863,45 +945,6 @@ namespace Service.MedicalRecord.Application
                 patCode != null && citCode == null ? patCode :
                 patCode == null && citCode != null ? citCode :
                 $"{patCode}, {citCode}";
-        }
-
-        public async Task<WeeTokenValidationDto> SendCompareToken(RequestTokenDto requestDto, string actionCode)
-        {
-            var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
-
-            if (request.FolioWeeClinic == null || request.IdPersona == null || request.IdOrden == null)
-            {
-                throw new CustomException(HttpStatusCode.BadRequest, "La solicitud no pertenece a WeeClinic");
-            }
-
-            var validation = await _weeService.OperateToken(request.IdPersona, actionCode, requestDto.Token);
-
-            return validation;
-        }
-
-        public async Task<WeeTokenVerificationDto> VerifyWeeToken(RequestTokenDto requestDto)
-        {
-            var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
-
-            if (request.FolioWeeClinic == null || request.IdPersona == null || request.IdOrden == null)
-            {
-                throw new CustomException(HttpStatusCode.BadRequest, "La solicitud no pertenece a WeeClinic");
-            }
-
-            var branch = await _branchRepository.GetOne(x => x.Id == request.SucursalId);
-
-            var validation = await _weeService.VerifyToken(request.IdPersona, request.IdOrden, requestDto.Token, branch?.Clave);
-
-            if (validation.Verificado)
-            {
-                request.TokenValidado = true;
-                request.UsuarioModificoId = requestDto.UsuarioId;
-                request.FechaModifico = DateTime.Now;
-
-                await _repository.Update(request);
-            }
-
-            return validation;
         }
     }
 }

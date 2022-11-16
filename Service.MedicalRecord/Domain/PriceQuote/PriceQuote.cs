@@ -6,6 +6,8 @@ namespace Service.MedicalRecord.Domain.PriceQuote
     public class PriceQuote
     {
         public Guid Id { get; set; }
+        public Guid? ExpedienteId { get; set; }
+        public virtual MedicalRecord.MedicalRecord Expediente { get; set; }
         public string Procedencia { get; set; }
         public string NombrePaciente { get; set; }
         public DateTime FechaNac { get; set; }
@@ -22,13 +24,10 @@ namespace Service.MedicalRecord.Domain.PriceQuote
         public DateTime FechaCreo { get; set; }
         public Guid? UsuarioModId { get; set; }
         public DateTime? FechaMod { get; set; }
-        public Guid? ExpedienteId { get; set; }
         public string Genero { get; set; }
         public int Edad { get; set; }
         public int Cargo { get; set; }
         public int Tipo { get; set; }
-        public virtual MedicalRecord.MedicalRecord Expediente { get; set; }
-        public IEnumerable<CotizacionStudy> Estudios { get; set; }
-
+        public virtual ICollection<CotizacionStudy> Estudios { get; set; }
     }
 }
