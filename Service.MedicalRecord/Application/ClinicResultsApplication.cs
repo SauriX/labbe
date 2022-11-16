@@ -392,9 +392,11 @@ namespace Service.MedicalRecord.Application
                 }
                 else
                 {
+                    await UpdateStatusStudy(request.SolicitudEstudioId, Status.RequestStudy.Liberado, user);
+
                     var existingRequest = await _repository.GetRequestById(request.SolicitudId);
 
-                    if (existingRequest.Estudios.All(estudio => estudio.EstatusId == Status.RequestStudy.Liberado))
+                        if (existingRequest.Estudios.All(estudio => estudio.EstatusId == Status.RequestStudy.Liberado))
                     {
                         await SendResultsFiles(request.SolicitudId, userId, user);
                     }
@@ -575,8 +577,11 @@ namespace Service.MedicalRecord.Application
             foreach (var estudiosSeleccionados in estudios.Estudios)
             {
                 var existingRequest = await _repository.GetRequestById(estudiosSeleccionados.SolicitudId);
+
                 var files = new List<SenderFiles>();
+
                 List<RequestStudy> pathologicalStudies = new List<RequestStudy>();
+
                 List<RequestStudy> labStudies = new List<RequestStudy>();
 
                 List<ClinicResults> resultsTask = new List<ClinicResults>();
@@ -612,6 +617,30 @@ namespace Service.MedicalRecord.Application
                         resultsTask.AddRange(finalResult);
                     }
 
+                    RequestStudy estudioActual = await _repository.GetRequestStudyById(estudioId.EstudioId);
+
+                    
+                    List<string> mediosActuales = estudioActual.MedioSolicitado == null ? new List<string>() : estudioActual.MedioSolicitado?.Split(",").ToList();
+                    
+
+                    if (estudios.MediosEnvio.Contains("Whatsapp") && !mediosActuales.Contains("Whatsapp"))
+                    {
+                        mediosActuales.Add("Whatsapp");
+                    }
+                    if (estudios.MediosEnvio.Contains("Correo") && !mediosActuales.Contains("Correo"))
+                    {
+                        mediosActuales.Add("Correo");
+                    }
+                    if (estudios.MediosEnvio.Contains("Fisico") && !mediosActuales.Contains("Fisico"))
+                    {
+                        mediosActuales.Add("Fisico");
+                    }
+
+                    estudioActual.MedioSolicitado = String.Join(",", mediosActuales).Trim();
+
+                    await _repository.UpdateMedioSolicitado(estudioActual);
+
+
                 }
                 if (resultsTask.Count > 0)
                 {
@@ -632,10 +661,17 @@ namespace Service.MedicalRecord.Application
                 {
                     if (files.Count > 0)
                     {
+                        if (estudios.MediosEnvio.Contains("Whatsapp"))
+                        {
+                            await SendTestWhatsapp(files, existingRequest.Expediente.Celular, estudios.UsuarioId);
 
-                        await SendTestWhatsapp(files, existingRequest.Expediente.Celular, estudios.UsuarioId);
+                        }
 
-                        await SendTestEmail(files, existingRequest.Expediente.Correo, estudios.UsuarioId);
+                        if (estudios.MediosEnvio.Contains("Correo"))
+                        {
+
+                            await SendTestEmail(files, existingRequest.Expediente.Correo, estudios.UsuarioId);
+                        }
 
                         foreach (var estudio in existingRequest.Estudios)
                         {
@@ -662,7 +698,8 @@ namespace Service.MedicalRecord.Application
                 .Select(x => x.Id).ToList();
 
             List<int> pathologicalResults = existingRequest.Estudios
-                            .Where(x => x.AreaId == Catalogs.Area.HISTOPATOLOGIA)
+                            //.Where(x => x.AreaId == Catalogs.Area.HISTOPATOLOGIA)
+                            .Where(x => x.DepartamentoId == SharedDepartment.PATOLOGIA)
                             .Select(x => x.Id)
                             .ToList();
 

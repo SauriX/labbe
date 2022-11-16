@@ -156,13 +156,13 @@ namespace Integration.Pdf.Controllers
         public async Task<HttpResponseMessage> PathologicalResults(PathologicalResultsDto results)
         {
             var file = await PathologicalResultService.GeneratePathologicalResultPdf(results);
-            var labFile = LabResultsService.Generate(new ClinicResultsPdfDto() { SolicitudInfo = new ClinicResultsRequestDto(), CapturaResultados = new List<ClinicResultsCaptureDto>() });
+            // var labFile = LabResultsService.Generate(new ClinicResultsPdfDto() { SolicitudInfo = new ClinicResultsRequestDto(), CapturaResultados = new List<ClinicResultsCaptureDto>() });
 
-            var mergeFile = PathologicalResultService.MergePdf(file, labFile);
+            // var mergeFile = PathologicalResultService.MergePdf(file, labFile);
 
             var result = new HttpResponseMessage(HttpStatusCode.OK)
             {
-                Content = new ByteArrayContent(mergeFile)
+                Content = new ByteArrayContent(file)
             };
 
             result.Content.Headers.ContentDisposition =
