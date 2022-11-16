@@ -17,5 +17,6 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<WeeTokenValidationDto> OperateToken(string personId, string actionCode, string code = null);
         Task<WeeTokenVerificationDto> VerifyToken(string personId, string orderId, string code, string branch);
         Task<List<WeeServiceAssignmentDto>> AssignServices(List<WeeServiceNodeDto> services, string branch);
+        Task<WeeCancellationDto> CancelService(string serviceId, string nodeId, string branch);
     }
 }
