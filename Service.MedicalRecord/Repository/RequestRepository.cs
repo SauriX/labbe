@@ -89,7 +89,10 @@ namespace Service.MedicalRecord.Repository
             {
                 requests = requests.Where(x => x.Estudios.Any(y => filter.Departamentos.Contains(y.DepartamentoId)));
             }
-
+            if (filter.Expediente != null)
+            {
+                requests = requests.Where(x => x.Expediente.Expediente == filter.Expediente);
+            }
             return await requests.ToListAsync();
         }
 
@@ -146,6 +149,7 @@ namespace Service.MedicalRecord.Repository
         public async Task<List<RequestStudy>> GetStudyById(Guid requestId, IEnumerable<int> studiesIds)
         {
             var studies = await _context.Relacion_Solicitud_Estudio
+                .Include(x => x.EstudioWeeClinic)
                 .Where(x => x.SolicitudId == requestId && studiesIds.Contains(x.Id))
                 .ToListAsync();
 
@@ -258,7 +262,7 @@ namespace Service.MedicalRecord.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task BulkUpdatePacks(Guid requestId, List<RequestPack> packs)
+        public async Task BulkInsertUpdatePacks(Guid requestId, List<RequestPack> packs)
         {
             var config = new BulkConfig();
             config.SetSynchronizeFilter<RequestPack>(x => x.SolicitudId == requestId);
@@ -274,14 +278,14 @@ namespace Service.MedicalRecord.Repository
             await _context.BulkInsertOrUpdateOrDeleteAsync(packs, config);
         }
 
-        public async Task BulkUpdateStudies(Guid requestId, List<RequestStudy> studies)
+        public async Task BulkInsertUpdateStudies(Guid requestId, List<RequestStudy> studies)
         {
             var config = new BulkConfig();
             config.SetSynchronizeFilter<RequestStudy>(x => x.SolicitudId == requestId);
 
             await _context.BulkInsertOrUpdateAsync(studies, config);
-        }       
-        
+        }
+
         public async Task BulkUpdatePayments(Guid requestId, List<RequestPayment> payments)
         {
             var config = new BulkConfig();
@@ -305,6 +309,11 @@ namespace Service.MedicalRecord.Repository
             };
 
             await _context.BulkInsertOrUpdateOrDeleteAsync(studies, config);
+        }
+
+        public async Task BulkUpdateWeeStudies(Guid requestId, List<RequestStudyWee> studies)
+        {
+            await _context.BulkUpdateAsync(studies);
         }
 
         public async Task DeleteImage(Guid requestId, string code)

@@ -10,9 +10,9 @@ namespace Service.MedicalRecord.Context.EntityConfiguration.Appoitnment
         {
             builder.ToTable("CAT_Cita_Lab");
             builder.HasKey(x => x.Id);
-            builder
-                .HasMany(x => x.Estudios)
-                .WithOne();
+            //builder
+            //    .HasMany(x => x.Estudios)
+            //    .WithOne();
 
         }
     }

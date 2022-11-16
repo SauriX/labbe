@@ -28,12 +28,13 @@ using COMPANIES = Shared.Dictionary.Catalogs.Company;
 using MEDICS = Shared.Dictionary.Catalogs.Medic;
 using DocumentFormat.OpenXml.Math;
 using Integration.WeeClinic.Services;
-using Service.MedicalRecord.Dtos.Promos;
+using Service.MedicalRecord.Dtos.Promotion;
 using Service.MedicalRecord.Domain.Catalogs;
 using Microsoft.VisualBasic;
 using Integration.WeeClinic.Models.Laboratorio_GetPreciosEstudios_ByidServicio;
 using Service.MedicalRecord.Dtos.WeeClinic;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Integration.WeeClinic.Dtos;
 
 namespace Service.MedicalRecord.Application
 {
@@ -159,6 +160,8 @@ namespace Service.MedicalRecord.Application
 
             foreach (var study in studiesDto)
             {
+                if (string.IsNullOrEmpty(request.FolioWeeClinic)) study.Asignado = true;
+
                 var st = studiesParams.FirstOrDefault(x => x.Id == study.EstudioId);
                 if (st == null) continue;
 
@@ -219,6 +222,7 @@ namespace Service.MedicalRecord.Application
             newRequest.CargoTipo = CANTIDAD;
             newRequest.CopagoTipo = CANTIDAD;
             newRequest.DescuentoTipo = CANTIDAD;
+            newRequest.UsuarioCreoId = requestDto.UsuarioId;
             newRequest.UsuarioCreo = requestDto.Usuario;
 
             await _repository.Create(newRequest);
@@ -261,7 +265,7 @@ namespace Service.MedicalRecord.Application
                 study.Precio = weePrice.Paciente.Total + weePrice.Aseguradora.Total;
                 study.PrecioFinal = weePrice.Paciente.Total + weePrice.Aseguradora.Total;
                 study.AplicaCopago = weePrice.Total.Copago > 0;
-                study.EstudioWeeClinic = new RequestStudyWee(ws.IdNodo, ws.IdServicio, ws.Cubierto, ws.IsAvaliable, ws.RestanteDays, ws.Vigencia, ws.IsCancel);
+                study.EstudioWeeClinic = new RequestStudyWee(ws.IdNodo, ws.IdServicio, ws.Cubierto, weePrice.Paciente.Total, weePrice.Aseguradora.Total, ws.IsAvaliable, ws.RestanteDays, ws.Vigencia, ws.IsCancel);
             }
 
             string code = await GetNewCode(requestDto);
@@ -450,13 +454,6 @@ namespace Service.MedicalRecord.Application
 
                 studiesDto.AddRange(packStudiesDto);
 
-                //var duplicates = requestDto.Estudios.GroupBy(x => x.Clave).Where(x => x.Count() > 1).Select(x => x.Key);
-
-                //if (duplicates != null && duplicates.Any())
-                //{
-                //    throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.RepeatedStudies(string.Join(", ", duplicates)));
-                //}
-
                 var currentPacks = await _repository.GetPacksByRequest(requestDto.SolicitudId);
 
                 var currentSudies = await _repository.GetStudiesByRequest(requestDto.SolicitudId);
@@ -553,14 +550,38 @@ namespace Service.MedicalRecord.Application
                 throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.NoStudySelected);
             }
 
+            var branch = await _branchRepository.GetOne(x => x.Id == request.SucursalId);
+
+            var weeServices = new List<WeeServiceDto>();
+
             foreach (var study in studies)
             {
+                if (!string.IsNullOrEmpty(request.FolioWeeClinic))
+                {
+                    if (study.EstudioWeeClinic == null)
+                    {
+                        throw new CustomException(HttpStatusCode.BadRequest, $"El estudio {study.Clave} no contiene información de WeeClinic, favor de contactar a su administrador de sistema");
+                    }
+
+                    if (study.EstudioWeeClinic.IsCancel == 0)
+                    {
+                        throw new CustomException(HttpStatusCode.BadRequest, $"No es posible cancelar el estudio {study.Clave} a traves de WeeClinic");
+                    }
+
+                    var weeCancelled = await _weeService.CancelService(study.EstudioWeeClinic.IdServicio, study.EstudioWeeClinic.IdNodo, branch.Clave);
+
+                    if (!weeCancelled.Cancelado)
+                    {
+                        throw new CustomException(HttpStatusCode.BadRequest, $"No fue posible cancelar el estudio {study.Clave} a traves de WeeClinic");
+                    }
+                }
+
                 study.EstatusId = Status.RequestStudy.Cancelado;
                 study.UsuarioModificoId = requestDto.UsuarioId;
                 study.FechaModifico = DateTime.Now;
             }
 
-            await _repository.BulkUpdateStudies(requestDto.SolicitudId, studies);
+            await _repository.BulkInsertUpdateStudies(requestDto.SolicitudId, studies);
         }
 
         public async Task<List<RequestPaymentDto>> CancelPayment(Guid recordId, Guid requestId, List<RequestPaymentDto> paymentsDto)
@@ -622,7 +643,7 @@ namespace Service.MedicalRecord.Application
                 study.FechaModifico = DateTime.Now;
             }
 
-            await _repository.BulkUpdateStudies(requestDto.SolicitudId, studies);
+            await _repository.BulkInsertUpdateStudies(requestDto.SolicitudId, studies);
             ;
             return studies.Count;
         }
@@ -650,7 +671,7 @@ namespace Service.MedicalRecord.Application
                 study.FechaModifico = DateTime.Now;
             }
 
-            await _repository.BulkUpdateStudies(requestDto.SolicitudId, studies);
+            await _repository.BulkInsertUpdateStudies(requestDto.SolicitudId, studies);
 
             return studies.Count;
         }
@@ -782,89 +803,6 @@ namespace Service.MedicalRecord.Application
             await _repository.DeleteImage(requestId, code);
         }
 
-        private static async Task<string> SaveImageGetPath(RequestImageDto requestDto, string fileName = null)
-        {
-            var path = Path.Combine("wwwroot/images/requests", requestDto.Clave);
-            var name = string.Concat(fileName ?? requestDto.Tipo, ".png");
-
-            var isSaved = await requestDto.Imagen.SaveFileAsync(path, name);
-
-            if (isSaved)
-            {
-                return Path.Combine(path, name);
-            }
-
-            return null;
-        }
-
-        private async Task<Domain.Request.Request> GetExistingRequest(Guid recordId, Guid requestId)
-        {
-            var request = await _repository.FindAsync(requestId);
-
-            if (request == null || request.ExpedienteId != recordId)
-            {
-                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
-            }
-
-            return request;
-        }
-
-        private async Task<string> GetNewCode(RequestDto requestDto)
-        {
-            var date = DateTime.Now.ToString("ddMMyy");
-
-            var codeRange = await _catalogClient.GetCodeRange(requestDto.SucursalId);
-            var lastCode = await _repository.GetLastCode(requestDto.SucursalId, date);
-
-            var consecutive = RequestCodes.GetCode(codeRange, lastCode);
-            var code = $"{consecutive}{date}";
-            return code;
-        }
-
-        private async Task<string> GeneratePathologicalCode(Request request)
-        {
-            var allStudies = await _repository.GetAllStudies(request.Id);
-
-            var isCitologic = allStudies.Any(x => x.AreaId == AREAS.CITOLOGIA_NASAL && x.EstatusId != Status.RequestStudy.Cancelado);
-            var isPathologic = allStudies.Any(x => x.AreaId == AREAS.HISTOPATOLOGIA && x.EstatusId != Status.RequestStudy.Cancelado);
-
-            string citCode = null;
-            string patCode = null;
-
-            if (request.ClavePatologica != null)
-            {
-                var pathCodes = request.ClavePatologica.Split(",");
-                citCode = pathCodes.FirstOrDefault(x => x.Contains("C"))?.Trim();
-                patCode = pathCodes.FirstOrDefault(x => x.Contains("LR"))?.Trim();
-            }
-
-            var date = DateTime.Now.ToString("yy");
-
-            if (isCitologic && citCode == null)
-            {
-                var lastCode = await _repository.GetLastPathologicalCode(request.SucursalId, date, "C");
-                citCode = RequestCodes.GetPathologicalCode("C", lastCode);
-            }
-            else if (!isCitologic)
-            {
-                citCode = null;
-            }
-            if (isPathologic && patCode == null)
-            {
-                var lastCode = await _repository.GetLastPathologicalCode(request.SucursalId, date, "LR");
-                patCode = RequestCodes.GetPathologicalCode("LR", lastCode);
-            }
-            else if (!isPathologic)
-            {
-                patCode = null;
-            }
-
-            return patCode == null && citCode == null ? null :
-                patCode != null && citCode == null ? patCode :
-                patCode == null && citCode != null ? citCode :
-                $"{patCode}, {citCode}";
-        }
-
         public async Task<WeeTokenValidationDto> SendCompareToken(RequestTokenDto requestDto, string actionCode)
         {
             var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
@@ -902,6 +840,170 @@ namespace Service.MedicalRecord.Application
             }
 
             return validation;
+        }
+
+        public async Task<List<WeeServiceAssignmentDto>> AssignWeeServices(Guid recordId, Guid requestId, Guid userId)
+        {
+            try
+            {
+                _transaction.BeginTransaction();
+                var request = await GetExistingRequest(recordId, requestId);
+
+                if (request.FolioWeeClinic == null || request.IdPersona == null || request.IdOrden == null)
+                {
+                    throw new CustomException(HttpStatusCode.BadRequest, "La solicitud no pertenece a WeeClinic");
+                }
+
+                var branch = await _branchRepository.GetOne(x => x.Id == request.SucursalId);
+                var studies = await _repository.GetStudiesByRequest(requestId);
+
+                var services = studies.Select(x => new WeeServiceNodeDto(x.EstudioWeeClinic.IdServicio, x.EstudioWeeClinic.IdNodo)).ToList();
+
+                var assignments = await _weeService.AssignServices(services, branch.Clave);
+
+                var results = new List<WeeServiceAssignmentDto>();
+
+                foreach (var assignment in assignments)
+                {
+                    var servicesIds = assignment.IdServicio.Split("|").Select(x => x.Split(",").FirstOrDefault());
+
+                    foreach (var serviceId in servicesIds)
+                    {
+                        var study = studies.FirstOrDefault(x => x.EstudioWeeClinic.IdServicio == serviceId);
+
+                        if (study == null) continue;
+
+                        results.Add(new WeeServiceAssignmentDto
+                        {
+                            IdServicio = serviceId,
+                            Estatus = assignment.Estatus,
+                            Mensaje = assignment.Mensaje,
+                            Clave = study.Clave,
+                            Nombre = study.Nombre
+                        });
+                    }
+                }
+
+                foreach (var study in studies)
+                {
+                    var result = results.FirstOrDefault(x => x.IdServicio == study.EstudioWeeClinic.IdServicio);
+
+                    if (result.Asignado)
+                    {
+                        study.EstudioWeeClinic.Asignado = true;
+                    }
+                }
+
+                var assigned = studies.Where(x => x.EstudioWeeClinic.Asignado).ToList();
+
+                request.TotalEstudios = assigned.Sum(x => x.PrecioFinal);
+                request.Descuento = assigned.Sum(x => x.Descuento);
+                request.DescuentoTipo = CANTIDAD;
+                request.Cargo = 0;
+                request.CargoTipo = CANTIDAD;
+                request.Copago = assigned.Sum(x => x.EstudioWeeClinic.TotalPaciente);
+                request.CopagoTipo = CANTIDAD;
+                request.Total = request.TotalEstudios - (request.TotalEstudios - request.Copago);
+                request.Saldo = request.Copago;
+                request.UsuarioModificoId = userId;
+                request.FechaModifico = DateTime.Now;
+
+                await _repository.Update(request);
+
+                await _repository.BulkUpdateWeeStudies(requestId, studies.Select(x => x.EstudioWeeClinic).ToList());
+
+                _transaction.CommitTransaction();
+
+                return results;
+            }
+            catch (Exception)
+            {
+                _transaction.RollbackTransaction();
+                throw;
+            }
+        }
+
+        private static async Task<string> SaveImageGetPath(RequestImageDto requestDto, string fileName = null)
+        {
+            var path = Path.Combine("wwwroot/images/requests", requestDto.Clave);
+            var name = string.Concat(fileName ?? requestDto.Tipo, ".png");
+
+            var isSaved = await requestDto.Imagen.SaveFileAsync(path, name);
+
+            if (isSaved)
+            {
+                return Path.Combine(path, name);
+            }
+
+            return null;
+        }
+
+        private async Task<Domain.Request.Request> GetExistingRequest(Guid recordId, Guid requestId)
+        {
+            var request = await _repository.FindAsync(requestId);
+
+            if (request == null || request.ExpedienteId != recordId)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
+            }
+
+            return request;
+        }
+
+        private async Task<string> GetNewCode(RequestDto requestDto)
+        {
+            var date = DateTime.Now.ToString("ddMMyy");
+
+            var branch = await _branchRepository.GetOne(x => x.Id == requestDto.SucursalId);
+            var lastCode = await _repository.GetLastCode(requestDto.SucursalId, date);
+
+            var consecutive = Codes.GetCode(branch.Clinicos, lastCode);
+            var code = $"{consecutive}{date}";
+            return code;
+        }
+
+        private async Task<string> GeneratePathologicalCode(Request request)
+        {
+            var allStudies = await _repository.GetAllStudies(request.Id);
+
+            var isCitologic = allStudies.Any(x => x.AreaId == AREAS.CITOLOGIA_NASAL && x.EstatusId != Status.RequestStudy.Cancelado);
+            var isPathologic = allStudies.Any(x => x.AreaId == AREAS.HISTOPATOLOGIA && x.EstatusId != Status.RequestStudy.Cancelado);
+
+            string citCode = null;
+            string patCode = null;
+
+            if (request.ClavePatologica != null)
+            {
+                var pathCodes = request.ClavePatologica.Split(",");
+                citCode = pathCodes.FirstOrDefault(x => x.Contains("C"))?.Trim();
+                patCode = pathCodes.FirstOrDefault(x => x.Contains("LR"))?.Trim();
+            }
+
+            var date = DateTime.Now.ToString("yy");
+
+            if (isCitologic && citCode == null)
+            {
+                var lastCode = await _repository.GetLastPathologicalCode(request.SucursalId, date, "C");
+                citCode = Codes.GetPathologicalCode("C", lastCode);
+            }
+            else if (!isCitologic)
+            {
+                citCode = null;
+            }
+            if (isPathologic && patCode == null)
+            {
+                var lastCode = await _repository.GetLastPathologicalCode(request.SucursalId, date, "LR");
+                patCode = Codes.GetPathologicalCode("LR", lastCode);
+            }
+            else if (!isPathologic)
+            {
+                patCode = null;
+            }
+
+            return patCode == null && citCode == null ? null :
+                patCode != null && citCode == null ? patCode :
+                patCode == null && citCode != null ? citCode :
+                $"{patCode}, {citCode}";
         }
     }
 }

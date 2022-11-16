@@ -1516,7 +1516,6 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("FCSI")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 

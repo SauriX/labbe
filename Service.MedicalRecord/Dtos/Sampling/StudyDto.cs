@@ -16,6 +16,7 @@ namespace Service.MedicalRecord.Dtos.Sampling
         public bool Seleccion { get; set; }
         public string Clave { get; set; }
         public string NombreEstatus { get; set; }
+        public Guid SolicitudId { get; set; }
         public List<StudyParamsDto> Parametros { get; set; }
     }
 

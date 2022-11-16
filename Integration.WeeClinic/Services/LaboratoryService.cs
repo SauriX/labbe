@@ -3,6 +3,7 @@ using Integration.WeeClinic.Extensions;
 using Integration.WeeClinic.Models.Laboratorio_AsignaEstudio;
 using Integration.WeeClinic.Models.Laboratorio_BusquedaFolioLaboratorio;
 using Integration.WeeClinic.Models.Laboratorio_BusquedaFolios;
+using Integration.WeeClinic.Models.Laboratorio_CancelaEstudios_ByProveedor;
 using Integration.WeeClinic.Models.Laboratorio_GetPreciosEstudios_ByidServicio;
 using Integration.WeeClinic.Models.Laboratorio_ValidarCodigoPacienteLaboratorio;
 using Integration.WeeClinic.Models.Laboratorio_ValidaToken;
@@ -173,7 +174,7 @@ namespace Integration.WeeClinic.Services
         {
             var url = "api/Laboratorio/Laboratorio_AsignaEstudio";
 
-            var servicesData = string.Join("|", services.Select(x => string.Concat(x.IdServicio, ",", x.IdNodo, ",0,0")));
+            var servicesData = string.Join("|", services.Select(x => string.Concat(x.IdServicio, ",", x.IdNodo, ",0,0"))) + "|";
 
             var data = new Dictionary<string, string>()
             {
@@ -191,20 +192,24 @@ namespace Integration.WeeClinic.Services
         }
 
         // Servicio 7. Cancelación de estudio
-        public static async Task<string> Laboratorio_CancelaEstudios_ByProveedor(string serviceId, string nodeId, string branch)
+        public static async Task<Laboratorio_CancelaEstudios_ByProveedor> Laboratorio_CancelaEstudios_ByProveedor(string serviceId, string nodeId, string branch)
         {
             var url = "api/Laboratorio/Laboratorio_CancelaEstudios_ByProveedor";
 
             var data = new Dictionary<string, string>()
             {
-                ["idServicio"] = "35caf363-e8d4-430e-b22e-1f8d005fb4dd",
-                ["idNodo"] = "00000000-0000-0000-0000-000000000000",
-                ["ClaveSucursal"] = "MT"
+                ["idServicio"] = serviceId,
+                ["idNodo"] = nodeId,
+                ["ClaveSucursal"] = branch
             };
 
-            var response = await PostService<string>(url, data);
+            var response = await PostService<Laboratorio_CancelaEstudios_ByProveedor>(url, data);
 
-            return "";
+            response.ValidateNotEmpty("Datos");
+
+            var results = response.Transform<Laboratorio_CancelaEstudios_ByProveedor>();
+
+            return results;
         }
 
         // Servicio 8. Carga de resultados

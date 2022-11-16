@@ -13,5 +13,12 @@
             public const string ProcessingStudies = "La solicitud ya cuenta con estudios en estatus no pendiente";
             public static string RepeatedStudies(string studies) => $"Los siguientes estudios se encuentran repetidos: {studies}";
         }
+
+        public class Quotation
+        {
+            public const string NoStudySelected = "No se selecciono ningun estudio para actualizar";
+            public const string AlreadyCancelled = "La cotización ya ha sido cancelada";
+            public const string PackWithoutStudies = "Alguno de los paquetes no contiene estudios";
+        }
     }
 }

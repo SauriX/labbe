@@ -9,6 +9,8 @@ namespace Service.MedicalRecord.Context.EntityConfiguration.Request
     {
         public void Configure(EntityTypeBuilder<RequestStudy> builder)
         {
+            builder.ToTable("Relacion_Solicitud_Estudio");
+
             builder.HasKey(x => x.Id);
 
             builder
