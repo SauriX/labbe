@@ -261,7 +261,7 @@ namespace Service.MedicalRecord.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task BulkUpdatePacks(Guid requestId, List<RequestPack> packs)
+        public async Task BulkInsertUpdatePacks(Guid requestId, List<RequestPack> packs)
         {
             var config = new BulkConfig();
             config.SetSynchronizeFilter<RequestPack>(x => x.SolicitudId == requestId);
@@ -277,7 +277,7 @@ namespace Service.MedicalRecord.Repository
             await _context.BulkInsertOrUpdateOrDeleteAsync(packs, config);
         }
 
-        public async Task BulkUpdateStudies(Guid requestId, List<RequestStudy> studies)
+        public async Task BulkInsertUpdateStudies(Guid requestId, List<RequestStudy> studies)
         {
             var config = new BulkConfig();
             config.SetSynchronizeFilter<RequestStudy>(x => x.SolicitudId == requestId);

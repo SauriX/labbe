@@ -201,7 +201,7 @@ namespace Integration.Pdf.Service
                     var studyName = new Col("****" + studyParam.Key, 14, fontTitle, ParagraphAlignment.Left);
                     section.AddText(studyName);
 
-                    var checkCritics = studyParam.Where(x => x.Resultado != null && x.TipoValorId != 10).Any(x => decimal.Parse(x.Resultado) > x.CriticoMaximo || decimal.Parse(x.Resultado) < x.CriticoMinimo);
+                    //var checkCritics = studyParam.Where(x => x.Resultado != null && x.TipoValorId != 10).Any(x => decimal.Parse(x.Resultado) > x.CriticoMaximo || decimal.Parse(x.Resultado) < x.CriticoMinimo);
                     var checkResultNotNull = studyParam.Where(x => x.Resultado != null);
 
                     foreach (var param in studyParam)
@@ -234,7 +234,7 @@ namespace Integration.Pdf.Service
                         section.AddText(criticTitle);
                         section.AddSpace(5);
 
-                        foreach (var param in studyParam.Where(x => x.Resultado != null && x.TipoValorId != 10))
+                        foreach (var param in studyParam.Where(x => x.Resultado != null && x.TipoValorId != 10 && x.TipoValorId != 7 && x.TipoValorId != 5 && x.TipoValorId != 6 && x.TipoValorId != 9 && x.TipoValorId != 8))
                         {
                             if (param.Resultado != null && (decimal.Parse(param.Resultado) > param.CriticoMaximo || decimal.Parse(param.Resultado) < param.CriticoMinimo))
                             {

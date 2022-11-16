@@ -35,6 +35,18 @@
       ],
       "UpstreamPathTemplate": "/api/MassSearch/GetAllCaptureResults",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/MassSearch/list",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/MassSearch/list",
+      "UpstreamHttpMethod": [ "POST" ]
     }
   ]
 }

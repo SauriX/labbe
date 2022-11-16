@@ -28,7 +28,7 @@ using COMPANIES = Shared.Dictionary.Catalogs.Company;
 using MEDICS = Shared.Dictionary.Catalogs.Medic;
 using DocumentFormat.OpenXml.Math;
 using Integration.WeeClinic.Services;
-using Service.MedicalRecord.Dtos.Promos;
+using Service.MedicalRecord.Dtos.Promotion;
 using Service.MedicalRecord.Domain.Catalogs;
 using Microsoft.VisualBasic;
 using Integration.WeeClinic.Models.Laboratorio_GetPreciosEstudios_ByidServicio;
@@ -220,6 +220,7 @@ namespace Service.MedicalRecord.Application
             newRequest.CargoTipo = CANTIDAD;
             newRequest.CopagoTipo = CANTIDAD;
             newRequest.DescuentoTipo = CANTIDAD;
+            newRequest.UsuarioCreoId = requestDto.UsuarioId;
             newRequest.UsuarioCreo = requestDto.Usuario;
 
             await _repository.Create(newRequest);
@@ -451,13 +452,6 @@ namespace Service.MedicalRecord.Application
 
                 studiesDto.AddRange(packStudiesDto);
 
-                //var duplicates = requestDto.Estudios.GroupBy(x => x.Clave).Where(x => x.Count() > 1).Select(x => x.Key);
-
-                //if (duplicates != null && duplicates.Any())
-                //{
-                //    throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.RepeatedStudies(string.Join(", ", duplicates)));
-                //}
-
                 var currentPacks = await _repository.GetPacksByRequest(requestDto.SolicitudId);
 
                 var currentSudies = await _repository.GetStudiesByRequest(requestDto.SolicitudId);
@@ -561,7 +555,7 @@ namespace Service.MedicalRecord.Application
                 study.FechaModifico = DateTime.Now;
             }
 
-            await _repository.BulkUpdateStudies(requestDto.SolicitudId, studies);
+            await _repository.BulkInsertUpdateStudies(requestDto.SolicitudId, studies);
         }
 
         public async Task<List<RequestPaymentDto>> CancelPayment(Guid recordId, Guid requestId, List<RequestPaymentDto> paymentsDto)
@@ -623,7 +617,7 @@ namespace Service.MedicalRecord.Application
                 study.FechaModifico = DateTime.Now;
             }
 
-            await _repository.BulkUpdateStudies(requestDto.SolicitudId, studies);
+            await _repository.BulkInsertUpdateStudies(requestDto.SolicitudId, studies);
             ;
             return studies.Count;
         }
@@ -651,7 +645,7 @@ namespace Service.MedicalRecord.Application
                 study.FechaModifico = DateTime.Now;
             }
 
-            await _repository.BulkUpdateStudies(requestDto.SolicitudId, studies);
+            await _repository.BulkInsertUpdateStudies(requestDto.SolicitudId, studies);
 
             return studies.Count;
         }
@@ -895,10 +889,10 @@ namespace Service.MedicalRecord.Application
         {
             var date = DateTime.Now.ToString("ddMMyy");
 
-            var codeRange = await _catalogClient.GetCodeRange(requestDto.SucursalId);
+            var branch = await _branchRepository.GetOne(x => x.Id == requestDto.SucursalId);
             var lastCode = await _repository.GetLastCode(requestDto.SucursalId, date);
 
-            var consecutive = RequestCodes.GetCode(codeRange, lastCode);
+            var consecutive = Codes.GetCode(branch.Clinicos, lastCode);
             var code = $"{consecutive}{date}";
             return code;
         }
@@ -925,7 +919,7 @@ namespace Service.MedicalRecord.Application
             if (isCitologic && citCode == null)
             {
                 var lastCode = await _repository.GetLastPathologicalCode(request.SucursalId, date, "C");
-                citCode = RequestCodes.GetPathologicalCode("C", lastCode);
+                citCode = Codes.GetPathologicalCode("C", lastCode);
             }
             else if (!isCitologic)
             {
@@ -934,7 +928,7 @@ namespace Service.MedicalRecord.Application
             if (isPathologic && patCode == null)
             {
                 var lastCode = await _repository.GetLastPathologicalCode(request.SucursalId, date, "LR");
-                patCode = RequestCodes.GetPathologicalCode("LR", lastCode);
+                patCode = Codes.GetPathologicalCode("LR", lastCode);
             }
             else if (!isPathologic)
             {

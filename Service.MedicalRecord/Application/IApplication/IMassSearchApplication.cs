@@ -8,5 +8,6 @@ namespace Service.MedicalRecord.Application.IApplication
     {
         Task<MassSearchInfoDto> GetByFilter(MassSearchFilterDto filter);
         Task<List<RequestsInfoDto>> GetAllCaptureResults(DeliverResultsFilterDto search);
+        Task<(byte[] file, string fileName)> ExportList(DeliverResultsFilterDto search);
     }
 }

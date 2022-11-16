@@ -7,6 +7,7 @@ namespace Service.MedicalRecord.Dtos.MassSearch
     {
         public Guid SolicitudId { get; set; }
         public Guid ExpedienteId { get; set; }
+        public string ClavePatologica { get; set; }
         public string Solicitud { get; set; }
         public string Nombre { get; set; }
         public string Registro { get; set; }

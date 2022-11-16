@@ -71,7 +71,8 @@ namespace Service.MedicalRecord.Mapper
             {
                 SolicitudId = x.Id,
                 ExpedienteId= x.ExpedienteId,
-                Solicitud = $"{x.Clave} - {x.ClavePatologica}",
+                Solicitud = x.Clave,
+                ClavePatologica = x.ClavePatologica,
                 Nombre = x.Expediente.NombreCompleto,
                 Registro = x.FechaCreo.ToString("dd/MM/yyyy"),
                 Sucursal = x.Sucursal?.Nombre,
@@ -79,7 +80,7 @@ namespace Service.MedicalRecord.Mapper
                 Sexo = x.Expediente.Genero == "F" ? "Femenino" : "Masculino",
                 Compania = x.Compañia?.Nombre,
                 Estudios = x.Estudios
-                //.Where(y => y.EstatusId == Status.RequestStudy.Liberado || y.EstatusId == Status.RequestStudy.Enviado || y.EstatusId == Status.RequestStudy.Entregado)
+                .Where(y => y.EstatusId == Status.RequestStudy.Liberado || y.EstatusId == Status.RequestStudy.Enviado || y.EstatusId == Status.RequestStudy.Entregado)
                 .Select(y => new RequestsStudiesInfoDto {
                     EstudioId = y.Id,
                     Estudio = y.Nombre,

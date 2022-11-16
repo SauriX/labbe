@@ -147,7 +147,7 @@ namespace Service.Identity.Context
                 new Menu(18, 1, "Maquilador", "maquila", "maquila", 1017),
                 new Menu(19, 24, "Expedientes", "expedientes", "expedientes", 2401),
                 new Menu(20, null, "Parámetros de sistema", "configuration", "configuration", 2000),
-                new Menu(21, 24, "Cotización", "cotizacion", "cotizacion", 2402),
+                new Menu(21, 24, "Cotización", "quotation", "cotizacion", 2402),
                 new Menu(22, 24, "Reportes" , "report", "reports", 2403),
                 new Menu(23, 24, "Citas","appointments", "appointments", 2404),
                 new Menu(24, null, "Recepción",  "reception", "configuration", 2400),
@@ -158,10 +158,11 @@ namespace Service.Identity.Context
                 new Menu(29, 1, "Mantenimiento", "mantain","equipmentMantain", 100),
                 new Menu(30, 24, "Captura de Resultados (Clínicos)", "clinicResults","clinicResults", 100),
                 new Menu(31, 24, "Búsqueda de captura de resultados masiva", "massSearch","massResultSearch", 100),
-                new Menu(32, 24, "Seguimientio de rutas", "RouteTracking","segRutas", 100),
-                new Menu(33, 24, "Detalle de seguimiento de envio", "ShipmentTracking","ShipmentTracking", 100),
-                new Menu(34, 24, "Listas de trabajo", "worklist","worklists", 2410),
-                 new Menu(35, 24, "Validación de resultados", "ResultValidation","ResultValidation", 2411),
+                new Menu(32, 24, "Búsqueda y envío de resultados", "massSearch","deliveryResults", 100),
+                new Menu(33, 24, "Seguimientio de rutas", "RouteTracking","segRutas", 100),
+                new Menu(34, 24, "Detalle de seguimiento de envio", "ShipmentTracking","ShipmentTracking", 100),
+                new Menu(35, 24, "Listas de trabajo", "worklist","worklists", 2410),
+                 new Menu(36, 24, "Validación de resultados", "ResultValidation","ResultValidation", 2411),
             };
 
             return menus;
