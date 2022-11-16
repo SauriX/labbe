@@ -160,7 +160,7 @@ namespace Service.MedicalRecord.Mapper
                     Precio = x.Precio,
                     PrecioFinal = x.PrecioFinal,
                     Clave = x.Nombre
-                })
+                }).ToList()
 
             };
 
@@ -203,7 +203,7 @@ namespace Service.MedicalRecord.Mapper
                     Precio = x.Precio,
                     PrecioFinal = x.PrecioFinal,
                     Clave = x.Nombre,
-                }),
+                }).ToList(),
                 FechaCreo = model.FechaCreo,
 
             };

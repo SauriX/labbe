@@ -42,6 +42,7 @@ namespace Service.MedicalRecord.Mapper
                 Seleccion = false,
                 Clave = x.Clave,
                 NombreEstatus = x.Estatus.Nombre,
+                SolicitudId = x.SolicitudId
             }).ToList();
         }
     }
