@@ -90,7 +90,7 @@ namespace Service.MedicalRecord.Controllers
         }
         [HttpPut("sendResultFile")]
         [Authorize(Policies.Update)]
-        public async Task SendResultFile([FromForm] DeliverResultsStudiesDto estudios)
+        public async Task SendResultFile([FromBody] DeliverResultsStudiesDto estudios)
         {
             estudios.UsuarioId = (Guid)HttpContext.Items["userId"];
             estudios.Usuario = HttpContext.Items["userName"].ToString();

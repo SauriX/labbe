@@ -244,7 +244,7 @@ namespace Service.MedicalRecord
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
             services.AddScoped<IMedicalRecordApplication, MedicalRecordApplication>();
-            services.AddScoped<IPriceQuoteApplication, PriceQuoteApplication>();
+            services.AddScoped<IQuotationApplication, QuotationApplication>();
             services.AddScoped<IRequestApplication, RequestApplication>();
             services.AddScoped<IAppointmentApplication, AppointmentApplication>();
             services.AddScoped<ISamplingApplication, SamplingAplication>();
@@ -260,7 +260,7 @@ namespace Service.MedicalRecord
 
             services.AddScoped<IMedicalRecordRepository, MedicalRecordRepository>();
             services.AddScoped<IRequestRepository, RequestRepository>();
-            services.AddScoped<IPriceQuoteRepository, PriceQuoteRepository>();
+            services.AddScoped<IQuotationRepository, QuotationRepository>();
             services.AddScoped<IAppointmentResposiotry, AppointmentRepository>();
             services.AddScoped<ISamplingRepository, SamplingRepository>();
             services.AddScoped<IRequestedStudyRepository, RequestedStudyRepository>();

@@ -27,9 +27,9 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task UpdateImage(RequestImage requestImage);
         Task UpdateStudy(RequestStudy study);
         Task UpdatePayment(RequestPayment payment);
-        Task BulkUpdatePacks(Guid requestId, List<RequestPack> studies);
-        Task BulkUpdateDeletePacks(Guid requestId, List<RequestPack> studies);
-        Task BulkUpdateStudies(Guid requestId, List<RequestStudy> studies);
+        Task BulkInsertUpdatePacks(Guid requestId, List<RequestPack> packs);
+        Task BulkUpdateDeletePacks(Guid requestId, List<RequestPack> packs);
+        Task BulkInsertUpdateStudies(Guid requestId, List<RequestStudy> studies);
         Task BulkUpdatePayments(Guid requestId, List<RequestPayment> payments);
         Task BulkUpdateDeleteStudies(Guid requestId, List<RequestStudy> studies);
         Task DeleteImage(Guid requestId, string code);

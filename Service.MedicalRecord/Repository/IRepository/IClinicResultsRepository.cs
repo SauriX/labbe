@@ -31,5 +31,8 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task CreateLabResults(List<ClinicResults> newParameter);
         Task UpdateLabResults(List<ClinicResults> newParameter);
         Task<Request> GetRequestById(Guid id);
+        Task UpdateMedioSolicitado(RequestStudy study);
+        Task<string> GetMedioSolicitado(int RequestStudyId);
+
     }
 }

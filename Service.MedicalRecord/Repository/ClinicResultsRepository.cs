@@ -261,5 +261,26 @@ namespace Service.MedicalRecord.Repository
 
             return request;
         }
+        public async Task UpdateMedioSolicitado(RequestStudy study)
+        {
+            var entry = _context.Entry(study);
+
+            entry.State = EntityState.Modified;
+
+            await _context.SaveChangesAsync();
+
+            entry.State = EntityState.Detached;
+        }
+        public async Task<string> GetMedioSolicitado(int RequestStudyId)
+        {
+            return await _context.Relacion_Solicitud_Estudio
+                .Where(x => x.Id == RequestStudyId)
+                .Select(x => x.MedioSolicitado)
+                .FirstOrDefaultAsync();
+
+        }
+        
+
+       
     }
 }

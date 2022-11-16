@@ -33,6 +33,13 @@ namespace Service.MedicalRecord.Controllers
             var clinicResults = await _service.GetAllCaptureResults(search);
             return clinicResults;
         }
+        [HttpPost("list")]
+        [Authorize(Policies.Download)]
+        public async Task<IActionResult> ExportResultsExcel(DeliverResultsFilterDto search)
+        {
+            var (file, fileName) = await _service.ExportList(search);
+            return File(file, MimeType.XLSX, fileName);
+        }
 
     }
 }

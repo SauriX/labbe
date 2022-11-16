@@ -1,4 +1,4 @@
-﻿using Service.MedicalRecord.Domain.PriceQuote;
+﻿using Service.MedicalRecord.Domain.Quotation;
 using System;
 using System.Collections.Generic;
 
@@ -8,7 +8,7 @@ namespace Service.MedicalRecord.Domain.Appointments
     {
         public Guid Id { get; set; }
         public Guid? ExpedienteId { get; set; }
-        public MedicalRecord.MedicalRecord? Expediente { get; set; }
+        public MedicalRecord.MedicalRecord Expediente { get; set; }
         public string NombrePaciente { get; set; }
         public int Edad { get; set; }
         public string Direccion { get; set; }
@@ -30,6 +30,6 @@ namespace Service.MedicalRecord.Domain.Appointments
         public DateTime FechaCreo { get; set; }
         public Guid? UsuarioModId { get; set; }
         public DateTime? FechaMod { get; set; }
-        public IEnumerable<CotizacionStudy>? Estudios { get; set; }
+        //public IEnumerable<PriceQuoteStudy> Estudios { get; set; }
     }
 }

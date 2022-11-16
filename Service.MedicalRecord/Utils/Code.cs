@@ -7,7 +7,7 @@ using System.Net;
 
 namespace Service.MedicalRecord.Utils
 {
-    public static class RequestCodes
+    public static class Codes
     {
         public static int GetCode(string codeRange, string lastCode)
         {
