@@ -40,9 +40,9 @@ namespace Service.MedicalRecord.Mapper
                 Estatus= x.EstatusId,
                 Registro = x.FechaCreo,
                 Entrega = x.FechaCreo.AddDays((double)x.Dias),
-                
-  
-               
+
+                SolicitudId = x.SolicitudId
+
             }).ToList();
         }
     }
