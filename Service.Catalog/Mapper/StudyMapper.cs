@@ -35,7 +35,7 @@ namespace Service.Catalog.Mapper
             return model.Select(x => new StudyListDto
             {
                 Id = x.Id,
-                Parametros = x.Parameters.Select(y => y.Parametro).ToParameterValueStudyDto(),
+                Parametros = x.Parameters.OrderBy(x => x.Orden).Select(y => y.Parametro).ToParameterValueStudyDto(),
                 Indicaciones = x.Indications.Select(y => y.Indicacion).ToIndicationListDto(),
                
                 Clave = x.Clave
@@ -82,7 +82,7 @@ namespace Service.Catalog.Mapper
                 Prioridad = model.Prioridad,
                 Urgencia = model.Urgencia,
                 WorkLists =model.WorkList,
-                Parameters = model.Parameters.Select(y => y.Parametro).ToList().ToParameterListDto(),
+                Parameters = model.Parameters.OrderBy(x => x.Orden).Select(y => y.Parametro).ToList().ToParameterListDto(),
                 Indicaciones = model.Indications.Select(y => y.Indicacion).ToList().ToIndicationListDto(),
                 Reactivos = model.Reagents.Select(y => y.Reagent).ToList().ToReagentListDto(),
                 Paquete = model.Packets.Select(y => y.Packet).ToList().ToCatalogListDto(),
@@ -123,7 +123,7 @@ namespace Service.Catalog.Mapper
                 FechaCreo = DateTime.Now,
                 UsuarioModificoId = model.UsuarioId,
                 FechaModifico = DateTime.Now,
-                Parameters = model.Parameters.Select(x => new ParameterStudy
+                Parameters = model.Parameters.Select((x, i)=> new ParameterStudy
                 {
                     ParametroId = Guid.Parse(x.Id),
                     EstudioId = study.Id,
@@ -131,7 +131,8 @@ namespace Service.Catalog.Mapper
                     UsuarioCreoId = Guid.Empty,
                     FechaCreo = DateTime.Now,
                     UsuarioModificoId = Guid.Empty,
-                    FechaModifico = DateTime.Now
+                    FechaModifico = DateTime.Now, 
+                    Orden = i,
                 }).ToList(),
                 WorkList = model.WorkLists,
                 Indications = model.Indicaciones.Select(x => new IndicationStudy
@@ -185,14 +186,15 @@ namespace Service.Catalog.Mapper
                 FechaCreo = DateTime.Now,
                 UsuarioModificoId = model.UsuarioId,
                 FechaModifico = DateTime.Now,
-                Parameters = model.Parameters.Select(x => new ParameterStudy
+                Parameters = model.Parameters.Select((x, i) => new ParameterStudy
                 {
                     ParametroId = Guid.Parse(x.Id),
                     Activo = true,
                     UsuarioCreoId = Guid.Empty,
                     FechaCreo = DateTime.Now,
                     UsuarioModificoId = Guid.Empty,
-                    FechaModifico = DateTime.Now
+                    FechaModifico = DateTime.Now,
+                    Orden = i,
                 }).ToList(),
                 WorkList = model.WorkLists,
                 Indications = model.Indicaciones.Select(x => new IndicationStudy

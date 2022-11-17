@@ -5,6 +5,7 @@ using Service.Catalog.Domain.Indication;
 using Service.Catalog.Domain.Parameter;
 using Service.Catalog.Domain.Study;
 using Service.Catalog.Repository.IRepository;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -133,7 +134,7 @@ namespace Service.Catalog.Repository
             }
         }
 
-        public async Task Update(Study study)
+        /*public async Task Update(Study study)
         {
             var reagents = study.Reagents.ToList();
            
@@ -162,6 +163,44 @@ namespace Service.Catalog.Repository
             await _context.BulkInsertOrUpdateOrDeleteAsync(indications, config);
 
             await _context.SaveChangesAsync();
+        }*/
+
+        public async Task Update(Study study)
+        {
+            using var transaction = _context.Database.BeginTransaction();
+
+            try
+            {
+                var reagents = study.Reagents.ToList();
+                var parameters = study.Parameters.ToList();
+                var indications = study.Indications.ToList();
+
+                study.Reagents = null;
+                study.WorkLists = null;
+                study.Parameters = null;
+                study.Indications = null;
+
+                _context.CAT_Estudio.Update(study);
+
+                await _context.SaveChangesAsync();
+
+                var config = new BulkConfig();
+                config.SetSynchronizeFilter<ReagentStudy>(x => x.EstudioId == study.Id);
+                await _context.BulkInsertOrUpdateOrDeleteAsync(reagents, config);
+     
+                config.SetSynchronizeFilter<ParameterStudy>(x => x.EstudioId == study.Id);
+                await _context.BulkInsertOrUpdateOrDeleteAsync(parameters, config);
+
+                config.SetSynchronizeFilter<IndicationStudy>(x => x.EstudioId == study.Id);
+                await _context.BulkInsertOrUpdateOrDeleteAsync(indications, config);
+
+                transaction.Commit();
+            }
+            catch (Exception)
+            {
+                transaction.Rollback();
+                throw;
+            }
         }
 
         public async Task<bool> ValidateClaveNamne(string clave, string nombre, int id, int orden)

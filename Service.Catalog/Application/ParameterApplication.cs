@@ -143,13 +143,6 @@ namespace Service.Catalog.Application
         {
             Helpers.ValidateGuid(value.Id, out Guid guid);
 
-            //var existing = await _repository.GetValueById(guid);
-
-            //if (existing == null)
-            //{
-            //    throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
-            //}
-
             var updatedValue = value.ToModel();
 
             await _repository.UpdateValue(updatedValue);

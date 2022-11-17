@@ -59,7 +59,7 @@ namespace Service.MedicalRecord.Mapper
                 Sexo = x.Genero,
                 Tipo = x.Status,
                 Expediente = x.Expediente.Expediente,
-                //Estudios = x.Estudios.Count()>0?x.Estudios.First().Clave:"",
+                Estudios = x.Estudios.Count()>0?x.Estudios.First().Clave:"",
                 Type = "laboratorio",
             }).ToList();
         }
@@ -93,25 +93,10 @@ namespace Service.MedicalRecord.Mapper
                 expedienteid = model.ExpedienteId.ToString(),
                 nomprePaciente = model.NombrePaciente,
                 edad = model.Edad,
-                //cargo = model.,
+                //cargo = model.Expediente.ca,
                 //typo =model.t,
-                //fechaNacimiento =model.fe,
-                //estudy = model.Estudios.Select(x => new QuotetPrice
-                //{
-                //    PrecioListaId = x.CotizacionId,
-                //    ListaPrecioId = x.ListaPrecioId,
-                //    //PromocionId = x.PromocionId??0,
-                //    //EstudioId = x.EstudioId ?? 0,
-                //    //PaqueteId = x.PaqueteId ?? 0 ,
-                //    //EstatusId = x.EstatusId ,
-                //    //AplicaDescuento = x.Descuento ,
-                //    //AplicaCargo = x.Cargo,
-                //    //AplicaCopago = x.Copago,
-                //    Precio = x.Precio,
-                //    PrecioFinal = x.PrecioFinal,
-                //    Nombre = x.Clave,
-
-                //}).ToList(),
+                fechaNacimiento =model.Expediente.FechaDeNacimiento,
+                estudy = model.Estudios.ToList(),
                 generales = new AppointmentGeneral
                 {
                     procedencia = model.Procedencia,
@@ -147,23 +132,8 @@ namespace Service.MedicalRecord.Mapper
                 //edad = model.Edad,
                 //cargo = model.,
                 //typo =model.t,
-                //fechaNacimiento =model.fe,
-                //estudy = model.Estudios.Select(x => new QuotetPrice
-                //{
-                //    PrecioListaId = x.CotizacionId,
-                //    ListaPrecioId = x.ListaPrecioId,
-                //    //PromocionId = x.PromocionId,
-                //    EstudioId = x.EstudioId,
-                //    PaqueteId = x.PaqueteId,
-                //    //EstatusId = x.EstatusId,
-                //    //AplicaDescuento = x.Descuento,
-                //    //AplicaCargo = x.Cargo,
-                //    //AplicaCopago = x.Copago,
-                //    Precio = x.Precio,
-                //    PrecioFinal = x.PrecioFinal,
-                //    Nombre = x.Clave,
-
-                //}).ToList(),
+                fechaNacimiento =model.Expediente.FechaDeNacimiento,
+                estudy = model.Estudios.ToList(),
 
                 Genero = model.Genero,
                 //SucursalId = model.SucursalID,
@@ -211,21 +181,7 @@ namespace Service.MedicalRecord.Mapper
                 Activo = dto.generales.activo,
                 UsuarioCreoId = dto.UserId,
                 FechaCreo = DateTime.Now,
-                //Estudios = dto.estudy.Select(x => new PriceQuoteStudy
-                //{
-                //    CotizacionId = x.PrecioListaId,
-                //    ListaPrecioId = x.ListaPrecioId,
-                //    //PromocionId = x.PromocionId,
-                //    //EstudioId = x.EstudioId,
-                //    PaqueteId = x.PaqueteId,
-                //    //EstatusId = x.EstatusId,
-                //    //Descuento = x.AplicaDescuento,
-                //    //Cargo = x.AplicaCargo,
-                //    //Copago = x.AplicaCopago,
-                //    Precio = x.Precio,
-                //    PrecioFinal = x.PrecioFinal,
-                //    Clave = x.Nombre
-                //}),
+                Estudios = dto.estudy,
                 Status = 1
             };
 
@@ -255,21 +211,7 @@ namespace Service.MedicalRecord.Mapper
                 Activo = dto.generalesDom.Activo,
                 UsuarioCreoId = dto.UserId,
                 FechaCreo = DateTime.Now,
-                //Estudios = dto.estudy.Select(x => new PriceQuoteStudy
-                //{
-                //    CotizacionId = x.PrecioListaId,
-                //    ListaPrecioId = x.ListaPrecioId,
-                //    //PromocionId = x.PromocionId,
-                //    //EstudioId = x.EstudioId,
-                //    PaqueteId = x.PaqueteId,
-                //    //EstatusId = x.EstatusId,
-                //    //Descuento = x.AplicaDescuento,
-                //    //Cargo = x.AplicaCargo,
-                //    //Copago = x.AplicaCopago,
-                //    Precio = x.Precio,
-                //    PrecioFinal = x.PrecioFinal,
-                //    Clave = x.Nombre
-                //}),
+                Estudios = dto.estudy,
                 Status = 1
             };
 
@@ -302,21 +244,7 @@ namespace Service.MedicalRecord.Mapper
                 FechaCreo = model.FechaCreo,
                 UsuarioModId = dto.UserId,
                 FechaMod = DateTime.Now,
-                //Estudios = dto.estudy.Select(x => new PriceQuoteStudy
-                //{
-                //    CotizacionId = x.PrecioListaId,
-                //    ListaPrecioId = x.ListaPrecioId,
-                //    //PromocionId = x.PromocionId,
-                //    //EstudioId = x.EstudioId,
-                //    PaqueteId = x.PaqueteId,
-                //    //EstatusId = x.EstatusId,
-                //    //Descuento = x.AplicaDescuento,
-                //    //Cargo = x.AplicaCargo,
-                //    //Copago = x.AplicaCopago,
-                //    Precio = x.Precio,
-                //    PrecioFinal = x.PrecioFinal,
-                //    Clave = x.Nombre
-                //}),
+                Estudios = dto.estudy,
                 Status = dto.status,
                 Cita = model.Cita
             };
@@ -347,21 +275,7 @@ namespace Service.MedicalRecord.Mapper
                 Activo = dto.generalesDom.Activo,
                 UsuarioCreoId = dto.UserId,
                 FechaCreo = DateTime.Now,
-                //Estudios = dto.estudy.Select(x => new PriceQuoteStudy
-                //{
-                //    CotizacionId = x.PrecioListaId,
-                //    ListaPrecioId = x.ListaPrecioId,
-                //    //PromocionId = x.PromocionId,
-                //    //EstudioId = x.EstudioId,
-                //    PaqueteId = x.PaqueteId,
-                //    //EstatusId = x.EstatusId,
-                //    //Descuento = x.AplicaDescuento,
-                //    //Cargo = x.AplicaCargo,
-                //    //Copago = x.AplicaCopago,
-                //    Precio = x.Precio,
-                //    PrecioFinal = x.PrecioFinal,
-                //    Clave = x.Nombre
-                //}),
+                Estudios = dto.estudy,
                 Status = dto.status,
                 Cita = model.Cita
             };

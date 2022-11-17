@@ -1,5 +1,6 @@
 ﻿using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Dtos.Catalogs;
+using Service.MedicalRecord.Dtos.ResultValidation;
 using Service.MedicalRecord.Dtos.Sampling;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,13 +8,13 @@ using System.Linq;
 
 namespace Service.MedicalRecord.Mapper
 {
-    public static class SamplingMapper
+    public static class ValidationMapper
     {
-        public static List<SamplingListDto> ToSamplingListDto(this List<Request> model)
+        public static List<ValidationListDto> ToValidationListDto(this List<Request> model)
         {
             if (model == null) return null;
 
-            return model.Select(x => new SamplingListDto
+            return model.Select(x => new ValidationListDto
             {
                 Solicitud = x.Clave,
                 Nombre = x.Expediente.NombreCompleto,
@@ -22,27 +23,26 @@ namespace Service.MedicalRecord.Mapper
                 Edad = x.Expediente.Edad.ToString(),
                 Sexo = x.Expediente.Genero,
                 Compañia = x.Compañia?.Nombre,
-                Seleccion = false,
-                Estudios = x.Estudios.ToStudySamplingDto(),
-                Id = x.Id.ToString(),
-                ExpedienteId = x.ExpedienteId.ToString()
+                Estudios = x.Estudios.ToStudyValidationDto(),
+                Id = x.Id,
+                Order = x.ExpedienteId.ToString()
             }).ToList();
         }
 
-        public static List<StudyDto> ToStudySamplingDto(this ICollection<RequestStudy> model)
+        public static List<ValidationStudyDto> ToStudyValidationDto(this ICollection<RequestStudy> model)
         {
-            return model.Select(x => new StudyDto
+            return model.Select(x => new ValidationStudyDto
             {
                 Id = x.EstudioId,
-                Nombre = x.Nombre,
+               Study = $"{x.Nombre}-{x.Clave}",
                 Area = "",
-                Status = x.EstatusId,
-                Registro = x.FechaCreo.ToString(),
-                Entrega = x.FechaCreo.AddDays((double)x.Dias).ToString(),
-                Seleccion = false,
-                Clave = x.Clave,
-                NombreEstatus = x.Estatus.Nombre,
+                Status = x.Estatus.Nombre,
+                Estatus= x.EstatusId,
+                Registro = x.FechaCreo,
+                Entrega = x.FechaCreo.AddDays((double)x.Dias),
+
                 SolicitudId = x.SolicitudId
+
             }).ToList();
         }
     }
