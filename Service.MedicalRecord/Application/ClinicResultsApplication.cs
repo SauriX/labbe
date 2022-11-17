@@ -663,14 +663,14 @@ namespace Service.MedicalRecord.Application
                     {
                         if (estudios.MediosEnvio.Contains("Whatsapp"))
                         {
-                            await SendTestWhatsapp(files, existingRequest.Expediente.Celular, estudios.UsuarioId);
+                            await SendTestWhatsapp(files, existingRequest.EnvioWhatsApp, estudios.UsuarioId);
 
                         }
 
                         if (estudios.MediosEnvio.Contains("Correo"))
                         {
 
-                            await SendTestEmail(files, existingRequest.Expediente.Correo, estudios.UsuarioId);
+                            await SendTestEmail(files, existingRequest.EnvioCorreo, estudios.UsuarioId);
                         }
 
                         foreach (var estudio in existingRequest.Estudios)
