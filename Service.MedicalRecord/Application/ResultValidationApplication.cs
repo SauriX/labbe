@@ -16,20 +16,21 @@ using SharedResponses = Shared.Dictionary.Responses;
 using RecordResponses = Service.MedicalRecord.Dictionary.Response;
 using Service.MedicalRecord.Domain.Request;
 using MoreLinq;
+using Service.MedicalRecord.Dtos.ResultValidation;
 
 namespace Service.MedicalRecord.Application
 {
-    public class SamplingAplication:ISamplingApplication
+    public class ResultValidationApplication:IValidationApplication
     {
-        public readonly ISamplingRepository _repository;
+        public readonly IResultaValidationRepository _repository;
 
-        public SamplingAplication(ISamplingRepository repository)
+        public ResultValidationApplication(IResultaValidationRepository repository)
         {
 
             _repository = repository;
         }
 
-        public async Task<(byte[] file, string fileName)> ExportList(RequestedStudySearchDto search)
+        public async Task<(byte[] file, string fileName)> ExportList(SearchValidation search)
         {
             var studies = await GetAll(search);
 
@@ -37,7 +38,7 @@ namespace Service.MedicalRecord.Application
             {
                 if (studies.Count > 0)
                 {
-                    request.Estudios.Insert(0, new StudyDto { Clave = "Clave", Nombre = "Nombre Estudio", Registro = "Fecha de Registro", Entrega = "Fecha de Entrega", NombreEstatus = "Estatus" });
+                    request.Estudios.Insert(0, new ValidationStudyDto{ Study= "Clave", Entrega = DateTime.Now, Estatus = 1 });
                 }
             }
 
@@ -87,13 +88,12 @@ namespace Service.MedicalRecord.Application
             return (template.ToByteArray(), $"Informe Toma de Muestra de Estudio.xlsx");
         }
 
-        public async Task<List<SamplingListDto>> GetAll(RequestedStudySearchDto search)
+        public async Task<List<ValidationListDto>> GetAll(SearchValidation search)
         {
-          
             var requestedStudy = await _repository.GetAll(search);
             if (requestedStudy != null)
             {
-                return requestedStudy.ToRequestedStudyDto();
+                return requestedStudy.ToValidationListDto();
             }
             else
             {
@@ -111,7 +111,7 @@ namespace Service.MedicalRecord.Application
                 var studiesIds = item.EstudioId;
                 var studies = await _repository.GetStudyById(item.SolicitudId, studiesIds);
 
-                studies = studies.Where(x => x.EstatusId == Status.RequestStudy.Pendiente || x.EstatusId == Status.RequestStudy.TomaDeMuestra).ToList();
+                studies = studies.Where(x => x.EstatusId == Status.RequestStudy.Capturado).ToList();
 
                 if (studies == null || studies.Count == 0)
                 {
@@ -120,13 +120,13 @@ namespace Service.MedicalRecord.Application
 
                 foreach (var study in studies)
                 {
-                    if (study.EstatusId == Status.RequestStudy.Pendiente)
+                    if (study.EstatusId == Status.RequestStudy.Capturado)
                     {
-                        study.EstatusId = Status.RequestStudy.TomaDeMuestra;
+                        study.EstatusId = Status.RequestStudy.Validado;
                     }
                     else
                     {
-                        study.EstatusId = Status.RequestStudy.Pendiente;
+                        study.EstatusId = Status.RequestStudy.Capturado;
                     }
                 }
                 studyCount += studies.Count;
