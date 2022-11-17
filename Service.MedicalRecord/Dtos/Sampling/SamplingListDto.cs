@@ -1,4 +1,5 @@
 ﻿using Service.MedicalRecord.Domain.Request;
+using System;
 using System.Collections.Generic;
 
 namespace Service.MedicalRecord.Dtos.Sampling
@@ -14,7 +15,8 @@ namespace Service.MedicalRecord.Dtos.Sampling
         public string Sexo { get; set; }
         public string Compañia { get; set; }
         public bool Seleccion { get; set; }
-        public string Order { get; set; }
+        public string ExpedienteId { get; set; }
+        public string ClavePatologica { get; set; }
         public List<StudyDto> Estudios { get; set; }
     }
 }
