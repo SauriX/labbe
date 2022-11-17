@@ -1,4 +1,5 @@
-﻿using Service.MedicalRecord.Dtos.Quotation;
+﻿using Service.MedicalRecord.Domain.Quotation;
+using Service.MedicalRecord.Dtos.Quotation;
 using System;
 using System.Collections.Generic;
 
@@ -14,7 +15,7 @@ namespace Service.MedicalRecord.Dtos.Appointment
         public int cargo { get; set; }
         public int typo { get; set; }
         public DateTime fechaNacimiento { get; set; }
-        //public List<QuotetPrice> estudy { get; set; }
+        public List<QuotationStudy> estudy { get; set; }
         public AppointmentGeneral? generales { get; set; }
         public string Genero { get; set; }
         public Guid UserId { get; set; }
