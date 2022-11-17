@@ -23,7 +23,8 @@ namespace Service.MedicalRecord.Mapper
                 Seleccion = false,
                 Estudios = x.Estudios.ToStudySamplingDto(),
                 Id = x.Id.ToString(),
-                Order = x.ExpedienteId.ToString()
+                ExpedienteId = x.ExpedienteId.ToString(),
+                ClavePatologica = x.ClavePatologica,
             }).ToList();
         }
     }
