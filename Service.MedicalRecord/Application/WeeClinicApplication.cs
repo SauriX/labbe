@@ -163,5 +163,21 @@ namespace Service.MedicalRecord.Application
 
             return assignments;
         }
+
+        public async Task<WeeCancellationDto> CancelService(string serviceId, string nodeId, string branch)
+        {
+            var response = await LaboratoryService.Laboratorio_CancelaEstudios_ByProveedor(serviceId, nodeId, branch);
+
+            var data = response.Datos;
+
+            var assignments = new WeeCancellationDto
+            {
+                IdServicio = data[0].IdServicio,
+                IdNodo = data[0].IdNodo,
+                Action = data[0].Action
+            };
+
+            return assignments;
+        }
     }
 }

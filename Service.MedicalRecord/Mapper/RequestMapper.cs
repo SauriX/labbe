@@ -233,6 +233,7 @@ namespace Service.MedicalRecord.Mapper
                 DescuentoPorcentaje = x.DescuentoPorcentaje,
                 PrecioFinal = x.PrecioFinal,
                 NombreEstatus = x.Estatus.Nombre,
+                Asignado = x.EstudioWeeClinic.Asignado,
                 FechaActualizacion = x.EstatusId == Status.RequestStudy.Capturado
                     ? x.FechaCaptura?.ToString("dd/MM/yyyy HH:mm")
                     : x.EstatusId == Status.RequestStudy.Validado
