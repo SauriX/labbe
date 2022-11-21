@@ -50,6 +50,7 @@ namespace Service.MedicalRecord.Mapper
                 Activo = x.Activo,
                 Estudios = x.Estudios.Select(s => new QuotationStudyInfoDto
                 {
+                    Id = s.Id,
                     Clave = s.Clave,
                     Nombre = s.Nombre,
                 })

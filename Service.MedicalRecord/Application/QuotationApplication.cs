@@ -209,6 +209,17 @@ namespace Service.MedicalRecord.Application
             await _repository.Update(quotation);
         }
 
+        public async Task AssignRecord(Guid quotationId, Guid? recordId, Guid userId)
+        {
+            var quotation = await GetExistingQuotation(quotationId);
+
+            quotation.ExpedienteId = recordId;
+            quotation.UsuarioModificoId = userId;
+            quotation.FechaModifico = DateTime.Now;
+
+            await _repository.Update(quotation);
+        }
+
         public async Task SendTestEmail(QuotationSendDto quotationDto)
         {
             var quotation = await GetExistingQuotation(quotationDto.CotizacionId);

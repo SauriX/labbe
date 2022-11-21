@@ -106,6 +106,15 @@ namespace Service.MedicalRecord.Controllers
             await _service.UpdateGeneral(quotationDto);
         }
 
+        [HttpPut("assign/{quotationId}/{recordId?}")]
+        [Authorize(Policies.Update)]
+        public async Task AssignRecord(Guid quotationId, Guid? recordId = null)
+        {
+            var userId = (Guid)HttpContext.Items["userId"];
+
+            await _service.AssignRecord(quotationId, recordId, userId);
+        }
+
         [HttpPut("totals")]
         [Authorize(Policies.Update)]
         public async Task UpdateTotals(QuotationTotalDto quotationDto)
