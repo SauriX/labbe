@@ -82,6 +82,7 @@ namespace Service.MedicalRecord.Repository
             var quotation = await _context.CAT_Cotizacion
                 .Include(x => x.Expediente)
                 .Include(x => x.Estudios)
+                .Include(x => x.Paquetes)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             return quotation;

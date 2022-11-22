@@ -310,8 +310,8 @@ namespace Service.MedicalRecord.Application
 
                 var request = new RequestDto(requestDto.ExpedienteId,
                     requestDto.SucursalId,
-                    requestDto.Clave,
-                    requestDto.ClavePatologica,
+                    null,
+                    null,
                     requestDto.UsuarioId);
                 var id = await Create(request);
 

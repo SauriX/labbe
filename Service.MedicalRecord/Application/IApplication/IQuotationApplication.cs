@@ -17,6 +17,7 @@ namespace Service.MedicalRecord.Application.IApplication
         Task SendTestEmail(QuotationSendDto quotationDto);
         Task SendTestWhatsapp(QuotationSendDto quotationDto);
         Task<string> Create(QuotationDto quotationDto);
+        Task<string> ConvertToRequest(Guid quotationId, Guid userId, string userName);
         Task UpdateGeneral(QuotationGeneralDto quotationDto);
         Task AssignRecord(Guid quotationId, Guid? recordId, Guid userId);
         Task UpdateTotals(QuotationTotalDto quotationDto);

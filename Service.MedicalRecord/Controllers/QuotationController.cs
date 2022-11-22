@@ -97,6 +97,16 @@ namespace Service.MedicalRecord.Controllers
             return await _service.Create(quotationDto);
         }
 
+        [HttpPost("convert/{quotationId}")]
+        [Authorize(Policies.Create)]
+        public async Task<string> ConvertToRequest(Guid quotationId)
+        {
+            var userId = (Guid)HttpContext.Items["userId"];
+            var userName = HttpContext.Items["userName"].ToString();
+
+            return await _service.ConvertToRequest(quotationId, userId, userName);
+        }
+
         [HttpPut("general")]
         [Authorize(Policies.Update)]
         public async Task UpdateGeneral(QuotationGeneralDto quotationDto)

@@ -27,6 +27,7 @@ using Service.MedicalRecord.Dtos.Quotation;
 using Service.MedicalRecord.Domain.Quotation;
 using QuotationTemplates = Service.MedicalRecord.Dictionary.EmailTemplates.Quotation;
 using Service.MedicalRecord.Dtos.Promotion;
+using Service.MedicalRecord.Dtos.Request;
 
 namespace Service.MedicalRecord.Application
 {
@@ -40,6 +41,7 @@ namespace Service.MedicalRecord.Application
         private readonly IRabbitMQSettings _rabbitMQSettings;
         private readonly IQueueNames _queueNames;
         private readonly IRepository<Branch> _branchRepository;
+        private readonly IRequestApplication _requestApplication;
 
         private const byte PORCENTAJE = 1;
         private const byte CANTIDAD = 2;
@@ -52,7 +54,8 @@ namespace Service.MedicalRecord.Application
             ISendEndpointProvider sendEndpointProvider,
             IRabbitMQSettings rabbitMQSettings,
             IQueueNames queueNames,
-            IRepository<Branch> branchRepository)
+            IRepository<Branch> branchRepository,
+            IRequestApplication requestApplication)
         {
             _transaction = transaction;
             _repository = repository;
@@ -62,6 +65,7 @@ namespace Service.MedicalRecord.Application
             _rabbitMQSettings = rabbitMQSettings;
             _queueNames = queueNames;
             _branchRepository = branchRepository;
+            _requestApplication = requestApplication;
         }
 
         public async Task<IEnumerable<QuotationInfoDto>> GetByFilter(QuotationFilterDto filter)
@@ -191,6 +195,27 @@ namespace Service.MedicalRecord.Application
             await _repository.Create(newQuotation);
 
             return newQuotation.Id.ToString();
+        }
+
+        public async Task<string> ConvertToRequest(Guid quotationId, Guid userId, string userName)
+        {
+            var quotation = await _repository.GetById(quotationId);
+
+            if (quotation == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
+            }
+
+            if (quotation.ExpedienteId == null)
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "La cotización debe tener un expediente asignado");
+            }
+
+            var requestInfo = quotation.ToRequestConvertDto(userId, userName);
+
+            var requestId = await _requestApplication.Convert(requestInfo);
+
+            return requestId;
         }
 
         public async Task UpdateGeneral(QuotationGeneralDto quotationDto)
