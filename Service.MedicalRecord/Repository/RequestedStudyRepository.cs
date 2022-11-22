@@ -37,7 +37,7 @@ namespace Service.MedicalRecord.Repository
             var report = _context.CAT_Solicitud.Where(x => x.Estudios.Any(y => y.EstatusId == Status.RequestStudy.TomaDeMuestra || y.EstatusId == Status.RequestStudy.Solicitado))
                 .Include(x => x.Expediente)
                 .Include(x => x.Medico)
-                .Include(x => x.Estudios.Where(y => search.Estatus.Contains(y.EstatusId))).ThenInclude(x => x.Estatus)
+                .Include(x => x.Estudios.Where(y => y.EstatusId == Status.RequestStudy.TomaDeMuestra || y.EstatusId == Status.RequestStudy.Solicitado)).ThenInclude(x => x.Estatus)
                 .Include(x => x.Sucursal)
                 .Include(x => x.Compañia)
                 .AsQueryable();

@@ -20,8 +20,8 @@ namespace Service.MedicalRecord.Domain.Request
         public string ListaPrecio { get; set; }
         public int? PromocionId { get; set; }
         public string Promocion { get; set; }
-        public int DepartamentoId { get; set; }
-        public int AreaId { get; set; }
+        public int? DepartamentoId { get; set; }
+        public int? AreaId { get; set; }
         public byte EstatusId { get; set; }
         public virtual StatusRequestStudy Estatus { get; set; }
         public decimal Dias { get; set; }
@@ -30,7 +30,7 @@ namespace Service.MedicalRecord.Domain.Request
         public bool AplicaDescuento { get; set; }
         public bool AplicaCargo { get; set; }
         public bool AplicaCopago { get; set; }
-        public int TaponId { get; set; }
+        public int? TaponId { get; set; }
         public virtual Cap Tapon { get; set; }
         public decimal Precio { get; set; }
         public decimal Descuento { get; set; }

@@ -14,7 +14,7 @@ namespace Service.MedicalRecord.Dtos.Request
         public List<byte> Procedencias { get; set; } = new List<byte>();
         public List<byte> Estatus { get; set; } = new List<byte>();
         public List<byte> Urgencias { get; set; } = new List<byte>();
-        public List<int> Departamentos { get; set; } = new List<int>();
+        public List<int?> Departamentos { get; set; } = new List<int?>();
         public List<Guid> Sucursales { get; set; } = new List<Guid>();
         public List<Guid> Compañias { get; set; } = new List<Guid>();
         public List<Guid> Medicos { get; set; } = new List<Guid>();

@@ -31,6 +31,7 @@ namespace Service.MedicalRecord.Repository
         }
 
         public async Task<List<Domain.MedicalRecord.MedicalRecord>> GetNow(MedicalRecordSearch search)
+        
         {
             var expedientes = _context.CAT_Expedientes.AsQueryable();
 
@@ -44,7 +45,7 @@ namespace Service.MedicalRecord.Repository
             }
             if (!string.IsNullOrEmpty(search.expediente))
             {
-                expedientes = expedientes.Where(x => x.Expediente.Contains(search.expediente) || search.expediente.Contains(x.NombrePaciente));
+                expedientes = expedientes.Where(x => x.Expediente.Contains(search.expediente) || x.NombrePaciente.ToLower().Contains(search.expediente.ToLower()) || x.PrimerApellido.ToLower().Contains(search.expediente.ToLower()));
 
             }
             if (search.fechaNacimiento.Date != DateTime.MinValue.Date)
@@ -53,7 +54,7 @@ namespace Service.MedicalRecord.Repository
 
             }
 
-            if (search.fechaAlta[0].Date != DateTime.MinValue.Date && search.fechaAlta[1].Date != DateTime.MinValue.Date)
+            if (search.fechaAlta != null && search.fechaAlta[0].Date != DateTime.MinValue.Date && search.fechaAlta[1].Date != DateTime.MinValue.Date)
             {
                 expedientes = expedientes.Where(x => x.FechaCreo.Date >= search.fechaAlta[0].Date && x.FechaCreo.Date <= search.fechaAlta[1].Date);
             }
@@ -61,6 +62,10 @@ namespace Service.MedicalRecord.Repository
             {
                 expedientes = expedientes.Where(x => x.IdSucursal == Guid.Parse(search.sucursal));
 
+            }
+            if (!string.IsNullOrEmpty(search.telefono))
+            {
+                expedientes = expedientes.Where(x => x.Telefono == search.telefono);
             }
             return expedientes.ToList();
         }
