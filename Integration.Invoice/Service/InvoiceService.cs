@@ -8,50 +8,76 @@ namespace Integration.Invoice.Service
 {
     public class InvoiceService
     {
+        const string API_KEY = "sk_test_jrKzRvqdg87nNoa6E0WBknQG7rJp1xlDwVyeGBAZ34";
+
         public static async Task<object> Create()
         {
-            var facturapi = new FacturapiClient("sk_test_jrKzRvqdg87nNoa6E0WBknQG7rJp1xlDwVyeGBAZ34");
+            //    var facturapi = new FacturapiClient(API_KEY);
 
-            try
-            {
-                //var facturapi = new FacturapiClient("sk_test_API_KEY");
-                var invoiceP = await facturapi.Invoice.CreateAsync(new Dictionary<string, object>
-                {
-                    ["customer"] = new Dictionary<string, object>
-                    {
-                        ["legal_name"] = "MIGUEL ALEJANDRO FARIAS ROCHA",
-                        ["email"] = "email@example.com",
-                        ["tax_id"] = "FARM960328BJ8",
-                        ["tax_system"] = "626",
-                        ["address"] = new Dictionary<string, object>
-                        {
-                            ["zip"] = "64102"
-                        }
-                    },
-                    ["items"] = new Dictionary<string, object>[]
-                  {
-    new Dictionary<string, object>
-    {
-      ["product"] = new Dictionary<string, object>
-      {
-        ["description"] = "Ukelele",
-        ["product_key"] = "60131324",
-        ["price"] = 1.00
-      }
-    }
-                  },
-                    ["payment_form"] = Facturapi.PaymentForm.DINERO_ELECTRONICO,
-                    ["folio_number"] = 914,
-                    ["series"] = "F"
-                });
+            //    var data = new Dictionary<string, object>
+            //    {
+            //        ["customer"] = new Dictionary<string, object>
+            //        {
+            //            ["legal_name"] = "MIGUEL ALEJANDRO FARIAS ROCHA",
+            //            ["email"] = "email@example.com",
+            //            ["tax_id"] = "FARM960328BJ8",
+            //            ["tax_system"] = "626",
+            //            ["address"] = new Dictionary<string, object>
+            //            {
+            //                ["zip"] = "64102"
+            //            }
+            //        }
+            //    };
 
-                return invoiceP;
-            }
-            catch (Exception e)
-            {
+            //    var invoive = await facturapi.Invoice.CreateAsync()
+            //}
 
-                throw;
-            }
+            //    public static async Task<object> Create()
+            //    {
+            //        var facturapi = new FacturapiClient("sk_test_jrKzRvqdg87nNoa6E0WBknQG7rJp1xlDwVyeGBAZ34");
+
+            //        try
+            //        {
+            //            //var facturapi = new FacturapiClient("sk_test_API_KEY");
+            //            var invoiceP = await facturapi.Invoice.CreateAsync(new Dictionary<string, object>
+            //            {
+            //                ["customer"] = new Dictionary<string, object>
+            //                {
+            //                    ["legal_name"] = "MIGUEL ALEJANDRO FARIAS ROCHA",
+            //                    ["email"] = "email@example.com",
+            //                    ["tax_id"] = "FARM960328BJ8",
+            //                    ["tax_system"] = "626",
+            //                    ["address"] = new Dictionary<string, object>
+            //                    {
+            //                        ["zip"] = "64102"
+            //                    }
+            //                },
+            //                ["items"] = new Dictionary<string, object>[]
+            //              {
+            //new Dictionary<string, object>
+            //{
+            //  ["product"] = new Dictionary<string, object>
+            //  {
+            //    ["description"] = "Ukelele",
+            //    ["product_key"] = "60131324",
+            //    ["price"] = 1.00
+            //  }
+            //}
+            //              },
+            //                ["payment_form"] = Facturapi.PaymentForm.DINERO_ELECTRONICO,
+            //                ["folio_number"] = 914,
+            //                ["series"] = "F"
+            //            });
+
+            //            return invoiceP;
+            //        }
+            //        catch (Exception e)
+            //        {
+
+            //            throw;
+            //        }
+
+            return "";
         }
 
         public static async Task<object> GetById(string ig)

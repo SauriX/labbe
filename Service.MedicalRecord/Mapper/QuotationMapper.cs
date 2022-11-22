@@ -1,6 +1,8 @@
 ﻿using Service.MedicalRecord.Dictionary;
 using Service.MedicalRecord.Domain.Quotation;
 using Service.MedicalRecord.Dtos.Quotation;
+using Service.MedicalRecord.Dtos.Request;
+using Shared.Dictionary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,6 +52,7 @@ namespace Service.MedicalRecord.Mapper
                 Activo = x.Activo,
                 Estudios = x.Estudios.Select(s => new QuotationStudyInfoDto
                 {
+                    Id = s.Id,
                     Clave = s.Clave,
                     Nombre = s.Nombre,
                 })
@@ -168,6 +171,74 @@ namespace Service.MedicalRecord.Mapper
                 DescuentoPorcentaje = x.DescuentoPorcentaje,
                 PrecioFinal = x.PrecioFinal
             }).ToList();
+        }
+
+        public static RequestConvertDto ToRequestConvertDto(this Quotation quotation, Guid userId, string userName)
+        {
+            if (quotation == null) return null;
+
+            var requestInfo = new RequestConvertDto
+            {
+                ExpedienteId = (Guid)quotation.ExpedienteId,
+                SucursalId = quotation.SucursalId,
+                Usuario = userName,
+                UsuarioId = userId,
+                General = new RequestGeneralDto
+                {
+                    Activo = true,
+                    CompañiaId = quotation.CompañiaId,
+                    MedicoId = quotation.MedicoId,
+                    Observaciones = quotation.Observaciones,
+                    Procedencia = quotation.Procedencia,
+                    UsuarioId = userId,
+                    Correo = quotation.EnvioCorreo,
+                    Whatsapp = quotation.EnvioWhatsApp
+                },
+                Estudios = quotation.Estudios.Select(x => new RequestStudyDto
+                {
+                    AplicaCargo = x.AplicaCargo,
+                    AreaId = null,// x.AreaId,
+                    Clave = x.Clave,
+                    DepartamentoId = null,// x.DepartamentoId,
+                    Descuento = x.Descuento,
+                    DescuentoPorcentaje = x.DescuentoPorcentaje,
+                    Dias = x.Dias,
+                    EstatusId = Status.RequestStudy.Pendiente,
+                    EstudioId = x.EstudioId,
+                    FechaEntrega = DateTime.Now.AddHours(x.Horas),
+                    Horas = x.Horas,
+                    ListaPrecio = x.ListaPrecio,
+                    ListaPrecioId = x.ListaPrecioId,
+                    Nombre = x.Nombre,
+                    PaqueteId = x.PaqueteId,
+                    Precio = x.Precio,
+                    PrecioFinal = x.PrecioFinal,
+                    Promocion = x.Promocion,
+                    PromocionId = x.PromocionId,
+                    UsuarioActualizacion = userName
+                }).ToList(),
+                Paquetes = quotation.Paquetes.Select(x => new RequestPackDto
+                {
+                    PaqueteId = x.PaqueteId,
+                    AplicaCargo = x.AplicaCargo,
+                    AreaId = Catalogs.Area.PAQUETES,
+                    Clave = x.Clave,
+                    DepartamentoId = Catalogs.Department.PAQUETES,
+                    Descuento = x.Descuento,
+                    DescuentoPorcentaje = x.DescuentoPorcentaje,
+                    Dias = x.Dias,
+                    Horas = x.Horas,
+                    ListaPrecio = x.ListaPrecio,
+                    ListaPrecioId = x.ListaPrecioId,
+                    Nombre = x.Nombre,
+                    Precio = x.Precio,
+                    PrecioFinal = x.PrecioFinal,
+                    Promocion = x.Promocion,
+                    PromocionId = x.PromocionId,
+                }).ToList(),
+            };
+
+            return requestInfo;
         }
 
         public static Quotation ToModel(this QuotationDto dto)

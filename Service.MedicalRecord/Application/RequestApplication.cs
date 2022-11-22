@@ -310,8 +310,8 @@ namespace Service.MedicalRecord.Application
 
                 var request = new RequestDto(requestDto.ExpedienteId,
                     requestDto.SucursalId,
-                    requestDto.Clave,
-                    requestDto.ClavePatologica,
+                    null,
+                    null,
                     requestDto.UsuarioId);
                 var id = await Create(request);
 
@@ -319,6 +319,7 @@ namespace Service.MedicalRecord.Application
                 general.SolicitudId = Guid.Parse(id);
                 general.UsuarioId = requestDto.UsuarioId;
                 general.Procedencia = 1;
+                general.ExpedienteId = requestDto.ExpedienteId;
                 general.Urgencia = 1;
                 await UpdateGeneral(general);
 
@@ -563,10 +564,10 @@ namespace Service.MedicalRecord.Application
                         throw new CustomException(HttpStatusCode.BadRequest, $"El estudio {study.Clave} no contiene información de WeeClinic, favor de contactar a su administrador de sistema");
                     }
 
-                    if (study.EstudioWeeClinic.IsCancel == 0)
-                    {
-                        throw new CustomException(HttpStatusCode.BadRequest, $"No es posible cancelar el estudio {study.Clave} a traves de WeeClinic");
-                    }
+                    //if (study.EstudioWeeClinic.IsCancel == 0)
+                    //{
+                    //    throw new CustomException(HttpStatusCode.BadRequest, $"No es posible cancelar el estudio {study.Clave} a traves de WeeClinic");
+                    //}
 
                     var weeCancelled = await _weeService.CancelService(study.EstudioWeeClinic.IdServicio, study.EstudioWeeClinic.IdNodo, branch.Clave);
 

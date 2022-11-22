@@ -24,6 +24,7 @@
       "UpstreamPathTemplate": "/api/ResultValidation/export/list",
       "UpstreamHttpMethod": [ "POST" ]
     },
+
     {
       "DownstreamPathTemplate": "/api/ResultValidation",
       "DownstreamScheme": "http",
@@ -46,6 +47,18 @@
         }
       ],
       "UpstreamPathTemplate": "/api/ResultValidation/order/{recordId}/{requestId}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/ResultValidation/view/list",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/ResultValidation/view/list",
       "UpstreamHttpMethod": [ "POST" ]
     }
   ]

@@ -31,11 +31,11 @@ namespace Service.MedicalRecord.Repository
         }
 
         public async Task<List<Request>> GetAll(SearchValidation search)
-        {
-            var report = _context.CAT_Solicitud.Where(x => x.Estudios.Any(y => y.EstatusId == Status.RequestStudy.Pendiente || y.EstatusId == Status.RequestStudy.TomaDeMuestra))
+            {
+            var report = _context.CAT_Solicitud.Where(x => x.Estudios.Any(y => y.EstatusId == Status.RequestStudy.Capturado || y.EstatusId == Status.RequestStudy.Validado))
                 .Include(x => x.Expediente)
                 .Include(x => x.Medico)
-                .Include(x => x.Estudios.Where(y => y.EstatusId == Status.RequestStudy.Pendiente || y.EstatusId == Status.RequestStudy.TomaDeMuestra)).ThenInclude(x => x.Estatus)
+                .Include(x => x.Estudios.Where(y => y.EstatusId == Status.RequestStudy.Capturado ||y.EstatusId == Status.RequestStudy.Validado)).ThenInclude(x => x.Estatus)
                 .Include(x => x.Sucursal)
                 .Include(x => x.Compañia)
                 .AsQueryable();
@@ -56,16 +56,22 @@ namespace Service.MedicalRecord.Repository
             if (search.Compañia != null && search.Compañia.Count > 0)
             {
                 report = report.Where(x => search.Compañia.Contains(x.CompañiaId.ToString()));
-            }
-            if (search.Estatus != null && search.Estatus.Count > 0)
-            {
-                report = report.Where(x => x.Estudios.Any(y => search.Estatus.Contains(y.EstatusId)));
+
             }
             if (search.Fecha != null)
             {
                 report = report.
                     Where(x => x.FechaCreo.Date >= search.Fecha.First().Date && x.FechaCreo.Date <= search.Fecha.Last().Date);
             }
+            if (search.Estudio != null && search.Estudio.Count > 0)
+            {
+                report = report.Where(x => x.Estudios.Any(y => search.Estudio.Contains(y.EstudioId)));
+            }
+            if (search.Estatus != null && search.Estatus.Count > 0)
+            {
+                report = report.Where(x => x.Estudios.Any(y => search.Estatus.Contains(y.EstatusId)));
+            }
+
 
             if (search.TipoSoli != null && search.TipoSoli.Count > 0)
             {
