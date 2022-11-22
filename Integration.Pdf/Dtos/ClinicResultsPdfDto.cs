@@ -32,6 +32,7 @@ namespace Integration.Pdf.Dtos
         public decimal? CriticoMaximo { get; set; }
         public bool ImprimirCriticos { get; set; }
         public bool ImprimirPrevios { get; set; }
+        public int Orden { get; set; }
     }
 
     public class ClinicResultsRequestDto

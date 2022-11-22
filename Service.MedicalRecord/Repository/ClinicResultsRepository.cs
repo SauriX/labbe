@@ -56,7 +56,7 @@ namespace Service.MedicalRecord.Repository
 
         public async Task<List<Request>> GetAll(ClinicResultSearchDto search)
         {
-            var report = _context.CAT_Solicitud
+            var report = _context.CAT_Solicitud.Where(x => x.Medico != null)
                 .Include(x => x.Expediente)
                 .Include(x => x.Medico)
                 .Include(x => x.Estudios).ThenInclude(x => x.Estatus)

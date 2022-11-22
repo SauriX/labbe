@@ -181,7 +181,7 @@ namespace Service.MedicalRecord.Application
                 }
 
 
-                var newResults = missingParams.Select(x => new ClinicResults
+                var newResults = missingParams.Select((x, i) => new ClinicResults
                 {
                     Id = Guid.NewGuid(),
                     SolicitudId = requestId,
@@ -201,6 +201,7 @@ namespace Service.MedicalRecord.Application
                     Formula = x.Formula,
                     UltimoResultado = x?.UltimoResultado,
                     DeltaCheck = x.DeltaCheck,
+                    Orden = i
                 }).ToList();
 
                 // Crear Los que no existen
