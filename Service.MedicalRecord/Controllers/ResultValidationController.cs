@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.MedicalRecord.Application.IApplication;
+using Service.MedicalRecord.Dtos.MassSearch;
 using Service.MedicalRecord.Dtos.RequestedStudy;
 using Service.MedicalRecord.Dtos.ResultValidation;
 using Service.MedicalRecord.Dtos.Sampling;
@@ -47,11 +48,19 @@ namespace Service.MedicalRecord.Controllers
         }
 
         [HttpPost("export/list")]
-        [Authorize(Policies.Download)]
+      //  [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportStudyExcel(SearchValidation search)
         {
             var (file, fileName) = await _service.ExportList(search);
             return File(file, MimeType.XLSX, fileName);
+        }
+
+        [HttpPost("view/list")]
+        //[Authorize(Policies.Download)]
+        public async Task<IActionResult> SendResultFile(DeliverResultsStudiesDto estudios) {
+            var file = await _service.SendResultFile(estudios);
+                return File(file, MimeType.PDF, "Orden.pdf");
+
         }
     }
 }

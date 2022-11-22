@@ -9,8 +9,8 @@ namespace Service.MedicalRecord.Dtos.ResultValidation
         public string Area { get; set; }
         public string Status { get; set; }
         public int Estatus { get; set; }
-        public DateTime Registro { get; set; }
-        public DateTime Entrega { get; set; }
+        public string Registro { get; set; }
+        public string Entrega { get; set; }
         public Guid SolicitudId { get; set; }
     }
 }

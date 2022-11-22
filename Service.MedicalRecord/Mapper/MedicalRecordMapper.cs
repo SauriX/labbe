@@ -37,7 +37,7 @@ namespace Service.MedicalRecord.Mapper
                 NomprePaciente = $"{x.NombrePaciente} {x.PrimerApellido}",
                 Genero = x.Genero,
                 Edad = x.Edad,
-                FechaNacimiento = x.FechaDeNacimiento.Date.ToShortDateString().ToString(),
+                FechaNacimiento = x.FechaDeNacimiento.Date.ToString("dd/MM/yyyy"),
                 MonederoElectronico = x.Monedero,
                 Telefono = x.Telefono,
             }).ToList();
@@ -228,7 +228,7 @@ namespace Service.MedicalRecord.Mapper
             };
         }
 
-        
+
         public static MedicalRecord.Domain.MedicalRecord.MedicalRecord ToModel(this MedicalRecordsFormDto dto, MedicalRecord.Domain.MedicalRecord.MedicalRecord model)
         {
             if (model == null || dto == null) return null;
