@@ -17,38 +17,46 @@ using RecordResponses = Service.MedicalRecord.Dictionary.Response;
 using Service.MedicalRecord.Domain.Request;
 using MoreLinq;
 using Service.MedicalRecord.Dtos.ResultValidation;
+using Service.MedicalRecord.Dtos.MassSearch;
+using EventBus.Messages.Common;
+using Service.MedicalRecord.Domain;
+using Shared.Dictionary;
+using Service.MedicalRecord.Client.IClient;
 
 namespace Service.MedicalRecord.Application
 {
-    public class ResultValidationApplication:IValidationApplication
+    public class ResultValidationApplication : IValidationApplication
     {
         public readonly IResultaValidationRepository _repository;
-
-        public ResultValidationApplication(IResultaValidationRepository repository)
+        private readonly IClinicResultsRepository _clinicresultrepository;
+        private readonly IPdfClient _pdfClient;
+        public ResultValidationApplication(IResultaValidationRepository repository, IClinicResultsRepository clinicresultrepository, IPdfClient pdfClient)
         {
 
             _repository = repository;
+            _clinicresultrepository = clinicresultrepository;
+            _pdfClient = pdfClient;
         }
 
         public async Task<(byte[] file, string fileName)> ExportList(SearchValidation search)
         {
             var studies = await GetAll(search);
-
-            foreach (var request in studies)
+           foreach (var request in studies)
             {
                 if (studies.Count > 0)
                 {
-                    request.Estudios.Insert(0, new ValidationStudyDto{ Study= "Clave", Entrega = DateTime.Now, Estatus = 1 });
+                    request.Estudios.Insert(0, new ValidationStudyDto { Study = "Nombre Estudio", Registro = "Fecha de Registro", Entrega = "Fecha de Entrega", Status = "Estatus" });
                 }
             }
+          
 
-            var path = Assets.InformeExpedientes;
+            var path = Assets.InformeExpedientesv;
 
             var template = new XLTemplate(path);
 
             template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
-            template.AddVariable("Titulo", "Toma de Muestra de Estudio");
+            template.AddVariable("Titulo", "Validacion de Estudio");
             template.AddVariable("FechaInicio", search.Fecha.First().ToString("dd/MM/yyyy"));
             template.AddVariable("FechaFinal", search.Fecha.Last().ToString("dd/MM/yyyy"));
             template.AddVariable("Expedientes", studies);
@@ -64,12 +72,12 @@ namespace Service.MedicalRecord.Application
                     var descripcion = template.Workbook.Worksheets.FirstOrDefault().Cell(y.RowNumber(), "B").Value.ToString();
                     var next = template.Workbook.Worksheets.FirstOrDefault().Cell(y.RowNumber() + 2, "B").Value.ToString();
                     var plusOne = template.Workbook.Worksheets.FirstOrDefault().Cell(y.RowNumber() + 1, "B").Value.ToString();
-                    if (descripcion == "Clave" && cuenta == 0)
+                    if (descripcion == "Nombre Estudio" && cuenta == 0)
                     {
                         posiciones[0] = y.RowNumber();
                         cuenta++;
                     }
-                    if ((next == "Clave" || (next == "" && plusOne == "")) && cuenta == 1)
+                    if ((next == "Nombre Estudio" || (next == "" && plusOne == "")) && cuenta == 1)
                     {
                         posiciones[1] = y.RowNumber();
                         cuenta++;
@@ -85,7 +93,7 @@ namespace Service.MedicalRecord.Application
             });
             template.Format();
 
-            return (template.ToByteArray(), $"Informe Toma de Muestra de Estudio.xlsx");
+            return (template.ToByteArray(), $"Informe Validacion de Estudio.xlsx");
         }
 
         public async Task<List<ValidationListDto>> GetAll(SearchValidation search)
@@ -111,7 +119,7 @@ namespace Service.MedicalRecord.Application
                 var studiesIds = item.EstudioId;
                 var studies = await _repository.GetStudyById(item.SolicitudId, studiesIds);
 
-                studies = studies.Where(x => x.EstatusId == Status.RequestStudy.Capturado).ToList();
+                studies = studies.Where(x => x.EstatusId == Status.RequestStudy.Capturado || x.EstatusId == Status.RequestStudy.Validado).ToList();
 
                 if (studies == null || studies.Count == 0)
                 {
@@ -149,5 +157,45 @@ namespace Service.MedicalRecord.Application
 
             return request;
         }
+        public async Task<byte[]  > SendResultFile(DeliverResultsStudiesDto estudios)
+        {
+            var estudiosSeleccionados = estudios.Estudios[0];
+
+            var existingRequest = await _clinicresultrepository.GetRequestById(estudiosSeleccionados.SolicitudId);
+            var estudioId = estudiosSeleccionados.EstudiosId[0];
+            var existingStudy = existingRequest.Estudios.ToList().Find(x => x.EstudioId == estudiosSeleccionados.EstudiosId[0].EstudioId);
+            var area = existingStudy.DepartamentoId;
+            if ( area== Catalogs.Department.PATOLOGIA)
+            {
+                var finalResult = await _clinicresultrepository.GetResultPathologicalById(existingStudy.Id);
+
+                List<ClinicalResultsPathological> resultsTaskUnique = new List<ClinicalResultsPathological>();
+
+                resultsTaskUnique.Add(finalResult);
+
+                var existingResultPathologyPdf = resultsTaskUnique.toInformationPdfResult(true);
+
+                   
+                return await _pdfClient.GeneratePathologicalResults(existingResultPathologyPdf);
+
+
+
+            }
+            else
+            {
+                var finalResult = await _clinicresultrepository.GetLabResultsById(existingStudy.Id);
+
+                return await _pdfClient.GenerateLabResults(finalResult.ToResults(true, true, true)); 
+
+            }
+
+
+
+
+
+        }
+
     }
+        
+    
 }

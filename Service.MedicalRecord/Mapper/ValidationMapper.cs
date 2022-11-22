@@ -38,8 +38,8 @@ namespace Service.MedicalRecord.Mapper
                 Area = "",
                 Status = x.Estatus.Nombre,
                 Estatus= x.EstatusId,
-                Registro = x.FechaCreo,
-                Entrega = x.FechaCreo.AddDays((double)x.Dias),
+                Registro = x.FechaCreo.ToString(),
+                Entrega = x.FechaCreo.AddDays((double)x.Dias).ToString(),
 
                 SolicitudId = x.SolicitudId
 
