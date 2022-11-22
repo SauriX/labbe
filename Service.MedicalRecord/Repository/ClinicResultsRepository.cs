@@ -139,7 +139,15 @@ namespace Service.MedicalRecord.Repository
         }
         public async Task UpdateLabResults(List<ClinicResults> newParameter)
         {
-            await _context.BulkUpdateAsync(newParameter);
+            var config = new BulkConfig()
+            {
+                PropertiesToInclude = new List<string>
+                {
+                    nameof(ClinicResults.Resultado),
+                    nameof(ClinicResults.UltimoResultado),
+                }
+            };
+            await _context.BulkUpdateAsync(newParameter, config);
         }
 
 
