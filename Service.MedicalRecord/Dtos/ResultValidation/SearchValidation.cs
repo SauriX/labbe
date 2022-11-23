@@ -13,7 +13,7 @@ namespace Service.MedicalRecord.Dtos.ResultValidation
         public List<string> Medico { get; set; }
         public List<int> TipoSoli { get; set; }
         public List<string> Compañia { get; set; }
-        public List<string> Sucursal { get; set; }
+        public List<    string> Sucursal { get; set; }
         public List<int> Estatus { get; set; }
     }
 }

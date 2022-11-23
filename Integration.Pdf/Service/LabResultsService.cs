@@ -203,18 +203,19 @@ namespace Integration.Pdf.Service
 
                     //var checkCritics = studyParam.Where(x => x.Resultado != null && x.TipoValorId != 10).Any(x => decimal.Parse(x.Resultado) > x.CriticoMaximo || decimal.Parse(x.Resultado) < x.CriticoMinimo);
                     var checkResultNotNull = studyParam.Where(x => x.Resultado != null);
+                    var orderParams = studyParam.OrderBy(x => x.Orden);
 
-                    foreach (var param in studyParam)
+                    foreach (var param in orderParams)
                     {
                         var checkResult = false;
                         var typeValueText = param.TipoValorId == 9 || param.TipoValorId == 10;
 
-                        if (param.Resultado != null && param.TipoValorId == 1 || param.TipoValorId == 2 || param.TipoValorId == 3 || param.TipoValorId == 4)
+                        if (param.Resultado != null && param.ValorInicial != null && param.ValorFinal != null && param.TipoValorId == 1 || param.TipoValorId == 2 || param.TipoValorId == 3 || param.TipoValorId == 4)
                         {
                             checkResult = decimal.Parse(param.Resultado) > decimal.Parse(param.ValorFinal) || decimal.Parse(param.Resultado) < decimal.Parse(param.ValorInicial);
                         }
 
-                        List <Col> col = new List<Col>()
+                        List<Col> col = new List<Col>()
                         {
                             new Col(param.Nombre, 14, fontParam, ParagraphAlignment.Left){
                                 Fill = typeValueText ? TabLeader.Spaces : TabLeader.Dots

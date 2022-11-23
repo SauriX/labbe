@@ -66,7 +66,7 @@ namespace Service.MedicalRecord.Repository
                     && ((x.Expediente.NombrePaciente + " " + x.Expediente.PrimerApellido + " " + x.Expediente.SegundoApellido).ToLower().Contains(filter.Expediente.ToLower())
                     || (x.Expediente != null && x.Expediente.Expediente.ToLower().Contains(filter.Expediente.ToLower()))));
             }
-
+           
             return await quotations.ToListAsync();
         }
 

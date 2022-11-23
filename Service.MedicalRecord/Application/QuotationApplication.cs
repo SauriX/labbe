@@ -191,6 +191,7 @@ namespace Service.MedicalRecord.Application
             newQuotation.CargoTipo = CANTIDAD;
             newQuotation.UsuarioCreoId = quotationDto.UsuarioId;
             newQuotation.UsuarioCreo = quotationDto.Usuario;
+            newQuotation.ExpedienteId = quotationDto.ExpedienteId;
 
             await _repository.Create(newQuotation);
 

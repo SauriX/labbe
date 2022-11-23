@@ -774,6 +774,20 @@ namespace Service.Catalog.Context
             return maquilas;
         }
 
+        /*private static List<ParameterValue> GetParameterValue()
+        {
+            var path = "wwwroot/seed/CAT_VALORES_REFERENCIA.xlsx";
+            var tableData = ReadAsTable(path);
+
+            var maquilas = tableData.AsEnumerable().Select(x => new ParameterValue(
+                Convert.ToInt32(x.Field<double>("Id")),
+                x.Field<string>("Clave"),
+                x.Field<string>("Nombre") ?? ""
+                )).ToList();
+
+            return maquilas;
+        }*/
+
         private static List<Tapon> GetTags()
         {
             var path = "wwwroot/seed/CAT_ETIQUETAS.xlsx";

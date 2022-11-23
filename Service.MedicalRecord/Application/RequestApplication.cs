@@ -319,6 +319,7 @@ namespace Service.MedicalRecord.Application
                 general.SolicitudId = Guid.Parse(id);
                 general.UsuarioId = requestDto.UsuarioId;
                 general.Procedencia = 1;
+                general.ExpedienteId = requestDto.ExpedienteId;
                 general.Urgencia = 1;
                 await UpdateGeneral(general);
 

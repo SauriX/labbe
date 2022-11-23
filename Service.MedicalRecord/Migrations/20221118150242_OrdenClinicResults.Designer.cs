@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.MedicalRecord.Context;
 
 namespace Service.MedicalRecord.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221118150242_OrdenClinicResults")]
+    partial class OrdenClinicResults
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1035,13 +1037,13 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<bool>("AplicaDescuento")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("AreaId")
+                    b.Property<int>("AreaId")
                         .HasColumnType("int");
 
                     b.Property<string>("Clave")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("DepartamentoId")
+                    b.Property<int>("DepartamentoId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Descuento")
@@ -1121,7 +1123,7 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<Guid>("SolicitudId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("TaponId")
+                    b.Property<int>("TaponId")
                         .HasColumnType("int");
 
                     b.Property<string>("UsuarioCaptura")
@@ -1735,7 +1737,9 @@ namespace Service.MedicalRecord.Migrations
 
                     b.HasOne("Service.MedicalRecord.Domain.Catalogs.Cap", "Tapon")
                         .WithMany()
-                        .HasForeignKey("TaponId");
+                        .HasForeignKey("TaponId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Estatus");
 
