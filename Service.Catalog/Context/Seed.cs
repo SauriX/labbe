@@ -895,6 +895,25 @@ namespace Service.Catalog.Context
             return packs;
         }
 
+        private static List<ParameterValue> GetParameterValues()
+        {
+            var path = "wwwroot/seed/CAT_PARAMETROS_VALORES.xlsx";
+            var tableData = ReadAsTable(path);
+
+            var parameters = GetParameters();
+
+            var parameterValues = tableData.AsEnumerable().Select(x =>
+            {
+                var parameter = parameters.FirstOrDefault(p => p.Clave == x.Field<string>("Clave"));
+
+                if (parameter == null) return null;
+
+
+            });
+
+            return parameterValues;
+        }
+
         private static List<IndicationStudy> GetStudyIndications()
         {
             var path = "wwwroot/seed/CAT_ESTUDIOS_INDI.xlsx";
@@ -908,10 +927,12 @@ namespace Service.Catalog.Context
                 var study = studies.FirstOrDefault(s => s.Clave == x.Field<string>("ClaveEstudio"));
                 var indication = indications.FirstOrDefault(i => i.Clave == x.Field<string>("ClaveIndicacion"));
 
-                return new IndicationStudy(indication?.Id ?? 0, study?.Id ?? 0);
+                if (study == null || indication == null) return null;
+
+                return new IndicationStudy(indication.Id, study.Id);
             }).ToList();
 
-            studyIndications = studyIndications.Where(x => x.IndicacionId > 0 && x.EstudioId > 0).ToList();
+            studyIndications = studyIndications.Where(x => x != null).ToList();
 
             studyIndications = studyIndications.GroupBy(x => new { x.EstudioId, x.IndicacionId }).Select(x => x.First()).ToList();
 
