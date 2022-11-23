@@ -74,6 +74,7 @@ namespace Service.MedicalRecord.Mapper
                 DeltaCheck = x.DeltaCheck,
                 UltimoResultado = x?.UltimoResultado,
                 Orden = i,
+                Clave = x.Clave
             }).ToList();
         }
 
