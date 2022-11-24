@@ -70,6 +70,17 @@ namespace Service.MedicalRecord.Repository
             if (search.Estatus != null && search.Estatus.Count > 0)
             {
                 report = report.Where(x => x.Estudios.Any(y => search.Estatus.Contains(y.EstatusId)));
+                List<Request> report2 = new List<Request>();
+                foreach (var item in report) { 
+                    var estudios = item.Estudios;
+
+                    estudios = estudios.Where(x=> search.Estatus.Contains(x.EstatusId)).ToList();
+
+                    item.Estudios= estudios;
+                    report2.Add(item);
+                }
+
+                report = report2.AsQueryable();
             }
 
 
@@ -83,7 +94,7 @@ namespace Service.MedicalRecord.Repository
                 report = report.Where(x => x.Estudios.Any(y => search.Area.Contains(y.AreaId)));
             }
 
-            return await report.ToListAsync();
+            return  report.ToList();
         }
 
         public async Task<List<RequestStudy>> GetStudyById(Guid requestId, IEnumerable<int> studiesIds)
@@ -91,6 +102,7 @@ namespace Service.MedicalRecord.Repository
             var studies = await _context.Relacion_Solicitud_Estudio
                 .Where(x => x.SolicitudId == requestId && studiesIds.Contains(x.EstudioId))
                 .ToListAsync();
+
 
             return studies;
         }
