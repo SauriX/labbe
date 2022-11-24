@@ -9,7 +9,6 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 namespace Integration.Pdf.Service
 {
     public class LabResultsService
@@ -64,7 +63,7 @@ namespace Integration.Pdf.Service
             {
                 section.PageSetup.TopMargin = Unit.FromCentimeter(1);
             }
-            section.PageSetup.BottomMargin = Unit.FromCentimeter(2);
+            section.PageSetup.BottomMargin = Unit.FromCentimeter(6);
             section.PageSetup.LeftMargin = Unit.FromCentimeter(0.5);
             section.PageSetup.RightMargin = Unit.FromCentimeter(0.5);
 
@@ -227,6 +226,13 @@ namespace Integration.Pdf.Service
                             new Col(param.UnidadNombre, 6, fontParam, ParagraphAlignment.Center),
                             new Col(typeValueText ? "" : $"{param.ValorInicial} - {param.ValorFinal}", 6, fontParam, ParagraphAlignment.Center),
                         };
+                        if(param.TipoValorId == 10 || param.TipoValorId == 7)
+                        {
+                            col.RemoveAt(2);
+                            col.RemoveAt(3);
+                            col[1].Tamaño = 19;
+                        }
+
                         if (results.ImprimirPrevios) col.Insert(2, new Col(param.UltimoResultado != null ? param.UltimoResultado : "-", 6, Col.FONT_SUBTITLE_BOLD));
                         section.AddBorderedText(col.ToArray(), top: false, right: false, bottom: false, left: false);
                     }

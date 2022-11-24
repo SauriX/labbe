@@ -369,7 +369,7 @@ namespace Service.MedicalRecord.Application
                 if (request.Solicitud.Parcialidad)
                 {
                     List<ClinicResults> toSendInfoLab = new List<ClinicResults> { request };
-                    var existingLabResultsPdf = toSendInfoLab.ToResults(true, true, true);
+                    var existingLabResultsPdf = toSendInfoLab.ToResults(true, false, false);
 
                     byte[] pdfBytes = await _pdfClient.GenerateLabResults(existingLabResultsPdf);
                     string namePdf = string.Concat(request.Solicitud.Clave, ".pdf");
