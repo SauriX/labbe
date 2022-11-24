@@ -145,6 +145,11 @@ namespace Service.MedicalRecord.Repository
                 {
                     nameof(ClinicResults.Resultado),
                     nameof(ClinicResults.UltimoResultado),
+                    nameof(ClinicResults.Orden),
+                    nameof(ClinicResults.ValorInicial),
+                    nameof(ClinicResults.ValorFinal),
+                    nameof(ClinicResults.CriticoMinimo),
+                    nameof(ClinicResults.CriticoMaximo)
                 }
             };
             await _context.BulkUpdateAsync(newParameter, config);

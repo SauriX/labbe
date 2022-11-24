@@ -32,7 +32,9 @@ namespace Service.MedicalRecord.Mapper
                 ExpedienteId = model.ExpedienteId,
                 SucursalId = model.SucursalId,
                 Clave = model.Clave,
-                Registro = $"{model.FechaCreo:dd/MM/yyyy}"
+                Registro = $"{model.FechaCreo:dd/MM/yyyy}",
+                Activo = model.Activo,
+
             };
         }
 

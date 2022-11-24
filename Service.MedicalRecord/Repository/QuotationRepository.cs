@@ -171,5 +171,7 @@ namespace Service.MedicalRecord.Repository
 
             await _context.BulkDeleteAsync(studies, config);
         }
+
+        
     }
 }
