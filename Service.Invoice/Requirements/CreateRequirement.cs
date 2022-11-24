@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Service.MedicalRecord.Client.IClient;
+using Service.Billing.Client.IClient;
 using Shared.Dictionary;
 using System;
 using System.Linq;
