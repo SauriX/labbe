@@ -144,7 +144,7 @@ namespace Service.MedicalRecord.Application
             var request = await GetExistingRequest(recordId, requestId);
 
             var studies = await _request.GetAllStudies(request.Id);
-            var studiesDto = studies.ToRequestStudyDto().Where(x => x.DepartamentoId != SharedDepartment.PATOLOGIA).ToList();
+            var studiesDto = studies.ToRequestStudyDto().Where(x => x.AreaId != Catalogs.Area.HISTOPATOLOGIA).ToList();
 
             var ids = studiesDto.Select(x => x.EstudioId).ToList();
             var studiesParams = await _catalogClient.GetStudies(ids);

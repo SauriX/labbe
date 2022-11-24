@@ -43,7 +43,7 @@ namespace Service.MedicalRecord.Mapper
                 Id = x.EstudioId,
                 Nombre = x.Nombre,
                 Area = "",
-                Status = x.EstatusId,
+                Estatus = x.EstatusId,
                 Registro = x.FechaCreo.ToString("G"),
                 Entrega = x.FechaCreo.AddDays((double)x.Dias).ToString("G"),
                 Seleccion = false,
