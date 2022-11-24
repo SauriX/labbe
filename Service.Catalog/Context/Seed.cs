@@ -916,14 +916,14 @@ namespace Service.Catalog.Context
 
             var parameters = GetParameters();
 
-            //var parameterValues = tableData.AsEnumerable().Select(x =>
-            //{
-            //    var parameter = parameters.FirstOrDefault(p => p.Clave == x.Field<string>("Clave"));
+            var parameterValues = tableData.AsEnumerable().Select(x =>
+            {
+                var parameter = parameters.FirstOrDefault(p => p.Clave == x.Field<string>("Clave"));
 
-            //    if (parameter == null) return null;
+                if (parameter == null) return null;
 
-
-            //});
+                return new ParameterValue();
+            }).ToList();
 
             return null;
         }
