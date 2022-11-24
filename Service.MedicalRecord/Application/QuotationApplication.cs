@@ -422,6 +422,18 @@ namespace Service.MedicalRecord.Application
             return code;
         }
 
+        public async Task DeactivateQuotation(Guid quotationId)
+        {
+            var quotation = await _repository.GetById(quotationId);
+
+            quotation.Activo = false;
+
+            await _repository.Update(quotation);
+        }
+
+        
+
+
         //public async Task<(byte[] file, string fileName)> ExportList(QuotationFilterDto search)
         //{
         //    var studys = await GetByFilter(search);
