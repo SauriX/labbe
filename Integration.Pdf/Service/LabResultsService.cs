@@ -63,7 +63,7 @@ namespace Integration.Pdf.Service
             {
                 section.PageSetup.TopMargin = Unit.FromCentimeter(1);
             }
-            section.PageSetup.BottomMargin = Unit.FromCentimeter(6);
+            section.PageSetup.BottomMargin = Unit.FromCentimeter(8);
             section.PageSetup.LeftMargin = Unit.FromCentimeter(0.5);
             section.PageSetup.RightMargin = Unit.FromCentimeter(0.5);
 
@@ -226,11 +226,12 @@ namespace Integration.Pdf.Service
                             new Col(param.UnidadNombre, 6, fontParam, ParagraphAlignment.Center),
                             new Col(typeValueText ? "" : $"{param.ValorInicial} - {param.ValorFinal}", 6, fontParam, ParagraphAlignment.Center),
                         };
-                        if(param.TipoValorId == 10 || param.TipoValorId == 7)
+                        if (param.TipoValorId == 10 || param.TipoValorId == 7)
                         {
-                            col.RemoveAt(2);
                             col.RemoveAt(3);
+                            col.RemoveAt(2);
                             col[1].Tamaño = 19;
+                            col[1].Horizontal = ParagraphAlignment.Justify;
                         }
 
                         if (results.ImprimirPrevios) col.Insert(2, new Col(param.UltimoResultado != null ? param.UltimoResultado : "-", 6, Col.FONT_SUBTITLE_BOLD));
