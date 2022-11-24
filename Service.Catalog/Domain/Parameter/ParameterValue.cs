@@ -4,6 +4,19 @@ namespace Service.Catalog.Domain.Parameter
 {
     public class ParameterValue
     {
+        public ParameterValue()
+        {
+        }
+
+        public ParameterValue(Guid parametroId, decimal inicial, decimal final, string nombre)
+        {
+            Id = Guid.NewGuid();
+            ParametroId = parametroId;
+            ValorInicial = inicial;
+            ValorFinal = final;
+            Nombre = nombre;
+        }
+
         public Guid Id { get; set; }
         public Guid ParametroId { get; set; }
         public virtual Parameter Parametro { get; set; }

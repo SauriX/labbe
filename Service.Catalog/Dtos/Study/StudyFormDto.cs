@@ -56,7 +56,6 @@ namespace Service.Catalog.Dtos.Study
             RuleFor(x => x.Nombre).NotEmpty().MaximumLength(100);
             RuleFor(x => x.Tiemporespuesta).NotEmpty();
             RuleFor(x => x.Cantidad).NotEmpty();
-            RuleFor(x => x.NombreCorto).NotEmpty().MaximumLength(50);
 
             RuleFor(x => x.Area).NotEmpty();
             RuleFor(x => x.Departamento).NotEmpty();
