@@ -158,7 +158,7 @@ namespace Service.Catalog.Mapper
                     Id = x.MedicId,
                     Clave = x.Medic.Clave,
                     Activo = true,
-                    Nombre = x.Medic.Nombre
+                    Nombre = $"{x.Medic.Nombre} {x.Medic.PrimerApellido} {x.Medic.SegundoApellido}"
                 }).ToList(),
                 Dias = dias,
                 lista = model.prices.FirstOrDefault().PrecioLista.Nombre
