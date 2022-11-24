@@ -73,16 +73,16 @@ namespace Shared.Dictionary
         public class TipoValor
         {
             public const string SinValor = "0";
-            public const string Numerico = "0";
-            public const string NumericoPorSexo = "0";
-            public const string NumericoPorEdad = "0";
-            public const string NumericoPorEdadSexo = "0";
-            public const string OpcionMultiple = "0";
-            public const string NumericoCon1Columna = "0";
-            public const string Texto = "0";
-            public const string Parrafo = "0";
-            public const string Etiqueta = "0";
-            public const string Observacion = "0";
+            public const string Numerico = "1";
+            public const string NumericoPorSexo = "2";
+            public const string NumericoPorEdad = "3";
+            public const string NumericoPorEdadSexo = "4";
+            public const string OpcionMultiple = "5";
+            public const string NumericoCon1Columna = "6";
+            public const string Texto = "7";
+            public const string Parrafo = "8";
+            public const string Etiqueta = "9";
+            public const string Observacion = "10";
         }
     }
 }
