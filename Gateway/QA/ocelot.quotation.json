@@ -89,6 +89,28 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/quotation/convert/{quotationId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/quotation/convert/{quotationId}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/quotation/deactivate/{quotationId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/quotation/deactivate/{quotationId}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
       "DownstreamPathTemplate": "/LabRamos/services/records/api/quotation/general",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -109,7 +131,7 @@
       ],
       "UpstreamPathTemplate": "/api/quotation/assign/{quotationId}",
       "UpstreamHttpMethod": [ "PUT" ]
-    },  
+    },
     {
       "DownstreamPathTemplate": "/LabRamos/services/records/api/quotation/assign/{quotationId}/{recordId}",
       "DownstreamScheme": "https",
