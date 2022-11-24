@@ -69,5 +69,20 @@ namespace Shared.Dictionary
             public static readonly Guid ALM = new("891b8852-0eca-471b-b477-328af34205f3");
             public static readonly Guid RECIMP = new("8a51bff5-4edb-4526-a022-34219248ae98");
         }
+
+        public class TipoValor
+        {
+            public const string SinValor = "0";
+            public const string Numerico = "1";
+            public const string NumericoPorSexo = "2";
+            public const string NumericoPorEdad = "3";
+            public const string NumericoPorEdadSexo = "4";
+            public const string OpcionMultiple = "5";
+            public const string NumericoCon1Columna = "6";
+            public const string Texto = "7";
+            public const string Parrafo = "8";
+            public const string Etiqueta = "9";
+            public const string Observacion = "10";
+        }
     }
 }

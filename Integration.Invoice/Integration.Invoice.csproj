@@ -142,6 +142,7 @@
     <Compile Include="Controllers\InvoiceController.cs" />
     <Compile Include="Dtos\FacturapiAddressDto.cs" />
     <Compile Include="Dtos\FacturapiClientDto.cs" />
+    <Compile Include="Dtos\FacturapiDto.cs" />
     <Compile Include="Dtos\FacturapiProductDto.cs" />
     <Compile Include="Dtos\InvoiceCreationDto.cs" />
     <Compile Include="Global.asax.cs">

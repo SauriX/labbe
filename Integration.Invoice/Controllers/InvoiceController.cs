@@ -1,4 +1,5 @@
-﻿using Integration.Invoice.Service;
+﻿using Integration.Invoice.Dtos;
+using Integration.Invoice.Service;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -12,9 +13,9 @@ namespace Integration.Invoice.Controllers
     {
         [HttpPost]
         [Route("")]
-        public async Task<object> Ticket()
+        public async Task<object> Ticket(FacturapiDto invoiceDto)
         {
-            var file = await InvoiceService.Create();
+            var file = await InvoiceService.Create(invoiceDto);
             return file;
         }
 
