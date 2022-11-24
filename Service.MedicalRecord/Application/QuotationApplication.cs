@@ -191,6 +191,7 @@ namespace Service.MedicalRecord.Application
             newQuotation.CargoTipo = CANTIDAD;
             newQuotation.UsuarioCreoId = quotationDto.UsuarioId;
             newQuotation.UsuarioCreo = quotationDto.Usuario;
+            newQuotation.ExpedienteId = quotationDto.ExpedienteId;
 
             await _repository.Create(newQuotation);
 
@@ -420,6 +421,18 @@ namespace Service.MedicalRecord.Application
             var code = $"{consecutive}{date}";
             return code;
         }
+
+        public async Task DeactivateQuotation(Guid quotationId)
+        {
+            var quotation = await _repository.GetById(quotationId);
+
+            quotation.Activo = false;
+
+            await _repository.Update(quotation);
+        }
+
+        
+
 
         //public async Task<(byte[] file, string fileName)> ExportList(QuotationFilterDto search)
         //{
