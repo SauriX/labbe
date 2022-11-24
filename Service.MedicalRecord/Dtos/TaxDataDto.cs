@@ -8,6 +8,7 @@ namespace Service.MedicalRecord.Dtos
         public Guid? ExpedienteId { get; set; }
         public string Rfc { get; set; }
         public string RazonSocial { get; set; }
+        public string RegimenFiscal { get; set; }
         public string Cp { get; set; }
         public string Estado { get; set; }
         public string Municipio { get; set; }

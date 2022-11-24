@@ -107,6 +107,14 @@ namespace Service.MedicalRecord.Controllers
             return await _service.ConvertToRequest(quotationId, userId, userName);
         }
 
+        [HttpPost("deactivate/{quotationId}")]
+        [Authorize(Policies.Create)]
+        public async Task DeactivateQuotation(Guid quotationId)
+        {
+
+            await _service.DeactivateQuotation(quotationId);
+        }
+
         [HttpPut("general")]
         [Authorize(Policies.Update)]
         public async Task UpdateGeneral(QuotationGeneralDto quotationDto)

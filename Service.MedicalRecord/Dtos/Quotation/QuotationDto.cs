@@ -24,5 +24,6 @@ namespace Service.MedicalRecord.Dtos.Quotation
         public string Usuario { get; set; }
         [JsonIgnore]
         public Guid UsuarioId { get; set; }
+        public bool Activo { get; set; }
     }
 }
