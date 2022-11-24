@@ -208,6 +208,7 @@ namespace Integration.Pdf.Service
                     {
                         var checkResult = false;
                         var typeValueText = param.TipoValorId == 9 || param.TipoValorId == 10;
+                        var typeValueLabel = param.TipoValorId == 9;
 
                         if (param.Resultado != null && param.TipoValorId == 1 || param.TipoValorId == 2 || param.TipoValorId == 3 || param.TipoValorId == 4)
                         {
@@ -219,7 +220,7 @@ namespace Integration.Pdf.Service
 
                         List<Col> col = new List<Col>()
                         {
-                            new Col(param.Nombre, 14, typeValueText ? fontCritic : fontParam, ParagraphAlignment.Left){
+                            new Col(param.Nombre, 14, typeValueLabel ? fontCritic : fontParam, ParagraphAlignment.Left){
                                 Fill = typeValueText ? TabLeader.Spaces : TabLeader.Dots
                             },
                             new Col(checkResult ? $"*{param.Resultado}" : param.Resultado, 7, checkResult ? fontCritic : fontParam, ParagraphAlignment.Center),
@@ -233,24 +234,20 @@ namespace Integration.Pdf.Service
 
                     if (results.ImprimirCriticos)
                     {
-                        var checkParams = studyParam.Where(x => x.Resultado != null && x.TipoValorId != 10 && x.TipoValorId != 7 && x.TipoValorId != 5 && x.TipoValorId != 6 && x.TipoValorId != 9 && x.TipoValorId != 8);
-                        var checkCritics = studyParam.Where(x => x.Resultado != null && x.TipoValorId != 10).Any(x => decimal.Parse(x.Resultado) >= x.CriticoMaximo || decimal.Parse(x.Resultado) <= x.CriticoMinimo);
+                        var notNumericTypeValue = studyParam.Where(x => x.Resultado != null && x.TipoValorId != 10 && x.TipoValorId != 7 && x.TipoValorId != 5 && x.TipoValorId != 6 && x.TipoValorId != 9 && x.TipoValorId != 8);
+                        var checkStudyParams = notNumericTypeValue;
+                        var checkCritics = notNumericTypeValue.Any(x => decimal.Parse(x.Resultado) >= x.CriticoMaximo || decimal.Parse(x.Resultado) <= x.CriticoMinimo);
                         var criticTitle = new Col(checkCritics ? "VALORES CRÍTICOS" : "", 14, fontTitle, ParagraphAlignment.Left);
                         section.AddText(criticTitle);
                         section.AddSpace(5);
 
-                        foreach (var param in studyParam.Where(x => x.Resultado != null && x.TipoValorId != 10 && x.TipoValorId != 7 && x.TipoValorId != 5 && x.TipoValorId != 6 && x.TipoValorId != 9 && x.TipoValorId != 8))
+                        foreach (var param in checkStudyParams)
                         {
                             if (param.Resultado != null && (decimal.Parse(param.Resultado) >= param.CriticoMaximo || decimal.Parse(param.Resultado) <= param.CriticoMinimo))
                             {
                                 var col = new Col[]
                                 {
-                                    /*new Col(param.Nombre, 14, fontParam, ParagraphAlignment.Left){
-                                        Fill = TabLeader.Dots
-                                    },*/
                                     new Col(param.Resultado, 7, fontCritic, ParagraphAlignment.Left),
-                                    /*new Col(param.UnidadNombre, 6, fontParam, ParagraphAlignment.Center),
-                                    new Col($"< {param.CriticoMinimo} - {param.ValorFinal} >", 6, fontParam, ParagraphAlignment.Center)*/
                                 };
                                 section.AddBorderedText(col, top: false, right: false, bottom: false, left: false);
                             }
