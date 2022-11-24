@@ -201,22 +201,25 @@ namespace Integration.Pdf.Service
                     var studyName = new Col("****" + studyParam.Key, 14, fontTitle, ParagraphAlignment.Left);
                     section.AddText(studyName);
 
-                    //var checkCritics = studyParam.Where(x => x.Resultado != null && x.TipoValorId != 10).Any(x => decimal.Parse(x.Resultado) > x.CriticoMaximo || decimal.Parse(x.Resultado) < x.CriticoMinimo);
                     var checkResultNotNull = studyParam.Where(x => x.Resultado != null);
+                    var orderParams = studyParam.OrderBy(x => x.Orden);
 
-                    foreach (var param in studyParam)
+                    foreach (var param in orderParams)
                     {
                         var checkResult = false;
                         var typeValueText = param.TipoValorId == 9 || param.TipoValorId == 10;
 
                         if (param.Resultado != null && param.TipoValorId == 1 || param.TipoValorId == 2 || param.TipoValorId == 3 || param.TipoValorId == 4)
                         {
-                            checkResult = decimal.Parse(param.Resultado) > decimal.Parse(param.ValorFinal) || decimal.Parse(param.Resultado) < decimal.Parse(param.ValorInicial);
+                            if (param.ValorInicial != null && param.ValorFinal != null)
+                                checkResult = decimal.Parse(param.Resultado) > decimal.Parse(param?.ValorFinal) || decimal.Parse(param.Resultado) < decimal.Parse(param?.ValorInicial);
+                            else
+                                checkResult = false;
                         }
 
-                        List <Col> col = new List<Col>()
+                        List<Col> col = new List<Col>()
                         {
-                            new Col(param.Nombre, 14, fontParam, ParagraphAlignment.Left){
+                            new Col(param.Nombre, 14, typeValueText ? fontCritic : fontParam, ParagraphAlignment.Left){
                                 Fill = typeValueText ? TabLeader.Spaces : TabLeader.Dots
                             },
                             new Col(checkResult ? $"*{param.Resultado}" : param.Resultado, 7, checkResult ? fontCritic : fontParam, ParagraphAlignment.Center),
@@ -230,13 +233,15 @@ namespace Integration.Pdf.Service
 
                     if (results.ImprimirCriticos)
                     {
-                        var criticTitle = new Col("VALORES CRÍTICOS", 14, fontTitle, ParagraphAlignment.Left);
+                        var checkParams = studyParam.Where(x => x.Resultado != null && x.TipoValorId != 10 && x.TipoValorId != 7 && x.TipoValorId != 5 && x.TipoValorId != 6 && x.TipoValorId != 9 && x.TipoValorId != 8);
+                        var checkCritics = studyParam.Where(x => x.Resultado != null && x.TipoValorId != 10).Any(x => decimal.Parse(x.Resultado) >= x.CriticoMaximo || decimal.Parse(x.Resultado) <= x.CriticoMinimo);
+                        var criticTitle = new Col(checkCritics ? "VALORES CRÍTICOS" : "", 14, fontTitle, ParagraphAlignment.Left);
                         section.AddText(criticTitle);
                         section.AddSpace(5);
 
                         foreach (var param in studyParam.Where(x => x.Resultado != null && x.TipoValorId != 10 && x.TipoValorId != 7 && x.TipoValorId != 5 && x.TipoValorId != 6 && x.TipoValorId != 9 && x.TipoValorId != 8))
                         {
-                            if (param.Resultado != null && (decimal.Parse(param.Resultado) > param.CriticoMaximo || decimal.Parse(param.Resultado) < param.CriticoMinimo))
+                            if (param.Resultado != null && (decimal.Parse(param.Resultado) >= param.CriticoMaximo || decimal.Parse(param.Resultado) <= param.CriticoMinimo))
                             {
                                 var col = new Col[]
                                 {
