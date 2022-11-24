@@ -6,7 +6,7 @@ namespace Service.MedicalRecord.Dtos.MassSearch
     public class DeliverResultsFilterDto
     {
         public List<Guid> Companias { get; set; }
-        public List<int> Departamentos { get; set; }
+        public List<int?> Departamentos { get; set; }
         public DateTime FechaInicial { get; set; }
         public DateTime FechaFinal { get; set; }
         public List<Guid> Medicos { get; set; }

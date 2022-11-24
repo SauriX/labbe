@@ -10,7 +10,7 @@ namespace Service.MedicalRecord.Mapper
 {
     public static class RequestMapper
     {
-        private const byte VIGENTE   = 1;
+        private const byte VIGENTE = 1;
         private const byte PARTICULAR = 2;
         private const byte URGENCIA_NORMAL = 1;
         //private const byte DESCUENTO_PORCENTAJE = 1;
@@ -233,8 +233,12 @@ namespace Service.MedicalRecord.Mapper
                 DescuentoPorcentaje = x.DescuentoPorcentaje,
                 PrecioFinal = x.PrecioFinal,
                 NombreEstatus = x.Estatus.Nombre,
-                Asignado = x.EstudioWeeClinic.Asignado,
-                FechaActualizacion = x.EstatusId == Status.RequestStudy.Capturado
+                Asignado = x.EstudioWeeClinic?.Asignado ?? true,
+                FechaActualizacion = x.EstatusId == Status.RequestStudy.TomaDeMuestra
+                    ? x.FechaTomaMuestra?.ToString("dd/MM/yyyy HH:mm")
+                    : x.EstatusId == Status.RequestStudy.Solicitado
+                    ? x.FechaSolicitado?.ToString("dd/MM/yyyy HH:mm")
+                    : x.EstatusId == Status.RequestStudy.Capturado
                     ? x.FechaCaptura?.ToString("dd/MM/yyyy HH:mm")
                     : x.EstatusId == Status.RequestStudy.Validado
                     ? x.FechaValidacion?.ToString("dd/MM/yyyy HH:mm")
@@ -243,7 +247,11 @@ namespace Service.MedicalRecord.Mapper
                     : x.EstatusId == Status.RequestStudy.Enviado
                     ? x.FechaEnviado?.ToString("dd/MM/yyyy HH:mm")
                     : "",
-                UsuarioActualizacion = x.EstatusId == Status.RequestStudy.Capturado
+                UsuarioActualizacion = x.EstatusId == Status.RequestStudy.TomaDeMuestra
+                    ? x.UsuarioTomaMuestra
+                    : x.EstatusId == Status.RequestStudy.Solicitado
+                    ? x.UsuarioSolicitado 
+                    : x.EstatusId == Status.RequestStudy.Capturado
                     ? x.UsuarioCaptura
                     : x.EstatusId == Status.RequestStudy.Validado
                     ? x.UsuarioValidacion

@@ -97,6 +97,24 @@ namespace Service.MedicalRecord.Controllers
             return await _service.Create(quotationDto);
         }
 
+        [HttpPost("convert/{quotationId}")]
+        [Authorize(Policies.Create)]
+        public async Task<string> ConvertToRequest(Guid quotationId)
+        {
+            var userId = (Guid)HttpContext.Items["userId"];
+            var userName = HttpContext.Items["userName"].ToString();
+
+            return await _service.ConvertToRequest(quotationId, userId, userName);
+        }
+
+        [HttpPost("deactivate/{quotationId}")]
+        [Authorize(Policies.Create)]
+        public async Task DeactivateQuotation(Guid quotationId)
+        {
+
+            await _service.DeactivateQuotation(quotationId);
+        }
+
         [HttpPut("general")]
         [Authorize(Policies.Update)]
         public async Task UpdateGeneral(QuotationGeneralDto quotationDto)
@@ -104,6 +122,15 @@ namespace Service.MedicalRecord.Controllers
             quotationDto.UsuarioId = (Guid)HttpContext.Items["userId"];
 
             await _service.UpdateGeneral(quotationDto);
+        }
+
+        [HttpPut("assign/{quotationId}/{recordId?}")]
+        [Authorize(Policies.Update)]
+        public async Task AssignRecord(Guid quotationId, Guid? recordId = null)
+        {
+            var userId = (Guid)HttpContext.Items["userId"];
+
+            await _service.AssignRecord(quotationId, recordId, userId);
         }
 
         [HttpPut("totals")]

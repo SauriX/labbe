@@ -1,15 +1,30 @@
 ﻿using Service.MedicalRecord.Domain.Request;
+using Service.MedicalRecord.Dtos.RequestedStudy;
 using Service.MedicalRecord.Dtos.Sampling;
 using System.Collections.Generic;
+using Service.MedicalRecord.Dictionary;
 using System.Linq;
 
 namespace Service.MedicalRecord.Mapper
 {
     public static class RequestedStudyMapper
     {
-        public static List<SamplingListDto> ToRequestedStudyDto(this List<Request> model)
+        public static List<SamplingListDto> ToRequestedStudyDto(this List<Request> model, RequestedStudySearchDto search)
         {
             if (model == null) return null;
+
+            if(search.Estatus != null)
+            {
+                foreach (var request in model)
+                {
+                    request.Estudios = request.Estudios.Where(x => search.Estatus.Contains(x.EstatusId)).ToList();
+                }
+            }
+
+            foreach (var request in model)
+            {
+                request.Estudios = request.Estudios.Where(x => x.EstatusId == Status.RequestStudy.TomaDeMuestra || x.EstatusId == Status.RequestStudy.Solicitado).ToList();
+            }
 
             return model.Select(x => new SamplingListDto
             {
@@ -23,7 +38,8 @@ namespace Service.MedicalRecord.Mapper
                 Seleccion = false,
                 Estudios = x.Estudios.ToStudySamplingDto(),
                 Id = x.Id.ToString(),
-                Order = x.ExpedienteId.ToString()
+                ExpedienteId = x.ExpedienteId.ToString(),
+                ClavePatologica = x.ClavePatologica,
             }).ToList();
         }
     }

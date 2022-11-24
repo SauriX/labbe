@@ -97,6 +97,30 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
+      "DownstreamPathTemplate": "/api/quotation/convert/{quotationId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/quotation/convert/{quotationId}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/quotation/deactivate/{quotationId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/quotation/deactivate/{quotationId}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/quotation/general",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -106,6 +130,30 @@
         }
       ],
       "UpstreamPathTemplate": "/api/quotation/general",
+      "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/quotation/assign/{quotationId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/quotation/assign/{quotationId}",
+      "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/quotation/assign/{quotationId}/{recordId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/quotation/assign/{quotationId}/{recordId}",
       "UpstreamHttpMethod": [ "PUT" ]
     },
     {

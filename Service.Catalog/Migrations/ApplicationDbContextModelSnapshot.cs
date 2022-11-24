@@ -1623,6 +1623,9 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("smalldatetime");
 
+                    b.Property<int>("Orden")
+                        .HasColumnType("int");
+
                     b.Property<Guid?>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");
 

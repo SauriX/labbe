@@ -30,6 +30,6 @@ namespace Service.MedicalRecord.Domain.Appointments
         public DateTime FechaCreo { get; set; }
         public Guid? UsuarioModId { get; set; }
         public DateTime? FechaMod { get; set; }
-        //public IEnumerable<PriceQuoteStudy> Estudios { get; set; }
+        public IEnumerable<QuotationStudy> Estudios { get; set; }
     }
 }

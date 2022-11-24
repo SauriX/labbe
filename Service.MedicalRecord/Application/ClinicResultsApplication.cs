@@ -33,6 +33,7 @@ using Service.MedicalRecord.Dtos.Catalogs;
 using Microsoft.Extensions.Configuration;
 using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Dtos.MassSearch;
+using System.Text;
 
 namespace Service.MedicalRecord.Application
 {
@@ -143,7 +144,7 @@ namespace Service.MedicalRecord.Application
             var request = await GetExistingRequest(recordId, requestId);
 
             var studies = await _request.GetAllStudies(request.Id);
-            var studiesDto = studies.ToRequestStudyDto().Where(x => x.DepartamentoId != SharedDepartment.PATOLOGIA).ToList();
+            var studiesDto = studies.ToRequestStudyDto().Where(x => x.AreaId != Catalogs.Area.HISTOPATOLOGIA).ToList();
 
             var ids = studiesDto.Select(x => x.EstudioId).ToList();
             var studiesParams = await _catalogClient.GetStudies(ids);
@@ -181,7 +182,7 @@ namespace Service.MedicalRecord.Application
                 }
 
 
-                var newResults = missingParams.Select(x => new ClinicResults
+                var newResults = missingParams.Select((x, i) => new ClinicResults
                 {
                     Id = Guid.NewGuid(),
                     SolicitudId = requestId,
@@ -201,6 +202,7 @@ namespace Service.MedicalRecord.Application
                     Formula = x.Formula,
                     UltimoResultado = x?.UltimoResultado,
                     DeltaCheck = x.DeltaCheck,
+                    Orden = i
                 }).ToList();
 
                 // Crear Los que no existen
@@ -220,18 +222,19 @@ namespace Service.MedicalRecord.Application
                 foreach (var param in study.Parametros)
                 {
                     var result = results.Find(x => x.SolicitudEstudioId == study.Id && x.ParametroId.ToString() == param.Id);
-                    /*if (result.Formula != null && result.Resultado != null)
+                    if (!string.IsNullOrWhiteSpace(result.Formula) && result.Resultado != null)
                     {
-                        param.Resultado = GetFormula(results, result.Formula);
+                        param.Resultado = GetFormula(results.Where(x => x.SolicitudEstudioId == study.Id && x.Clave != null).ToList(), result.Formula);
                     }
                     else
-                    {*/
-                    if(result == null) {
-                        continue;
-                    }
+                    {
+                        if (result == null)
+                        {
+                            continue;
+                        }
 
-                    param.Resultado = result.Resultado;
-                    /*}*/
+                        param.Resultado = result.Resultado;
+                    }
                     param.ResultadoId = result.Id.ToString();
                     param.Formula = result.Formula;
 
@@ -302,13 +305,7 @@ namespace Service.MedicalRecord.Application
                                 param.TipoValores = param.TipoValores;
                                 break;
                             case "6":
-                                param.ValorInicial = string.Join("\n", param.TipoValores.Where(x => x.ValorInicial != 0));
-                                break;
-                            case "7":
-                                param.ValorInicial = string.Join("\n", param.TipoValores.Where(x => x.DescripcionTexto != null));
-                                break;
-                            case "8":
-                                param.ValorInicial = string.Join("\n", param.TipoValores.Where(x => x.DescripcionParrafo != null));
+                                param.TipoValores = param.TipoValores;
                                 break;
                             case "9":
                                 param.ValorInicial = "\n";
@@ -351,12 +348,18 @@ namespace Service.MedicalRecord.Application
             if (request.SolicitudEstudio.EstatusId == Status.RequestStudy.Solicitado)
             {
                 var newResults = results.ToCaptureResults();
+                
                 await _repository.UpdateLabResults(newResults);
                 await UpdateStatusStudy(request.SolicitudEstudioId, request.SolicitudEstudio.EstatusId, user);
             }
             else if (request.SolicitudEstudio.EstatusId == Status.RequestStudy.Capturado)
             {
                 var newResults = results.ToCaptureResults();
+                for (int i = 0; i < newResults.Count; i++)
+                {
+                    if (!string.IsNullOrWhiteSpace(newResults[i].Formula))
+                        newResults[i].Resultado = GetFormula(newResults, newResults[i].Formula);
+                }
                 await _repository.UpdateLabResults(newResults);
                 await UpdateStatusStudy(request.SolicitudEstudioId, request.SolicitudEstudio.EstatusId, user);
             }
@@ -366,7 +369,7 @@ namespace Service.MedicalRecord.Application
                 if (request.Solicitud.Parcialidad)
                 {
                     List<ClinicResults> toSendInfoLab = new List<ClinicResults> { request };
-                    var existingLabResultsPdf = toSendInfoLab.ToResults(true, true, true);
+                    var existingLabResultsPdf = toSendInfoLab.ToResults(true, false, false);
 
                     byte[] pdfBytes = await _pdfClient.GenerateLabResults(existingLabResultsPdf);
                     string namePdf = string.Concat(request.Solicitud.Clave, ".pdf");
@@ -396,7 +399,7 @@ namespace Service.MedicalRecord.Application
 
                     var existingRequest = await _repository.GetRequestById(request.SolicitudId);
 
-                        if (existingRequest.Estudios.All(estudio => estudio.EstatusId == Status.RequestStudy.Liberado))
+                    if (existingRequest.Estudios.All(estudio => estudio.EstatusId == Status.RequestStudy.Liberado))
                     {
                         await SendResultsFiles(request.SolicitudId, userId, user);
                     }
@@ -483,7 +486,7 @@ namespace Service.MedicalRecord.Application
             return path;
 
         }
-        
+
         public async Task UpdateResultPathologicalStudy(ClinicalResultPathologicalFormDto result)
         {
             var existing = await _repository.GetResultPathologicalById(result.RequestStudyId);
@@ -588,7 +591,7 @@ namespace Service.MedicalRecord.Application
 
                 foreach (var estudioId in estudiosSeleccionados.EstudiosId)
                 {
-                    
+
 
                     if (estudioId.Tipo == Catalogs.Area.HISTOPATOLOGIA)
                     {
@@ -619,9 +622,9 @@ namespace Service.MedicalRecord.Application
 
                     RequestStudy estudioActual = await _repository.GetRequestStudyById(estudioId.EstudioId);
 
-                    
+
                     List<string> mediosActuales = estudioActual.MedioSolicitado == null ? new List<string>() : estudioActual.MedioSolicitado?.Split(",").ToList();
-                    
+
 
                     if (estudios.MediosEnvio.Contains("Whatsapp") && !mediosActuales.Contains("Whatsapp"))
                     {
@@ -663,14 +666,14 @@ namespace Service.MedicalRecord.Application
                     {
                         if (estudios.MediosEnvio.Contains("Whatsapp"))
                         {
-                            await SendTestWhatsapp(files, existingRequest.Expediente.Celular, estudios.UsuarioId);
+                            await SendTestWhatsapp(files, existingRequest.EnvioWhatsApp, estudios.UsuarioId);
 
                         }
 
                         if (estudios.MediosEnvio.Contains("Correo"))
                         {
 
-                            await SendTestEmail(files, existingRequest.Expediente.Correo, estudios.UsuarioId);
+                            await SendTestEmail(files, existingRequest.EnvioCorreo, estudios.UsuarioId);
                         }
 
                         foreach (var estudio in existingRequest.Estudios)
@@ -735,7 +738,7 @@ namespace Service.MedicalRecord.Application
                     var pathName = Path.Combine(MedicalRecordPath, pathPdf.Replace("wwwroot/", "")).Replace("\\", "/");
 
                     files.Add(new SenderFiles(new Uri(pathName), namePdf));
-                }            
+                }
             }
 
             if (labResults.Count > 0)
@@ -756,7 +759,7 @@ namespace Service.MedicalRecord.Application
 
                 var pathName = Path.Combine(MedicalRecordPath, pathPdf.Replace("wwwroot/", "")).Replace("\\", "/");
 
-              
+
                 files.Add(new SenderFiles(new Uri(pathName), namePdf));
 
             }
@@ -771,7 +774,7 @@ namespace Service.MedicalRecord.Application
 
                     foreach (var estudio in existingRequest.Estudios)
                     {
-                      await UpdateStatusStudy(estudio.Id, Status.RequestStudy.Enviado, usuario);
+                        await UpdateStatusStudy(estudio.Id, Status.RequestStudy.Enviado, usuario);
 
                     }
                 }
@@ -785,12 +788,12 @@ namespace Service.MedicalRecord.Application
 
         public async Task SendTestEmail(List<SenderFiles> senderFiles, string correo, Guid usuario)
         {
-            
+
             var subject = RequestTemplates.Subjects.PathologicalSubject;
             var title = RequestTemplates.Titles.PathologicalTitle;
             var message = RequestTemplates.Messages.PathologicalMessage;
 
-            
+
             var emailToSend = new EmailContract(correo, null, subject, title, message, senderFiles)
             {
                 Notificar = true,
@@ -806,7 +809,7 @@ namespace Service.MedicalRecord.Application
 
         public async Task SendTestWhatsapp(List<SenderFiles> senderFiles, string telefono, Guid usuario)
         {
-            
+
             var message = RequestTemplates.Subjects.PathologicalSubject;
 
 
@@ -930,14 +933,14 @@ namespace Service.MedicalRecord.Application
 
         private string GetFormula(List<ClinicResults> parameters, string formula)
         {
-            var message = string.Empty;
+            StringBuilder message = new(formula);
 
             foreach (var par in parameters)
             {
-                message = formula.Replace(par.Clave, par.Resultado.ToString());
+                message.Replace(par.Clave, par.Resultado);
             }
 
-            var str4 = "(" + message.Replace(" ", "").ToLower() + ")";
+            var str4 = "(" + message.Replace(" ", "").ToString().ToLower() + ")";
             str4 = str4.Replace(")(", ")*(");
 
             while (str4.Contains('('))

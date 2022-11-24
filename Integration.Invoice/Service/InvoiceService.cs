@@ -1,68 +1,83 @@
 ﻿using Facturapi;
+using Integration.Invoice.Dtos;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Integration.Invoice.Service
 {
     public class InvoiceService
     {
-        public static async Task<object> Create()
+        const string API_KEY = "sk_test_jrKzRvqdg87nNoa6E0WBknQG7rJp1xlDwVyeGBAZ34";
+
+        public static async Task<Facturapi.Invoice> Create(FacturapiDto data)
         {
-            var facturapi = new FacturapiClient("sk_test_jrKzRvqdg87nNoa6E0WBknQG7rJp1xlDwVyeGBAZ34");
+            var facturapi = new FacturapiClient(API_KEY);
 
-            try
+            var client = data.Cliente;
+            var products = data.Productos;
+
+            var invoiceData = new Dictionary<string, object>
             {
-                //var facturapi = new FacturapiClient("sk_test_API_KEY");
-                var invoiceP = await facturapi.Invoice.CreateAsync(new Dictionary<string, object>
+                ["type"] = "I",
+                ["payment_form"] = data.FormaPago,
+                ["payment_method"] = data.MetodoPago,
+                ["use"] = data.UsoCDFI,
+                ["currency"] = "MXN",
+                ["exchange"] = 1,
+                ["external_id"] = data.ClaveExterna,
+                ["series"] = "F",
+                ["customer"] = new Dictionary<string, object>
                 {
-                    ["customer"] = new Dictionary<string, object>
+                    ["legal_name"] = client.RazonSocial,
+                    ["tax_id"] = client.RFC,
+                    ["tax_system"] = client.RegimenFiscal,
+                    ["email"] = client.Correo,
+                    ["phone"] = client.Telefono,
+                    ["address"] = new Dictionary<string, object>
                     {
-                        ["legal_name"] = "MIGUEL ALEJANDRO FARIAS ROCHA",
-                        ["email"] = "email@example.com",
-                        ["tax_id"] = "FARM960328BJ8",
-                        ["tax_system"] = "626",
-                        ["address"] = new Dictionary<string, object>
-                        {
-                            ["zip"] = "64102"
-                        }
-                    },
-                    ["items"] = new Dictionary<string, object>[]
-                  {
-    new Dictionary<string, object>
-    {
-      ["product"] = new Dictionary<string, object>
-      {
-        ["description"] = "Ukelele",
-        ["product_key"] = "60131324",
-        ["price"] = 1.00
-      }
-    }
-                  },
-                    ["payment_form"] = Facturapi.PaymentForm.DINERO_ELECTRONICO,
-                    ["folio_number"] = 914,
-                    ["series"] = "F"
-                });
+                        ["zip"] = client.Domicilio.CodigoPostal,
+                        ["country"] = "MEX",
+                        ["state"] = client.Domicilio.Estado,
+                        ["city"] = client.Domicilio.Ciudad,
+                        ["neighborhood"] = client.Domicilio.Colonia,
+                        ["street"] = client.Domicilio.Calle,
+                        ["interior"] = client.Domicilio.NumeroInterior,
+                        ["exterior"] = client.Domicilio.NumeroExterior,
+                    }
+                },
+                ["items"] = products.Select(x => new Dictionary<string, object>
+                {
+                    ["quantity"] = x.Cantidad,
+                    ["discount"] = x.Descuento,
+                    ["product"] = new Dictionary<string, object>
+                    {
+                        ["description"] = x.Descripcion,
+                        ["product_key"] = x.ClaveProductoSAT,
+                        ["price"] = x.Precio,
+                        ["unit_key"] = x.ClaveUnidadSAT,
+                        ["unit_name"] = x.ClaveUnidadNombreSAT,
+                        ["sku"] = x.Clave
+                    }
+                }).ToList()
+            };
 
-                return invoiceP;
-            }
-            catch (Exception e)
-            {
+            var invoice = await facturapi.Invoice.CreateAsync(invoiceData);
 
-                throw;
-            }
+            return invoice;
         }
 
-        public static async Task<object> GetById(string ig)
+        public static async Task<Facturapi.Invoice> GetById(string invoiceId)
         {
             try
             {
-                var facturapi = new FacturapiClient("sk_test_jrKzRvqdg87nNoa6E0WBknQG7rJp1xlDwVyeGBAZ34");
+                var facturapi = new FacturapiClient(API_KEY);
 
-                var a = await facturapi.Invoice.RetrieveAsync(ig);
+                var invoice = await facturapi.Invoice.RetrieveAsync(invoiceId);
 
-                return a;
+                return invoice;
             }
             catch (Exception)
             {
@@ -71,15 +86,15 @@ namespace Integration.Invoice.Service
             }
         }
 
-        public static async Task<byte[]> GetXml(string id)
+        public static async Task<byte[]> GetXml(string invoiceId)
         {
             try
             {
-                var facturapi = new FacturapiClient("sk_test_jrKzRvqdg87nNoa6E0WBknQG7rJp1xlDwVyeGBAZ34");
+                var facturapi = new FacturapiClient(API_KEY);
 
-                var a = await facturapi.Invoice.DownloadXmlAsync(id);
+                var invoice = await facturapi.Invoice.DownloadXmlAsync(invoiceId);
 
-                return a.ToByteArray();
+                return invoice.ToByteArray();
             }
             catch (Exception)
             {

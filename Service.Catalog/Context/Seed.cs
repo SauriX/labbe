@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using DEP = Shared.Dictionary.Catalogs.Department;
 using AREAS = Shared.Dictionary.Catalogs.Area;
 using BR = Shared.Dictionary.Catalogs.Branch;
+using ValueTypes = Shared.Dictionary.Catalogs.TipoValor;
 using Shared.Utils;
 using ClosedXML.Excel;
 using System.Data;
@@ -21,10 +22,9 @@ using Service.Catalog.Domain.Study;
 using RabbitMQ.Client;
 using Service.Catalog.Domain.Parameter;
 using Service.Catalog.Domain.Packet;
-using DocumentFormat.OpenXml.Office2010.Excel;
-using DocumentFormat.OpenXml.Wordprocessing;
-using Service.Catalog.Domain.Medics;
-using static ClosedXML.Excel.XLPredefinedFormat;
+using System.Net;
+using Shared.Error;
+using Shared.Extensions;
 
 namespace Service.Catalog.Context
 {
@@ -548,6 +548,26 @@ namespace Service.Catalog.Context
                 }
             }
 
+            // ParameterValues
+            if (update)
+            {
+                using var transaction = context.Database.BeginTransaction();
+
+                try
+                {
+                    var parameterValues = GetParameterValues();
+
+                    context.BulkInsertOrUpdate(parameterValues);
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+
             // StudyIndications
             if (update)
             {
@@ -895,6 +915,196 @@ namespace Service.Catalog.Context
             return packs;
         }
 
+        private static List<ParameterValue> GetParameterValues()
+        {
+            var path = "wwwroot/seed/CAT_VALORES_REFERENCIA.xlsx";
+            var tableData = ReadAsTable(path);
+
+            var parameters = GetParameters();
+
+            var errores = new List<string>();
+
+            var parameterValues = tableData.AsEnumerable().Select((x, i) =>
+            {
+                var parameter = parameters.FirstOrDefault(p => p.Clave == x.Field<string>("Clave"));
+
+                if (parameter == null) return null;
+
+                var order = x.Field<double>("Orden");
+                var gender = x.Field<string>("Sexo");
+                var startAge = x.Field<string>("EdadInicial").ToLower();
+                var endAge = x.Field<string>("EdadFinal").ToLower();
+                var value1 = x.Field<string>("Valor1");
+                var value2 = x.Field<string>("Valor2");
+                var value3 = x.Field<string>("Valor3");
+                var value4 = x.Field<string>("Valor4");
+                var value5 = x.Field<string>("Valor5");
+                var value6 = x.Field<string>("Valor6");
+                var label = x.Field<string>("Etiqueta");
+                var multiple = x.Field<string>("Multiple");
+
+                var valueNum1 = 0m;
+                var valueNum2 = 0m;
+
+                var initAgeType = 3;
+                var initAge = 0;
+                var finalAge = 0;
+
+                if (parameter.TipoValor.In(ValueTypes.Numerico, ValueTypes.NumericoPorSexo, ValueTypes.NumericoPorEdad, ValueTypes.NumericoPorEdadSexo))
+                {
+                    value1 = string.IsNullOrWhiteSpace(value1) || value1 == "\\N" ? "0" : value1.Split(" ")[0];
+                    value2 = string.IsNullOrWhiteSpace(value2) || value2 == "\\N" ? "0" : value2.Split(" ")[0];
+
+                    var initOk = decimal.TryParse(value1, out valueNum1);
+                    var endOk = decimal.TryParse(value2, out valueNum2);
+
+                    if (!initOk || !endOk)
+                    {
+                        errores.Add($"El valor {value1} o {value2} no es numerico, fila: {i + 2}");
+                        return null;
+                    }
+                }
+
+                if (parameter.TipoValor.In(ValueTypes.NumericoPorEdad, ValueTypes.NumericoPorEdadSexo))
+                {
+                    initAgeType = startAge.Contains("a") ? 3 : startAge.Contains("m") ? 2 : startAge.Contains("d") ? 1 : 3;
+
+                    var intiAgeStr = startAge.Split(".")[0].Replace(new string[] { "años", "a", "meses", "mes", "m", "d", " " }, "");
+                    var endAgeStr = endAge.Split(".")[0].Replace(new string[] { "años", "a", "meses", "mes", "m", "d", " " }, "");
+
+                    var initOk = int.TryParse(intiAgeStr, out initAge);
+                    var endOk = int.TryParse(endAgeStr, out finalAge);
+
+                    if (!initOk || !endOk)
+                    {
+                        errores.Add($"El valor {intiAgeStr} o {endAgeStr} no es una edad valida, fila: {i + 2}");
+                        return null;
+                    }
+                }
+
+                if (parameter.TipoValor == ValueTypes.Numerico)
+                {
+                    return new ParameterValue
+                    {
+                        Id = Guid.NewGuid(),
+                        ParametroId = parameter.Id,
+                        Nombre = ValueTypes.Numerico,
+                        ValorInicial = valueNum1,
+                        ValorFinal = valueNum2,
+                        Activo = true
+                    };
+                }
+                if (parameter.TipoValor == ValueTypes.NumericoPorSexo)
+                {
+                    return new ParameterValue
+                    {
+                        Id = Guid.NewGuid(),
+                        ParametroId = parameter.Id,
+                        Nombre = gender == "M" ? "hombre" : "mujer",
+                        HombreValorInicial = gender == "M" ? valueNum1 : 0m,
+                        HombreValorFinal = gender == "M" ? valueNum2 : 0m,
+                        MujerValorInicial = gender == "F" ? valueNum1 : 0m,
+                        MujerValorFinal = gender == "F" ? valueNum2 : 0m,
+                        Activo = true
+                    };
+                }
+                if (parameter.TipoValor == ValueTypes.NumericoPorEdad)
+                {
+                    return new ParameterValue
+                    {
+                        Id = Guid.NewGuid(),
+                        ParametroId = parameter.Id,
+                        Nombre = ValueTypes.NumericoPorEdad,
+                        RangoEdadInicial = initAge,
+                        RangoEdadFinal = finalAge,
+                        ValorInicialNumerico = valueNum1,
+                        ValorFinalNumerico = valueNum2,
+                        Activo = true
+                    };
+                }
+                if (parameter.TipoValor == ValueTypes.NumericoPorEdadSexo)
+                {
+                    return new ParameterValue
+                    {
+                        Id = Guid.NewGuid(),
+                        ParametroId = parameter.Id,
+                        Nombre = gender == "M" ? "hombre" : "mujer",
+                        RangoEdadInicial = initAge,
+                        RangoEdadFinal = finalAge,
+                        ValorInicialNumerico = valueNum1,
+                        ValorFinalNumerico = valueNum2,
+                        Activo = true
+                    };
+                }
+                if (parameter.TipoValor == ValueTypes.OpcionMultiple)
+                {
+                    return new ParameterValue
+                    {
+                        Id = Guid.NewGuid(),
+                        ParametroId = parameter.Id,
+                        Nombre = ValueTypes.OpcionMultiple,
+                        Opcion = multiple,
+                        Activo = true
+                    };
+                }
+                if (parameter.TipoValor == ValueTypes.Texto)
+                {
+                    return new ParameterValue
+                    {
+                        Id = Guid.NewGuid(),
+                        ParametroId = parameter.Id,
+                        Nombre = ValueTypes.Texto,
+                        DescripcionTexto = multiple,
+                        Activo = true
+                    };
+                }
+                if (parameter.TipoValor == ValueTypes.Parrafo)
+                {
+                    return new ParameterValue
+                    {
+                        Id = Guid.NewGuid(),
+                        ParametroId = parameter.Id,
+                        Nombre = ValueTypes.Parrafo,
+                        DescripcionParrafo = multiple,
+                        Activo = true
+                    };
+                }
+                if (parameter.TipoValor == ValueTypes.Etiqueta)
+                {
+                    return new ParameterValue
+                    {
+                        Id = Guid.NewGuid(),
+                        ParametroId = parameter.Id,
+                        Nombre = ValueTypes.Etiqueta,
+                        Opcion = label,
+                        Activo = true
+                    };
+                }
+                if (parameter.TipoValor == ValueTypes.Observacion)
+                {
+                    return new ParameterValue
+                    {
+                        Id = Guid.NewGuid(),
+                        ParametroId = parameter.Id,
+                        Nombre = ValueTypes.Observacion,
+                        DescripcionTexto = multiple,
+                        Activo = true
+                    };
+                }
+
+                return null;
+            }).ToList();
+
+            if (errores.Any())
+            {
+                //throw new Exception(string.Join(Environment.NewLine, errores));
+            }
+
+            parameterValues = parameterValues.Where(x => x != null).ToList();
+
+            return parameterValues;
+        }
+
         private static List<IndicationStudy> GetStudyIndications()
         {
             var path = "wwwroot/seed/CAT_ESTUDIOS_INDI.xlsx";
@@ -908,10 +1118,12 @@ namespace Service.Catalog.Context
                 var study = studies.FirstOrDefault(s => s.Clave == x.Field<string>("ClaveEstudio"));
                 var indication = indications.FirstOrDefault(i => i.Clave == x.Field<string>("ClaveIndicacion"));
 
-                return new IndicationStudy(indication?.Id ?? 0, study?.Id ?? 0);
+                if (study == null || indication == null) return null;
+
+                return new IndicationStudy(indication.Id, study.Id);
             }).ToList();
 
-            studyIndications = studyIndications.Where(x => x.IndicacionId > 0 && x.EstudioId > 0).ToList();
+            studyIndications = studyIndications.Where(x => x != null).ToList();
 
             studyIndications = studyIndications.GroupBy(x => new { x.EstudioId, x.IndicacionId }).Select(x => x.First()).ToList();
 

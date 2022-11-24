@@ -37,7 +37,7 @@ namespace Service.MedicalRecord.Mapper
                 NomprePaciente = $"{x.NombrePaciente} {x.PrimerApellido}",
                 Genero = x.Genero,
                 Edad = x.Edad,
-                FechaNacimiento = x.FechaDeNacimiento.Date.ToShortDateString().ToString(),
+                FechaNacimiento = x.FechaDeNacimiento.Date.ToString("dd/MM/yyyy"),
                 MonederoElectronico = x.Monedero,
                 Telefono = x.Telefono,
             }).ToList();
@@ -70,7 +70,7 @@ namespace Service.MedicalRecord.Mapper
                 Celular = model.Celular,
                 Calle = model.Calle,
                 Colonia = model.ColoniaId,
-                TaxData = data,
+                TaxData = data == null ? Enumerable.Empty<TaxDataDto>(): data,
                 sucursal = model.IdSucursal.ToString(),
                 HasWallet = model.MonederoActivo,
                 Wallet = model.Monedero,
@@ -87,6 +87,7 @@ namespace Service.MedicalRecord.Mapper
                 Id = x.Id,
                 Rfc = x.RFC,
                 RazonSocial = x.RazonSocial,
+                RegimenFiscal = x.RegimenFiscal,
                 Cp = x.CodigoPostal,
                 Estado = x.Estado,
                 Municipio = x.Ciudad,
@@ -126,6 +127,7 @@ namespace Service.MedicalRecord.Mapper
                 Id = Guid.NewGuid(),
                 RFC = x.Rfc,
                 RazonSocial = x.RazonSocial,
+                RegimenFiscal = x.RegimenFiscal,
                 CodigoPostal = x.Cp,
                 Estado = x.Estado,
                 Ciudad = x.Municipio,
@@ -228,7 +230,7 @@ namespace Service.MedicalRecord.Mapper
             };
         }
 
-        
+
         public static MedicalRecord.Domain.MedicalRecord.MedicalRecord ToModel(this MedicalRecordsFormDto dto, MedicalRecord.Domain.MedicalRecord.MedicalRecord model)
         {
             if (model == null || dto == null) return null;

@@ -20,12 +20,12 @@ namespace Service.MedicalRecord.Dtos.Request
         public string ListaPrecio { get; set; }
         public int? PromocionId { get; set; }
         public string Promocion { get; set; }
-        public int TaponId { get; set; }
+        public int? TaponId { get; set; }
         public string TaponColor { get; set; }
         public string TaponClave { get; set; }
         public string TaponNombre { get; set; }
-        public int DepartamentoId { get; set; }
-        public int AreaId { get; set; }
+        public int? DepartamentoId { get; set; }
+        public int? AreaId { get; set; }
         public byte EstatusId { get; set; }
         public string Estatus { get; set; }
         public bool AplicaDescuento { get; set; }

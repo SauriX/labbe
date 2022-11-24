@@ -43,7 +43,7 @@ namespace Service.MedicalRecord.Mapper
                 Id = x.EstudioId,
                 Nombre = x.Nombre,
                 Area = "",
-                Status = x.EstatusId,
+                Estatus = x.EstatusId,
                 Registro = x.FechaCreo.ToString("G"),
                 Entrega = x.FechaCreo.AddDays((double)x.Dias).ToString("G"),
                 Seleccion = false,
@@ -54,7 +54,7 @@ namespace Service.MedicalRecord.Mapper
 
         public static List<ClinicResults> ToCaptureResults(this List<ClinicResultsFormDto> model)
         {
-            return model.Select(x => new ClinicResults
+            return model.Select((x, i) => new ClinicResults
             {
                 Id = x.Id,
                 Nombre = x.Nombre,
@@ -72,8 +72,9 @@ namespace Service.MedicalRecord.Mapper
                 Formula = x?.Formula,
                 NombreCorto = x?.NombreCorto,
                 DeltaCheck = x.DeltaCheck,
-                UltimoResultado = x?.UltimoResultado
-
+                UltimoResultado = x?.UltimoResultado,
+                Orden = i,
+                Clave = x.Clave
             }).ToList();
         }
 
@@ -201,7 +202,7 @@ namespace Service.MedicalRecord.Mapper
 
         public static List<ClinicResultsFormDto> ResultsGeneric(this IEnumerable<ClinicResults> model)
         {
-            return model.Select(results =>
+            return model.Select((results, i) =>
             {
                 return new ClinicResultsFormDto
                 {
@@ -220,7 +221,8 @@ namespace Service.MedicalRecord.Mapper
                     UnidadNombre = results.Unidades,
                     Estudio = results.SolicitudEstudio.Nombre,
                     UltimoResultado = results.UltimoResultado,
-                    DeltaCheck = results.DeltaCheck
+                    DeltaCheck = results.DeltaCheck,
+                    Orden = results.Orden,
                 };
             }).ToList();
         }

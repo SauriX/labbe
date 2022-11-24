@@ -31,6 +31,7 @@ namespace Service.MedicalRecord.Repository
         }
 
         public async Task<List<Domain.MedicalRecord.MedicalRecord>> GetNow(MedicalRecordSearch search)
+        
         {
             var expedientes = _context.CAT_Expedientes.AsQueryable();
 
@@ -44,7 +45,7 @@ namespace Service.MedicalRecord.Repository
             }
             if (!string.IsNullOrEmpty(search.expediente))
             {
-                expedientes = expedientes.Where(x => x.Expediente.Contains(search.expediente) || search.expediente.Contains(x.NombrePaciente));
+                expedientes = expedientes.Where(x => x.Expediente.Contains(search.expediente) || x.NombrePaciente.ToLower().Contains(search.expediente.ToLower()) || x.PrimerApellido.ToLower().Contains(search.expediente.ToLower()));
 
             }
             if (search.fechaNacimiento.Date != DateTime.MinValue.Date)
@@ -53,7 +54,7 @@ namespace Service.MedicalRecord.Repository
 
             }
 
-            if (search.fechaAlta[0].Date != DateTime.MinValue.Date && search.fechaAlta[1].Date != DateTime.MinValue.Date)
+            if (search.fechaAlta != null && search.fechaAlta[0].Date != DateTime.MinValue.Date && search.fechaAlta[1].Date != DateTime.MinValue.Date)
             {
                 expedientes = expedientes.Where(x => x.FechaCreo.Date >= search.fechaAlta[0].Date && x.FechaCreo.Date <= search.fechaAlta[1].Date);
             }
@@ -61,6 +62,10 @@ namespace Service.MedicalRecord.Repository
             {
                 expedientes = expedientes.Where(x => x.IdSucursal == Guid.Parse(search.sucursal));
 
+            }
+            if (!string.IsNullOrEmpty(search.telefono))
+            {
+                expedientes = expedientes.Where(x => x.Telefono == search.telefono);
             }
             return expedientes.ToList();
         }
@@ -110,12 +115,12 @@ namespace Service.MedicalRecord.Repository
             await _context.SaveChangesAsync();
 
             var config = new BulkConfig() { SetOutputIdentity = true };
-            await _context.BulkInsertOrUpdateOrDeleteAsync(newtaxdata, config);
+            await _context.BulkInsertOrUpdateAsync(newtaxdata, config);
 
             var taxdataMedicalRecord = newtaxdata.ToTaxDataMedicalRecord();
             config.SetSynchronizeFilter<MedicalRecordTaxData>(x => x.ExpedienteID == expediente.Id);
             taxdataMedicalRecord.ForEach(x => x.ExpedienteID = expediente.Id);
-            await _context.BulkInsertOrUpdateOrDeleteAsync(taxdataMedicalRecord, config);
+            await _context.BulkInsertOrUpdateAsync(taxdataMedicalRecord, config);
         }
 
         public async Task CreateTaxData(TaxData taxData, MedicalRecordTaxData recordTaxData)
@@ -130,19 +135,32 @@ namespace Service.MedicalRecord.Repository
         public async Task Update(Domain.MedicalRecord.MedicalRecord expediente, IEnumerable<TaxDataDto> taxdata)
         {
             expediente.TaxData = null;
-            if (taxdata == null) { taxdata = new List<TaxDataDto>(); }
-            var newtaxdata = taxdata.Where(x => x.Id == Guid.Empty).ToTaxData();
-            var oldtaxData = taxdata.Where(x => x.Id != Guid.Empty).ToTaxDataUpdate();
-            var finalTaxData = newtaxdata.Concat(oldtaxData).ToList();
             _context.CAT_Expedientes.Update(expediente);
+
             await _context.SaveChangesAsync();
+
+            if (taxdata == null) { taxdata = new List<TaxDataDto>(); }
+
+            var newtaxdata = taxdata.Where(x => x.Id == Guid.Empty).ToTaxData();
+
+
+            var oldtaxData = taxdata.Where(x => x.Id != Guid.Empty).ToTaxDataUpdate();
+
+
+            var finalTaxData = newtaxdata.Concat(oldtaxData).ToList();
+
             var config = new BulkConfig() { SetOutputIdentity = true };
-            await _context.BulkInsertOrUpdateOrDeleteAsync(finalTaxData, config);
+            
+            await _context.BulkInsertOrUpdateAsync(finalTaxData, config);
 
             var taxdataMedicalRecord = finalTaxData.ToTaxDataMedicalRecord();
-            config.SetSynchronizeFilter<MedicalRecordTaxData>(x => x.ExpedienteID == expediente.Id);
             taxdataMedicalRecord.ForEach(x => x.ExpedienteID = expediente.Id);
-            await _context.BulkInsertOrUpdateOrDeleteAsync(taxdataMedicalRecord, config);
+            config.SetSynchronizeFilter<MedicalRecordTaxData>(x => x.ExpedienteID == expediente.Id);
+
+
+
+            await _context.BulkInsertOrUpdateAsync(taxdataMedicalRecord, config);
+
         }
         public async Task UpdateWallet(Domain.MedicalRecord.MedicalRecord expediente)
         {
@@ -166,7 +184,11 @@ namespace Service.MedicalRecord.Repository
         }
         public async Task<List<Domain.MedicalRecord.MedicalRecord>> Coincidencias(MedicalRecord.Domain.MedicalRecord.MedicalRecord expediente)
         {
-            var expedientes = await _context.CAT_Expedientes.Where(x => x.NombrePaciente == expediente.NombrePaciente && x.PrimerApellido == expediente.PrimerApellido).ToListAsync();
+            var expedientes = await _context.CAT_Expedientes
+                .Where(x => x.NombrePaciente == expediente.NombrePaciente 
+                && x.PrimerApellido == expediente.PrimerApellido 
+                && x.FechaDeNacimiento.Date == expediente.FechaDeNacimiento.Date)
+                .ToListAsync();
 
             return expedientes;
         }

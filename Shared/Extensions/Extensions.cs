@@ -112,6 +112,14 @@ namespace Shared.Extensions
             return table;
         }
 
+        public static string Replace(this string s, string[] separators, string newVal)
+        {
+            string[] temp;
+
+            temp = s.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+            return string.Join(newVal, temp);
+        }
+
         public static bool IsImage(this IFormFile postedFile)
         {
             //-------------------------------------------

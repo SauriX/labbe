@@ -21,6 +21,7 @@ namespace Service.Catalog.Domain.Parameter
         public int EstudioId { get; set; }
         public virtual Domain.Study.Study Estudio { get; set; }
         public bool Activo { get; set; }
+        public int Orden { get; set; }
         public Guid? UsuarioCreoId { get; set; }
         public DateTime FechaCreo { get; set; }
         public Guid? UsuarioModificoId { get; set; }

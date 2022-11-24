@@ -9,7 +9,6 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 namespace Integration.Pdf.Service
 {
     public class LabResultsService
@@ -64,7 +63,7 @@ namespace Integration.Pdf.Service
             {
                 section.PageSetup.TopMargin = Unit.FromCentimeter(1);
             }
-            section.PageSetup.BottomMargin = Unit.FromCentimeter(2);
+            section.PageSetup.BottomMargin = Unit.FromCentimeter(8);
             section.PageSetup.LeftMargin = Unit.FromCentimeter(0.5);
             section.PageSetup.RightMargin = Unit.FromCentimeter(0.5);
 
@@ -201,28 +200,40 @@ namespace Integration.Pdf.Service
                     var studyName = new Col("****" + studyParam.Key, 14, fontTitle, ParagraphAlignment.Left);
                     section.AddText(studyName);
 
-                    //var checkCritics = studyParam.Where(x => x.Resultado != null && x.TipoValorId != 10).Any(x => decimal.Parse(x.Resultado) > x.CriticoMaximo || decimal.Parse(x.Resultado) < x.CriticoMinimo);
                     var checkResultNotNull = studyParam.Where(x => x.Resultado != null);
+                    var orderParams = studyParam.OrderBy(x => x.Orden);
 
-                    foreach (var param in studyParam)
+                    foreach (var param in orderParams)
                     {
                         var checkResult = false;
                         var typeValueText = param.TipoValorId == 9 || param.TipoValorId == 10;
+                        var typeValueLabel = param.TipoValorId == 9;
 
                         if (param.Resultado != null && param.TipoValorId == 1 || param.TipoValorId == 2 || param.TipoValorId == 3 || param.TipoValorId == 4)
                         {
-                            checkResult = decimal.Parse(param.Resultado) > decimal.Parse(param.ValorFinal) || decimal.Parse(param.Resultado) < decimal.Parse(param.ValorInicial);
+                            if (param.ValorInicial != null && param.ValorFinal != null)
+                                checkResult = decimal.Parse(param.Resultado) > decimal.Parse(param?.ValorFinal) || decimal.Parse(param.Resultado) < decimal.Parse(param?.ValorInicial);
+                            else
+                                checkResult = false;
                         }
 
-                        List <Col> col = new List<Col>()
+                        List<Col> col = new List<Col>()
                         {
-                            new Col(param.Nombre, 14, fontParam, ParagraphAlignment.Left){
+                            new Col(param.Nombre, 14, typeValueLabel ? fontCritic : fontParam, ParagraphAlignment.Left){
                                 Fill = typeValueText ? TabLeader.Spaces : TabLeader.Dots
                             },
                             new Col(checkResult ? $"*{param.Resultado}" : param.Resultado, 7, checkResult ? fontCritic : fontParam, ParagraphAlignment.Center),
                             new Col(param.UnidadNombre, 6, fontParam, ParagraphAlignment.Center),
                             new Col(typeValueText ? "" : $"{param.ValorInicial} - {param.ValorFinal}", 6, fontParam, ParagraphAlignment.Center),
                         };
+                        if (param.TipoValorId == 10 || param.TipoValorId == 7)
+                        {
+                            col.RemoveAt(3);
+                            col.RemoveAt(2);
+                            col[1].Tamaño = 19;
+                            col[1].Horizontal = ParagraphAlignment.Justify;
+                        }
+
                         if (results.ImprimirPrevios) col.Insert(2, new Col(param.UltimoResultado != null ? param.UltimoResultado : "-", 6, Col.FONT_SUBTITLE_BOLD));
                         section.AddBorderedText(col.ToArray(), top: false, right: false, bottom: false, left: false);
                     }
@@ -230,22 +241,20 @@ namespace Integration.Pdf.Service
 
                     if (results.ImprimirCriticos)
                     {
-                        var criticTitle = new Col("VALORES CRÍTICOS", 14, fontTitle, ParagraphAlignment.Left);
+                        var notNumericTypeValue = studyParam.Where(x => x.Resultado != null && x.TipoValorId != 10 && x.TipoValorId != 7 && x.TipoValorId != 5 && x.TipoValorId != 6 && x.TipoValorId != 9 && x.TipoValorId != 8);
+                        var checkStudyParams = notNumericTypeValue;
+                        var checkCritics = notNumericTypeValue.Any(x => decimal.Parse(x.Resultado) >= x.CriticoMaximo || decimal.Parse(x.Resultado) <= x.CriticoMinimo);
+                        var criticTitle = new Col(checkCritics ? "VALORES CRÍTICOS" : "", 14, fontTitle, ParagraphAlignment.Left);
                         section.AddText(criticTitle);
                         section.AddSpace(5);
 
-                        foreach (var param in studyParam.Where(x => x.Resultado != null && x.TipoValorId != 10 && x.TipoValorId != 7 && x.TipoValorId != 5 && x.TipoValorId != 6 && x.TipoValorId != 9 && x.TipoValorId != 8))
+                        foreach (var param in checkStudyParams)
                         {
-                            if (param.Resultado != null && (decimal.Parse(param.Resultado) > param.CriticoMaximo || decimal.Parse(param.Resultado) < param.CriticoMinimo))
+                            if (param.Resultado != null && (decimal.Parse(param.Resultado) >= param.CriticoMaximo || decimal.Parse(param.Resultado) <= param.CriticoMinimo))
                             {
                                 var col = new Col[]
                                 {
-                                    /*new Col(param.Nombre, 14, fontParam, ParagraphAlignment.Left){
-                                        Fill = TabLeader.Dots
-                                    },*/
                                     new Col(param.Resultado, 7, fontCritic, ParagraphAlignment.Left),
-                                    /*new Col(param.UnidadNombre, 6, fontParam, ParagraphAlignment.Center),
-                                    new Col($"< {param.CriticoMinimo} - {param.ValorFinal} >", 6, fontParam, ParagraphAlignment.Center)*/
                                 };
                                 section.AddBorderedText(col, top: false, right: false, bottom: false, left: false);
                             }

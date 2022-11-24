@@ -37,7 +37,7 @@ namespace Service.MedicalRecord.Application
             _queueNames = queueNames;
         }
         public async Task<List<AppointmentList>> GetAllLab(SearchAppointment search) { 
-            return (await _repository.GetAllLab(search)).ToApointmentListDtoLab();
+             return (await _repository.GetAllLab(search)).ToApointmentListDtoLab();
         }
         public async Task<List<AppointmentList>> GetAllDom(SearchAppointment search) {
             return (await _repository.GetAllDom(search)).ToApointmentListDtoDom();

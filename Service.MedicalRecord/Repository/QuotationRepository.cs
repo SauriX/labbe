@@ -37,8 +37,8 @@ namespace Service.MedicalRecord.Repository
 
             if (filter.FechaAInicial != null && filter.FechaAFinal != null)
             {
-                quotations = quotations.Where(x => x.FechaCreo.Date <= ((DateTime)filter.FechaAInicial).Date
-                && x.FechaCreo.Date >= ((DateTime)filter.FechaAFinal).Date);
+                quotations = quotations.Where(x => x.FechaCreo.Date >= ((DateTime)filter.FechaAInicial).Date
+                && x.FechaCreo.Date <= ((DateTime)filter.FechaAFinal).Date);
             }
 
             if (filter.Sucursales != null && filter.Sucursales.Count > 0)
@@ -66,7 +66,7 @@ namespace Service.MedicalRecord.Repository
                     && ((x.Expediente.NombrePaciente + " " + x.Expediente.PrimerApellido + " " + x.Expediente.SegundoApellido).ToLower().Contains(filter.Expediente.ToLower())
                     || (x.Expediente != null && x.Expediente.Expediente.ToLower().Contains(filter.Expediente.ToLower()))));
             }
-
+           
             return await quotations.ToListAsync();
         }
 
@@ -82,6 +82,7 @@ namespace Service.MedicalRecord.Repository
             var quotation = await _context.CAT_Cotizacion
                 .Include(x => x.Expediente)
                 .Include(x => x.Estudios)
+                .Include(x => x.Paquetes)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             return quotation;
@@ -132,9 +133,9 @@ namespace Service.MedicalRecord.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task Update(Quotation expediente)
+        public async Task Update(Quotation quotation)
         {
-            _context.CAT_Cotizacion.Update(expediente);
+            _context.CAT_Cotizacion.Update(quotation);
 
             await _context.SaveChangesAsync();
         }
@@ -170,5 +171,7 @@ namespace Service.MedicalRecord.Repository
 
             await _context.BulkDeleteAsync(studies, config);
         }
+
+        
     }
 }

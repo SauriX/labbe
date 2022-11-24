@@ -12,7 +12,7 @@ namespace Service.MedicalRecord.Mapper
     {
         public static MassSearchInfoDto ToMassSearchInfoDto(this List<Request> model)
         {
-            List<int> filterAreas = new List<int>() { 5, 34, 23, 44, 28, 17, 41, 9, 20 };
+            List<int?> filterAreas = new List<int?>() { 5, 34, 23, 44, 28, 17, 41, 9, 20 };
 
             var parameters = model.SelectMany(x => x.Estudios)
                 .SelectMany(x => x.Resultados)

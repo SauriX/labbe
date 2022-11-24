@@ -98,7 +98,10 @@ namespace Service.Catalog.Application
             var updatedAgent = study.ToModel(existing);
 
             await _repository.Update(updatedAgent);
-            return existing.ToStudyFormDto();
+
+            updatedAgent = await _repository.GetById(updatedAgent.Id);
+
+            return updatedAgent.ToStudyFormDto();
         }
 
         public async Task<(byte[] file, string fileName)> ExportList(string search = null)
