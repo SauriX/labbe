@@ -115,12 +115,12 @@ namespace Service.MedicalRecord.Repository
             await _context.SaveChangesAsync();
 
             var config = new BulkConfig() { SetOutputIdentity = true };
-            await _context.BulkInsertOrUpdateOrDeleteAsync(newtaxdata, config);
+            await _context.BulkInsertOrUpdateAsync(newtaxdata, config);
 
             var taxdataMedicalRecord = newtaxdata.ToTaxDataMedicalRecord();
             config.SetSynchronizeFilter<MedicalRecordTaxData>(x => x.ExpedienteID == expediente.Id);
             taxdataMedicalRecord.ForEach(x => x.ExpedienteID = expediente.Id);
-            await _context.BulkInsertOrUpdateOrDeleteAsync(taxdataMedicalRecord, config);
+            await _context.BulkInsertOrUpdateAsync(taxdataMedicalRecord, config);
         }
 
         public async Task CreateTaxData(TaxData taxData, MedicalRecordTaxData recordTaxData)
@@ -135,19 +135,32 @@ namespace Service.MedicalRecord.Repository
         public async Task Update(Domain.MedicalRecord.MedicalRecord expediente, IEnumerable<TaxDataDto> taxdata)
         {
             expediente.TaxData = null;
-            if (taxdata == null) { taxdata = new List<TaxDataDto>(); }
-            var newtaxdata = taxdata.Where(x => x.Id == Guid.Empty).ToTaxData();
-            var oldtaxData = taxdata.Where(x => x.Id != Guid.Empty).ToTaxDataUpdate();
-            var finalTaxData = newtaxdata.Concat(oldtaxData).ToList();
             _context.CAT_Expedientes.Update(expediente);
+
             await _context.SaveChangesAsync();
+
+            if (taxdata == null) { taxdata = new List<TaxDataDto>(); }
+
+            var newtaxdata = taxdata.Where(x => x.Id == Guid.Empty).ToTaxData();
+
+
+            var oldtaxData = taxdata.Where(x => x.Id != Guid.Empty).ToTaxDataUpdate();
+
+
+            var finalTaxData = newtaxdata.Concat(oldtaxData).ToList();
+
             var config = new BulkConfig() { SetOutputIdentity = true };
-            await _context.BulkInsertOrUpdateOrDeleteAsync(finalTaxData, config);
+            
+            await _context.BulkInsertOrUpdateAsync(finalTaxData, config);
 
             var taxdataMedicalRecord = finalTaxData.ToTaxDataMedicalRecord();
-            config.SetSynchronizeFilter<MedicalRecordTaxData>(x => x.ExpedienteID == expediente.Id);
             taxdataMedicalRecord.ForEach(x => x.ExpedienteID = expediente.Id);
-            await _context.BulkInsertOrUpdateOrDeleteAsync(taxdataMedicalRecord, config);
+            config.SetSynchronizeFilter<MedicalRecordTaxData>(x => x.ExpedienteID == expediente.Id);
+
+
+
+            await _context.BulkInsertOrUpdateAsync(taxdataMedicalRecord, config);
+
         }
         public async Task UpdateWallet(Domain.MedicalRecord.MedicalRecord expediente)
         {
