@@ -171,7 +171,11 @@ namespace Service.MedicalRecord.Repository
         }
         public async Task<List<Domain.MedicalRecord.MedicalRecord>> Coincidencias(MedicalRecord.Domain.MedicalRecord.MedicalRecord expediente)
         {
-            var expedientes = await _context.CAT_Expedientes.Where(x => x.NombrePaciente == expediente.NombrePaciente && x.PrimerApellido == expediente.PrimerApellido).ToListAsync();
+            var expedientes = await _context.CAT_Expedientes
+                .Where(x => x.NombrePaciente == expediente.NombrePaciente 
+                && x.PrimerApellido == expediente.PrimerApellido 
+                && x.FechaDeNacimiento.Date == expediente.FechaDeNacimiento.Date)
+                .ToListAsync();
 
             return expedientes;
         }
