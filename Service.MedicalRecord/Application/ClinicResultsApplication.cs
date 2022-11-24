@@ -305,10 +305,10 @@ namespace Service.MedicalRecord.Application
                                 param.TipoValores = param.TipoValores;
                                 break;
                             case "6":
-                                param.ValorInicial = string.Join("\n", param.TipoValores.Where(x => x.ValorInicial != 0));
+                                param.TipoValores = param.TipoValores;
                                 break;
                             case "7":
-                                param.ValorInicial = string.Join("\n", param.TipoValores.Where(x => x.DescripcionTexto != null));
+                                param.ValorInicial = string.Join("\n", param.TipoValores.Select(x => x.DescripcionTexto));
                                 break;
                             case "8":
                                 param.ValorInicial = string.Join("\n", param.TipoValores.Where(x => x.DescripcionParrafo != null));
