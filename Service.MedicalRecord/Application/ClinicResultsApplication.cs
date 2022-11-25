@@ -384,8 +384,8 @@ namespace Service.MedicalRecord.Application
 
                     try
                     {
-                        await SendTestWhatsapp(files, request.Solicitud.Expediente.Celular, userId);
-                        await SendTestEmail(files, request.Solicitud.Expediente.Correo, userId);
+                        await SendTestWhatsapp(files, request.Solicitud.EnvioWhatsApp, userId);
+                        await SendTestEmail(files, request.Solicitud.EnvioCorreo, userId);
                         await UpdateStatusStudy(request.SolicitudEstudioId, Status.RequestStudy.Enviado, user);
                     }
                     catch (Exception ex)
@@ -546,9 +546,9 @@ namespace Service.MedicalRecord.Application
                     try
                     {
 
-                        await SendTestWhatsapp(files, existing.Solicitud.Expediente.Celular, result.UsuarioId);
+                        await SendTestWhatsapp(files, existing.Solicitud.EnvioWhatsApp, result.UsuarioId);
 
-                        await SendTestEmail(files, existing.Solicitud.Expediente.Correo, result.UsuarioId);
+                        await SendTestEmail(files, existing.Solicitud.EnvioCorreo, result.UsuarioId);
 
                         await UpdateStatusStudy(result.EstudioId, Status.RequestStudy.Enviado, result.Usuario);
                     }
@@ -769,9 +769,9 @@ namespace Service.MedicalRecord.Application
                 if (files.Count > 0)
                 {
 
-                    await SendTestWhatsapp(files, existingRequest.Expediente.Celular, usuarioId);
+                    await SendTestWhatsapp(files, existingRequest.EnvioWhatsApp, usuarioId);
 
-                    await SendTestEmail(files, existingRequest.Expediente.Correo, usuarioId);
+                    await SendTestEmail(files, existingRequest.EnvioCorreo, usuarioId);
 
                     foreach (var estudio in existingRequest.Estudios)
                     {
