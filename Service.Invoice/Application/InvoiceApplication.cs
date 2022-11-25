@@ -1,5 +1,5 @@
 ﻿using Service.Billing.Application.IApplication;
-using Service.Billing.Dtos;
+using Service.Billing.Dtos.Invoice;
 using Service.Billing.Mapper;
 using Service.Billing.Repository.IRepository;
 using Shared.Dictionary;
@@ -39,9 +39,11 @@ namespace Service.Billing.Application
             return invoices.ToInvoiceDto();
         }
 
-        public Task<List<InvoiceDto>> GetByRequest(Guid requestId)
+        public async Task<List<InvoiceDto>> GetByRequest(Guid requestId)
         {
-            throw new NotImplementedException();
+            var invoices = await _repository.GetByRequest(requestId);
+
+            return invoices.ToInvoiceDto();
         }
 
         public Task<InvoiceDto> Create(InvoiceDto invoice)
@@ -49,7 +51,7 @@ namespace Service.Billing.Application
             throw new NotImplementedException();
         }
 
-        public Task<byte[]> PrintInvoiceXML(Guid invoiceId)
+        public Task<(byte[], string)> PrintInvoiceXML(Guid invoiceId)
         {
             throw new NotImplementedException();
         }
