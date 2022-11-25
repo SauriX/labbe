@@ -276,6 +276,7 @@ namespace Service.MedicalRecord.Repository
         {
             var config = new BulkConfig();
             config.SetSynchronizeFilter<RequestPack>(x => x.SolicitudId == requestId);
+            config.SetOutputIdentity = true;
 
             await _context.BulkInsertOrUpdateOrDeleteAsync(packs, config);
         }
@@ -309,6 +310,7 @@ namespace Service.MedicalRecord.Repository
                 nameof(RequestStudy.FechaLiberado), nameof(RequestStudy.UsuarioLiberado),
                 nameof(RequestStudy.FechaEnviado), nameof(RequestStudy.UsuarioEnviado),
             };
+            config.SetOutputIdentity = true;
 
             await _context.BulkInsertOrUpdateOrDeleteAsync(studies, config);
         }

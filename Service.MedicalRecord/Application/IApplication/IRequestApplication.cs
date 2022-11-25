@@ -23,7 +23,7 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<RequestPaymentDto> CreatePayment(RequestPaymentDto requestDto);
         Task UpdateGeneral(RequestGeneralDto requestDto);
         Task UpdateTotals(RequestTotalDto requestDto);
-        Task UpdateStudies(RequestStudyUpdateDto requestDto);
+        Task<RequestStudyUpdateDto> UpdateStudies(RequestStudyUpdateDto requestDto);
         Task CancelRequest(Guid recordId, Guid requestId, Guid userId);
         Task CancelStudies(RequestStudyUpdateDto requestDto);
         Task<List<RequestPaymentDto>> CancelPayment(Guid recordId, Guid requestId, List<RequestPaymentDto> requestDto);
