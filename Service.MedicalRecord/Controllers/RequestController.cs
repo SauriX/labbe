@@ -64,6 +64,12 @@ namespace Service.MedicalRecord.Controllers
             return await _service.GetImages(recordId, requestId);
         }
 
+        [HttpGet("nextPaymentCode/{serie}")]
+        public async Task<string> GetNextPaymentNumber(string serie)
+        {
+            return await _service.GetNextPaymentNumber(serie);
+        }
+
         [HttpGet("email/{recordId}/{requestId}/{email}")]
         [Authorize(Policies.Mail)]
         public async Task SendTestEmail(Guid recordId, Guid requestId, string email)

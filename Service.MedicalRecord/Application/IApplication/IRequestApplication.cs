@@ -15,11 +15,12 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<RequestStudyUpdateDto> GetStudies(Guid recordId, Guid requestId);
         Task<IEnumerable<RequestPaymentDto>> GetPayments(Guid recordId, Guid requestId);
         Task<IEnumerable<string>> GetImages(Guid recordId, Guid requestId);
+        Task<string> GetNextPaymentNumber(string serie);
         Task SendTestEmail(RequestSendDto requestDto);
         Task SendTestWhatsapp(RequestSendDto requestDto);
         Task<string> Create(RequestDto requestDto);
         Task<string> CreateWeeClinic(RequestDto requestDto);
-        Task<string> Convert(RequestConvertDto requestDto);
+        Task<string> ConvertToRequest(RequestConvertDto requestDto);
         Task<RequestPaymentDto> CreatePayment(RequestPaymentDto requestDto);
         Task UpdateGeneral(RequestGeneralDto requestDto);
         Task UpdateTotals(RequestTotalDto requestDto);

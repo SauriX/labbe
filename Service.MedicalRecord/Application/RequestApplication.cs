@@ -204,6 +204,16 @@ namespace Service.MedicalRecord.Application
             return imagesNames;
         }
 
+        public async Task<string> GetNextPaymentNumber(string serie)
+        {
+            var date = DateTime.Now.ToString("yy");
+
+            var lastCode = await _repository.GetLastPaymentCode(serie, date);
+            var consecutive = lastCode == null ? 1 : Convert.ToInt32(lastCode.Replace(date, "")) + 1;
+
+            return $"{date}{consecutive:D5}";
+        }
+
         public async Task<string> Create(RequestDto requestDto)
         {
             var code = await GetNewCode(requestDto);
@@ -295,7 +305,7 @@ namespace Service.MedicalRecord.Application
             return newRequest.Id.ToString();
         }
 
-        public async Task<string> Convert(RequestConvertDto requestDto)
+        public async Task<string> ConvertToRequest(RequestConvertDto requestDto)
         {
             try
             {

@@ -21,6 +21,7 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task<RequestImage> GetImage(Guid requestId, string code);
         Task<List<RequestImage>> GetImages(Guid requestId);
         Task<List<RequestPayment>> GetPayments(Guid requestId);
+        Task<string> GetLastPaymentCode(string serie, string year);
         Task Create(Request request);
         Task CreatePayment(RequestPayment request);
         Task Update(Request request);

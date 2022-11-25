@@ -215,6 +215,13 @@ namespace Service.MedicalRecord.Repository
             return payments;
         }
 
+        public async Task<string> GetLastPaymentCode(string serie, string year)
+        {
+            var last = await _context.Relacion_Solicitud_Pago.OrderBy(x => x.FechaCreo).LastOrDefaultAsync(x => x.Serie == serie && x.Numero.StartsWith(year));
+
+            return last?.Numero;
+        }
+
         public async Task Create(Request request)
         {
             _context.CAT_Solicitud.Add(request);
