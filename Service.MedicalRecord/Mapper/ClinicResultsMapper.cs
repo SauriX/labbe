@@ -6,7 +6,7 @@ using Service.MedicalRecord.Dtos.Sampling;
 using Service.MedicalRecord.Dtos.ClinicResults;
 using Service.MedicalRecord.Domain;
 using System;
-using Service.MedicalRecord.Dtos.Request;
+using Service.MedicalRecord.Dictionary;
 
 namespace Service.MedicalRecord.Mapper
 {
@@ -49,6 +49,14 @@ namespace Service.MedicalRecord.Mapper
                 Seleccion = false,
                 Clave = x.Clave,
                 NombreEstatus = x.Estatus.Nombre,
+                FechaActualizacion = x.EstatusId == Status.RequestStudy.TomaDeMuestra
+                    ? x.FechaTomaMuestra?.ToString("dd/MM/yyyy HH:mm")
+                    : x.EstatusId == Status.RequestStudy.Solicitado
+                    ? x.FechaSolicitado?.ToString("dd/MM/yyyy HH:mm") : DateTime.Now.ToString("dd/MM/yyyy HH:mm"),
+                UsuarioActualizacion = x.EstatusId == Status.RequestStudy.TomaDeMuestra
+                    ? x.UsuarioTomaMuestra
+                    : x.EstatusId == Status.RequestStudy.Solicitado
+                    ? x.UsuarioSolicitado : "",
             }).ToList();
         }
 

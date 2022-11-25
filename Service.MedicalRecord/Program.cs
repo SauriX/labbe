@@ -46,6 +46,8 @@ namespace Service.MedicalRecord
             try
             {
                 Directory.CreateDirectory("wwwroot/images");
+                Directory.CreateDirectory("wwwroot/temp/labResults");
+                Directory.CreateDirectory("wwwroot/temp/pdf");
                 host.Run();
             }
             catch (Exception e)

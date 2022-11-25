@@ -390,7 +390,7 @@ namespace Service.MedicalRecord.Application
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception("Error");
+                        throw ex;
                     }
                 }
                 else
