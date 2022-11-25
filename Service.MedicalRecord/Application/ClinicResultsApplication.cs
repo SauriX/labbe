@@ -65,7 +65,7 @@ namespace Service.MedicalRecord.Application
             _pdfClient = pdfClient;
             _queueNames = queueNames;
             _rabbitMQSettings = rabbitMQSettings;
-            MedicalRecordPath = configuration.GetValue<string>("ClientUrls:MedicalRecord");
+            MedicalRecordPath = configuration.GetValue<string>("ClientUrls:MedicalRecord") + configuration.GetValue<string>("ClientRoutes:MedicalRecord");
         }
 
         public async Task<(byte[] file, string fileName)> ExportList(ClinicResultSearchDto search)
