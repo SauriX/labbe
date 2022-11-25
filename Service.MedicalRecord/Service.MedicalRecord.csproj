@@ -41,8 +41,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\layout\excel\trackingOrder\" />
-    <Folder Include="wwwroot\temp\labResults\" />
-    <Folder Include="wwwroot\temp\pdf\" />
   </ItemGroup>
 
 </Project>

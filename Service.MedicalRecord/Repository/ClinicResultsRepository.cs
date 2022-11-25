@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using EFCore.BulkExtensions;
 using Service.MedicalRecord.Domain;
 using Service.MedicalRecord.Dtos.ClinicResults;
+using Service.MedicalRecord.Dictionary;
 
 namespace Service.MedicalRecord.Repository
 {
@@ -57,6 +58,8 @@ namespace Service.MedicalRecord.Repository
         public async Task<List<Request>> GetAll(ClinicResultSearchDto search)
         {
             var report = _context.CAT_Solicitud.Where(x => x.Medico != null)
+                .Where(x => x.Estudios != null)
+                .Where(x => x.Estudios.Any(y => y.EstatusId >= Status.RequestStudy.Solicitado && y.EstatusId < Status.RequestStudy.Cancelado))
                 .Include(x => x.Expediente)
                 .Include(x => x.Medico)
                 .Include(x => x.Estudios).ThenInclude(x => x.Estatus)

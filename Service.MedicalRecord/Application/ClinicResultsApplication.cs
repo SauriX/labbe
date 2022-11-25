@@ -65,7 +65,7 @@ namespace Service.MedicalRecord.Application
             _pdfClient = pdfClient;
             _queueNames = queueNames;
             _rabbitMQSettings = rabbitMQSettings;
-            MedicalRecordPath = configuration.GetValue<string>("ClientUrls:MedicalRecord");
+            MedicalRecordPath = configuration.GetValue<string>("ClientUrls:MedicalRecord") + configuration.GetValue<string>("ClientRoutes:MedicalRecord");
         }
 
         public async Task<(byte[] file, string fileName)> ExportList(ClinicResultSearchDto search)
@@ -348,7 +348,7 @@ namespace Service.MedicalRecord.Application
             if (request.SolicitudEstudio.EstatusId == Status.RequestStudy.Solicitado)
             {
                 var newResults = results.ToCaptureResults();
-                
+
                 await _repository.UpdateLabResults(newResults);
                 await UpdateStatusStudy(request.SolicitudEstudioId, request.SolicitudEstudio.EstatusId, user);
             }
@@ -384,13 +384,13 @@ namespace Service.MedicalRecord.Application
 
                     try
                     {
-                        await SendTestWhatsapp(files, request.Solicitud.Expediente.Celular, userId);
-                        await SendTestEmail(files, request.Solicitud.Expediente.Correo, userId);
+                        await SendTestWhatsapp(files, request.Solicitud.EnvioWhatsApp, userId);
+                        await SendTestEmail(files, request.Solicitud.EnvioCorreo, userId);
                         await UpdateStatusStudy(request.SolicitudEstudioId, Status.RequestStudy.Enviado, user);
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception("Error");
+                        throw ex;
                     }
                 }
                 else
@@ -546,15 +546,15 @@ namespace Service.MedicalRecord.Application
                     try
                     {
 
-                        await SendTestWhatsapp(files, existing.Solicitud.Expediente.Celular, result.UsuarioId);
+                        await SendTestWhatsapp(files, existing.Solicitud.EnvioWhatsApp, result.UsuarioId);
 
-                        await SendTestEmail(files, existing.Solicitud.Expediente.Correo, result.UsuarioId);
+                        await SendTestEmail(files, existing.Solicitud.EnvioCorreo, result.UsuarioId);
 
                         await UpdateStatusStudy(result.EstudioId, Status.RequestStudy.Enviado, result.Usuario);
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception("c");
+                        throw ex;
                     }
 
                 }
@@ -686,7 +686,7 @@ namespace Service.MedicalRecord.Application
                 catch (Exception ex)
                 {
 
-                    throw new Exception("c");
+                    throw ex;
                 }
             }
 
@@ -697,14 +697,15 @@ namespace Service.MedicalRecord.Application
             var existingRequest = await _repository.GetRequestById(solicitudId);
 
             List<int> labResults = existingRequest.Estudios
-                .Where(x => x.DepartamentoId != SharedDepartment.PATOLOGIA)
+                .Where(x => x.AreaId != Catalogs.Area.HISTOPATOLOGIA)
+                .Where(x => x.AreaId != Catalogs.Area.CITOLOGIA)
                 .Select(x => x.Id).ToList();
 
             List<int> pathologicalResults = existingRequest.Estudios
-                            //.Where(x => x.AreaId == Catalogs.Area.HISTOPATOLOGIA)
-                            .Where(x => x.DepartamentoId == SharedDepartment.PATOLOGIA)
-                            .Select(x => x.Id)
-                            .ToList();
+                .Where(x => x.AreaId == Catalogs.Area.HISTOPATOLOGIA)
+                .Where(x => x.AreaId == Catalogs.Area.CITOLOGIA)
+                .Select(x => x.Id)
+                .ToList();
 
             var files = new List<SenderFiles>();
 
@@ -768,9 +769,9 @@ namespace Service.MedicalRecord.Application
                 if (files.Count > 0)
                 {
 
-                    await SendTestWhatsapp(files, existingRequest.Expediente.Celular, usuarioId);
+                    await SendTestWhatsapp(files, existingRequest.EnvioWhatsApp, usuarioId);
 
-                    await SendTestEmail(files, existingRequest.Expediente.Correo, usuarioId);
+                    await SendTestEmail(files, existingRequest.EnvioCorreo, usuarioId);
 
                     foreach (var estudio in existingRequest.Estudios)
                     {
@@ -782,7 +783,7 @@ namespace Service.MedicalRecord.Application
             catch (Exception ex)
             {
 
-                throw new Exception("c");
+                throw ex;
             }
         }
 
