@@ -348,7 +348,7 @@ namespace Service.MedicalRecord.Application
             if (request.SolicitudEstudio.EstatusId == Status.RequestStudy.Solicitado)
             {
                 var newResults = results.ToCaptureResults();
-                
+
                 await _repository.UpdateLabResults(newResults);
                 await UpdateStatusStudy(request.SolicitudEstudioId, request.SolicitudEstudio.EstatusId, user);
             }
@@ -554,7 +554,7 @@ namespace Service.MedicalRecord.Application
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception("c");
+                        throw ex;
                     }
 
                 }
@@ -686,7 +686,7 @@ namespace Service.MedicalRecord.Application
                 catch (Exception ex)
                 {
 
-                    throw new Exception("c");
+                    throw ex;
                 }
             }
 
@@ -697,14 +697,15 @@ namespace Service.MedicalRecord.Application
             var existingRequest = await _repository.GetRequestById(solicitudId);
 
             List<int> labResults = existingRequest.Estudios
-                .Where(x => x.DepartamentoId != SharedDepartment.PATOLOGIA)
+                .Where(x => x.AreaId != Catalogs.Area.HISTOPATOLOGIA)
+                .Where(x => x.AreaId != Catalogs.Area.CITOLOGIA)
                 .Select(x => x.Id).ToList();
 
             List<int> pathologicalResults = existingRequest.Estudios
-                            //.Where(x => x.AreaId == Catalogs.Area.HISTOPATOLOGIA)
-                            .Where(x => x.DepartamentoId == SharedDepartment.PATOLOGIA)
-                            .Select(x => x.Id)
-                            .ToList();
+                .Where(x => x.AreaId == Catalogs.Area.HISTOPATOLOGIA)
+                .Where(x => x.AreaId == Catalogs.Area.CITOLOGIA)
+                .Select(x => x.Id)
+                .ToList();
 
             var files = new List<SenderFiles>();
 
@@ -782,7 +783,7 @@ namespace Service.MedicalRecord.Application
             catch (Exception ex)
             {
 
-                throw new Exception("c");
+                throw ex;
             }
         }
 
