@@ -73,6 +73,18 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
+      "DownstreamPathTemplate": "/api/request/nextPaymentCode/{serie}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/request/nextPaymentCode/{serie}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/request/email/{recordId}/{requestId}/{email}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

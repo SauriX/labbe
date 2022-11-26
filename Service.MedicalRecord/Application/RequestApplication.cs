@@ -1,6 +1,5 @@
 ﻿using EventBus.Messages.Common;
 using MassTransit;
-using Microsoft.Extensions.Configuration;
 using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Client.IClient;
 using Service.MedicalRecord.Dictionary;
@@ -21,19 +20,13 @@ using RecordResponses = Service.MedicalRecord.Dictionary.Response;
 using Service.MedicalRecord.Settings.ISettings;
 using Service.MedicalRecord.Transactions;
 using RequestTemplates = Service.MedicalRecord.Dictionary.EmailTemplates.Request;
-using Shared.Helpers;
 using Service.MedicalRecord.Domain.Request;
 using AREAS = Shared.Dictionary.Catalogs.Area;
 using COMPANIES = Shared.Dictionary.Catalogs.Company;
 using MEDICS = Shared.Dictionary.Catalogs.Medic;
-using DocumentFormat.OpenXml.Math;
-using Integration.WeeClinic.Services;
 using Service.MedicalRecord.Dtos.Promotion;
 using Service.MedicalRecord.Domain.Catalogs;
-using Microsoft.VisualBasic;
-using Integration.WeeClinic.Models.Laboratorio_GetPreciosEstudios_ByidServicio;
 using Service.MedicalRecord.Dtos.WeeClinic;
-using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Integration.WeeClinic.Dtos;
 
 namespace Service.MedicalRecord.Application
@@ -211,6 +204,16 @@ namespace Service.MedicalRecord.Application
             return imagesNames;
         }
 
+        public async Task<string> GetNextPaymentNumber(string serie)
+        {
+            var date = DateTime.Now.ToString("yy");
+
+            var lastCode = await _repository.GetLastPaymentCode(serie, date);
+            var consecutive = lastCode == null ? 1 : Convert.ToInt32(lastCode.Replace(date, "")) + 1;
+
+            return $"{date}{consecutive:D5}";
+        }
+
         public async Task<string> Create(RequestDto requestDto)
         {
             var code = await GetNewCode(requestDto);
@@ -302,7 +305,7 @@ namespace Service.MedicalRecord.Application
             return newRequest.Id.ToString();
         }
 
-        public async Task<string> Convert(RequestConvertDto requestDto)
+        public async Task<string> ConvertToRequest(RequestConvertDto requestDto)
         {
             try
             {
@@ -424,7 +427,7 @@ namespace Service.MedicalRecord.Application
             await _repository.Update(request);
         }
 
-        public async Task UpdateStudies(RequestStudyUpdateDto requestDto)
+        public async Task<RequestStudyUpdateDto> UpdateStudies(RequestStudyUpdateDto requestDto)
         {
             try
             {
@@ -456,15 +459,12 @@ namespace Service.MedicalRecord.Application
                 studiesDto.AddRange(packStudiesDto);
 
                 var currentPacks = await _repository.GetPacksByRequest(requestDto.SolicitudId);
-
                 var currentSudies = await _repository.GetStudiesByRequest(requestDto.SolicitudId);
 
                 var packs = requestDto.Paquetes.ToModel(requestDto.SolicitudId, currentPacks, requestDto.UsuarioId);
-
                 await _repository.BulkUpdateDeletePacks(requestDto.SolicitudId, packs);
 
                 var studies = studiesDto.ToModel(requestDto.SolicitudId, currentSudies, requestDto.UsuarioId);
-
                 await _repository.BulkUpdateDeleteStudies(requestDto.SolicitudId, studies);
 
                 var pathologicalCode = await GeneratePathologicalCode(request);
@@ -485,11 +485,39 @@ namespace Service.MedicalRecord.Application
                 await _repository.Update(request);
 
                 _transaction.CommitTransaction();
+
+                AssignStudiesIds(requestDto, packs, studies);
+
+                return requestDto;
             }
             catch (Exception)
             {
                 _transaction.RollbackTransaction();
                 throw;
+            }
+        }
+
+        private static void AssignStudiesIds(RequestStudyUpdateDto requestDto, List<RequestPack> packs, List<RequestStudy> studies)
+        {
+            foreach (var pack in requestDto.Paquetes.Where(x => x.Id == 0))
+            {
+                var newPack = packs.FirstOrDefault(x => x.PaqueteId == pack.PaqueteId && !requestDto.Paquetes.Select(p => p.Id).Contains(x.Id));
+                pack.Id = newPack.Id;
+                packs.Remove(newPack);
+
+                foreach (var study in pack.Estudios)
+                {
+                    var newStudy = studies.FirstOrDefault(x => x.EstudioId == study.EstudioId && x.PaqueteId == pack.Id);
+                    study.Id = newStudy.Id;
+                    studies.Remove(newStudy);
+                }
+            }
+
+            foreach (var study in requestDto.Estudios.Where(x => x.Id == 0))
+            {
+                var newStudy = studies.FirstOrDefault(x => x.EstudioId == study.EstudioId && !requestDto.Estudios.Select(p => p.Id).Contains(x.Id));
+                study.Id = newStudy.Id;
+                studies.Remove(newStudy);
             }
         }
 

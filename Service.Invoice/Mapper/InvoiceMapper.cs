@@ -1,6 +1,6 @@
 ﻿using Service.Billing.Domain.Invoice;
-using Service.Billing.Dtos;
 using Service.Billing.Dtos.Facturapi;
+using Service.Billing.Dtos.Invoice;
 using System;
 using System.Collections.Generic;
 using System.Linq;
