@@ -93,7 +93,7 @@ namespace Service.MedicalRecord.Application
             var requestedStudy = await _repository.GetAll(search);
             if (requestedStudy != null)
             {
-                return requestedStudy.ToRequestedStudyDto();
+                return requestedStudy.ToSamplingListDto(search);
             }
             else
             {

@@ -214,7 +214,7 @@ namespace Service.MedicalRecord.Application
 
             var requestInfo = quotation.ToRequestConvertDto(userId, userName);
 
-            var requestId = await _requestApplication.Convert(requestInfo);
+            var requestId = await _requestApplication.ConvertToRequest(requestInfo);
 
             return requestId;
         }

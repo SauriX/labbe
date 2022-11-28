@@ -28,6 +28,7 @@ namespace Shared.Dictionary
         {
             public const int PAQUETES = 1;
             public const int CITOLOGIA_NASAL = 8;
+            public const int CITOLOGIA = 51;
             public const int HISTOPATOLOGIA = 30;
         }
 

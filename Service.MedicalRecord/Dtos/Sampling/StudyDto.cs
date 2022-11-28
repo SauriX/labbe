@@ -10,13 +10,15 @@ namespace Service.MedicalRecord.Dtos.Sampling
         public string Nombre { get; set; }
         public string Area { get; set; }
         public AreaListDto Areas { get; set; }
-        public int Status { get; set; }
+        public int Estatus { get; set; }
         public string Registro { get; set; }
         public string Entrega { get; set; }
         public bool Seleccion { get; set; }
         public string Clave { get; set; }
         public string NombreEstatus { get; set; }
         public Guid SolicitudId { get; set; }
+        public string FechaActualizacion { get; set; }
+        public string UsuarioActualizacion { get; set; }
         public List<StudyParamsDto> Parametros { get; set; }
     }
 

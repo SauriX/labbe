@@ -215,6 +215,13 @@ namespace Service.MedicalRecord.Repository
             return payments;
         }
 
+        public async Task<string> GetLastPaymentCode(string serie, string year)
+        {
+            var last = await _context.Relacion_Solicitud_Pago.OrderBy(x => x.FechaCreo).LastOrDefaultAsync(x => x.Serie == serie && x.Numero.StartsWith(year));
+
+            return last?.Numero;
+        }
+
         public async Task Create(Request request)
         {
             _context.CAT_Solicitud.Add(request);
@@ -276,6 +283,7 @@ namespace Service.MedicalRecord.Repository
         {
             var config = new BulkConfig();
             config.SetSynchronizeFilter<RequestPack>(x => x.SolicitudId == requestId);
+            config.SetOutputIdentity = true;
 
             await _context.BulkInsertOrUpdateOrDeleteAsync(packs, config);
         }
@@ -309,6 +317,7 @@ namespace Service.MedicalRecord.Repository
                 nameof(RequestStudy.FechaLiberado), nameof(RequestStudy.UsuarioLiberado),
                 nameof(RequestStudy.FechaEnviado), nameof(RequestStudy.UsuarioEnviado),
             };
+            config.SetOutputIdentity = true;
 
             await _context.BulkInsertOrUpdateOrDeleteAsync(studies, config);
         }

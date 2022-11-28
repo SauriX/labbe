@@ -92,7 +92,7 @@ namespace Service.MedicalRecord.Application
 
             if (requestedStudy != null)
             {
-                return requestedStudy.ToRequestedStudyDto();
+                return requestedStudy.ToRequestedStudyDto(search);
             }
             else
             {
@@ -122,10 +122,12 @@ namespace Service.MedicalRecord.Application
                     if (study.EstatusId == Status.RequestStudy.TomaDeMuestra)
                     {
                         study.EstatusId = Status.RequestStudy.Solicitado;
+                        study.FechaSolicitado = DateTime.Now;
                     }
                     else
                     {
                         study.EstatusId = Status.RequestStudy.TomaDeMuestra;
+                        study.FechaTomaMuestra = DateTime.Now;
                     }
                 }
                 studyCount += studies.Count;
