@@ -48,13 +48,13 @@ namespace Service.MedicalRecord.Repository
             {
                 report = report.Where(x => search.SucursalId.Contains(x.SucursalId));
             }
-            if (search.MedicoId != null && search.MedicoId.Count > 0)
+            if (search.Medico != null && search.Medico.Count > 0)
             {
-                report = report.Where(x => search.MedicoId.Contains(x.MedicoId.ToString()));
+                report = report.Where(x => search.Medico.Contains(x.MedicoId.ToString()));
             }
-            if (search.CompañiaId != null && search.CompañiaId.Count > 0)
+            if (search.Compañia != null && search.Compañia.Count > 0)
             {
-                report = report.Where(x => search.CompañiaId.Contains(x.CompañiaId.ToString()));
+                report = report.Where(x => search.Compañia.Contains(x.CompañiaId.ToString()));
             }
             if (search.Estatus != null && search.Estatus.Count > 0)
             {
