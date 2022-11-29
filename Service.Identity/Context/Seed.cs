@@ -162,7 +162,8 @@ namespace Service.Identity.Context
                 new Menu(33, 24, "Seguimientio de rutas", "RouteTracking","segRutas", 100),
                 new Menu(34, 24, "Detalle de seguimiento de envio", "ShipmentTracking","ShipmentTracking", 100),
                 new Menu(35, 24, "Listas de trabajo", "worklist","worklists", 2410),
-                 new Menu(36, 24, "Validación de resultados", "ResultValidation","ResultValidation", 2411),
+                new Menu(36, 24, "Validación de resultados", "ResultValidation","ResultValidation", 2411),
+                new Menu(37, 24, "Liberación de resultados", "RelaseResult","RelaseResult", 2412),
             };
 
             return menus;
