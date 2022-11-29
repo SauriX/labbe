@@ -6,7 +6,7 @@ using Service.MedicalRecord.Dtos.Sampling;
 using Service.MedicalRecord.Dtos.ClinicResults;
 using Service.MedicalRecord.Domain;
 using System;
-using Service.MedicalRecord.Dtos.Request;
+using Service.MedicalRecord.Dictionary;
 
 namespace Service.MedicalRecord.Mapper
 {
@@ -49,6 +49,32 @@ namespace Service.MedicalRecord.Mapper
                 Seleccion = false,
                 Clave = x.Clave,
                 NombreEstatus = x.Estatus.Nombre,
+                FechaActualizacion = x.EstatusId == Status.RequestStudy.TomaDeMuestra
+                    ? x.FechaTomaMuestra?.ToString("dd/MM/yyyy HH:mm")
+                    : x.EstatusId == Status.RequestStudy.Solicitado
+                    ? x.FechaSolicitado?.ToString("dd/MM/yyyy HH:mm")
+                    : x.EstatusId == Status.RequestStudy.Capturado
+                    ? x.FechaCaptura?.ToString("dd/MM/yyyy HH:mm")
+                    : x.EstatusId == Status.RequestStudy.Validado
+                    ? x.FechaValidacion?.ToString("dd/MM/yyyy HH:mm")
+                    : x.EstatusId == Status.RequestStudy.Liberado
+                    ? x.FechaLiberado?.ToString("dd/MM/yyyy HH:mm")
+                    : x.EstatusId == Status.RequestStudy.Enviado
+                    ? x.FechaEnviado?.ToString("dd/MM/yyyy HH:mm")
+                    : "",
+                UsuarioActualizacion = x.EstatusId == Status.RequestStudy.TomaDeMuestra
+                    ? x.UsuarioTomaMuestra
+                    : x.EstatusId == Status.RequestStudy.Solicitado
+                    ? x.UsuarioSolicitado
+                    : x.EstatusId == Status.RequestStudy.Capturado
+                    ? x.UsuarioCaptura
+                    : x.EstatusId == Status.RequestStudy.Validado
+                    ? x.UsuarioValidacion
+                    : x.EstatusId == Status.RequestStudy.Liberado
+                    ? x.UsuarioLiberado
+                    : x.EstatusId == Status.RequestStudy.Enviado
+                    ? x.UsuarioEnviado
+                    : "",
             }).ToList();
         }
 
@@ -177,7 +203,7 @@ namespace Service.MedicalRecord.Mapper
             {
                 Id = (Guid)(requestInfo.Solicitud.Id),
                 Clave = requestInfo.Solicitud.Clave,
-                Paciente = requestInfo.Solicitud.Expediente.NombrePaciente,
+                Paciente = requestInfo.Solicitud.Expediente.NombreCompleto,
                 Medico = requestInfo.Solicitud.Medico?.Nombre,
                 Compañia = requestInfo.Solicitud.Compañia?.Nombre,
                 Expediente = requestInfo.Solicitud.Expediente.Expediente,

@@ -8,6 +8,7 @@ namespace Service.MedicalRecord.Dtos.Sampling
     {
         public string Id { get; set; }
         public string Solicitud { get; set; }
+        public string Order { get; set; }
         public string Nombre { get; set; }
         public string Registro { get; set; }
         public string Sucursal { get; set; }

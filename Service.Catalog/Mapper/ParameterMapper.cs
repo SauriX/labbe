@@ -166,7 +166,12 @@ namespace Service.Catalog.Mapper
                 MedidaTiempoId = model.MedidaTiempoId,
                 Opcion = model.Opcion,
                 DescripcionTexto = model.DescripcionTexto,
-                DescripcionParrafo = model.DescripcionParrafo
+                DescripcionParrafo = model.DescripcionParrafo,
+                PrimeraColumna = model.PrimeraColumna,
+                SegundaColumna = model.SegundaColumna,
+                TerceraColumna = model.TerceraColumna,
+                CuartaColumna = model.CuartaColumna,
+                QuintaColumna = model.QuintaColumna
             };
         }
 
@@ -198,7 +203,12 @@ namespace Service.Catalog.Mapper
                 MedidaTiempoId = x.MedidaTiempoId,
                 Opcion = x.Opcion,
                 DescripcionTexto = x.DescripcionTexto,
-                DescripcionParrafo = x.DescripcionParrafo
+                DescripcionParrafo = x.DescripcionParrafo,
+                PrimeraColumna = x.PrimeraColumna,
+                SegundaColumna = x.SegundaColumna,
+                TerceraColumna = x.TerceraColumna,
+                CuartaColumna = x.CuartaColumna,
+                QuintaColumna = x.QuintaColumna
             });
         }
 
@@ -231,6 +241,11 @@ namespace Service.Catalog.Mapper
                 Opcion = dto.Opcion?.ToString(),
                 DescripcionTexto = dto.DescripcionTexto?.ToString(),
                 DescripcionParrafo = dto.DescripcionParrafo?.ToString(),
+                PrimeraColumna = dto?.PrimeraColumna,
+                SegundaColumna = dto?.SegundaColumna,
+                TerceraColumna = dto?.TerceraColumna,
+                CuartaColumna = dto?.CuartaColumna,
+                QuintaColumna = dto?.QuintaColumna,
                 Activo = true,
                 UsuarioCreoId = dto.UsuarioId,
                 FechaCreo = DateTime.Now,
@@ -265,6 +280,11 @@ namespace Service.Catalog.Mapper
                 Opcion = x.Opcion?.ToString(),
                 DescripcionTexto = x.DescripcionTexto?.ToString(),
                 DescripcionParrafo = x.DescripcionParrafo?.ToString(),
+                PrimeraColumna = x?.PrimeraColumna,
+                SegundaColumna = x?.SegundaColumna,
+                TerceraColumna = x?.TerceraColumna,
+                CuartaColumna = x?.CuartaColumna,
+                QuintaColumna = x?.QuintaColumna,
                 Activo = true,
                 UsuarioCreoId = x.UsuarioId,
                 FechaCreo = DateTime.Now,
@@ -299,6 +319,11 @@ namespace Service.Catalog.Mapper
                 Opcion = dto.Opcion.ToString(),
                 DescripcionTexto = dto.DescripcionTexto.ToString(),
                 DescripcionParrafo = dto.DescripcionParrafo.ToString(),
+                PrimeraColumna = dto.PrimeraColumna,
+                SegundaColumna = dto.SegundaColumna,
+                TerceraColumna = dto.TerceraColumna,
+                CuartaColumna = dto.CuartaColumna,
+                QuintaColumna = dto.QuintaColumna,
                 Activo = true,
                 UsuarioCreoId = model.UsuarioCreoId,
                 FechaCreo = model.FechaCreo,

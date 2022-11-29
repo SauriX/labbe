@@ -25,8 +25,33 @@ namespace Service.Billing.Client
             _configuration = configuration;
         }
 
-        public Task<FacturapiDto> GetInvoiceById(string facturapiId)
+        public async Task<FacturapiDto> GetInvoiceById(string facturapiId)
         {
+            //try
+            //{
+            //    var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Invoice")}/api/invoice/{facturapiId}");
+
+            //    if (response.IsSuccessStatusCode && (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.NoContent))
+            //    {
+            //        if (response.StatusCode == HttpStatusCode.NoContent)
+            //        {
+            //            return null;
+            //        }
+
+            //        return await response.Content.ReadFromJsonAsync<string>();
+            //    }
+
+            //    var error = await response.Content.ReadFromJsonAsync<ServerException>();
+
+            //    var ex = Exceptions.GetException(error);
+
+            //    throw ex;
+            //}
+            //catch (Exception)
+            //{
+            //    throw;
+            //}
+
             throw new NotImplementedException();
         }
 
@@ -40,33 +65,7 @@ namespace Service.Billing.Client
             throw new NotImplementedException();
         }
 
-        //public async Task<string> GetCodeRange(Guid branchId)
-        //{
-        //    try
-        //    {
-        //        var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/branch/getCodeRange/{branchId}");
 
-        //        if (response.IsSuccessStatusCode && (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.NoContent))
-        //        {
-        //            if (response.StatusCode == HttpStatusCode.NoContent)
-        //            {
-        //                return null;
-        //            }
-
-        //            return await response.Content.ReadFromJsonAsync<string>();
-        //        }
-
-        //        var error = await response.Content.ReadFromJsonAsync<ServerException>();
-
-        //        var ex = Exceptions.GetException(error);
-
-        //        throw ex;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-        //}
 
         //public async Task<byte[]> GenerateTicket(RequestOrderDto order)
         //{
