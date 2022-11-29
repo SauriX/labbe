@@ -54,7 +54,7 @@ namespace Service.MedicalRecord.Repository
 
             if (filter.Medicos != null && filter.Medicos.Any())
             {
-                requests = requests.Where(x => x.MedicoId != null && filter.Medicos.Contains((Guid)x.MedicoId));
+                requests = requests.Where(x => filter.Medicos.Contains((Guid)x.MedicoId));
             }
 
             if (filter.Procedencias != null && filter.Procedencias.Any())

@@ -158,7 +158,7 @@ namespace Service.Identity.Context
                 new Menu(29, 1, "Mantenimiento", "mantain","equipmentMantain", 100),
                 new Menu(30, 24, "Captura de Resultados (Clínicos)", "clinicResults","clinicResults", 100),
                 new Menu(31, 24, "Búsqueda de captura de resultados masiva", "massSearch","massResultSearch", 100),
-                new Menu(32, 24, "Búsqueda y envío de resultados", "massSearch","deliveryResults", 100),
+                new Menu(32, 24, "Búsqueda y envío de resultados", "deliveryResults","deliveryResults", 100),
                 new Menu(33, 24, "Seguimientio de rutas", "RouteTracking","segRutas", 100),
                 new Menu(34, 24, "Detalle de seguimiento de envio", "ShipmentTracking","ShipmentTracking", 100),
                 new Menu(35, 24, "Listas de trabajo", "worklist","worklists", 2410),
