@@ -337,6 +337,8 @@ namespace Service.MedicalRecord.Application
         public async Task UpdateLabResults(List<ClinicResultsFormDto> results)
         {
             var request = (await _repository.GetLabResultsById(results.First().SolicitudEstudioId)).FirstOrDefault();
+            var existingRequest = await _repository.GetRequestById(request.SolicitudId);
+
             var user = results.First().Usuario;
             var userId = results.First().UsuarioId;
 
@@ -368,8 +370,21 @@ namespace Service.MedicalRecord.Application
             {
                 if (request.Solicitud.Parcialidad)
                 {
-                    List<ClinicResults> toSendInfoLab = new List<ClinicResults> { request };
-                    var existingLabResultsPdf = toSendInfoLab.ToResults(true, false, false);
+                    List<int> labResults = existingRequest.Estudios
+                        .Where(x => x.AreaId != Catalogs.Area.HISTOPATOLOGIA)
+                        .Where(x => x.AreaId != Catalogs.Area.CITOLOGIA)
+                        .Where(x => x.Id == request.SolicitudEstudioId)
+                        .Select(x => x.Id).ToList();
+
+                    List<ClinicResults> resultsTask = new List<ClinicResults>();
+
+                    foreach (var resultPath in labResults)
+                    {
+                        var finalResult = await _repository.GetLabResultsById(resultPath);
+                        resultsTask.AddRange(finalResult);
+                    }
+
+                    var existingLabResultsPdf = resultsTask.ToResults(true, true, true);
 
                     byte[] pdfBytes = await _pdfClient.GenerateLabResults(existingLabResultsPdf);
                     string namePdf = string.Concat(request.Solicitud.Clave, ".pdf");
@@ -396,8 +411,6 @@ namespace Service.MedicalRecord.Application
                 else
                 {
                     await UpdateStatusStudy(request.SolicitudEstudioId, Status.RequestStudy.Liberado, user);
-
-                    var existingRequest = await _repository.GetRequestById(request.SolicitudId);
 
                     if (existingRequest.Estudios.All(estudio => estudio.EstatusId == Status.RequestStudy.Liberado))
                     {

@@ -45,7 +45,7 @@ namespace Service.MedicalRecord.Controllers
             return File(file, MimeType.PDF, "Orden.pdf");
         }
 
-        [HttpPost("export/list")]
+        [HttpPost("export/getList")]
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportStudyExcel(RequestedStudySearchDto search)
         {

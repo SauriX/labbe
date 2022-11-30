@@ -229,7 +229,7 @@ namespace Integration.Pdf.Service
                             col.RemoveAt(3);
                             col.RemoveAt(2);
                             col[1].Tamaño = 19;
-                            col[1].Horizontal = ParagraphAlignment.Justify;
+                            col[1].Horizontal = ParagraphAlignment.Left;
                         }
 
                         if (results.ImprimirPrevios) col.Insert(2, new Col(param.UltimoResultado != null ? param.UltimoResultado : "-", 6, Col.FONT_SUBTITLE_BOLD));

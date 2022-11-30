@@ -203,7 +203,7 @@ namespace Service.MedicalRecord.Mapper
             {
                 Id = (Guid)(requestInfo.Solicitud.Id),
                 Clave = requestInfo.Solicitud.Clave,
-                Paciente = requestInfo.Solicitud.Expediente.NombrePaciente,
+                Paciente = requestInfo.Solicitud.Expediente.NombreCompleto,
                 Medico = requestInfo.Solicitud.Medico?.Nombre,
                 Compañia = requestInfo.Solicitud.Compañia?.Nombre,
                 Expediente = requestInfo.Solicitud.Expediente.Expediente,
