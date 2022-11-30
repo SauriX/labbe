@@ -5,7 +5,7 @@ namespace Shared.Helpers
 {
     public class Exceptions
     {
-        public static Exception GetException(ServerException error)
+        public static Exception GetException(ClientException error)
         {
             //var message = error.ExceptionMessage + " / " + error.Message;
             //if (!string.IsNullOrWhiteSpace(error.StackTrace))

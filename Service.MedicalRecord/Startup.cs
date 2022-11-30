@@ -72,6 +72,7 @@ namespace Service.MedicalRecord
             services.AddScoped<IIdentityClient, IdentityClient>();
             services.AddScoped<ICatalogClient, CatalogClient>();
             services.AddScoped<IPdfClient, PdfClient>();
+            services.AddScoped<IBillingClient, BillingClient>();
 
             services.AddHttpClient<IIdentityClient, IdentityClient>(client =>
             {
@@ -106,6 +107,20 @@ namespace Service.MedicalRecord
                 var token = new HttpContextAccessor().HttpContext.Request.Headers["Authorization"].ToString();
 
                 client.BaseAddress = new Uri(Configuration["ClientUrls:Pdf"]);
+
+                if (!string.IsNullOrWhiteSpace(token))
+                {
+                    client.DefaultRequestHeaders.Add("Authorization", token);
+                }
+
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            });
+
+            services.AddHttpClient<IBillingClient, BillingClient>(client =>
+            {
+                var token = new HttpContextAccessor().HttpContext.Request.Headers["Authorization"].ToString();
+
+                client.BaseAddress = new Uri(Configuration["ClientUrls:Billing"]);
 
                 if (!string.IsNullOrWhiteSpace(token))
                 {

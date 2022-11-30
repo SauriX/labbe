@@ -27,71 +27,67 @@ namespace Service.Billing.Client
 
         public async Task<FacturapiDto> GetInvoiceById(string facturapiId)
         {
-            //try
-            //{
-            //    var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Invoice")}/api/invoice/{facturapiId}");
+            try
+            {
+                var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Invoice")}/api/invoice/{facturapiId}");
 
-            //    if (response.IsSuccessStatusCode && (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.NoContent))
-            //    {
-            //        if (response.StatusCode == HttpStatusCode.NoContent)
-            //        {
-            //            return null;
-            //        }
+                if (response.IsSuccessStatusCode && (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.NoContent))
+                {
+                    if (response.StatusCode == HttpStatusCode.NoContent)
+                    {
+                        return null;
+                    }
 
-            //        return await response.Content.ReadFromJsonAsync<string>();
-            //    }
+                    return await response.Content.ReadFromJsonAsync<FacturapiDto>();
+                }
 
-            //    var error = await response.Content.ReadFromJsonAsync<ServerException>();
+                var error = await response.Content.ReadFromJsonAsync<ClientExceptionFramework>();
 
-            //    var ex = Exceptions.GetException(error);
-
-            //    throw ex;
-            //}
-            //catch (Exception)
-            //{
-            //    throw;
-            //}
-
-            throw new NotImplementedException();
+                throw new CustomException(HttpStatusCode.BadRequest, error.ExceptionMessage);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        public Task<FacturapiDto> CreateInvoice(FacturapiDto invoice)
+        public async Task<FacturapiDto> CreateInvoice(FacturapiDto invoice)
         {
-            throw new NotImplementedException();
+            var json = JsonConvert.SerializeObject(invoice);
+
+            var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Invoice")}/api/invoice", stringContent);
+
+            if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+            {
+                return await response.Content.ReadFromJsonAsync<FacturapiDto>();
+            }
+
+            var error = await response.Content.ReadFromJsonAsync<ClientExceptionFramework>();
+
+            throw new CustomException(HttpStatusCode.BadRequest, error.ExceptionMessage);
         }
 
-        public Task<byte[]> GetInvoiceXML(string facturapiId)
+        public async Task<byte[]> GetInvoiceXML(string facturapiId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Invoice")}/api/invoice/xml/{facturapiId}");
+
+                if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+                {
+                    return await response.Content.ReadAsByteArrayAsync();
+                }
+
+                var error = await response.Content.ReadFromJsonAsync<ClientExceptionFramework>();
+
+                throw new CustomException(HttpStatusCode.BadRequest, error.ExceptionMessage);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
-
-
-
-        //public async Task<byte[]> GenerateTicket(RequestOrderDto order)
-        //{
-        //    try
-        //    {
-        //        var json = JsonConvert.SerializeObject(order);
-
-        //        var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
-
-        //        var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Pdf")}/api/pdf/ticket", stringContent);
-
-        //        if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
-        //        {
-        //            return await response.Content.ReadAsByteArrayAsync();
-        //        }
-
-        //        var error = await response.Content.ReadFromJsonAsync<ServerException>();
-
-        //        var ex = Exceptions.GetException(error);
-
-        //        throw ex;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-        //}
     }
 }

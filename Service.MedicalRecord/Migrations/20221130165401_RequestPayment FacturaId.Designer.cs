@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.MedicalRecord.Context;
 
 namespace Service.MedicalRecord.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221130165401_RequestPayment FacturaId")]
+    partial class RequestPaymentFacturaId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1085,9 +1087,6 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("FechaPendiente")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime?>("FechaSolicitado")
                         .HasColumnType("smalldatetime");
 
@@ -1147,9 +1146,6 @@ namespace Service.MedicalRecord.Migrations
 
                     b.Property<Guid?>("UsuarioModificoId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UsuarioPendiente")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UsuarioSolicitado")
                         .HasColumnType("nvarchar(max)");

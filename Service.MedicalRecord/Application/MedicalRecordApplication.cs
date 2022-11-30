@@ -147,7 +147,7 @@ namespace Service.MedicalRecord.Application
         }
         public async Task UpdateTaxData(TaxDataDto taxData)
         {
-            if (taxData.ExpedienteId == null || taxData.ExpedienteId == Guid.Empty || taxData.Id == null || taxData.Id == Guid.Empty)
+            if (taxData.ExpedienteId == null || taxData.ExpedienteId == Guid.Empty || taxData.Id == Guid.Empty)
             {
                 throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
             }
