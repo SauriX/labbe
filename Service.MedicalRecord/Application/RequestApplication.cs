@@ -28,6 +28,7 @@ using Service.MedicalRecord.Dtos.Promotion;
 using Service.MedicalRecord.Domain.Catalogs;
 using Service.MedicalRecord.Dtos.WeeClinic;
 using Integration.WeeClinic.Dtos;
+using Service.MedicalRecord.Dtos.Invoice;
 
 namespace Service.MedicalRecord.Application
 {
@@ -42,6 +43,8 @@ namespace Service.MedicalRecord.Application
         private readonly IQueueNames _queueNames;
         private readonly IWeeClinicApplication _weeService;
         private readonly IRepository<Branch> _branchRepository;
+        private readonly IMedicalRecordRepository _recordRepository;
+        private readonly IBillingClient _billingClient;
 
         private const byte PORCENTAJE = 1;
         private const byte CANTIDAD = 2;
@@ -55,7 +58,9 @@ namespace Service.MedicalRecord.Application
             IRabbitMQSettings rabbitMQSettings,
             IQueueNames queueNames,
             IWeeClinicApplication weeService,
-            IRepository<Branch> branchRepository)
+            IRepository<Branch> branchRepository,
+            IMedicalRecordRepository recordRepository,
+            IBillingClient billingClient)
         {
             _transaction = transaction;
             _repository = repository;
@@ -66,6 +71,8 @@ namespace Service.MedicalRecord.Application
             _rabbitMQSettings = rabbitMQSettings;
             _weeService = weeService;
             _branchRepository = branchRepository;
+            _recordRepository = recordRepository;
+            _billingClient = billingClient;
         }
 
         public async Task<IEnumerable<RequestInfoDto>> GetByFilter(RequestFilterDto filter)
@@ -362,6 +369,103 @@ namespace Service.MedicalRecord.Application
             await _repository.CreatePayment(newPayment);
 
             return newPayment.ToRequestPaymentDto();
+        }
+
+        public async Task<string> CheckInPayment(RequestCheckInDto checkInDto)
+        {
+            var request = await GetExistingRequest(checkInDto.ExpedienteId, checkInDto.SolicitudId);
+
+            var payments = await _repository.GetPayments(checkInDto.SolicitudId);
+            payments = payments.Where(x => checkInDto.Pagos.Select(p => p.Id).Contains(x.Id)).ToList();
+
+            var totalQty = payments.Sum(x => x.Cantidad);
+
+            if (checkInDto.Desglozado && totalQty != request.Total)
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "Para hacer una factura desglozada la suma de los pagos debe ser la totalidad de la solicitud");
+            }
+
+            var record = await _recordRepository.GetById(checkInDto.ExpedienteId);
+            var taxData = record?.TaxData?.FirstOrDefault(x => x.FacturaID == checkInDto.DatoFiscalId)?.Factura;
+
+            if (taxData == null)
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "Datos fiscales inválidos");
+            }
+
+            var invoiceDto = new InvoiceDto
+            {
+                Expediente = record.Expediente,
+                ExpedienteId = checkInDto.ExpedienteId,
+                Solicitud = request.Clave,
+                SolicitudId = checkInDto.SolicitudId,
+                UsoCFDI = checkInDto.UsoCFDI,
+                FormaPago = checkInDto.FormaPago,
+                RegimenFiscal = taxData.RegimenFiscal,
+                RFC = taxData.RFC,
+                Paciente = record.NombreCompleto,
+                ConNombre = checkInDto.ConNombre,
+                Desglozado = checkInDto.Desglozado,
+                EnvioCorreo = checkInDto.EnvioCorreo ? request.EnvioCorreo : null,
+                EnvioWhatsapp = checkInDto.EnvioWhatsapp ? request.EnvioWhatsApp : null,
+                Cliente = new ClientDto
+                {
+                    RFC = taxData.RFC,
+                    RazonSocial = taxData.RazonSocial,
+                    RegimenFiscal = taxData.RegimenFiscal,
+                    Correo = request.EnvioCorreo,
+                    Telefono = request.EnvioWhatsApp,
+                    CodigoPostal = taxData.CodigoPostal,
+                    Pais = "MEX",
+                    Estado = taxData.Estado,
+                    Ciudad = taxData.Ciudad,
+                    Municipio = taxData.Ciudad,
+                    Colonia = taxData.ColoniaId.ToString(),
+                    Calle = taxData.Calle,
+                },
+            };
+
+            if (checkInDto.ConNombre)
+            {
+                invoiceDto.Productos = new List<ProductDto>
+                {
+                    new ProductDto
+                    {
+                        Clave = "Pago a Solicitud",
+                        Descripcion = $"Pago cantidad ${totalQty}",
+                        Precio = totalQty,
+                        Cantidad = 1,
+                        Descuento = 0,
+                    }
+                };
+            }
+            else
+            {
+                var studies = await _repository.GetStudiesByRequest(checkInDto.SolicitudId);
+                var packs = await _repository.GetPacksByRequest(checkInDto.SolicitudId);
+
+                invoiceDto.Productos = new List<ProductDto>();
+                invoiceDto.Productos.AddRange(studies.GroupBy(x => new { x.Clave, x.PrecioFinal }).Select(x => new ProductDto
+                {
+                    Clave = x.Key.Clave,
+                    Descripcion = x.First().Nombre,
+                    Precio = x.First().Precio,
+                    Cantidad = x.Count(),
+                    Descuento = x.First().Descuento * x.Count(),
+                }));
+                invoiceDto.Productos.AddRange(packs.GroupBy(x => new { x.Clave, x.PrecioFinal }).Select(x => new ProductDto
+                {
+                    Clave = x.Key.Clave,
+                    Descripcion = x.First().Nombre,
+                    Precio = x.First().Precio,
+                    Cantidad = x.Count(),
+                    Descuento = x.First().Descuento * x.Count(),
+                }));
+            }
+
+            var invoiceResponse = await _billingClient.CheckInPayment(invoiceDto);
+
+            return "";
         }
 
         public async Task UpdateGeneral(RequestGeneralDto requestDto)
