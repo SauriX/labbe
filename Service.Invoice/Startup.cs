@@ -81,7 +81,7 @@ namespace Service.Billing
             {
                 var token = new HttpContextAccessor().HttpContext.Request.Headers["Authorization"].ToString();
 
-                client.BaseAddress = new Uri(Configuration["ClientUrls:Catalog"]);
+                client.BaseAddress = new Uri(Configuration["ClientUrls:Invoice"]);
 
                 if (!string.IsNullOrWhiteSpace(token))
                 {

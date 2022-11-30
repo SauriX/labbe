@@ -2,7 +2,7 @@
 
 namespace Shared.Error
 {
-    public class ServerException
+    public class ClientException
     {
         public string Errors { get; set; }
 

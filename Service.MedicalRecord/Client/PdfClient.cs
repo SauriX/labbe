@@ -45,7 +45,7 @@ namespace Service.MedicalRecord.Client
                     return await response.Content.ReadAsByteArrayAsync();
                 }
 
-                var error = await response.Content.ReadFromJsonAsync<ServerException>();
+                var error = await response.Content.ReadFromJsonAsync<ClientException>();
 
                 var ex = Exceptions.GetException(error);
 
@@ -68,7 +68,7 @@ namespace Service.MedicalRecord.Client
                     return await response.Content.ReadAsByteArrayAsync();
                 }
 
-                var error = await response.Content.ReadFromJsonAsync<ServerException>();
+                var error = await response.Content.ReadFromJsonAsync<ClientException>();
 
                 var ex = Exceptions.GetException(error);
 
@@ -95,7 +95,7 @@ namespace Service.MedicalRecord.Client
                     return await response.Content.ReadAsByteArrayAsync();
                 }
 
-                var error = await response.Content.ReadFromJsonAsync<ServerException>();
+                var error = await response.Content.ReadFromJsonAsync<ClientException>();
 
                 var ex = Exceptions.GetException(error);
 
@@ -122,7 +122,7 @@ namespace Service.MedicalRecord.Client
                     return await response.Content.ReadAsByteArrayAsync();
                 }
 
-                var error = await response.Content.ReadFromJsonAsync<ServerException>();
+                var error = await response.Content.ReadFromJsonAsync<ClientException>();
 
                 var ex = Exceptions.GetException(error);
 
@@ -149,7 +149,7 @@ namespace Service.MedicalRecord.Client
                     return await response.Content.ReadAsByteArrayAsync();
                 }
 
-                var error = await response.Content.ReadFromJsonAsync<ServerException>();
+                var error = await response.Content.ReadFromJsonAsync<ClientException>();
 
                 var ex = Exceptions.GetException(error);
 
@@ -175,7 +175,7 @@ namespace Service.MedicalRecord.Client
                     return await response.Content.ReadAsByteArrayAsync();
                 }
 
-                var error = await response.Content.ReadFromJsonAsync<ServerException>();
+                var error = await response.Content.ReadFromJsonAsync<ClientException>();
 
                 var ex = Exceptions.GetException(error);
 
@@ -203,7 +203,7 @@ namespace Service.MedicalRecord.Client
                     return await response.Content.ReadAsByteArrayAsync();
                 }
 
-                var error = await response.Content.ReadFromJsonAsync<ServerException>();
+                var error = await response.Content.ReadFromJsonAsync<ClientException>();
 
                 var ex = Exceptions.GetException(error);
 
@@ -230,7 +230,7 @@ namespace Service.MedicalRecord.Client
                     return await response.Content.ReadAsByteArrayAsync();
                 }
 
-                var error = await response.Content.ReadFromJsonAsync<ServerException>();
+                var error = await response.Content.ReadFromJsonAsync<ClientException>();
 
                 var ex = Exceptions.GetException(error);
 
@@ -263,7 +263,7 @@ namespace Service.MedicalRecord.Client
                     return await response.Content.ReadAsByteArrayAsync();
                 }
 
-                var error = await response.Content.ReadFromJsonAsync<ServerException>();
+                var error = await response.Content.ReadFromJsonAsync<ClientException>();
 
                 var ex = Exceptions.GetException(error);
 

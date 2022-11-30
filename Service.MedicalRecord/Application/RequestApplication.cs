@@ -371,14 +371,26 @@ namespace Service.MedicalRecord.Application
             return newPayment.ToRequestPaymentDto();
         }
 
-        public async Task<string> CheckInPayment(RequestCheckInDto checkInDto)
+        public async Task<IEnumerable<RequestPaymentDto>> CheckInPayment(RequestCheckInDto checkInDto)
         {
+            if (checkInDto.Pagos == null || checkInDto.Pagos.Count == 0)
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "No se seleccionó ningun pago");
+            }
+
             var request = await GetExistingRequest(checkInDto.ExpedienteId, checkInDto.SolicitudId);
 
-            var payments = await _repository.GetPayments(checkInDto.SolicitudId);
-            payments = payments.Where(x => checkInDto.Pagos.Select(p => p.Id).Contains(x.Id)).ToList();
+            var paymentsToCheckIn = await _repository.GetPayments(checkInDto.SolicitudId);
+            paymentsToCheckIn = paymentsToCheckIn.Where(x => checkInDto.Pagos.Select(p => p.Id).Contains(x.Id) && x.EstatusId == Status.RequestPayment.Pagado).ToList();
 
-            var totalQty = payments.Sum(x => x.Cantidad);
+            if (!paymentsToCheckIn.Any())
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.NoPaymentSelected);
+            }
+
+            var maxPay = paymentsToCheckIn.OrderByDescending(x => x.Cantidad).FirstOrDefault();
+
+            var totalQty = paymentsToCheckIn.Sum(x => x.Cantidad);
 
             if (checkInDto.Desglozado && totalQty != request.Total)
             {
@@ -400,7 +412,7 @@ namespace Service.MedicalRecord.Application
                 Solicitud = request.Clave,
                 SolicitudId = checkInDto.SolicitudId,
                 UsoCFDI = checkInDto.UsoCFDI,
-                FormaPago = checkInDto.FormaPago,
+                FormaPago = maxPay.FormaPago,
                 RegimenFiscal = taxData.RegimenFiscal,
                 RFC = taxData.RFC,
                 Paciente = record.NombreCompleto,
@@ -465,7 +477,20 @@ namespace Service.MedicalRecord.Application
 
             var invoiceResponse = await _billingClient.CheckInPayment(invoiceDto);
 
-            return "";
+            foreach (var payment in paymentsToCheckIn)
+            {
+                payment.EstatusId = Status.RequestPayment.Facturado;
+                payment.FacturaId = invoiceResponse.Id;
+                payment.FacturapiId = invoiceResponse.FacturapiId;
+                payment.UsuarioModificoId = checkInDto.UsuarioId;
+                payment.FechaModifico = DateTime.Now;
+            }
+
+            await _repository.BulkUpdatePayments(checkInDto.SolicitudId, paymentsToCheckIn);
+
+            var checkedIn = paymentsToCheckIn.ToRequestPaymentDto();
+
+            return checkedIn;
         }
 
         public async Task UpdateGeneral(RequestGeneralDto requestDto)

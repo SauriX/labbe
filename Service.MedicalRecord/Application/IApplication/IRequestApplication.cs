@@ -22,7 +22,7 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<string> CreateWeeClinic(RequestDto requestDto);
         Task<string> ConvertToRequest(RequestConvertDto requestDto);
         Task<RequestPaymentDto> CreatePayment(RequestPaymentDto requestDto);
-        Task<string> CheckInPayment(RequestCheckInDto checkInDto);
+        Task<IEnumerable<RequestPaymentDto>> CheckInPayment(RequestCheckInDto checkInDto);
         Task UpdateGeneral(RequestGeneralDto requestDto);
         Task UpdateTotals(RequestTotalDto requestDto);
         Task<RequestStudyUpdateDto> UpdateStudies(RequestStudyUpdateDto requestDto);

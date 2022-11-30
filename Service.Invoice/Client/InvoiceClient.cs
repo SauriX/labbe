@@ -41,11 +41,9 @@ namespace Service.Billing.Client
                     return await response.Content.ReadFromJsonAsync<FacturapiDto>();
                 }
 
-                var error = await response.Content.ReadFromJsonAsync<ServerException>();
+                var error = await response.Content.ReadFromJsonAsync<ClientExceptionFramework>();
 
-                var ex = Exceptions.GetException(error);
-
-                throw ex;
+                throw new CustomException(HttpStatusCode.BadRequest, error.ExceptionMessage);
             }
             catch (Exception)
             {
@@ -55,29 +53,20 @@ namespace Service.Billing.Client
 
         public async Task<FacturapiDto> CreateInvoice(FacturapiDto invoice)
         {
-            try
+            var json = JsonConvert.SerializeObject(invoice);
+
+            var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Invoice")}/api/invoice", stringContent);
+
+            if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
             {
-                var json = JsonConvert.SerializeObject(invoice);
-
-                var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
-
-                var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Invoice")}/api/invoice", stringContent);
-
-                if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
-                {
-                    return await response.Content.ReadFromJsonAsync<FacturapiDto>();
-                }
-
-                var error = await response.Content.ReadFromJsonAsync<ServerException>();
-
-                var ex = Exceptions.GetException(error);
-
-                throw ex;
+                return await response.Content.ReadFromJsonAsync<FacturapiDto>();
             }
-            catch (Exception)
-            {
-                throw;
-            }
+
+            var error = await response.Content.ReadFromJsonAsync<ClientExceptionFramework>();
+
+            throw new CustomException(HttpStatusCode.BadRequest, error.ExceptionMessage);
         }
 
         public async Task<byte[]> GetInvoiceXML(string facturapiId)
@@ -91,11 +80,9 @@ namespace Service.Billing.Client
                     return await response.Content.ReadAsByteArrayAsync();
                 }
 
-                var error = await response.Content.ReadFromJsonAsync<ServerException>();
+                var error = await response.Content.ReadFromJsonAsync<ClientExceptionFramework>();
 
-                var ex = Exceptions.GetException(error);
-
-                throw ex;
+                throw new CustomException(HttpStatusCode.BadRequest, error.ExceptionMessage);
             }
             catch (Exception)
             {

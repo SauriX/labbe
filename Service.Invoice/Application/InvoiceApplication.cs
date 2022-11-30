@@ -63,13 +63,13 @@ namespace Service.Billing.Application
 
                 var facturapiResponse = await _invoiceClient.CreateInvoice(facturapiInvoice);
 
-                invoice.FacturapiId = facturapiResponse.Id;
+                invoice.FacturapiId = facturapiResponse.FacturapiId;
                 await _repository.Update(invoice);
 
                 _transacionProvider.CommitTransaction();
 
                 invoiceDto.Id = invoice.Id;
-                invoiceDto.FacturapiId = facturapiResponse.Id;
+                invoiceDto.FacturapiId = facturapiResponse.FacturapiId;
 
                 return invoiceDto;
             }
@@ -86,12 +86,17 @@ namespace Service.Billing.Application
 
             var xml = await _invoiceClient.GetInvoiceXML(invoice.FacturapiId);
 
-            return new(xml, invoice.Solicitud);
+            return new(xml, invoice.FacturapiId + ".xml");
         }
 
         private async Task<Invoice> GetExistingInvoice(Guid invoiceId)
         {
-            var invoice = await GetExistingInvoice(invoiceId);
+            var invoice = await _repository.GetById(invoiceId);
+
+            if (invoice == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
+            }
 
             return invoice;
         }

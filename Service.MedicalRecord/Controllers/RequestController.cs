@@ -132,7 +132,7 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("payment/checkin")]
         [Authorize(Policies.Create)]
-        public async Task<string> CheckInPayment(RequestCheckInDto checkInDto)
+        public async Task<IEnumerable<RequestPaymentDto>> CheckInPayment(RequestCheckInDto checkInDto)
         {
             checkInDto.UsuarioId = (Guid)HttpContext.Items["userId"];
             checkInDto.UsuarioRegistra = HttpContext.Items["userName"].ToString();
