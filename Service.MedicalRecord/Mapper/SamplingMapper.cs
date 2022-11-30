@@ -59,7 +59,9 @@ namespace Service.MedicalRecord.Mapper
                 Clave = x.Clave,
                 NombreEstatus = x.Estatus.Nombre,
                 SolicitudId = x.SolicitudId,
-                FechaActualizacion = x.EstatusId == Status.RequestStudy.TomaDeMuestra
+                FechaActualizacion = x.EstatusId == Status.RequestStudy.Pendiente
+                    ? x.FechaPendiente?.ToString("dd/MM/yyyy HH:mm") 
+                    : x.EstatusId == Status.RequestStudy.TomaDeMuestra
                     ? x.FechaTomaMuestra?.ToString("dd/MM/yyyy HH:mm")
                     : x.EstatusId == Status.RequestStudy.Solicitado
                     ? x.FechaSolicitado?.ToString("dd/MM/yyyy HH:mm")
@@ -72,7 +74,9 @@ namespace Service.MedicalRecord.Mapper
                     : x.EstatusId == Status.RequestStudy.Enviado
                     ? x.FechaEnviado?.ToString("dd/MM/yyyy HH:mm")
                     : "",
-                UsuarioActualizacion = x.EstatusId == Status.RequestStudy.TomaDeMuestra
+                UsuarioActualizacion = x.EstatusId == Status.RequestStudy.Pendiente
+                    ? x.UsuarioPendiente
+                    : x.EstatusId == Status.RequestStudy.TomaDeMuestra
                     ? x.UsuarioTomaMuestra
                     : x.EstatusId == Status.RequestStudy.Solicitado
                     ? x.UsuarioSolicitado

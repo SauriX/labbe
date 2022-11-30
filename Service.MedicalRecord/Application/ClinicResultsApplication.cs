@@ -222,32 +222,35 @@ namespace Service.MedicalRecord.Application
                 foreach (var param in study.Parametros)
                 {
                     var result = results.Find(x => x.SolicitudEstudioId == study.Id && x.ParametroId.ToString() == param.Id);
-                    if (!string.IsNullOrWhiteSpace(result.Formula) && result.Resultado != null)
+                    if(result != null)
                     {
-                        param.Resultado = GetFormula(results.Where(x => x.SolicitudEstudioId == study.Id && x.Clave != null).ToList(), result.Formula);
-                    }
-                    else
-                    {
-                        if (result == null)
+                        if (!string.IsNullOrWhiteSpace(result.Formula) && result.Resultado != null)
                         {
-                            continue;
+                            param.Resultado = GetFormula(results.Where(x => x.SolicitudEstudioId == study.Id && x.Clave != null).ToList(), result.Formula);
                         }
+                        else
+                        {
+                            if (result == null)
+                            {
+                                continue;
+                            }
 
-                        param.Resultado = result.Resultado;
-                    }
-                    param.ResultadoId = result.Id.ToString();
-                    param.Formula = result.Formula;
+                            param.Resultado = result.Resultado;
+                        }
+                        param.ResultadoId = result.Id.ToString();
+                        param.Formula = result.Formula;
 
-                    if (param.DeltaCheck)
-                    {
-                        var listRequests = await _repository.GetSecondLastRequest(result.Solicitud.ExpedienteId);
-                        var previousResult = listRequests.Where(x => x.Id != result.SolicitudId)
-                            .Where(x => x.FechaCreo < result.Solicitud.FechaCreo)
-                            .SelectMany(x => x.Estudios)
-                            .Where(x => x.EstudioId == st.Id)
-                            .SelectMany(x => x.Resultados)
-                            .Where(x => x.ParametroId.ToString() == param.Id).FirstOrDefault()?.Resultado;
-                        param.UltimoResultado = previousResult == null ? null : previousResult;
+                        if (param.DeltaCheck)
+                        {
+                            var listRequests = await _repository.GetSecondLastRequest(result.Solicitud.ExpedienteId);
+                            var previousResult = listRequests.Where(x => x.Id != result.SolicitudId)
+                                .Where(x => x.FechaCreo < result.Solicitud.FechaCreo)
+                                .SelectMany(x => x.Estudios)
+                                .Where(x => x.EstudioId == st.Id)
+                                .SelectMany(x => x.Resultados)
+                                .Where(x => x.ParametroId.ToString() == param.Id).FirstOrDefault()?.Resultado;
+                            param.UltimoResultado = previousResult == null ? null : previousResult;
+                        }
                     }
 
                     if (param.TipoValores != null && param.TipoValores.Count != 0)

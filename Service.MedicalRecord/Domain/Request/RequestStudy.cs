@@ -39,6 +39,8 @@ namespace Service.MedicalRecord.Domain.Request
         public string MedioSolicitado { get; set; }
         public virtual RequestStudyWee EstudioWeeClinic { get; set; }
         // Fechas Actualizacion
+        public DateTime? FechaPendiente { get; set; }
+        public string UsuarioPendiente { get; set; }
         public DateTime? FechaTomaMuestra { get; set; }
         public string UsuarioTomaMuestra { get; set; }      
         public DateTime? FechaValidacion { get; set; }
