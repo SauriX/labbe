@@ -181,6 +181,13 @@ namespace Service.Catalog.Repository
             return config;
         }
 
+        public async Task<string> GetLastConsecutive()
+        {
+            var last = await _context.CAT_Sucursal.OrderByDescending(x => x.Codigo.Length).ThenByDescending(x => x.Codigo).FirstOrDefaultAsync();
+
+            return last?.Codigo ?? "00";
+        }
+
         public async Task CreateConfig(BranchFolioConfig config)
         {
             _context.CAT_Sucursal_Folio.Add(config);

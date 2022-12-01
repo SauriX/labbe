@@ -11,20 +11,21 @@ namespace Service.Catalog.Mapper
         public static IEnumerable<BranchInfoDto> ToBranchListDto(this List<Branch> model)
         {
             if (model == null) return null;
-             return model.Select(x => new BranchInfoDto
+            return model.Select(x => new BranchInfoDto
             {
-                idSucursal = x.Id.ToString(),
-                clave = x.Clave,
-                nombre = x.Nombre,
-                correo = x.Correo,
-                telefono = x.Telefono,
+                IdSucursal = x.Id.ToString(),
+                Codigo = x.Codigo,
+                Clave = x.Clave,
+                Nombre = x.Nombre,
+                Correo = x.Correo,
+                Telefono = x.Telefono,
                 //ubicacion = $"{x.Calle} {x.NumeroExterior} {x.Ciudad}",
-                ubicacion = x.Calle.Trim() + " " + x.NumeroExterior?.Trim() + ", " + x.Colonia?.Colonia?.Trim() + ", " + x.Colonia.Ciudad.Ciudad.Trim() + ", " + x.Colonia.Ciudad.Estado.Estado.Trim(),
-                clinico = "test",
-                activo = x.Activo,
-                codigoPostal = x.Codigopostal,
-                ciudad= x.Colonia.Ciudad.Ciudad.Trim()
-             });
+                Ubicacion = x.Calle.Trim() + " " + x.NumeroExterior?.Trim() + ", " + x.Colonia?.Colonia?.Trim() + ", " + x.Colonia.Ciudad.Ciudad.Trim() + ", " + x.Colonia.Ciudad.Estado.Estado.Trim(),
+                Clinico = "test",
+                Activo = x.Activo,
+                CodigoPostal = x.Codigopostal,
+                Ciudad = x.Colonia.Ciudad.Ciudad.Trim()
+            });
         }
         public static Branch ToModel(this BranchFormDto dto)
         {
@@ -33,23 +34,23 @@ namespace Service.Catalog.Mapper
             return new Branch
             {
                 Id = Guid.NewGuid(),
-                Clave = dto.clave.Trim(),
-                Nombre = dto.nombre.Trim(),
-                Activo = dto.activo,
-                Calle = dto.calle.Trim(),
-                ColoniaId = dto.coloniaId,
-                Correo = dto.correo,
+                Clave = dto.Clave.Trim(),
+                Nombre = dto.Nombre.Trim(),
+                Activo = dto.Activo,
+                Calle = dto.Calle.Trim(),
+                ColoniaId = dto.ColoniaId,
+                Correo = dto.Correo,
                 FechaCreo = DateTime.Now,
                 FechaModifico = DateTime.Now,
-                NumeroInterior = dto.numeroInt?.ToString(),
-                NumeroExterior = dto.numeroExt.ToString(),
-                Telefono = dto.telefono,
+                NumeroInterior = dto.NumeroInt?.ToString(),
+                NumeroExterior = dto.NumeroExt.ToString(),
+                Telefono = dto.Telefono,
                 UsuarioCreoId = Guid.NewGuid(),
                 UsuarioModificoId = Guid.NewGuid(),
-                Ciudad = dto.ciudad,
-                Estado = dto.estado,
-                Codigopostal = dto.codigoPostal,
-                Departamentos = dto.departamentos.Select(x => new BranchDepartment
+                Ciudad = dto.Ciudad,
+                Estado = dto.Estado,
+                Codigopostal = dto.CodigoPostal,
+                Departamentos = dto.Departamentos.Select(x => new BranchDepartment
                 {
                     DepartamentoId = x.DepartamentoId,
                     UsuarioCreoId = dto.UsuarioId,
@@ -66,25 +67,26 @@ namespace Service.Catalog.Mapper
 
             return new BranchFormDto
             {
-                idSucursal = model.Id.ToString(),
-                activo = model.Activo,
-                calle = model.Calle,
-                clave = model.Clave,
-                ciudad = model.Ciudad,
-                clinicosId = model.Clinicos,
-                codigoPostal = model.Codigopostal,
-                coloniaId = model.ColoniaId,
-                correo = model.Correo,
-                estado = model.Estado,
-                facturaciónId = model.Clinicos,
-                nombre = model.Nombre,
-                numeroExt = model.NumeroExterior,
-                numeroInt = model.NumeroInterior,
-                presupuestosId = model.Clinicos,
-                telefono = model.Telefono,
-                departamentos = model.Departamentos.ToBranchDepartmentDto(),
+                IdSucursal = model.Id.ToString(),
+                Codigo = model.Codigo,
+                Activo = model.Activo,
+                Calle = model.Calle,
+                Clave = model.Clave,
+                Ciudad = model.Ciudad,
+                ClinicosId = model.Clinicos,
+                CodigoPostal = model.Codigopostal,
+                ColoniaId = model.ColoniaId,
+                Correo = model.Correo,
+                Estado = model.Estado,
+                FacturaciónId = model.Clinicos,
+                Nombre = model.Nombre,
+                NumeroExt = model.NumeroExterior,
+                NumeroInt = model.NumeroInterior,
+                PresupuestosId = model.Clinicos,
+                Telefono = model.Telefono,
+                Departamentos = model.Departamentos.ToBranchDepartmentDto(),
                 Matriz = model.Matriz,
-                colonia = model.Colonia.Colonia
+                Colonia = model.Colonia.Colonia
 
             };
         }
@@ -112,26 +114,27 @@ namespace Service.Catalog.Mapper
 
             return new Branch
             {
-                Id = Guid.Parse(dto.idSucursal),
-                Clave = dto.clave,
-                Nombre = dto.nombre.Trim(),
-                Activo = dto.activo,
-                Calle = dto.calle.Trim(),
-                ColoniaId = dto.coloniaId,
-                Correo = dto.correo,
+                Id = Guid.Parse(dto.IdSucursal),
+                Codigo = model.Codigo,
+                Clave = dto.Clave,
+                Nombre = dto.Nombre.Trim(),
+                Activo = dto.Activo,
+                Calle = dto.Calle.Trim(),
+                ColoniaId = dto.ColoniaId,
+                Correo = dto.Correo,
                 FechaCreo = model.FechaCreo,
                 FechaModifico = model.FechaModifico,
-                NumeroInterior = dto.numeroInt,
-                NumeroExterior = dto.numeroExt,
-                Telefono = dto.telefono,
+                NumeroInterior = dto.NumeroInt,
+                NumeroExterior = dto.NumeroExt,
+                Telefono = dto.Telefono,
                 UsuarioCreoId = model.UsuarioCreoId,
                 UsuarioModificoId = model.UsuarioModificoId,
-                Ciudad = dto.ciudad,
-                Estado = dto.estado,
-                Codigopostal = dto.codigoPostal,
+                Ciudad = dto.Ciudad,
+                Estado = dto.Estado,
+                Codigopostal = dto.CodigoPostal,
                 Matriz = dto.Matriz,
                 Clinicos = model.Clinicos,
-                Departamentos = dto.departamentos.Select(x => new BranchDepartment
+                Departamentos = dto.Departamentos.Select(x => new BranchDepartment
                 {
                     SucursalId = model.Id,
                     DepartamentoId = x.DepartamentoId,

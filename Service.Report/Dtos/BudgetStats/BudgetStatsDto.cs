@@ -11,6 +11,7 @@ namespace Service.Report.Dtos.BudgetStats
         public string ClaveSolicitud { get; set; }
         public string NombrePaciente { get; set; }
         public string Solicitud { get; set; }
+        public string Sucursal { get; set; }
         public string NombreMedico { get; set; }
         public decimal PrecioEstudios => Estudio.Sum(x => x.PrecioFinal);
         public decimal Descuento { get; set; }

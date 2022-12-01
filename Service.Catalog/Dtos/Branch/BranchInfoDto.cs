@@ -2,15 +2,16 @@
 {
     public class BranchInfoDto
     {
-        public string idSucursal { get; set; }
-        public string clave { get; set; }
-        public string nombre { get; set; }
-        public string correo { get; set; }
-        public string telefono { get; set; }
-        public string ubicacion { get; set; }
-        public string clinico { get; set; }
-        public bool activo { get; set; }
-        public string codigoPostal { get; set; }
-        public string? ciudad { get; set; }
+        public string IdSucursal { get; set; }
+        public string Codigo { get; set; }
+        public string Clave { get; set; }
+        public string Nombre { get; set; }
+        public string Correo { get; set; }
+        public string Telefono { get; set; }
+        public string Ubicacion { get; set; }
+        public string Clinico { get; set; }
+        public bool Activo { get; set; }
+        public string CodigoPostal { get; set; }
+        public string Ciudad { get; set; }
     }
 }
