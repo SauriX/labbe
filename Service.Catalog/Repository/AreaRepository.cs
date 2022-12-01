@@ -61,7 +61,7 @@ namespace Service.Catalog.Repository
 
         public async Task<bool> IsDuplicate(Area catalog)
         {
-            var isDuplicate = await _context.CAT_Area.AnyAsync(x => x.Id != catalog.Id && (x.Clave == catalog.Clave || x.Nombre == catalog.Nombre));
+            var isDuplicate = await _context.CAT_Area.AnyAsync(x => x.Id != catalog.Id && x.DepartamentoId == catalog.DepartamentoId && (x.Clave == catalog.Clave || x.Nombre == catalog.Nombre));
 
             return isDuplicate;
         }
