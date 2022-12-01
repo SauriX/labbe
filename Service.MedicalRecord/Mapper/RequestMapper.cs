@@ -119,6 +119,8 @@ namespace Service.MedicalRecord.Mapper
                 Cantidad = model.Cantidad,
                 Serie = model.Serie,
                 Numero = model.Numero,
+                FacturaId = model.FacturaId,
+                FacturapiId = model.FacturapiId,
                 UsuarioRegistra = model.UsuarioRegistra,
                 EstatusId = model.EstatusId
             };
@@ -250,7 +252,7 @@ namespace Service.MedicalRecord.Mapper
                 UsuarioActualizacion = x.EstatusId == Status.RequestStudy.TomaDeMuestra
                     ? x.UsuarioTomaMuestra
                     : x.EstatusId == Status.RequestStudy.Solicitado
-                    ? x.UsuarioSolicitado 
+                    ? x.UsuarioSolicitado
                     : x.EstatusId == Status.RequestStudy.Capturado
                     ? x.UsuarioCaptura
                     : x.EstatusId == Status.RequestStudy.Validado

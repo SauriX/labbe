@@ -120,6 +120,17 @@
       ],
       "UpstreamPathTemplate": "/api/request/payment",
       "UpstreamHttpMethod": [ "POST" ]
+    },    
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/request/payment/checkin",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/request/payment/checkin",
+      "UpstreamHttpMethod": [ "POST" ]
     },
     {
       "DownstreamPathTemplate": "/LabRamos/services/records/api/request/general",

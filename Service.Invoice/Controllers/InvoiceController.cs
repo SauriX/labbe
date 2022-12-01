@@ -46,7 +46,6 @@ namespace Service.Billing.Controllers
         }
 
         [HttpPost("print/xml/{invoiceId}")]
-        [Authorize(Policies.Download)]
         public async Task<IActionResult> PrintInvoiceXML(Guid invoiceId)
         {
             var (file, fileName) = await _service.PrintInvoiceXML(invoiceId);

@@ -44,8 +44,10 @@ namespace Service.Billing.Repository
             _context.CAT_Factura.Add(invoice);
 
             await _context.SaveChangesAsync();
-        }      
-        
+
+            _context.ChangeTracker.Clear();
+        }
+
         public async Task Update(Invoice invoice)
         {
             _context.CAT_Factura.Update(invoice);

@@ -7,6 +7,7 @@ namespace Integration.Invoice.Dtos
 {
     public class FacturapiDto
     {
+        public string FacturapiId { get; set; }
         public string Tipo { get; set; }
         public string FormaPago { get; set; }
         public string MetodoPago => "PUE";

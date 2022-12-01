@@ -130,6 +130,16 @@ namespace Service.MedicalRecord.Controllers
             return await _service.CreatePayment(requestDto);
         }
 
+        [HttpPost("payment/checkin")]
+        [Authorize(Policies.Create)]
+        public async Task<IEnumerable<RequestPaymentDto>> CheckInPayment(RequestCheckInDto checkInDto)
+        {
+            checkInDto.UsuarioId = (Guid)HttpContext.Items["userId"];
+            checkInDto.UsuarioRegistra = HttpContext.Items["userName"].ToString();
+
+            return await _service.CheckInPayment(checkInDto);
+        }
+
         [HttpPut("general")]
         [Authorize(Policies.Update)]
         public async Task UpdateGeneral(RequestGeneralDto requestDto)
