@@ -412,13 +412,12 @@ namespace Service.MedicalRecord.Application
 
         private async Task<string> GetNewCode(QuotationDto quotationDto)
         {
-            var date = DateTime.Now.ToString("ddMMyy");
+            var date = DateTime.Now.ToString("yyMMdd");
 
             var branch = await _branchRepository.GetOne(x => x.Id == quotationDto.SucursalId);
             var lastCode = await _repository.GetLastCode(quotationDto.SucursalId, date);
 
-            var consecutive = Codes.GetCode(branch.Clinicos, lastCode);
-            var code = $"{consecutive}{date}";
+            var code = Codes.GetCode(branch.Codigo, lastCode);
             return code;
         }
 

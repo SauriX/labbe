@@ -115,8 +115,8 @@ namespace Service.MedicalRecord.Repository
         public async Task<string> GetLastCode(Guid branchId, string date)
         {
             var lastRequest = await _context.CAT_Solicitud
-                .OrderBy(x => x.FechaCreo)
-                .LastOrDefaultAsync(x => x.SucursalId == branchId && x.Clave.EndsWith(date));
+                .OrderByDescending(x => x.FechaCreo)
+                .FirstOrDefaultAsync(x => x.SucursalId == branchId && x.Clave.StartsWith(date));
 
             return lastRequest?.Clave;
         }

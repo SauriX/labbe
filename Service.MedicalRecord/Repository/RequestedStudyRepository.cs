@@ -14,8 +14,6 @@ namespace Service.MedicalRecord.Repository
 {
     public class RequestedStudyRepository : IRequestedStudyRepository
     {
-        private const int Toma = 2;
-        private const int Solicitado = 3;
         private readonly ApplicationDbContext _context;
 
         public RequestedStudyRepository(ApplicationDbContext context)
@@ -34,7 +32,7 @@ namespace Service.MedicalRecord.Repository
 
         public async Task<List<Request>> GetAll(RequestedStudySearchDto search)
         {
-            var report = _context.CAT_Solicitud
+            var report = _context.CAT_Solicitud.Where(x => x.Estudios != null)
                 .Include(x => x.Expediente)
                 .Include(x => x.Medico)
                 .Include(x => x.Estudios).ThenInclude(x => x.Estatus)

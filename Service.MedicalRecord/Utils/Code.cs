@@ -9,7 +9,22 @@ namespace Service.MedicalRecord.Utils
 {
     public static class Codes
     {
-        public static int GetCode(string codeRange, string lastCode)
+        public static string GetCode(string branchCode, string lastCode)
+        {
+            var date = DateTime.Now.ToString("yyMMdd");
+
+            if (lastCode == null)
+            {
+                return $"{date}{branchCode}001";
+            }
+
+            var current = lastCode[8..];
+            var next = Convert.ToInt32(current) + 1;
+
+            return $"{date}{branchCode}{next:D3}";
+        }
+
+        public static int GetCodeLegacy(string codeRange, string lastCode)
         {
             var date = DateTime.Now.ToString("ddMMyy");
             var ranges = codeRange?.Split("-");

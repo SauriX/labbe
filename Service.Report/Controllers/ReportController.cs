@@ -21,6 +21,7 @@ namespace Service.Report.Controllers.Report
         private readonly ICashRegisterApplication _cashregisterService;
         private readonly IMaquilaInternApplication _maquilainternService;
         private readonly IMaquilaExternApplication _maquilaexternService;
+        private readonly IBudgetStatsApplication _budgetStatsService;
 
         public ReportController(
             IPatientStatsApplication patientStatsService,
@@ -36,7 +37,8 @@ namespace Service.Report.Controllers.Report
             IChargeRequestApplication chargeRequestService,
             ICashRegisterApplication cashRegisterService,
             IMaquilaInternApplication maquilaInternService,
-            IMaquilaExternApplication maquilaExternService)
+            IMaquilaExternApplication maquilaExternService,
+            IBudgetStatsApplication budgetStatsService)
         {
             _patientstatsService = patientStatsService;
             _requestService = requestService;
@@ -52,6 +54,7 @@ namespace Service.Report.Controllers.Report
             _cashregisterService = cashRegisterService;
             _maquilainternService = maquilaInternService;
             _maquilaexternService = maquilaExternService;
+            _budgetStatsService = budgetStatsService;
         }
     }
 }

@@ -91,8 +91,8 @@ namespace Service.MedicalRecord.Repository
         public async Task<string> GetLastCode(Guid branchId, string date)
         {
             var quotation = await _context.CAT_Cotizacion
-                .OrderBy(x => x.FechaCreo)
-                .LastOrDefaultAsync(x => x.SucursalId == branchId && x.Clave.EndsWith(date));
+                .OrderByDescending(x => x.FechaCreo)
+                .FirstOrDefaultAsync(x => x.SucursalId == branchId && x.Clave.StartsWith(date));
 
             return quotation?.Clave;
         }

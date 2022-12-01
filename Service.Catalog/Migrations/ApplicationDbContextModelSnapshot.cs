@@ -40,6 +40,9 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("Clinicos")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Codigo")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Codigopostal")
                         .HasColumnType("nvarchar(max)");
 

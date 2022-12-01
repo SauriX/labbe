@@ -3,9 +3,11 @@ using ClosedXML.Report;
 using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Client.IClient;
 using Service.MedicalRecord.Dictionary;
+using Service.MedicalRecord.Domain.Catalogs;
 using Service.MedicalRecord.Domain.MedicalRecord;
 using Service.MedicalRecord.Dtos;
 using Service.MedicalRecord.Dtos.MedicalRecords;
+using Service.MedicalRecord.Dtos.Quotation;
 using Service.MedicalRecord.Mapper;
 using Service.MedicalRecord.Repository.IRepository;
 using Service.MedicalRecord.Utils;
@@ -21,13 +23,18 @@ namespace Service.MedicalRecord.Application
 {
     public class MedicalRecordApplication : IMedicalRecordApplication
     {
-        public readonly IMedicalRecordRepository _repository;
+        private readonly IMedicalRecordRepository _repository;
         private readonly ICatalogClient _catalogClient;
+        private readonly IRepository<Branch> _branchRepository;
 
-        public MedicalRecordApplication(IMedicalRecordRepository repository, ICatalogClient catalogClient)
+        public MedicalRecordApplication(
+            IMedicalRecordRepository repository,
+            ICatalogClient catalogClient,
+            IRepository<Branch> branchRepository)
         {
             _repository = repository;
             _catalogClient = catalogClient;
+            _branchRepository = branchRepository;
         }
 
         public async Task<List<MedicalRecordsListDto>> GetAll()
@@ -73,13 +80,13 @@ namespace Service.MedicalRecord.Application
             }
 
             var newprice = expediente.ToModel();
-            var date = DateTime.Now.ToString("ddMMyy");
+            var date = DateTime.Now.ToString("yyMMdd");
 
-            var codeRange = await _catalogClient.GetCodeRange(Guid.Parse(expediente.sucursal));
-            var lastCode = await _repository.GetLastCode(Guid.Parse(expediente.sucursal), date);
+            var branch = await _branchRepository.GetOne(x => x.Id == newprice.IdSucursal);
+            var lastCode = await _repository.GetLastCode(newprice.IdSucursal, date);
 
-            var consecutive = Codes.GetCode(codeRange, lastCode);
-            var code = $"{consecutive}{date}";
+            var code = Codes.GetCode(branch.Codigo, lastCode);
+
             newprice.Expediente = code;   
             await _repository.Create(newprice, expediente.TaxData);
 
@@ -147,7 +154,7 @@ namespace Service.MedicalRecord.Application
         }
         public async Task UpdateTaxData(TaxDataDto taxData)
         {
-            if (taxData.ExpedienteId == null || taxData.ExpedienteId == Guid.Empty || taxData.Id == null || taxData.Id == Guid.Empty)
+            if (taxData.ExpedienteId == null || taxData.ExpedienteId == Guid.Empty || taxData.Id == Guid.Empty)
             {
                 throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
             }
