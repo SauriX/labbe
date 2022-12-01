@@ -34,7 +34,7 @@ namespace Service.MedicalRecord.Mapper
             return model.Select(x => new ValidationStudyDto
             {
                 Id = x.EstudioId,
-               Study = $"{x.Nombre}-{x.Clave}",
+               Study = $"{x.Clave}-{x.Nombre}",
                 Area = "",
                 Status = x.Estatus.Nombre,
                 Estatus= x.EstatusId,

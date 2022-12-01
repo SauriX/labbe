@@ -45,7 +45,7 @@ namespace Service.MedicalRecord.Application
             {
                 if (studies.Count > 0)
                 {
-                    request.Estudios.Insert(0, new ValidationStudyDto { Study = "Nombre Estudio", Registro = "Fecha de Registro", Entrega = "Fecha de Entrega", Status = "Estatus" });
+                    request.Estudios.Insert(0, new ValidationStudyDto { Study = "Clave", Registro = "Fecha de Registro", Entrega = "Fecha de Entrega", Status = "Estatus" });
                 }
             }
           
@@ -56,7 +56,7 @@ namespace Service.MedicalRecord.Application
 
             template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
-            template.AddVariable("Titulo", "Validacion de Estudio");
+            template.AddVariable("Titulo", "Validación de Estudio");
             template.AddVariable("FechaInicio", search.Fecha.First().ToString("dd/MM/yyyy"));
             template.AddVariable("FechaFinal", search.Fecha.Last().ToString("dd/MM/yyyy"));
             template.AddVariable("Expedientes", studies);
@@ -72,12 +72,12 @@ namespace Service.MedicalRecord.Application
                     var descripcion = template.Workbook.Worksheets.FirstOrDefault().Cell(y.RowNumber(), "B").Value.ToString();
                     var next = template.Workbook.Worksheets.FirstOrDefault().Cell(y.RowNumber() + 2, "B").Value.ToString();
                     var plusOne = template.Workbook.Worksheets.FirstOrDefault().Cell(y.RowNumber() + 1, "B").Value.ToString();
-                    if (descripcion == "Nombre Estudio" && cuenta == 0)
+                    if (descripcion == "Clave" && cuenta == 0)
                     {
                         posiciones[0] = y.RowNumber();
                         cuenta++;
                     }
-                    if ((next == "Nombre Estudio" || (next == "" && plusOne == "")) && cuenta == 1)
+                    if ((next == "Clave" || (next == "" && plusOne == "")) && cuenta == 1)
                     {
                         posiciones[1] = y.RowNumber();
                         cuenta++;

@@ -41,20 +41,20 @@ namespace Service.Catalog.Context
                     {
                         new Configuration(1, "Correo"),
                         new Configuration(2, "Remitente"),
-                        new Configuration(3,"SMTP" ),
-                        new Configuration(4,"Requiere Contraseña"),
-                        new Configuration(5,"Contraseña"),
-                        new Configuration(6,"Nombre Sistema"),
-                        new Configuration(7,"Logo","logo.png"),
-                        new Configuration(8,"RFC"),
-                        new Configuration(9,"Razón Social"),
-                        new Configuration(10,"CP"),
-                        new Configuration(11,"Estado"),
-                        new Configuration(12,"Colonia"),
-                        new Configuration(13,"Calle"),
-                        new Configuration(14,"Número"),
-                        new Configuration(15,"Teléfono"),
-                        new Configuration(16,"Ciudad")
+                        new Configuration(3, "SMTP" ),
+                        new Configuration(4, "Requiere Contraseña"),
+                        new Configuration(5, "Contraseña"),
+                        new Configuration(6, "Nombre Sistema"),
+                        new Configuration(7, "Logo","logo.png"),
+                        new Configuration(8, "RFC"),
+                        new Configuration(9, "Razón Social"),
+                        new Configuration(10, "CP"),
+                        new Configuration(11, "Estado"),
+                        new Configuration(12, "Colonia"),
+                        new Configuration(13, "Calle"),
+                        new Configuration(14, "Número"),
+                        new Configuration(15, "Teléfono"),
+                        new Configuration(16, "Ciudad")
                     };
 
                     context.CAT_Configuracion.AddRange(configuration);
@@ -389,7 +389,7 @@ namespace Service.Catalog.Context
             }
 
             // Branches
-            if (true)
+            if (update)
             {
                 using var transaction = context.Database.BeginTransaction();
 

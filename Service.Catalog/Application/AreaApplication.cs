@@ -2,6 +2,7 @@
 using ClosedXML.Report;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dictionary;
+using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Dtos.Catalog;
 using Service.Catalog.Mapper;
 using Service.Catalog.Repository.IRepository;
@@ -66,6 +67,8 @@ namespace Service.Catalog.Application
 
             var newArea = area.ToModel();
 
+            await CheckDuplicate(newArea);
+
             await _repository.Create(newArea);
 
             newArea = await _repository.GetById(newArea.Id);
@@ -89,13 +92,15 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
 
-            var updatedAgent = area.ToModel(existing);
+            var updatedArea = area.ToModel(existing);
 
-            await _repository.Update(updatedAgent);
+            await CheckDuplicate(updatedArea);
 
-            updatedAgent = await _repository.GetById(updatedAgent.Id);
+            await _repository.Update(updatedArea);
 
-            return updatedAgent.ToAreaListDto();
+            updatedArea = await _repository.GetById(updatedArea.Id);
+
+            return updatedArea.ToAreaListDto();
         }
 
         public async Task<byte[]> ExportList(string search)
@@ -142,6 +147,16 @@ namespace Service.Catalog.Application
             template.Format();
 
             return (template.ToByteArray(), catalog.Clave);
+        }
+
+        private async Task CheckDuplicate(Area area)
+        {
+            var isDuplicate = await _repository.IsDuplicate(area);
+
+            if (isDuplicate)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave"));
+            }
         }
     }
 }

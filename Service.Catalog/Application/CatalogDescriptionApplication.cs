@@ -60,12 +60,7 @@ namespace Service.Catalog.Application
 
             var newCatalog = catalog.ToModel<T>();
 
-            var isDuplicate = await _repository.IsDuplicate(newCatalog);
-
-            if (isDuplicate)
-            {
-                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
-            }
+            await CheckDuplicate(newCatalog);
 
             await _repository.Create(newCatalog);
 
@@ -81,18 +76,13 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
 
-            var updatedAgent = catalog.ToModel(existing);
+            var updatedCatalog = catalog.ToModel(existing);
 
-            var isDuplicate = await _repository.IsDuplicate(updatedAgent);
+            await CheckDuplicate(updatedCatalog);
 
-            if (isDuplicate)
-            {
-                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
-            }
+            await _repository.Update(updatedCatalog);
 
-            await _repository.Update(updatedAgent);
-
-            return updatedAgent.ToCatalogDescriptionListDto();
+            return updatedCatalog.ToCatalogDescriptionListDto();
         }
 
         public async Task<byte[]> ExportList(string search, string catalogName)
@@ -139,6 +129,16 @@ namespace Service.Catalog.Application
             template.Format();
 
             return (template.ToByteArray(), catalog.Clave);
+        }
+
+        private async Task CheckDuplicate(T catalog)
+        {
+            var isDuplicate = await _repository.IsDuplicate(catalog);
+
+            if (isDuplicate)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
+            }
         }
     }
 }
