@@ -55,6 +55,13 @@ namespace Service.Identity.Controllers
             return await _service.GetScopes(userId, ControllerNames.Medic);
         }
 
+        [HttpGet(ControllerNames.RelaseResult)]
+        public async Task<ScopesDto> GetRelaseResult()
+        {
+            var userId = GetUserId();
+            return await _service.GetScopes(userId, ControllerNames.RelaseResult);
+        }
+
         [HttpGet(ControllerNames.Study)]
         public async Task<ScopesDto> GetStudyScopes()
         {
