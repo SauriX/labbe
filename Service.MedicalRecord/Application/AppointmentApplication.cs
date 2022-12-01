@@ -18,67 +18,84 @@ using EventBus.Messages.Common;
 using MassTransit;
 using Service.MedicalRecord.Settings.ISettings;
 using RequestTemplates = Service.MedicalRecord.Dictionary.EmailTemplates.Request;
+using Service.MedicalRecord.Domain.Catalogs;
+using Service.MedicalRecord.Dtos.Quotation;
+
 namespace Service.MedicalRecord.Application
 {
-    public class AppointmentApplication: IAppointmentApplication
+    public class AppointmentApplication : IAppointmentApplication
     {
-        public readonly IAppointmentResposiotry _repository;
+        private readonly IAppointmentResposiotry _repository;
         private readonly ICatalogClient _catalogCliente;
         private readonly ISendEndpointProvider _sendEndpointProvider;
         private readonly IRabbitMQSettings _rabbitMQSettings;
         private readonly IQueueNames _queueNames;
-        public AppointmentApplication(IAppointmentResposiotry repository, ICatalogClient catalogCliente, ISendEndpointProvider sendEndpointProvider,
-           IRabbitMQSettings rabbitMQSettings, IQueueNames queueNames)
+        private readonly IRepository<Branch> _branchRepository;
+
+        public AppointmentApplication(
+            IAppointmentResposiotry repository,
+            ICatalogClient catalogCliente,
+            ISendEndpointProvider sendEndpointProvider,
+            IRabbitMQSettings rabbitMQSettings,
+            IQueueNames queueNames,
+            IRepository<Branch> branchRepository)
         {
             _repository = repository;
-            _catalogCliente = catalogCliente;   
+            _catalogCliente = catalogCliente;
             _sendEndpointProvider = sendEndpointProvider;
             _rabbitMQSettings = rabbitMQSettings;
             _queueNames = queueNames;
+            _branchRepository = branchRepository;
         }
-        public async Task<List<AppointmentList>> GetAllLab(SearchAppointment search) { 
-             return (await _repository.GetAllLab(search)).ToApointmentListDtoLab();
+        public async Task<List<AppointmentList>> GetAllLab(SearchAppointment search)
+        {
+            return (await _repository.GetAllLab(search)).ToApointmentListDtoLab();
         }
-        public async Task<List<AppointmentList>> GetAllDom(SearchAppointment search) {
+        public async Task<List<AppointmentList>> GetAllDom(SearchAppointment search)
+        {
             return (await _repository.GetAllDom(search)).ToApointmentListDtoDom();
         }
 
-        public async Task<AppointmentForm> GetByIdLab(string id) { 
-                return  (await _repository.GetByIdLab(id)).ToDtoAppointmentLab();
+        public async Task<AppointmentForm> GetByIdLab(string id)
+        {
+            return (await _repository.GetByIdLab(id)).ToDtoAppointmentLab();
         }
-        public async Task<AppointmentForm> GetByIdDom(string id) {
+        public async Task<AppointmentForm> GetByIdDom(string id)
+        {
             return (await _repository.GetByIdDom(id)).ToDtoAppointmentDom();
         }
-        public async Task<AppointmentList> CreateLab(AppointmentForm appointmentLab) {
+        public async Task<AppointmentList> CreateLab(AppointmentForm appointmentLab)
+        {
             var newAppointment = appointmentLab.toModel();
-            var date = DateTime.Now.ToString("ddMMyy");
-            var codeRange = await _catalogCliente.GetCodeRange(appointmentLab.SucursalId);
-            var lastCode = await _repository.GetLastCode(date);
+            var date = DateTime.Now.ToString("yyMMdd");
 
-            var consecutive = Codes.GetCode(codeRange, lastCode);
-            var code = $"{consecutive}{date}";
-            newAppointment.Cita = code;
+            //var branch = await _branchRepository.GetOne(x => x.Id == newAppointment.SucursalID);
+            //var lastCode = await _repository.GetLastCode(date);
+
+            //var code = Codes.GetCode(codeRange, lastCode);
+            newAppointment.Cita = "";
             await _repository.CreateLab(newAppointment);
             newAppointment = await _repository.GetByIdLab(newAppointment.Id.ToString());
 
             return newAppointment.ToApointmentListDtoLab();
         }
-        public async  Task<AppointmentList> CreateDom(AppointmentForm appointmentDom)
+        public async Task<AppointmentList> CreateDom(AppointmentForm appointmentDom)
         {
             var newAppointment = appointmentDom.toModelDom();
-            var date = DateTime.Now.ToString("ddMMyy");
-            var codeRange = await _catalogCliente.GetCodeRange(appointmentDom.SucursalId);
-            var lastCode = await _repository.GetLastCode(date);
+            var date = DateTime.Now.ToString("yyMMdd");
+            //var branch = await _branchRepository.GetOne(x => x.Id == newAppointment.su);
+            //var lastCode = await _repository.GetLastCode(date);
 
-            var consecutive = Codes.GetCode(codeRange, lastCode);
-            var code = $"{consecutive}{date}";
+            //var consecutive = Codes.GetCode(codeRange, lastCode);
+            var code = $"";
             newAppointment.Cita = code;
             await _repository.CreateDom(newAppointment);
             newAppointment = await _repository.GetByIdDom(newAppointment.Id.ToString());
-                
+
             return newAppointment.ToApointmentListDtoDom();
         }
-        public async Task<AppointmentList> UpdateLab(AppointmentForm appointmentLab) {
+        public async Task<AppointmentList> UpdateLab(AppointmentForm appointmentLab)
+        {
             var existing = await _repository.GetByIdLab(appointmentLab.Id.ToString());
             var newAppointment = appointmentLab.toModel(existing);
             await _repository.UpdateLab(newAppointment);
@@ -86,7 +103,8 @@ namespace Service.MedicalRecord.Application
 
             return newAppointment.ToApointmentListDtoLab();
         }
-        public async Task<AppointmentList> UpdateDom(AppointmentForm appointmentDom) {
+        public async Task<AppointmentList> UpdateDom(AppointmentForm appointmentDom)
+        {
             var existing = await _repository.GetByIdDom(appointmentDom.Id.ToString());
             var newAppointment = appointmentDom.toModelDom(existing);
             await _repository.UpdateDom(newAppointment);
@@ -97,7 +115,7 @@ namespace Service.MedicalRecord.Application
         }
         public async Task<(byte[] file, string fileName)> ExportList(SearchAppointment search)
         {
-            
+
             if (search.tipo == "laboratorio")
             {
                 var studys = await GetAllLab(search);
@@ -121,7 +139,8 @@ namespace Service.MedicalRecord.Application
 
                 return (template.ToByteArray(), $"Catálogo de Citas.xlsx");
             }
-            else {
+            else
+            {
                 var studys = await GetAllDom(search);
                 var path = Assets.CitaList;
 
@@ -144,7 +163,7 @@ namespace Service.MedicalRecord.Application
                 return (template.ToByteArray(), $"Catálogo de Citas.xlsx");
             }
 
-            
+
 
         }
 
@@ -169,7 +188,8 @@ namespace Service.MedicalRecord.Application
 
                 return (template.ToByteArray(), $"Catálogo de Cita ({study.nomprePaciente}).xlsx");
             }
-            else {
+            else
+            {
                 var study = await GetByIdDom(data.Id);
                 study.fechaNacimiento = DateTime.Now;
                 var path = Assets.CitaForm;
@@ -191,7 +211,8 @@ namespace Service.MedicalRecord.Application
         }
         public async Task SendTestEmail(RequestSendDto requestDto, string Typo)
         {
-            if (Typo == "laboratorio") {
+            if (Typo == "laboratorio")
+            {
                 var request = await GetByIdLab(requestDto.SolicitudId.ToString());
                 var subject = RequestTemplates.Subjects.TestMessage;
                 var title = RequestTemplates.Titles.RequestCode(request.expediente);
@@ -206,7 +227,9 @@ namespace Service.MedicalRecord.Application
                 var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, _queueNames.Email)));
 
                 await endpoint.Send(emailToSend);
-            } else {
+            }
+            else
+            {
                 var request = await GetByIdDom(requestDto.SolicitudId.ToString());
                 var subject = RequestTemplates.Subjects.TestMessage;
                 var title = RequestTemplates.Titles.RequestCode(request.expediente);
@@ -222,14 +245,15 @@ namespace Service.MedicalRecord.Application
 
                 await endpoint.Send(emailToSend);
             }
-            
+
 
 
         }
 
-        public async Task SendTestWhatsapp(RequestSendDto requestDto,string Typo)
+        public async Task SendTestWhatsapp(RequestSendDto requestDto, string Typo)
         {
-            if (Typo == "laboratorio"){
+            if (Typo == "laboratorio")
+            {
                 var request = await GetByIdLab(requestDto.SolicitudId.ToString());
 
                 var message = RequestTemplates.Messages.TestMessage;
@@ -246,7 +270,8 @@ namespace Service.MedicalRecord.Application
 
                 await endpoint.Send(emailToSend);
             }
-            else {
+            else
+            {
                 var request = await GetByIdDom(requestDto.SolicitudId.ToString());
 
                 var message = RequestTemplates.Messages.TestMessage;

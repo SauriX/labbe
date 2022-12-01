@@ -10,9 +10,10 @@ namespace Service.Catalog.Domain.Branch
         {
         }
 
-        public Branch(Guid id, string clave, string nombre, int matriz, string clinicos, string telefono, string correo, string calle, string numExterior, string numInterior, string cp, int coloniaId, string municipio, string estado)
+        public Branch(Guid id, string codigo, string clave, string nombre, int matriz, string clinicos, string telefono, string correo, string calle, string numExterior, string numInterior, string cp, int coloniaId, string municipio, string estado)
         {
             Id = id;
+            Codigo = codigo;
             Clave = clave;
             Nombre = nombre;
             Clinicos = clinicos;
@@ -31,6 +32,7 @@ namespace Service.Catalog.Domain.Branch
         }
 
         public Guid Id { get; set; }
+        public string Codigo { get; set; }
         public string Clave { get; set; }
         public string Nombre { get; set; }
         public int ColoniaId { get; set; }
