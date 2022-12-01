@@ -14,20 +14,20 @@ namespace Service.Catalog.Controllers.Catalog
         [Authorize(Policies.Access)]
         public async Task<IEnumerable<CatalogListDto>> GetAllEquipo(string search = null)
         {
-            return await _equipoService.GetAll(search);
+            return await _equipmentService.GetAll(search);
         }
 
         [HttpGet("Equipo/active")]
         public async Task<IEnumerable<CatalogListDto>> GetActiveEquipo()
         {
-            return await _equipoService.GetActive();
+            return await _equipmentService.GetActive();
         }
 
         [HttpGet("Equipo/{id}")]
         [Authorize(Policies.Access)]
         public async Task<CatalogFormDto> GetEquipoById(int id)
         {
-            return await _equipoService.GetById(id);
+            return await _equipmentService.GetById(id);
         }
 
         [HttpPost("Equipo")]
@@ -35,7 +35,7 @@ namespace Service.Catalog.Controllers.Catalog
         public async Task<CatalogListDto> CreateEquipo(CatalogFormDto catalog)
         {
             catalog.UsuarioId = (Guid)HttpContext.Items["userId"];
-            return await _equipoService.Create(catalog);
+            return await _equipmentService.Create(catalog);
         }
 
         [HttpPut("Equipo")]
@@ -43,14 +43,14 @@ namespace Service.Catalog.Controllers.Catalog
         public async Task<CatalogListDto> UpdateEquipo(CatalogFormDto catalog)
         {
             catalog.UsuarioId = (Guid)HttpContext.Items["userId"];
-            return await _equipoService.Update(catalog);
+            return await _equipmentService.Update(catalog);
         }
 
         [HttpPost("Equipo/export/list/{search}")]
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportListEquipo(string search)
         {
-            var file = await _equipoService.ExportList(search, "Especialidades");
+            var file = await _equipmentService.ExportList(search, "Especialidades");
             return File(file, MimeType.XLSX, "Catálogo de Especialidad.xlsx");
         }
 
@@ -58,7 +58,7 @@ namespace Service.Catalog.Controllers.Catalog
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportFormEquipo(int id)
         {
-            var (file, code) = await _equipoService.ExportForm(id, "Especialidades");
+            var (file, code) = await _equipmentService.ExportForm(id, "Especialidades");
             return File(file, MimeType.XLSX, $"Catálogo de Especialidad ({code}).xlsx");
         }
     }
