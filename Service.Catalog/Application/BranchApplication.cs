@@ -35,7 +35,7 @@ namespace Service.Catalog.Application
 
         public async Task<bool> Create(BranchFormDto branch)
         {
-            if (!string.IsNullOrEmpty(branch.idSucursal))
+            if (!string.IsNullOrEmpty(branch.IdSucursal))
             {
                 throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
             }
@@ -77,10 +77,14 @@ namespace Service.Catalog.Application
 
             string finalCode = await GetBranchFolio(newBranch, city);
 
+            string lastConsecutive = await _repository.GetLastConsecutive();
+            string nextConsecutive = (Convert.ToInt32(lastConsecutive) + 1).ToString("D2");
+
             newBranch.Clinicos = finalCode;
+            newBranch.Codigo = nextConsecutive;
             await _repository.Create(newBranch);
 
-            var contract = new BranchContract(newBranch.Id, newBranch.Clave, newBranch.Nombre, newBranch.Clinicos, newBranch.Codigopostal, location.First().CiudadId);
+            var contract = new BranchContract(newBranch.Id, newBranch.Codigo, newBranch.Clave, newBranch.Nombre, newBranch.Clinicos, newBranch.Codigopostal, location.First().CiudadId);
 
             await _publishEndpoint.Publish(contract);
 
@@ -108,7 +112,7 @@ namespace Service.Catalog.Application
 
         public async Task<bool> Update(BranchFormDto branch)
         {
-            var existing = await _repository.GetById(branch.idSucursal);
+            var existing = await _repository.GetById(branch.IdSucursal);
 
             if (existing == null)
             {
@@ -153,7 +157,7 @@ namespace Service.Catalog.Application
 
             await _repository.Update(updatedBranch);
 
-            var contract = new BranchContract(updatedBranch.Id, updatedBranch.Clave, updatedBranch.Nombre, updatedBranch.Clinicos, updatedBranch.Codigopostal, location.First().CiudadId);
+            var contract = new BranchContract(updatedBranch.Id, updatedBranch.Codigo, updatedBranch.Clave, updatedBranch.Nombre, updatedBranch.Clinicos, updatedBranch.Codigopostal, location.First().CiudadId);
 
             await _publishEndpoint.Publish(contract);
 
@@ -209,7 +213,7 @@ namespace Service.Catalog.Application
 
             template.Format();
 
-            return (template.ToByteArray(), $"Catálogo de Sucursales ({indication.clave}).xlsx");
+            return (template.ToByteArray(), $"Catálogo de Sucursales ({indication.Clave}).xlsx");
         }
 
         public async Task<IEnumerable<BranchCityDto>> GetBranchByCity()

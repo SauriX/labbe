@@ -3,6 +3,7 @@ using ClosedXML.Report;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dictionary;
 using Service.Catalog.Domain.Catalog;
+using Service.Catalog.Domain.Reagent;
 using Service.Catalog.Dtos.Catalog;
 using Service.Catalog.Mapper;
 using Service.Catalog.Repository.IRepository;
@@ -60,12 +61,7 @@ namespace Service.Catalog.Application
 
             var newCatalog = catalog.ToModel<T>();
 
-            var isDuplicate = await _repository.IsDuplicate(newCatalog);
-
-            if (isDuplicate)
-            {
-                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
-            }
+            await CheckDuplicate(newCatalog);
 
             await _repository.Create(newCatalog);
 
@@ -83,12 +79,7 @@ namespace Service.Catalog.Application
 
             var updatedCatalog = catalog.ToModel(existing);
 
-            var isDuplicate = await _repository.IsDuplicate(updatedCatalog);
-
-            if (isDuplicate)
-            {
-                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
-            }
+            await CheckDuplicate(updatedCatalog);
 
             await _repository.Update(updatedCatalog);
 
@@ -139,6 +130,16 @@ namespace Service.Catalog.Application
             template.Format();
 
             return (template.ToByteArray(), catalog.Clave);
+        }
+
+        private async Task CheckDuplicate(T catalog)
+        {
+            var isDuplicate = await _repository.IsDuplicate(catalog);
+
+            if (isDuplicate)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
+            }
         }
     }
 }

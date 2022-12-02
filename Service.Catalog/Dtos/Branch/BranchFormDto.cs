@@ -5,25 +5,26 @@ namespace Service.Catalog.Dtos.Branch
 {
     public class BranchFormDto
     {
-        public string idSucursal { get; set; }
-        public string clave { get; set; }
-        public string nombre { get; set; }
-        public string calle { get; set; }
-        public string correo { get; set; }
-        public string telefono { get; set; }
-        public string numeroExt { get; set; }
-        public string numeroInt { get; set; }
-        public string presupuestosId { get; set; }
-        public string facturaciónId { get; set; }
-        public string clinicosId { get; set; }
-        public bool activo { get; set; }
-        public string estado { get; set; }
-        public string ciudad { get; set; }
-        public int coloniaId { get; set; }
-        public string codigoPostal { get; set; }
-        public string colonia { get; set; }
+        public string IdSucursal { get; set; }
+        public string Codigo { get; set; }
+        public string Clave { get; set; }
+        public string Nombre { get; set; }
+        public string Calle { get; set; }
+        public string Correo { get; set; }
+        public string Telefono { get; set; }
+        public string NumeroExt { get; set; }
+        public string NumeroInt { get; set; }
+        public string PresupuestosId { get; set; }
+        public string FacturaciónId { get; set; }
+        public string ClinicosId { get; set; }
+        public bool Activo { get; set; }
+        public string Estado { get; set; }
+        public string Ciudad { get; set; }
+        public int ColoniaId { get; set; }
+        public string CodigoPostal { get; set; }
+        public string Colonia { get; set; }
         public Guid UsuarioId { get; set; }
         public bool Matriz { get; set; }
-        public IEnumerable<BranchDepartmentDto> departamentos { get; set; }
+        public IEnumerable<BranchDepartmentDto> Departamentos { get; set; }
     }
 }

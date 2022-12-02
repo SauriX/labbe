@@ -8,9 +8,10 @@ namespace Service.MedicalRecord.Domain.Catalogs
         {
         }
 
-        public Branch(Guid id, string clave, string nombre, string clinicos, string codigoPostal, short ciudadId)
+        public Branch(Guid id, string codigo, string clave, string nombre, string clinicos, string codigoPostal, short ciudadId)
         {
             Id = id;
+            Codigo = codigo;
             Clave = clave;
             Nombre = nombre;
             Clinicos = clinicos;
@@ -19,6 +20,7 @@ namespace Service.MedicalRecord.Domain.Catalogs
         }
 
         public Guid Id { get; set; }
+        public string Codigo { get; set; }
         public string Clave { get; set; }
         public string Nombre { get; set; }
         public string Clinicos { get; set; }
