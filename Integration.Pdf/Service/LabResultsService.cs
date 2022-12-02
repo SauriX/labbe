@@ -9,6 +9,8 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
+using MigraDoc.DocumentObjectModel.Shapes.Charts;
+
 namespace Integration.Pdf.Service
 {
     public class LabResultsService
@@ -91,6 +93,13 @@ namespace Integration.Pdf.Service
 
             var LabRamosImage = File.ReadAllBytes(logoLab);
             var ISOImage = File.ReadAllBytes(logoISO);
+
+            var contentWidth = section.PageSetup.PageWidth - section.PageSetup.LeftMargin - section.PageSetup.RightMargin;
+            Chart chart = new Chart();
+            chart.Left = 0;
+
+            chart.Width = contentWidth;
+            chart.Height = Unit.FromCentimeter(12);
 
             var headerParagraph = "ALFONSO RAMOS SALAZAR, QBP, MSC, DBC UNIVERSIDAD Y HOSPITAL GENERAL DE TORONTO CED. DGP No. 703973 REG. S.S.A. 10-86 DGP F-370, No. REG. 0111";
 
@@ -190,6 +199,10 @@ namespace Integration.Pdf.Service
                 var study = results.CapturaResultados.Select(x => x.Estudio).Distinct().ToList();
                 var studyParameter = results.CapturaResultados.GroupBy(x => x.Estudio).ToList();
 
+                Series series = chart.SeriesCollection.AddSeries();
+                series.ChartType = ChartType.Line;
+                XSeries xseries = chart.XValues.AddXSeries();
+
                 for (int i = 0; i < studyParameter.Count; i++)
                 {
                     IGrouping<string, ClinicResultsCaptureDto> studyParam = studyParameter[i];
@@ -198,7 +211,6 @@ namespace Integration.Pdf.Service
                     var studyName = new Col("****" + studyParam.Key, 14, fontTitle, ParagraphAlignment.Left);
                     section.AddText(studyName);
 
-                    var checkResultNotNull = studyParam.Where(x => x.Resultado != null);
                     var orderParams = studyParam.OrderBy(x => x.Orden);
 
                     foreach (var param in orderParams)
@@ -232,9 +244,46 @@ namespace Integration.Pdf.Service
                             col[1].Horizontal = ParagraphAlignment.Left;
                         }
 
+                        var glucoseToleranceValues = param.TipoValorId == 6 || param.TipoValorId == 1;
+
+                        if(param.EstudioId == 631 && glucoseToleranceValues)
+                        {
+                            try
+                            {
+                                var numericResult = Convert.ToDouble(param.Resultado);
+                                series.Add(numericResult);
+                                xseries.Add(param.Clave);
+                            } 
+                            catch (Exception ex)
+                            {
+                                throw ex;
+                            }
+                        }
+
                         if (results.ImprimirPrevios) col.Insert(2, new Col(param.UltimoResultado != null ? param.UltimoResultado : "-", 6, Col.FONT_SUBTITLE_BOLD));
                         section.AddBorderedText(col.ToArray(), top: false, right: false, bottom: false, left: false);
                     }
+
+                    if (studyParam.Any(x => x.EstudioId == 631))
+                    {
+                        section.AddPageBreak();
+
+                        var titleChart = new Col("Gráfica Curva de Tolerancia a Glucosa", 14, fontTitle, ParagraphAlignment.Left);
+                        section.AddText(titleChart);
+                        section.AddSpace(5);
+
+                        chart.XAxis.MajorTickMark = TickMarkType.Outside;
+                        chart.XAxis.Title.Caption = "Tolerancia a la Glucosa";
+
+                        chart.YAxis.MajorTickMark = TickMarkType.Outside;
+                        chart.YAxis.HasMajorGridlines = true;
+
+                        chart.PlotArea.LineFormat.Color = Colors.DarkGray;
+                        chart.PlotArea.LineFormat.Width = 1;
+
+                        section.Add(chart);
+                    }
+
                     section.AddSpace(10);
 
                     if (results.ImprimirCriticos)

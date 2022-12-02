@@ -305,9 +305,11 @@ namespace Service.MedicalRecord.Application
                                 }
                                 break;
                             case "5":
-                                param.TipoValores = param.TipoValores;
-                                break;
                             case "6":
+                            case "11":
+                            case "12":
+                            case "13":
+                            case "14":
                                 param.TipoValores = param.TipoValores;
                                 break;
                             case "9":
@@ -952,7 +954,7 @@ namespace Service.MedicalRecord.Application
         {
             StringBuilder message = new(formula);
 
-            foreach (var par in parameters)
+            foreach (var par in parameters.OrderByDescending(x => x.Clave.Length))
             {
                 message.Replace(par.Clave, par.Resultado);
             }
