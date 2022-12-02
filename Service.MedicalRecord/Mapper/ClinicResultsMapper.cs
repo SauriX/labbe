@@ -249,6 +249,7 @@ namespace Service.MedicalRecord.Mapper
                     UltimoResultado = results.UltimoResultado,
                     DeltaCheck = results.DeltaCheck,
                     Orden = results.Orden,
+                    Clave = results.Clave
                 };
             }).ToList();
         }
