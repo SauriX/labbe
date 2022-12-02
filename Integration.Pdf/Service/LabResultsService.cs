@@ -246,7 +246,7 @@ namespace Integration.Pdf.Service
 
                         var glucoseToleranceValues = param.TipoValorId == 6 || param.TipoValorId == 1;
 
-                        if(param.EstudioId == 631 && glucoseToleranceValues)
+                        if(param.EstudioId == 631 && glucoseToleranceValues && param.Clave != "_OB_CTG")
                         {
                             try
                             {

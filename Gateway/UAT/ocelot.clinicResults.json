@@ -21,6 +21,17 @@
       ],
       "UpstreamPathTemplate": "/api/clinicResults/export/list",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/clinicResults/export/glucose",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/clinicResults/export/glucose",
+      "UpstreamHttpMethod": [ "POST" ]
     }
   ]
 }
