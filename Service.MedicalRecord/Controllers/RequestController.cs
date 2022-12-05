@@ -231,26 +231,30 @@ namespace Service.MedicalRecord.Controllers
             await _service.AddPartiality(requestDto);
         }
 
-        [HttpPost("ticket/{recordId}/{requestId}")]
-        //[Authorize(Policies.Print)]
-        public async Task<IActionResult> PrintTicket(Guid recordId, Guid requestId)
+        [HttpPost("ticket/{recordId}/{requestId}/{paymentId}")]
+        [Authorize(Policies.Download)]
+        public async Task<IActionResult> PrintTicket(Guid recordId, Guid requestId, Guid paymentId)
         {
-            var file = await _service.PrintTicket(recordId, requestId);
+            var userName = HttpContext.Items["userName"].ToString();
+
+            var file = await _service.PrintTicket(recordId, requestId, paymentId, userName);
 
             return File(file, MimeType.PDF, "ticket.pdf");
         }
 
         [HttpPost("order/{recordId}/{requestId}")]
-        //[Authorize(Policies.Print)]
+        [Authorize(Policies.Download)]
         public async Task<IActionResult> PrintOrder(Guid recordId, Guid requestId)
         {
-            var file = await _service.PrintOrder(recordId, requestId);
+            var userName = HttpContext.Items["userName"].ToString();
+
+            var file = await _service.PrintOrder(recordId, requestId, userName);
 
             return File(file, MimeType.PDF, "order.pdf");
         }
 
         [HttpPost("tags/{recordId}/{requestId}")]
-        //[Authorize(Policies.Print)]
+        [Authorize(Policies.Print)]
         public async Task<IActionResult> PrintTags(Guid recordId, Guid requestId, List<RequestTagDto> tags)
         {
             var file = await _service.PrintTags(recordId, requestId, tags);

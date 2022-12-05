@@ -15,7 +15,7 @@ namespace Integration.Pdf.Controllers
     {
         [HttpPost]
         [Route("ticket")]
-        public HttpResponseMessage Ticket(RequestOrderDto order)
+        public HttpResponseMessage Ticket(RequestTicketDto order)
         {
             var file = TicketService.Generate(order);
 
