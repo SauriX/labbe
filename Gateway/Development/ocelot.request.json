@@ -265,7 +265,7 @@
       "UpstreamHttpMethod": [ "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/api/request/ticket/{recordId}/{requestId}",
+      "DownstreamPathTemplate": "/api/request/ticket/{recordId}/{requestId}/{paymentId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -273,7 +273,7 @@
           "Port": 24048
         }
       ],
-      "UpstreamPathTemplate": "/api/request/ticket/{recordId}/{requestId}",
+      "UpstreamPathTemplate": "/api/request/ticket/{recordId}/{requestId}/{paymentId}",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {

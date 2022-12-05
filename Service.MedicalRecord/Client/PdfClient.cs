@@ -30,11 +30,11 @@ namespace Service.MedicalRecord.Client
             _configuration = configuration;
         }
 
-        public async Task<byte[]> GenerateTicket(RequestOrderDto order)
+        public async Task<byte[]> GenerateTicket(RequestTicketDto ticket)
         {
             try
             {
-                var json = JsonConvert.SerializeObject(order);
+                var json = JsonConvert.SerializeObject(ticket);
 
                 var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 

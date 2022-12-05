@@ -15,7 +15,6 @@ namespace Integration.Pdf.Service
         {
             Document document = CreateDocument(order);
 
-            document.UseCmykColor = true;
             const bool unicode = false;
 
             DocumentRenderer renderer = new DocumentRenderer(document);
@@ -65,7 +64,7 @@ namespace Integration.Pdf.Service
 
         static void Format(Section section, RequestOrderDto order)
         {
-            var title = new Col("Laboratorio Alfonso Ramos S.A. de C.V. (HERMOSILLO)", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Right);
+            var title = new Col($"Laboratorio Alfonso Ramos S.A. de C.V. ({order.Sucursal})", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Right);
             section.AddText(title);
 
             section.AddSpace();
@@ -73,14 +72,17 @@ namespace Integration.Pdf.Service
             var line1 = new Col[]
             {
                 new Col("SOLICITUD NO.", 3, ParagraphAlignment.Left),
-                new Col($": {order.Clave}", 21, Col.FONT_BOLD, ParagraphAlignment.Left)
+                new Col($": {order.Solicitud}", 8, Col.FONT_BOLD, ParagraphAlignment.Left),
+                new Col("", 9),
+                new Col("FECHA", 1, ParagraphAlignment.Left),
+                new Col($": {order.Fecha}", 3, Col.FONT_BOLD),
             };
             section.AddBorderedText(line1, top: true, right: true, left: true);
 
             var line2 = new Col[]
             {
-                new Col("FECHA", 3, ParagraphAlignment.Left),
-                new Col($": {order.FechaSolicitud}", 8, Col.FONT_BOLD, ParagraphAlignment.Left),
+                new Col("PACIENTE", 3, ParagraphAlignment.Left),
+                new Col($": {order.Paciente}", 8, Col.FONT_BOLD, ParagraphAlignment.Left),
                 new Col("", 1),
                 new Col("FECH. NAC.", 3, ParagraphAlignment.Left),
                 new Col($": {order.FechaNacimiento}", 4, Col.FONT_BOLD, ParagraphAlignment.Left),
@@ -92,14 +94,15 @@ namespace Integration.Pdf.Service
 
             var line3 = new Col[]
             {
-                new Col("PACIENTE", 3, ParagraphAlignment.Left),
-                new Col($": {order.Paciente}", 8, Col.FONT_BOLD, ParagraphAlignment.Left),
+                new Col("E-MAIL", 3, ParagraphAlignment.Left),
+                new Col($": {order.Correo}", 8, Col.FONT_BOLD, ParagraphAlignment.Left),
                 new Col("", 1),
-                new Col("SEXO", 3, ParagraphAlignment.Left),
-                new Col($": {order.Sexo}", 4, Col.FONT_BOLD, ParagraphAlignment.Left),
+                new Col("CEL", 3, ParagraphAlignment.Left),
+                new Col($": {order.Celular}", 4, Col.FONT_BOLD, ParagraphAlignment.Left),
                 new Col("", 1),
-                new Col("TEL", 1, ParagraphAlignment.Left),
-                new Col($": {order.TelefonoPaciente}", 3, Col.FONT_BOLD, ParagraphAlignment.Left)
+                new Col("SEXO", 1, ParagraphAlignment.Left),
+                new Col($": {order.Sexo}", 3, Col.FONT_BOLD, ParagraphAlignment.Left),
+
             };
             section.AddBorderedText(line3, right: true, left: true);
 
@@ -109,7 +112,9 @@ namespace Integration.Pdf.Service
                 new Col($": {order.Medico}", 8, Col.FONT_BOLD, ParagraphAlignment.Left),
                 new Col("", 1),
                 new Col("TEL", 3, ParagraphAlignment.Left),
-                new Col($": {order.TelefonoMedico}", 9, Col.FONT_BOLD, ParagraphAlignment.Left),
+                new Col($": {order.Telefono}", 4, Col.FONT_BOLD, ParagraphAlignment.Left),
+                new Col("", 5)
+
             };
             section.AddBorderedText(line4, right: true, left: true);
 
@@ -125,19 +130,10 @@ namespace Integration.Pdf.Service
 
             var line6 = new Col[]
             {
-                new Col("E-MAIL", 3, ParagraphAlignment.Left),
-                new Col($": {order.Correo}", 8, Col.FONT_BOLD, ParagraphAlignment.Left),
-                new Col("", 1),
-                new Col($"{order.EnvioPaciente}", 12, ParagraphAlignment.Left),
-            };
-            section.AddBorderedText(line6, right: true, left: true);
-
-            var line7 = new Col[]
-            {
                 new Col("OBS", 3, ParagraphAlignment.Left),
                 new Col($": {order.Observaciones}", 21, Col.FONT_BOLD, ParagraphAlignment.Left),
             };
-            section.AddBorderedText(line7, right: true, left: true, bottom: true);
+            section.AddBorderedText(line6, right: true, left: true, bottom: true);
 
             section.AddSpace(10);
 
@@ -187,6 +183,14 @@ namespace Integration.Pdf.Service
                 new Col(order.Cargo, 3, ParagraphAlignment.Right),
             };
             section.AddBorderedText(charge, right: true, left: true);
+
+            var cop = new Col[]
+            {
+                new Col("", 3),
+                new Col("COPAGO", 18, ParagraphAlignment.Left),
+                new Col(order.Copago, 3, ParagraphAlignment.Right),
+            };
+            section.AddBorderedText(cop, right: true, left: true);
 
 
             var points = new Col[]
