@@ -191,6 +191,7 @@
     <Compile Include="Dtos\PendingRecive\PendingSearchDto.cs" />
     <Compile Include="Dtos\PendingRecive\ReciveStudyDto.cs" />
     <Compile Include="Dtos\PendingRecive\StatusDto.cs" />
+    <Compile Include="Dtos\RequestOrderDto.cs" />
     <Compile Include="Dtos\RequestTagDto.cs" />
     <Compile Include="Dtos\RichTextFormatRAWDto.cs" />
     <Compile Include="Dtos\WorkListDto.cs" />
@@ -209,7 +210,7 @@
     <Compile Include="Models\MantainData.cs" />
     <Compile Include="Models\ReportData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Dtos\RequestOrderDto.cs" />
+    <Compile Include="Dtos\RequestTicketDto.cs" />
     <Compile Include="Service\CashRegisterService.cs" />
     <Compile Include="Service\LabResultsService.cs" />
     <Compile Include="Service\MantainService.cs" />
