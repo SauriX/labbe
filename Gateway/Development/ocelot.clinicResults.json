@@ -49,7 +49,7 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/clinicResults/updateResults",
+      "DownstreamPathTemplate": "/api/clinicResults/updateResults/{EnvioManual}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -57,7 +57,7 @@
           "Port": 24048
         }
       ],
-      "UpstreamPathTemplate": "/api/clinicResults/updateResults",
+      "UpstreamPathTemplate": "/api/clinicResults/updateResults/{EnvioManual}",
       "UpstreamHttpMethod": [ "PUT" ]
     },
     {
@@ -85,7 +85,7 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/clinicResults/updatePathological",
+      "DownstreamPathTemplate": "/api/clinicResults/updatePathological/{EnvioManual}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -93,7 +93,7 @@
           "Port": 24048
         }
       ],
-      "UpstreamPathTemplate": "/api/clinicResults/updatePathological",
+      "UpstreamPathTemplate": "/api/clinicResults/updatePathological/{EnvioManual}",
       "UpstreamHttpMethod": [ "PUT" ]
     },
     {

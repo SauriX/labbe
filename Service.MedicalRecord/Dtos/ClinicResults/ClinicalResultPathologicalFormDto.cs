@@ -22,5 +22,6 @@ namespace Service.MedicalRecord.Dtos.ClinicResults
         public string  DepartamentoEstudio { get; set; }
         public Guid UsuarioId { get; set; }
         public string Usuario { get; set; }
+        
     }
 }

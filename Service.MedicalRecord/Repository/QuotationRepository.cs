@@ -33,6 +33,7 @@ namespace Service.MedicalRecord.Repository
             var quotations = _context.CAT_Cotizacion
                 .Include(x => x.Expediente)
                 .Include(x => x.Estudios)
+                .OrderBy(x => x.FechaCreo)
                 .AsQueryable();
 
             if (filter.FechaAInicial != null && filter.FechaAFinal != null)

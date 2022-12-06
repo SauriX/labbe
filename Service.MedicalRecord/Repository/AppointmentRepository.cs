@@ -24,7 +24,7 @@ namespace Service.MedicalRecord.Repository
 
         public async Task<List<AppointmentLab>> GetAllLab(SearchAppointment search)
         {
-            var citasLab = _context.CAT_Cita_Lab.Include(x => x.Expediente).Include(x=> x.Estudios).AsQueryable();
+            var citasLab = _context.CAT_Cita_Lab.Include(x => x.Expediente).Include(x=> x.Estudios).OrderBy(x => x.FechaCreo).AsQueryable();
             if (!string.IsNullOrEmpty(search.nombre) || search.fecha.Length > 0)
             {
                 citasLab = citasLab.Where(x => x.NombrePaciente.Contains(search.nombre) || x.FechaCita.Date <= search.fecha[1].Date && x.FechaCreo.Date >= search.fecha[0].Date);
@@ -37,7 +37,7 @@ namespace Service.MedicalRecord.Repository
         }
         public async Task<List<AppointmentDom>> GetAllDom(SearchAppointment search)
         {
-            var citasDom = _context.CAT_Cita_Dom.Include(x=>x.Expediente).AsQueryable();
+            var citasDom = _context.CAT_Cita_Dom.Include(x=>x.Expediente).OrderBy(x => x.FechaCreo).AsQueryable();
             if (!string.IsNullOrEmpty(search.nombre) || search.fecha.Length > 0)
             {
                 citasDom = citasDom.Where(x => x.NombrePaciente.Contains(search.nombre) || x.FechaCita.Date <= search.fecha[1].Date && x.FechaCreo.Date >= search.fecha[0].Date);

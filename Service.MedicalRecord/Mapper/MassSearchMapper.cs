@@ -79,6 +79,7 @@ namespace Service.MedicalRecord.Mapper
                 Edad = x.Expediente.Edad,
                 Sexo = x.Expediente.Genero == "F" ? "Femenino" : "Masculino",
                 Compania = x.Compañia?.Nombre,
+                Parcialidad = x.Parcialidad ? "Sí" : "No",
                 Estudios = x.Estudios
                 .Where(y => y.EstatusId == Status.RequestStudy.Liberado || y.EstatusId == Status.RequestStudy.Enviado || y.EstatusId == Status.RequestStudy.Entregado)
                 .Select(y => new RequestsStudiesInfoDto {

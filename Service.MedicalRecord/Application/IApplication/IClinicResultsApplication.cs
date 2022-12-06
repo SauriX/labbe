@@ -17,9 +17,9 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<List<ClinicResultsDto>> GetAll(ClinicResultSearchDto search);
         Task<(byte[] file, string fileName)> ExportList(ClinicResultSearchDto search);
         Task SaveLabResults(List<ClinicResultsFormDto> results);
-        Task UpdateLabResults(List<ClinicResultsFormDto> results);
+        Task UpdateLabResults(List<ClinicResultsFormDto> results, bool EnvioManual);
         Task SaveResultPathologicalStudy(ClinicalResultPathologicalFormDto search);
-        Task UpdateResultPathologicalStudy(ClinicalResultPathologicalFormDto search);
+        Task UpdateResultPathologicalStudy(ClinicalResultPathologicalFormDto search, bool EnvioManual);
         Task SendResultFile(DeliverResultsStudiesDto estudios);
         Task UpdateStatusStudy(int RequestStudyId, byte status, string idUsuario);
         Task<ClinicResultsPathologicalInfoDto> GetResultPathological(int RequestStudyId);
