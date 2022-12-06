@@ -51,7 +51,7 @@ namespace Service.MedicalRecord.Mapper
             IEnumerable<TaxDataDto> data = null;
             if (taxdata.Count() > 0)
             {
-                data = model.TaxData?.Select(x => x.Factura)?.ToTaxDataDto();
+                data = model.TaxData?.Select(x => x.Factura)?.OrderBy(x=> x.FechaCreo)?.ToTaxDataDto();
             }
             return new MedicalRecordsFormDto
             {
