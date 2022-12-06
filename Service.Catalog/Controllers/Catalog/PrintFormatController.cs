@@ -10,34 +10,34 @@ namespace Service.Catalog.Controllers.Catalog
         [HttpGet("format/all/{search?}")]
         public async Task<IEnumerable<CatalogListDto>> GetAllFormat(string search = null)
         {
-            return await _FormatService.GetAll(search);
+            return await _formatService.GetAll(search);
 
         }
 
         [HttpGet("format/active")]
         public async Task<IEnumerable<CatalogListDto>> GetActiveFormat()
         {
-            return await _FormatService.GetActive();
+            return await _formatService.GetActive();
         }
 
         [HttpGet("format/{id}")]
         public async Task<CatalogFormDto> GetByIdFormat(int id)
         {
-            return await _FormatService.GetById(id);
+            return await _formatService.GetById(id);
         }
 
         [HttpPost("format")]
         public async Task<CatalogListDto> CreateFormat(CatalogFormDto catalog)
         {
             catalog.UsuarioId = System.Guid.NewGuid();
-            return await _FormatService.Create(catalog);
+            return await _formatService.Create(catalog);
         }
 
         [HttpPut("format")]
         public async Task<CatalogListDto> UpdateFormat(CatalogFormDto catalog)
         {
             catalog.UsuarioId = System.Guid.NewGuid();
-            return await _FormatService.Update(catalog);
+            return await _formatService.Update(catalog);
         }
     }
 }

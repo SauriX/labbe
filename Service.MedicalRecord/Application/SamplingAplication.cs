@@ -123,10 +123,12 @@ namespace Service.MedicalRecord.Application
                     if (study.EstatusId == Status.RequestStudy.Pendiente)
                     {
                         study.EstatusId = Status.RequestStudy.TomaDeMuestra;
+                        study.FechaTomaMuestra = DateTime.Now;
                     }
                     else
                     {
                         study.EstatusId = Status.RequestStudy.Pendiente;
+                        study.FechaPendiente = DateTime.Now;
                     }
                 }
                 studyCount += studies.Count;

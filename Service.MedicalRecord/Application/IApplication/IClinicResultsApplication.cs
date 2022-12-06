@@ -16,6 +16,7 @@ namespace Service.MedicalRecord.Application.IApplication
     {
         Task<List<ClinicResultsDto>> GetAll(ClinicResultSearchDto search);
         Task<(byte[] file, string fileName)> ExportList(ClinicResultSearchDto search);
+        Task<(byte[] file, string fileName)> ExportGlucoseChart(ClinicResultsFormDto result);
         Task SaveLabResults(List<ClinicResultsFormDto> results);
         Task UpdateLabResults(List<ClinicResultsFormDto> results, bool EnvioManual);
         Task SaveResultPathologicalStudy(ClinicalResultPathologicalFormDto search);

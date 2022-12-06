@@ -30,5 +30,10 @@ namespace Service.MedicalRecord.Dtos.Catalogs
         public string Opcion { get; set; }
         public string DescripcionTexto { get; set; }
         public string DescripcionParrafo { get; set; }
+        public string PrimeraColumna { get; set; }
+        public string SegundaColumna { get; set; }
+        public string TerceraColumna { get; set; }
+        public string CuartaColumna { get; set; }
+        public string QuintaColumna { get; set; } 
     }
 }

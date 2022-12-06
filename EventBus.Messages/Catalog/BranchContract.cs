@@ -8,9 +8,10 @@ namespace EventBus.Messages.Catalog
         {
         }
 
-        public BranchContract(Guid id, string clave, string nombre, string clinicos, string codigoPostal, short ciudadId)
+        public BranchContract(Guid id, string codigo, string clave, string nombre, string clinicos, string codigoPostal, short ciudadId)
         {
             Id = id;
+            Codigo = codigo;
             Clave = clave;
             Nombre = nombre;
             Clinicos = clinicos;
@@ -19,6 +20,7 @@ namespace EventBus.Messages.Catalog
         }
 
         public Guid Id { get; set; }
+        public string Codigo { get; set; }
         public string Clave { get; set; }
         public string Nombre { get; set; }
         public string Clinicos { get; set; }

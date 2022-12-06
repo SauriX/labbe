@@ -126,6 +126,87 @@ namespace Service.MedicalRecord.Application
 
             return (template.ToByteArray(), $"Informe Captura de Resultados (Clínicos).xlsx");
         }
+        
+        public async Task<(byte[] file, string fileName)> ExportGlucoseChart(ClinicResultsFormDto result)
+        {
+            var studies = await _repository.GetResultsById(result.SolicitudId);
+            var request = await _repository.GetRequestById(result.SolicitudId); 
+            var glucoseStudy = studies.Where(x => x.EstudioId == 631).Where(x => x.TipoValorId == "6" || x.TipoValorId == "1").Where(x => x.Clave != "_OB_CTG");
+
+            var path = Assets.ToleranciaGlucosa;
+
+            List<object> glucoseParams = new List<object>();
+
+            foreach(var param in glucoseStudy.OrderBy(x => x.Orden))
+            {
+                var numericResult = Convert.ToDecimal(param.Resultado);
+                if(param.Clave == "_GLU_SU")
+                {
+                    glucoseParams.Add(new
+                    {
+                        Estudio = "0",
+                        Resultado = numericResult
+                    });
+                }
+                if(param.Clave == "_GLU_SU30")
+                {
+                    glucoseParams.Add(new
+                    {
+                        Estudio = "30",
+                        Resultado = numericResult
+                    });
+                }if(param.Clave == "_GLU_SU60")
+                {
+                    glucoseParams.Add(new
+                    {
+                        Estudio = "60",
+                        Resultado = numericResult
+                    });
+                }
+                if(param.Clave == "_GLU_SU90")
+                {
+                    glucoseParams.Add(new
+                    {
+                        Estudio = "90",
+                        Resultado = numericResult
+                    });
+                }if(param.Clave == "_GLU_SU120")
+                {
+                    glucoseParams.Add(new
+                    {
+                        Estudio = "120",
+                        Resultado = numericResult
+                    });
+                }
+                if(param.Clave == "_GLU_SU180")
+                {
+                    glucoseParams.Add(new
+                    {
+                        Estudio = "180",
+                        Resultado = numericResult
+                    });
+                }if(param.Clave == "_GLU_SU240")
+                {
+                    glucoseParams.Add(new
+                    {
+                        Estudio = "240",
+                        Resultado = numericResult
+                    });
+                }
+            }
+
+            var template = new XLTemplate(path);
+
+            template.AddVariable("NombrePaciente", request.Expediente.NombreCompleto);
+            template.AddVariable("Medico", request.Medico.Nombre);
+            template.AddVariable("Fecha", DateTime.Now.ToString("f"));
+            template.AddVariable("Estudios", glucoseParams);
+
+            template.Generate();
+            template.Format();
+
+            return (template.ToByteArray(), $"Gráfica Curva de Tolerancia a Glucosa.xlsx");
+        }
 
         public async Task<List<ClinicResultsDto>> GetAll(ClinicResultSearchDto search)
         {
@@ -223,32 +304,35 @@ namespace Service.MedicalRecord.Application
                 foreach (var param in study.Parametros)
                 {
                     var result = results.Find(x => x.SolicitudEstudioId == study.Id && x.ParametroId.ToString() == param.Id);
-                    if (!string.IsNullOrWhiteSpace(result.Formula) && result.Resultado != null)
+                    if(result != null)
                     {
-                        param.Resultado = GetFormula(results.Where(x => x.SolicitudEstudioId == study.Id && x.Clave != null).ToList(), result.Formula);
-                    }
-                    else
-                    {
-                        if (result == null)
+                        if (!string.IsNullOrWhiteSpace(result.Formula) && result.Resultado != null)
                         {
-                            continue;
+                            param.Resultado = GetFormula(results.Where(x => x.SolicitudEstudioId == study.Id && x.Clave != null).ToList(), result.Formula);
                         }
+                        else
+                        {
+                            if (result == null)
+                            {
+                                continue;
+                            }
 
-                        param.Resultado = result.Resultado;
-                    }
-                    param.ResultadoId = result.Id.ToString();
-                    param.Formula = result.Formula;
+                            param.Resultado = result.Resultado;
+                        }
+                        param.ResultadoId = result.Id.ToString();
+                        param.Formula = result.Formula;
 
-                    if (param.DeltaCheck)
-                    {
-                        var listRequests = await _repository.GetSecondLastRequest(result.Solicitud.ExpedienteId);
-                        var previousResult = listRequests.Where(x => x.Id != result.SolicitudId)
-                            .Where(x => x.FechaCreo < result.Solicitud.FechaCreo)
-                            .SelectMany(x => x.Estudios)
-                            .Where(x => x.EstudioId == st.Id)
-                            .SelectMany(x => x.Resultados)
-                            .Where(x => x.ParametroId.ToString() == param.Id).FirstOrDefault()?.Resultado;
-                        param.UltimoResultado = previousResult == null ? null : previousResult;
+                        if (param.DeltaCheck)
+                        {
+                            var listRequests = await _repository.GetSecondLastRequest(result.Solicitud.ExpedienteId);
+                            var previousResult = listRequests.Where(x => x.Id != result.SolicitudId)
+                                .Where(x => x.FechaCreo < result.Solicitud.FechaCreo)
+                                .SelectMany(x => x.Estudios)
+                                .Where(x => x.EstudioId == st.Id)
+                                .SelectMany(x => x.Resultados)
+                                .Where(x => x.ParametroId.ToString() == param.Id).FirstOrDefault()?.Resultado;
+                            param.UltimoResultado = previousResult == null ? null : previousResult;
+                        }
                     }
 
                     if (param.TipoValores != null && param.TipoValores.Count != 0)
@@ -303,9 +387,11 @@ namespace Service.MedicalRecord.Application
                                 }
                                 break;
                             case "5":
-                                param.TipoValores = param.TipoValores;
-                                break;
                             case "6":
+                            case "11":
+                            case "12":
+                            case "13":
+                            case "14":
                                 param.TipoValores = param.TipoValores;
                                 break;
                             case "9":
@@ -971,7 +1057,7 @@ namespace Service.MedicalRecord.Application
         {
             StringBuilder message = new(formula);
 
-            foreach (var par in parameters)
+            foreach (var par in parameters.OrderByDescending(x => x.Clave.Length))
             {
                 message.Replace(par.Clave, par.Resultado);
             }

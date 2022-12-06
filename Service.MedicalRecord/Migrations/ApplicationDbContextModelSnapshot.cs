@@ -173,6 +173,9 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("Clinicos")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Codigo")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CodigoPostal")
                         .HasColumnType("nvarchar(max)");
 
@@ -974,6 +977,12 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<byte>("EstatusId")
                         .HasColumnType("tinyint");
 
+                    b.Property<Guid>("FacturaId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FacturapiId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
@@ -1079,6 +1088,9 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("FechaPendiente")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("FechaSolicitado")
                         .HasColumnType("smalldatetime");
 
@@ -1138,6 +1150,9 @@ namespace Service.MedicalRecord.Migrations
 
                     b.Property<Guid?>("UsuarioModificoId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UsuarioPendiente")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UsuarioSolicitado")
                         .HasColumnType("nvarchar(max)");

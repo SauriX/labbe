@@ -122,8 +122,8 @@ namespace Service.MedicalRecord.Repository
         public async Task<string> GetLastCode(string date)
         {
             var lastRequest = await _context.CAT_Cotizacion
-                .OrderBy(x => x.FechaCreo)
-                .LastOrDefaultAsync(x => x.Clave.EndsWith(date));
+                .OrderByDescending(x => x.FechaCreo)
+                .FirstOrDefaultAsync(x => x.Clave.StartsWith(date));
 
             return lastRequest?.Clave;
         }

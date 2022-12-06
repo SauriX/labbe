@@ -41,6 +41,14 @@ namespace Service.MedicalRecord.Controllers
             var (file, fileName) = await _service.ExportList(search);
             return File(file, MimeType.XLSX, fileName);
         }
+        
+        [HttpPost("export/glucose")]
+        [Authorize(Policies.Download)]
+        public async Task<IActionResult> ExportGlucoseChart(ClinicResultsFormDto results)
+        {
+            var (file, fileName) = await _service.ExportGlucoseChart(results);
+            return File(file, MimeType.XLSX, fileName);
+        }
 
         [HttpPost("saveResults")]
         [Authorize(Policies.Create)]

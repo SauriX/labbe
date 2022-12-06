@@ -33,6 +33,7 @@
         public const string ShipmentTracking = "ShipmentTracking";
         public const string MassSearch = "MassSearch";
         public const string Sampling = "Sampling";
+        public const string RelaseResult = "RelaseResult";
 
     }
 }

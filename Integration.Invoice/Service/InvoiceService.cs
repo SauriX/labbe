@@ -12,7 +12,7 @@ namespace Integration.Invoice.Service
     {
         const string API_KEY = "sk_test_jrKzRvqdg87nNoa6E0WBknQG7rJp1xlDwVyeGBAZ34";
 
-        public static async Task<Facturapi.Invoice> Create(FacturapiDto data)
+        public static async Task<FacturapiDto> Create(FacturapiDto data)
         {
             var facturapi = new FacturapiClient(API_KEY);
 
@@ -66,7 +66,9 @@ namespace Integration.Invoice.Service
 
             var invoice = await facturapi.Invoice.CreateAsync(invoiceData);
 
-            return invoice;
+            data.FacturapiId = invoice.Id;
+
+            return data;
         }
 
         public static async Task<Facturapi.Invoice> GetById(string invoiceId)

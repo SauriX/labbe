@@ -2,6 +2,7 @@
 using ClosedXML.Report;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dictionary;
+using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Dtos.Catalog;
 using Service.Catalog.Mapper;
 using Service.Catalog.Repository.IRepository;
@@ -59,6 +60,8 @@ namespace Service.Catalog.Application
 
             var newDimension = dimension.ToModel();
 
+            await CheckDuplicate(newDimension);
+
             await _repository.Create(newDimension);
 
             return newDimension.ToDimensionListDto();
@@ -73,11 +76,13 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
 
-            var updatedAgent = dimension.ToModel(existing);
+            var updatedDimension = dimension.ToModel(existing);
 
-            await _repository.Update(updatedAgent);
+            await CheckDuplicate(updatedDimension);
 
-            return updatedAgent.ToDimensionListDto();
+            await _repository.Update(updatedDimension);
+
+            return updatedDimension.ToDimensionListDto();
         }
 
         public async Task<byte[]> ExportList(string search)
@@ -124,6 +129,16 @@ namespace Service.Catalog.Application
             template.Format();
 
             return (template.ToByteArray(), catalog.Clave);
+        }
+
+        private async Task CheckDuplicate(Dimension dimension)
+        {
+            var isDuplicate = await _repository.IsDuplicate(dimension);
+
+            if (isDuplicate)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave"));
+            }
         }
     }
 }

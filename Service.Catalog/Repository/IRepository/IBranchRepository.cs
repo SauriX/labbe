@@ -17,6 +17,7 @@ namespace Service.Catalog.Repository.IRepository
         Task<List<Branch>> GetBranchByCity();
         Task<List<BranchFolioConfig>> GetConfigByState(byte stateId);
         Task<BranchFolioConfig> GetLastConfig();
+        Task<string> GetLastConsecutive();
         Task CreateConfig(BranchFolioConfig config);
         Task<bool> HasMatriz(Branch branch);
     }

@@ -145,6 +145,18 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
+      "DownstreamPathTemplate": "/api/request/payment/checkin",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/request/payment/checkin",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/request/general",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -253,7 +265,7 @@
       "UpstreamHttpMethod": [ "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/api/request/ticket/{recordId}/{requestId}",
+      "DownstreamPathTemplate": "/api/request/ticket/{recordId}/{requestId}/{paymentId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -261,7 +273,7 @@
           "Port": 24048
         }
       ],
-      "UpstreamPathTemplate": "/api/request/ticket/{recordId}/{requestId}",
+      "UpstreamPathTemplate": "/api/request/ticket/{recordId}/{requestId}/{paymentId}",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {

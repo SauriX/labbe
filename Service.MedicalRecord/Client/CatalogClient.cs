@@ -45,7 +45,7 @@ namespace Service.MedicalRecord.Client
                     return await response.Content.ReadFromJsonAsync<string>();
                 }
 
-                var error = await response.Content.ReadFromJsonAsync<ServerException>();
+                var error = await response.Content.ReadFromJsonAsync<ClientException>();
 
                 var ex = Exceptions.GetException(error);
 
@@ -108,7 +108,7 @@ namespace Service.MedicalRecord.Client
                     return await response.Content.ReadFromJsonAsync<List<RequestStudyParamsDto>>();
                 }
 
-                var error = await response.Content.ReadFromJsonAsync<ServerException>();
+                var error = await response.Content.ReadFromJsonAsync<ClientException>();
 
                 var ex = Exceptions.GetException(error);
 
@@ -135,7 +135,7 @@ namespace Service.MedicalRecord.Client
                     return await response.Content.ReadFromJsonAsync<List<PriceListInfoPromoDto>>();
                 }
 
-                var error = await response.Content.ReadFromJsonAsync<ServerException>();
+                var error = await response.Content.ReadFromJsonAsync<ClientException>();
 
                 var ex = Exceptions.GetException(error);
 
@@ -162,7 +162,7 @@ namespace Service.MedicalRecord.Client
                     return await response.Content.ReadFromJsonAsync<List<PriceListInfoPromoDto>>();
                 }
 
-                var error = await response.Content.ReadFromJsonAsync<ServerException>();
+                var error = await response.Content.ReadFromJsonAsync<ClientException>();
 
                 var ex = Exceptions.GetException(error);
 
@@ -189,7 +189,7 @@ namespace Service.MedicalRecord.Client
                     return await response.Content.ReadFromJsonAsync<List<RequestStudyDto>>();
                 }
 
-                var error = await response.Content.ReadFromJsonAsync<ServerException>();
+                var error = await response.Content.ReadFromJsonAsync<ClientException>();
 
                 //var ex = Exceptions.GetException(error);
 
