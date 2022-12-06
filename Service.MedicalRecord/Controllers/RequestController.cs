@@ -254,7 +254,7 @@ namespace Service.MedicalRecord.Controllers
         }
 
         [HttpPost("tags/{recordId}/{requestId}")]
-        [Authorize(Policies.Print)]
+        [Authorize(Policies.Download)]
         public async Task<IActionResult> PrintTags(Guid recordId, Guid requestId, List<RequestTagDto> tags)
         {
             var file = await _service.PrintTags(recordId, requestId, tags);

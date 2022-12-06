@@ -9,7 +9,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/MedicalRecord/all",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamhttpsMethod": [ "GET" ]
     },
     {
       "DownstreamPathTemplate": "/LabRamos/services/records/api/MedicalRecord/now",
@@ -20,7 +20,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/MedicalRecord/now",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamhttpsMethod": [ "POST" ]
     },
     {
       "DownstreamPathTemplate": "/LabRamos/services/records/api/MedicalRecord/coincidencias",
@@ -31,7 +31,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/MedicalRecord/coincidencias",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamhttpsMethod": [ "POST" ]
     },
     {
       "DownstreamPathTemplate": "/LabRamos/services/records/api/MedicalRecord/active",
@@ -42,7 +42,18 @@
         }
       ],
       "UpstreamPathTemplate": "/api/MedicalRecord/active",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamhttpsMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/MedicalRecord/taxData/{recordId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/MedicalRecord/taxData/{recordId}",
+      "UpstreamhttpsMethod": [ "GET" ]
     },
     {
       "DownstreamPathTemplate": "/LabRamos/services/records/api/MedicalRecord/{id}",
@@ -53,7 +64,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/MedicalRecord/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamhttpsMethod": [ "GET" ]
     },
     {
       "DownstreamPathTemplate": "/LabRamos/services/records/api/MedicalRecord",
@@ -64,7 +75,29 @@
         }
       ],
       "UpstreamPathTemplate": "/api/MedicalRecord",
-      "UpstreamHttpMethod": [ "POST", "PUT" ]
+      "UpstreamhttpsMethod": [ "POST", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/MedicalRecord/taxData",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/MedicalRecord/taxData",
+      "UpstreamhttpsMethod": [ "POST", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/MedicalRecord/updateWallet",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/MedicalRecord/updateWallet",
+      "UpstreamhttpsMethod": [ "POST", "PUT" ]
     },
     {
       "DownstreamPathTemplate": "/LabRamos/services/records/api/MedicalRecord/export/list",
@@ -75,7 +108,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/MedicalRecord/export/list",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamhttpsMethod": [ "POST" ]
     },
     {
       "DownstreamPathTemplate": "/LabRamos/services/records/api/MedicalRecord/export/form/{id}",
@@ -86,7 +119,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/MedicalRecord/export/form/{id}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamhttpsMethod": [ "POST" ]
     }
   ]
 }
