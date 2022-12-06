@@ -193,6 +193,14 @@ namespace Service.MedicalRecord.Repository
             return expedientes;
         }
 
+        public async Task<List<Domain.MedicalRecord.MedicalRecord>> GetRecordsByIds(List<Guid> records)
+        {
+            var medicalRecords = await _context.CAT_Expedientes
+                .Where(x => records.Contains(x.Id))
+                .ToListAsync();
+
+            return medicalRecords;
+        }
 
     }
 }
