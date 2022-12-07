@@ -88,13 +88,12 @@ namespace Service.MedicalRecord.Repository
             {
                 report = report.Where(x => search.TipoSoli.Contains(x.Urgencia));
             }
-
-            if (search.Area != null && search.Area.Count > 0)
+            if (search.Area != null && search.Area > 0)
             {
-                report = report.Where(x => x.Estudios.Any(y => search.Area.Contains(y.AreaId)));
+                report = report.Where(x => x.Estudios.Any(y => search.Area == y.AreaId));
             }
 
-            return  report.ToList();
+            return report.ToList();
         }
 
         public async Task<List<RequestStudy>> GetStudyById(Guid requestId, IEnumerable<int> studiesIds)
