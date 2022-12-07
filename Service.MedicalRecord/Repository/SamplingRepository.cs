@@ -31,7 +31,7 @@ namespace Service.MedicalRecord.Repository
 
         public async Task<List<Request>> GetAll(RequestedStudySearchDto search)
         {
-            var report = _context.CAT_Solicitud.Where(x => x.Estudios != null)
+            var report = _context.CAT_Solicitud.Where(x => x.Estudios.Count > 0)
                 .Include(x => x.Expediente)
                 .Include(x => x.Medico)
                 .Include(x => x.Estudios).ThenInclude(x => x.Estatus)

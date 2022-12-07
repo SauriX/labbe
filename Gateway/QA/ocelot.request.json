@@ -232,14 +232,14 @@
       "UpstreamHttpMethod": [ "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/records/api/request/ticket/{recordId}/{requestId}",
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/request/ticket/{recordId}/{requestId}/{paymentId}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/request/ticket/{recordId}/{requestId}",
+      "UpstreamPathTemplate": "/api/request/ticket/{recordId}/{requestId}/{paymentId}",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {

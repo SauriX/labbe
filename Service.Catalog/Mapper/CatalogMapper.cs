@@ -33,6 +33,19 @@ namespace Service.Catalog.Mapper
                 Activo = x.Activo,
             });
         }
+        
+        public static IEnumerable<CatalogListDto> ToBudgetDto(this IEnumerable<Budget> model)
+        {
+            if (model == null) return null;
+
+            return model.Select(x => new CatalogListDto
+            {
+                Id = x.Id,
+                Clave = x.Clave,
+                Nombre = x.Nombre,
+                Activo = x.Activo,
+            });
+        }
 
         public static IEnumerable<CatalogListDto> ToCatalogListDto<T>(this List<T> model) where T : GenericCatalog
         {

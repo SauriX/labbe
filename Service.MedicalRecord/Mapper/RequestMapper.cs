@@ -133,40 +133,96 @@ namespace Service.MedicalRecord.Mapper
             return model.Select(x => x.ToRequestPaymentDto());
         }
 
-        public static RequestOrderDto ToRequestOrderDto(this Request model)
+        public static RequestTicketDto ToRequestTicketDto(this Request model, RequestPayment payment, List<RequestPayment> payments, string userName)
         {
             if (model == null) return null;
 
-            var studies = model.Paquetes?.SelectMany(x => x.Estudios)?.ToList() ?? new List<RequestStudy>();
-            studies.AddRange(model.Estudios ?? new List<RequestStudy>());
+            return new RequestTicketDto
+            {
+                DireccionSucursal = "Laboratorio Alfonso Ramos, S.A. de C.V. Avenida Humberto Lobo #555 A, Col. del Valle C.P. 66220 San Pedro Garza García, Nuevo León.",
+                Contacto = "Tel/WhatsApp: 81 4170 0769 RFC: LAR900731TL0",
+                Sucursal = $"SUCURSAL {model.Sucursal.Nombre}", // "SUCURSAL MONTERREY"
+                Folio = payment.Serie + "-" + payment.Numero,
+                Fecha = DateTime.Now.ToString("dd/MM/yyyy"),
+                Atiende = userName.ToUpper(),
+                Paciente = model.Expediente.NombreCompleto.ToUpper(),
+                Expediente = model.Expediente.Expediente,
+                FechaNacimiento = model.Expediente.FechaDeNacimiento.ToString("dd/MM/yyyy"),
+                Solicitud = model.Clave,
+                FechaEntrega = "",
+                Medico = model.Medico?.Nombre?.ToUpper(),
+                FormaPago = payment.FormaPago.Split(" ", 2)[1],
+                Subtotal = model.TotalEstudios.ToString("C"),
+                Descuento = model.Descuento.ToString("C"),
+                IVA = (model.TotalEstudios * .16m).ToString("C"),
+                Total = model.Total.ToString("C"),
+                Anticipo = payments.Sum(x => x.Cantidad).ToString("C"),
+                Saldo = (model.Total - payments.Sum(x => x.Cantidad)).ToString("C"),
+                PagoLetra = "",
+                MonederoUtilizado = 0.ToString("C"),
+                MonederoGenerado = 0.ToString("C"),
+                MonederoAcumulado = 0.ToString("C"),
+                CodigoPago = payment.Serie + "-" + payment.Numero,
+                Usuario = "",
+                Contraseña = "",
+                ContactoTelefono = "",
+                Estudios = model.Paquetes.Select(x => new RequestTicketStudyDto
+                {
+                    Cantidad = "1",
+                    Clave = x.Clave,
+                    Estudio = x.Nombre,
+                    Precio = x.Precio.ToString("F"),
+                    Descuento = x.Descuento.ToString("F"),
+                    Total = x.PrecioFinal.ToString("F"),
+                }).Concat(model.Estudios.Select(x => new RequestTicketStudyDto
+                {
+                    Cantidad = "1",
+                    Clave = x.Clave,
+                    Estudio = x.Nombre,
+                    Precio = x.Precio.ToString("F"),
+                    Descuento = x.Descuento.ToString("F"),
+                    Total = x.PrecioFinal.ToString("F"),
+                })).ToList()
+            };
+        }
+
+        public static RequestOrderDto ToRequestOrderDto(this Request model, string userName)
+        {
+            if (model == null) return null;
 
             return new RequestOrderDto
             {
-                Clave = model.Clave,
-                Sucursal = model.Sucursal.Nombre,
-                FechaVenta = DateTime.Now.ToString("yyyy-MM-dd"),
+                Sucursal = model.Sucursal.Nombre.ToUpper(),
+                Solicitud = model.Clave,
+                Fecha = DateTime.Now.ToString("dd/MM/yyyy"),
                 FechaSolicitud = model.FechaCreo.ToString("dd/MM/yyyy"),
-                Fecha = model.FechaCreo.ToString("dd/MM/yyyy"),
-                Personal = model.UsuarioCreo,
-                Paciente = model.Expediente.NombreCompleto,
-                FechaNacimiento = model.Expediente.FechaDeNacimiento.ToString("dd-MM-yyyy"),
+                FechaNacimiento = model.Expediente.FechaDeNacimiento.ToString("dd/MM/yyyy"),
                 Edad = model.Expediente.Edad.ToString(),
+                Paciente = model.Expediente.NombreCompleto.ToUpper(),
                 Sexo = model.Expediente.Genero,
-                TelefonoPaciente = model.EnvioWhatsApp ?? model.Expediente.Telefono,
-                Expediente = model.Expediente.Expediente,
-                Medico = model.Medico?.Nombre,
-                Compañia = model.Procedencia == PARTICULAR ? "Particular" : model.Compañia?.Nombre,
-                Correo = model.EnvioCorreo,
-                Observaciones = model.Observaciones,
+                Telefono = model.Expediente.Telefono,
+                Celular = model.Expediente.Celular,
+                Correo = model.Expediente.Correo?.ToUpper(),
+                Medico = model.Medico?.Nombre?.ToUpper(),
+                Compañia = model.Compañia?.Nombre?.ToUpper(),
+                Observaciones = model.Observaciones?.ToUpper(),
+                Descuento = model.Descuento.ToString("C"),
+                Cargo = model.Cargo.ToString("C"),
+                Copago = model.Copago.ToString("C"),
+                PuntosAplicados = 0.ToString(),
                 Total = model.Total.ToString("C"),
-                Descuento = model.DescuentoTipo == DESCUENTO_DINERO ? model.Descuento.ToString("C") : (model.TotalEstudios * model.Descuento).ToString("C"),
-                Cargo = model.CargoTipo == DESCUENTO_DINERO ? model.Cargo.ToString("C") : (model.TotalEstudios * model.Cargo).ToString("C"),
-                Estudios = studies.Select(x => new RequestOrderStudyDto
+                Atiende = userName.ToUpper(),
+                Estudios = model.Paquetes.Select(x => new RequestOrderStudyDto
                 {
                     Clave = x.Clave,
                     Estudio = x.Nombre,
-                    Precio = x.Precio.ToString("C")
-                }).ToList()
+                    Precio = x.PrecioFinal.ToString("C"),
+                }).Concat(model.Estudios.Select(x => new RequestOrderStudyDto
+                {
+                    Clave = x.Clave,
+                    Estudio = x.Nombre,
+                    Precio = x.PrecioFinal.ToString("C"),
+                })).ToList()
             };
         }
 

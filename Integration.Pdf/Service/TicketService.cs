@@ -1,6 +1,7 @@
 ﻿using Integration.Pdf.Dtos;
 using Integration.Pdf.Extensions;
 using Integration.Pdf.Models;
+using Integration.Pdf.Utils;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
 using System;
@@ -13,11 +14,10 @@ namespace Integration.Pdf.Service
 {
     public class TicketService
     {
-        public static byte[] Generate(RequestOrderDto order)
+        public static byte[] Generate(RequestTicketDto order)
         {
             Document document = CreateDocument(order);
 
-            //document.UseCmykColor = true;
             const bool unicode = false;
 
             DocumentRenderer renderer = new DocumentRenderer(document);
@@ -44,7 +44,7 @@ namespace Integration.Pdf.Service
             return buffer;
         }
 
-        static Document CreateDocument(RequestOrderDto order)
+        static Document CreateDocument(RequestTicketDto order)
         {
             Document document = new Document();
 
@@ -66,95 +66,103 @@ namespace Integration.Pdf.Service
             return document;
         }
 
-        static void Format(Section section, RequestOrderDto order)
+        static void Format(Section section, RequestTicketDto ticket)
         {
-            var branchInfo = new Col("Laboratorio Alfonso Ramos, S.A. de C.V. Avenida Humberto Lobo #555 A, Col. del Valle C.P. 66220 San Pedro Garza García, Nuevo León.");
+            var branchInfo = new Col($"Laboratorio Alfonso Ramos, S.A. de C.V. {ticket.DireccionSucursal}");
             section.AddText(branchInfo);
 
-            var phoneInfo = new Col("Tel/WhatsApp: 81 4170 0769 RFC: LAR900731TL0");
+            var phoneInfo = new Col(ticket.Contacto);
             section.AddText(phoneInfo);
 
-            var branchName = new Col("SUCURSAL MONTERREY", Col.FONT_BOLD);
+            var branchName = new Col(ticket.Sucursal, Col.FONT_BOLD);
             section.AddText(branchName);
 
-            var folio = new Col("FOLIO: MT-7463");
-            var date = new Col("FECHA: 2022-02-17");
+            var folio = new Col($"FOLIO: {ticket.Folio}");
+            var date = new Col($"FECHA: {ticket.Fecha}");
             section.AddText(new[] { folio, date }, partialBold: true);
 
             section.AddDivider();
 
-            var attendant = new Col($"QUIEN ATIENDE: {order.Atiende}", Col.FONT_BOLD, ParagraphAlignment.Left);
+            var attendant = new Col($"QUIEN ATIENDE: {ticket.Atiende}", Col.FONT_BOLD, ParagraphAlignment.Left);
             section.AddText(attendant);
 
             section.AddDivider();
 
-            var user = new Col($"PACIENTE: {order.Paciente}");
-            var userId = new Col($"ID PACIENTE: {order.Clave}");
+            var user = new Col($"PACIENTE: {ticket.Paciente}");
+            var userId = new Col($"ID PACIENTE: {ticket.Expediente}");
             section.AddText(new[] { user, userId });
 
-            var birthdate = new Col($"FECHA NACIMIENTO: {order.FechaNacimiento}");
+            var birthdate = new Col($"FECHA NACIMIENTO: {ticket.FechaNacimiento}");
             section.AddText(birthdate, partialBold: true);
 
-            var exp = new Col("EXPEDIENTE:2202178006");
-            var code = new Col("CÓDIGO:2202178007");
+            var exp = new Col($"EXPEDIENTE: {ticket.Expediente}");
+            var code = new Col($"CÓDIGO: {ticket.Solicitud}");
             section.AddText(new[] { exp, code }, partialBold: true);
 
-            var deliveryDate = new Col("FECHA ENTREGA:18-02-2022 05:00:00 PM");
+            var deliveryDate = new Col($"FECHA ENTREGA: {ticket.FechaEntrega}");
             section.AddText(deliveryDate, partialBold: true);
 
-            var doctor = new Col("MÉDICO:JUAN MANUEL PONCE");
+            var doctor = new Col($"MÉDICO: {ticket.Medico}");
             section.AddText(doctor, partialBold: true);
 
             section.AddDivider();
 
-            var colDesc = new Col("DESC", 3, Col.FONT_BOLD);
-            var colQty = new Col("CANT", 1, Col.FONT_BOLD);
-            var colSub = new Col("SUB", 1, Col.FONT_BOLD);
-            var colDisc = new Col("DES", 1, Col.FONT_BOLD);
-            var colTotal = new Col("TOTAL", 1, Col.FONT_BOLD);
+            var detailHeader = new Col[]
+            {
+                new Col("DESC", 3, Col.FONT_BOLD),
+                new Col("CANT", 1, Col.FONT_BOLD),
+                new Col("SUB", 1, Col.FONT_BOLD),
+                new Col("DES", 1, Col.FONT_BOLD),
+                new Col("TOTAL", 1, Col.FONT_BOLD)
+            };
+            section.AddText(detailHeader);
 
-            section.AddText(new[] { colDesc, colQty, colSub, colDisc, colTotal });
-
-            var studies = GetStudies();
-
-            foreach (var study in studies)
+            foreach (var study in ticket.Estudios)
             {
                 section.AddText(
                     new[] {
-                        new Col(study.Descripcion + " " + $"({study.Codigo})", 3, ParagraphAlignment.Left),
-                        new Col(study.Cantidad.ToString(), 1),
-                        new Col(study.SubTotal.ToString("F"), 1),
-                        new Col(study.Descuento.ToString("F"), 1),
-                        new Col(study.Total.ToString("F"), 1)
+                        new Col(study.Estudio + " " + $"({study.Clave})", 3, ParagraphAlignment.Left),
+                        new Col(study.Cantidad, 1),
+                        new Col(study.Precio, 1),
+                        new Col(study.Descuento, 1),
+                        new Col(study.Total, 1)
                     });
             }
 
             section.AddDivider();
 
-            var paymentType = new Col("FORMA DE PAGO: TARJETA DE DEBITO", Col.FONT_BOLD);
+            var paymentType = new Col($"FORMA DE PAGO: {ticket.FormaPago}", Col.FONT_BOLD);
             section.AddText(paymentType);
 
-            section.AddText(new[] { new Col("SUBTOTAL", 1, ParagraphAlignment.Left), new Col("$ 150.80", 1, ParagraphAlignment.Right), new Col("") });
-            section.AddText(new[] { new Col("DESCUENTO", 1, ParagraphAlignment.Left), new Col("$ 0.00", 1, ParagraphAlignment.Right), new Col("") });
-            section.AddText(new[] { new Col("IVA", 1, ParagraphAlignment.Left), new Col("$ 24.14", 1, ParagraphAlignment.Right), new Col("") });
-            section.AddText(new[] { new Col("TOTAL", 1, ParagraphAlignment.Left), new Col("$ 175.00", 1, ParagraphAlignment.Right), new Col("") });
-            section.AddText(new[] { new Col("ANTICIPO", 1, ParagraphAlignment.Left), new Col("$ 175.00", 1, ParagraphAlignment.Right), new Col("") });
-            section.AddText(new[] { new Col("SALDO", 1, ParagraphAlignment.Left), new Col("$ 0.00", 1, ParagraphAlignment.Right), new Col("") });
+            section.AddText(new[] { new Col("SUBTOTAL", 1, ParagraphAlignment.Left), new Col(ticket.Subtotal, 1, ParagraphAlignment.Right), new Col("") });
+            section.AddText(new[] { new Col("DESCUENTO", 1, ParagraphAlignment.Left), new Col(ticket.Descuento, 1, ParagraphAlignment.Right), new Col("") });
+            section.AddText(new[] { new Col("IVA", 1, ParagraphAlignment.Left), new Col(ticket.IVA, 1, ParagraphAlignment.Right), new Col("") });
+            section.AddText(new[] { new Col("TOTAL", 1, ParagraphAlignment.Left), new Col(ticket.Total, 1, ParagraphAlignment.Right), new Col("") });
+            section.AddText(new[] { new Col("ANTICIPO", 1, ParagraphAlignment.Left), new Col(ticket.Anticipo, 1, ParagraphAlignment.Right), new Col("") });
+            section.AddText(new[] { new Col("SALDO", 1, ParagraphAlignment.Left), new Col(ticket.Saldo, 1, ParagraphAlignment.Right), new Col("") });
 
-            var totalString = new Col("SON: CIENTO SETENTA Y CINCO PESOS 00/100 M.N");
-            section.AddText(totalString);
+            //var totalString = new Col("SON: CIENTO SETENTA Y CINCO PESOS 00/100 M.N");
+            //section.AddText(totalString);
 
             var mon = new Col("*Monedero Electrónico*", Col.FONT_BOLD);
             section.AddText(mon);
 
-            var used = new Col("Utilizados: $ 00.00", ParagraphAlignment.Center);
-            var gen = new Col("Generados: $ 75.25", ParagraphAlignment.Center);
+            var used = new Col($"Utilizados: {ticket.MonederoUtilizado}", ParagraphAlignment.Center);
+            var gen = new Col($"Generados: {ticket.MonederoGenerado}", ParagraphAlignment.Center);
             section.AddText(new[] { used, gen }, partialBold: true);
 
-            var acc = new Col("Acumulado: $ 75.25", ParagraphAlignment.Center);
+            var acc = new Col($"Acumulado: {ticket.MonederoAcumulado}", ParagraphAlignment.Center);
             section.AddText(acc, partialBold: true);
 
             section.AddDivider();
+
+            //byte[] barcodeImage = BarCode.Generate(ticket.CodigoPago, 150, 28, BarcodeFormat.CODE_128);
+            //string imageFilename = barcodeImage.MigraDocFilenameFromByteArray();
+
+            //var imgPar = section.AddParagraph();
+            //imgPar.Format.Alignment = ParagraphAlignment.Center;
+            //var barcode = imgPar.AddImage(imageFilename);
+            //barcode.Width = Unit.FromCentimeter(7);
 
             BarcodeWriter<Bitmap> writer = new BarcodeWriter<Bitmap>()
             {
@@ -167,7 +175,7 @@ namespace Integration.Pdf.Service
 
             writer.Options = new ZXing.Common.EncodingOptions { Width = barWidth, Height = barHeight, Margin = 0, PureBarcode = true };
 
-            var bitmap = writer.Write("USUARIO:2202178006");
+            var bitmap = writer.Write(ticket.CodigoPago);
 
             ImageConverter converter = new ImageConverter();
             var image = (byte[])converter.ConvertTo(bitmap, typeof(byte[]));
@@ -181,14 +189,14 @@ namespace Integration.Pdf.Service
             var page = new Col("Consulta tus resultados en línea en la página web: www.laboratoriosramos.com.mx con los siguientes datos:");
             section.AddText(page);
 
-            var us = new Col("USUARIO: 2202178006", Col.FONT_BOLD, ParagraphAlignment.Center);
-            var pass = new Col("CONTRASEÑA: F12D8", Col.FONT_BOLD, ParagraphAlignment.Center);
+            var us = new Col($"USUARIO: {ticket.Usuario}", Col.FONT_BOLD, ParagraphAlignment.Center);
+            var pass = new Col($"CONTRASEÑA: {ticket.Contraseña}", Col.FONT_BOLD, ParagraphAlignment.Center);
             section.AddText(new[] { us, pass });
 
             var wa = new Col("*También puedes solicitar tus resultados vía WhatsApp*", Col.FONT_BOLD);
             section.AddText(wa);
 
-            var con = new Col("Contacto: 81 4170 0769", Col.FONT_BOLD);
+            var con = new Col($"Contacto: {ticket.ContactoTelefono}", Col.FONT_BOLD);
             section.AddText(con);
 
             var inf = new Col("TE INVITAMOS A SOLICITAR U OBTENER TU COMPROBANTE FISCAL DURANTE EL MES EN EL QUE SE RELALIZA EL SERVICIO Y COMO MÁXIMO LOS PRIMEROS DOS DIAS NATURALES DEL SIGUIENTE MES, ESTE SE PODRA DESCARGAREN LA PAGINA WEB.", Col.FONT_BOLD, ParagraphAlignment.Justify);
@@ -208,101 +216,6 @@ namespace Integration.Pdf.Service
             public decimal Descuento { get; set; }
             public decimal IVA { get; set; }
             public decimal Total { get; set; }
-        }
-
-        public static List<Info> GetStudies()
-        {
-            return new List<Info>
-            {
-                new Info
-                {
-                    Codigo = "ETX",
-                    Descripcion = "TELERADIOGRAFIA DE TORAX",
-                    Cantidad = 1,
-                    SubTotal = 150.86m,
-                    Impuestos = 15.45m,
-                    Descuento = 0m,
-                    IVA = 5.3m,
-                    Total = 175,
-                },
-                new Info
-                {
-                    Codigo = "TEZ",
-                    Descripcion = "TELERADIO GRAFIA DE TORAX",
-                    Cantidad = 1,
-                    SubTotal = 150.86m,
-                    Impuestos = 15.45m,
-                    Descuento = 0m,
-                    IVA = 5.3m,
-                    Total = 175,
-                },
-                new Info
-                {
-                    Codigo = "ETX",
-                    Descripcion = "TELERADIOGRAFIA DE TORAX",
-                    Cantidad = 1,
-                    SubTotal = 150.86m,
-                    Impuestos = 15.45m,
-                    Descuento = 0m,
-                    IVA = 5.3m,
-                    Total = 175,
-                },
-                new Info
-                {
-                    Codigo = "TEZ",
-                    Descripcion = "TELERADIO GRAFIA DE TORAX",
-                    Cantidad = 1,
-                    SubTotal = 150.86m,
-                    Impuestos = 15.45m,
-                    Descuento = 0m,
-                    IVA = 5.3m,
-                    Total = 175,
-                },
-                new Info
-                {
-                    Codigo = "ETX",
-                    Descripcion = "TELERADIOGRAFIA DE TORAX",
-                    Cantidad = 1,
-                    SubTotal = 150.86m,
-                    Impuestos = 15.45m,
-                    Descuento = 0m,
-                    IVA = 5.3m,
-                    Total = 175,
-                },
-                new Info
-                {
-                    Codigo = "TEZ",
-                    Descripcion = "TELERADIO GRAFIA DE TORAX",
-                    Cantidad = 1,
-                    SubTotal = 150.86m,
-                    Impuestos = 15.45m,
-                    Descuento = 0m,
-                    IVA = 5.3m,
-                    Total = 175,
-                },
-                new Info
-                {
-                    Codigo = "ETX",
-                    Descripcion = "TELERADIOGRAFIA DE TORAX",
-                    Cantidad = 1,
-                    SubTotal = 150.86m,
-                    Impuestos = 15.45m,
-                    Descuento = 0m,
-                    IVA = 5.3m,
-                    Total = 175,
-                },
-                new Info
-                {
-                    Codigo = "TEZ",
-                    Descripcion = "TELERADIO GRAFIA DE TORAX",
-                    Cantidad = 1,
-                    SubTotal = 150.86m,
-                    Impuestos = 15.45m,
-                    Descuento = 0m,
-                    IVA = 5.3m,
-                    Total = 175,
-                },
-            };
         }
     }
 }

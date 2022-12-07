@@ -19,6 +19,7 @@ namespace Service.MedicalRecord.Dtos.Sampling
         public Guid SolicitudId { get; set; }
         public string FechaActualizacion { get; set; }
         public string UsuarioActualizacion { get; set; }
+        public byte Urgencia { get; set; }
         public List<StudyParamsDto> Parametros { get; set; }
     }
 

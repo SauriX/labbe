@@ -32,7 +32,7 @@ namespace Service.MedicalRecord.Repository
 
         public async Task<List<Request>> GetAll(RequestedStudySearchDto search)
         {
-            var report = _context.CAT_Solicitud.Where(x => x.Estudios != null)
+            var report = _context.CAT_Solicitud
                 .Include(x => x.Expediente)
                 .Include(x => x.Medico)
                 .Include(x => x.Estudios).ThenInclude(x => x.Estatus)
@@ -82,6 +82,8 @@ namespace Service.MedicalRecord.Repository
             {
                 report = report.Where(x => x.Estudios.Any(y => search.Area.Contains(y.AreaId)));
             }
+
+            report.ToQueryString();
 
             return await report.ToListAsync();
         }

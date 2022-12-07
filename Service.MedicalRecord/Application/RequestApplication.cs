@@ -845,7 +845,7 @@ namespace Service.MedicalRecord.Application
             await _repository.Update(request);
         }
 
-        public async Task<byte[]> PrintTicket(Guid recordId, Guid requestId)
+        public async Task<byte[]> PrintTicket(Guid recordId, Guid requestId, Guid paymentId, string userName)
         {
             var request = await _repository.GetById(requestId);
 
@@ -854,12 +854,22 @@ namespace Service.MedicalRecord.Application
                 throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
             }
 
-            var order = request.ToRequestOrderDto();
+            var payments = await _repository.GetPayments(requestId);
+            var payment = payments.FirstOrDefault(x => x.Id == paymentId);
+
+            if (payment == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
+            }
+
+            payments = payments.Where(x => x.FechaCreo < payment.FechaCreo && !x.EstatusId.In(Status.RequestPayment.Cancelado, Status.RequestPayment.FacturaCancelada)).ToList();
+
+            var order = request.ToRequestTicketDto(payment, payments, userName);
 
             return await _pdfClient.GenerateTicket(order);
         }
 
-        public async Task<byte[]> PrintOrder(Guid recordId, Guid requestId)
+        public async Task<byte[]> PrintOrder(Guid recordId, Guid requestId, string userName)
         {
             var request = await _repository.GetById(requestId);
 
@@ -868,7 +878,7 @@ namespace Service.MedicalRecord.Application
                 throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
             }
 
-            var order = request.ToRequestOrderDto();
+            var order = request.ToRequestOrderDto(userName);
 
             return await _pdfClient.GenerateOrder(order);
         }

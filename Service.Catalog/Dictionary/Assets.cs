@@ -12,6 +12,8 @@
         public const string CatalogForm = "wwwroot/layout/excel/catalog/CatalogoFormulario.xlsx";
         public const string DescriptionList = "wwwroot/layout/excel/catalog/DescripcionListado.xlsx";
         public const string DescriptionForm = "wwwroot/layout/excel/catalog/DescripcionFormulario.xlsx";
+        public const string BudgetList = "wwwroot/layout/excel/catalog/PresupuestoListado.xlsx";
+        public const string BudgetForm = "wwwroot/layout/excel/catalog/PresupuestoFormulario.xlsx";
         public const string AreaList = "wwwroot/layout/excel/catalog/AreaListado.xlsx";
         public const string AreaForm = "wwwroot/layout/excel/catalog/AreaFormulario.xlsx";
         public const string DimensionList = "wwwroot/layout/excel/catalog/DimensionListado.xlsx";

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Dtos;
 using Service.MedicalRecord.Dtos.MedicalRecords;
+using Service.MedicalRecord.Dtos.Reports;
 using Shared.Dictionary;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,13 @@ namespace Service.MedicalRecord.Controllers
         public async Task<List<MedicalRecordsListDto>> GetNow(MedicalRecordSearch search = null)
         {
             return await _service.GetNow(search);
+        }
+
+        [HttpPost("report/expedientes")]
+        [Authorize(Policies.Access)]
+        public async Task<List<MedicalRecordDto>> GetMedicalRecord(List<Guid> records)
+        {
+            return await _service.GetMedicalRecord(records);
         }
 
         [HttpPost("coincidencias")]

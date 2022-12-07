@@ -36,6 +36,7 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Sucursal)
                 .Include(x => x.Estudios).ThenInclude(x => x.Estatus)
                 .Include(x => x.Estudios).ThenInclude(x => x.Tapon)
+                .OrderBy(x => x.FechaCreo)
                 .AsQueryable();
 
             if (filter.TipoFecha != null && filter.TipoFecha == 1 && filter.FechaInicial != null && filter.FechaFinal != null)
