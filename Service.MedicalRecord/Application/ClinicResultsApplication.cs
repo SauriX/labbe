@@ -47,6 +47,7 @@ namespace Service.MedicalRecord.Application
         private readonly IRabbitMQSettings _rabbitMQSettings;
         private readonly IQueueNames _queueNames;
         private readonly string MedicalRecordPath;
+        private const byte PARTICULAR = 2;
 
 
         public ClinicResultsApplication(IClinicResultsRepository repository,
@@ -124,6 +125,87 @@ namespace Service.MedicalRecord.Application
             template.Format();
 
             return (template.ToByteArray(), $"Informe Captura de Resultados (Clínicos).xlsx");
+        }
+        
+        public async Task<(byte[] file, string fileName)> ExportGlucoseChart(ClinicResultsFormDto result)
+        {
+            var studies = await _repository.GetResultsById(result.SolicitudId);
+            var request = await _repository.GetRequestById(result.SolicitudId); 
+            var glucoseStudy = studies.Where(x => x.EstudioId == 631).Where(x => x.TipoValorId == "6" || x.TipoValorId == "1").Where(x => x.Clave != "_OB_CTG");
+
+            var path = Assets.ToleranciaGlucosa;
+
+            List<object> glucoseParams = new List<object>();
+
+            foreach(var param in glucoseStudy.OrderBy(x => x.Orden))
+            {
+                var numericResult = Convert.ToDecimal(param.Resultado);
+                if(param.Clave == "_GLU_SU")
+                {
+                    glucoseParams.Add(new
+                    {
+                        Estudio = "0",
+                        Resultado = numericResult
+                    });
+                }
+                if(param.Clave == "_GLU_SU30")
+                {
+                    glucoseParams.Add(new
+                    {
+                        Estudio = "30",
+                        Resultado = numericResult
+                    });
+                }if(param.Clave == "_GLU_SU60")
+                {
+                    glucoseParams.Add(new
+                    {
+                        Estudio = "60",
+                        Resultado = numericResult
+                    });
+                }
+                if(param.Clave == "_GLU_SU90")
+                {
+                    glucoseParams.Add(new
+                    {
+                        Estudio = "90",
+                        Resultado = numericResult
+                    });
+                }if(param.Clave == "_GLU_SU120")
+                {
+                    glucoseParams.Add(new
+                    {
+                        Estudio = "120",
+                        Resultado = numericResult
+                    });
+                }
+                if(param.Clave == "_GLU_SU180")
+                {
+                    glucoseParams.Add(new
+                    {
+                        Estudio = "180",
+                        Resultado = numericResult
+                    });
+                }if(param.Clave == "_GLU_SU240")
+                {
+                    glucoseParams.Add(new
+                    {
+                        Estudio = "240",
+                        Resultado = numericResult
+                    });
+                }
+            }
+
+            var template = new XLTemplate(path);
+
+            template.AddVariable("NombrePaciente", request.Expediente.NombreCompleto);
+            template.AddVariable("Medico", request.Medico.Nombre);
+            template.AddVariable("Fecha", DateTime.Now.ToString("f"));
+            template.AddVariable("Estudios", glucoseParams);
+
+            template.Generate();
+            template.Format();
+
+            return (template.ToByteArray(), $"Gráfica Curva de Tolerancia a Glucosa.xlsx");
         }
 
         public async Task<List<ClinicResultsDto>> GetAll(ClinicResultSearchDto search)
@@ -305,9 +387,11 @@ namespace Service.MedicalRecord.Application
                                 }
                                 break;
                             case "5":
-                                param.TipoValores = param.TipoValores;
-                                break;
                             case "6":
+                            case "11":
+                            case "12":
+                            case "13":
+                            case "14":
                                 param.TipoValores = param.TipoValores;
                                 break;
                             case "9":
@@ -336,8 +420,12 @@ namespace Service.MedicalRecord.Application
             var newResults = results.ToCaptureResults();
             await _repository.CreateLabResults(newResults);
         }
-
-        public async Task UpdateLabResults(List<ClinicResultsFormDto> results)
+        private bool canSendResult(Request request)
+        {
+            return request.Procedencia == PARTICULAR && request.Saldo != 0 ? false : true;
+            
+        }
+        public async Task UpdateLabResults(List<ClinicResultsFormDto> results, bool EnvioManual)
         {
             var request = (await _repository.GetLabResultsById(results.First().SolicitudEstudioId)).FirstOrDefault();
             var existingRequest = await _repository.GetRequestById(request.SolicitudId);
@@ -369,9 +457,9 @@ namespace Service.MedicalRecord.Application
                 await UpdateStatusStudy(request.SolicitudEstudioId, request.SolicitudEstudio.EstatusId, user);
             }
 
-            else if (request.SolicitudEstudio.EstatusId == Status.RequestStudy.Liberado)
+            else if (request.SolicitudEstudio.EstatusId == Status.RequestStudy.Liberado || EnvioManual)
             {
-                if (request.Solicitud.Parcialidad)
+                if (request.Solicitud.Parcialidad || EnvioManual)
                 {
                     List<int> labResults = existingRequest.Estudios
                         .Where(x => x.AreaId != Catalogs.Area.HISTOPATOLOGIA)
@@ -402,9 +490,13 @@ namespace Service.MedicalRecord.Application
 
                     try
                     {
-                        await SendTestWhatsapp(files, request.Solicitud.EnvioWhatsApp, userId);
-                        await SendTestEmail(files, request.Solicitud.EnvioCorreo, userId);
-                        await UpdateStatusStudy(request.SolicitudEstudioId, Status.RequestStudy.Enviado, user);
+                        if (canSendResult(request.Solicitud))
+                        {
+                            await SendTestWhatsapp(files, request.Solicitud.EnvioWhatsApp, userId);
+                            await SendTestEmail(files, request.Solicitud.EnvioCorreo, userId);
+                            await UpdateStatusStudy(request.SolicitudEstudioId, Status.RequestStudy.Enviado, user);
+
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -417,7 +509,10 @@ namespace Service.MedicalRecord.Application
 
                     if (existingRequest.Estudios.All(estudio => estudio.EstatusId == Status.RequestStudy.Liberado))
                     {
-                        await SendResultsFiles(request.SolicitudId, userId, user);
+                        if (canSendResult(request.Solicitud))
+                        {
+                            await SendResultsFiles(request.SolicitudId, userId, user);
+                        }
                     }
                 }
             }
@@ -503,7 +598,7 @@ namespace Service.MedicalRecord.Application
 
         }
 
-        public async Task UpdateResultPathologicalStudy(ClinicalResultPathologicalFormDto result)
+        public async Task UpdateResultPathologicalStudy(ClinicalResultPathologicalFormDto result, bool EnvioManual)
         {
             var existing = await _repository.GetResultPathologicalById(result.RequestStudyId);
 
@@ -538,9 +633,9 @@ namespace Service.MedicalRecord.Application
             {
                 await this.UpdateStatusStudy(result.EstudioId, result.Estatus, result.Usuario);
             }
-            if (result.Estatus == Status.RequestStudy.Liberado)
+            if (result.Estatus == Status.RequestStudy.Liberado || EnvioManual)
             {
-                if (existing.Solicitud.Parcialidad)
+                if (existing.Solicitud.Parcialidad || EnvioManual) // envio manual o parcial de resultados 👻
                 {
                     await UpdateStatusStudy(result.EstudioId, result.Estatus, result.Usuario);
                     List<ClinicalResultsPathological> toSendInfoPathological = new List<ClinicalResultsPathological> { existing };
@@ -561,12 +656,16 @@ namespace Service.MedicalRecord.Application
                     };
                     try
                     {
+                        if (canSendResult(existing.Solicitud))
+                        {
 
-                        await SendTestWhatsapp(files, existing.Solicitud.EnvioWhatsApp, result.UsuarioId);
+                            await SendTestWhatsapp(files, existing.Solicitud.EnvioWhatsApp, result.UsuarioId);
 
-                        await SendTestEmail(files, existing.Solicitud.EnvioCorreo, result.UsuarioId);
+                            await SendTestEmail(files, existing.Solicitud.EnvioCorreo, result.UsuarioId);
 
-                        await UpdateStatusStudy(result.EstudioId, Status.RequestStudy.Enviado, result.Usuario);
+                            await UpdateStatusStudy(result.EstudioId, Status.RequestStudy.Enviado, result.Usuario);
+                        }
+
                     }
                     catch (Exception ex)
                     {
@@ -576,13 +675,17 @@ namespace Service.MedicalRecord.Application
                 }
                 else
                 {
-                    await UpdateStatusStudy(result.EstudioId, result.Estatus, result.Usuario);
-
-                    var existingRequest = await _repository.GetRequestById(existing.SolicitudId);
-
-                    if (existingRequest.Estudios.All(estudio => estudio.EstatusId == Status.RequestStudy.Liberado))
+                    if (canSendResult(existing.Solicitud))
                     {
-                        await SendResultsFiles(existing.SolicitudId, result.UsuarioId, result.Usuario);
+
+                        await UpdateStatusStudy(result.EstudioId, result.Estatus, result.Usuario);
+
+                        var existingRequest = await _repository.GetRequestById(existing.SolicitudId);
+
+                        if (existingRequest.Estudios.All(estudio => estudio.EstatusId == Status.RequestStudy.Liberado))
+                        {
+                            await SendResultsFiles(existing.SolicitudId, result.UsuarioId, result.Usuario);
+                        }
                     }
 
 
@@ -678,7 +781,7 @@ namespace Service.MedicalRecord.Application
 
                 try
                 {
-                    if (files.Count > 0)
+                    if (files.Count > 0 && canSendResult(existingRequest))
                     {
                         if (estudios.MediosEnvio.Contains("Whatsapp"))
                         {
@@ -715,11 +818,13 @@ namespace Service.MedicalRecord.Application
             List<int> labResults = existingRequest.Estudios
                 .Where(x => x.AreaId != Catalogs.Area.HISTOPATOLOGIA)
                 .Where(x => x.AreaId != Catalogs.Area.CITOLOGIA)
+                .Where(x => x.EstatusId != Status.RequestStudy.Enviado)
                 .Select(x => x.Id).ToList();
 
             List<int> pathologicalResults = existingRequest.Estudios
                 .Where(x => x.AreaId == Catalogs.Area.HISTOPATOLOGIA)
                 .Where(x => x.AreaId == Catalogs.Area.CITOLOGIA)
+                .Where(x => x.EstatusId != Status.RequestStudy.Enviado)
                 .Select(x => x.Id)
                 .ToList();
 
@@ -782,7 +887,7 @@ namespace Service.MedicalRecord.Application
             }
             try
             {
-                if (files.Count > 0)
+                if (files.Count > 0 && canSendResult(existingRequest))
                 {
 
                     await SendTestWhatsapp(files, existingRequest.EnvioWhatsApp, usuarioId);
@@ -952,7 +1057,7 @@ namespace Service.MedicalRecord.Application
         {
             StringBuilder message = new(formula);
 
-            foreach (var par in parameters)
+            foreach (var par in parameters.OrderByDescending(x => x.Clave.Length))
             {
                 message.Replace(par.Clave, par.Resultado);
             }

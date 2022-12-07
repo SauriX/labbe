@@ -90,7 +90,10 @@ namespace Service.MedicalRecord.Repository
 
         public async Task<Domain.MedicalRecord.MedicalRecord> GetById(Guid id)
         {
-            var expedientes = await _context.CAT_Expedientes.Include(x => x.TaxData).ThenInclude(x => x.Factura).FirstOrDefaultAsync(x => x.Id == id);
+            var expedientes = await _context.CAT_Expedientes
+                .Include(x => x.TaxData)
+                .ThenInclude(x => x.Factura)
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             return expedientes;
         }
@@ -114,7 +117,7 @@ namespace Service.MedicalRecord.Repository
             _context.CAT_Expedientes.Add(expediente);
             await _context.SaveChangesAsync();
 
-            var config = new BulkConfig() { SetOutputIdentity = true };
+            var config = new BulkConfig() { SetOutputIdentity = true, PreserveInsertOrder = true };
             await _context.BulkInsertOrUpdateAsync(newtaxdata, config);
 
             var taxdataMedicalRecord = newtaxdata.ToTaxDataMedicalRecord();
@@ -193,6 +196,14 @@ namespace Service.MedicalRecord.Repository
             return expedientes;
         }
 
+        public async Task<List<Domain.MedicalRecord.MedicalRecord>> GetRecordsByIds(List<Guid> records)
+        {
+            var medicalRecords = await _context.CAT_Expedientes
+                .Where(x => records.Contains(x.Id))
+                .ToListAsync();
+
+            return medicalRecords;
+        }
 
     }
 }

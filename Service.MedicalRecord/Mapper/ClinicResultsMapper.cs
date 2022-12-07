@@ -44,8 +44,8 @@ namespace Service.MedicalRecord.Mapper
                 Nombre = x.Nombre,
                 Area = "",
                 Estatus = x.EstatusId,
-                Registro = x.FechaCreo.ToString("G"),
-                Entrega = x.FechaCreo.AddDays((double)x.Dias).ToString("G"),
+                Registro = x.FechaCreo.ToString("dd/MM/yyyy HH:mm"),
+                Entrega = x.FechaCreo.AddDays((double)x.Dias).ToString("dd/MM/yyyy HH:mm"),
                 Seleccion = false,
                 Clave = x.Clave,
                 NombreEstatus = x.Estatus.Nombre,
@@ -75,6 +75,7 @@ namespace Service.MedicalRecord.Mapper
                     : x.EstatusId == Status.RequestStudy.Enviado
                     ? x.UsuarioEnviado
                     : "",
+                Urgencia = x.Solicitud.Urgencia
             }).ToList();
         }
 
@@ -249,6 +250,7 @@ namespace Service.MedicalRecord.Mapper
                     UltimoResultado = results.UltimoResultado,
                     DeltaCheck = results.DeltaCheck,
                     Orden = results.Orden,
+                    Clave = results.Clave
                 };
             }).ToList();
         }

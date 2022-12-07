@@ -1,6 +1,7 @@
 ﻿using Service.MedicalRecord.Domain.TaxData;
 using Service.MedicalRecord.Dtos;
 using Service.MedicalRecord.Dtos.MedicalRecords;
+using Service.MedicalRecord.Dtos.Reports;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,7 +51,7 @@ namespace Service.MedicalRecord.Mapper
             IEnumerable<TaxDataDto> data = null;
             if (taxdata.Count() > 0)
             {
-                data = model.TaxData?.Select(x => x.Factura)?.ToTaxDataDto();
+                data = model.TaxData?.Select(x => x.Factura)?.OrderBy(x=> x.FechaCreo)?.ToTaxDataDto();
             }
             return new MedicalRecordsFormDto
             {
@@ -260,6 +261,22 @@ namespace Service.MedicalRecord.Mapper
                 FechaCreo = model.FechaCreo,
                 IdSucursal = Guid.Parse(dto.sucursal)
             };
+        }
+
+        public static List<MedicalRecordDto> ToMedicalRecordDto(this List<Domain.MedicalRecord.MedicalRecord> model)
+        {
+            if (model == null) return null;
+
+            return model.Select(x => new MedicalRecordDto
+            {
+                Id = x.Id,
+                Expediente = x.Expediente,
+                Nombre = x.NombreCompleto,
+                Edad = x.Edad,
+                Sexo = x.Genero,
+                Celular = x.Celular,
+                Correo = x.Correo,
+            }).ToList();
         }
     }
 }

@@ -250,6 +250,47 @@ namespace Service.Catalog.Migrations
                     b.ToTable("CAT_Banco");
                 });
 
+            modelBuilder.Entity("Service.Catalog.Domain.Catalog.Budget", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Clave")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("CostoFijo")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaModifico")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("SucursalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UsuarioCreoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UsuarioModificoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SucursalId");
+
+                    b.ToTable("CAT_Presupuestos");
+                });
+
             modelBuilder.Entity("Service.Catalog.Domain.Catalog.Clinic", b =>
                 {
                     b.Property<int>("Id")
@@ -2817,6 +2858,17 @@ namespace Service.Catalog.Migrations
                         .IsRequired();
 
                     b.Navigation("Departamento");
+                });
+
+            modelBuilder.Entity("Service.Catalog.Domain.Catalog.Budget", b =>
+                {
+                    b.HasOne("Service.Catalog.Domain.Branch.Branch", "Sucursal")
+                        .WithMany()
+                        .HasForeignKey("SucursalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Sucursal");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Company.Company", b =>

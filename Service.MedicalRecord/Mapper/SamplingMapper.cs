@@ -15,7 +15,7 @@ namespace Service.MedicalRecord.Mapper
         {
             if (model == null) return null;
 
-            if (search.Estatus != null)
+            if (search.Estatus != null && search.Estatus.Count > 0)
             {
                 foreach (var request in model)
                 {
@@ -28,7 +28,7 @@ namespace Service.MedicalRecord.Mapper
                 request.Estudios = request.Estudios.Where(x => x.EstatusId == Status.RequestStudy.TomaDeMuestra || x.EstatusId == Status.RequestStudy.Pendiente).ToList();
             }
 
-            return model.Select(x => new SamplingListDto
+            return model.Where(x => x.Estudios.Count > 0).Select(x => new SamplingListDto
             {
                 Solicitud = x.Clave,
                 Nombre = x.Expediente.NombreCompleto,
@@ -53,8 +53,8 @@ namespace Service.MedicalRecord.Mapper
                 Nombre = x.Nombre,
                 Area = "",
                 Estatus = x.EstatusId,
-                Registro = x.FechaCreo.ToString(),
-                Entrega = x.FechaCreo.AddDays((double)x.Dias).ToString(),
+                Registro = x.FechaCreo.ToString("dd/MM/yyyy HH:mm"),
+                Entrega = x.FechaCreo.AddDays((double)x.Dias).ToString("dd/MM/yyyy HH:mm"),
                 Seleccion = false,
                 Clave = x.Clave,
                 NombreEstatus = x.Estatus.Nombre,
@@ -89,6 +89,7 @@ namespace Service.MedicalRecord.Mapper
                     : x.EstatusId == Status.RequestStudy.Enviado
                     ? x.UsuarioEnviado
                     : "",
+                Urgencia = x.Solicitud.Urgencia,
             }).ToList();
         }
     }

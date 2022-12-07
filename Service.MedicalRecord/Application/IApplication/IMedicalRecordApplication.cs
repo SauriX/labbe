@@ -1,5 +1,6 @@
 ﻿using Service.MedicalRecord.Dtos;
 using Service.MedicalRecord.Dtos.MedicalRecords;
+using Service.MedicalRecord.Dtos.Reports;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace Service.MedicalRecord.Application.IApplication
     {
         Task<List<MedicalRecordsListDto>> GetAll();
         Task<List<MedicalRecordsListDto>> GetNow(MedicalRecordSearch search);
+        Task<List<MedicalRecordDto>> GetMedicalRecord(List<Guid> records);
         Task<List<MedicalRecordsListDto>> GetActive();
         Task<List<TaxDataDto>> GetTaxData(Guid recordId);
         Task<MedicalRecordsFormDto> GetById(Guid id);

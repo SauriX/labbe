@@ -21,7 +21,7 @@ namespace Service.MedicalRecord.Controllers
         public ResultValidationController(IValidationApplication service, IRequestApplication requestService)
         {
             _service = service;
-            _requestService = requestService;   
+            _requestService = requestService;
         }
         [HttpPost("getList")]
         [Authorize(Policies.Access)]
@@ -42,13 +42,15 @@ namespace Service.MedicalRecord.Controllers
         [Authorize(Policies.Access)]
         public async Task<IActionResult> PrintOrder(Guid recordId, Guid requestId)
         {
-            var file = await _requestService.PrintOrder(recordId, requestId);
+            var userName = HttpContext.Items["userName"].ToString();
+
+            var file = await _requestService.PrintOrder(recordId, requestId, userName);
 
             return File(file, MimeType.PDF, "Orden.pdf");
         }
 
         [HttpPost("export/list")]
-      //  [Authorize(Policies.Download)]
+        //  [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportStudyExcel(SearchValidation search)
         {
             var (file, fileName) = await _service.ExportList(search);
@@ -57,9 +59,10 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("view/list")]
         //[Authorize(Policies.Download)]
-        public async Task<IActionResult> SendResultFile(DeliverResultsStudiesDto estudios) {
+        public async Task<IActionResult> SendResultFile(DeliverResultsStudiesDto estudios)
+        {
             var file = await _service.SendResultFile(estudios);
-                return File(file, MimeType.PDF, "Orden.pdf");
+            return File(file, MimeType.PDF, "Orden.pdf");
 
         }
     }

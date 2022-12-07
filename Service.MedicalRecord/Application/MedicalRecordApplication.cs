@@ -8,6 +8,7 @@ using Service.MedicalRecord.Domain.MedicalRecord;
 using Service.MedicalRecord.Dtos;
 using Service.MedicalRecord.Dtos.MedicalRecords;
 using Service.MedicalRecord.Dtos.Quotation;
+using Service.MedicalRecord.Dtos.Reports;
 using Service.MedicalRecord.Mapper;
 using Service.MedicalRecord.Repository.IRepository;
 using Service.MedicalRecord.Utils;
@@ -49,6 +50,13 @@ namespace Service.MedicalRecord.Application
             var expedientes = await _repository.GetNow(search);
 
             return expedientes.ToMedicalRecordsListDto();
+        }
+
+        public async Task<List<MedicalRecordDto>> GetMedicalRecord(List<Guid> records)
+        {
+            var expedientes = await _repository.GetRecordsByIds(records);
+
+            return expedientes.ToMedicalRecordDto();
         }
 
         public async Task<List<MedicalRecordsListDto>> GetActive()
