@@ -81,7 +81,7 @@ namespace Service.MedicalRecord.Mapper
                 Compania = x.Compañia?.Nombre,
                 Parcialidad = x.Parcialidad ? "Sí" : "No",
                 Estudios = x.Estudios
-                .Where(y => y.EstatusId == Status.RequestStudy.Liberado || y.EstatusId == Status.RequestStudy.Enviado || y.EstatusId == Status.RequestStudy.Entregado)
+                //.Where(y => y.EstatusId == Status.RequestStudy.Liberado || y.EstatusId == Status.RequestStudy.Enviado || y.EstatusId == Status.RequestStudy.Entregado)
                 .Select(y => new RequestsStudiesInfoDto {
                     EstudioId = y.Id,
                     Estudio = y.Nombre,
@@ -101,7 +101,8 @@ namespace Service.MedicalRecord.Mapper
                             ? $"{y.UsuarioLiberado} - {y.FechaLiberado?.ToString("dd/MM/yyyy")}" 
                             : y.EstatusId == 7 
                             ? $"{y.UsuarioEnviado} - {y.FechaEnviado?.ToString("dd/MM/yyyy")}" 
-                            : ""
+                            : "",
+                    IsActiveCheckbox = y.EstatusId == Status.RequestStudy.Liberado || y.EstatusId == Status.RequestStudy.Enviado || y.EstatusId == Status.RequestStudy.Entregado
                 }).ToList(),
             }).ToList();
         }

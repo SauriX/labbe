@@ -177,6 +177,7 @@ namespace Service.MedicalRecord.Mapper
                 Id = (Guid)x.Id,
                 RFC = x.Rfc,
                 RazonSocial = x.RazonSocial,
+                RegimenFiscal = x.RegimenFiscal,
                 CodigoPostal = x.Cp,
                 Estado = x.Estado,
                 Ciudad = x.Municipio,

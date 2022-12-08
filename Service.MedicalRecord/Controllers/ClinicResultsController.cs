@@ -98,11 +98,11 @@ namespace Service.MedicalRecord.Controllers
         }
         [HttpPut("sendResultFile")]
         [Authorize(Policies.Update)]
-        public async Task SendResultFile([FromBody] DeliverResultsStudiesDto estudios)
+        public async Task<bool> SendResultFile([FromBody] DeliverResultsStudiesDto estudios)
         {
             estudios.UsuarioId = (Guid)HttpContext.Items["userId"];
             estudios.Usuario = HttpContext.Items["userName"].ToString();
-            await _service.SendResultFile(estudios);
+            return await _service.SendResultFile(estudios);
         }
 
 
