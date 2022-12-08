@@ -9,6 +9,7 @@ namespace Service.Catalog.Dtos.Catalog
         public string NombreServicio { get; set; }
         public bool Activo { get; set; }
         public decimal CostoFijo { get; set; }
+        public string Sucursal { get; set; }
         public Guid SucursalId { get; set; }
         public Guid UsuarioId { get; set; }
     }

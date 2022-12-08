@@ -1,23 +1,23 @@
-﻿using EFCore.BulkExtensions;
-using Microsoft.EntityFrameworkCore;
-using Service.MedicalRecord.Context;
-using Service.MedicalRecord.Dictionary;
+﻿using Service.MedicalRecord.Context;
+using System.Threading.Tasks;
 using Service.MedicalRecord.Domain.Request;
-using Service.MedicalRecord.Dtos.RequestedStudy;
-using Service.MedicalRecord.Dtos.ResultValidation;
-using Service.MedicalRecord.Repository.IRepository;
 using System;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Service.MedicalRecord.Dictionary;
+using Service.MedicalRecord.Dtos.RelaseResult;
+using EFCore.BulkExtensions;
+using Service.MedicalRecord.Repository.IRepository;
 
 namespace Service.MedicalRecord.Repository
 {
-    public class ResultValidationRepository: IResultaValidationRepository
+    public class RelaseResultRepository: IRelaseResultRepository
     {
         private readonly ApplicationDbContext _context;
+        
 
-        public ResultValidationRepository(ApplicationDbContext context)
+        public RelaseResultRepository(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -25,17 +25,17 @@ namespace Service.MedicalRecord.Repository
         {
             var report = _context.CAT_Solicitud
                    .Include(x => x.Estudios);
-            var request = await _context.CAT_Solicitud.FindAsync(id);
+            var request =  _context.CAT_Solicitud.Include(x => x.Estudios).Include(x=>x.Estatus).FirstOrDefault(x=>x.Id==id);
 
             return request;
         }
 
-        public async Task<List<Request>> GetAll(SearchValidation search)
-            {
-            var report = _context.CAT_Solicitud.Where(x => x.Estudios.Any(y => y.EstatusId == Status.RequestStudy.Capturado || y.EstatusId == Status.RequestStudy.Validado))
+        public async Task<List<Request>> GetAll(SearchRelase search)
+        {
+            var report = _context.CAT_Solicitud.Where(x => x.Estudios.Any(y => y.EstatusId == Status.RequestStudy.Liberado || y.EstatusId == Status.RequestStudy.Validado || y.EstatusId == Status.RequestStudy.Enviado))
                 .Include(x => x.Expediente)
                 .Include(x => x.Medico)
-                .Include(x => x.Estudios).ThenInclude(x => x.Estatus)
+                .Include(x => x.Estudios).ThenInclude(x=>x.Estatus)
                 .Include(x => x.Sucursal)
                 .Include(x => x.Compañia)
                 .AsQueryable();
@@ -71,12 +71,13 @@ namespace Service.MedicalRecord.Repository
             {
                 report = report.Where(x => x.Estudios.Any(y => search.Estatus.Contains(y.EstatusId)));
                 List<Request> report2 = new List<Request>();
-                foreach (var item in report) { 
+                foreach (var item in report)
+                {
                     var estudios = item.Estudios;
 
-                    estudios = estudios.Where(x=> search.Estatus.Contains(x.EstatusId)).ToList();
+                    estudios = estudios.Where(x => search.Estatus.Contains(x.EstatusId)).ToList();
 
-                    item.Estudios= estudios;
+                    item.Estudios = estudios;
                     report2.Add(item);
                 }
 
@@ -88,9 +89,10 @@ namespace Service.MedicalRecord.Repository
             {
                 report = report.Where(x => search.TipoSoli.Contains(x.Urgencia));
             }
-            if (search.Area != null && search.Area > 0)
+
+            if (search.Area != null && search.Area >0 )
             {
-                report = report.Where(x => x.Estudios.Any(y => search.Area == y.AreaId));
+                report = report.Where(x => x.Estudios.Any(y => search.Area==y.AreaId));
             }
 
             return report.ToList();

@@ -11,6 +11,7 @@ namespace Service.Catalog.Controllers.Catalog
     public partial class CatalogController : ControllerBase
     {
         private readonly IAreaApplication _areaService;
+        private readonly IBudgetApplication _budgetService;
         private readonly ICatalogApplication<Bank> _bankService;
         private readonly ICatalogApplication<Provenance> _provenanceService;
         private readonly ICatalogApplication<Clinic> _clinicService;
@@ -32,6 +33,7 @@ namespace Service.Catalog.Controllers.Catalog
         public CatalogController(
             ICatalogApplication<Delivery> deliveryService,
             IAreaApplication areaService,
+            IBudgetApplication budgetService,
             ICatalogApplication<Bank> bankService,
             ICatalogApplication<Clinic> clinicService,
             ICatalogApplication<Department> departmentService,
@@ -52,6 +54,7 @@ namespace Service.Catalog.Controllers.Catalog
         {
             _deliveryService = deliveryService;
             _areaService = areaService;
+            _budgetService = budgetService;
             _bankService = bankService;
             _clinicService = clinicService;
             _departmentService = departmentService;

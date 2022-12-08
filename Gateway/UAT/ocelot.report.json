@@ -4,7 +4,7 @@
       "DownstreamPathTemplate": "/LabRamos-uat/services/report/api/report/expediente/download/pdf",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
-        {
+          {
           "Host": "axsishost.online"
         }
       ],
