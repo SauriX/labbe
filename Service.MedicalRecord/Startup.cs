@@ -261,6 +261,7 @@ namespace Service.MedicalRecord
             services.AddScoped<IMedicalRecordApplication, MedicalRecordApplication>();
             services.AddScoped<IQuotationApplication, QuotationApplication>();
             services.AddScoped<IRequestApplication, RequestApplication>();
+            services.AddScoped<IReportApplication, ReportApplication>();
             services.AddScoped<IAppointmentApplication, AppointmentApplication>();
             services.AddScoped<ISamplingApplication, SamplingAplication>();
             services.AddScoped<IRequestedStudyApplication, RequestedStudyApplication>();
@@ -275,6 +276,7 @@ namespace Service.MedicalRecord
 
             services.AddScoped<IMedicalRecordRepository, MedicalRecordRepository>();
             services.AddScoped<IRequestRepository, RequestRepository>();
+            services.AddScoped<IReportRepository, ReportRepository>();
             services.AddScoped<IQuotationRepository, QuotationRepository>();
             services.AddScoped<IAppointmentResposiotry, AppointmentRepository>();
             services.AddScoped<ISamplingRepository, SamplingRepository>();

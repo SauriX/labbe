@@ -14,7 +14,7 @@ namespace Service.Report.Mapper
             if (model == null) return null;
 
             var results = (from c in model
-                           group c by new { c.SolicitudId, c.Clave, c.Expediente.Nombre, c.Medico.NombreMedico, c.Fecha, c.Expediente, c.Parcialidad } into grupo
+                           group c by new { c.Id, c.Clave, c.Expediente.Nombre, c.Medico.NombreMedico, c.Fecha, c.Expediente, c.Parcialidad } into grupo
                            select grupo)
                            .Select(grupo =>
                            {
@@ -44,7 +44,7 @@ namespace Service.Report.Mapper
             if (model == null) return null;
 
             var results = (from c in model.Where(x => x.Urgencia != 1)
-                           group c by new { c.SolicitudId, c.Clave, c.Expediente.Nombre, c.Medico.NombreMedico, c.Fecha, c.Expediente, c.Urgencia } into grupo
+                           group c by new { c.Id, c.Clave, c.Expediente.Nombre, c.Medico.NombreMedico, c.Fecha, c.Expediente, c.Urgencia } into grupo
                            select grupo)
                            .Select(grupo =>
                            {
