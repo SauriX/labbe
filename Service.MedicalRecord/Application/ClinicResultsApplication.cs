@@ -712,7 +712,7 @@ namespace Service.MedicalRecord.Application
 
                 foreach (var estudioId in estudiosSeleccionados.EstudiosId)
                 {
-
+                      
 
                     if (estudioId.Tipo == Catalogs.Area.HISTOPATOLOGIA)
                     {

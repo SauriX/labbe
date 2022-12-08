@@ -198,7 +198,7 @@ namespace Service.MedicalRecord.Application
                     Usuario = Usuario,
                     MediosEnvio=mediosenvio
                 };
-
+                  
                 await _clinicresultapplication.SendResultFile(dataToSend);
             }
             return studyCount;
