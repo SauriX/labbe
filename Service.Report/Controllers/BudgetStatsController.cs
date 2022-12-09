@@ -13,7 +13,7 @@ namespace Service.Report.Controllers.Report
     {
         [HttpPost("presupuestos/filter")]
         [Authorize(Policies.Access)]
-        public async Task<IEnumerable<BudgetStatsDto>> GetBudgetRequestNow(ReportFilterDto search)
+        public async Task<List<BudgetStatsDto>> GetBudgetRequestNow(ReportFilterDto search)
         {
             return await _budgetStatsService.GetByFilter(search);
         }
@@ -27,7 +27,7 @@ namespace Service.Report.Controllers.Report
 
         [HttpPost("presupuestos/chart/filter")]
         [Authorize(Policies.Access)]
-        public async Task<IEnumerable<BudgetStatsChartDto>> GetBudgetRequestFilterChart(ReportFilterDto search)
+        public async Task<List<BudgetStatsChartDto>> GetBudgetRequestFilterChart(ReportFilterDto search)
         {
             return await _budgetStatsService.GetChartByFilter(search);
         }

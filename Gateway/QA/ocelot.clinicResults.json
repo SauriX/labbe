@@ -56,14 +56,14 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/records/api/clinicResults/updateResults",
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/clinicResults/updateResults/{EnvioManual}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/clinicResults/updateResults",
+      "UpstreamPathTemplate": "/api/clinicResults/updateResults/{EnvioManual}",
       "UpstreamHttpMethod": [ "PUT" ]
     },
     {

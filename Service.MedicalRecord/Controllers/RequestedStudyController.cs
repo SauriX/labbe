@@ -6,6 +6,7 @@ using Service.MedicalRecord.Dtos.Sampling;
 using Shared.Dictionary;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Service.MedicalRecord.Controllers
@@ -32,6 +33,7 @@ namespace Service.MedicalRecord.Controllers
         [Authorize(Policies.Update)]
         public async Task UpdateStatus(List<RequestedStudyUpdateDto> requestDto)
         {
+            requestDto.First().Usuario = HttpContext.Items["userName"].ToString();
             await _service.UpdateStatus(requestDto);
         }
 

@@ -57,6 +57,7 @@ namespace Service.Report
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddScoped<IIdentityClient, IdentityClient>();
+            services.AddScoped<IMedicalRecordClient, MedicalRecordClient>();
             services.AddScoped<IPdfClient, PdfClient>();
 
             services.AddHttpClient<IIdentityClient, IdentityClient>(client =>
@@ -64,6 +65,20 @@ namespace Service.Report
                 var token = new HttpContextAccessor().HttpContext.Request.Headers["Authorization"].ToString();
 
                 client.BaseAddress = new Uri(Configuration["ClientUrls:Identity"]);
+
+                if (!string.IsNullOrWhiteSpace(token))
+                {
+                    client.DefaultRequestHeaders.Add("Authorization", token);
+                }
+
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            });
+
+            services.AddHttpClient<IMedicalRecordClient, MedicalRecordClient>(client =>
+            {
+                var token = new HttpContextAccessor().HttpContext.Request.Headers["Authorization"].ToString();
+
+                client.BaseAddress = new Uri(Configuration["ClientUrls:MedicalRecord"]);
 
                 if (!string.IsNullOrWhiteSpace(token))
                 {
