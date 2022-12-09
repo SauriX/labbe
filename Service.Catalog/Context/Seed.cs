@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PL = Shared.Dictionary.Catalogs.PriceList;
 using DEP = Shared.Dictionary.Catalogs.Department;
 using AREAS = Shared.Dictionary.Catalogs.Area;
 using BR = Shared.Dictionary.Catalogs.Branch;
@@ -25,6 +26,9 @@ using Service.Catalog.Domain.Packet;
 using System.Net;
 using Shared.Error;
 using Shared.Extensions;
+using Service.Catalog.Domain.Price;
+using Shared.Dictionary;
+using Service.Catalog.Domain.Company;
 
 namespace Service.Catalog.Context
 {
@@ -732,6 +736,11 @@ namespace Service.Catalog.Context
             return cfdis;
         }
 
+        //private static Company GetDefaultCompany()
+        //{
+
+        //}
+
         private static List<Department> GetDepartments()
         {
             var path = "wwwroot/seed/CAT_DEPARTAMENTOS.xlsx";
@@ -1105,6 +1114,13 @@ namespace Service.Catalog.Context
 
             return parameterValues;
         }
+
+        //private static List<PriceList> GetDefaultPriceList()
+        //{
+        //    var priceList = new PriceList(PL.PARTICULARES, "PARTICULARES", "PARTICULARES", false, true);
+
+        //    return priceList;
+        //}
 
         private static List<IndicationStudy> GetStudyIndications()
         {

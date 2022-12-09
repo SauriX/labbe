@@ -103,6 +103,23 @@ namespace Integration.Invoice.Service
 
                 throw;
             }
+        } 
+        
+        public static async Task<byte[]> GetPdf(string invoiceId)
+        {
+            try
+            {
+                var facturapi = new FacturapiClient(API_KEY);
+
+                var invoice = await facturapi.Invoice.DownloadPdfAsync(invoiceId);
+
+                return invoice.ToByteArray();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 

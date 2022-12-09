@@ -8,14 +8,27 @@ namespace Shared.Dictionary
 {
     public class Catalogs
     {
+        public class Origin
+        {
+            public const int COMPAÑIA = 1;
+            public const int PARTICULAR = 2;
+        }
+
+        public class PriceList
+        {
+            public static readonly Guid PARTICULARES = new("f67febd9-f94b-4e65-bf0a-27db5deac249");
+        }
+
         public class Company
         {
             public static readonly Guid PARTICULARES = new("1b84fa7e-9b41-41fa-b8e0-f1d029bb94d4");
         }
+
         public class MediosEntrega
         {
             public const int WHATSAPP = 1;
         }
+
         public class Department
         {
             public const int PAQUETES = 1;
