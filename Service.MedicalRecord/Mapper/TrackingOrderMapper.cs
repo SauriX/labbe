@@ -172,6 +172,7 @@ namespace Service.MedicalRecord.Mapper
             //});
             return model.GroupBy(x => x.Solicitud.Id)/*.GroupBy(x => x.Tapon.Clave)*/.Select(x => new EstudiosListDto
             {
+                solicitudId = x.FirstOrDefault().SolicitudId,
                 //solicitud = x.,
                 Estudios = x.Select(y => new StudiesRequestRouteDto
                 {

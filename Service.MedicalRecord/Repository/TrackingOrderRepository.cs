@@ -101,7 +101,7 @@ namespace Service.MedicalRecord.Repository
 
             listaEstudio = listaEstudio.Where(x => estudios.Contains(x.EstudioId));
 
-            listaEstudio = listaEstudio.Where(x => x.EstatusId == Status.RequestStudy.TomaDeMuestra);
+            listaEstudio = listaEstudio.Where(x => x.EstatusId == Status.RequestStudy.TomaDeMuestra || x.EstatusId == Status.RequestStudy.Pendiente);
 
             return await listaEstudio.ToListAsync();
         }
