@@ -693,12 +693,14 @@ namespace Service.MedicalRecord.Application
             }
 
         }
-        public async Task SendResultFile(DeliverResultsStudiesDto estudios)
+        public async Task<bool> SendResultFile(DeliverResultsStudiesDto estudios)
         {
 
             foreach (var estudiosSeleccionados in estudios.Estudios)
             {
                 var existingRequest = await _repository.GetRequestById(estudiosSeleccionados.SolicitudId);
+                
+                List<RequestStudy> studiesToUpdate = new List<RequestStudy>();
 
                 var files = new List<SenderFiles>();
 
@@ -710,7 +712,7 @@ namespace Service.MedicalRecord.Application
 
                 foreach (var estudioId in estudiosSeleccionados.EstudiosId)
                 {
-
+                      
 
                     if (estudioId.Tipo == Catalogs.Area.HISTOPATOLOGIA)
                     {
@@ -736,14 +738,17 @@ namespace Service.MedicalRecord.Application
                     else
                     {
                         var finalResult = await _repository.GetLabResultsById(estudioId.EstudioId);
+
                         resultsTask.AddRange(finalResult);
+
+
                     }
 
                     RequestStudy estudioActual = await _repository.GetRequestStudyById(estudioId.EstudioId);
 
+                    studiesToUpdate.Add(estudioActual);
 
                     List<string> mediosActuales = estudioActual.MedioSolicitado == null ? new List<string>() : estudioActual.MedioSolicitado?.Split(",").ToList();
-
 
                     if (estudios.MediosEnvio.Contains("Whatsapp") && !mediosActuales.Contains("Whatsapp"))
                     {
@@ -778,7 +783,7 @@ namespace Service.MedicalRecord.Application
 
                     files.Add(new SenderFiles(new Uri(pathName), namePdf));
                 }
-
+                
                 try
                 {
                     if (files.Count > 0 && canSendResult(existingRequest))
@@ -795,19 +800,22 @@ namespace Service.MedicalRecord.Application
                             await SendTestEmail(files, existingRequest.EnvioCorreo, estudios.UsuarioId);
                         }
 
-                        foreach (var estudio in existingRequest.Estudios)
+                        //foreach (var estudio in existingRequest.Estudios)
+                        foreach (var estudio in studiesToUpdate)
                         {
-                            await UpdateStatusStudy(estudio.Id, Status.RequestStudy.Enviado, estudios.Usuario);
-
+                                await UpdateStatusStudy(estudio.Id, Status.RequestStudy.Enviado, estudios.Usuario);
                         }
                     }
+
                 }
                 catch (Exception ex)
                 {
-
                     throw ex;
                 }
+                
             }
+
+            return true;
 
 
         }

@@ -29,5 +29,7 @@ namespace Service.MedicalRecord.Dtos.MassSearch
         public string Estatus { get; set; }
         public string Registro { get; set; }
         public bool isPathological{ get; set; }
+        public bool IsActiveCheckbox { get; set; }
+
     }
 }
