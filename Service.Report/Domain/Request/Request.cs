@@ -7,7 +7,7 @@ namespace Service.Report.Domain.Request
 {
     public class Request
     {
-        public Guid SolicitudId { get; set; }
+        public Guid Id { get; set; }
         public string Clave { get; set; }
         public Guid SucursalId { get; set; }
         public virtual Branch Sucursal { get; set; }

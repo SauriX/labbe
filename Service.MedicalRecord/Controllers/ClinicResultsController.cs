@@ -65,14 +65,14 @@ namespace Service.MedicalRecord.Controllers
             return clinicResults;
         }
 
-        [HttpPut("updateResults")]
+        [HttpPut("updateResults/{EnvioManual}")]
         [Authorize(Policies.Update)]
-        public async Task UpdateLabResults(List<ClinicResultsFormDto> results)
+        public async Task UpdateLabResults(List<ClinicResultsFormDto> results, bool EnvioManual)
         {
             results.First().UsuarioId = (Guid)HttpContext.Items["userId"];
             results.First().Usuario = HttpContext.Items["userName"].ToString();
            /* results.First().UsuarioClave = HttpContext.Items["userName"].ToString();*/
-            await _service.UpdateLabResults(results);
+            await _service.UpdateLabResults(results, EnvioManual);
         }
 
         [HttpGet("studies_params/{recordId}/{requestId}")]
@@ -88,21 +88,21 @@ namespace Service.MedicalRecord.Controllers
             await _service.SaveResultPathologicalStudy(result);
         }
 
-        [HttpPut("updatePathological")]
+        [HttpPut("updatePathological/{EnvioManual}")]
         [Authorize(Policies.Update)]
-        public async Task UpdateResultPathologicalStudy([FromForm] ClinicalResultPathologicalFormDto result)
+        public async Task UpdateResultPathologicalStudy([FromForm] ClinicalResultPathologicalFormDto result, bool EnvioManual)
         {
             result.UsuarioId = (Guid)HttpContext.Items["userId"];
             result.Usuario = HttpContext.Items["userName"].ToString();
-            await _service.UpdateResultPathologicalStudy(result);
+            await _service.UpdateResultPathologicalStudy(result, EnvioManual);
         }
         [HttpPut("sendResultFile")]
         [Authorize(Policies.Update)]
-        public async Task SendResultFile([FromBody] DeliverResultsStudiesDto estudios)
+        public async Task<bool> SendResultFile([FromBody] DeliverResultsStudiesDto estudios)
         {
             estudios.UsuarioId = (Guid)HttpContext.Items["userId"];
             estudios.Usuario = HttpContext.Items["userName"].ToString();
-            await _service.SendResultFile(estudios);
+            return await _service.SendResultFile(estudios);
         }
 
 

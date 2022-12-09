@@ -23,5 +23,6 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task UpdateTaxData(TaxData taxData);
         Task<string> GetLastCode(Guid branchId, string date);
         Task<List<Domain.MedicalRecord.MedicalRecord>> Coincidencias(MedicalRecord.Domain.MedicalRecord.MedicalRecord expediente);
+        Task<List<Domain.MedicalRecord.MedicalRecord>> GetRecordsByIds(List<Guid> records);
     }
 }

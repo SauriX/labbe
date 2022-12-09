@@ -23,6 +23,17 @@
       "UpstreamhttpsMethod": [ "POST" ]
     },
     {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/MedicalRecord/report/expedientes",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/MedicalRecord/report/expedientes",
+      "UpstreamhttpsMethod": [ "POST" ]
+    },
+    {
       "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/MedicalRecord/coincidencias",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [

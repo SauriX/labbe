@@ -16,7 +16,7 @@ namespace Service.Report.Mapper
             if (model == null) return null;
 
             var results = (from c in model
-                           group c by new { c.Expediente.Expediente, c.Expediente.Nombre, c.Expediente.Celular, c.Expediente.Correo, c.Medico.NombreMedico, c.SolicitudId, c.Clave } into grupo
+                           group c by new { c.Expediente.Expediente, c.Expediente.Nombre, c.Expediente.Celular, c.Expediente.Correo, c.Medico.NombreMedico, c.Id, c.Clave } into grupo
                            select new ContactStatsDto
                            {
                                Id = Guid.NewGuid(),

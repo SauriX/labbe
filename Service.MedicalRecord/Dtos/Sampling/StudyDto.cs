@@ -7,6 +7,7 @@ namespace Service.MedicalRecord.Dtos.Sampling
     public class StudyDto
     {
         public int Id { get; set; }
+        public int SolicitudEstudioId { get; set; }
         public string Nombre { get; set; }
         public string Area { get; set; }
         public AreaListDto Areas { get; set; }
@@ -19,6 +20,8 @@ namespace Service.MedicalRecord.Dtos.Sampling
         public Guid SolicitudId { get; set; }
         public string FechaActualizacion { get; set; }
         public string UsuarioActualizacion { get; set; }
+        public byte Urgencia { get; set; }
+        public string Observacion { get; set; }
         public List<StudyParamsDto> Parametros { get; set; }
     }
 

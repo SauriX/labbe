@@ -123,11 +123,13 @@ namespace Service.MedicalRecord.Application
                     {
                         study.EstatusId = Status.RequestStudy.Solicitado;
                         study.FechaSolicitado = DateTime.Now;
+                        study.UsuarioSolicitado = item.Usuario;
                     }
                     else
                     {
                         study.EstatusId = Status.RequestStudy.TomaDeMuestra;
                         study.FechaTomaMuestra = DateTime.Now;
+                        study.UsuarioTomaMuestra = item.Usuario;
                     }
                 }
                 studyCount += studies.Count;

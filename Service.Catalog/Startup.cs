@@ -245,6 +245,7 @@ namespace Service.Catalog
             services.AddScoped<IPromotionApplication, PromotionApplication>();
             services.AddScoped<ILoyaltyApplication, LoyaltyApplication>();
             services.AddScoped<IRouteApplication, RouteApplication>();
+            services.AddScoped<IBudgetApplication, BudgetApplication>();
 
             services.AddScoped<ICatalogRepository<Delivery>, CatalogRepository<Delivery>>();
             services.AddScoped<ICatalogRepository<Area>, CatalogRepository<Area>>();
@@ -284,7 +285,7 @@ namespace Service.Catalog
             services.AddScoped<IRouteRepository, RouteRepository>();
             services.AddScoped<IEquipmentMantainRepository, EquipmentMantainRepository>();
             services.AddScoped<IEquipmentApplication, EquipmentApplication>();
-
+            services.AddScoped<IBudgetRepository, BudgetRepository>();
 
         }
 

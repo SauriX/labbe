@@ -246,14 +246,42 @@ namespace Integration.Pdf.Service
 
                         var glucoseToleranceValues = param.TipoValorId == 6 || param.TipoValorId == 1;
 
-                        if(param.EstudioId == 631 && glucoseToleranceValues && param.Clave != "_OB_CTG")
+                        if (param.EstudioId == 631 && glucoseToleranceValues && param.Clave != "_OB_CTG")
                         {
                             try
                             {
                                 var numericResult = Convert.ToDouble(param.Resultado);
                                 series.Add(numericResult);
-                                xseries.Add(param.Clave);
-                            } 
+
+                                if (param.Clave == "_GLU_SU")
+                                {
+                                    xseries.Add("0");
+                                }
+                                if (param.Clave == "_GLU_SU30")
+                                {
+                                    xseries.Add("30");
+                                }
+                                if (param.Clave == "_GLU_SU60")
+                                {
+                                    xseries.Add("60");
+                                }
+                                if (param.Clave == "_GLU_SU90")
+                                {
+                                    xseries.Add("90");
+                                }
+                                if (param.Clave == "_GLU_SU120")
+                                {
+                                    xseries.Add("120");
+                                }
+                                if (param.Clave == "_GLU_SU180")
+                                {
+                                    xseries.Add("180");
+                                }
+                                if (param.Clave == "_GLU_SU240")
+                                {
+                                    xseries.Add("240");
+                                }
+                            }
                             catch (Exception ex)
                             {
                                 throw ex;
@@ -273,9 +301,12 @@ namespace Integration.Pdf.Service
                         section.AddSpace(5);
 
                         chart.XAxis.MajorTickMark = TickMarkType.Outside;
-                        chart.XAxis.Title.Caption = "Tolerancia a la Glucosa";
+                        chart.XAxis.Title.Caption = "Tiempo Post Carga de Glucosa min.";
 
                         chart.YAxis.MajorTickMark = TickMarkType.Outside;
+                        chart.YAxis.Title.Caption = "Concentración de Glucosa mg/dl";
+                        chart.YAxis.Title.Orientation = 90;
+                        chart.YAxis.Title.VerticalAlignment = VerticalAlignment.Center;
                         chart.YAxis.HasMajorGridlines = true;
 
                         chart.PlotArea.LineFormat.Color = Colors.DarkGray;

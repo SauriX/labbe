@@ -77,6 +77,46 @@ namespace Service.Report.Migrations
                     b.ToTable("CAT_Medico");
                 });
 
+            modelBuilder.Entity("Service.Report.Domain.Indicators.Indicators", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("CostoFijo")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("CostoReactivo")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("CostoTomaCalculado")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("FechaFinal")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaInicial")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Ingresos")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Pacientes")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("SucursalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("UtilidadOperacion")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SucursalId");
+
+                    b.ToTable("CAT_Indicadores");
+                });
+
             modelBuilder.Entity("Service.Report.Domain.MedicalRecord.MedicalRecord", b =>
                 {
                     b.Property<Guid>("Id")
@@ -103,7 +143,7 @@ namespace Service.Report.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MedicalRecord");
+                    b.ToTable("CAT_Expedientes");
                 });
 
             modelBuilder.Entity("Service.Report.Domain.Request.Request", b =>
@@ -160,7 +200,7 @@ namespace Service.Report.Migrations
 
                     b.HasIndex("SucursalId");
 
-                    b.ToTable("Request");
+                    b.ToTable("CAT_Solicitud");
                 });
 
             modelBuilder.Entity("Service.Report.Domain.Request.RequestPack", b =>
@@ -251,7 +291,7 @@ namespace Service.Report.Migrations
 
                     b.HasIndex("SolicitudId");
 
-                    b.ToTable("RequestPayment");
+                    b.ToTable("CAT_Corte_Caja");
                 });
 
             modelBuilder.Entity("Service.Report.Domain.Request.RequestStatus", b =>
@@ -315,7 +355,18 @@ namespace Service.Report.Migrations
 
                     b.HasIndex("SolicitudId", "PaqueteId");
 
-                    b.ToTable("RequestStudy");
+                    b.ToTable("Relación_Solicitud_Estudio");
+                });
+
+            modelBuilder.Entity("Service.Report.Domain.Indicators.Indicators", b =>
+                {
+                    b.HasOne("Service.Report.Domain.Catalogs.Branch", "Sucursal")
+                        .WithMany()
+                        .HasForeignKey("SucursalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Sucursal");
                 });
 
             modelBuilder.Entity("Service.Report.Domain.Request.Request", b =>

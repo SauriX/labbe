@@ -15,6 +15,7 @@ namespace Service.MedicalRecord.Dtos.MassSearch
         public int Edad { get; set; }
         public string Sexo { get; set; }
         public string Compania { get; set; }
+        public string Parcialidad { get; set; }
         public List<RequestsStudiesInfoDto> Estudios { get; set; }
 
     }
@@ -28,5 +29,7 @@ namespace Service.MedicalRecord.Dtos.MassSearch
         public string Estatus { get; set; }
         public string Registro { get; set; }
         public bool isPathological{ get; set; }
+        public bool IsActiveCheckbox { get; set; }
+
     }
 }

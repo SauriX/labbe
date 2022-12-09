@@ -18,10 +18,10 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<(byte[] file, string fileName)> ExportList(ClinicResultSearchDto search);
         Task<(byte[] file, string fileName)> ExportGlucoseChart(ClinicResultsFormDto result);
         Task SaveLabResults(List<ClinicResultsFormDto> results);
-        Task UpdateLabResults(List<ClinicResultsFormDto> results);
+        Task UpdateLabResults(List<ClinicResultsFormDto> results, bool EnvioManual);
         Task SaveResultPathologicalStudy(ClinicalResultPathologicalFormDto search);
-        Task UpdateResultPathologicalStudy(ClinicalResultPathologicalFormDto search);
-        Task SendResultFile(DeliverResultsStudiesDto estudios);
+        Task UpdateResultPathologicalStudy(ClinicalResultPathologicalFormDto search, bool EnvioManual);
+        Task<bool> SendResultFile(DeliverResultsStudiesDto estudios);
         Task UpdateStatusStudy(int RequestStudyId, byte status, string idUsuario);
         Task<ClinicResultsPathologicalInfoDto> GetResultPathological(int RequestStudyId);
         /*Task<ClinicResults> GetLaboratoryResults(int RequestStudyId);*/

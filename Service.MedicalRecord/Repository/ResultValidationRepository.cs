@@ -35,7 +35,7 @@ namespace Service.MedicalRecord.Repository
             var report = _context.CAT_Solicitud.Where(x => x.Estudios.Any(y => y.EstatusId == Status.RequestStudy.Capturado || y.EstatusId == Status.RequestStudy.Validado))
                 .Include(x => x.Expediente)
                 .Include(x => x.Medico)
-                .Include(x => x.Estudios.Where(y => y.EstatusId == Status.RequestStudy.Capturado ||y.EstatusId == Status.RequestStudy.Validado)).ThenInclude(x => x.Estatus)
+                .Include(x => x.Estudios).ThenInclude(x => x.Estatus)
                 .Include(x => x.Sucursal)
                 .Include(x => x.Compañia)
                 .AsQueryable();
@@ -88,13 +88,12 @@ namespace Service.MedicalRecord.Repository
             {
                 report = report.Where(x => search.TipoSoli.Contains(x.Urgencia));
             }
-
-            if (search.Area != null && search.Area.Count > 0)
+            if (search.Area != null && search.Area > 0)
             {
-                report = report.Where(x => x.Estudios.Any(y => search.Area.Contains(y.AreaId)));
+                report = report.Where(x => x.Estudios.Any(y => search.Area == y.AreaId));
             }
 
-            return  report.ToList();
+            return report.ToList();
         }
 
         public async Task<List<RequestStudy>> GetStudyById(Guid requestId, IEnumerable<int> studiesIds)

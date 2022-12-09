@@ -261,6 +261,7 @@ namespace Service.MedicalRecord
             services.AddScoped<IMedicalRecordApplication, MedicalRecordApplication>();
             services.AddScoped<IQuotationApplication, QuotationApplication>();
             services.AddScoped<IRequestApplication, RequestApplication>();
+            services.AddScoped<IReportApplication, ReportApplication>();
             services.AddScoped<IAppointmentApplication, AppointmentApplication>();
             services.AddScoped<ISamplingApplication, SamplingAplication>();
             services.AddScoped<IRequestedStudyApplication, RequestedStudyApplication>();
@@ -272,9 +273,11 @@ namespace Service.MedicalRecord
             services.AddScoped<IWeeClinicApplication, WeeClinicApplication>();
             services.AddScoped<IMassSearchApplication, MassSearchApplication>();
             services.AddScoped<IValidationApplication, ResultValidationApplication>();
+            services.AddScoped<IRelaseResultApplication, RelaseResultApplication>();
 
             services.AddScoped<IMedicalRecordRepository, MedicalRecordRepository>();
             services.AddScoped<IRequestRepository, RequestRepository>();
+            services.AddScoped<IReportRepository, ReportRepository>();
             services.AddScoped<IQuotationRepository, QuotationRepository>();
             services.AddScoped<IAppointmentResposiotry, AppointmentRepository>();
             services.AddScoped<ISamplingRepository, SamplingRepository>();
@@ -286,6 +289,7 @@ namespace Service.MedicalRecord
             services.AddScoped<IWorkListRepository, WorkListRepository>();
             services.AddScoped<IMassSearchRepository, MassSearchRepository>();
             services.AddScoped<IResultaValidationRepository, ResultValidationRepository>();
+            services.AddScoped<IRelaseResultRepository, RelaseResultRepository>();
         }
 
 
