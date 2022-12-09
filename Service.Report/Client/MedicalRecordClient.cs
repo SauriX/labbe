@@ -1,6 +1,7 @@
 ﻿using DocumentFormat.OpenXml.Office2010.ExcelAc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using Service.Report.Client.IClient;
 using Service.Report.Dtos;
 using Service.Report.Dtos.BudgetStats;
 using Service.Report.Dtos.MedicalRecord;
@@ -16,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Service.Report.Client
 {
-    public class MedicalRecordClient
+    public class MedicalRecordClient : IMedicalRecordClient
     {
         private readonly IConfiguration _configuration;
         private readonly HttpClient _client;
@@ -62,7 +63,7 @@ namespace Service.Report.Client
 
                 var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:MedicalRecord")}/api/report/presupuestos/filter", stringContent);
+                var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:MedicalRecord")}/api/reportdata/presupuestos/filter", stringContent);
 
                 if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
                 {
@@ -89,7 +90,7 @@ namespace Service.Report.Client
 
                 var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:MedicalRecord")}/api/report/presupuestos/table/filter", stringContent);
+                var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:MedicalRecord")}/api/reportdata/presupuestos/table/filter", stringContent);
 
                 if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
                 {
@@ -116,7 +117,7 @@ namespace Service.Report.Client
 
                 var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:MedicalRecord")}/api/report/presupuestos/chart/filter", stringContent);
+                var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:MedicalRecord")}/api/reportdata/presupuestos/chart/filter", stringContent);
 
                 if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
                 {

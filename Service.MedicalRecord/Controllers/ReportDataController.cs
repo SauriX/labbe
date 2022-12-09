@@ -13,14 +13,15 @@ namespace Service.MedicalRecord.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ReportController : ControllerBase
+    public class ReportDataController : ControllerBase
     {
         private readonly IReportApplication _service;
-        public ReportController(IReportApplication service) 
+        public ReportDataController(IReportApplication service) 
         {
             _service = service;
         }
 
+        // Cotizaciones
         [HttpPost("presupuestos/filter")]
         [Authorize(Policies.Access)]
         public async Task<IEnumerable<BudgetStatsDto>> GetBudgetRequestNow(ReportFilterDto search)

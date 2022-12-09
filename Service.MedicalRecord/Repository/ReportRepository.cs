@@ -97,28 +97,28 @@ namespace Service.MedicalRecord.Repository
                 }
             }
 
-            //if (search.TipoCompañia != null && search.TipoCompañia.Count == 1)
-            //{
-            //    if (search.TipoCompañia.Contains(Convenio))
-            //    {
-            //        report = report.Where(x => x.Compañia.Convenio == 1);
-            //    }
+            if (search.TipoCompañia != null && search.TipoCompañia.Count == 1)
+            {
+                if (search.TipoCompañia.Contains(Convenio))
+                {
+                    report = report.Where(x => x.Procedencia == 1);
+                }
 
-            //    else if (search.TipoCompañia.Contains(Todas))
-            //    {
-            //        report = report.Where(x => x.Compañia.Convenio == 2);
-            //    }
+                else if (search.TipoCompañia.Contains(Todas))
+                {
+                    report = report.Where(x => x.Procedencia == 2);
+                }
 
-            //    query = report.ToQueryString();
-            //}
+                query = report.ToQueryString();
+            }
 
-            //if (search.TipoCompañia != null && search.TipoCompañia.Count == 2)
-            //{
-            //    if (search.TipoCompañia.Contains(Convenio) && search.TipoCompañia.Contains(Todas))
-            //    {
-            //        report = report.Where(x => x.Compañia.Convenio == 1 || x.Compañia.Convenio == 2);
-            //    }
-            //}
+            if (search.TipoCompañia != null && search.TipoCompañia.Count == 2)
+            {
+                if (search.TipoCompañia.Contains(Convenio) && search.TipoCompañia.Contains(Todas))
+                {
+                    report = report.Where(x => x.Procedencia == 1 || x.Procedencia == 2);
+                }
+            }
 
             if (search.Fecha != null)
             {
