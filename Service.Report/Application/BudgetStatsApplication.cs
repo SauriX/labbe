@@ -1,8 +1,12 @@
 ﻿using Service.Report.Application.IApplication;
 using Service.Report.Client.IClient;
+using Service.Report.Domain.Catalogs;
+using Service.Report.Domain.MedicalRecord;
 using Service.Report.Dtos;
 using Service.Report.Dtos.BudgetStats;
+using Service.Report.Mapper;
 using Service.Report.PdfModel;
+using Service.Report.Repository.IRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,34 +16,39 @@ namespace Service.Report.Application
 {
     public class BudgetStatsApplication : BaseApplication, IBudgetStatsApplication
     {
+        public readonly IReportRepository _repository;
         private readonly IMedicalRecordClient _medicalRecordService;
         private readonly IPdfClient _pdfClient;
 
-        public BudgetStatsApplication(IMedicalRecordClient medicalRecordService,
-            IPdfClient pdfClient)
+        public BudgetStatsApplication(IReportRepository repository, IMedicalRecordClient medicalRecordService,
+            IPdfClient pdfClient, IRepository<Branch> branchRepository, IRepository<Medic> medicRepository, IRepository<Company> companyRepository) : base(branchRepository, medicRepository, companyRepository)
         {
             _medicalRecordService = medicalRecordService;
+            _repository = repository;
             _pdfClient = pdfClient;
 
         }
 
-        public async Task<List<BudgetStatsDto>> GetByFilter(ReportFilterDto filter)
+        public async Task<IEnumerable<BudgetStatsDto>> GetByFilter(ReportFilterDto filter)
         {
-            var results = await _medicalRecordService.GetQuotationByFilter(filter);
+            var data = await _repository.GetByFilter(filter);
+            var results = data.ToBudgetRequestDto();
 
             return results;
         }
 
         public async Task<BudgetDto> GetTableByFilter(ReportFilterDto filter)
         {
-            var results = await _medicalRecordService.GetQuotationTableByFilter(filter);
+            var data = await _repository.GetByFilter(filter);
+            var results = data.ToBudgetDto();
 
             return results;
         }
 
-        public async Task<List<BudgetStatsChartDto>> GetChartByFilter(ReportFilterDto filter)
+        public async Task<IEnumerable<BudgetStatsChartDto>> GetChartByFilter(ReportFilterDto filter)
         {
-            var results = await _medicalRecordService.GetQuotationChartByFilter(filter);
+            var data = await _repository.GetByFilter(filter);
+            var results = data.ToBudgetStatsChartDto();
 
             return results;
         }

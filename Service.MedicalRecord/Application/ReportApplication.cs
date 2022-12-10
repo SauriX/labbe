@@ -1,11 +1,11 @@
 ﻿using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Dtos.Reports;
-using Service.MedicalRecord.Dtos.Reports.BudgetStats;
 using Service.MedicalRecord.Repository.IRepository;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Linq;
-using Service.MedicalRecord.Mapper.Reports;
+using Service.MedicalRecord.Dtos.Reports.StudyStats;
+using Service.MedicalRecord.Mapper;
+using Service.MedicalRecord.Dtos.Reports.BudgetStats;
 
 namespace Service.MedicalRecord.Application
 {
@@ -22,23 +22,23 @@ namespace Service.MedicalRecord.Application
         public async Task<IEnumerable<BudgetStatsDto>> GetQuotationByFilter(ReportFilterDto filter)
         {
             var data = await _repository.GetByQuotation(filter);
-            var results = data.ToBudgetRequestDto();
+            var results = data.ToQuotationReportDto();
 
             return results;
         }
 
-        public async Task<BudgetDto> GetQuotationTableByFilter(ReportFilterDto filter)
+        public async Task<IEnumerable<ReportInfoDto>> GetRequestByFilter(ReportFilterDto filter)
         {
-            var data = await _repository.GetByQuotation(filter);
-            var results = data.ToBudgetDto();
+            var data = await _repository.GetByFilter(filter);
+            var results = data.ToReportRequestDto();
 
             return results;
         }
-
-        public async Task<IEnumerable<BudgetStatsChartDto>> GetQuotationChartByFilter(ReportFilterDto filter)
+        
+        public async Task<IEnumerable<StudiesDto>> GetStudiesByFilter(ReportFilterDto filter)
         {
-            var data = await _repository.GetByQuotation(filter);
-            var results = data.ToBudgetStatsChartDto();
+            var data = await _repository.GetByStudies(filter);
+            var results = data.RequestStudies();
 
             return results;
         }

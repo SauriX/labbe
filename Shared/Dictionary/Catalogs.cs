@@ -97,6 +97,10 @@ namespace Shared.Dictionary
             public const string Parrafo = "8";
             public const string Etiqueta = "9";
             public const string Observacion = "10";
+            public const string NumericoCon2Columna = "11";
+            public const string NumericoCon3Columna = "12";
+            public const string NumericoCon4Columna = "13";
+            public const string NumericoCon5Columna = "14";
         }
     }
 }
