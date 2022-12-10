@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System;
-using Service.MedicalRecord.Dtos.Reports.StudyStats;
+using Service.Report.Dtos.StudyStats;
 
-namespace Service.MedicalRecord.Dtos.Reports
+namespace Service.Report.Domain.MedicalRecord
 {
-    public class ReportInfoDto
+    public class RequestInfo
     {
         public Guid Id { get; set; }
         public Guid ExpedienteId { get; set; }
@@ -34,7 +34,6 @@ namespace Service.MedicalRecord.Dtos.Reports
         public decimal Total { get; set; }
         public decimal Saldo { get; set; }
         public string Fecha { get; set; }
-        public List<StudiesDto> Estudios { get; set; }
-
+        public List<RequestStudies> Estudios { get; set; }
     }
 }

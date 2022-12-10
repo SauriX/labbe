@@ -1,4 +1,5 @@
-﻿using Service.Report.Dtos;
+﻿using Service.Report.Domain.MedicalRecord;
+using Service.Report.Dtos;
 using Service.Report.Dtos.BudgetStats;
 using Service.Report.Dtos.MedicalRecord;
 using System;
@@ -10,8 +11,8 @@ namespace Service.Report.Client.IClient
     public interface IMedicalRecordClient
     {
         Task<List<MedicalRecordDto>> GetMedicalRecord(List<Guid> records);
-        Task<List<BudgetStatsDto>> GetQuotationByFilter(ReportFilterDto search);
-        Task<BudgetDto> GetQuotationTableByFilter(ReportFilterDto search);
-        Task<List<BudgetStatsChartDto>> GetQuotationChartByFilter(ReportFilterDto search);
+        Task<List<Quotation>> GetQuotationByFilter(ReportFilterDto search);
+        Task<List<RequestInfo>> GetRequestByFilter(ReportFilterDto search);
+        Task<List<RequestStudies>> GetStudiesByFilter(ReportFilterDto search);
     }
 }

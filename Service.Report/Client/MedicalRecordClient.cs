@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Service.Report.Client.IClient;
+using Service.Report.Domain.MedicalRecord;
 using Service.Report.Dtos;
 using Service.Report.Dtos.BudgetStats;
 using Service.Report.Dtos.MedicalRecord;
@@ -55,7 +56,7 @@ namespace Service.Report.Client
             }
         }
 
-        public async Task<List<BudgetStatsDto>> GetQuotationByFilter(ReportFilterDto search)
+        public async Task<List<Quotation>> GetQuotationByFilter(ReportFilterDto search)
         {
             try
             {
@@ -63,11 +64,11 @@ namespace Service.Report.Client
 
                 var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:MedicalRecord")}/api/reportdata/presupuestos/filter", stringContent);
+                var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:MedicalRecord")}/api/reportdata/cotizaciones/filter", stringContent);
 
                 if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
                 {
-                    return await response.Content.ReadFromJsonAsync<List<BudgetStatsDto>>();
+                    return await response.Content.ReadFromJsonAsync<List<Quotation>>();
                 }
 
                 var error = await response.Content.ReadFromJsonAsync<ClientException>();
@@ -82,7 +83,7 @@ namespace Service.Report.Client
             }
         }
 
-        public async Task<BudgetDto> GetQuotationTableByFilter(ReportFilterDto search)
+        public async Task<List<RequestInfo>> GetRequestByFilter(ReportFilterDto search)
         {
             try
             {
@@ -90,11 +91,11 @@ namespace Service.Report.Client
 
                 var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:MedicalRecord")}/api/reportdata/presupuestos/table/filter", stringContent);
+                var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:MedicalRecord")}/api/reportdata/solicitudes/filter", stringContent);
 
                 if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
                 {
-                    return await response.Content.ReadFromJsonAsync<BudgetDto>();
+                    return await response.Content.ReadFromJsonAsync<List<RequestInfo>>();
                 }
 
                 var error = await response.Content.ReadFromJsonAsync<ClientException>();
@@ -109,7 +110,7 @@ namespace Service.Report.Client
             }
         }
 
-        public async Task<List<BudgetStatsChartDto>> GetQuotationChartByFilter(ReportFilterDto search)
+        public async Task<List<RequestStudies>> GetStudiesByFilter(ReportFilterDto search)
         {
             try
             {
@@ -117,11 +118,11 @@ namespace Service.Report.Client
 
                 var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:MedicalRecord")}/api/reportdata/presupuestos/chart/filter", stringContent);
+                var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:MedicalRecord")}/api/reportdata/estudios/filter", stringContent);
 
                 if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
                 {
-                    return await response.Content.ReadFromJsonAsync<List<BudgetStatsChartDto>>();
+                    return await response.Content.ReadFromJsonAsync<List<RequestStudies>>();
                 }
 
                 var error = await response.Content.ReadFromJsonAsync<ClientException>();
