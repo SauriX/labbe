@@ -34,8 +34,8 @@ namespace Integration.Invoice.Service
                     ["legal_name"] = client.RazonSocial,
                     ["tax_id"] = client.RFC,
                     ["tax_system"] = client.RegimenFiscal,
-                    ["email"] = client.Correo,
-                    ["phone"] = client.Telefono,
+                    ["email"] = client.Correo ?? "",
+                    ["phone"] = client.Telefono ?? "",
                     ["address"] = new Dictionary<string, object>
                     {
                         ["zip"] = client.Domicilio.CodigoPostal,
@@ -103,8 +103,8 @@ namespace Integration.Invoice.Service
 
                 throw;
             }
-        } 
-        
+        }
+
         public static async Task<byte[]> GetPdf(string invoiceId)
         {
             try
