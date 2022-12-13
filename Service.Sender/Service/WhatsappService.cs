@@ -39,7 +39,6 @@ namespace Service.Sender.Service
         public async Task SendFile(string phone, Uri filePath, string fileName)
         {
             var token = "01eo1fdxodwi6s88";
-
             
             var client = new HttpClient();
 

@@ -362,7 +362,12 @@ namespace Service.MedicalRecord.Application
 
         public async Task<RequestPaymentDto> CreatePayment(RequestPaymentDto requestDto)
         {
-            await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
+            var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
+
+            if (requestDto.Cantidad > request.Saldo)
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "La cantidad del pago no puede sobrepasar el saldo");
+            }
 
             var newPayment = requestDto.ToModel();
 
@@ -1089,6 +1094,54 @@ namespace Service.MedicalRecord.Application
                 _transaction.RollbackTransaction();
                 throw;
             }
+        }
+
+        private async Task UpdateTotals(Guid recordId, Guid requestId, Guid userId, RequestTotalDto totals = null)
+        {
+            var request = await GetExistingRequest(recordId, requestId);
+
+            var studies = await _repository.GetStudiesByRequest(requestId);
+            var packs = await _repository.GetPacksByRequest(requestId);
+
+            var payments = await _repository.GetPayments(requestId);
+
+            studies = studies.Where(x => x.EstatusId != Status.RequestStudy.Cancelado).ToList();
+            packs = packs.Where(x => true).ToList();
+            payments = payments.Where(x => x.EstatusId.In(Status.RequestPayment.Pagado, Status.RequestPayment.Facturado)).ToList();
+
+            var studyAndPack = studies.Select(x => new { x.AplicaCargo, x.AplicaCopago, x.AplicaDescuento, x.Precio, x.PrecioFinal })
+                .Concat(packs.Select(x => new { x.AplicaCargo, x.AplicaCopago, x.AplicaDescuento, x.Precio, x.PrecioFinal }));
+
+            var totalStudies = studyAndPack.Sum(x => x.PrecioFinal);
+            var final = totalStudies - totals.Descuento + totals.Cargo;
+
+            var descT = totals.DescuentoTipo == 1 ? Math.Round(studyAndPack.Where(x => x.AplicaDescuento).Sum(x => x.Precio) * totals.Descuento / 100, 2) : totals.Descuento;
+            var descP = totals.DescuentoTipo == 1 ? totals.Descuento : Math.Round(studyAndPack.Where(x => x.AplicaDescuento).Sum(x => x.Precio) * 100 / totalStudies, 2);
+
+            var charT = totals.CargoTipo == 1 ? Math.Round(studyAndPack.Where(x => x.AplicaCargo).Sum(x => x.Precio) * totals.Cargo / 100, 2) : totals.Cargo;
+            var charP = totals.CargoTipo == 1 ? totals.Cargo : Math.Round(studyAndPack.Where(x => x.AplicaCargo).Sum(x => x.Precio) * 100 / totalStudies, 2);
+
+            var copT = totals.CopagoTipo == 1 ? Math.Round(studyAndPack.Where(x => x.AplicaCopago).Sum(x => x.Precio) * totals.Copago / 100, 2) : totals.Copago;
+            var copP = totals.CopagoTipo == 1 ? totals.Copago : Math.Round(studyAndPack.Where(x => x.AplicaCopago).Sum(x => x.Precio) * 100 / totalStudies, 2);
+
+            var finalTotal = totalStudies - descT + charT;
+            var userTotal = copT > 0 ? copT : totalStudies - descT + charT;
+
+            var balance = finalTotal - payments.Sum(x => x.Cantidad);
+
+            request.TotalEstudios = totalStudies;
+            request.Descuento = totals.Descuento;
+            request.DescuentoTipo = totals.DescuentoTipo;
+            request.Cargo = totals.Cargo;
+            request.CargoTipo = totals.CargoTipo;
+            request.Copago = totals.Copago;
+            request.CopagoTipo = totals.CopagoTipo;
+            request.Total = userTotal;
+            request.Saldo = balance;
+            request.UsuarioModificoId = userId;
+            request.FechaModifico = DateTime.Now;
+
+            await _repository.Update(request);
         }
 
         private static async Task<string> SaveImageGetPath(RequestImageDto requestDto, string fileName = null)

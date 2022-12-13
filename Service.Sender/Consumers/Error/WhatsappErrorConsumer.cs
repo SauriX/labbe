@@ -30,7 +30,7 @@ namespace Service.Sender.Consumers.Error
 
             if (message.Notificar)
             {
-                var notification = new NotificationContract("Hubo un error al enviar el correo, intenta más tarde", true);
+                var notification = new NotificationContract("Hubo un error al enviar el whatsapp, intenta más tarde", true);
 
                 await _hubContext.Clients.Group(message.RemitenteId).SendAsync("Notify", notification);
             }
