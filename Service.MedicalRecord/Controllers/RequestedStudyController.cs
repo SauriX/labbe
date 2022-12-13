@@ -42,6 +42,7 @@ namespace Service.MedicalRecord.Controllers
         [Authorize(Policies.Access)]
         public async Task<IActionResult> PrintOrder(Guid recordId, Guid requestId)
         {
+
             var userName = HttpContext.Items["userName"].ToString();
 
             var file = await _requestService.PrintOrder(recordId, requestId, userName);

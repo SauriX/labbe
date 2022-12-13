@@ -1,0 +1,14 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace Service.MedicalRecord.Dtos.InvoiceCompany
+{
+    public class InvoiceCompanyFilterDto
+    {
+        public DateTime FechaInicial { get; set; }
+        public DateTime FechaFinal { get; set; }
+        public List<Guid> Companias { get; set; }
+        public List<Guid> Sucursales { get; set; }
+        public List<int> Ciudades { get; set; }
+    }
+}
