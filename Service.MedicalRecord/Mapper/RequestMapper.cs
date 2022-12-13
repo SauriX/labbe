@@ -212,6 +212,7 @@ namespace Service.MedicalRecord.Mapper
                 PuntosAplicados = 0.ToString(),
                 Total = model.Total.ToString("C"),
                 Atiende = userName.ToUpper(),
+
                 Estudios = model.Paquetes.Select(x => new RequestOrderStudyDto
                 {
                     Clave = x.Clave,

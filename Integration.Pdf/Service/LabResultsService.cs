@@ -144,7 +144,7 @@ namespace Integration.Pdf.Service
                         new Col("Doctor (a)", 12, fontText, ParagraphAlignment.Left),
                         new Col($": {results.SolicitudInfo?.Medico}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
                         new Col("Expediente", 12, fontText, ParagraphAlignment.Left),
-                        new Col($": {results.SolicitudInfo?.Clave}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left)
+                        new Col($": {results.SolicitudInfo?.Expediente}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left)
                     };
                 header.AddBorderedText(line1, top: true, right: false, left: false);
 
@@ -160,7 +160,7 @@ namespace Integration.Pdf.Service
                 var line3 = new Col[]
                 {
                         new Col("Paciente Número", 12, fontText, ParagraphAlignment.Left),
-                        new Col($": {results.SolicitudInfo?.Expediente}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
+                        new Col($": {results.SolicitudInfo?.Clave}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
                         new Col("Sexo", 12, fontText, ParagraphAlignment.Left),
                         new Col($": {results.SolicitudInfo?.Sexo}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
                 };
@@ -213,7 +213,7 @@ namespace Integration.Pdf.Service
 
                     var orderParams = studyParam.OrderBy(x => x.Orden);
 
-                    foreach (var param in orderParams)
+                    foreach (var param in orderParams.Where(x => x.Resultado != null))
                     {
                         var checkResult = false;
                         var typeValueText = param.TipoValorId == 9 || param.TipoValorId == 10;
