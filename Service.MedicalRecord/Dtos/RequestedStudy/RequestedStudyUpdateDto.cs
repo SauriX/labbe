@@ -1,8 +1,6 @@
-﻿using Service.MedicalRecord.Dtos.Request;
-using System;
+﻿using Service.MedicalRecord.Dtos.Sampling;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System;
 
 namespace Service.MedicalRecord.Dtos.RequestedStudy
 {
@@ -10,5 +8,7 @@ namespace Service.MedicalRecord.Dtos.RequestedStudy
     {
         public List<int> EstudioId { get; set; }
         public Guid SolicitudId { get; set; }
+        public string Usuario { get; set; }
+        public List<SamplingCommentDto> Observacion { get; set; }
     }
 }

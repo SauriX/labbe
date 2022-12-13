@@ -5,6 +5,19 @@ namespace Service.Catalog.Domain.Price
 {
     public class PriceList
     {
+        public PriceList()
+        {
+        }
+
+        public PriceList(Guid id, string clave, string nombre, bool? visibilidad, bool activo)
+        {
+            Id = id;
+            Clave = clave;
+            Nombre = nombre;
+            Visibilidad = visibilidad;
+            Activo = activo;
+        }
+
         public Guid Id { get; set; }
         public string Clave { get; set; }
         public string Nombre { get; set; }

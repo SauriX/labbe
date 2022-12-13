@@ -180,7 +180,7 @@ namespace Service.MedicalRecord.Application
                     };
                     deliveryResultStudie.Add(deliver);
                 }
-                UsuarioId = request.UsuarioCreoId.ToString();
+                UsuarioId = request.UsuarioCreoId.ToString();   
                 Usuario = request.UsuarioCreoId.ToString();
 
 
@@ -198,7 +198,7 @@ namespace Service.MedicalRecord.Application
                     Usuario = Usuario,
                     MediosEnvio=mediosenvio
                 };
-
+                  
                 await _clinicresultapplication.SendResultFile(dataToSend);
             }
             return studyCount;

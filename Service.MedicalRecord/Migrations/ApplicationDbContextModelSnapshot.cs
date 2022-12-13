@@ -1115,6 +1115,9 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("Nombre")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Observacion")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("PaqueteId")
                         .HasColumnType("int");
 

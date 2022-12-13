@@ -9,8 +9,10 @@ namespace Integration.Pdf.Extensions
 {
     public static class SectionExtensions
     {
-        public static void AddText(this Section section, Models.Col col, bool partialBold = false, bool inverted = false, int spaceAfter = 5)
+        public static void AddText(this Section section, Models.Col col, bool partialBold = false, bool inverted = false, Unit? spaceAfter = null)
         {
+            if (spaceAfter == null) spaceAfter = Unit.FromPoint(5);
+
             Paragraph paragraph = section.AddParagraph();
             paragraph.Format.Alignment = col.Horizontal;
 
@@ -50,7 +52,7 @@ namespace Integration.Pdf.Extensions
             Paragraph p = section.AddParagraph();
             p.Format.LineSpacingRule = LineSpacingRule.Exactly;
             p.Format.LineSpacing = 0;
-            p.Format.SpaceBefore = Unit.FromPoint(spaceAfter);
+            p.Format.SpaceBefore = Unit.FromPoint((Unit)spaceAfter);
         }
 
         public static void AddBorderedText(this Section section, Models.Col col, bool all = true, bool top = false, bool right = false, bool bottom = false, bool left = false)
@@ -105,9 +107,12 @@ namespace Integration.Pdf.Extensions
             p.Format.SpaceBefore = Unit.FromPoint(5);
         }
 
-        public static void AddText(this Section section, Models.Col[] cols, bool partialBold = false, int fontSize = 0, bool bold = false)
+        public static void AddText(this Section section, Models.Col[] cols, bool partialBold = false, int fontSize = 0, bool bold = false, Unit? verticalPadding = null)
         {
+            if (verticalPadding == null) verticalPadding = Unit.FromPoint(5);
+
             Table table = section.AddTable();
+            table.Rows.Alignment = RowAlignment.Center;
             table.Borders.Visible = false;
             table.TopPadding = 0;
             table.BottomPadding = 0;
@@ -131,7 +136,8 @@ namespace Integration.Pdf.Extensions
             {
                 Models.Col col = cols[i];
 
-                Paragraph paragraph = row.Cells[i].AddParagraph();
+                Cell cell = row.Cells[i];
+                Paragraph paragraph = cell.AddParagraph();
                 string[] split = (col.Texto ?? "").Split(new[] { ':' }, 2);
 
                 if (!col.EsImagen && partialBold && split.Length == 2)
@@ -139,17 +145,23 @@ namespace Integration.Pdf.Extensions
                     paragraph.AddFormattedText(split[0] + ": ", Models.Col.FONT_BOLD);
                     paragraph.AddFormattedText(split[1], fontSize == 0 ? Models.Col.FONT_DEFAULT : new Font("Calibri", fontSize));
                 }
-                else if (!col.EsImagen)
+                else if (!col.EsImagen && !col.EsTabla)
                 {
                     var fp = paragraph.AddFormattedText(col.Texto ?? "", fontSize == 0 ? col.Fuente : new Font("Calibri", fontSize));
                     fp.Bold = col.Fuente.Bold || bold;
                 }
-                else
+                else if (col.EsImagen)
                 {
                     string imageFilename = col.Imagen.MigraDocFilenameFromByteArray();
                     var image = paragraph.AddImage(imageFilename);
                     if (col.ImagenTamaño != null) image.Width = (Unit)col.ImagenTamaño;
                     image.LockAspectRatio = true;
+                }
+                else
+                {
+                    var inneTable = col.Tabla.Clone();
+                    cell.Format.Alignment = col.Horizontal;
+                    cell.Elements.Add(inneTable);
                 }
 
                 if (col.Fill != null)
@@ -163,23 +175,27 @@ namespace Integration.Pdf.Extensions
             Paragraph p = section.AddParagraph();
             p.Format.LineSpacingRule = LineSpacingRule.Exactly;
             p.Format.LineSpacing = 0;
-            p.Format.SpaceBefore = Unit.FromPoint(5);
+            p.Format.SpaceBefore = (Unit)verticalPadding;
         }
 
-        public static void AddBorderedText(this Section section, Models.Col[] cols, bool all = false, bool top = false, bool right = false, bool bottom = false, bool left = false, Unit? marginSize = null)
+        public static void AddBorderedText(this Section section, Models.Col[] cols,
+            bool all = false, bool top = false, bool right = false, bool bottom = false, bool left = false,
+            int fontSize = 0, bool inverted = false, Unit? verticalSpace = null, Unit? borderWidth = null)
         {
-            if (marginSize == null) marginSize = Unit.FromPoint(2.5);
+            if (verticalSpace == null) verticalSpace = Unit.FromPoint(2.5);
+            if (borderWidth == null) borderWidth = Unit.FromPoint(1);
 
             Table table = section.AddTable();
+            table.Rows.Alignment = RowAlignment.Center;
             if (!all && !top && !right && !bottom && !left)
             {
                 table.Borders.Visible = false;
             }
 
-            table.TopPadding = (Unit)marginSize;
-            table.RightPadding = (Unit)marginSize;
-            table.BottomPadding = (Unit)marginSize;
-            table.LeftPadding = (Unit)marginSize;
+            table.TopPadding = (Unit)verticalSpace;
+            table.RightPadding = Unit.FromPoint(2.5);
+            table.BottomPadding = (Unit)verticalSpace;
+            table.LeftPadding = Unit.FromPoint(2.5);
 
             float sectionWidth = section.PageSetup.PageWidth - section.PageSetup.LeftMargin - section.PageSetup.RightMargin;
             float columnWidth = sectionWidth / cols.Sum(x => x.Tamaño);
@@ -194,6 +210,11 @@ namespace Integration.Pdf.Extensions
             Row row = table.AddRow();
             row.VerticalAlignment = VerticalAlignment.Center;
 
+            if (inverted == true)
+            {
+                row.Shading.Color = Colors.LightGray;
+            }
+
             for (int i = 0; i < cols.Length; i++)
             {
                 Models.Col col = cols[i];
@@ -201,26 +222,26 @@ namespace Integration.Pdf.Extensions
 
                 if (all)
                 {
-                    cell.Borders.Width = Unit.FromPoint(1);
+                    cell.Borders.Width = (Unit)borderWidth;
                     cell.Borders.Color = Colors.Black;
                 }
                 else
                 {
                     if (top)
                     {
-                        cell.Borders.Top = new Border() { Width = Unit.FromPoint(1), Color = Colors.Black };
+                        cell.Borders.Top = new Border() { Width = (Unit)borderWidth, Color = Colors.Black };
                     }
                     if (right && i == cols.Length - 1)
                     {
-                        cell.Borders.Right = new Border() { Width = Unit.FromPoint(1), Color = Colors.Black };
+                        cell.Borders.Right = new Border() { Width = (Unit)borderWidth, Color = Colors.Black };
                     }
                     if (bottom)
                     {
-                        cell.Borders.Bottom = new Border() { Width = Unit.FromPoint(1), Color = Colors.Black };
+                        cell.Borders.Bottom = new Border() { Width = (Unit)borderWidth, Color = Colors.Black };
                     }
                     if (left && i == 0)
                     {
-                        cell.Borders.Left = new Border() { Width = Unit.FromPoint(1), Color = Colors.Black };
+                        cell.Borders.Left = new Border() { Width = (Unit)borderWidth, Color = Colors.Black };
                     }
                 }
 
@@ -228,7 +249,7 @@ namespace Integration.Pdf.Extensions
 
                 if (!col.EsImagen)
                 {
-                    paragraph.AddFormattedText(col.Texto ?? "", col.Fuente);
+                    paragraph.AddFormattedText(col.Texto ?? "", fontSize == 0 ? col.Fuente : new Font(col.Fuente.Name, fontSize));
                 }
                 else
                 {
@@ -276,7 +297,7 @@ namespace Integration.Pdf.Extensions
 
                 var rtfObject = JsonConvert.DeserializeObject<RichTextFormatRAWDto>(col.Texto);
 
-                 foreach(var block in rtfObject.blocks)
+                foreach (var block in rtfObject.blocks)
                 {
                     Paragraph paragraph = row.Cells[i].AddParagraph();
 
@@ -294,7 +315,7 @@ namespace Integration.Pdf.Extensions
                         paragraph.Format.ListInfo.ContinuePreviousList = true;
 
                     }
-                    if(block.Data.TextAlign == "left")
+                    if (block.Data.TextAlign == "left")
                     {
                         paragraph.Format.Alignment = ParagraphAlignment.Left;
                     }
@@ -302,7 +323,7 @@ namespace Integration.Pdf.Extensions
                     {
                         paragraph.Format.Alignment = ParagraphAlignment.Center;
                     }
-                    if(block.Data.TextAlign == "right")
+                    if (block.Data.TextAlign == "right")
                     {
                         paragraph.Format.Alignment = ParagraphAlignment.Right;
                     }
@@ -311,83 +332,83 @@ namespace Integration.Pdf.Extensions
 
                     List<InlineStyleRangesList> ranges = new List<InlineStyleRangesList>();
                     char[] charIndex = block.Text.ToCharArray();
-                    for (int k = 0; k < charIndex.Length; k ++)
+                    for (int k = 0; k < charIndex.Length; k++)
                     {
                         FormattedText ft = new FormattedText();
 
                         ft = paragraph.AddFormattedText(charIndex[k].ToString());
 
-                        ft.Size = 14; 
+                        ft.Size = 14;
 
                         for (int j = 0; j < block.InlineStyleRanges.Count; j++)
                         {
-                            
-                            if (k >= block.InlineStyleRanges[j].Offset 
+
+                            if (k >= block.InlineStyleRanges[j].Offset
                                 && k <= (block.InlineStyleRanges[j].Offset + block.InlineStyleRanges[j].Length - 1))
                             {
 
-                                    string[] inlineStyle = block.InlineStyleRanges[j].Style.Split('-');
+                                string[] inlineStyle = block.InlineStyleRanges[j].Style.Split('-');
 
- 
 
-                                    if (inlineStyle[0] == "fontsize")
-                                    {
-                                        ft.Size = inlineStyle[1];
 
-                                    }
+                                if (inlineStyle[0] == "fontsize")
+                                {
+                                    ft.Size = inlineStyle[1];
 
-                                    if (inlineStyle[0] == "BOLD")
-                                    {
-                                        ft.Bold = true;
+                                }
 
-                                    }
+                                if (inlineStyle[0] == "BOLD")
+                                {
+                                    ft.Bold = true;
 
-                                    if (inlineStyle[0] == "fontfamily")
-                                    {
+                                }
 
-                                    }
+                                if (inlineStyle[0] == "fontfamily")
+                                {
 
-                                    if (inlineStyle[0] == "ITALIC")
-                                    {
-                                        
-                                        ft.Italic = true;
-                                    }
-                                    if (inlineStyle[0] == "UNDERLINE")
-                                    {
+                                }
 
-                                        
-                                        ft.Underline = Underline.Single;
+                                if (inlineStyle[0] == "ITALIC")
+                                {
 
-                                    }
-                                    if (inlineStyle[0] == "color")
-                                    {
-                                        //paragraph.AddFormattedText(part);
+                                    ft.Italic = true;
+                                }
+                                if (inlineStyle[0] == "UNDERLINE")
+                                {
 
-                                        var rgbaColor = inlineStyle[1].Substring(inlineStyle[1].IndexOf("(") +1 , (inlineStyle[1].Length - inlineStyle[1].IndexOf("(") - 2 ));
 
-                                        var rgbaColorValues = rgbaColor.Split(',');
+                                    ft.Underline = Underline.Single;
+
+                                }
+                                if (inlineStyle[0] == "color")
+                                {
+                                    //paragraph.AddFormattedText(part);
+
+                                    var rgbaColor = inlineStyle[1].Substring(inlineStyle[1].IndexOf("(") + 1, (inlineStyle[1].Length - inlineStyle[1].IndexOf("(") - 2));
+
+                                    var rgbaColorValues = rgbaColor.Split(',');
 
                                     //paragraph.Format.Font.Color = Color.FromArgb((byte)rgbaColor[3], (byte)rgbaColor[0], (byte)rgbaColor[1], (byte)rgbaColor[2]);
-                                        if (rgbaColorValues.Length >3)
-                                        {
+                                    if (rgbaColorValues.Length > 3)
+                                    {
 
-                                            ft.Color = Color.FromArgb((byte)rgbaColor[3], (byte)rgbaColor[0], (byte)rgbaColor[1], (byte)rgbaColor[2]);
-                                        }
-                                        else
-                                        {
-                                            ft.Color = Color.FromRgb((byte)rgbaColor[0], (byte)rgbaColor[1], (byte)rgbaColor[2]);
-
-                                        }
+                                        ft.Color = Color.FromArgb((byte)rgbaColor[3], (byte)rgbaColor[0], (byte)rgbaColor[1], (byte)rgbaColor[2]);
+                                    }
+                                    else
+                                    {
+                                        ft.Color = Color.FromRgb((byte)rgbaColor[0], (byte)rgbaColor[1], (byte)rgbaColor[2]);
 
                                     }
-                                    
+
+                                }
+
                             }
-                            
+
                         }
                     }
-                      
 
-                 }
+
+                }
 
 
             }
@@ -396,7 +417,7 @@ namespace Integration.Pdf.Extensions
             p.Format.LineSpacingRule = LineSpacingRule.Exactly;
             p.Format.LineSpacing = 0;
             p.Format.SpaceBefore = Unit.FromPoint(5);
-            
+
 
         }
 

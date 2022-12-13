@@ -50,7 +50,9 @@ namespace Service.MedicalRecord.Mapper
             return model.Select(x => new StudyDto
             {
                 Id = x.EstudioId,
+                SolicitudEstudioId = x.Id,
                 Nombre = x.Nombre,
+                Observacion = x.Observacion,
                 Area = "",
                 Estatus = x.EstatusId,
                 Registro = x.FechaCreo.ToString("dd/MM/yyyy HH:mm"),
@@ -92,5 +94,6 @@ namespace Service.MedicalRecord.Mapper
                 Urgencia = x.Solicitud.Urgencia,
             }).ToList();
         }
+
     }
 }

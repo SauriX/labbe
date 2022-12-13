@@ -1,0 +1,40 @@
+﻿using System.Collections.Generic;
+using System;
+using Service.MedicalRecord.Dtos.Reports.StudyStats;
+
+namespace Service.MedicalRecord.Dtos.Reports
+{
+    public class ReportInfoDto
+    {
+        public Guid Id { get; set; }
+        public Guid ExpedienteId { get; set; }
+        public string Expediente { get; set; }
+        public string NombreCompleto { get; set; }
+        public int Edad { get; set; }
+        public string Sexo { get; set; }
+        public string Celular { get; set; }
+        public string Correo { get; set; }
+        public string Solicitud { get; set; }
+        public string ClavePatalogica { get; set; }
+        public Guid SucursalId { get; set; }
+        public string Sucursal { get; set; }
+        public byte EstatusId { get; set; }
+        public string NombreEstatus { get; set; }
+        public byte Procedencia { get; set; }
+        public Guid CompañiaId { get; set; }
+        public string Compañia { get; set; }
+        public Guid MedicoId { get; set; }
+        public string Medico { get; set; }
+        public byte Urgencia { get; set; }
+        public bool Parcialidad { get; set; }
+        public decimal TotalEstudios { get; set; }
+        public decimal Descuento { get; set; }
+        public decimal Cargo { get; set; }
+        public decimal Copago { get; set; }
+        public decimal Total { get; set; }
+        public decimal Saldo { get; set; }
+        public string Fecha { get; set; }
+        public List<StudiesDto> Estudios { get; set; }
+
+    }
+}

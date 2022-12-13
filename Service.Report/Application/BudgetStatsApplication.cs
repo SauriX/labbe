@@ -1,9 +1,9 @@
 ﻿using Service.Report.Application.IApplication;
 using Service.Report.Client.IClient;
 using Service.Report.Domain.Catalogs;
+using Service.Report.Domain.MedicalRecord;
 using Service.Report.Dtos;
 using Service.Report.Dtos.BudgetStats;
-using Service.Report.Dtos.TypeRequest;
 using Service.Report.Mapper;
 using Service.Report.PdfModel;
 using Service.Report.Repository.IRepository;
@@ -17,10 +17,13 @@ namespace Service.Report.Application
     public class BudgetStatsApplication : BaseApplication, IBudgetStatsApplication
     {
         public readonly IReportRepository _repository;
+        private readonly IMedicalRecordClient _medicalRecordService;
         private readonly IPdfClient _pdfClient;
 
-        public BudgetStatsApplication(IReportRepository repository, IPdfClient pdfClient, IRepository<Branch> branchRepository, IRepository<Medic> medicRepository, IRepository<Company> companyRepository) : base(branchRepository, medicRepository, companyRepository)
+        public BudgetStatsApplication(IReportRepository repository, IMedicalRecordClient medicalRecordService,
+            IPdfClient pdfClient, IRepository<Branch> branchRepository, IRepository<Medic> medicRepository, IRepository<Company> companyRepository) : base(branchRepository, medicRepository, companyRepository)
         {
+            _medicalRecordService = medicalRecordService;
             _repository = repository;
             _pdfClient = pdfClient;
 

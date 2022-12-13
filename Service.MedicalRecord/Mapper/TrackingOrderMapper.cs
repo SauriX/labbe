@@ -163,15 +163,10 @@ namespace Service.MedicalRecord.Mapper
         {
             if (model == null) return null;
 
-            //return model.Select(x =>  new StudiesRequestRouteDto
-            //{
-            //Estudio = x.Nombre,
-            //    Clave = x.Clave,
-            //    Paciente = x.Solicitud.Expediente.NombreCompleto,
-            //    Solicitud = x.Solicitud.Clave,
-            //});
+
             return model.GroupBy(x => x.Solicitud.Id)/*.GroupBy(x => x.Tapon.Clave)*/.Select(x => new EstudiosListDto
             {
+                solicitudId = x.FirstOrDefault().SolicitudId,
                 //solicitud = x.,
                 Estudios = x.Select(y => new StudiesRequestRouteDto
                 {

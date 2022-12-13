@@ -34,8 +34,8 @@ namespace Integration.Invoice.Service
                     ["legal_name"] = client.RazonSocial,
                     ["tax_id"] = client.RFC,
                     ["tax_system"] = client.RegimenFiscal,
-                    ["email"] = client.Correo,
-                    ["phone"] = client.Telefono,
+                    ["email"] = client.Correo ?? "",
+                    ["phone"] = client.Telefono ?? "",
                     ["address"] = new Dictionary<string, object>
                     {
                         ["zip"] = client.Domicilio.CodigoPostal,
@@ -95,6 +95,23 @@ namespace Integration.Invoice.Service
                 var facturapi = new FacturapiClient(API_KEY);
 
                 var invoice = await facturapi.Invoice.DownloadXmlAsync(invoiceId);
+
+                return invoice.ToByteArray();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public static async Task<byte[]> GetPdf(string invoiceId)
+        {
+            try
+            {
+                var facturapi = new FacturapiClient(API_KEY);
+
+                var invoice = await facturapi.Invoice.DownloadPdfAsync(invoiceId);
 
                 return invoice.ToByteArray();
             }

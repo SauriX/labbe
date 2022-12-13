@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PL = Shared.Dictionary.Catalogs.PriceList;
 using DEP = Shared.Dictionary.Catalogs.Department;
 using AREAS = Shared.Dictionary.Catalogs.Area;
 using BR = Shared.Dictionary.Catalogs.Branch;
@@ -25,6 +26,9 @@ using Service.Catalog.Domain.Packet;
 using System.Net;
 using Shared.Error;
 using Shared.Extensions;
+using Service.Catalog.Domain.Price;
+using Shared.Dictionary;
+using Service.Catalog.Domain.Company;
 
 namespace Service.Catalog.Context
 {
@@ -732,6 +736,11 @@ namespace Service.Catalog.Context
             return cfdis;
         }
 
+        //private static Company GetDefaultCompany()
+        //{
+
+        //}
+
         private static List<Department> GetDepartments()
         {
             var path = "wwwroot/seed/CAT_DEPARTAMENTOS.xlsx";
@@ -851,7 +860,7 @@ namespace Service.Catalog.Context
                     area?.DepartamentoId,
                     unit?.Id,
                     unit?.Id,
-                    x.Field<string>("Fcsi"));
+                    x.Field<string>("FcsiFormato"));
             }).ToList();
 
             return parameters;
@@ -1092,6 +1101,56 @@ namespace Service.Catalog.Context
                         Activo = true
                     };
                 }
+                if (parameter.TipoValor == ValueTypes.NumericoCon1Columna)
+                {
+                    return new ParameterValue
+                    {
+                        Id = Guid.NewGuid(),
+                        ParametroId = parameter.Id,
+                        Nombre = ValueTypes.NumericoCon1Columna,
+                        PrimeraColumna = value1,
+                        Activo = true
+                    };
+                }
+                if (parameter.TipoValor == ValueTypes.NumericoCon2Columna)
+                {
+                    return new ParameterValue
+                    {
+                        Id = Guid.NewGuid(),
+                        ParametroId = parameter.Id,
+                        Nombre = ValueTypes.NumericoCon2Columna,
+                        PrimeraColumna = value1,
+                        SegundaColumna = value2,
+                        Activo = true
+                    };
+                }
+                if (parameter.TipoValor == ValueTypes.NumericoCon3Columna)
+                {
+                    return new ParameterValue
+                    {
+                        Id = Guid.NewGuid(),
+                        ParametroId = parameter.Id,
+                        Nombre = ValueTypes.NumericoCon3Columna,
+                        PrimeraColumna = value1,
+                        SegundaColumna = value2,
+                        TerceraColumna = value3,
+                        Activo = true
+                    };
+                }
+                if (parameter.TipoValor == ValueTypes.NumericoCon4Columna)
+                {
+                    return new ParameterValue
+                    {
+                        Id = Guid.NewGuid(),
+                        ParametroId = parameter.Id,
+                        Nombre = ValueTypes.NumericoCon4Columna,
+                        PrimeraColumna = value1,
+                        SegundaColumna = value2,
+                        TerceraColumna = value3,
+                        CuartaColumna = value4,
+                        Activo = true
+                    };
+                }
 
                 return null;
             }).ToList();
@@ -1105,6 +1164,13 @@ namespace Service.Catalog.Context
 
             return parameterValues;
         }
+
+        //private static List<PriceList> GetDefaultPriceList()
+        //{
+        //    var priceList = new PriceList(PL.PARTICULARES, "PARTICULARES", "PARTICULARES", false, true);
+
+        //    return priceList;
+        //}
 
         private static List<IndicationStudy> GetStudyIndications()
         {
@@ -1226,9 +1292,9 @@ namespace Service.Catalog.Context
                 "NSR" => "4",
                 "M" => "5",
                 "NT" => "6",
-                "NT2" => "6",
-                "NT3" => "6",
-                "NT4" => "6",
+                "NT2" => "11",
+                "NT3" => "12",
+                "NT4" => "13",
                 "T" => "7",
                 "P" => "8",
                 "L" => "9",

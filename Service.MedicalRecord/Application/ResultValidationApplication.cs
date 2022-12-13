@@ -131,11 +131,14 @@ namespace Service.MedicalRecord.Application
                     if (study.EstatusId == Status.RequestStudy.Capturado)
                     {
                         study.EstatusId = Status.RequestStudy.Validado;
+                        study.FechaValidacion = DateTime.Now;
                     }
                     else
                     {
                         study.EstatusId = Status.RequestStudy.Capturado;
                     }
+                    study.FechaModifico = DateTime.Now;
+                    
                 }
                 studyCount += studies.Count;
 

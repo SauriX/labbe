@@ -28,7 +28,7 @@ namespace Service.Report.Repository
 
         public async Task<List<RequestStudy>> GetByStudies(ReportFilterDto search)
         {
-            var report = _context.RequestStudy
+            var report = _context.Relación_Solicitud_Estudio
                 .Include(x => x.Maquila)
                 .Include(x => x.Sucursal)
                 .Include(x => x.Solicitud)
@@ -61,7 +61,7 @@ namespace Service.Report.Repository
 
         public async Task<List<Request>> GetByFilter(ReportFilterDto search)
         {
-            var report = _context.Request
+            var report = _context.CAT_Solicitud
                 .Include(x => x.Expediente)
                 .Include(x => x.Medico)
                 .Include(x => x.Estudios).ThenInclude(x => x.Estatus)
@@ -166,7 +166,7 @@ namespace Service.Report.Repository
 
         public async Task<List<RequestPayment>> GetPaymentByFilter(ReportFilterDto search)
         {
-            var report = _context.RequestPayment
+            var report = _context.CAT_Corte_Caja
                 .Include(x => x.Empresa).Include(x => x.Solicitud).ThenInclude(x => x.Expediente).Include(x => x.Solicitud).ThenInclude(x => x.Sucursal).Include(x => x.Solicitud).ThenInclude(x => x.Empresa)
                 .AsQueryable();
 
