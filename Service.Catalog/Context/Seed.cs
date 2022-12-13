@@ -860,7 +860,7 @@ namespace Service.Catalog.Context
                     area?.DepartamentoId,
                     unit?.Id,
                     unit?.Id,
-                    x.Field<string>("Fcsi"));
+                    x.Field<string>("FcsiFormato"));
             }).ToList();
 
             return parameters;
@@ -1101,6 +1101,56 @@ namespace Service.Catalog.Context
                         Activo = true
                     };
                 }
+                if (parameter.TipoValor == ValueTypes.NumericoCon1Columna)
+                {
+                    return new ParameterValue
+                    {
+                        Id = Guid.NewGuid(),
+                        ParametroId = parameter.Id,
+                        Nombre = ValueTypes.NumericoCon1Columna,
+                        PrimeraColumna = value1,
+                        Activo = true
+                    };
+                }
+                if (parameter.TipoValor == ValueTypes.NumericoCon2Columna)
+                {
+                    return new ParameterValue
+                    {
+                        Id = Guid.NewGuid(),
+                        ParametroId = parameter.Id,
+                        Nombre = ValueTypes.NumericoCon2Columna,
+                        PrimeraColumna = value1,
+                        SegundaColumna = value2,
+                        Activo = true
+                    };
+                }
+                if (parameter.TipoValor == ValueTypes.NumericoCon3Columna)
+                {
+                    return new ParameterValue
+                    {
+                        Id = Guid.NewGuid(),
+                        ParametroId = parameter.Id,
+                        Nombre = ValueTypes.NumericoCon3Columna,
+                        PrimeraColumna = value1,
+                        SegundaColumna = value2,
+                        TerceraColumna = value3,
+                        Activo = true
+                    };
+                }
+                if (parameter.TipoValor == ValueTypes.NumericoCon4Columna)
+                {
+                    return new ParameterValue
+                    {
+                        Id = Guid.NewGuid(),
+                        ParametroId = parameter.Id,
+                        Nombre = ValueTypes.NumericoCon4Columna,
+                        PrimeraColumna = value1,
+                        SegundaColumna = value2,
+                        TerceraColumna = value3,
+                        CuartaColumna = value4,
+                        Activo = true
+                    };
+                }
 
                 return null;
             }).ToList();
@@ -1242,9 +1292,9 @@ namespace Service.Catalog.Context
                 "NSR" => "4",
                 "M" => "5",
                 "NT" => "6",
-                "NT2" => "6",
-                "NT3" => "6",
-                "NT4" => "6",
+                "NT2" => "11",
+                "NT3" => "12",
+                "NT4" => "13",
                 "T" => "7",
                 "P" => "8",
                 "L" => "9",
