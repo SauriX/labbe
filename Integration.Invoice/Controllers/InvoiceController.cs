@@ -49,5 +49,28 @@ namespace Integration.Invoice.Controllers
 
             return result;
         }
+
+        [HttpGet]
+        [Route("pdf/{id}")]
+        public async Task<HttpResponseMessage> PDF(string id)
+        {
+            var file = await InvoiceService.GetPdf(id);
+
+            var result = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new ByteArrayContent(file)
+            };
+
+            result.Content.Headers.ContentDisposition =
+                new ContentDispositionHeaderValue("attachment")
+                {
+                    FileName = "order.pdf"
+                };
+
+            result.Content.Headers.ContentType =
+                new MediaTypeHeaderValue("application/pdf");
+
+            return result;
+        }
     }
 }

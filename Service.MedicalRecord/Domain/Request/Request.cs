@@ -48,6 +48,8 @@ namespace Service.MedicalRecord.Domain.Request
         public string IdOrden { get; set; }
         public string IdPersona { get; set; }
 
+        public bool EsWeeClinic => !string.IsNullOrWhiteSpace(FolioWeeClinic);
+
 
         public virtual ICollection<RequestPayment> Pagos { get; set; }
         public virtual ICollection<RequestStudy> Estudios { get; set; }

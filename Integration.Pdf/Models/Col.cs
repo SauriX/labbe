@@ -1,4 +1,5 @@
 ﻿using MigraDoc.DocumentObjectModel;
+using MigraDoc.DocumentObjectModel.Tables;
 
 namespace Integration.Pdf.Models
 {
@@ -28,6 +29,8 @@ namespace Integration.Pdf.Models
         public Unit? ImagenTamaño { get; set; }
         public bool EsImagen => Imagen != null;
         public TabLeader? Fill { get; set; }
+        public Table Tabla { get; set; }
+        public bool EsTabla => Tabla != null;
 
         public Col() { }
 

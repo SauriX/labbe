@@ -4,6 +4,7 @@ using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Dtos.Quotation;
 using Service.MedicalRecord.Dtos.Reports;
 using Service.MedicalRecord.Dtos.Reports.BudgetStats;
+using Service.MedicalRecord.Dtos.Reports.StudyStats;
 using Shared.Dictionary;
 using System;
 using System.Collections.Generic;
@@ -21,26 +22,25 @@ namespace Service.MedicalRecord.Controllers
             _service = service;
         }
 
-        // Cotizaciones
-        [HttpPost("presupuestos/filter")]
+        [HttpPost("cotizaciones/filter")]
         [Authorize(Policies.Access)]
         public async Task<IEnumerable<BudgetStatsDto>> GetBudgetRequestNow(ReportFilterDto search)
         {
             return await _service.GetQuotationByFilter(search);
         }
-
-        [HttpPost("presupuestos/table/filter")]
+        
+        [HttpPost("solicitudes/filter")]
         [Authorize(Policies.Access)]
-        public async Task<BudgetDto> GetFilterBudgetRequestTable(ReportFilterDto search)
+        public async Task<IEnumerable<ReportInfoDto>> GetRequestNow(ReportFilterDto search)
         {
-            return await _service.GetQuotationTableByFilter(search);
+            return await _service.GetRequestByFilter(search);
         }
-
-        [HttpPost("presupuestos/chart/filter")]
+        
+        [HttpPost("estudios/filter")]
         [Authorize(Policies.Access)]
-        public async Task<IEnumerable<BudgetStatsChartDto>> GetBudgetRequestFilterChart(ReportFilterDto search)
+        public async Task<IEnumerable<StudiesDto>> GetRequestStudiesNow(ReportFilterDto search)
         {
-            return await _service.GetQuotationChartByFilter(search);
+            return await _service.GetStudiesByFilter(search);
         }
     }
 }
