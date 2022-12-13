@@ -454,8 +454,37 @@ namespace Service.MedicalRecord.Application
             var newResults = results.ToCaptureResults();
             await _repository.CreateLabResults(newResults);
         }
-        private bool canSendResult(Request request)
+        private List<RequestStudy> canSendResultResultsReady(Request request, int requestStudyId)
         {
+            var resultsPerDay = request.Estudios
+                .ToList()
+                .GroupBy(x => x.FechaEntrega.Date);
+
+            bool canSend = false;
+
+            List<RequestStudy> requestStudies = new List<RequestStudy>();
+
+            foreach (var results in resultsPerDay)
+            {
+                if (results.ToList().Find(x => x.Id == requestStudyId) != null)
+                {
+                    if (results.Where(x => x.Id != requestStudyId).All(x => x.EstatusId != Status.RequestStudy.Enviado || x.EstatusId != Status.RequestStudy.Cancelado))
+                    {
+                        requestStudies = results.ToList();
+
+                    }
+                }
+            }
+
+            //if (requestStudies != null && requestStudies.Where(x => x.Id != requestStudyId).All(x => x.EstatusId != Status.RequestStudy.Enviado || x.EstatusId != Status.RequestStudy.Cancelado))
+            //{
+            //    canSend = true;
+            //}
+            return requestStudies;
+        }
+        private bool canSendResultBalance(Request request)
+        {
+            
             return request.Procedencia == PARTICULAR && request.Saldo != 0 ? false : true;
             
         }
@@ -490,7 +519,6 @@ namespace Service.MedicalRecord.Application
                 await _repository.UpdateLabResults(newResults);
                 await UpdateStatusStudy(request.SolicitudEstudioId, request.SolicitudEstudio.EstatusId, user);
             }
-
             else if (request.SolicitudEstudio.EstatusId == Status.RequestStudy.Liberado || EnvioManual)
             {
                 if (request.Solicitud.Parcialidad || EnvioManual)
@@ -524,7 +552,7 @@ namespace Service.MedicalRecord.Application
 
                     try
                     {
-                        if (canSendResult(request.Solicitud))
+                        if (canSendResultBalance(request.Solicitud))
                         {
                             await SendTestWhatsapp(files, request.Solicitud.EnvioWhatsApp, userId);
                             await SendTestEmail(files, request.Solicitud.EnvioCorreo, userId);
@@ -543,9 +571,11 @@ namespace Service.MedicalRecord.Application
 
                     if (existingRequest.Estudios.All(estudio => estudio.EstatusId == Status.RequestStudy.Liberado))
                     {
-                        if (canSendResult(request.Solicitud))
+                        if (canSendResultBalance(request.Solicitud))
                         {
-                            await SendResultsFiles(request.SolicitudId, userId, user);
+                            var resultsToSend = canSendResultResultsReady(existingRequest, results.First().SolicitudEstudioId);
+
+                            await SendResultsFiles(request.SolicitudId, userId, user, resultsToSend);
                         }
                     }
                 }
@@ -690,7 +720,7 @@ namespace Service.MedicalRecord.Application
                     };
                     try
                     {
-                        if (canSendResult(existing.Solicitud))
+                        if (canSendResultBalance(existing.Solicitud))
                         {
 
                             await SendTestWhatsapp(files, existing.Solicitud.EnvioWhatsApp, result.UsuarioId);
@@ -709,17 +739,19 @@ namespace Service.MedicalRecord.Application
                 }
                 else
                 {
-                    if (canSendResult(existing.Solicitud))
+                    if (canSendResultBalance(existing.Solicitud))
                     {
 
                         await UpdateStatusStudy(result.EstudioId, result.Estatus, result.Usuario);
 
                         var existingRequest = await _repository.GetRequestById(existing.SolicitudId);
 
-                        if (existingRequest.Estudios.All(estudio => estudio.EstatusId == Status.RequestStudy.Liberado))
-                        {
-                            await SendResultsFiles(existing.SolicitudId, result.UsuarioId, result.Usuario);
-                        }
+                        //if (existingRequest.Estudios.All(estudio => estudio.EstatusId == Status.RequestStudy.Liberado))
+                        //{
+                        var resultsToSend = canSendResultResultsReady(existingRequest, existing.RequestStudyId);
+
+                        await SendResultsFiles(existing.SolicitudId, result.UsuarioId, result.Usuario, resultsToSend);
+                        //}
                     }
 
 
@@ -780,7 +812,11 @@ namespace Service.MedicalRecord.Application
 
                     RequestStudy estudioActual = await _repository.GetRequestStudyById(estudioId.EstudioId);
 
-                    studiesToUpdate.Add(estudioActual);
+                    if (estudioActual != null )
+                    {
+
+                        studiesToUpdate.Add(estudioActual);
+                    }
 
                     List<string> mediosActuales = estudioActual.MedioSolicitado == null ? new List<string>() : estudioActual.MedioSolicitado?.Split(",").ToList();
 
@@ -820,7 +856,7 @@ namespace Service.MedicalRecord.Application
                 
                 try
                 {
-                    if (files.Count > 0 && canSendResult(existingRequest))
+                    if (files.Count > 0 && canSendResultBalance(existingRequest))
                     {
                         if (estudios.MediosEnvio.Contains("Whatsapp"))
                         {
@@ -853,17 +889,19 @@ namespace Service.MedicalRecord.Application
 
 
         }
-        public async Task SendResultsFiles(Guid solicitudId, Guid usuarioId, string usuario)
+        public async Task SendResultsFiles(Guid solicitudId, Guid usuarioId, string usuario, List<RequestStudy> studiesToSend)
         {
             var existingRequest = await _repository.GetRequestById(solicitudId);
 
-            List<int> labResults = existingRequest.Estudios
+            //List<int> labResults = existingRequest.Estudios
+            List<int> labResults = studiesToSend
                 .Where(x => x.AreaId != Catalogs.Area.HISTOPATOLOGIA)
                 .Where(x => x.AreaId != Catalogs.Area.CITOLOGIA)
                 .Where(x => x.EstatusId != Status.RequestStudy.Enviado)
                 .Select(x => x.Id).ToList();
 
-            List<int> pathologicalResults = existingRequest.Estudios
+            //List<int> pathologicalResults = existingRequest.Estudios
+            List<int> pathologicalResults = studiesToSend
                 .Where(x => x.AreaId == Catalogs.Area.HISTOPATOLOGIA)
                 .Where(x => x.AreaId == Catalogs.Area.CITOLOGIA)
                 .Where(x => x.EstatusId != Status.RequestStudy.Enviado)
@@ -929,7 +967,7 @@ namespace Service.MedicalRecord.Application
             }
             try
             {
-                if (files.Count > 0 && canSendResult(existingRequest))
+                if (files.Count > 0 && canSendResultBalance(existingRequest))
                 {
 
                     await SendTestWhatsapp(files, existingRequest.EnvioWhatsApp, usuarioId);
