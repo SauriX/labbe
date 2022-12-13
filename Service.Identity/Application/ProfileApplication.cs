@@ -119,9 +119,10 @@ namespace Service.Identity.Application
 
         private static List<Menu> BuildMenu(List<Menu> menu)
         {
+     
             menu.ForEach(x =>
             {
-                x.SubMenus = menu.Where(s => s.MenuPadreId == x.Id).ToList();
+                x.SubMenus = menu.OrderBy(x => x.Orden).Where(s => s.MenuPadreId == x.Id && s.Id != 34).ToList();
             });
 
             return menu.Where(x => x.MenuPadreId == null).ToList();
