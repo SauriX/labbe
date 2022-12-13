@@ -42,6 +42,7 @@ namespace Service.MedicalRecord.Mapper
                 Id = x.Id.ToString(),
                 ExpedienteId = x.ExpedienteId.ToString(),
                 ClavePatologica = x.ClavePatologica,
+                //Observacion = x.Observaciones
             }).ToList();
         }
 
@@ -52,7 +53,7 @@ namespace Service.MedicalRecord.Mapper
                 Id = x.EstudioId,
                 SolicitudEstudioId = x.Id,
                 Nombre = x.Nombre,
-                Observacion = x.Observacion,
+                Observacion = x.Solicitud.Observaciones,
                 Area = "",
                 Estatus = x.EstatusId,
                 Registro = x.FechaCreo.ToString("dd/MM/yyyy HH:mm"),

@@ -415,5 +415,12 @@ namespace Integration.Pdf.Service
                 footer.AddText(footerNoPage);
             }
         }
-    }
+
+        //static string GetGlucoseTime(string glucoseKey) => glucoseKey switch
+        //{
+        //    "_GLU_SU" => "0",
+        //    "_GLU_SU30" => "30",
+        //    _ => ""
+        //};
+}
 }

@@ -23,7 +23,7 @@ namespace Service.MedicalRecord.Mapper
 
         public static List<BudgetStatsDto> QuotationReportGeneric(IEnumerable<Quotation> model)
         {
-            return model.Where(x => x.Estudios != null).Select(request =>
+            return model.Where(x => x.Estudios.Count > 0).Select(request =>
             {
                 var studies = request.Estudios;
                 var pack = request.Paquetes;
@@ -39,12 +39,14 @@ namespace Service.MedicalRecord.Mapper
                     Id = Guid.NewGuid(),
                     Solicitud = request.Clave,
                     Sucursal = request.Sucursal.Nombre,
-                    NombrePaciente = request.Expediente.NombreCompleto,
-                    NombreMedico = request.Medico.Nombre,
+                    SucursalId = request.Sucursal.Id,
+                    NombrePaciente = request.Expediente?.NombreCompleto,
+                    NombreMedico = request.Medico?.Nombre,
                     Estudio = studies.QuotationStudies(),
                     Descuento = descount,
                     DescuentoPorcentual = porcentualDescount,
                     Promocion = promotion,
+                    Fecha = request.FechaCreo,
                 };
             }).ToList();
         }

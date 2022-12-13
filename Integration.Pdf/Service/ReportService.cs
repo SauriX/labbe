@@ -56,7 +56,7 @@ namespace Integration.Pdf.Service
 
             section.PageSetup = document.DefaultPageSetup.Clone();
 
-            section.PageSetup.Orientation = Orientation.Portrait;
+            section.PageSetup.Orientation = Orientation.Landscape;
             section.PageSetup.PageFormat = PageFormat.A4;
 
             section.PageSetup.TopMargin = Unit.FromCentimeter(1);
@@ -106,7 +106,7 @@ namespace Integration.Pdf.Service
             section.AddText(printDate);
             section.AddSpace(10);
 
-            var contentWidth = section.PageSetup.PageWidth - section.PageSetup.LeftMargin - section.PageSetup.RightMargin;
+            var contentWidth = section.PageSetup.PageHeight - section.PageSetup.LeftMargin - section.PageSetup.RightMargin;
 
             Table table = new Table();
             table.Borders.Width = 0.75;
@@ -216,7 +216,7 @@ namespace Integration.Pdf.Service
                         titleCell.Borders.Visible = false;
                         titleCell.MergeRight = noCol - 1;
                         var paragraph = titleCell.AddParagraph();
-                        paragraph.AddFormattedText("Estudio", fontTitleChart);
+                        paragraph.AddFormattedText("Estudio(s)", fontTitleChart);
 
                         for (int i = 0; i < childrenData.Count; i++)
                         {

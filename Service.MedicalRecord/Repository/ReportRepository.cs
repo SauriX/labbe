@@ -168,6 +168,7 @@ namespace Service.MedicalRecord.Repository
             var report = _context.CAT_Cotizacion
                 .Include(x => x.Expediente)
                 .Include(x => x.Medico)
+                .Include(x => x.Compañia)
                 .Include(x => x.Estudios)
                 .Include(x => x.Sucursal)
                 .Include(x => x.Estudios).ThenInclude(x => x.Paquete)
@@ -185,6 +186,12 @@ namespace Service.MedicalRecord.Repository
             if (search.MedicoId != null && search.MedicoId.Count > 0)
             {
                 report = report.Where(x => search.MedicoId.Contains((Guid)x.MedicoId!));
+                query = report.ToQueryString();
+            }
+
+            if (search.CompañiaId != null && search.CompañiaId.Count > 0)
+            {
+                report = report.Where(x => search.CompañiaId.Contains((Guid)x.CompañiaId));
                 query = report.ToQueryString();
             }
 
