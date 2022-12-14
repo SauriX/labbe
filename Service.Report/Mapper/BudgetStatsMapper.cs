@@ -36,7 +36,7 @@ namespace Service.Report.Mapper
                     Sucursal = request.Sucursal,
                     NombrePaciente = request.NombrePaciente,
                     NombreMedico = request.NombreMedico,
-                    Estudio = studies.QuotationStudies(),
+                    Estudio = studies.GenericStudies(),
                     Descuento = request.Descuento,
                     DescuentoPorcentual = request.DescuentoPorcentual,
                     Promocion = request.Promocion,
@@ -81,13 +81,14 @@ namespace Service.Report.Mapper
             return data;
         }
 
-        public static List<StudiesDto> QuotationStudies(this IEnumerable<RequestStudies> studies)
+        public static List<StudiesDto> GenericStudies(this IEnumerable<RequestStudies> studies)
         {
             return studies.Select(x => new StudiesDto
             {
                 Id = x.Id,
                 Clave = x.Clave,
                 Estudio = x.Nombre,
+                Estatus = x.Estatus,
                 Precio = x.Precio,
                 Descuento = x.Descuento,
                 Paquete = x.Paquete,

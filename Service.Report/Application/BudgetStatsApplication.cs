@@ -20,8 +20,12 @@ namespace Service.Report.Application
         private readonly IMedicalRecordClient _medicalRecordService;
         private readonly IPdfClient _pdfClient;
 
-        public BudgetStatsApplication(IReportRepository repository, IMedicalRecordClient medicalRecordService,
-            IPdfClient pdfClient, IRepository<Branch> branchRepository, IRepository<Medic> medicRepository, IRepository<Company> companyRepository) : base(branchRepository, medicRepository, companyRepository)
+        public BudgetStatsApplication(IReportRepository repository,
+            IMedicalRecordClient medicalRecordService,
+            IPdfClient pdfClient,
+            IRepository<Branch> branchRepository,
+            IRepository<Medic> medicRepository,
+            IRepository<Company> companyRepository) : base(branchRepository, medicRepository, companyRepository)
         {
             _medicalRecordService = medicalRecordService;
             _repository = repository;

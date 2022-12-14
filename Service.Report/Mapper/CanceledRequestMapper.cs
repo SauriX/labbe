@@ -1,4 +1,5 @@
-﻿using Service.Report.Domain.Request;
+﻿using Service.Report.Domain.MedicalRecord;
+using Service.Report.Domain.Request;
 using Service.Report.Dtos;
 using Service.Report.Dtos.CanceledRequest;
 using Service.Report.Dtos.CompanyStats;
@@ -12,7 +13,7 @@ namespace Service.Report.Mapper
 {
     public static class CanceledRequestMapper
     {
-        public static IEnumerable<CanceledRequestDto> ToCanceledRequestDto(this IEnumerable<Request> model)
+        public static IEnumerable<CanceledRequestDto> ToCanceledRequestDto(this IEnumerable<RequestInfo> model)
         {
             if (model == null) return null;
 
@@ -21,7 +22,7 @@ namespace Service.Report.Mapper
             return results;
         }
 
-        public static CanceledDto ToCanceledDto(this IEnumerable<Request> model)
+        public static CanceledDto ToCanceledDto(this IEnumerable<RequestInfo> model)
         {
             if (model == null) return null;
 
@@ -42,12 +43,12 @@ namespace Service.Report.Mapper
             return data;
         }
 
-        public static IEnumerable<CanceledRequestChartDto> ToCanceledRequestChartDto(this IEnumerable<Request> model)
+        public static IEnumerable<CanceledRequestChartDto> ToCanceledRequestChartDto(this IEnumerable<RequestInfo> model)
         {
             if (model == null) return null;
 
             var results = (from c in model.Where(x => x.EstatusId == 10)
-                           group c by new { c.SucursalId, c.Sucursal.Sucursal } into grupo
+                           group c by new { c.SucursalId, c.Sucursal } into grupo
                            select new CanceledRequestChartDto
                            {
                                Id = Guid.NewGuid(),
@@ -59,29 +60,22 @@ namespace Service.Report.Mapper
             return results;
         }
 
-        public static List<CanceledRequestDto> CanceledGeneric(IEnumerable<Request> model)
+        public static List<CanceledRequestDto> CanceledGeneric(IEnumerable<RequestInfo> model)
         {
             return model.Where(x => x.EstatusId == 10).Select(request =>
             {
                 var studies = request.Estudios;
-                var pack = request.Paquetes;
-
-                var priceStudies = studies.Sum(x => x.Precio - (x.Precio * x.Paquete?.DescuentoPorcentaje ?? 0) - (x.Descuento == 0 ? 0 : x.Descuento));
-                var descount = request.Descuento;
-                var promotion = studies.Sum(x => x.Descuento) + pack.Sum(x => x.Descuento);
-                var porcentualDescount = (descount * 100) / priceStudies;
-                var descRequest = request.Descuento / 100;
 
                 return new CanceledRequestDto
                 {
                     Id = Guid.NewGuid(),
-                    Solicitud = request.Clave,
-                    Paciente = request.Expediente.Nombre,
-                    Medico = request.Medico.NombreMedico,
-                    Empresa = request.Empresa.NombreEmpresa,
-                    Estudio = studies.PromotionStudies(),
-                    Descuento = descount,
-                    DescuentoPorcentual = porcentualDescount,
+                    Solicitud = request.Solicitud,
+                    Paciente = request.NombreCompleto,
+                    Medico = request.Medico,
+                    Empresa = request.Compañia,
+                    Estudio = studies.GenericStudies(),
+                    Descuento = request.Descuento,
+                    DescuentoPorcentual = request.DescuentoPorcentual,
                 };
             }).ToList();
         }

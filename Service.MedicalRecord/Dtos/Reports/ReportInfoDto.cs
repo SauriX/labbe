@@ -25,15 +25,20 @@ namespace Service.MedicalRecord.Dtos.Reports
         public string Compañia { get; set; }
         public Guid MedicoId { get; set; }
         public string Medico { get; set; }
+        public string ClaveMedico { get; set; }
         public byte Urgencia { get; set; }
         public bool Parcialidad { get; set; }
         public decimal TotalEstudios { get; set; }
         public decimal Descuento { get; set; }
+        public decimal DescuentoPorcentual { get; set; }
         public decimal Cargo { get; set; }
+        public decimal CargoPorcentual { get; set; }
+        public decimal Promocion { get; set; }
         public decimal Copago { get; set; }
+        public decimal PrecioEstudios { get; set; }
         public decimal Total { get; set; }
         public decimal Saldo { get; set; }
-        public string Fecha { get; set; }
+        public DateTime Fecha { get; set; }
         public List<StudiesDto> Estudios { get; set; }
 
     }

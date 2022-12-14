@@ -131,7 +131,7 @@ namespace Service.MedicalRecord.Application
         {
             var studies = await _repository.GetResultsById(result.SolicitudId);
             var request = await _repository.GetRequestById(result.SolicitudId); 
-            var glucoseStudy = studies.Where(x => x.EstudioId == 631).Where(x => x.TipoValorId == "6" || x.TipoValorId == "1").Where(x => x.Clave != "_OB_CTG");
+            var glucoseStudy = studies.Where(x => x.EstudioId == 631).Where(x => x.TipoValorId == "6" || x.TipoValorId == "1").Where(x => x.Clave != "_OB_CTG").Where(x => x.Resultado != null);
 
             var path = Assets.ToleranciaGlucosa;
             var template = new XLTemplate(path);
@@ -404,32 +404,14 @@ namespace Service.MedicalRecord.Application
                                 break;
                             case "5":
                             case "6":
+                            case "11":
+                            case "12":
+                            case "13":
+                            case "14":
                                 param.TipoValores = param.TipoValores;
                                 break;
                             case "9":
                                 param.ValorInicial = "\n";
-                                break;
-                            case "11":
-                                param.PrimeraColumna = param.TipoValores.FirstOrDefault().PrimeraColumna;
-                                param.SegundaColumna = param.TipoValores.FirstOrDefault().SegundaColumna;
-                                break;
-                            case "12":
-                                param.PrimeraColumna = param.TipoValores.FirstOrDefault().PrimeraColumna;
-                                param.SegundaColumna = param.TipoValores.FirstOrDefault().SegundaColumna;
-                                param.TerceraColumna = param.TipoValores.FirstOrDefault().TerceraColumna;
-                                break;
-                            case "13":
-                                param.PrimeraColumna = param.TipoValores.FirstOrDefault().PrimeraColumna;
-                                param.SegundaColumna = param.TipoValores.FirstOrDefault().SegundaColumna;
-                                param.TerceraColumna = param.TipoValores.FirstOrDefault().TerceraColumna;
-                                param.CuartaColumna = param.TipoValores.FirstOrDefault().CuartaColumna;
-                                break;
-                            case "14":
-                                param.PrimeraColumna = param.TipoValores.FirstOrDefault().PrimeraColumna;
-                                param.SegundaColumna = param.TipoValores.FirstOrDefault().SegundaColumna;
-                                param.TerceraColumna = param.TipoValores.FirstOrDefault().TerceraColumna;
-                                param.CuartaColumna = param.TipoValores.FirstOrDefault().CuartaColumna;
-                                param.QuintaColumna = param.TipoValores.FirstOrDefault().QuintaColumna;
                                 break;
                         }
                     }

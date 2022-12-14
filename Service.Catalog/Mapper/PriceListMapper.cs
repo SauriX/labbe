@@ -238,7 +238,7 @@ namespace Service.Catalog.Mapper
                 Precio = model.Precio,
                 Parametros = model.Estudio.Parameters.Select(x => x.Parametro).ToParameterListDto(),
                 Indicaciones = model.Estudio.Indications.Select(x => x.Indicacion).ToIndicationListDto(),
-                Promociones = new List<PriceListInfoPromoDto>()
+                Promociones = new List<PriceListInfoPromoDto>(),
             };
         }
 

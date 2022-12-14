@@ -16,29 +16,38 @@ namespace Service.Report.Application
     public class MedicalBreakdonStatsApplication : BaseApplication, IMedicalBreakdownStatsApplication
     {
         public readonly IReportRepository _repository;
+        private readonly IMedicalRecordClient _medicalRecordService;
         private readonly IPdfClient _pdfClient;
 
-        public MedicalBreakdonStatsApplication(IReportRepository repository, IPdfClient pdfClient, IRepository<Branch> branchRepository, IRepository<Medic> medicRepository) : base(branchRepository, medicRepository)
+        public MedicalBreakdonStatsApplication(IReportRepository repository,
+            IMedicalRecordClient medicalRecordService,
+            IPdfClient pdfClient,
+            IRepository<Branch> branchRepository,
+            IRepository<Medic> medicRepository,
+            IRepository<Company> companyRepository) : base(branchRepository, medicRepository, companyRepository)
         {
+            _medicalRecordService = medicalRecordService;
             _repository = repository;
             _pdfClient = pdfClient;
+
         }
+
         public async Task<IEnumerable<MedicalBreakdownRequestDto>> GetByFilter(ReportFilterDto search)
         {
-            var data = await _repository.GetByFilter(search);
+            var data = await _medicalRecordService.GetRequestByFilter(filter);
             var results = data.ToMedicalBreakdownRequestDto();
             return results;
         }
         public async Task<IEnumerable<MedicalBreakdownRequestChartDto>> GetChartByFilter(ReportFilterDto search)
         {
-            var data = await _repository.GetByFilter(search);
+            var data = await _medicalRecordService.GetRequestByFilter(filter);
             var results = data.ToMedicalBreakdownRequestChartDto();
             return results;
 
         }
         public async Task<MedicalBreakdownDto> GetTableByFilter(ReportFilterDto search)
         {
-            var data = await _repository.GetByFilter(search);
+            var data = await _medicalRecordService.GetRequestByFilter(filter);
             var results = data.ToMedicalBreakdownDto();
             return results;
         }
@@ -71,10 +80,10 @@ namespace Service.Report.Application
                 { "Solicitud", x.Solicitud },
                 { "Nombre del Paciente", x.Paciente },
                 { "Nombre del Médico", x.Medico },
-                { "Children", x.Estudio.Select(x => new Dictionary<string, object> { { "Clave", x.Clave}, { "Estudio", x.Estudio}, { "Precio", $"Precio Estudio ${x.PrecioFinal}"},
-                    { "Promoción Estudio", x.Descuento == 0 ? $"Sin Promoción" : $"Promoción Estudio ${x.Descuento}" },
-                    { "Paquete", x.Paquete == null ? "Sin paquete" : $"Paquete {x.Paquete}" },
-                    { "Promoción paquete", x.Promocion == 0 || x.Promocion == null ? $"Sin Promoción" : $"Promoción Paquete ${x.Promocion}" }  } )},
+                { "Children", x.Estudio.Select(x => new Dictionary<string, object> { { "Clave", x.Clave}, { "Estudio", x.Estudio}, { "Precio", $"${x.PrecioFinal}"},
+                    { "Desc.", x.Descuento == 0 ? $" - " : $"${x.Descuento}" },
+                    { "Paquete", x.Paquete == null ? " - " : $"Paquete\n {x.Paquete}" },
+                    { "Promoción", x.Promocion == 0 || x.Promocion == null ? $" - " : $"${x.Promocion}" }  } )},
                 { "Compañía", x.Empresa},
                 { "Subtotal", x.Subtotal},
                 { "Promoción", x.Promocion},
