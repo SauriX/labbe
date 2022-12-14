@@ -96,5 +96,7 @@ namespace Service.Report.Mapper
                 PrecioFinal = x.PrecioFinal,
             }).ToList();
         }
+
+        //
     }
 }
