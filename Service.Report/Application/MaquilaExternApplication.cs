@@ -15,17 +15,23 @@ namespace Service.Report.Application
     public class MaquilaExternApplication : BaseApplication, IMaquilaExternApplication
     {
         public readonly IReportRepository _repository;
+        private readonly IMedicalRecordClient _medicalRecordService;
         private readonly IPdfClient _pdfClient;
 
-        public MaquilaExternApplication(IReportRepository repository, IPdfClient pdfClient, IRepository<Branch> branchRepository, IRepository<Medic> medicRepository) : base(branchRepository, medicRepository)
+        public MaquilaExternApplication(IReportRepository repository,
+            IMedicalRecordClient medicalRecordService,
+            IPdfClient pdfClient,
+            IRepository<Branch> branchRepository,
+            IRepository<Medic> medicRepository) : base(branchRepository, medicRepository)
         {
+            _medicalRecordService = medicalRecordService;
             _repository = repository;
             _pdfClient = pdfClient;
         }
 
         public async Task<IEnumerable<MaquilaRequestDto>> GetByStudies(ReportFilterDto filter)
         {
-            var data = await _repository.GetByStudies(filter);
+            var data = await _medicalRecordService.GetStudiesByFilter(filter);
             var results = data.ToMaquilaExternDto();
 
             return results;
@@ -33,7 +39,7 @@ namespace Service.Report.Application
 
         public async Task<IEnumerable<MaquilaRequestChartDto>> GetChartByFilter(ReportFilterDto filter)
         {
-            var data = await _repository.GetByStudies(filter);
+            var data = await _medicalRecordService.GetStudiesByFilter(filter);
             var results = data.ToMaquilaExternalChartDto();
 
             return results;

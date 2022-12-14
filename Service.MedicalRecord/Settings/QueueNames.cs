@@ -6,6 +6,7 @@ namespace Service.MedicalRecord.Settings
     {
         public string Branch { get; init; }
         public string Company { get; init; }
+        public string Maquila { get; init; }
         public string Medic { get; init; }
         public string Email { get; init; }
         public string Whatsapp { get; init; }
