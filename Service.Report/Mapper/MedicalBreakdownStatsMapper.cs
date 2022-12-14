@@ -72,7 +72,7 @@ namespace Service.Report.Mapper
                     Empresa = request.Compañia,
                     Estudio = studies.GenericStudies(),
                     PrecioEstudios = request.PrecioEstudios,
-                    Descuento = descount,
+                    Descuento = request.Descuento,
                     DescuentoPorcentual = request.DescuentoPorcentual,
                     MedicoId = request.MedicoId,
                     Promocion = request.Promocion,

@@ -42,7 +42,7 @@ namespace Service.MedicalRecord.Dtos.Request
         public string FechaActualizacion { get; set; }
         public string UsuarioActualizacion { get; set; }
         public bool Asignado { get; set; }
-        public Guid MaquilaId { get; set; }
+        public int? MaquilaId { get; set; }
         public string Maquila { get; set; }
         public List<PriceListInfoPromoDto> Promociones { get; set; }
         public List<ParameterListDto> Parametros { get; set; }

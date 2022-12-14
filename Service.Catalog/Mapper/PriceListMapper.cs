@@ -239,6 +239,8 @@ namespace Service.Catalog.Mapper
                 Parametros = model.Estudio.Parameters.Select(x => x.Parametro).ToParameterListDto(),
                 Indicaciones = model.Estudio.Indications.Select(x => x.Indicacion).ToIndicationListDto(),
                 Promociones = new List<PriceListInfoPromoDto>(),
+                Maquila = model.Estudio.Maquilador.Nombre,
+                MaquilaId = model.Estudio.MaquiladorId,
             };
         }
 

@@ -28,7 +28,6 @@ namespace Service.Report.Application
             _medicalRecordService = medicalRecordService;
             _repository = repository;
             _pdfClient = pdfClient;
-
         }
 
         public async Task<IEnumerable<MedicalStatsDto>> GetByFilter(ReportFilterDto filter)

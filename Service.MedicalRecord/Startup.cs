@@ -158,6 +158,12 @@ namespace Service.MedicalRecord
                         re.DiscardFaultedMessages();
                     });
 
+                    configurator.ReceiveEndpoint(queueNames.Maquila, re =>
+                    {
+                        re.Consumer<MaquilaConsumer>(context);
+                        re.DiscardFaultedMessages();
+                    });
+
                     configurator.ReceiveEndpoint(queueNames.Medic, re =>
                     {
                         re.Consumer<MedicConsumer>(context);

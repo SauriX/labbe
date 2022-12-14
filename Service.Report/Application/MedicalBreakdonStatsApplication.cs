@@ -34,20 +34,20 @@ namespace Service.Report.Application
 
         public async Task<IEnumerable<MedicalBreakdownRequestDto>> GetByFilter(ReportFilterDto search)
         {
-            var data = await _medicalRecordService.GetRequestByFilter(filter);
+            var data = await _medicalRecordService.GetRequestByFilter(search);
             var results = data.ToMedicalBreakdownRequestDto();
             return results;
         }
         public async Task<IEnumerable<MedicalBreakdownRequestChartDto>> GetChartByFilter(ReportFilterDto search)
         {
-            var data = await _medicalRecordService.GetRequestByFilter(filter);
+            var data = await _medicalRecordService.GetRequestByFilter(search);
             var results = data.ToMedicalBreakdownRequestChartDto();
             return results;
 
         }
         public async Task<MedicalBreakdownDto> GetTableByFilter(ReportFilterDto search)
         {
-            var data = await _medicalRecordService.GetRequestByFilter(filter);
+            var data = await _medicalRecordService.GetRequestByFilter(search);
             var results = data.ToMedicalBreakdownDto();
             return results;
         }
