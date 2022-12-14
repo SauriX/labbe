@@ -10,7 +10,7 @@ namespace Service.MedicalRecord.Dtos.Reports
         public Guid ExpedienteId { get; set; }
         public string Expediente { get; set; }
         public string NombreCompleto { get; set; }
-        public int Edad { get; set; }
+        public int? Edad { get; set; }
         public string Sexo { get; set; }
         public string Celular { get; set; }
         public string Correo { get; set; }
@@ -21,19 +21,24 @@ namespace Service.MedicalRecord.Dtos.Reports
         public byte EstatusId { get; set; }
         public string NombreEstatus { get; set; }
         public byte Procedencia { get; set; }
-        public Guid CompañiaId { get; set; }
+        public Guid? CompañiaId { get; set; }
         public string Compañia { get; set; }
-        public Guid MedicoId { get; set; }
+        public Guid? MedicoId { get; set; }
         public string Medico { get; set; }
+        public string ClaveMedico { get; set; }
         public byte Urgencia { get; set; }
         public bool Parcialidad { get; set; }
         public decimal TotalEstudios { get; set; }
         public decimal Descuento { get; set; }
+        public decimal DescuentoPorcentual { get; set; }
         public decimal Cargo { get; set; }
+        public decimal CargoPorcentual { get; set; }
+        public decimal Promocion { get; set; }
         public decimal Copago { get; set; }
+        public decimal PrecioEstudios { get; set; }
         public decimal Total { get; set; }
         public decimal Saldo { get; set; }
-        public string Fecha { get; set; }
+        public DateTime Fecha { get; set; }
         public List<StudiesDto> Estudios { get; set; }
 
     }

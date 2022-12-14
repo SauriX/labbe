@@ -16,17 +16,25 @@ namespace Service.Report.Application
     public class CanceledRequestApplication : BaseApplication, ICanceledRequestApplication
     {
         public readonly IReportRepository _repository;
+        private readonly IMedicalRecordClient _medicalRecordService;
         private readonly IPdfClient _pdfClient;
 
-        public CanceledRequestApplication(IReportRepository repository, IPdfClient pdfClient, IRepository<Branch> branchRepository, IRepository<Medic> medicRepository, IRepository<Company> companyRepository) : base(branchRepository, medicRepository, companyRepository)
+        public CanceledRequestApplication(IReportRepository repository,
+            IMedicalRecordClient medicalRecordService,
+            IPdfClient pdfClient,
+            IRepository<Branch> branchRepository,
+            IRepository<Medic> medicRepository,
+            IRepository<Company> companyRepository) : base(branchRepository, medicRepository, companyRepository)
         {
+            _medicalRecordService = medicalRecordService;
             _repository = repository;
             _pdfClient = pdfClient;
+
         }
 
         public async Task<IEnumerable<CanceledRequestDto>> GetByFilter(ReportFilterDto filter)
         {
-            var data = await _repository.GetByFilter(filter);
+            var data = await _medicalRecordService.GetRequestByFilter(filter);
             var results = data.ToCanceledRequestDto();
 
             return results;
@@ -34,7 +42,7 @@ namespace Service.Report.Application
 
         public async Task<IEnumerable<CanceledRequestChartDto>> GetChartByFilter(ReportFilterDto filter)
         {
-            var data = await _repository.GetByFilter(filter);
+            var data = await _medicalRecordService.GetRequestByFilter(filter);
             var results = data.ToCanceledRequestChartDto();
 
             return results;
@@ -42,7 +50,7 @@ namespace Service.Report.Application
 
         public async Task<CanceledDto> GetTableByFilter(ReportFilterDto filter)
         {
-            var data = await _repository.GetByFilter(filter);
+            var data = await _medicalRecordService.GetRequestByFilter(filter);
             var results = data.ToCanceledDto();
 
             return results;

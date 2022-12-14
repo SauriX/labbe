@@ -32,6 +32,8 @@ namespace Service.MedicalRecord.Domain.Request
         public bool AplicaCopago { get; set; }
         public int? TaponId { get; set; }
         public virtual Cap Tapon { get; set; }
+        public int? MaquilaId { get; set; }
+        public virtual Maquila Maquila { get; set; }
         public decimal Precio { get; set; }
         public decimal Descuento { get; set; }
         public decimal DescuentoPorcentaje { get; set; }

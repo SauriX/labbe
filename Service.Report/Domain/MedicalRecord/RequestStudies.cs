@@ -16,6 +16,8 @@ namespace Service.Report.Domain.MedicalRecord
         public decimal? Promocion { get; set; }
         public int? PaqueteId { get; set; }
         public string Paquete { get; set; }
+        public int? MaquilaId { get; set; }
+        public string Maquila { get; set; }
         public decimal Dias { get; set; }
         public int Horas { get; set; }
         public DateTime FechaEntrega { get => fechaEntrega == DateTime.MinValue ? DateTime.Now : fechaEntrega; set => fechaEntrega = value; }
@@ -23,5 +25,6 @@ namespace Service.Report.Domain.MedicalRecord
         public decimal Descuento { get; set; }
         public decimal DescuentoPorcentaje { get; set; }
         public decimal PrecioFinal { get; set; }
+        public RequestInfo Solicitud { get; set; }
     }
 }

@@ -152,7 +152,7 @@ namespace Service.Identity.Context
                 new Menu(23, 24, "Citas","appointments", "appointments", 2410),
                 new Menu(24, null, "Recepción", "reception", "reception", 2400),
                 new Menu(25, 24, "Toma de muestra", "sampling", "samplings", 2403),
-                new Menu(26, 24, "Registrar Solicitud", "requestedstudy", "requestedstudy", 2404),
+                new Menu(26, 24, "Solicitar Estudio", "requestedstudy", "requestedstudy", 2404),
                 new Menu(27, 24, "Solicitudes", "request", "requests", 2402),
                 new Menu(28, 1, "Admin. Equipos", "equipment", "equipment", 1018),
                 new Menu(29, 1, "Mantenimiento", "mantain","equipmentMantain", 100),
