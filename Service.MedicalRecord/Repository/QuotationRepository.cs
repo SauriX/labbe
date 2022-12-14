@@ -54,10 +54,18 @@ namespace Service.MedicalRecord.Repository
                 && x.Expediente.FechaDeNacimiento.Date >= ((DateTime)filter.FechaNFinal).Date);
             }
 
-            if (!string.IsNullOrWhiteSpace(filter.CorreoTelefono))
+            if (!string.IsNullOrWhiteSpace(filter.Correo))
             {
-                quotations = quotations.Where(x => (x.EnvioCorreo != null && x.EnvioCorreo.ToLower().Contains(filter.CorreoTelefono))
-                || (x.EnvioWhatsApp != null && x.EnvioWhatsApp.ToLower().Contains(filter.CorreoTelefono)));
+                quotations = quotations.Where(x => (x.Expediente != null && x.Expediente.Correo.ToLower().Contains(filter.Correo.ToLower()))
+                || (x.EnvioCorreo != null && x.EnvioCorreo.ToLower().Contains(filter.Correo)));
+            }
+
+            if (!string.IsNullOrWhiteSpace(filter.Telefono))
+            {
+                quotations = quotations.Where(x => (x.Expediente != null
+                    && (x.Expediente.Telefono.ToLower().Contains(filter.Telefono.ToLower())
+                    || x.Expediente.Celular.ToLower().Contains(filter.Telefono.ToLower())))
+                || (x.EnvioWhatsApp != null && x.EnvioWhatsApp.ToLower().Contains(filter.Telefono)));
             }
 
             if (!string.IsNullOrWhiteSpace(filter.Expediente))
@@ -67,7 +75,7 @@ namespace Service.MedicalRecord.Repository
                     && ((x.Expediente.NombrePaciente + " " + x.Expediente.PrimerApellido + " " + x.Expediente.SegundoApellido).ToLower().Contains(filter.Expediente.ToLower())
                     || (x.Expediente != null && x.Expediente.Expediente.ToLower().Contains(filter.Expediente.ToLower()))));
             }
-           
+
             return await quotations.ToListAsync();
         }
 
@@ -173,6 +181,6 @@ namespace Service.MedicalRecord.Repository
             await _context.BulkDeleteAsync(studies, config);
         }
 
-        
+
     }
 }

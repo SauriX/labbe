@@ -12,7 +12,7 @@ namespace Service.MedicalRecord.Dtos.Quotation
         public string Paciente { get; set; }
         public string Correo { get; set; }
         public string Whatsapp { get; set; }
-        public string Fecha { get; set; }
+        public DateTime Fecha { get; set; }
         public bool Activo { get; set; }
         public IEnumerable<QuotationStudyInfoDto> Estudios { get; set; }
     }
