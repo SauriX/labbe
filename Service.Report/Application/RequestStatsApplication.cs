@@ -14,18 +14,24 @@ namespace Service.Report.Application
 {
     public class RequestStatsApplication : BaseApplication, IRequestStatsApplication
     {
-        private readonly IReportRepository _repository;
+        public readonly IReportRepository _repository;
+        private readonly IMedicalRecordClient _medicalRecordService;
         private readonly IPdfClient _pdfClient;
 
-        public RequestStatsApplication(IReportRepository repository, IPdfClient pdfClient, IRepository<Branch> branchRepository) : base(branchRepository)
+        public RequestStatsApplication(IReportRepository repository,
+            IMedicalRecordClient medicalRecordService,
+            IPdfClient pdfClient,
+            IRepository<Branch> branchRepository) : base(branchRepository)
         {
+            _medicalRecordService = medicalRecordService;
             _repository = repository;
             _pdfClient = pdfClient;
+
         }
 
         public async Task<IEnumerable<RequestStatsDto>> GetByFilter(ReportFilterDto filter)
         {
-            var data = await _repository.GetByFilter(filter);
+            var data = await _medicalRecordService.GetRequestByFilter(filter);
 
             var results = data.ToRequestStatsDto();
 

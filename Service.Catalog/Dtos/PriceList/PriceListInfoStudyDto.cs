@@ -25,6 +25,8 @@ namespace Service.Catalog.Dtos.PriceList
         public int Dias { get; set; }
         public int Horas { get; set; }
         public int Orden { get; set; }
+        public int? MaquilaId { get; set; }
+        public string Maquila { get; set; }
         public decimal Precio { get; set; }
         public decimal PrecioFinal => Precio - Descuento;
         public DateTime FechaEntrega => DateTime.Now.AddHours(Horas);

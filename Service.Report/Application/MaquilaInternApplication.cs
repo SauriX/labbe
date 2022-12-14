@@ -15,24 +15,30 @@ namespace Service.Report.Application
     public class MaquilaInternApplication : BaseApplication, IMaquilaInternApplication
     {
         public readonly IReportRepository _repository;
+        private readonly IMedicalRecordClient _medicalRecordService;
         private readonly IPdfClient _pdfClient;
 
-        public MaquilaInternApplication(IReportRepository repository, IPdfClient pdfClient, IRepository<Branch> branchRepository, IRepository<Medic> medicRepository) : base(branchRepository, medicRepository)
+        public MaquilaInternApplication(IReportRepository repository,
+            IMedicalRecordClient medicalRecordService,
+            IPdfClient pdfClient,
+            IRepository<Branch> branchRepository,
+            IRepository<Medic> medicRepository) : base(branchRepository, medicRepository)
         {
+            _medicalRecordService = medicalRecordService;
             _repository = repository;
             _pdfClient = pdfClient;
         }
 
         public async Task<IEnumerable<MaquilaRequestDto>> GetByStudies(ReportFilterDto filter)
         {
-            var data = await _repository.GetByStudies(filter);
+            var data = await _medicalRecordService.GetStudiesByFilter(filter);
             var results = data.ToMaquilaInternDto();
 
             return results;
         }
         public async Task<IEnumerable<MaquilaRequestChartDto>> GetChartByFilter(ReportFilterDto filter)
         {
-            var data = await _repository.GetByFilter(filter);
+            var data = await _medicalRecordService.GetRequestByFilter(filter);
             var results = data.ToMaquilaInternChartDto();
 
             return results;

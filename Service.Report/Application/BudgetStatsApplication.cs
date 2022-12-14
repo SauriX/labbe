@@ -20,8 +20,12 @@ namespace Service.Report.Application
         private readonly IMedicalRecordClient _medicalRecordService;
         private readonly IPdfClient _pdfClient;
 
-        public BudgetStatsApplication(IReportRepository repository, IMedicalRecordClient medicalRecordService,
-            IPdfClient pdfClient, IRepository<Branch> branchRepository, IRepository<Medic> medicRepository, IRepository<Company> companyRepository) : base(branchRepository, medicRepository, companyRepository)
+        public BudgetStatsApplication(IReportRepository repository,
+            IMedicalRecordClient medicalRecordService,
+            IPdfClient pdfClient,
+            IRepository<Branch> branchRepository,
+            IRepository<Medic> medicRepository,
+            IRepository<Company> companyRepository) : base(branchRepository, medicRepository, companyRepository)
         {
             _medicalRecordService = medicalRecordService;
             _repository = repository;
@@ -31,7 +35,7 @@ namespace Service.Report.Application
 
         public async Task<IEnumerable<BudgetStatsDto>> GetByFilter(ReportFilterDto filter)
         {
-            var data = await _repository.GetByFilter(filter);
+            var data = await _medicalRecordService.GetQuotationByFilter(filter);
             var results = data.ToBudgetRequestDto();
 
             return results;
@@ -39,7 +43,7 @@ namespace Service.Report.Application
 
         public async Task<BudgetDto> GetTableByFilter(ReportFilterDto filter)
         {
-            var data = await _repository.GetByFilter(filter);
+            var data = await _medicalRecordService.GetQuotationByFilter(filter);
             var results = data.ToBudgetDto();
 
             return results;
@@ -47,7 +51,7 @@ namespace Service.Report.Application
 
         public async Task<IEnumerable<BudgetStatsChartDto>> GetChartByFilter(ReportFilterDto filter)
         {
-            var data = await _repository.GetByFilter(filter);
+            var data = await _medicalRecordService.GetQuotationByFilter(filter);
             var results = data.ToBudgetStatsChartDto();
 
             return results;
@@ -61,13 +65,12 @@ namespace Service.Report.Application
             List<Col> columns = new()
             {
                 new Col("Solicitud", ParagraphAlignment.Left),
-                new Col("Paciente", ParagraphAlignment.Left),
-                new Col("Médico", ParagraphAlignment.Left),
-                new Col("Subtotal", ParagraphAlignment.Left, "C"),
-                new Col("Promoción", ParagraphAlignment.Left, "C"),
-                new Col("Desc.", ParagraphAlignment.Left, "C"),
-                new Col("IVA", ParagraphAlignment.Left, "C"),
-                new Col("Total", ParagraphAlignment.Left, "C"),
+                new Col("Paciente", ParagraphAlignment.Center),
+                new Col("Médico", ParagraphAlignment.Center),
+                new Col("Subtotal", ParagraphAlignment.Center, "C"),
+                new Col("Desc.", ParagraphAlignment.Center, "C"),
+                new Col("IVA", ParagraphAlignment.Center, "C"),
+                new Col("Total", ParagraphAlignment.Center, "C"),
             };
 
             List<ChartSeries> series = new()
@@ -79,14 +82,13 @@ namespace Service.Report.Application
             var data = requestData.BudgetStats.Select(x => new Dictionary<string, object>
             {
                 { "Solicitud", x.Solicitud },
-                { "Paciente", x.NombrePaciente },
+                { "Paciente", x.NombrePaciente ?? " - " },
                 { "Médico", x.NombreMedico },
-                { "Children", x.Estudio.Select(x => new Dictionary<string, object> { { "Clave", x.Clave}, { "Estudio", x.Estudio}, { "Precio", $"Precio Estudio ${x.PrecioFinal}"},
-                    { "Promoción Estudio", x.Descuento == 0 ? $"Sin Promoción" : $"Promoción Estudio ${x.Descuento}" },
-                    { "Paquete", x.Paquete == null ? "Sin paquete" : $"Paquete {x.Paquete}" },
-                    { "Promoción paquete", x.Promocion == 0 || x.Promocion == null ? $"Sin Promoción" : $"Promoción Paquete ${x.Promocion}" }  } )},
+                { "Children", x.Estudio.Select(x => new Dictionary<string, object> { { "Clave", x.Clave}, { "Estudio", x.Estudio}, { "Precio", $"${x.PrecioFinal}"},
+                    { "Desc.", x.Descuento == 0 ? $" - " : $"${x.Descuento}" },
+                    { "Paquete", x.Paquete == null ? " - " : $"Paquete\n {x.Paquete}" },
+                    { "Promoción", x.Promocion == 0 || x.Promocion == null ? $" - " : $"${x.Promocion}" }  } )},
                 { "Subtotal", x.Subtotal},
-                { "Promoción", x.Promocion},
                 { "Desc.", x.Descuento},
                 { "IVA", x.IVA},
                 { "Total", x.TotalEstudios}

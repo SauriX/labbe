@@ -22,25 +22,22 @@ namespace Service.MedicalRecord.Application
         public async Task<IEnumerable<BudgetStatsDto>> GetQuotationByFilter(ReportFilterDto filter)
         {
             var data = await _repository.GetByQuotation(filter);
-            var results = data.ToQuotationReportDto();
 
-            return results;
+            return data.ToQuotationReportDto(); ;
         }
 
         public async Task<IEnumerable<ReportInfoDto>> GetRequestByFilter(ReportFilterDto filter)
         {
             var data = await _repository.GetByFilter(filter);
-            var results = data.ToReportRequestDto();
 
-            return results;
+            return data.ToReportRequestDto(); ;
         }
         
         public async Task<IEnumerable<StudiesDto>> GetStudiesByFilter(ReportFilterDto filter)
         {
             var data = await _repository.GetByStudies(filter);
-            var results = data.RequestStudies();
 
-            return results;
+            return data.RequestStudies();
         }
     }
 }

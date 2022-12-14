@@ -67,7 +67,7 @@ namespace Service.MedicalRecord.Mapper
         {
             if(model == null) return new List<RequestsInfoDto>();
 
-            return model.Select(x => new RequestsInfoDto
+            return model.Where(x => x.Estudios.Count > 0).Select(x => new RequestsInfoDto
             {
                 SolicitudId = x.Id,
                 ExpedienteId= x.ExpedienteId,
