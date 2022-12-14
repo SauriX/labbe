@@ -16,17 +16,24 @@ namespace Service.Report.Application
     public class UrgentStatsApplication : BaseApplication, IUrgentStatsApplication
     {
         public readonly IReportRepository _repository;
+        private readonly IMedicalRecordClient _medicalRecordService;
         private readonly IPdfClient _pdfClient;
 
-        public UrgentStatsApplication(IReportRepository repository, IPdfClient pdfClient, IRepository<Branch> branchRepository, IRepository<Medic> medicRepository) : base(branchRepository, medicRepository)
+        public UrgentStatsApplication(IReportRepository repository,
+            IMedicalRecordClient medicalRecordService,
+            IPdfClient pdfClient,
+            IRepository<Branch> branchRepository,
+            IRepository<Medic> medicRepository) : base(branchRepository, medicRepository)
         {
+            _medicalRecordService = medicalRecordService;
             _repository = repository;
             _pdfClient = pdfClient;
+
         }
 
         public async Task<IEnumerable<StudyStatsDto>> GetByFilter(ReportFilterDto filter)
         {
-            var data = await _repository.GetByFilter(filter);
+            var data = await _medicalRecordService.GetRequestByFilter(filter);
             var results = data.ToUrgentStatsDto();
 
             return results;
@@ -34,7 +41,7 @@ namespace Service.Report.Application
 
         public async Task<IEnumerable<StudyStatsChartDto>> GetChartByFilter(ReportFilterDto filter)
         {
-            var data = await _repository.GetByFilter(filter);
+            var data = await _medicalRecordService.GetRequestByFilter(filter);
             var results = data.ToUrgentStatsChartDto();
 
             return results;

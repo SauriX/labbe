@@ -131,11 +131,13 @@ namespace Service.MedicalRecord.Application
         {
             var studies = await _repository.GetResultsById(result.SolicitudId);
             var request = await _repository.GetRequestById(result.SolicitudId); 
-            var glucoseStudy = studies.Where(x => x.EstudioId == 631).Where(x => x.TipoValorId == "6" || x.TipoValorId == "1").Where(x => x.Clave != "_OB_CTG");
+            var glucoseStudy = studies.Where(x => x.EstudioId == 631).Where(x => x.TipoValorId == "6" || x.TipoValorId == "1").Where(x => x.Clave != "_OB_CTG").Where(x => x.Resultado != null);
 
             var path = Assets.ToleranciaGlucosa;
+            var template = new XLTemplate(path);
 
             List<object> glucoseParams = new List<object>();
+            var lastTime = "";
 
             foreach(var param in glucoseStudy.OrderBy(x => x.Orden))
             {
@@ -147,7 +149,9 @@ namespace Service.MedicalRecord.Application
                         Estudio = "0",
                         Resultado = numericResult
                     });
+                    lastTime = "CERO HORAS";
                 }
+
                 if(param.Clave == "_GLU_SU30")
                 {
                     glucoseParams.Add(new
@@ -155,13 +159,17 @@ namespace Service.MedicalRecord.Application
                         Estudio = "30",
                         Resultado = numericResult
                     });
-                }if(param.Clave == "_GLU_SU60")
+                    lastTime = "MEDIA HORA";
+                }
+
+                if(param.Clave == "_GLU_SU60")
                 {
                     glucoseParams.Add(new
                     {
                         Estudio = "60",
                         Resultado = numericResult
                     });
+                    lastTime = "UNA HORA";
                 }
                 if(param.Clave == "_GLU_SU90")
                 {
@@ -170,14 +178,19 @@ namespace Service.MedicalRecord.Application
                         Estudio = "90",
                         Resultado = numericResult
                     });
-                }if(param.Clave == "_GLU_SU120")
+                    lastTime = "HORA Y MEDIA";
+                }
+                
+                if(param.Clave == "_GLU_SU120")
                 {
                     glucoseParams.Add(new
                     {
                         Estudio = "120",
-                        Resultado = numericResult
+                        Resultado = numericResult,
                     });
+                    lastTime = "DOS HORAS";
                 }
+
                 if(param.Clave == "_GLU_SU180")
                 {
                     glucoseParams.Add(new
@@ -185,21 +198,24 @@ namespace Service.MedicalRecord.Application
                         Estudio = "180",
                         Resultado = numericResult
                     });
-                }if(param.Clave == "_GLU_SU240")
+                    lastTime = "TRES HORAS";
+                }
+
+                if(param.Clave == "_GLU_SU240")
                 {
                     glucoseParams.Add(new
                     {
                         Estudio = "240",
                         Resultado = numericResult
                     });
+                    lastTime = "CUATRO HORAS";
                 }
             }
-
-            var template = new XLTemplate(path);
 
             template.AddVariable("NombrePaciente", request.Expediente.NombreCompleto);
             template.AddVariable("Medico", request.Medico.Nombre);
             template.AddVariable("Fecha", DateTime.Now.ToString("f"));
+            template.AddVariable("Tiempo", lastTime);
             template.AddVariable("Estudios", glucoseParams);
 
             template.Generate();

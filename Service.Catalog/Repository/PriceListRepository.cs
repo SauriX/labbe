@@ -45,6 +45,7 @@ namespace Service.Catalog.Repository
                 .Include(x => x.Estudio.Parameters).ThenInclude(x => x.Parametro.Area.Departamento)
                 .Include(x => x.Estudio.Indications).ThenInclude(x => x.Indicacion)
                 .Include(x => x.Estudio.Tapon)
+                .Include(x => x.Estudio.Maquilador)
                 .Include(x => x.PrecioLista)
                 .Where(x => x.EstudioId == studyId);
 

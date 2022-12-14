@@ -16,10 +16,17 @@ namespace Service.Report.Application
     public class ChargeRequestApplication : BaseApplication, IChargeRequestApplication
     {
         public readonly IReportRepository _repository;
+        private readonly IMedicalRecordClient _medicalRecordService;
         private readonly IPdfClient _pdfClient;
 
-        public ChargeRequestApplication(IReportRepository repository, IPdfClient pdfClient, IRepository<Branch> branchRepository, IRepository<Medic> medicRepository, IRepository<Company> companyRepository) : base(branchRepository, medicRepository, companyRepository)
+        public ChargeRequestApplication(IReportRepository repository,
+            IMedicalRecordClient medicalRecordService,
+            IPdfClient pdfClient,
+            IRepository<Branch> branchRepository,
+            IRepository<Medic> medicRepository,
+            IRepository<Company> companyRepository) : base(branchRepository, medicRepository, companyRepository)
         {
+            _medicalRecordService = medicalRecordService;
             _repository = repository;
             _pdfClient = pdfClient;
 
@@ -27,7 +34,7 @@ namespace Service.Report.Application
 
         public async Task<IEnumerable<TypeRequestDto>> GetByFilter(ReportFilterDto filter)
         {
-            var data = await _repository.GetByFilter(filter);
+            var data = await _medicalRecordService.GetRequestByFilter(filter);
             var results = data.ToChargeRequestDto();
 
             return results;
@@ -35,7 +42,7 @@ namespace Service.Report.Application
 
         public async Task<TypeDto> GetTableByFilter(ReportFilterDto filter)
         {
-            var data = await _repository.GetByFilter(filter);
+            var data = await _medicalRecordService.GetRequestByFilter(filter);
             var results = data.ToChargeDto();
 
             return results;
@@ -43,7 +50,7 @@ namespace Service.Report.Application
 
         public async Task<IEnumerable<TypeRequestChartDto>> GetChartByFilter(ReportFilterDto filter)
         {
-            var data = await _repository.GetByFilter(filter);
+            var data = await _medicalRecordService.GetRequestByFilter(filter);
             var results = data.ToChargeRequestChartDto();
 
             return results;
@@ -79,10 +86,10 @@ namespace Service.Report.Application
                 { "Solicitud", x.Solicitud },
                 { "Paciente", x.Paciente },
                 { "Médico", x.Medico },
-                { "Children", x.Estudio.Select(x => new Dictionary<string, object> { { "Clave", x.Clave}, { "Estudio", x.Estudio}, { "Precio", $"Precio Estudio ${x.PrecioFinal}"},
-                    { "Promoción Estudio", x.Descuento == 0 ? $"Sin Promoción" : $"Promoción Estudio ${x.Descuento}" },
-                    { "Paquete", x.Paquete == null ? "Sin paquete" : $"Paquete {x.Paquete}" },
-                    { "Promoción paquete", x.Promocion == 0 || x.Promocion == null ? $"Sin Promoción" : $"Promoción Paquete ${x.Promocion}" }  } )},
+                { "Children", x.Estudio.Select(x => new Dictionary<string, object> { { "Clave", x.Clave}, { "Estudio", x.Estudio}, { "Precio", $"${x.PrecioFinal}"},
+                    { "Desc.", x.Descuento == 0 ? $" - " : $"${x.Descuento}" },
+                    { "Paquete", x.Paquete == null ? " - " : $"Paquete\n {x.Paquete}" },
+                    { "Promoción", x.Promocion == 0 || x.Promocion == null ? $" - " : $"${x.Promocion}" }  } )},
                 { "Compañía", x.Empresa},
                 { "Subtotal", x.SubtotalCargo},
                 { "Promoción",x.Promocion},

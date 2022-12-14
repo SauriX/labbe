@@ -1,4 +1,5 @@
-﻿using Service.Report.Domain.Request;
+﻿using Service.Report.Domain.MedicalRecord;
+using Service.Report.Domain.Request;
 using Service.Report.Dtos.PatientStats;
 using System;
 using System.Collections.Generic;
@@ -8,18 +9,18 @@ namespace Service.Report.Mapper
 {
     public static class PatientStatsMapper
     {
-        public static IEnumerable<PatientStatsDto> ToPatientStatsDto(this IEnumerable<Request> model)
+        public static IEnumerable<PatientStatsDto> ToPatientStatsDto(this IEnumerable<RequestInfo> model)
         {
             if (model == null) return null;
 
             var results = (from c in model
-                           group c by new { c.Expediente.Nombre, c.ExpedienteId } into g
+                           group c by new { c.NombreCompleto, c.ExpedienteId } into g
                            select new PatientStatsDto
                            {
                                Id = Guid.NewGuid(),
-                               Paciente = g.Key.Nombre,
+                               Paciente = g.Key.NombreCompleto,
                                NoSolicitudes = g.Count(),
-                               Total = g.Sum(x => x.PrecioFinal),
+                               Total = g.Sum(x => x.TotalEstudios),
                            }).ToList();
 
             results.Add(new PatientStatsDto

@@ -23,7 +23,7 @@ namespace Service.MedicalRecord.Mapper
 
         public static List<BudgetStatsDto> QuotationReportGeneric(IEnumerable<Quotation> model)
         {
-            return model.Where(x => x.Estudios != null).Select(request =>
+            return model.Where(x => x.Estudios.Count > 0).Select(request =>
             {
                 var studies = request.Estudios;
                 var pack = request.Paquetes;
@@ -39,12 +39,14 @@ namespace Service.MedicalRecord.Mapper
                     Id = Guid.NewGuid(),
                     Solicitud = request.Clave,
                     Sucursal = request.Sucursal.Nombre,
-                    NombrePaciente = request.Expediente.NombreCompleto,
-                    NombreMedico = request.Medico.Nombre,
+                    SucursalId = request.Sucursal.Id,
+                    NombrePaciente = request.Expediente?.NombreCompleto,
+                    NombreMedico = request.Medico?.Nombre,
                     Estudio = studies.QuotationStudies(),
                     Descuento = descount,
                     DescuentoPorcentual = porcentualDescount,
                     Promocion = promotion,
+                    Fecha = request.FechaCreo,
                 };
             }).ToList();
         }
@@ -61,6 +63,18 @@ namespace Service.MedicalRecord.Mapper
                 Paquete = x.Paquete?.Nombre,
                 Promocion = x.Paquete?.Descuento / studies.Count(),
                 PrecioFinal = x.Precio - (x.Precio * x.Paquete?.DescuentoPorcentaje ?? 0) - (x.Descuento == 0 ? 0 : x.Descuento),
+                Solicitud = new ReportInfoDto
+                {
+                    Id = x.Cotizacion.Id,
+                    Solicitud = x.Cotizacion.Clave,
+                    Expediente = x.Cotizacion.Expediente?.Expediente,
+                    NombreCompleto = x.Cotizacion.Expediente?.NombreCompleto,
+                    Edad = x.Cotizacion.Expediente?.Edad,
+                    Sexo = x.Cotizacion.Expediente?.Genero,
+                    Sucursal = x.Cotizacion.Sucursal.Nombre,
+                    Medico = x.Cotizacion.Medico?.Nombre,
+                    Fecha = x.Cotizacion.FechaCreo,
+                },
             }).ToList();
         }
 
@@ -71,36 +85,50 @@ namespace Service.MedicalRecord.Mapper
             return model.Where(x => x.Estudios.Count > 0).Select(request =>
             {
                 var studies = request.Estudios;
+                var pack = request.Paquetes;
+
+                var priceStudies = studies.Sum(x => x.Precio - (x.Precio * x.Paquete?.DescuentoPorcentaje ?? 0) - (x.Descuento == 0 ? 0 : x.Descuento));
+                var descount = studies.Sum(x => x.Descuento);
+                var promotion = studies.Sum(x => x.Descuento) + pack.Sum(x => x.Descuento);
+                var porcentualDescount = (descount * 100) / priceStudies;
+                var descRequest = descount / 100;
+                var charge = request.Cargo;
+                var porcentualCharge = (charge * 100) / priceStudies;
 
                 return new ReportInfoDto
                 {
                     Id = request.Id,
                     Solicitud = request.Clave,
                     ExpedienteId = request.ExpedienteId,
-                    Expediente = request.Expediente.Expediente,
-                    NombreCompleto = request.Expediente.NombreCompleto,
-                    Edad = request.Expediente.Edad,
-                    Sexo = request.Expediente.Genero,
-                    Celular = request.Expediente.Celular,
-                    Correo = request.Expediente.Correo,
-                    ClavePatalogica = request.ClavePatologica,
+                    Expediente = request.Expediente?.Expediente,
+                    NombreCompleto = request.Expediente?.NombreCompleto,
+                    Edad = request.Expediente?.Edad,
+                    Sexo = request.Expediente?.Genero,
+                    Celular = request.Expediente?.Celular,
+                    Correo = request.Expediente?.Correo,
+                    ClavePatalogica = request.ClavePatologica ?? "",
                     SucursalId = request.SucursalId,
                     Sucursal = request.Sucursal.Nombre,
                     EstatusId = request.EstatusId,
-                    NombreEstatus = request.Estatus.Nombre,
+                    NombreEstatus = request.Estatus?.Nombre,
                     Procedencia = request.Procedencia,
-                    CompañiaId = (Guid)request.CompañiaId,
-                    Compañia = request.Compañia.Nombre,
-                    MedicoId = (Guid)request.MedicoId,
-                    Medico = request.Medico.Nombre,
+                    CompañiaId = request.CompañiaId,
+                    Compañia = request.Compañia?.Nombre,
+                    MedicoId = request.MedicoId,
+                    Medico = request.Medico?.Nombre,
+                    ClaveMedico = request.Medico?.Clave,
                     Urgencia = request.Urgencia,
                     Parcialidad = request.Parcialidad,
                     TotalEstudios = request.TotalEstudios,
                     Descuento = request.Descuento,
+                    DescuentoPorcentual = porcentualDescount,
+                    Promocion = promotion,
                     Cargo = request.Cargo,
+                    CargoPorcentual = porcentualCharge,
                     Copago = request.Copago,
+                    PrecioEstudios = priceStudies,
                     Total = request.Total,
-                    Fecha = request.FechaCreo.ToString("dd/MM/yyyy"),
+                    Fecha = request.FechaCreo,
                     Estudios = studies.RequestStudies(),
                 };
             }).ToList();
@@ -113,11 +141,28 @@ namespace Service.MedicalRecord.Mapper
                 Id = x.Id,
                 Clave = x.Clave,
                 Nombre = x.Nombre,
+                MaquilaId = x.MaquilaId,
+                Maquila = x.Maquila?.Nombre ?? "",
                 Precio = x.Precio,
                 Descuento = x.Descuento,
-                Paquete = x.Paquete?.Nombre,
-                Promocion = x.Paquete?.Descuento / studies.Count(),
+                DescuentoPorcentaje = x.DescuentoPorcentaje,
+                PaqueteId = x.PaqueteId,
+                Paquete = x.Paquete?.Nombre ?? "",
+                Promocion = x.Paquete?.Descuento ?? 0 / studies.Count(),
                 PrecioFinal = x.Precio - (x.Precio * x.Paquete?.DescuentoPorcentaje ?? 0) - (x.Descuento == 0 ? 0 : x.Descuento),
+                Solicitud = new ReportInfoDto
+                {
+                    Id = x.Solicitud.Id,
+                    Solicitud = x.Solicitud.Clave,
+                    ExpedienteId = x.Solicitud.ExpedienteId,
+                    Expediente = x.Solicitud.Expediente?.Expediente,
+                    NombreCompleto = x.Solicitud.Expediente?.NombreCompleto,
+                    Edad = x.Solicitud.Expediente?.Edad,
+                    Sexo = x.Solicitud.Expediente?.Genero,
+                    Sucursal = x.Solicitud.Sucursal.Nombre,
+                    Medico = x.Solicitud.Medico?.Nombre,
+                    Fecha = x.Solicitud.FechaCreo,
+                },
             }).ToList();
         }
     }

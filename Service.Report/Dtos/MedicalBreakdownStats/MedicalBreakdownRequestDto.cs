@@ -11,7 +11,7 @@ namespace Service.Report.Dtos.MedicalBreakdownStats
         public string Paciente { get; set; }
         public string Medico { get; set; }
         public string ClaveMedico { get; set; }
-        public Guid MedicoId { get; set; }
+        public Guid? MedicoId { get; set; }
         public string Empresa { get; set; }
         public List<StudiesDto> Estudio { get; set; }
         public byte Estatus { get; set; }
