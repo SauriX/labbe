@@ -33,9 +33,11 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Expediente)
                 .Include(x => x.Medico)
                 .Include(x => x.Estudios).ThenInclude(x => x.Estatus)
+                .Include(x => x.Estudios).ThenInclude(x => x.Paquete)
+                .Include(x => x.Estudios).ThenInclude(x => x.Maquila)
+                .Include(x => x.Estatus)
                 .Include(x => x.Compañia)
                 .Include(x => x.Sucursal)
-                .Include(x => x.Estudios).ThenInclude(x => x.Paquete)
                 .Include(x => x.Paquetes)
                 .AsQueryable();
 
@@ -133,15 +135,13 @@ namespace Service.MedicalRecord.Repository
         public async Task<List<RequestStudy>> GetByStudies(ReportFilterDto search)
         {
             var report = _context.Relacion_Solicitud_Estudio
-                //.Include(x => x.Maquila)
-                //.Include(x => x.Sucursal)
+                .Include(x => x.Maquila)
                 .Include(x => x.Solicitud)
                 .Include(x => x.Solicitud).ThenInclude(x => x.Expediente)
                 .Include(x => x.Solicitud).ThenInclude(x => x.Medico)
-                .Include(x => x.Estatus)
                 .Include(x => x.Solicitud).ThenInclude(x => x.Sucursal)
+                .Include(x => x.Estatus)
                 .Include(x => x.Paquete)
-                .Include(x => x.Solicitud).ThenInclude(x => x.Paquetes)
                 .AsQueryable();
 
             if (search.SucursalId != null && search.SucursalId.Count > 0)

@@ -25,6 +25,6 @@ namespace Service.Report.Domain.MedicalRecord
         public decimal Descuento { get; set; }
         public decimal DescuentoPorcentaje { get; set; }
         public decimal PrecioFinal { get; set; }
-        public virtual RequestInfo Solicitud { get; set; }
+        public RequestInfo Solicitud { get; set; }
     }
 }

@@ -25,6 +25,6 @@ namespace Service.MedicalRecord.Dtos.Reports.StudyStats
         public decimal Descuento { get; set; }
         public decimal DescuentoPorcentaje { get; set; }
         public decimal PrecioFinal { get; set; }
-        public virtual ReportInfoDto Solicitud { get; set; }
+        public ReportInfoDto Solicitud { get; set; }
     }
 }
