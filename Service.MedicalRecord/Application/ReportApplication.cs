@@ -18,7 +18,6 @@ namespace Service.MedicalRecord.Application
             _repository = repository;
         }
 
-        // Cotizaciones
         public async Task<IEnumerable<BudgetStatsDto>> GetQuotationByFilter(ReportFilterDto filter)
         {
             var data = await _repository.GetByQuotation(filter);

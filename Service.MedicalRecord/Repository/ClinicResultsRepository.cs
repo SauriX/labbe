@@ -152,7 +152,9 @@ namespace Service.MedicalRecord.Repository
                     nameof(ClinicResults.ValorInicial),
                     nameof(ClinicResults.ValorFinal),
                     nameof(ClinicResults.CriticoMinimo),
-                    nameof(ClinicResults.CriticoMaximo)
+                    nameof(ClinicResults.CriticoMaximo),
+                    nameof(ClinicResults.FCSI),
+                    nameof(ClinicResults.TipoValorId),
                 }
             };
             await _context.BulkUpdateAsync(newParameter, config);

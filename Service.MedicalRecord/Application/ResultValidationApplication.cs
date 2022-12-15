@@ -137,8 +137,8 @@ namespace Service.MedicalRecord.Application
                     else
                     {
                         study.EstatusId = Status.RequestStudy.Capturado;
+                        study.FechaCaptura = DateTime.Now;
                     }
-                    study.FechaModifico = DateTime.Now;
                     
                 }
                 studyCount += studies.Count;
