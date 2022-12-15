@@ -229,7 +229,7 @@ namespace Service.MedicalRecord.Mapper
 
         public static List<ClinicResultsFormDto> ResultsGeneric(this IEnumerable<ClinicResults> model)
         {
-            return model.Select((results, i) =>
+            return model.Select(results =>
             {
                 return new ClinicResultsFormDto
                 {
