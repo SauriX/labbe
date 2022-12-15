@@ -91,7 +91,7 @@ namespace Service.MedicalRecord.Repository
         public async Task<List<RequestStudy>> GetStudyById(Guid requestId, IEnumerable<int> studiesIds)
         {
             var studies = await _context.Relacion_Solicitud_Estudio
-                .Where(x => x.SolicitudId == requestId && studiesIds.Contains(x.EstudioId))
+                .Where(x => x.SolicitudId == requestId && studiesIds.Contains(x.Id))
                 .ToListAsync();
 
             return studies;
