@@ -41,16 +41,15 @@ namespace Service.MedicalRecord.Application
         public async Task<(byte[] file, string fileName)> ExportList(SearchValidation search)
         {
             var studies = await GetAll(search);
-           foreach (var request in studies)
+            foreach (var request in studies)
             {
                 if (studies.Count > 0)
                 {
-                    request.Estudios.Insert(0, new ValidationStudyDto { Study = "Clave", Registro = "Fecha de Registro", Entrega = "Fecha de Entrega", Status = "Estatus" });
+                    request.Estudios.Insert(0, new ValidationStudyDto { Clave = "Clave", Nombre = "Nombre Estudio", Registro = "Fecha de Registro", Entrega = "Fecha de Entrega", NombreEstatus = "Estatus" });
                 }
             }
-          
 
-            var path = Assets.InformeExpedientesv;
+            var path = Assets.InformeExpedientes;
 
             var template = new XLTemplate(path);
 
