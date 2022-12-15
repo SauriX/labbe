@@ -34,6 +34,8 @@ namespace Integration.Pdf.Dtos
         public bool ImprimirCriticos { get; set; }
         public bool ImprimirPrevios { get; set; }
         public int Orden { get; set; }
+        public string FCSI { get; set; }
+        public List<ParameterValueDto> ValoresReferencia { get; set; }
     }
 
     public class ClinicResultsRequestDto
@@ -49,5 +51,38 @@ namespace Integration.Pdf.Dtos
         public string FechaAdmision { get; set; }
         public string FechaEntrega { get; set; }
         public string User { get; set; }
+        public string Metodo { get; set; }
+    }
+
+    public class ParameterValueDto
+    {
+        public string Id { get; set; }
+        public string ParametroId { get; set; }
+        public string Nombre { get; set; }
+        public decimal ValorInicial { get; set; }
+        public decimal ValorFinal { get; set; }
+        public decimal ValorInicialNumerico { get; set; }
+        public decimal ValorFinalNumerico { get; set; }
+        public int RangoEdadInicial { get; set; }
+        public int RangoEdadFinal { get; set; }
+        public decimal HombreValorInicial { get; set; }
+        public decimal HombreValorFinal { get; set; }
+        public decimal MujerValorInicial { get; set; }
+        public decimal MujerValorFinal { get; set; }
+        public decimal CriticoMinimo { get; set; }
+        public decimal CriticoMaximo { get; set; }
+        public decimal HombreCriticoMinimo { get; set; }
+        public decimal HombreCriticoMaximo { get; set; }
+        public decimal MujerCriticoMinimo { get; set; }
+        public decimal MujerCriticoMaximo { get; set; }
+        public byte MedidaTiempoId { get; set; }
+        public string Opcion { get; set; }
+        public string DescripcionTexto { get; set; }
+        public string DescripcionParrafo { get; set; }
+        public string PrimeraColumna { get; set; }
+        public string SegundaColumna { get; set; }
+        public string TerceraColumna { get; set; }
+        public string CuartaColumna { get; set; }
+        public string QuintaColumna { get; set; }
     }
 }
