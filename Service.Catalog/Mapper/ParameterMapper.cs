@@ -79,6 +79,7 @@ namespace Service.Catalog.Mapper
                 MostrarFormato = x.MostrarFormato,
                 ValorInicial = x?.ValorInicial,
                 ValorFinal = x.ValorFinal,
+                FCSI = x?.FCSI,
                 TipoValores = x.TipoValores?.Select(x => x.ToParameterValueDto())?.ToList(),
             });
         }

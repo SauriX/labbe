@@ -10,8 +10,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using MigraDoc.DocumentObjectModel.Shapes.Charts;
-using ZXing;
-using Microsoft.Ajax.Utilities;
 
 namespace Integration.Pdf.Service
 {
@@ -84,7 +82,7 @@ namespace Integration.Pdf.Service
             var fontParam = new Font("calibri", 12);
             var fontCritic = new Font("calibri", 12) { Bold = true };
             var fontTitle = new Font("calibri", 14) { Bold = true };
-            const byte CTG = 631;
+            const int CTG = 631;
 
             var contentWidth = section.PageSetup.PageWidth - section.PageSetup.LeftMargin - section.PageSetup.RightMargin;
             Chart chart = new Chart();
@@ -115,11 +113,12 @@ namespace Integration.Pdf.Service
 
                     var orderParams = studyParam.OrderBy(x => x.Orden);
 
-                    foreach (var param in orderParams.Where(x => !x.Resultado.IsNullOrWhiteSpace()))
+                    foreach (var param in orderParams.Where(x => !string.IsNullOrWhiteSpace(x.Resultado)))
                     {
                         var checkResult = false;
                         var typeValueText = param.TipoValorId == TypeValue.Etiqueta || param.TipoValorId == TypeValue.Observacion;
                         var typeValueNumeric = param.TipoValorId == TypeValue.Numerico || param.TipoValorId == TypeValue.NumericoSexo || param.TipoValorId == TypeValue.NumericoEdad || param.TipoValorId == TypeValue.NumericoEdadSexo;
+                        var fcsiExists = !string.IsNullOrEmpty(param.FCSI);
 
                         if (param.Resultado != null && typeValueNumeric)
                         {
@@ -147,13 +146,51 @@ namespace Integration.Pdf.Service
                             col[1].Horizontal = ParagraphAlignment.Left;
                         }
 
+                        var firstColumn = string.Join("\n", param.ValoresReferencia.Select(x => x.PrimeraColumna));
+                        var secondColumn = string.Join("\n", param.ValoresReferencia.Select(x => x.SegundaColumna));
+                        var thirdColumn = string.Join("\n", param.ValoresReferencia.Select(x => x.TerceraColumna));
+                        var fourthColumn = string.Join("\n", param.ValoresReferencia.Select(x => x.CuartaColumna));
+                        var fifthColumn = string.Join("\n", param.ValoresReferencia.Select(x => x.QuintaColumna));
+
+                        var font2Column = new Font("calibri", 9);
+                        var font3Column = new Font("calibri", 8);
+                        var font4Column = new Font("calibri", 7);
+                        var font5Column = new Font("calibri", 6);
+
+
                         if (param.TipoValorId == TypeValue.Numerico2Columna)
                         {
-                            col.RemoveAt(3);
-                            col[2] = new Col(param.UnidadNombre, 6, fontParam, ParagraphAlignment.Center);
-                            col[1].Tamaño = 19;
-                            col[1].Horizontal = ParagraphAlignment.Left;
+                            if (param.Resultado == "." && param.EstudioId == CTG)
+                            {
+                                col[2] = new Col(firstColumn, 6, font2Column, ParagraphAlignment.Center);
+                                col[3] = new Col(secondColumn, 6, font2Column, ParagraphAlignment.Center);
+                            }
+                            else if (param.Resultado != ".")
+                            {
+                                col[2] = new Col(firstColumn, 6, font2Column, ParagraphAlignment.Center);
+                                col[3] = new Col(secondColumn, 6, font2Column, ParagraphAlignment.Center);
+                            }
                         }
+
+                        else if (param.TipoValorId == TypeValue.Numerico3Columna)
+                        {
+                            col[2] = new Col(firstColumn + "\t" + secondColumn, 8, font3Column, ParagraphAlignment.Center);
+                            col[3] = new Col(thirdColumn, 4, font3Column, ParagraphAlignment.Center);
+                        }
+
+                        else if (param.TipoValorId == TypeValue.Numerico4Columna)
+                        {
+                            col[2] = new Col(firstColumn + "\t" + secondColumn, 6, font4Column, ParagraphAlignment.Center);
+                            col[3] = new Col(thirdColumn + "\t" + fourthColumn, 6, font4Column, ParagraphAlignment.Center);
+                        }
+
+                        else if (param.TipoValorId == TypeValue.Numerico5Columna)
+                        {
+                            col[2] = new Col(firstColumn + "\t" + secondColumn, 4, font5Column, ParagraphAlignment.Center);
+                            col[3] = new Col(thirdColumn + "\t" + fourthColumn + "\t" + fifthColumn, 8, font5Column, ParagraphAlignment.Center);
+                        }
+
+
 
                         var glucoseToleranceValues = param.TipoValorId == TypeValue.Numerico || param.TipoValorId == TypeValue.Numerico1Columna;
 
@@ -174,6 +211,20 @@ namespace Integration.Pdf.Service
 
                         if (results.ImprimirPrevios) col.Insert(2, new Col(param.UltimoResultado != null ? param.UltimoResultado : "-", 6, Col.FONT_SUBTITLE_BOLD));
                         section.AddBorderedText(col.ToArray(), top: false, right: false, bottom: false, left: false);
+
+                        var fcsiText = new Col(param.FCSI, 14, font2Column, ParagraphAlignment.Left);
+
+                        if(fcsiExists)
+                            section.AddText(fcsiText);
+                    }
+
+                    var methodExists = !string.IsNullOrEmpty(results.SolicitudInfo?.Metodo);
+                    var methodText = new Col($"Método: {results.SolicitudInfo?.Metodo}", 18, fontText, ParagraphAlignment.Left);
+
+                    if (methodExists)
+                    {
+                        section.AddSpace(2);
+                        section.AddText(methodText);
                     }
 
                     if (studyParam.Any(x => x.EstudioId == CTG))

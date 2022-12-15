@@ -25,5 +25,6 @@ namespace Service.MedicalRecord.Domain
         public bool DeltaCheck { get; set; }
         public string UltimoResultado { get; set; }
         public int Orden { get; set; }
+        public string FCSI { get; set; }
     }
 }

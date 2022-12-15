@@ -33,5 +33,7 @@ namespace Service.MedicalRecord.Dtos.ClinicResults
         public bool DeltaCheck { get; set; }
         public int Orden { get; set; }
         public string Clave { get; set; }
+        public string FCSI { get; set; }
+        public List<ParameterValueDto> ValoresReferencia { get; set; }
     }
 }

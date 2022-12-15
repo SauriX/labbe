@@ -8,6 +8,7 @@ namespace Service.MedicalRecord.Dtos.Request
         public int Id { get; set; }
         public List<ParameterListDto> Parametros { get; set; }
         public List<IndicationListDto> Indicaciones { get; set; }
+        public string Metodo { get; set; }
         public string Clave { get; set; }
     }
 }
