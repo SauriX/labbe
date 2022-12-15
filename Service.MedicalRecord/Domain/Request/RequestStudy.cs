@@ -40,6 +40,7 @@ namespace Service.MedicalRecord.Domain.Request
         public decimal PrecioFinal { get; set; }
         public string MedioSolicitado { get; set; }
         public string Observacion { get; set; }
+        public string Metodo { get; set; }
         public virtual RequestStudyWee EstudioWeeClinic { get; set; }
         // Fechas Actualizacion
         public DateTime? FechaPendiente { get; set; }

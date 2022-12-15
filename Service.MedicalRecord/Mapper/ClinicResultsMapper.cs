@@ -7,6 +7,7 @@ using Service.MedicalRecord.Dtos.ClinicResults;
 using Service.MedicalRecord.Domain;
 using System;
 using Service.MedicalRecord.Dictionary;
+using Service.MedicalRecord.Dtos.Catalogs;
 
 namespace Service.MedicalRecord.Mapper
 {
@@ -101,7 +102,8 @@ namespace Service.MedicalRecord.Mapper
                 DeltaCheck = x.DeltaCheck,
                 UltimoResultado = x?.UltimoResultado,
                 Orden = i,
-                Clave = x.Clave
+                Clave = x.Clave,
+                FCSI = x.Clave,
             }).ToList();
         }
 
@@ -193,11 +195,11 @@ namespace Service.MedicalRecord.Mapper
             };
         }
 
-        public static ClinicResultsPdfDto ToResults(this IEnumerable<ClinicResults> model, bool ImprimirLogos, bool ImprimirCriticos, bool ImprimirPrevios)
+        public static ClinicResultsPdfDto ToResults(this IEnumerable<ClinicResults> model, bool ImprimirLogos, bool ImprimirCriticos, bool ImprimirPrevios, List<ParameterValueDto> valoresReferencia = null)
         {
             if (model == null || !model.Any()) return new ClinicResultsPdfDto();
 
-            var results = ResultsGeneric(model);
+            var results = ResultsGeneric(model, valoresReferencia);
             var requestInfo = model.First();
 
             var request = new ClinicResultsRequestDto
@@ -212,7 +214,8 @@ namespace Service.MedicalRecord.Mapper
                 Sexo = requestInfo.Solicitud.Expediente.Genero,
                 FechaAdmision = requestInfo.Solicitud.FechaCreo.ToString("d"),
                 FechaEntrega = requestInfo.Solicitud.Estudios.Max(x => x.FechaEntrega).ToString("d"),
-                User = requestInfo.Solicitud.UsuarioCreo
+                User = requestInfo.Solicitud.UsuarioCreo,
+                Metodo = requestInfo.Solicitud.Estudios?.Select(x => x.Metodo).FirstOrDefault(),
             };
 
             var data = new ClinicResultsPdfDto
@@ -227,7 +230,7 @@ namespace Service.MedicalRecord.Mapper
             return data;
         }
 
-        public static List<ClinicResultsFormDto> ResultsGeneric(this IEnumerable<ClinicResults> model)
+        public static List<ClinicResultsFormDto> ResultsGeneric(this IEnumerable<ClinicResults> model, List<ParameterValueDto> valoresReferencia = null)
         {
             return model.Select(results =>
             {
@@ -250,7 +253,9 @@ namespace Service.MedicalRecord.Mapper
                     UltimoResultado = results.UltimoResultado,
                     DeltaCheck = results.DeltaCheck,
                     Orden = results.Orden,
-                    Clave = results.Clave
+                    Clave = results.Clave,
+                    FCSI = results.FCSI,
+                    ValoresReferencia = valoresReferencia
                 };
             }).ToList();
         }

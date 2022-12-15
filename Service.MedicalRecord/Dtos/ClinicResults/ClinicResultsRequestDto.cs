@@ -18,5 +18,6 @@ namespace Service.MedicalRecord.Dtos.ClinicResults
         public string FechaEntrega { get; set; }
         public string FechaAdmision { get; set; }
         public string User { get; set; }
+        public string Metodo { get; set; }
     }
 }

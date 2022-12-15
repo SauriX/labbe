@@ -44,6 +44,7 @@ namespace Service.MedicalRecord.Dtos.Request
         public bool Asignado { get; set; }
         public int? MaquilaId { get; set; }
         public string Maquila { get; set; }
+        public string Metodo { get; set; }
         public List<PriceListInfoPromoDto> Promociones { get; set; }
         public List<ParameterListDto> Parametros { get; set; }
         public List<IndicationListDto> Indicaciones { get; set; }
