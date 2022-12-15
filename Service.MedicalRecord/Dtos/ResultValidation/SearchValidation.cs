@@ -5,7 +5,7 @@ namespace Service.MedicalRecord.Dtos.ResultValidation
 {
     public class SearchValidation
     {
-        public DateTime[] Fecha  { get; set; }
+        public DateTime[]? Fecha  { get; set; }
         public string Search { get; set; }
         public int Area { get; set; }
         public List<int> Estudio { get; set; }
