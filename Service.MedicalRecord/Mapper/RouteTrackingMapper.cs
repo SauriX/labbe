@@ -57,7 +57,7 @@ namespace Service.MedicalRecord.Mapper
                 Id = x.EstudioId,
                 Nombre = x.Estudio,
                 Area = "",
-                Status = x.Solicitud.Estudios.Where(y=>y.EstudioId==x.EstudioId).FirstOrDefault().EstatusId,
+                Status = x.Solicitud.Estudios.Where(y=>y.EstudioId==x.EstudioId).FirstOrDefault().EstatusId ,
                 Registro = x.FechaCreo.ToString(),
                 Seleccion = false,
                 Clave = x.Solicitud.Clave,
