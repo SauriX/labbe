@@ -25,7 +25,7 @@ namespace Service.MedicalRecord.Repository
         }
 
         public async Task<List<TrackingOrder>> GetAll(RouteTrackingSearchDto search) {
-            var routeTrackingList = _context.CAT_Seguimiento_Ruta.Where(x => x.Estudios.Any(y => y.Solicitud.Estudios.Any(m=>m.EstatusId==Status.RequestStudy.TomaDeMuestra|| m.EstatusId == Status.RequestStudy.EnRuta))).Include(x => x.Estudios).ThenInclude(x=>x.Solicitud.Sucursal).AsQueryable();
+            var routeTrackingList = _context.CAT_Seguimiento_Ruta.Where(x => x.Estudios.Any(y => y.Solicitud.Estudios.Any(m=>m.EstatusId==Status.RequestStudy.TomaDeMuestra|| m.EstatusId == Status.RequestStudy.EnRuta))).Include(x => x.Estudios).ThenInclude(x=>x.Solicitud.Sucursal).Include(x => x.Estudios).ThenInclude(x=>x.Solicitud.Estudios).ThenInclude(x=>x.Estatus).AsQueryable();
 
             if (search.Fechas != null && search.Fechas.Length != 0)
             {
