@@ -23,13 +23,13 @@ namespace Service.MedicalRecord.Mapper
                 Edad = x.Expediente.Edad.ToString(),
                 Sexo = x.Expediente.Genero,
                 Compañia = x.Compañia?.Nombre,
-                Estudios = x.Estudios.ToStudyValidationDto(),
+                Estudios = x.Estudios.ToStudyValidationDto(x.Urgencia),
                 Id = x.Id,
                 Order = x.ExpedienteId.ToString()
             }).ToList();
         }
 
-        public static List<ValidationStudyDto> ToStudyValidationDto(this ICollection<RequestStudy> model)
+        public static List<ValidationStudyDto> ToStudyValidationDto(this ICollection<RequestStudy> model, byte urgencia)
         {
             return model.Select(x => new ValidationStudyDto
             {
@@ -44,6 +44,7 @@ namespace Service.MedicalRecord.Mapper
                 SolicitudId = x.SolicitudId,
                 Nombre = x.Nombre,
                 Clave = x.Clave.ToString(),
+                Tipo = urgencia == 1 ? true : false,
 
             }).ToList();
         }

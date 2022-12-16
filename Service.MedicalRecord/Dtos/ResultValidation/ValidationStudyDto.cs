@@ -16,5 +16,7 @@ namespace Service.MedicalRecord.Dtos.ResultValidation
 
         public string Clave { get; set; }
         public string NombreEstatus { get; set; }
+
+        public bool Tipo { get; set; }
     }
 }
