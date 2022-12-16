@@ -22,7 +22,7 @@ namespace Service.MedicalRecord.Mapper
                 Clave = x.Clave,
                 Sucursal = x.Estudios.Count > 0 ? x.Estudios.FirstOrDefault().Solicitud.Sucursal.Nombre : "",
                 Fecha = x.FechaCreo,
-                Status = x.Activo.ToString(),
+                Status = x.ToString(),
                 Estudios = x.Estudios.ToList().ToStudyRouteTrackingDto(),
                
             }).ToList();
@@ -57,14 +57,14 @@ namespace Service.MedicalRecord.Mapper
                 Id = x.EstudioId,
                 Nombre = x.Estudio,
                 Area = "",
-                Status = x.Escaneado?2:1,
+                Status = x.Solicitud.Estudios.Where(y=>y.EstudioId==x.EstudioId).FirstOrDefault().EstatusId,
                 Registro = x.FechaCreo.ToString(),
                 Seleccion = false,
                 Clave = x.Solicitud.Clave,
                 Expedienteid=x.ExpedienteId.ToString(),
             Solicitudid =x.SolicitudId.ToString(),
-            Entrega=x.FechaMod==System.DateTime.MinValue?"":x.FechaMod.ToString()
-        // NombreEstatus = x.Estatus.Nombre,
+            Entrega=x.FechaMod==System.DateTime.MinValue?"":x.FechaMod.ToString(),
+         NombreEstatus = x.Solicitud.Estudios.Where(y => y.EstudioId == x.EstudioId).FirstOrDefault().Estatus.Nombre,
     }).ToList();
         }
     }
