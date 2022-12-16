@@ -865,13 +865,13 @@ namespace Service.MedicalRecord.Application
                 {
                     if (files.Count > 0 && canSendResultBalance(existingRequest))
                     {
-                        if (estudios.MediosEnvio.Contains("Whatsapp"))
+                        if (estudios.MediosEnvio.Contains("Whatsapp") && !string.IsNullOrEmpty(existingRequest.EnvioWhatsApp))
                         {
                             await SendTestWhatsapp(files, existingRequest.EnvioWhatsApp, estudios.UsuarioId);
 
                         }
 
-                        if (estudios.MediosEnvio.Contains("Correo"))
+                        if (estudios.MediosEnvio.Contains("Correo") && !string.IsNullOrEmpty(existingRequest.EnvioCorreo))
                         {
 
                             await SendTestEmail(files, existingRequest.EnvioCorreo, estudios.UsuarioId);
