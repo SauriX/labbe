@@ -88,6 +88,9 @@ namespace Service.MedicalRecord.Repository
             {
                 report = report.Where(x => search.TipoSoli.Contains(x.Urgencia));
             }
+            if (search.Departament != null && search.Departament>0) {
+                report = report.Where(x => x.Estudios.Any(y => search.Departament == y.DepartamentoId));
+            }
             if (search.Area != null && search.Area > 0)
             {
                 report = report.Where(x => x.Estudios.Any(y => search.Area == y.AreaId));
