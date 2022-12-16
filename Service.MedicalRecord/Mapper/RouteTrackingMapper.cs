@@ -22,7 +22,7 @@ namespace Service.MedicalRecord.Mapper
                 Clave = x.Clave,
                 Sucursal = x.Estudios.Count > 0 ? x.Estudios.FirstOrDefault().Solicitud.Sucursal.Nombre : "",
                 Fecha = x.FechaCreo,
-                Status = x.ToString(),
+                Status = x.Activo.ToString(),
                 Estudios = x.Estudios.ToList().ToStudyRouteTrackingDto(),
                
             }).ToList();
