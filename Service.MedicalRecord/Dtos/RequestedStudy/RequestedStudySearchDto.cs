@@ -14,7 +14,7 @@ namespace Service.MedicalRecord.Dtos.RequestedStudy
         public List<string> Medico { get; set; }
         public List<string> CompañiaId { get; set; }
         public List<string> Compañia { get; set; }
-        public List<DateTime?> Fecha { get; set; }
+        public List<DateTime> Fecha { get; set; }
         public string Buscar { get; set; }
         public List<int?> Departamento { get; set; }
         public List<int?> Area { get; set; }
