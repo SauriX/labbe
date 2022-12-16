@@ -64,7 +64,7 @@ namespace Service.MedicalRecord.Mapper
                 Expedienteid=x.ExpedienteId.ToString(),
             Solicitudid =x.SolicitudId.ToString(),
             Entrega=x.FechaMod==System.DateTime.MinValue?"":x.FechaMod.ToString(),
-         NombreEstatus = x.Solicitud.Estudios.Where(y => y.EstudioId == x.EstudioId).FirstOrDefault().Estatus.Nombre,
+         NombreEstatus = x.Solicitud.Estudios.Where(y => y.EstudioId == x.EstudioId).FirstOrDefault().Estatus.Nombre ,
     }).ToList();
         }
     }
