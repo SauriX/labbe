@@ -231,7 +231,7 @@ namespace Service.MedicalRecord.Application
             var estudioId = estudiosSeleccionados.EstudiosId[0];
             var existingStudy = existingRequest.Estudios.ToList().Find(x => x.EstudioId == estudiosSeleccionados.EstudiosId[0].EstudioId);
             var area = existingStudy.DepartamentoId;
-            List<int> labsResults = new List<int>();
+            List<int> labsResults = new List<int>(  );
             if (area == Catalogs.Department.PATOLOGIA)
             {
                 var finalResult = await _clinicresultrepository.GetResultPathologicalById(existingStudy.Id);
