@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221219181612_Modificacion en Tablas para Seed")]
+    partial class ModificacionenTablasparaSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1927,7 +1929,7 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("FechaMod")
+                    b.Property<DateTime>("FechaMod")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("Id")
@@ -1936,8 +1938,8 @@ namespace Service.Catalog.Migrations
                     b.Property<decimal>("Precio")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("UsuarioCreoId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<long>("UsuarioCreoId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("UsuarioModId")
                         .HasColumnType("nvarchar(max)");
@@ -1963,7 +1965,7 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("FechaMod")
+                    b.Property<DateTime>("FechaMod")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("Id")
@@ -1973,6 +1975,7 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("UsuarioCreoId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("UsuarioModId")

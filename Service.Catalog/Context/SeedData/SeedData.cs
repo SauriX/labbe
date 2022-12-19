@@ -25,11 +25,24 @@ using Service.Catalog.Domain.Configuration;
 using Service.Catalog.Domain.Company;
 using Service.Catalog.Domain.Medics;
 using Service.Catalog.Domain.Price;
+using Service.Catalog.Domain.Provenance;
 
 namespace Service.Catalog.Context.SeedData
 {
     public class SeedData
     {
+        // PROCEDENCIA
+        public static List<Provenance> GetOrigins()
+        {
+            var origins = new List<Provenance>
+            {
+                new Provenance(OR.COMPAÑIA, "COMPAÑIA", "COMPAÑIA"),
+                new Provenance(OR.PARTICULAR, "PARTICULAR", "PARTICULAR")
+            };
+
+            return origins;
+        }
+
         // CCOMPAÑIA DEFAULT
         public static Company GetDefaultCompany()
         {
@@ -55,26 +68,6 @@ namespace Service.Catalog.Context.SeedData
                 "AQUIENCORRESPONDA");
 
             return medic;
-        }
-
-        // LISTA DE PRECIOS DEFAULT
-        public static PriceList GetDefaultPriceList()
-        {
-            var priceList = new PriceList(
-                PL.PARTICULARES,
-                "PARTICULARES",
-                "PARTICULARES",
-                true);
-
-            priceList.Compañia = new List<Price_Company>
-            {
-                new Price_Company(PL.PARTICULARES, COMP.PARTICULARES)
-            };
-
-            var branches = GetBranches();
-            priceList.Sucursales = branches.Select(x => new Price_Branch(PL.PARTICULARES, x.Id)).ToList();
-
-            return priceList;
         }
 
         // CONFIGURACION
@@ -195,6 +188,26 @@ namespace Service.Catalog.Context.SeedData
             };
 
             return branches;
+        }
+
+        // LISTA DE PRECIOS DEFAULT
+        public static PriceList GetDefaultPriceList()
+        {
+            var priceList = new PriceList(
+                PL.PARTICULARES,
+                "PARTICULARES",
+                "PARTICULARES",
+                true);
+
+            priceList.Compañia = new List<Price_Company>
+            {
+                new Price_Company(PL.PARTICULARES, COMP.PARTICULARES)
+            };
+
+            var branches = GetBranches();
+            priceList.Sucursales = branches.Select(x => new Price_Branch(PL.PARTICULARES, x.Id)).ToList();
+
+            return priceList;
         }
 
         // SUCURSALES CONFIGURACION FOLIO
@@ -325,10 +338,12 @@ namespace Service.Catalog.Context.SeedData
             var path = "wwwroot/seed/07_CAT_PAR_EST_PAQ.xlsx";
             var tableData = ReadAsTable(path, "PARAMETROS");
 
-            var units = tableData.AsEnumerable().Select(x => new Units(
-                Convert.ToInt32(x.Field<double>("UnidadId")),
-                x.Field<string>("Unidad")
-                )).ToList();
+            var units = tableData.AsEnumerable()
+                .Where(x => (int?)(x.Field<object>("UnidadId").NullIfEmpty() as double?) != null)
+                .Select(x => new Units(
+                    Convert.ToInt32(x.Field<double>("UnidadId")),
+                    x.Field<string>("Unidad")
+                    )).ToList();
 
             units = units.Where(x => x.Id > 0).GroupBy(x => x.Id).Select(x => x.First()).ToList();
 
@@ -336,7 +351,7 @@ namespace Service.Catalog.Context.SeedData
         }
 
         // PARAMETROS
-        public static List<Parameter> GetParameters(ApplicationDbContext context)
+        public static List<Parameter> GetParameters()
         {
             var path = "wwwroot/seed/07_CAT_PAR_EST_PAQ.xlsx";
             var tableData = ReadAsTable(path, "PARAMETROS");
@@ -361,7 +376,7 @@ namespace Service.Catalog.Context.SeedData
         }
 
         // ESTUDIOS
-        public static List<Study> GetStudies(ApplicationDbContext context)
+        public static List<Study> GetStudies()
         {
             var path = "wwwroot/seed/07_CAT_PAR_EST_PAQ.xlsx";
             var tableData = ReadAsTable(path, "ESTUDIOS");
@@ -410,7 +425,7 @@ namespace Service.Catalog.Context.SeedData
         }
 
         // PARAMETROS VALORES
-        public static List<ParameterValue> GetParameterValues(ApplicationDbContext context)
+        public static List<ParameterValue> GetParameterValues()
         {
             var path = "wwwroot/seed/09_REL_PAR_VAL.xlsx";
             var tableData = ReadAsTable(path, "PARAMETRO-VALOR");
@@ -633,11 +648,11 @@ namespace Service.Catalog.Context.SeedData
                 return null;
             }).ToList();
 
-            return parameterValues;
+            return parameterValues.Where(x => x != null).ToList();
         }
 
         // ESTUDIOS INDICACIONES
-        public static List<IndicationStudy> GetStudyIndications(ApplicationDbContext context)
+        public static List<IndicationStudy> GetStudyIndications()
         {
             var path = "wwwroot/seed/10_REL_EST_IND.xlsx";
             var tableData = ReadAsTable(path, "ESTUDIO-INDICACION");
@@ -654,7 +669,7 @@ namespace Service.Catalog.Context.SeedData
         }
 
         // ESTUDIOS PARAMETROS
-        public static List<ParameterStudy> GetStudyParameters(ApplicationDbContext context)
+        public static List<ParameterStudy> GetStudyParameters()
         {
             var path = "wwwroot/seed/11_REL_PAR_EST_PAQ.xlsx";
             var tableData = ReadAsTable(path, "ESTUDIO-PARAMETRO");
@@ -672,7 +687,7 @@ namespace Service.Catalog.Context.SeedData
         }
 
         // PAQUETES ESTUDIOS
-        public static List<PacketStudy> GetPackStudies(ApplicationDbContext context)
+        public static List<PacketStudy> GetPackStudies()
         {
             var path = "wwwroot/seed/11_REL_PAR_EST_PAQ.xlsx";
             var tableData = ReadAsTable(path, "PAQUETE-ESTUDIO");

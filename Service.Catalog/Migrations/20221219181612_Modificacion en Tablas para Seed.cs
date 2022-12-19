@@ -16,10 +16,10 @@ namespace Service.Catalog.Migrations
                 oldType: "nvarchar(max)",
                 oldNullable: true);
 
-            migrationBuilder.AlterColumn<Guid>(
+            migrationBuilder.AlterColumn<string>(
                 name: "UsuarioCreoId",
                 table: "Relacion_ListaP_Estudio",
-                type: "uniqueidentifier",
+                type: "nvarchar(max)",
                 nullable: true,
                 oldClrType: typeof(long),
                 oldType: "bigint");
@@ -134,10 +134,10 @@ namespace Service.Catalog.Migrations
                 oldType: "nvarchar(max)",
                 oldNullable: true);
 
-            migrationBuilder.AlterColumn<Guid>(
+            migrationBuilder.AlterColumn<string>(
                 name: "UsuarioCreoId",
                 table: "CAT_ListaP_Compañia",
-                type: "uniqueidentifier",
+                type: "nvarchar(max)",
                 nullable: false,
                 oldClrType: typeof(long),
                 oldType: "bigint");
@@ -209,8 +209,8 @@ namespace Service.Catalog.Migrations
                 type: "bigint",
                 nullable: false,
                 defaultValue: 0L,
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier",
+                oldClrType: typeof(string),
+                oldType: "nvarchar(max)",
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<DateTime>(
@@ -321,8 +321,8 @@ namespace Service.Catalog.Migrations
                 table: "CAT_ListaP_Compañia",
                 type: "bigint",
                 nullable: false,
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier");
+                oldClrType: typeof(string),
+                oldType: "nvarchar(max)");
 
             migrationBuilder.AlterColumn<Guid>(
                 name: "UsuarioCreoId",

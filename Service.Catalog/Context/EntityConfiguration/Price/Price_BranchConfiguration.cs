@@ -24,7 +24,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Price
 
             builder
               .Property(x => x.UsuarioCreoId)
-              .IsRequired(true);
+              .IsRequired(false);
 
             builder
               .Property(x => x.FechaCreo)
@@ -36,7 +36,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Price
 
             builder
               .Property(x => x.FechaMod)
-              .IsRequired(true);
+              .IsRequired(false);
         }
     }
 }

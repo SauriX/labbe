@@ -23,9 +23,9 @@ namespace Service.Catalog.Domain.Price
         public Guid Id { get; set; }
         public decimal Precio { get; set; }
         public bool Activo { get; set; }
-        public long UsuarioCreoId { get; set; }
+        public string UsuarioCreoId { get; set; }
         public DateTime FechaCreo { get; set; }
         public string UsuarioModId { get; set; }
-        public DateTime FechaMod { get; set; }
+        public DateTime? FechaMod { get; set; }
     }
 }

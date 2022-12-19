@@ -10,8 +10,8 @@ using Service.Catalog.Context;
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221219170300_Modificacion en Tablas para Seed")]
-    partial class ModificacionenTablasparaSeed
+    [Migration("20221219182029_Modificacion en Tablas para Seed Correcciones UsuarioCreo no requerido")]
+    partial class ModificacionenTablasparaSeedCorreccionesUsuarioCreonorequerido
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -1902,8 +1902,8 @@ namespace Service.Catalog.Migrations
                     b.Property<decimal>("Precio")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid?>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UsuarioCreoId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("UsuarioModId")
                         .HasColumnType("uniqueidentifier");
@@ -1929,7 +1929,7 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FechaMod")
+                    b.Property<DateTime?>("FechaMod")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("Id")
@@ -1938,8 +1938,8 @@ namespace Service.Catalog.Migrations
                     b.Property<decimal>("Precio")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<long>("UsuarioCreoId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("UsuarioCreoId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UsuarioModId")
                         .HasColumnType("nvarchar(max)");
@@ -1965,7 +1965,7 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FechaMod")
+                    b.Property<DateTime?>("FechaMod")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("Id")
@@ -1974,9 +1974,8 @@ namespace Service.Catalog.Migrations
                     b.Property<decimal>("Precio")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid?>("UsuarioCreoId")
-                        .IsRequired()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UsuarioCreoId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("UsuarioModId")
                         .HasColumnType("uniqueidentifier");
