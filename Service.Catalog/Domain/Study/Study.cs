@@ -12,7 +12,7 @@ namespace Service.Catalog.Domain.Study
         {
         }
 
-        public Study(int id, string clave, string nombre, int orden, string titulo, string corto, bool visible, int dias, int? areaId, int? departamentoId, int? maquiladorId, int? metodoId, int? taponId)
+        public Study(int id, string clave, string nombre, int orden, string titulo, string corto, bool visible, int dias, int? areaId, int? departamentoId, int? maquiladorId, int? metodoId)
         {
             Id = id;
             Clave = clave;
@@ -28,7 +28,6 @@ namespace Service.Catalog.Domain.Study
             DepartamentoId = departamentoId;
             MaquiladorId = maquiladorId;
             MetodoId = metodoId;
-            TaponId = taponId;
             Cantidad = 1;
             Activo = true;
             FechaCreo = DateTime.Now;

@@ -9,7 +9,7 @@ namespace Service.Catalog.Dtos.Medicos
         public Guid IdMedico { get; set; }
         public string Clave { get; set; }
         public string NombreCompleto { get; set; }
-        public long EspecialidadId { get; set; }
+        public int? EspecialidadId { get; set; }
         public string Especialidad { get; set; }
         public string Observaciones { get; set; }
         public string Direccion { get; set; }

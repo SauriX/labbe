@@ -4,6 +4,18 @@ namespace Service.Catalog.Domain.Price
 {
     public class Price_Branch
     {
+        public Price_Branch()
+        {
+        }
+
+        public Price_Branch(Guid precioListaId, Guid sucursalId)
+        {
+            PrecioListaId = precioListaId;
+            SucursalId = sucursalId;
+            Activo = true;
+            FechaCreo = DateTime.Now;
+        }
+
         public Guid PrecioListaId { get; set; }
         public virtual PriceList PrecioLista { get; set; }
         public Guid SucursalId { get; set; }

@@ -1,5 +1,6 @@
 ﻿using ClosedXML.Excel;
 using ClosedXML.Report;
+using ClosedXML.Report.Utils;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections;
@@ -192,6 +193,11 @@ namespace Shared.Extensions
                 yield return list.GetRange(itemsReturned, currentChunkSize);
                 itemsReturned += currentChunkSize;
             }
+        }
+
+        public static object NullIfEmpty(this object msg)
+        {
+            return string.IsNullOrWhiteSpace(msg.ToString()) ? null : msg;
         }
     }
 }

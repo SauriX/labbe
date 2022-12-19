@@ -10,7 +10,7 @@ namespace Service.Catalog.Domain.Parameter
         {
         }
 
-        public Parameter(Guid id, string clave, string nombre, string nombreCorto, string tipoValor, string formula, int? areaId, int? departamentoId, int? unidadId, int? unidadSiId, string fcsi)
+        public Parameter(Guid id, string clave, string nombre, string nombreCorto, string tipoValor, string formula, int? unidadId, int? unidadSiId, string fcsi)
         {
             Id = id;
             Clave = clave;
@@ -18,8 +18,6 @@ namespace Service.Catalog.Domain.Parameter
             NombreCorto = nombreCorto;
             TipoValor = tipoValor;
             Formula = formula;
-            AreaId = areaId;
-            DepartamentoId = departamentoId;
             UnidadId = unidadId;
             UnidadSiId = unidadSiId;
             FCSI = fcsi;
