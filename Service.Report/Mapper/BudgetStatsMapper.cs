@@ -1,12 +1,8 @@
-﻿using DocumentFormat.OpenXml.Office2010.ExcelAc;
-using Service.Report.Domain.MedicalRecord;
-using Service.Report.Domain.Request;
+﻿using Service.Report.Domain.MedicalRecord;
 using Service.Report.Dtos;
 using Service.Report.Dtos.BudgetStats;
 using Service.Report.Dtos.StudyStats;
-using Service.Report.Dtos.TypeRequest;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 

@@ -41,24 +41,25 @@ namespace Service.MedicalRecord.Application
         public async Task<(byte[] file, string fileName)> ExportList(SearchValidation search)
         {
             var studies = await GetAll(search);
-           foreach (var request in studies)
+            foreach (var request in studies)
             {
                 if (studies.Count > 0)
                 {
-                    request.Estudios.Insert(0, new ValidationStudyDto { Study = "Clave", Registro = "Fecha de Registro", Entrega = "Fecha de Entrega", Status = "Estatus" });
+                    request.Estudios.Insert(0, new ValidationStudyDto { Clave = "Clave", Nombre = "Nombre Estudio", Registro = "Fecha de Registro", Entrega = "Fecha de Entrega", NombreEstatus = "Estatus" });
                 }
             }
-          
 
-            var path = Assets.InformeExpedientesv;
+            var path = Assets.InformeExpedientes;
 
             var template = new XLTemplate(path);
 
             template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
             template.AddVariable("Titulo", "Validación de Estudio");
+            if(search.Fecha!=null || search.Fecha.Length <= 0) { 
             template.AddVariable("FechaInicio", search.Fecha.First().ToString("dd/MM/yyyy"));
             template.AddVariable("FechaFinal", search.Fecha.Last().ToString("dd/MM/yyyy"));
+            }
             template.AddVariable("Expedientes", studies);
 
             template.Generate();
@@ -93,7 +94,7 @@ namespace Service.MedicalRecord.Application
             });
             template.Format();
 
-            return (template.ToByteArray(), $"Informe Validacion de Estudio.xlsx");
+            return (template.ToByteArray(), "Informe Validacion de Estudio.xlsx");
         }
 
         public async Task<List<ValidationListDto>> GetAll(SearchValidation search)
@@ -136,8 +137,8 @@ namespace Service.MedicalRecord.Application
                     else
                     {
                         study.EstatusId = Status.RequestStudy.Capturado;
+                        study.FechaCaptura = DateTime.Now;
                     }
-                    study.FechaModifico = DateTime.Now;
                     
                 }
                 studyCount += studies.Count;

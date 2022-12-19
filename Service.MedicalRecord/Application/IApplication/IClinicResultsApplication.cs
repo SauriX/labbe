@@ -1,6 +1,7 @@
 ﻿using Service.MedicalRecord.Domain;
 using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Dtos;
+using Service.MedicalRecord.Dtos.Catalogs;
 using Service.MedicalRecord.Dtos.ClinicResults;
 using Service.MedicalRecord.Dtos.MassSearch;
 using Service.MedicalRecord.Dtos.Request;
@@ -29,5 +30,6 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<RequestStudy> GetRequestStudyById(int RequestStudyId);
         Task<RequestStudyUpdateDto> GetStudies(Guid recordId, Guid requestId);
         Task<byte[]> PrintSelectedStudies(ConfigurationToPrintStudies configuration);
+        Task<List<ParameterValueDto>> ReferencesValues(List<int> studies);
     }
 }

@@ -27,13 +27,15 @@ namespace Service.MedicalRecord.Application
     {
         public readonly IRelaseResultRepository _repository;
         private readonly IClinicResultsRepository _clinicresultrepository;
+        private readonly ICatalogClient _catalogClient;
         private readonly IClinicResultsApplication _clinicresultapplication;
         private readonly IPdfClient _pdfClient;
-        public RelaseResultApplication(IRelaseResultRepository repository, IClinicResultsRepository clinicresultrepository, IPdfClient pdfClient, IClinicResultsApplication clinicresultapplication)
+        public RelaseResultApplication(IRelaseResultRepository repository, IClinicResultsRepository clinicresultrepository, ICatalogClient catalogClient, IPdfClient pdfClient, IClinicResultsApplication clinicresultapplication)
         {
 
             _repository = repository;
             _clinicresultrepository = clinicresultrepository;
+            _catalogClient = catalogClient;
             _pdfClient = pdfClient;
             _clinicresultapplication = clinicresultapplication;
         }
@@ -136,12 +138,12 @@ namespace Service.MedicalRecord.Application
                     if (study.EstatusId == Status.RequestStudy.Liberado)
                     {   
                         study.EstatusId = Status.RequestStudy.Validado;
-                        study.FechaModifico = DateTime.Now;
+                        study.FechaValidacion = DateTime.Now;
                     }
                     else
                     {
                         study.EstatusId = Status.RequestStudy.Liberado;
-                        study.FechaModifico = DateTime.Now;
+                        study.FechaLiberado = DateTime.Now;
 
                     }
                 }
@@ -218,7 +220,7 @@ namespace Service.MedicalRecord.Application
         public async Task<byte[]> SendResultFile(DeliverResultsStudiesDto estudios)
         {
             var estudiosSeleccionados = estudios.Estudios[0];
-           
+
             var existingRequest = await _clinicresultrepository.GetRequestById(estudiosSeleccionados.SolicitudId);
             var estudioId = estudiosSeleccionados.EstudiosId[0];
             var existingStudy = existingRequest.Estudios.ToList().Find(x => x.EstudioId == estudiosSeleccionados.EstudiosId[0].EstudioId);

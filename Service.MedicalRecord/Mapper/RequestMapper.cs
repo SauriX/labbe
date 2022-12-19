@@ -295,6 +295,7 @@ namespace Service.MedicalRecord.Mapper
                 PrecioFinal = x.PrecioFinal,
                 NombreEstatus = x.Estatus.Nombre,
                 Asignado = x.EstudioWeeClinic?.Asignado ?? true,
+                Metodo = x.Metodo,
                 FechaActualizacion = x.EstatusId == Status.RequestStudy.TomaDeMuestra
                     ? x.FechaTomaMuestra?.ToString("dd/MM/yyyy HH:mm")
                     : x.EstatusId == Status.RequestStudy.Solicitado

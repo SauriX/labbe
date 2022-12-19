@@ -25,7 +25,7 @@ namespace Service.MedicalRecord.Mapper
 
             foreach (var request in model)
             {
-                request.Estudios = request.Estudios.Where(x => x.EstatusId == Status.RequestStudy.TomaDeMuestra || x.EstatusId == Status.RequestStudy.Pendiente).ToList();
+                request.Estudios = request.Estudios.ToList();
             }
 
             return model.Where(x => x.Estudios.Count > 0).Select(x => new SamplingListDto

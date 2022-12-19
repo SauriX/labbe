@@ -86,6 +86,7 @@ namespace Service.Catalog.Repository
                 .Include(x => x.Parameters).ThenInclude(x => x.Parametro).ThenInclude(x => x.Unidad)
                 .Include(x => x.Parameters).ThenInclude(x => x.Parametro).ThenInclude(x => x.TipoValores)
                 .Include(x => x.Indications).ThenInclude(x => x.Indicacion)
+                .Include(x => x.Metodo)
                 .Where(x => ids.Contains(x.Id))
                 .ToListAsync();
 

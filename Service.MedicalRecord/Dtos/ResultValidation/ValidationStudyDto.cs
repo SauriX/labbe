@@ -12,5 +12,9 @@ namespace Service.MedicalRecord.Dtos.ResultValidation
         public string Registro { get; set; }
         public string Entrega { get; set; }
         public Guid SolicitudId { get; set; }
+        public string Nombre { get; set; }
+
+        public string Clave { get; set; }
+        public string NombreEstatus { get; set; }
     }
 }
