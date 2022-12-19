@@ -179,6 +179,7 @@ namespace Service.MedicalRecord.Repository
                 .Where(x => x.RequestStudyId == id)
                 .Include(x => x.Medico)
                 .Include(x => x.SolicitudEstudio)
+                .ThenInclude(x => x.EstudioWeeClinic)
                 .Include(x => x.Solicitud).ThenInclude(y => y.Expediente)
                 .FirstOrDefaultAsync();
             return resultExisting;
@@ -200,6 +201,7 @@ namespace Service.MedicalRecord.Repository
             var resultExisting = await _context.ClinicResults
                 .Where(x => x.SolicitudEstudioId == id)
                 .Include(x => x.SolicitudEstudio)
+                .ThenInclude(x => x.EstudioWeeClinic)
                 .Include(x => x.Solicitud).ThenInclude(y => y.Expediente)
                 .Include(x => x.Solicitud).ThenInclude(y => y.Medico)
                 .Include(x => x.Solicitud).ThenInclude(y => y.Estudios)
@@ -272,6 +274,7 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Compañia)
                 .Include(x => x.Medico)
                 .Include(x => x.Estudios.Where(x => x.PaqueteId == null))
+                .ThenInclude(x => x.EstudioWeeClinic)
                 .Include(x => x.Paquetes).ThenInclude(x => x.Estudios)
                 .FirstOrDefaultAsync(x => x.Id == id);
 

@@ -277,7 +277,7 @@ namespace Service.MedicalRecord.Mapper
                 TaponColor = x.Tapon.Color,
                 TaponClave = x.Tapon.Clave,
                 TaponNombre = x.Tapon.Nombre,
-                Maquila = x.Maquila.Nombre,
+                Maquila = x.Maquila?.Nombre,
                 MaquilaId = x.MaquilaId,
                 EstatusId = x.EstatusId,
                 Estatus = x.Estatus.Nombre,

@@ -1,6 +1,7 @@
 ﻿using Integration.WeeClinic;
 using Integration.WeeClinic.Models.Laboratorio_BusquedaFolioLaboratorio;
 using Integration.WeeClinic.Models.Laboratorio_BusquedaFolios;
+using Integration.WeeClinic.Models.Laboratorio_CargaResultados;
 using Integration.WeeClinic.Models.Laboratorio_GetPreciosEstudios_ByidServicio;
 using Integration.WeeClinic.Models.Laboratorio_ValidarCodigoPacienteLaboratorio;
 using Integration.WeeClinic.Models.Laboratorio_ValidaToken;
@@ -78,7 +79,7 @@ namespace Service.MedicalRecord.Controllers
         //}
 
         [HttpPost("servicio8")]
-        public async Task<string> UploadFileAzure(IFormFile file)
+        public async Task<Laboratorio_CargaResultados> UploadFileAzure(IFormFile file)
         {
             return await LaboratoryService.UploadFileAzure(file);
         }
@@ -90,9 +91,9 @@ namespace Service.MedicalRecord.Controllers
         }
 
         [HttpGet("servicio9")]
-        public async Task<string> Laboratorio_ArchivosResultados_Update()
+        public async Task<Laboratorio_CargaResultados> Laboratorio_ArchivosResultados_Update(string idServicio, string idNodo, string idArchivo, string nota, int isRemplazarOrnew)
         {
-            return await LaboratoryService.Laboratorio_ArchivosResultados_Update();
+            return await LaboratoryService.Laboratorio_ArchivosResultados_Update(idServicio, idNodo, idArchivo, nota, isRemplazarOrnew);
         }
 
         [HttpGet("servicio10")]
