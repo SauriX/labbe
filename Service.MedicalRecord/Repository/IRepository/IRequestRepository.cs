@@ -1,4 +1,5 @@
 ﻿using Service.MedicalRecord.Domain.Request;
+using Service.MedicalRecord.Dtos.InvoiceCompany;
 using Service.MedicalRecord.Dtos.Request;
 using System;
 using System.Collections.Generic;
@@ -35,5 +36,7 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task BulkUpdateDeleteStudies(Guid requestId, List<RequestStudy> studies);
         Task BulkUpdateWeeStudies(Guid requestId, List<RequestStudyWee> studies);
         Task DeleteImage(Guid requestId, string code);
+        Task<List<Request>> InvoiceCompanyFilter(InvoiceCompanyFilterDto filter);
+
     }
 }

@@ -280,6 +280,7 @@ namespace Service.MedicalRecord
             services.AddScoped<IMassSearchApplication, MassSearchApplication>();
             services.AddScoped<IValidationApplication, ResultValidationApplication>();
             services.AddScoped<IRelaseResultApplication, RelaseResultApplication>();
+            services.AddScoped<IInvoiceCompanyApplication, InvoiceCompanyApplication>();
 
             services.AddScoped<IMedicalRecordRepository, MedicalRecordRepository>();
             services.AddScoped<IRequestRepository, RequestRepository>();

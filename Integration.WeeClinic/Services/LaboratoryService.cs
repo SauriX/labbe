@@ -4,6 +4,7 @@ using Integration.WeeClinic.Models.Laboratorio_AsignaEstudio;
 using Integration.WeeClinic.Models.Laboratorio_BusquedaFolioLaboratorio;
 using Integration.WeeClinic.Models.Laboratorio_BusquedaFolios;
 using Integration.WeeClinic.Models.Laboratorio_CancelaEstudios_ByProveedor;
+using Integration.WeeClinic.Models.Laboratorio_CargaResultados;
 using Integration.WeeClinic.Models.Laboratorio_GetPreciosEstudios_ByidServicio;
 using Integration.WeeClinic.Models.Laboratorio_ValidarCodigoPacienteLaboratorio;
 using Integration.WeeClinic.Models.Laboratorio_ValidaToken;
@@ -214,20 +215,27 @@ namespace Integration.WeeClinic.Services
 
         // Servicio 8. Carga de resultados
         // Dudas: Que tipo de archivos se pueden subir?
-        public static async Task<string> UploadFileAzure(IFormFile file)
+        public static async Task<Laboratorio_CargaResultados> UploadFileAzure(IFormFile file)
         {
             try
             {
                 var url = $"api/FileUpload/UploadFileAzure";
 
                 using var multipartFormContent = new MultipartFormDataContent();
+
                 var stream = new StreamContent(file.OpenReadStream());
+
                 stream.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+
                 multipartFormContent.Add(stream, name: "UploadedImage", fileName: file.FileName);
 
-                var response = await PostService<string>(url, multipartFormContent);
+                var response = await PostService<Laboratorio_CargaResultados>(url, multipartFormContent);
 
-                return "";
+                //response.ValidateNotEmpty("Datos");
+
+                var results = response.Transform<Laboratorio_CargaResultados>();
+
+                return results;
             }
             catch (Exception)
             {
@@ -255,22 +263,31 @@ namespace Integration.WeeClinic.Services
         }
 
         // Servicio 9. Relacionar archivo (PDF Resultado) con el estudio
-        public static async Task<string> Laboratorio_ArchivosResultados_Update()
+        public static async Task<Laboratorio_CargaResultados> Laboratorio_ArchivosResultados_Update(string idServicio, string idNodo, string idArchivo, string nota, int isRemplazarOrnew)
         {
             var url = "api/Laboratorio/Laboratorio_ArchivosResultados_Update";
 
             var data = new Dictionary<string, string>()
             {
-                ["idServicio"] = "35caf363-e8d4-430e-b22e-1f8d005fb4dd",
-                ["idNodo"] = "00000000-0000-0000-0000-000000000000",
-                ["idArchivo"] = "3398544d-f3e2-4dc4-9206-f080c10d014a",
-                ["Nota"] = $"Nota de prueba",
-                ["isRemplazarOrnew"] = "0"
+                //["idServicio"] = "35caf363-e8d4-430e-b22e-1f8d005fb4dd",
+                //["idNodo"] = "00000000-0000-0000-0000-000000000000",
+                //["idArchivo"] = "3398544d-f3e2-4dc4-9206-f080c10d014a",
+                //["Nota"] = $"Nota de prueba",
+                //["isRemplazarOrnew"] = "0"
+                ["idServicio"] = idServicio,
+                ["idNodo"] = idNodo,
+                ["idArchivo"] = idArchivo,
+                ["Nota"] = nota,
+                ["isRemplazarOrnew"] = isRemplazarOrnew.ToString()
             };
 
             var response = await PostService<string>(url, data);
 
-            return "";
+            response.ValidateNotEmpty("Datos");
+
+            var results = response.Transform<Laboratorio_CargaResultados>();
+
+            return results;
         }
 
         // Servicio 10. Reemplazar archivos con el estudio

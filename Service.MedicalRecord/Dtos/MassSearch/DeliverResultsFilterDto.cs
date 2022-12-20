@@ -5,6 +5,8 @@ namespace Service.MedicalRecord.Dtos.MassSearch
 {
     public class DeliverResultsFilterDto
     {
+        private string clave { get; set; }
+        public string Clave { get => clave; set => clave = value?.ToLower(); }
         public List<Guid> Companias { get; set; }
         public List<int?> Departamentos { get; set; }
         public DateTime FechaInicial { get; set; }
