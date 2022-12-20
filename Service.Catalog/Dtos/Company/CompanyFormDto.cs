@@ -22,7 +22,7 @@ namespace Service.Catalog.Dtos.Company
         public string Estado { get; set; }
         public string Ciudad { get; set; }
         public string RazonSocial { get; set; }
-        public int MetodoDePagoId { get; set; }
+        public int? MetodoDePagoId { get; set; }
         public int? FormaDePagoId { get; set; }
         public string LimiteDeCredito { get; set; }
         public int? DiasCredito { get; set; }
@@ -44,7 +44,7 @@ namespace Service.Catalog.Dtos.Company
             RuleFor(x => x.Clave).NotEmpty().MaximumLength(100);
             RuleFor(x => x.Contrasena).NotEmpty().MaximumLength(100);
             RuleFor(x => x.NombreComercial).NotEmpty().MaximumLength(100);
-            RuleFor(x => x.Procedencia).NotEmpty().MaximumLength(100);
+            RuleFor(x => x.ProcedenciaId).NotEmpty().MaximumLength(100);
             
         }
 

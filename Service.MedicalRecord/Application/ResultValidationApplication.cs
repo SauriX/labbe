@@ -30,12 +30,14 @@ namespace Service.MedicalRecord.Application
         public readonly IResultaValidationRepository _repository;
         private readonly IClinicResultsRepository _clinicresultrepository;
         private readonly IPdfClient _pdfClient;
-        public ResultValidationApplication(IResultaValidationRepository repository, IClinicResultsRepository clinicresultrepository, IPdfClient pdfClient)
+        private readonly IClinicResultsApplication _clinicresultApplication;
+        public ResultValidationApplication(IResultaValidationRepository repository, IClinicResultsRepository clinicresultrepository, IPdfClient pdfClient, IClinicResultsApplication clinicresultApplication)
         {
 
             _repository = repository;
             _clinicresultrepository = clinicresultrepository;
             _pdfClient = pdfClient;
+            _clinicresultApplication = clinicresultApplication;
         }
 
         public async Task<(byte[] file, string fileName)> ExportList(SearchValidation search)
@@ -169,6 +171,7 @@ namespace Service.MedicalRecord.Application
             var estudioId = estudiosSeleccionados.EstudiosId[0];
             var existingStudy = existingRequest.Estudios.ToList().Find(x => x.EstudioId == estudiosSeleccionados.EstudiosId[0].EstudioId);
             var area = existingStudy.DepartamentoId;
+            List<int> labsResults = new List<int>();
             if ( area== Catalogs.Department.PATOLOGIA)
             {
                 var finalResult = await _clinicresultrepository.GetResultPathologicalById(existingStudy.Id);
@@ -178,7 +181,7 @@ namespace Service.MedicalRecord.Application
                 resultsTaskUnique.Add(finalResult);
 
                 var existingResultPathologyPdf = resultsTaskUnique.toInformationPdfResult(true);
-
+                 
                    
                 return await _pdfClient.GeneratePathologicalResults(existingResultPathologyPdf);
 
@@ -188,8 +191,10 @@ namespace Service.MedicalRecord.Application
             else
             {
                 var finalResult = await _clinicresultrepository.GetLabResultsById(existingStudy.Id);
+                labsResults.Add(existingStudy.EstudioId);
+                var paramReferenceValues = await _clinicresultApplication.ReferencesValues(labsResults);
 
-                return await _pdfClient.GenerateLabResults(finalResult.ToResults(true, true, true)); 
+                return await _pdfClient.GenerateLabResults(finalResult.ToResults(true, true, true,paramReferenceValues)); 
 
             }
 

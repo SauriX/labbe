@@ -20,30 +20,37 @@ namespace Service.Catalog.Context.EntityConfiguration.Medics
               .Property(x => x.Nombre)
               .IsRequired(true)
               .HasMaxLength(100);
+
             builder
               .Property(x => x.PrimerApellido)
               .IsRequired(true)
               .HasMaxLength(100);
+
             builder
               .Property(x => x.SegundoApellido)
               .IsRequired(false)
               .HasMaxLength(100);
+
             builder
               .Property(x => x.Correo)
               .IsRequired(false)
               .HasMaxLength(100);
+
             builder
               .Property(x => x.CodigoPostal)
-              .IsRequired(true)
+              .IsRequired(false)
               .HasMaxLength(15);
+
             builder
               .Property(x => x.Calle)
-              .IsRequired(true)
+              .IsRequired(false)
               .HasMaxLength(100);
+
             builder
               .Property(x => x.NumeroExterior)
-              .IsRequired(true)
+              .IsRequired(false)
               .HasMaxLength(100);
+
             builder
               .Property(x => x.NumeroInterior)
               .IsRequired(false)
@@ -69,7 +76,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Medics
 
             builder
               .Property(x => x.Calle)
-              .IsRequired(true)
+              .IsRequired(false)
               .HasMaxLength(100);
 
             builder

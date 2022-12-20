@@ -13,5 +13,13 @@ namespace Service.MedicalRecord.Dtos.RelaseResult
         public int Estatus { get; set; }
         public Guid SolicitudId { get; set; }
         public bool Tipo { get; set; }
+        public string Clave { get; set; }
+        public string NombreEstatus { get; set; }
+
+        public string Nombre { get; set; }
+
+
+
+
     }
 }
