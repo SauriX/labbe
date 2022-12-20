@@ -14,7 +14,7 @@ namespace Service.Catalog.Dtos.Medicos
         public string Nombre { get; set; }
         public string PrimerApellido { get; set; }
         public string SegundoApellido { get; set; }
-        public int EspecialidadId { get; set; }
+        public int? EspecialidadId { get; set; }
         public string Observaciones { get; set; }
         public string CodigoPostal { get; set; }
         public string EstadoId { get; set; }
@@ -22,7 +22,7 @@ namespace Service.Catalog.Dtos.Medicos
         public string NumeroExterior { get; set; }
         public string NumeroInterior { get; set; }
         public string Calle { get; set; }
-        public int ColoniaId { get; set; }
+        public int? ColoniaId { get; set; }
         public string Correo { get; set; }
         public string Celular { get; set; }
         public string Telefono { get; set; }

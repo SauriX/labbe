@@ -20,6 +20,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Company
               .Property(x => x.Contrasena)
               .IsRequired(true)
               .HasMaxLength(100);
+
             builder
               .Property(x => x.NombreComercial)
               .IsRequired(true)
@@ -28,32 +29,39 @@ namespace Service.Catalog.Context.EntityConfiguration.Company
             builder
              .Property(x => x.CodigoPostal)
              .IsRequired(false);
+
             builder
              .Property(x => x.Estado)
              .IsRequired(false);
+
             builder
              .Property(x => x.FormaDePagoId)
              .IsRequired(false);
+
             builder
              .Property(x => x.DiasCredito)
              .IsRequired(false);
+
             builder
              .Property(x => x.CFDIId)
              .IsRequired(false);
+
             builder
              .Property(x => x.BancoId)
              .IsRequired(false);
 
             builder
               .Property(x => x.RFC)
-              .IsRequired(true)
+              .IsRequired(false)
               .HasMaxLength(100);
+
             builder
               .Property(x => x.Ciudad)
               .IsRequired(false);
+
             builder
               .Property(x => x.MetodoDePagoId)
-              .IsRequired(true);
+              .IsRequired(false);
 
             builder
               .Property(x => x.Activo)
@@ -61,7 +69,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Company
 
             builder
               .Property(x => x.UsuarioCreoId)
-              .IsRequired(true);
+              .IsRequired(false);
 
             builder
               .Property(x => x.FechaCreo)

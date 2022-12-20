@@ -8,14 +8,17 @@ namespace Service.Catalog.Domain.Parameter
         {
         }
 
-        public ParameterStudy(Guid parametroId, int estudioId)
+        public ParameterStudy(int id, Guid parametroId, int estudioId, int orden)
         {
+            Id = id;
             ParametroId = parametroId;
             EstudioId = estudioId;
+            Orden = orden;
             Activo = true;
             FechaCreo = DateTime.Now;
         }
 
+        public int Id { get; set; }
         public Guid ParametroId { get; set; }
         public virtual Parameter Parametro { get; set; }
         public int EstudioId { get; set; }

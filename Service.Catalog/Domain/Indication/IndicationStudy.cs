@@ -8,10 +8,11 @@ namespace Service.Catalog.Domain.Indication
         {
         }
 
-        public IndicationStudy(int indicacionId, int estudioId)
+        public IndicationStudy(int indicacionId, int estudioId, int orden)
         {
             IndicacionId = indicacionId;
             EstudioId = estudioId;
+            Orden = orden;
             Activo = true;
             FechaCreo = DateTime.Now;
         }
@@ -21,6 +22,7 @@ namespace Service.Catalog.Domain.Indication
         public int EstudioId { get; set; }
         public virtual Domain.Study.Study Estudio { get; set; }
         public bool Activo { get; set; }
+        public int Orden { get; set; }
         public Guid? UsuarioCreoId { get; set; }
         public DateTime FechaCreo { get; set; }
         public Guid? UsuarioModificoId { get; set; }

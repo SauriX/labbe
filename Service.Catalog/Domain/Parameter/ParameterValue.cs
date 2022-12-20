@@ -6,15 +6,19 @@ namespace Service.Catalog.Domain.Parameter
     {
         public ParameterValue()
         {
+            Activo = true;
+            FechaCreo = DateTime.Now;
         }
 
-        public ParameterValue(Guid parametroId, decimal inicial, decimal final, string nombre)
+        public ParameterValue(Guid id, Guid parametroId, decimal inicial, decimal final, string nombre)
         {
-            Id = Guid.NewGuid();
+            Id = id;
             ParametroId = parametroId;
             ValorInicial = inicial;
             ValorFinal = final;
             Nombre = nombre;
+            Activo = true;
+            FechaCreo = DateTime.Now;
         }
 
         public Guid Id { get; set; }
@@ -46,6 +50,7 @@ namespace Service.Catalog.Domain.Parameter
         public string TerceraColumna { get; set; }
         public string CuartaColumna { get; set; }
         public string QuintaColumna { get; set; }
+        public int Orden { get; set; }
         public bool Activo { get; set; }
         public Guid UsuarioCreoId { get; set; }
         public DateTime FechaCreo { get; set; }

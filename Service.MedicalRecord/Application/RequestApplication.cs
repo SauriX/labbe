@@ -373,6 +373,8 @@ namespace Service.MedicalRecord.Application
 
             await _repository.CreatePayment(newPayment);
 
+            await UpdateTotals(request.ExpedienteId, request.Id, requestDto.UsuarioId);
+
             return newPayment.ToRequestPaymentDto();
         }
 
@@ -774,6 +776,8 @@ namespace Service.MedicalRecord.Application
             }
 
             await _repository.BulkUpdatePayments(requestId, paymentsToCancel);
+
+            await UpdateTotals(request.ExpedienteId, request.Id, userId);
 
             foreach (var payment in paymentsDto)
             {
