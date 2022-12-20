@@ -103,7 +103,7 @@ namespace Service.MedicalRecord.Mapper
                 UltimoResultado = x?.UltimoResultado,
                 Orden = i,
                 Clave = x.Clave,
-                FCSI = x.Clave,
+                FCSI = x.FCSI,
             }).ToList();
         }
 

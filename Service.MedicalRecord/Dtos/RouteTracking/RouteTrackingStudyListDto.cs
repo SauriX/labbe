@@ -12,5 +12,6 @@
       public string Clave { get; set; }
         public string Expedienteid { get; set; }
         public string Solicitudid { get; set; }
+        public string NombreEstatus { get; set; }
     }
 }
