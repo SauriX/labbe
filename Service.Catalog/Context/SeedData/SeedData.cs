@@ -678,6 +678,7 @@ namespace Service.Catalog.Context.SeedData
                 .Select(x =>
                 {
                     return new ParameterStudy(
+                        Convert.ToInt32(x.Field<double>("Id")),
                         Guid.Parse(x.Field<string>("ParametroId")),
                         Convert.ToInt32(x.Field<double>("EstudioId")),
                         Convert.ToInt32(x.Field<double>("Orden")));

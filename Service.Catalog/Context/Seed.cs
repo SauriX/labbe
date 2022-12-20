@@ -892,39 +892,55 @@ namespace Service.Catalog.Context
                 //}
             }
 
-            //// ESTUDIOS PARAMETROS
-            //if (!context.Relacion_Estudio_Parametro.Any())
-            //{
-            //    var studyParameters = SeedData.SeedData.GetStudyParameters();
+            // ESTUDIOS PARAMETROS
+            if (!context.Relacion_Estudio_Parametro.Any())
+            {
+                using var transaction = context.Database.BeginTransaction();
 
-            //    context.Relacion_Estudio_Parametro.AddRange(studyParameters);
+                try
+                {
+                    var studyParameters = SeedData.SeedData.GetStudyParameters();
 
-            //    await context.SaveChangesAsync();
+                    context.Relacion_Estudio_Parametro.AddRange(studyParameters);
 
-            //    //using var transaction = context.Database.BeginTransaction();
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.Relacion_Estudio_Parametro)} ON;");
+                    await context.SaveChangesAsync();
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.Relacion_Estudio_Parametro)} OFF;");
 
-            //    //try
-            //    //{
-            //    //    var studyParameters = SeedData.SeedData.GetStudyParameters(context);
-            //    //    var sp = new ParameterStudy();
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
 
-            //    //    var script = MergeGenerator.Build(
-            //    //        nameof(context.Relacion_Estudio_Parametro),
-            //    //        studyParameters,
-            //    //        new string[] { nameof(sp.EstudioId), nameof(sp.ParametroId) },
-            //    //        nameof(sp.Activo));
 
-            //    //    //context.Database.ExecuteSqlRaw(script);
-            //    //    context.BulkInsertOrUpdate(studyParameters);
 
-            //    //    transaction.Commit();
-            //    //}
-            //    //catch (Exception)
-            //    //{
-            //    //    transaction.Rollback();
-            //    //    throw;
-            //    //}
-            //}
+                //using var transaction = context.Database.BeginTransaction();
+
+                //try
+                //{
+                //    var studyParameters = SeedData.SeedData.GetStudyParameters(context);
+                //    var sp = new ParameterStudy();
+
+                //    var script = MergeGenerator.Build(
+                //        nameof(context.Relacion_Estudio_Parametro),
+                //        studyParameters,
+                //        new string[] { nameof(sp.EstudioId), nameof(sp.ParametroId) },
+                //        nameof(sp.Activo));
+
+                //    //context.Database.ExecuteSqlRaw(script);
+                //    context.BulkInsertOrUpdate(studyParameters);
+
+                //    transaction.Commit();
+                //}
+                //catch (Exception)
+                //{
+                //    transaction.Rollback();
+                //    throw;
+                //}
+            }
 
             // PAQUETES ESTUDIOS
             if (!context.Relacion_Estudio_Paquete.Any())

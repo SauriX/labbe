@@ -10,7 +10,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Parameter
         {
             builder.ToTable("Relacion_Estudio_Parametro");
 
-            builder.HasKey(x => new { x.EstudioId, x.ParametroId });
+            builder.HasKey(x => x.Id);
 
             builder
               .Property(x => x.Activo)
