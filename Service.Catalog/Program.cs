@@ -35,7 +35,7 @@ namespace Service.Catalog
                 var context = services.GetRequiredService<ApplicationDbContext>();
                 await context.Database.MigrateAsync();
                 var seedData = config.GetValue<bool>("SeedData");
-                await Seed.SeedData(context, seedData);
+                await Seed.SeedTables(context, seedData);
             }
             catch (Exception e)
             {

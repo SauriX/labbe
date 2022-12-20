@@ -9,23 +9,24 @@ namespace Service.Catalog.Domain.Price
         {
         }
 
-        public PriceList(Guid id, string clave, string nombre, bool? visibilidad, bool activo)
+        public PriceList(Guid id, string clave, string nombre, bool visibilidad)
         {
             Id = id;
             Clave = clave;
             Nombre = nombre;
             Visibilidad = visibilidad;
-            Activo = activo;
+            Activo = true;
+            FechaCreo = DateTime.Now;
         }
 
         public Guid Id { get; set; }
         public string Clave { get; set; }
         public string Nombre { get; set; }
-        public bool? Visibilidad { get; set; }
+        public bool Visibilidad { get; set; }
         public bool Activo { get; set; }
-        public Guid UsuarioCreoId { get; set; }
+        public Guid? UsuarioCreoId { get; set; }
         public DateTime FechaCreo { get; set; }
-        public Guid UsuarioModificoId { get; set; }
+        public Guid? UsuarioModificoId { get; set; }
         public DateTime? FechaModifico { get; set; }
         public virtual ICollection<Price_Promotion> Promocion { get; set; }
         public virtual ICollection<Price_Company> Compañia { get; set; }
