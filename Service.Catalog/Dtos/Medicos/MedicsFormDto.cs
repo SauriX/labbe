@@ -35,13 +35,13 @@ namespace Service.Catalog.Dtos.Medicos
     {
         public MedicosFormDtoValidator()
         {
-            RuleFor(x => x.Clave).NotEmpty().MaximumLength(15);//.NotEqual();
+            RuleFor(x => x.Clave).NotEmpty().MaximumLength(15);
             RuleFor(x => x.Nombre).NotEmpty().MaximumLength(50);
             RuleFor(x => x.PrimerApellido).NotEmpty().MaximumLength(50);
             RuleFor(x => x.SegundoApellido).NotEmpty().MaximumLength(50);
-            RuleFor(x => x.EspecialidadId).NotEmpty();
-            RuleFor(x => x.Calle).NotEmpty().MaximumLength(50);
-            RuleFor(x => x.ColoniaId).NotEmpty();
+            //RuleFor(x => x.EspecialidadId).NotEmpty();
+            //RuleFor(x => x.Calle).NotEmpty().MaximumLength(50);
+            //RuleFor(x => x.ColoniaId).NotEmpty();
 
         }
 
