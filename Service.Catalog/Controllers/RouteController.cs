@@ -40,6 +40,17 @@ namespace Service.Catalog.Controllers
             return await _service.GetById(id);
         }
 
+        [HttpPost("multiple")]
+        [Authorize(Policies.Access)]
+        public async Task<List<RouteFormDto>> GetByIdmulty(List<string> id)
+        {
+            List<RouteFormDto> routes = new List<RouteFormDto>();
+            foreach (var item in id) { 
+                var route = await _service.GetById(item);
+                routes.Add(route);
+            }
+            return routes;
+        }
         [HttpPost]
         [Authorize(Policies.Create)]
         public async Task<RouteListDto> Create(RouteFormDto routes)

@@ -41,15 +41,20 @@ namespace Service.MedicalRecord.Application
             var routeTrackingList = await _repository.GetAll( search);
             var list = routeTrackingList.ToList().ToRouteTrackingDto();
             List<RouteTrackingListDto> revefinal = new List<RouteTrackingListDto>();
-
+            List<Guid> IdRoutes = new List<Guid>();
             foreach (var item in list)
             {
-                var route = await _catalogClient.GetRuta(item.rutaId);
+                IdRoutes.Add(item.rutaId) ;
+            }
+            var routes = await _catalogClient.GetRutas(IdRoutes);
+            foreach (var item in list)
+            {
+                var route= routes.FirstOrDefault();
                 DateTime oDate = Convert.ToDateTime(item.Fecha);
                 item.Fecha = oDate.AddDays(route.TiempoDeEntrega).ToString();
             }
                 
-            return list;
+            return revefinal;
         }
         public async Task <RouteTrackingFormDto> GetByid(Guid id)
         {
