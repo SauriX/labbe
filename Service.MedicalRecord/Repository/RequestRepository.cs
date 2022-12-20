@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MoreLinq;
 using Service.MedicalRecord.Context;
 using Service.MedicalRecord.Domain.Request;
+using Service.MedicalRecord.Dtos.InvoiceCompany;
 using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Repository.IRepository;
 using System;
@@ -338,6 +339,36 @@ namespace Service.MedicalRecord.Repository
 
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public Task<List<Request>> InvoiceCompanyFilter(InvoiceCompanyFilterDto filter)
+        {
+            var requests = _context.CAT_Solicitud
+                .Include(x => x.Expediente)
+                .Include(x => x.Compañia)
+                .Include(x => x.Sucursal)
+                .Include(x => x.Estudios).ThenInclude(x => x.Estatus)
+                .Include(x => x.Estudios).ThenInclude(x => x.Tapon)
+                .Include(x => x.Pagos)
+                .OrderBy(x => x.FechaCreo)
+                .Where(x => x.Procedencia == 2)
+                .AsQueryable();
+
+            if (filter.FechaInicial != null && filter.FechaFinal != null)
+            {
+                requests = requests.Where(x => ((DateTime)filter.FechaInicial).Date <= x.FechaCreo.Date && ((DateTime)filter.FechaFinal).Date >= x.FechaCreo.Date);
+            }
+
+            if (filter.Sucursales != null && filter.Sucursales.Any())
+            {
+                requests = requests.Where(x => filter.Sucursales.Contains(x.SucursalId));
+            }
+
+            if (filter.Companias != null && filter.Companias.Any())
+            {
+                requests = requests.Where(x => x.CompañiaId != null && filter.Companias.Contains((Guid)x.CompañiaId));
+            }
+            return requests.ToListAsync();
         }
     }
 }

@@ -39,7 +39,9 @@ namespace Service.MedicalRecord.Mapper
                             Genero = solicitud.Expediente.Genero,
                             NombreEstudio = estudios[j].Clave,
                             ExpedienteId = solicitud.ExpedienteId,
-                            Parameters = estudios[j].Resultados.Where(x => x.TipoValorId != "9").Select(x => new MassSearchParameter
+                            Parameters = estudios[j].Resultados
+                            .Where(x => x.TipoValorId != "9")
+                            .Select(x => new MassSearchParameter
                             {
 
                                 Nombre = x.NombreCorto,

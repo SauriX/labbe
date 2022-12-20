@@ -462,6 +462,7 @@ namespace Service.MedicalRecord.Application
             }
 
             var newResults = results.ToCaptureResults();
+
             await _repository.CreateLabResults(newResults);
         }
         private async Task<WeeUploadFileDto> UploadResultFile(byte[] pdfBytes, string nameFile)
