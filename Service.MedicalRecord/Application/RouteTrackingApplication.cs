@@ -17,7 +17,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-
+using Service.MedicalRecord.Domain;
+using Service.MedicalRecord.Domain.Request;
 namespace Service.MedicalRecord.Application
 {
     public class RouteTrackingApplication: IRouteTrackingApplication
@@ -25,6 +26,9 @@ namespace Service.MedicalRecord.Application
         public readonly IRouteTrackingRepository _repository;
         private readonly ICatalogClient _catalogClient;
         private readonly IPdfClient _pdfClient;
+
+        public object SharedResponses { get; private set; }
+
         public RouteTrackingApplication(IRouteTrackingRepository repository,ICatalogClient catalog, IPdfClient pdfClient)
         {
             _repository = repository;
@@ -35,8 +39,17 @@ namespace Service.MedicalRecord.Application
         public async Task<List<RouteTrackingListDto>> GetAll(RouteTrackingSearchDto search)
         {
             var routeTrackingList = await _repository.GetAll( search);
+            var list = routeTrackingList.ToList().ToRouteTrackingDto();
+            List<RouteTrackingListDto> revefinal = new List<RouteTrackingListDto>();
 
-                return  routeTrackingList.ToList().ToRouteTrackingDto();
+            foreach (var item in list)
+            {
+                var route = await _catalogClient.GetRuta(item.rutaId);
+                DateTime oDate = Convert.ToDateTime(item.Fecha);
+                item.Fecha = oDate.AddDays(route.TiempoDeEntrega).ToString();
+            }
+                
+            return list;
         }
         public async Task <RouteTrackingFormDto> GetByid(Guid id)
         {
@@ -49,25 +62,61 @@ namespace Service.MedicalRecord.Application
         {
             try
             {
+                
+                /* foreach (var item in requestDto)
+                 {
+                     var ruteOrder = await _repository.getById(item.SolicitudId);
+                     var route = new RouteTracking
+                     {
+                         Id = Guid.NewGuid(),
+                         SegumientoId = Guid.Parse(ruteOrder.Estudios.FirstOrDefault().SeguimientoId.ToString()),
+                         RutaId = Guid.Parse(ruteOrder.RutaId),
+                         SucursalId = Guid.Parse(ruteOrder.SucursalDestinoId),
+                         FechaDeEntregaEstimada = ruteOrder.FechaCreo,
+                         SolicitudId = ruteOrder.Estudios.FirstOrDefault().SolicitudId,
+                         HoraDeRecoleccion = ruteOrder.FechaCreo,
+                         UsuarioCreoId = ruteOrder.UsuarioCreoId,
+                         FechaCreo = DateTime.Now,
+
+                     };
+
+                     await _repository.Create(route);
+
+                 }*/
                 int studyCount = 0;
                 foreach (var item in requestDto)
                 {
                     var ruteOrder = await _repository.getById(item.SolicitudId);
-                    var route = new RouteTracking
+                    var solicitudId = ruteOrder.Estudios.FirstOrDefault().SolicitudId;
+                    var request = await GetExistingRequest(ruteOrder.Estudios.FirstOrDefault().SolicitudId);
+
+                    var studiesIds = item.EstudioId;
+                    var studies = await _repository.GetStudyById(solicitudId, studiesIds);
+
+                    studies = studies.Where(x => x.EstatusId == Status.RequestStudy.TomaDeMuestra || x.EstatusId == Status.RequestStudy.EnRuta).ToList();
+
+                    if (studies == null || studies.Count == 0)
                     {
-                        Id = Guid.NewGuid(),
-                        SegumientoId = Guid.Parse(ruteOrder.Estudios.FirstOrDefault().SeguimientoId.ToString()),
-                        RutaId = Guid.Parse(ruteOrder.RutaId),
-                        SucursalId = Guid.Parse(ruteOrder.SucursalDestinoId),
-                        FechaDeEntregaEstimada = ruteOrder.FechaCreo,
-                        SolicitudId = ruteOrder.Estudios.FirstOrDefault().SolicitudId,
-                        HoraDeRecoleccion = ruteOrder.FechaCreo,
-                        UsuarioCreoId = ruteOrder.UsuarioCreoId,
-                        FechaCreo = DateTime.Now,
+                        throw new CustomException(HttpStatusCode.BadRequest);
+                    }
 
-                    };
+                    foreach (var study in studies)
+                    {
+                        if (study.EstatusId == Status.RequestStudy.TomaDeMuestra)
+                        {
+                            study.EstatusId = Status.RequestStudy.EnRuta;
+                            //study.FechaValidacion = DateTime.Now;
+                        }
+                        else
+                        {
+                            study.EstatusId = Status.RequestStudy.TomaDeMuestra;
+                            //study.FechaCaptura = DateTime.Now;
+                        }
 
-                    await _repository.Create(route);
+                    }
+                    studyCount += studies.Count;
+
+                    await _repository.BulkUpdateStudies(solicitudId, studies);
 
                 }
 
@@ -76,6 +125,17 @@ namespace Service.MedicalRecord.Application
             catch(Exception  ex) {
                 throw ex;
             }
+        }
+        private async Task<Request> GetExistingRequest(Guid requestId)
+        {
+            var request = await _repository.FindAsync(requestId);
+
+            if (request == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound);
+            }
+
+            return request;
         }
         public async Task<(byte[] file, string fileName)> ExportForm(Guid id)
         {
@@ -132,6 +192,7 @@ namespace Service.MedicalRecord.Application
                     }
                     register.Horaen = routeTra.FechaDeEntregaEstimada;
                     register.Fechaen = routeTra.FechaDeEntregaEstimada;
+                  
 
                 }
                 if (item.Fechareal != DateTime.MinValue) {
