@@ -3,6 +3,7 @@ using Integration.WeeClinic.Models.Laboratorio_BusquedaFolioLaboratorio;
 using Integration.WeeClinic.Models.Laboratorio_BusquedaFolios;
 using Integration.WeeClinic.Models.Laboratorio_GetPreciosEstudios_ByidServicio;
 using Integration.WeeClinic.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Newtonsoft.Json;
 using Service.MedicalRecord.Application.IApplication;
@@ -178,6 +179,35 @@ namespace Service.MedicalRecord.Application
             };
 
             return assignments;
+        }
+        public async Task<WeeUploadFileDto> UploadResultFile(IFormFile file)
+        {
+            var response = await LaboratoryService.UploadFileAzure(file);
+
+            var data = response.Archivos;
+
+            var assigments = new WeeUploadFileDto
+            {
+                IdArchivo = data[0].IdArchivo,
+                URLAzureBlob = data[0].URLAzureBlob
+            };
+
+            return assigments;
+        }
+        public async Task<WeeUploadFileDto> RelateResultFile(string idServicio, string idNodo, string idArchivo, string nota, int isRemplazarOrnew)
+        {
+            var response = await LaboratoryService.Laboratorio_ArchivosResultados_Update(idServicio, idNodo, idArchivo, nota, isRemplazarOrnew);
+
+            var data = response.Archivos;
+
+            var assigments = new WeeUploadFileDto
+            {
+                IdArchivo = data[0].IdArchivo,
+                URLAzureBlob = data[0].URLAzureBlob
+            };
+
+            return assigments;
+
         }
     }
 }

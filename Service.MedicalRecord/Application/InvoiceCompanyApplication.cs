@@ -1,5 +1,6 @@
 ﻿using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Dtos.InvoiceCompany;
+using Service.MedicalRecord.Mapper;
 using Service.MedicalRecord.Repository.IRepository;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -15,12 +16,11 @@ namespace Service.MedicalRecord.Application
             _repository = repository;
         }
 
-        public async Task<IEnumerable<InvoiceCompanyInfoDto>> GetByFilter(InvoiceCompanyFilterDto filter)
+        public async Task<InvoiceCompanyInfoDto> GetByFilter(InvoiceCompanyFilterDto filter)
         {
-            //var request = await _repository.GetByFilter(filter);
+            var request = await _repository.InvoiceCompanyFilter(filter);
 
-            //return request.ToRequestInfoDto();
-            throw new System.NotImplementedException();
+            return request.ToInvoiceCompanyDto();
         }
     }
 }

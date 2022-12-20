@@ -18,7 +18,7 @@ namespace Integration.WeeClinic
     {
         protected const string baseUrl = "http://weeqp.azurewebsites.net/QP/WeeClinic";
         protected const string certKey = "693CADADEA9E51F02CCE915C6541FF99CDBE4BE494E7C5E86F3FC257CC76D851";
-        protected const string token = "R3XaFcSbKFyBVPmX7Ctj7o17Np6rotqti1PcEjAb9JAtRMiiTnr1PSCY51flr6Xm7i29xg33jh0evqA2H9heNhcraL02OApzhtkmglEsBo1kAuq4Ue9gpTdGbNkfO6EO-SR92corHQcC40D7qZy7P-wGaVA-mSjZpWJVsb9Bkt6vkep0ROHZ9uvOm28FQSeyyVrWOuDzcg6rvAWawonhgcZSxAZKotBTBe1SubaUurIkASFYtWGQ5UP9ok77HibjXpbvE5b5yTfCfe35BzvZcEc4NhMw8yzBYwpZp72cLnG6iyXkntG8bHtG1tlMQt2GJP7PNB-zu7tFa7wgpW48jRM475mtbJoA86IZGgiW2FZqvz6mMtFyv4XliXBwl2Me_Q_Rbm1aSyy3jE-0OP3zW9zipRx6nA3EHGInlZaPMZ3IhHk9F-1FImCL_U6GOAK9";
+        protected const string token = "2BH039glUYph3E8a-yw1hFKMn0pXevSLReGOzx0-2osMFo220KdGPWm49qaRMAbJf611wIizjiSGRVHtUzvFD19rpZI-iASm_0a4N3qj_cQ0X2RHP-4HeElXv1AA2lvf_A425bsPenPLzpSkgW43ZQ_Mwi4qv2T1-MpBIGIdDpxG3aKqnRgfw5ErE3igE_dydwwabFpZqPEviMRYj4RMdXi_AvJeGP6WnZ3OK12LlO3yvG_OdgY2Mn9EniUFGUNak5493jb-8RqAuCuXl3KzEblLEVLdblQTeafewwdanc2YzHcwU1H4DP2u5JpxSNhVzTsX4B-4XJlV6NhhiUFC3Fb21NlIK-xQfvQBownjSgyg-lMa6ukk3E16f9mPj13eWmFjrB5pZhOabIzR_FqrzWX0n5LeFXQbd91-2dwDQ7YL6FBXgVRqUJeLwBJL0x4H";
 
         protected const string folio1 = "AD00704422003227421X";
         protected const string folio2 = "AD0070442200322751R4";
@@ -122,10 +122,12 @@ namespace Integration.WeeClinic
             }
         }
 
-        public static async Task<string> PostService<T>(string serviceUrl, MultipartFormDataContent multipartFormContent)
+        public static async Task<Dictionary<string, List<Dictionary<string, object>>>> PostService<T>(string serviceUrl, MultipartFormDataContent multipartFormContent)
         {
             try
             {
+                //var example = await Login();
+
                 var url = $"{baseUrl}/API/{serviceUrl}";
 
                 using HttpClient client = new();
@@ -138,8 +140,9 @@ namespace Integration.WeeClinic
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var responseData = await response.Content.ReadAsStringAsync();
-                    return responseData;
+                    var responseData = await response.Content.ReadFromJsonAsync<WeeClinicBase>();
+
+                    return responseData.DsRespuesta;
                 }
 
                 if ((int)response.StatusCode == 400)

@@ -100,7 +100,7 @@ namespace Service.Catalog.Application
         private async Task<string> GenerateCode(MedicsFormDto medics, string suffix = null)
         {
 
-            var code = medics.Nombre[..3].ToUpper();
+            var code = medics.Nombre.Length < 3 ? medics.Nombre.ToUpper() : medics.Nombre[..3].ToUpper();
             code += medics.PrimerApellido[..1].ToUpper();
             code += medics.SegundoApellido[..1].ToUpper();
             code += suffix;
