@@ -44,7 +44,7 @@ namespace Service.Catalog.Dtos.Company
             RuleFor(x => x.Clave).NotEmpty().MaximumLength(100);
             RuleFor(x => x.Contrasena).NotEmpty().MaximumLength(100);
             RuleFor(x => x.NombreComercial).NotEmpty().MaximumLength(100);
-            RuleFor(x => x.Procedencia).NotEmpty().MaximumLength(100);
+            RuleFor(x => x.ProcedenciaId).NotEmpty().MaximumLength(100);
             
         }
 
