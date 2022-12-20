@@ -116,6 +116,11 @@ namespace Service.Catalog
                         re.Consumer<CompanyErrorConsumer>(context);
                     });
 
+                    configurator.ReceiveEndpoint(queueNames.MaquilaError, re =>
+                    {
+                        re.Consumer<MaquilaErrorConsumer>(context);
+                    });
+
                     configurator.ReceiveEndpoint(queueNames.MedicError, re =>
                     {
                         re.Consumer<MedicErrorConsumer>(context);

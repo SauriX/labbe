@@ -37,7 +37,7 @@ namespace Service.Catalog.Mapper
                 Id = x.Id,
                 Parametros = x.Parameters.OrderBy(x => x.Orden).Select(y => y.Parametro).ToParameterValueStudyDto(),
                 Indicaciones = x.Indications.Select(y => y.Indicacion).ToIndicationListDto(),
-               
+                Metodo = x.Metodo?.Nombre,
                 Clave = x.Clave
             });
         }

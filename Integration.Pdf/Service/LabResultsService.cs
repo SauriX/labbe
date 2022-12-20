@@ -82,17 +82,7 @@ namespace Integration.Pdf.Service
             var fontParam = new Font("calibri", 12);
             var fontCritic = new Font("calibri", 12) { Bold = true };
             var fontTitle = new Font("calibri", 14) { Bold = true };
-            var fontFooterTitle = new Font("Calibri", 10) { Bold = true };
-            var fontFooterSubtitle = new Font("Calibri", 7) { Bold = true };
-            var fontFooterText = new Font("Calibri", 6) { Bold = true };
-
-            var logoLab = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets\\LabRamosLogo.png");
-            var logoISO = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets\\ISOLogo.png");
-            var firma = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets\\firmaEjemplo.png");
-            var firmaImage = File.ReadAllBytes(firma);
-
-            var LabRamosImage = File.ReadAllBytes(logoLab);
-            var ISOImage = File.ReadAllBytes(logoISO);
+            const int CTG = 631;
 
             var contentWidth = section.PageSetup.PageWidth - section.PageSetup.LeftMargin - section.PageSetup.RightMargin;
             Chart chart = new Chart();
@@ -101,100 +91,10 @@ namespace Integration.Pdf.Service
             chart.Width = contentWidth;
             chart.Height = Unit.FromCentimeter(12);
 
-            var headerParagraph = "ALFONSO RAMOS SALAZAR, QBP, MSC, DBC UNIVERSIDAD Y HOSPITAL GENERAL DE TORONTO CED. DGP No. 703973 REG. S.S.A. 10-86 DGP F-370, No. REG. 0111";
-
             if (results.CapturaResultados != null)
             {
-                var header = section.Headers.Primary;
 
-                if (results.ImprimrLogos)
-                {
-                    var headerInfo = new Col[]
-                {
-                        new Col(LabRamosImage, 6, ParagraphAlignment.Left)
-                        {
-                            ImagenTamaño = Unit.FromCentimeter(6)
-                        },
-                        new Col(headerParagraph, 4, new Font("Calibri", 10), ParagraphAlignment.Center),
-                        new Col(ISOImage, 4, ParagraphAlignment.Right)
-                        {
-                            ImagenTamaño = Unit.FromCentimeter(3)
-                        },
-                };
-
-                    header.AddText(headerInfo);
-
-                    var textFrame = header.AddTextFrame();
-                    textFrame.RelativeHorizontal = RelativeHorizontal.Page;
-                    textFrame.RelativeVertical = RelativeVertical.Page;
-
-                    textFrame.WrapFormat.DistanceLeft = (section.PageSetup.PageWidth / 2) - 15;
-                    textFrame.WrapFormat.DistanceTop = Unit.FromCentimeter(2.7);
-
-                    textFrame.Width = 100;
-                    textFrame.Height = Unit.FromCentimeter(1);
-
-                    var textFramePar = textFrame.AddParagraph();
-                    textFramePar.Format.Alignment = ParagraphAlignment.Center;
-                    textFramePar.AddFormattedText("www.laboratorioramos.com.mx", new Font("Calibri", 10) { Bold = true });
-                }
-
-                var line1 = new Col[]
-                    {
-                        new Col("Doctor (a)", 12, fontText, ParagraphAlignment.Left),
-                        new Col($": {results.SolicitudInfo?.Medico}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
-                        new Col("Expediente", 12, fontText, ParagraphAlignment.Left),
-                        new Col($": {results.SolicitudInfo?.Clave}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left)
-                    };
-                header.AddBorderedText(line1, top: true, right: false, left: false);
-
-                var line2 = new Col[]
-                {
-                        new Col("Paciente", 12, fontText, ParagraphAlignment.Left),
-                        new Col($": {results.SolicitudInfo?.Paciente}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
-                        new Col("Edad", 12, fontText, ParagraphAlignment.Left),
-                        new Col($": {results.SolicitudInfo?.Edad}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left)
-                };
-                header.AddBorderedText(line2, right: false, left: false);
-
-                var line3 = new Col[]
-                {
-                        new Col("Paciente Número", 12, fontText, ParagraphAlignment.Left),
-                        new Col($": {results.SolicitudInfo?.Expediente}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
-                        new Col("Sexo", 12, fontText, ParagraphAlignment.Left),
-                        new Col($": {results.SolicitudInfo?.Sexo}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
-                };
-                header.AddBorderedText(line3, right: false, left: false);
-
-                var line4 = new Col[]
-                {
-                        new Col("Fecha de Admisión", 12, fontText, ParagraphAlignment.Left),
-                        new Col($": {results.SolicitudInfo?.FechaAdmision}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
-                        new Col("Fecha de Entrega", 12, fontText, ParagraphAlignment.Left),
-                        new Col($": {results.SolicitudInfo?.FechaEntrega}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
-                };
-                header.AddBorderedText(line4, right: false, left: false);
-
-                var line5 = new Col[]
-                {
-                        new Col("Compañía", 12, fontText, ParagraphAlignment.Left),
-                        new Col($": {(results.SolicitudInfo?.Compañia == null ? "Particulares" : results.SolicitudInfo.Compañia)}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
-                        new Col("Impreso a las", 12, fontText, ParagraphAlignment.Left),
-                        new Col($": {DateTime.Now.ToString("t")}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
-                };
-                header.AddBorderedText(line5, right: false, left: false);
-
-                header.AddSpace(10);
-
-                List<Col> studyHeader = new List<Col>()
-                    {
-                        new Col("EXAMEN", 14, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
-                        new Col("RESULTADO", 7, Col.FONT_SUBTITLE_BOLD),
-                        new Col("UNIDADES", 6, Col.FONT_SUBTITLE_BOLD),
-                        new Col("REFERENCIA", 6, Col.FONT_SUBTITLE_BOLD),
-                    };
-                if (results.ImprimirPrevios) studyHeader.Insert(2, new Col("PREVIO", 6, Col.FONT_SUBTITLE_BOLD));
-                header.AddBorderedText(studyHeader.ToArray(), top: true, right: false, bottom: true, left: false);
+                RenderHeader(section, results, fontText);
 
                 var study = results.CapturaResultados.Select(x => x.Estudio).Distinct().ToList();
                 var studyParameter = results.CapturaResultados.GroupBy(x => x.Estudio).ToList();
@@ -213,13 +113,14 @@ namespace Integration.Pdf.Service
 
                     var orderParams = studyParam.OrderBy(x => x.Orden);
 
-                    foreach (var param in orderParams)
+                    foreach (var param in orderParams.Where(x => !string.IsNullOrWhiteSpace(x.Resultado)))
                     {
                         var checkResult = false;
-                        var typeValueText = param.TipoValorId == 9 || param.TipoValorId == 10;
-                        var typeValueLabel = param.TipoValorId == 9;
+                        var typeValueText = param.TipoValorId == TypeValue.Etiqueta || param.TipoValorId == TypeValue.Observacion;
+                        var typeValueNumeric = param.TipoValorId == TypeValue.Numerico || param.TipoValorId == TypeValue.NumericoSexo || param.TipoValorId == TypeValue.NumericoEdad || param.TipoValorId == TypeValue.NumericoEdadSexo;
+                        var fcsiExists = !string.IsNullOrEmpty(param.FCSI);
 
-                        if (param.Resultado != null && param.TipoValorId == 1 || param.TipoValorId == 2 || param.TipoValorId == 3 || param.TipoValorId == 4)
+                        if (param.Resultado != null && typeValueNumeric)
                         {
                             if (param.ValorInicial != null && param.ValorFinal != null)
                                 checkResult = decimal.Parse(param.Resultado) > decimal.Parse(param?.ValorFinal) || decimal.Parse(param.Resultado) < decimal.Parse(param?.ValorInicial);
@@ -229,14 +130,15 @@ namespace Integration.Pdf.Service
 
                         List<Col> col = new List<Col>()
                         {
-                            new Col(param.Nombre, 14, typeValueLabel ? fontCritic : fontParam, ParagraphAlignment.Left){
+                            new Col(param.Nombre, 14, param.TipoValorId == TypeValue.Etiqueta ? fontCritic : fontParam, ParagraphAlignment.Left){
                                 Fill = typeValueText ? TabLeader.Spaces : TabLeader.Dots
                             },
                             new Col(checkResult ? $"*{param.Resultado}" : param.Resultado, 7, checkResult ? fontCritic : fontParam, ParagraphAlignment.Center),
                             new Col(param.UnidadNombre, 6, fontParam, ParagraphAlignment.Center),
                             new Col(typeValueText ? "" : $"{param.ValorInicial} - {param.ValorFinal}", 6, fontParam, ParagraphAlignment.Center),
                         };
-                        if (param.TipoValorId == 10 || param.TipoValorId == 7)
+
+                        if (param.TipoValorId == TypeValue.Texto || param.TipoValorId == TypeValue.Parrafo || param.TipoValorId == TypeValue.Observacion)
                         {
                             col.RemoveAt(3);
                             col.RemoveAt(2);
@@ -244,43 +146,62 @@ namespace Integration.Pdf.Service
                             col[1].Horizontal = ParagraphAlignment.Left;
                         }
 
-                        var glucoseToleranceValues = param.TipoValorId == 6 || param.TipoValorId == 1;
+                        var firstColumn = string.Join("\n", param.ValoresReferencia.Select(x => x.PrimeraColumna));
+                        var secondColumn = string.Join("\n", param.ValoresReferencia.Select(x => x.SegundaColumna));
+                        var thirdColumn = string.Join("\n", param.ValoresReferencia.Select(x => x.TerceraColumna));
+                        var fourthColumn = string.Join("\n", param.ValoresReferencia.Select(x => x.CuartaColumna));
+                        var fifthColumn = string.Join("\n", param.ValoresReferencia.Select(x => x.QuintaColumna));
 
-                        if (param.EstudioId == 631 && glucoseToleranceValues && param.Clave != "_OB_CTG")
+                        var font2Column = new Font("calibri", 9);
+                        var font3Column = new Font("calibri", 8);
+                        var font4Column = new Font("calibri", 7);
+                        var font5Column = new Font("calibri", 6);
+
+
+                        if (param.TipoValorId == TypeValue.Numerico2Columna)
+                        {
+                            if (param.Resultado == "." && param.EstudioId == CTG)
+                            {
+                                col[2] = new Col(firstColumn, 6, font2Column, ParagraphAlignment.Center);
+                                col[3] = new Col(secondColumn, 6, font2Column, ParagraphAlignment.Center);
+                            }
+                            else if (param.Resultado != ".")
+                            {
+                                col[2] = new Col(firstColumn, 6, font2Column, ParagraphAlignment.Center);
+                                col[3] = new Col(secondColumn, 6, font2Column, ParagraphAlignment.Center);
+                            }
+                        }
+
+                        else if (param.TipoValorId == TypeValue.Numerico3Columna)
+                        {
+                            col[2] = new Col(firstColumn + "\t" + secondColumn, 8, font3Column, ParagraphAlignment.Center);
+                            col[3] = new Col(thirdColumn, 4, font3Column, ParagraphAlignment.Center);
+                        }
+
+                        else if (param.TipoValorId == TypeValue.Numerico4Columna)
+                        {
+                            col[2] = new Col(firstColumn + "\t" + secondColumn, 6, font4Column, ParagraphAlignment.Center);
+                            col[3] = new Col(thirdColumn + "\t" + fourthColumn, 6, font4Column, ParagraphAlignment.Center);
+                        }
+
+                        else if (param.TipoValorId == TypeValue.Numerico5Columna)
+                        {
+                            col[2] = new Col(firstColumn + "\t" + secondColumn, 4, font5Column, ParagraphAlignment.Center);
+                            col[3] = new Col(thirdColumn + "\t" + fourthColumn + "\t" + fifthColumn, 8, font5Column, ParagraphAlignment.Center);
+                        }
+
+
+
+                        var glucoseToleranceValues = param.TipoValorId == TypeValue.Numerico || param.TipoValorId == TypeValue.Numerico1Columna;
+
+                        if (param.EstudioId == CTG && glucoseToleranceValues && param.Clave != "_OB_CTG")
                         {
                             try
                             {
                                 var numericResult = Convert.ToDouble(param.Resultado);
                                 series.Add(numericResult);
 
-                                if (param.Clave == "_GLU_SU")
-                                {
-                                    xseries.Add("0");
-                                }
-                                if (param.Clave == "_GLU_SU30")
-                                {
-                                    xseries.Add("30");
-                                }
-                                if (param.Clave == "_GLU_SU60")
-                                {
-                                    xseries.Add("60");
-                                }
-                                if (param.Clave == "_GLU_SU90")
-                                {
-                                    xseries.Add("90");
-                                }
-                                if (param.Clave == "_GLU_SU120")
-                                {
-                                    xseries.Add("120");
-                                }
-                                if (param.Clave == "_GLU_SU180")
-                                {
-                                    xseries.Add("180");
-                                }
-                                if (param.Clave == "_GLU_SU240")
-                                {
-                                    xseries.Add("240");
-                                }
+                                RenderGlucose(param.Clave, xseries);
                             }
                             catch (Exception ex)
                             {
@@ -290,9 +211,23 @@ namespace Integration.Pdf.Service
 
                         if (results.ImprimirPrevios) col.Insert(2, new Col(param.UltimoResultado != null ? param.UltimoResultado : "-", 6, Col.FONT_SUBTITLE_BOLD));
                         section.AddBorderedText(col.ToArray(), top: false, right: false, bottom: false, left: false);
+
+                        var fcsiText = new Col(param.FCSI, 14, font2Column, ParagraphAlignment.Left);
+
+                        if(fcsiExists)
+                            section.AddText(fcsiText);
                     }
 
-                    if (studyParam.Any(x => x.EstudioId == 631))
+                    var methodExists = !string.IsNullOrEmpty(results.SolicitudInfo?.Metodo);
+                    var methodText = new Col($"Método: {results.SolicitudInfo?.Metodo}", 18, fontText, ParagraphAlignment.Left);
+
+                    if (methodExists)
+                    {
+                        section.AddSpace(2);
+                        section.AddText(methodText);
+                    }
+
+                    if (studyParam.Any(x => x.EstudioId == CTG))
                     {
                         section.AddPageBreak();
 
@@ -319,14 +254,25 @@ namespace Integration.Pdf.Service
 
                     if (results.ImprimirCriticos)
                     {
-                        var notNumericTypeValue = studyParam.Where(x => x.Resultado != null && x.TipoValorId != 10 && x.TipoValorId != 7 && x.TipoValorId != 5 && x.TipoValorId != 6 && x.TipoValorId != 9 && x.TipoValorId != 8);
-                        var checkStudyParams = notNumericTypeValue;
+                        var notNumericTypeValue = studyParam.Where(x => x.Resultado != null &&
+                        (x.TipoValorId != TypeValue.OpcionMultiple
+                        && x.TipoValorId != TypeValue.Numerico1Columna
+                        && x.TipoValorId != TypeValue.Numerico2Columna
+                        && x.TipoValorId != TypeValue.Numerico3Columna
+                        && x.TipoValorId != TypeValue.Numerico4Columna
+                        && x.TipoValorId != TypeValue.Numerico5Columna
+                        && x.TipoValorId != TypeValue.Texto
+                        && x.TipoValorId != TypeValue.Parrafo
+                        && x.TipoValorId != TypeValue.Etiqueta
+                        && x.TipoValorId != TypeValue.Observacion));
+
                         var checkCritics = notNumericTypeValue.Any(x => decimal.Parse(x.Resultado) >= x.CriticoMaximo || decimal.Parse(x.Resultado) <= x.CriticoMinimo);
                         var criticTitle = new Col(checkCritics ? "VALORES CRÍTICOS" : "", 14, fontTitle, ParagraphAlignment.Left);
+
                         section.AddText(criticTitle);
                         section.AddSpace(5);
 
-                        foreach (var param in checkStudyParams)
+                        foreach (var param in notNumericTypeValue)
                         {
                             if (param.Resultado != null && (decimal.Parse(param.Resultado) >= param.CriticoMaximo || decimal.Parse(param.Resultado) <= param.CriticoMinimo))
                             {
@@ -347,40 +293,185 @@ namespace Integration.Pdf.Service
                     }
                 }
 
-                var footer = section.Footers.Primary;
+                RenderFooter(section, results);
 
-                var firmadoPor = "MSc. Alfonso Ramos Salazar\nCED. PROF. 703973";
+            }
+        }
 
-                var footerFirmaLibera = new Col[]
+        private static void RenderGlucose(string clave, XSeries xseries)
+        {
+            if (clave == "_GLU_SU")
+            {
+                xseries.Add("0");
+            }
+            if (clave == "_GLU_SU30")
+            {
+                xseries.Add("30");
+            }
+            if (clave == "_GLU_SU60")
+            {
+                xseries.Add("60");
+            }
+            if (clave == "_GLU_SU90")
+            {
+                xseries.Add("90");
+            }
+            if (clave == "_GLU_SU120")
+            {
+                xseries.Add("120");
+            }
+            if (clave == "_GLU_SU180")
+            {
+                xseries.Add("180");
+            }
+            if (clave == "_GLU_SU240")
+            {
+                xseries.Add("240");
+            }
+        }
+
+        private static void RenderHeader(Section section, ClinicResultsPdfDto results, Font fontText)
+        {
+            var logoLab = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets\\LabRamosLogo.png");
+            var logoISO = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets\\ISOLogo.png");
+
+            var LabRamosImage = File.ReadAllBytes(logoLab);
+            var ISOImage = File.ReadAllBytes(logoISO);
+
+            var headerParagraph = "ALFONSO RAMOS SALAZAR, QBP, MSC, DBC UNIVERSIDAD Y HOSPITAL GENERAL DE TORONTO CED. DGP No. 703973 REG. S.S.A. 10-86 DGP F-370, No. REG. 0111";
+
+            var header = section.Headers.Primary;
+
+            if (results.ImprimrLogos)
+            {
+                var headerInfo = new Col[]
+            {
+                        new Col(LabRamosImage, 6, ParagraphAlignment.Left)
+                        {
+                            ImagenTamaño = Unit.FromCentimeter(6)
+                        },
+                        new Col(headerParagraph, 4, new Font("Calibri", 10), ParagraphAlignment.Center),
+                        new Col(ISOImage, 4, ParagraphAlignment.Right)
+                        {
+                            ImagenTamaño = Unit.FromCentimeter(3)
+                        },
+            };
+
+                header.AddText(headerInfo);
+
+                var textFrame = header.AddTextFrame();
+                textFrame.RelativeHorizontal = RelativeHorizontal.Page;
+                textFrame.RelativeVertical = RelativeVertical.Page;
+
+                textFrame.WrapFormat.DistanceLeft = (section.PageSetup.PageWidth / 2) - 15;
+                textFrame.WrapFormat.DistanceTop = Unit.FromCentimeter(2.7);
+
+                textFrame.Width = 100;
+                textFrame.Height = Unit.FromCentimeter(1);
+
+                var textFramePar = textFrame.AddParagraph();
+                textFramePar.Format.Alignment = ParagraphAlignment.Center;
+                textFramePar.AddFormattedText("www.laboratorioramos.com.mx", new Font("Calibri", 10) { Bold = true });
+            }
+
+            var line1 = new Col[]
                 {
-                     new Col("Toma de Muestra: " + results.SolicitudInfo?.FechaAdmision + " " + " " + results.SolicitudInfo?.User + "\nLiberó: " + results.SolicitudInfo?.FechaEntrega + " " + " " + results.SolicitudInfo?.User, 5, ParagraphAlignment.Left),
-                     new Col(firmaImage, 4)
-                     {
-                         ImagenTamaño = Unit.FromCentimeter(3)
-                     },
+                        new Col("Doctor (a)", 12, fontText, ParagraphAlignment.Left),
+                        new Col($": {results.SolicitudInfo?.Medico}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
+                        new Col("Expediente", 12, fontText, ParagraphAlignment.Left),
+                        new Col($": {results.SolicitudInfo?.Expediente}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left)
                 };
+            header.AddBorderedText(line1, top: true, right: false, left: false);
 
-                var footerFirmadoPor = new Col[]
+            var line2 = new Col[]
+            {
+                        new Col("Paciente", 12, fontText, ParagraphAlignment.Left),
+                        new Col($": {results.SolicitudInfo?.Paciente}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
+                        new Col("Edad", 12, fontText, ParagraphAlignment.Left),
+                        new Col($": {results.SolicitudInfo?.Edad}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left)
+            };
+            header.AddBorderedText(line2, right: false, left: false);
+
+            var line3 = new Col[]
+            {
+                        new Col("Paciente Número", 12, fontText, ParagraphAlignment.Left),
+                        new Col($": {results.SolicitudInfo?.Clave}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
+                        new Col("Sexo", 12, fontText, ParagraphAlignment.Left),
+                        new Col($": {results.SolicitudInfo?.Sexo}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
+            };
+            header.AddBorderedText(line3, right: false, left: false);
+
+            var line4 = new Col[]
+            {
+                        new Col("Fecha de Admisión", 12, fontText, ParagraphAlignment.Left),
+                        new Col($": {results.SolicitudInfo?.FechaAdmision}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
+                        new Col("Fecha de Entrega", 12, fontText, ParagraphAlignment.Left),
+                        new Col($": {results.SolicitudInfo?.FechaEntrega}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
+            };
+            header.AddBorderedText(line4, right: false, left: false);
+
+            var line5 = new Col[]
+            {
+                        new Col("Compañía", 12, fontText, ParagraphAlignment.Left),
+                        new Col($": {(results.SolicitudInfo?.Compañia == null ? "Particulares" : results.SolicitudInfo.Compañia)}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
+                        new Col("Impreso a las", 12, fontText, ParagraphAlignment.Left),
+                        new Col($": {DateTime.Now.ToString("t")}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
+            };
+            header.AddBorderedText(line5, right: false, left: false);
+
+            header.AddSpace(10);
+
+            List<Col> studyHeader = new List<Col>()
+                    {
+                        new Col("EXAMEN", 14, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
+                        new Col("RESULTADO", 7, Col.FONT_SUBTITLE_BOLD),
+                        new Col("UNIDADES", 6, Col.FONT_SUBTITLE_BOLD),
+                        new Col("REFERENCIA", 6, Col.FONT_SUBTITLE_BOLD),
+                    };
+            if (results.ImprimirPrevios) studyHeader.Insert(2, new Col("PREVIO", 6, Col.FONT_SUBTITLE_BOLD));
+            header.AddBorderedText(studyHeader.ToArray(), top: true, right: false, bottom: true, left: false);
+        }
+
+        private static void RenderFooter(Section section, ClinicResultsPdfDto results)
+        {
+            var fontFooterTitle = new Font("Calibri", 10) { Bold = true };
+            var fontFooterSubtitle = new Font("Calibri", 7) { Bold = true };
+            var fontFooterText = new Font("Calibri", 6) { Bold = true };
+
+            var firma = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets\\firmaEjemplo.png");
+            var firmaImage = File.ReadAllBytes(firma);
+
+            var footer = section.Footers.Primary;
+
+            var firmadoPor = "MSc. Alfonso Ramos Salazar\nCED. PROF. 703973";
+
+            var footerFirmaLibera = new Col[]
+            {
+                new Col("Toma de Muestra: " + results.SolicitudInfo?.FechaAdmision + " " + " " + results.SolicitudInfo?.User + "\nLiberó: " + results.SolicitudInfo?.FechaEntrega + " " + " " + results.SolicitudInfo?.User, 5, ParagraphAlignment.Left),
+                new Col(firmaImage, 4)
                 {
-                    new Col("", 5, ParagraphAlignment.Left),
-                    new Col(firmadoPor, 4)
-                };
-
-                footer.AddText(footerFirmaLibera);
-                footer.AddText(footerFirmadoPor);
-                section.AddSpace(5);
-
-                var footerTitleBranches = new Col[]
-                {
-                        new Col("CD. OBREGÓN, SON.", 4, fontFooterTitle,  ParagraphAlignment.Center),
+                    ImagenTamaño = Unit.FromCentimeter(3)
+                },
+            };
+            var footerFirmadoPor = new Col[]
+            {
+                new Col("", 5, ParagraphAlignment.Left),
+                new Col(firmadoPor, 4)
+            };
+            footer.AddText(footerFirmaLibera);
+            footer.AddText(footerFirmadoPor);
+            section.AddSpace(5);
+            var footerTitleBranches = new Col[]
+            {
+                new Col("CD. OBREGÓN, SON.", 4, fontFooterTitle,  ParagraphAlignment.Center),
                         new Col("GUAYMAS, SON.", 1, fontFooterTitle,  ParagraphAlignment.Center),
                         new Col("HERMOSILLO, SON.", 3, fontFooterTitle,  ParagraphAlignment.Center),
-                };
+            };
 
-                footer.AddText(footerTitleBranches);
+            footer.AddText(footerTitleBranches);
 
-                var footerBranchesUnits = new Col[]
-                {
+            var footerBranchesUnits = new Col[]
+            {
                         new Col("UNIDAD CENTRO", 1, fontFooterSubtitle,  ParagraphAlignment.Center),
                         new Col("UNIDAD 200", 1, fontFooterSubtitle,  ParagraphAlignment.Center),
                         new Col("UNIDAD 300", 1, fontFooterSubtitle,  ParagraphAlignment.Center),
@@ -389,12 +480,12 @@ namespace Integration.Pdf.Service
                         new Col("CENTRO MÉDICO DEL RÍO", 1, fontFooterSubtitle,  ParagraphAlignment.Center),
                         new Col("MORELOS", 1, fontFooterSubtitle,  ParagraphAlignment.Center),
                         new Col("NAVARRETE", 1, fontFooterSubtitle,  ParagraphAlignment.Center),
-                };
+            };
 
-                footer.AddText(footerBranchesUnits);
+            footer.AddText(footerBranchesUnits);
 
-                var footerBranchesAddress = new Col[]
-                {
+            var footerBranchesAddress = new Col[]
+            {
                         new Col("Sinaloa No. 144 Sur Col. CentroTels. (664) 415-16-92, 414-08-41, 414-08-42, 415-31-39 y 415-31-40", 1, fontFooterText,  ParagraphAlignment.Center),
                         new Col("Calle 200 Casi Esq. con Michoacán Tels. (644)412-31-56 y 416-14-07", 1, fontFooterText,  ParagraphAlignment.Center),
                         new Col("Jalisco No. 2250 Esq. Calle 300 Plaza Perisur Cd. Obregón, Son. Tel. (644) 444-66-69", 1, fontFooterText,  ParagraphAlignment.Center),
@@ -403,17 +494,36 @@ namespace Integration.Pdf.Service
                         new Col("Reforma No. 273 Sur Tel. (662) 213-6866", 1, fontFooterText,  ParagraphAlignment.Center),
                         new Col("Blvd. Morelos No. 357 Col. El Bachoco Tels. (662) 267-8635 y 37", 1, fontFooterText,  ParagraphAlignment.Center),
                         new Col("Blvd. Navarrete No. 292 Col. Raquet Club Tel. (662) 216-3342", 1, fontFooterText,  ParagraphAlignment.Center),
-                };
+            };
 
-                footer.AddText(footerBranchesAddress);
-                section.AddSpace(3);
+            footer.AddText(footerBranchesAddress);
+            section.AddSpace(3);
 
-                var footerNoPage = new Col[]
-                {
+            var footerNoPage = new Col[]
+            {
                         new Col("Página {pageNumber}/{pageCount}", 1, fontFooterTitle, ParagraphAlignment.Right),
-                };
-                footer.AddText(footerNoPage);
-            }
+            };
+            footer.AddText(footerNoPage);
         }
+
+        public class TypeValue
+        {
+            public const byte Numerico = 1;
+            public const byte NumericoSexo = 2;
+            public const byte NumericoEdad = 3;
+            public const byte NumericoEdadSexo = 4;
+            public const byte OpcionMultiple = 5;
+            public const byte Numerico1Columna = 6;
+            public const byte Texto = 7;
+            public const byte Parrafo = 8;
+            public const byte Etiqueta = 9;
+            public const byte Observacion = 10;
+            public const byte Numerico2Columna = 11;
+            public const byte Numerico3Columna = 12;
+            public const byte Numerico4Columna = 13;
+            public const byte Numerico5Columna = 14;
+
+        }
+
     }
 }

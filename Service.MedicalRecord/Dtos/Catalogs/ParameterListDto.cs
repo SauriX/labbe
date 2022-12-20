@@ -28,6 +28,7 @@ namespace Service.MedicalRecord.Dtos.Catalogs
         public string UltimoResultado { get; set; }
         public string Formula { get; set; }
         public int Orden { get; set; }
+        public string FCSI { get; set; }
         public bool Editable => string.IsNullOrWhiteSpace(Formula) ? true : Formula?.Contains(Clave) ?? true;
         public List<ParameterValueDto> TipoValores { get; set; }
     }

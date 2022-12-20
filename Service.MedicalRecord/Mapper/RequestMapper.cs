@@ -212,6 +212,7 @@ namespace Service.MedicalRecord.Mapper
                 PuntosAplicados = 0.ToString(),
                 Total = model.Total.ToString("C"),
                 Atiende = userName.ToUpper(),
+
                 Estudios = model.Paquetes.Select(x => new RequestOrderStudyDto
                 {
                     Clave = x.Clave,
@@ -276,6 +277,8 @@ namespace Service.MedicalRecord.Mapper
                 TaponColor = x.Tapon.Color,
                 TaponClave = x.Tapon.Clave,
                 TaponNombre = x.Tapon.Nombre,
+                Maquila = x.Maquila?.Nombre,
+                MaquilaId = x.MaquilaId,
                 EstatusId = x.EstatusId,
                 Estatus = x.Estatus.Nombre,
                 Dias = x.Dias,
@@ -292,6 +295,7 @@ namespace Service.MedicalRecord.Mapper
                 PrecioFinal = x.PrecioFinal,
                 NombreEstatus = x.Estatus.Nombre,
                 Asignado = x.EstudioWeeClinic?.Asignado ?? true,
+                Metodo = x.Metodo,
                 FechaActualizacion = x.EstatusId == Status.RequestStudy.TomaDeMuestra
                     ? x.FechaTomaMuestra?.ToString("dd/MM/yyyy HH:mm")
                     : x.EstatusId == Status.RequestStudy.Solicitado

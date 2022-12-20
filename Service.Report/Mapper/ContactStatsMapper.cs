@@ -1,4 +1,5 @@
 ﻿using Service.Report.Dictionary;
+using Service.Report.Domain.MedicalRecord;
 using Service.Report.Domain.Request;
 using Service.Report.Dtos.ContactStats;
 using Shared.Extensions;
@@ -11,19 +12,19 @@ namespace Service.Report.Mapper
 {
     public static class ContactStatsMapper
     {
-        public static IEnumerable<ContactStatsDto> ToContactStatsDto(this IEnumerable<Request> model)
+        public static IEnumerable<ContactStatsDto> ToContactStatsDto(this IEnumerable<RequestInfo> model)
         {
             if (model == null) return null;
 
             var results = (from c in model
-                           group c by new { c.Expediente.Expediente, c.Expediente.Nombre, c.Expediente.Celular, c.Expediente.Correo, c.Medico.NombreMedico, c.Id, c.Clave } into grupo
+                           group c by new { c.Expediente, c.NombreCompleto, c.Celular, c.Correo, c.Medico, c.Id, c.Solicitud } into grupo
                            select new ContactStatsDto
                            {
                                Id = Guid.NewGuid(),
                                Expediente = grupo.Key.Expediente,
-                               Paciente = grupo.Key.Nombre,
-                               Medico = grupo.Key.NombreMedico,
-                               Clave = grupo.Key.Clave,
+                               Paciente = grupo.Key.NombreCompleto,
+                               Medico = grupo.Key.Medico,
+                               Clave = grupo.Key.Solicitud,
                                Estatus = grupo.Sum(x => x.Estudios.Count) == 0 ? "" : GetStatus(grupo.SelectMany(x => x.Estudios)),
                                Celular = grupo.Key.Celular,
                                Correo = grupo.Key.Correo
@@ -31,7 +32,7 @@ namespace Service.Report.Mapper
 
             return results;
         }
-        public static IEnumerable<ContactStatsChartDto> ToContactStatsChartDto(this IEnumerable<Request> model)
+        public static IEnumerable<ContactStatsChartDto> ToContactStatsChartDto(this IEnumerable<RequestInfo> model)
         {
             if (model == null) return null;
 
@@ -42,14 +43,14 @@ namespace Service.Report.Mapper
                                Id = Guid.NewGuid(),
                                Fecha = new DateTime(grupo.Key.Year, grupo.Key.Month, 1).ToString("MM/yyyy"),
                                Solicitudes = grupo.Count(),
-                               CantidadTelefono = grupo.GroupBy(x => new { x.Expediente.Expediente, x.Expediente.Celular}).Count(x => !string.IsNullOrWhiteSpace(x.Key.Celular)),
-                               CantidadCorreo = grupo.GroupBy(x => new { x.Expediente.Expediente, x.Expediente.Correo }).Count(x => !string.IsNullOrWhiteSpace(x.Key.Correo)),
+                               CantidadTelefono = grupo.GroupBy(x => new { x.Expediente, x.Celular}).Count(x => !string.IsNullOrWhiteSpace(x.Key.Celular)),
+                               CantidadCorreo = grupo.GroupBy(x => new { x.Expediente, x.Correo }).Count(x => !string.IsNullOrWhiteSpace(x.Key.Correo)),
                            }).ToList();
 
             return results;
         }
 
-        private static string GetStatus(IEnumerable<RequestStudy> studies)
+        private static string GetStatus(IEnumerable<RequestStudies> studies)
         {
             string status = string.Empty;
             if (studies == null || !studies.Any()) return status;

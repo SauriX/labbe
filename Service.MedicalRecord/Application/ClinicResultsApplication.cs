@@ -1,6 +1,5 @@
 ﻿using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Dtos;
-using Service.MedicalRecord.Dtos.RequestedStudy;
 using Service.MedicalRecord.Dtos.Sampling;
 using Service.MedicalRecord.Repository.IRepository;
 using System;
@@ -17,7 +16,6 @@ using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.ClinicResults;
 using System.Net;
 using SharedResponses = Shared.Dictionary.Responses;
-using SharedDepartment = Shared.Dictionary.Catalogs.Department;
 using Shared.Error;
 using Shared.Dictionary;
 using Service.MedicalRecord.Client.IClient;
@@ -34,6 +32,7 @@ using Microsoft.Extensions.Configuration;
 using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Dtos.MassSearch;
 using System.Text;
+using ClosedXML.Report.Utils;
 
 namespace Service.MedicalRecord.Application
 {
@@ -126,80 +125,96 @@ namespace Service.MedicalRecord.Application
 
             return (template.ToByteArray(), $"Informe Captura de Resultados (Clínicos).xlsx");
         }
-        
+
         public async Task<(byte[] file, string fileName)> ExportGlucoseChart(ClinicResultsFormDto result)
         {
             var studies = await _repository.GetResultsById(result.SolicitudId);
-            var request = await _repository.GetRequestById(result.SolicitudId); 
-            var glucoseStudy = studies.Where(x => x.EstudioId == 631).Where(x => x.TipoValorId == "6" || x.TipoValorId == "1").Where(x => x.Clave != "_OB_CTG");
+            var request = await _repository.GetRequestById(result.SolicitudId);
+            var glucoseStudy = studies.Where(x => x.EstudioId == 631).Where(x => x.TipoValorId == "6" || x.TipoValorId == "1").Where(x => x.Clave != "_OB_CTG").Where(x => !string.IsNullOrWhiteSpace(x.Resultado));
 
             var path = Assets.ToleranciaGlucosa;
+            var template = new XLTemplate(path);
 
             List<object> glucoseParams = new List<object>();
+            var lastTime = "";
 
-            foreach(var param in glucoseStudy.OrderBy(x => x.Orden))
+            foreach (var param in glucoseStudy.OrderBy(x => x.Orden))
             {
                 var numericResult = Convert.ToDecimal(param.Resultado);
-                if(param.Clave == "_GLU_SU")
+                if (param.Clave == "_GLU_SU")
                 {
                     glucoseParams.Add(new
                     {
                         Estudio = "0",
                         Resultado = numericResult
                     });
+                    lastTime = "CERO HORAS";
                 }
-                if(param.Clave == "_GLU_SU30")
+
+                if (param.Clave == "_GLU_SU30")
                 {
                     glucoseParams.Add(new
                     {
                         Estudio = "30",
                         Resultado = numericResult
                     });
-                }if(param.Clave == "_GLU_SU60")
+                    lastTime = "MEDIA HORA";
+                }
+
+                if (param.Clave == "_GLU_SU60")
                 {
                     glucoseParams.Add(new
                     {
                         Estudio = "60",
                         Resultado = numericResult
                     });
+                    lastTime = "UNA HORA";
                 }
-                if(param.Clave == "_GLU_SU90")
+                if (param.Clave == "_GLU_SU90")
                 {
                     glucoseParams.Add(new
                     {
                         Estudio = "90",
                         Resultado = numericResult
                     });
-                }if(param.Clave == "_GLU_SU120")
+                    lastTime = "HORA Y MEDIA";
+                }
+
+                if (param.Clave == "_GLU_SU120")
                 {
                     glucoseParams.Add(new
                     {
                         Estudio = "120",
-                        Resultado = numericResult
+                        Resultado = numericResult,
                     });
+                    lastTime = "DOS HORAS";
                 }
-                if(param.Clave == "_GLU_SU180")
+
+                if (param.Clave == "_GLU_SU180")
                 {
                     glucoseParams.Add(new
                     {
                         Estudio = "180",
                         Resultado = numericResult
                     });
-                }if(param.Clave == "_GLU_SU240")
+                    lastTime = "TRES HORAS";
+                }
+
+                if (param.Clave == "_GLU_SU240")
                 {
                     glucoseParams.Add(new
                     {
                         Estudio = "240",
                         Resultado = numericResult
                     });
+                    lastTime = "CUATRO HORAS";
                 }
             }
-
-            var template = new XLTemplate(path);
 
             template.AddVariable("NombrePaciente", request.Expediente.NombreCompleto);
             template.AddVariable("Medico", request.Medico.Nombre);
             template.AddVariable("Fecha", DateTime.Now.ToString("f"));
+            template.AddVariable("Tiempo", lastTime);
             template.AddVariable("Estudios", glucoseParams);
 
             template.Generate();
@@ -235,6 +250,24 @@ namespace Service.MedicalRecord.Application
             var resultsIds = results.Select(x => x.SolicitudEstudioId).ToList();
             var totalParams = studiesParams.SelectMany(x => x.Parametros).Count();
 
+            List<RequestStudy> methodStudies = new List<RequestStudy>();
+
+            foreach(var studyMethod in studies.Where(x => x.Metodo == null))
+            {
+                var method = studiesParams.FirstOrDefault(x => x.Id == studyMethod.EstudioId).Metodo;
+                if (method != null)
+                {
+                    studyMethod.Metodo = method;
+                    methodStudies.Add(studyMethod);
+                }
+                    
+            }
+
+            if (methodStudies.Any())
+            {
+                await _request.BulkInsertUpdateStudies(requestId, methodStudies);
+            }
+
             if (results.Count < totalParams)
             {
                 var missingParams = new List<ParameterListDto>();
@@ -261,6 +294,8 @@ namespace Service.MedicalRecord.Application
                         }
                         resultsIds.Add(study.Id);
                     }
+                    study.Metodo = currentStudy.Metodo;
+
                 }
 
 
@@ -284,7 +319,8 @@ namespace Service.MedicalRecord.Application
                     Formula = x.Formula,
                     UltimoResultado = x?.UltimoResultado,
                     DeltaCheck = x.DeltaCheck,
-                    Orden = i
+                    Orden = i,
+                    FCSI = x.FCSI
                 }).ToList();
 
                 // Crear Los que no existen
@@ -300,13 +336,14 @@ namespace Service.MedicalRecord.Application
 
                 study.Parametros = st.Parametros;
                 study.Indicaciones = st.Indicaciones;
+                study.Metodo = st.Metodo;
 
                 foreach (var param in study.Parametros)
                 {
                     var result = results.Find(x => x.SolicitudEstudioId == study.Id && x.ParametroId.ToString() == param.Id);
-                    if(result != null)
+                    if (result != null)
                     {
-                        if (!string.IsNullOrWhiteSpace(result.Formula) && result.Resultado != null)
+                        if (!string.IsNullOrWhiteSpace(result.Formula) && !string.IsNullOrWhiteSpace(result.Resultado))
                         {
                             param.Resultado = GetFormula(results.Where(x => x.SolicitudEstudioId == study.Id && x.Clave != null).ToList(), result.Formula);
                         }
@@ -441,19 +478,16 @@ namespace Service.MedicalRecord.Application
                     }
                 }
             }
-
-            //if (requestStudies != null && requestStudies.Where(x => x.Id != requestStudyId).All(x => x.EstatusId != Status.RequestStudy.Enviado || x.EstatusId != Status.RequestStudy.Cancelado))
-            //{
-            //    canSend = true;
-            //}
             return requestStudies;
         }
+
         private bool canSendResultBalance(Request request)
         {
-            
+
             return request.Procedencia == PARTICULAR && request.Saldo != 0 ? false : true;
-            
+
         }
+
         public async Task UpdateLabResults(List<ClinicResultsFormDto> results, bool EnvioManual)
         {
             var request = (await _repository.GetLabResultsById(results.First().SolicitudEstudioId)).FirstOrDefault();
@@ -479,7 +513,7 @@ namespace Service.MedicalRecord.Application
                 var newResults = results.ToCaptureResults();
                 for (int i = 0; i < newResults.Count; i++)
                 {
-                    if (!string.IsNullOrWhiteSpace(newResults[i].Formula))
+                    if (!string.IsNullOrWhiteSpace(newResults[i].Formula) || newResults[i].Formula.Trim().Length > 0)
                         newResults[i].Resultado = GetFormula(newResults, newResults[i].Formula);
                 }
                 await _repository.UpdateLabResults(newResults);
@@ -495,15 +529,19 @@ namespace Service.MedicalRecord.Application
                         .Where(x => x.Id == request.SolicitudEstudioId)
                         .Select(x => x.Id).ToList();
 
+                    List<int> studyLabResults = new List<int> { };
                     List<ClinicResults> resultsTask = new List<ClinicResults>();
 
                     foreach (var resultPath in labResults)
                     {
                         var finalResult = await _repository.GetLabResultsById(resultPath);
                         resultsTask.AddRange(finalResult);
+                        studyLabResults.AddRange(resultsTask.Select(x => x.EstudioId));
                     }
 
-                    var existingLabResultsPdf = resultsTask.ToResults(true, true, true);
+                    var paramReferenceValues = await ReferencesValues(studyLabResults);
+
+                    var existingLabResultsPdf = resultsTask.ToResults(true, true, true, paramReferenceValues);
 
                     byte[] pdfBytes = await _pdfClient.GenerateLabResults(existingLabResultsPdf);
                     string namePdf = string.Concat(request.Solicitud.Clave, ".pdf");
@@ -731,7 +769,7 @@ namespace Service.MedicalRecord.Application
             foreach (var estudiosSeleccionados in estudios.Estudios)
             {
                 var existingRequest = await _repository.GetRequestById(estudiosSeleccionados.SolicitudId);
-                
+
                 List<RequestStudy> studiesToUpdate = new List<RequestStudy>();
 
                 var files = new List<SenderFiles>();
@@ -742,9 +780,11 @@ namespace Service.MedicalRecord.Application
 
                 List<ClinicResults> resultsTask = new List<ClinicResults>();
 
+                List<int> labResults = new List<int>();
+
                 foreach (var estudioId in estudiosSeleccionados.EstudiosId)
                 {
-                        
+
 
                     if (estudioId.Tipo == Catalogs.Area.HISTOPATOLOGIA)
                     {
@@ -773,12 +813,12 @@ namespace Service.MedicalRecord.Application
 
                         resultsTask.AddRange(finalResult);
 
-
+                        labResults.AddRange(resultsTask.Select(x => x.EstudioId));
                     }
 
                     RequestStudy estudioActual = await _repository.GetRequestStudyById(estudioId.EstudioId);
 
-                    if (estudioActual != null )
+                    if (estudioActual != null)
                     {
 
                         studiesToUpdate.Add(estudioActual);
@@ -807,8 +847,9 @@ namespace Service.MedicalRecord.Application
                 }
                 if (resultsTask.Count > 0)
                 {
+                    var paramReferenceValues = await ReferencesValues(labResults);
 
-                    var existingLabResultsPdf = resultsTask.ToResults(true, true, true);
+                    var existingLabResultsPdf = resultsTask.ToResults(true, true, true, paramReferenceValues);
 
                     byte[] pdfBytes = await _pdfClient.GenerateLabResults(existingLabResultsPdf);
                     string namePdf = string.Concat(existingRequest.Clave, ".pdf");
@@ -819,27 +860,26 @@ namespace Service.MedicalRecord.Application
 
                     files.Add(new SenderFiles(new Uri(pathName), namePdf));
                 }
-                
+
                 try
                 {
                     if (files.Count > 0 && canSendResultBalance(existingRequest))
                     {
-                        if (estudios.MediosEnvio.Contains("Whatsapp"))
+                        if (estudios.MediosEnvio.Contains("Whatsapp") && !string.IsNullOrEmpty(existingRequest.EnvioWhatsApp))
                         {
                             await SendTestWhatsapp(files, existingRequest.EnvioWhatsApp, estudios.UsuarioId);
 
                         }
 
-                        if (estudios.MediosEnvio.Contains("Correo"))
+                        if (estudios.MediosEnvio.Contains("Correo") && !string.IsNullOrEmpty(existingRequest.EnvioCorreo))
                         {
 
                             await SendTestEmail(files, existingRequest.EnvioCorreo, estudios.UsuarioId);
                         }
 
-                        //foreach (var estudio in existingRequest.Estudios)
                         foreach (var estudio in studiesToUpdate)
                         {
-                                await UpdateStatusStudy(estudio.Id, Status.RequestStudy.Enviado, estudios.Usuario);
+                            await UpdateStatusStudy(estudio.Id, Status.RequestStudy.Enviado, estudios.Usuario);
                         }
                     }
 
@@ -848,7 +888,7 @@ namespace Service.MedicalRecord.Application
                 {
                     throw ex;
                 }
-                
+
             }
 
             return true;
@@ -874,6 +914,7 @@ namespace Service.MedicalRecord.Application
                 .Select(x => x.Id)
                 .ToList();
 
+            List<int> studyLabResults = new List<int> { };
             var files = new List<SenderFiles>();
 
             if (pathologicalResults.Count > 0)
@@ -917,9 +958,12 @@ namespace Service.MedicalRecord.Application
                 {
                     var finalResult = await _repository.GetLabResultsById(resultPath);
                     resultsTask.AddRange(finalResult);
+                    studyLabResults.AddRange(resultsTask.Select(x => x.EstudioId));
                 }
 
-                var existingLabResultsPdf = resultsTask.ToResults(true, true, true);
+                var paramReferenceValues = await ReferencesValues(studyLabResults);
+
+                var existingLabResultsPdf = resultsTask.ToResults(true, true, true, paramReferenceValues);
 
                 byte[] pdfBytes = await _pdfClient.GenerateLabResults(existingLabResultsPdf);
                 string namePdf = string.Concat(existingRequest.Clave, ".pdf");
@@ -999,6 +1043,7 @@ namespace Service.MedicalRecord.Application
         public async Task<byte[]> PrintSelectedStudies(ConfigurationToPrintStudies configuration)
         {
             List<int> labResults = new List<int> { };
+            List<int> studyLabResults = new List<int> { };
             List<int> pathologicalResults = new List<int> { };
 
             foreach (var config in configuration.Estudios)
@@ -1028,14 +1073,25 @@ namespace Service.MedicalRecord.Application
             {
                 var finalResult = await _repository.GetLabResultsById(resultLabPathId);
                 labResultsTask.AddRange(finalResult.Where(x => x.SolicitudEstudioId == resultLabPathId));
+                studyLabResults.AddRange(finalResult.Where(x => x.TipoValorId == "11").Select(x => x.EstudioId));
             }
 
+            var paramReferenceValues = await ReferencesValues(studyLabResults);
+
             var existingResultPathologyPdf = resultsTask.toInformationPdfResult(configuration.ImprimirLogos);
-            var existingLabResultPdf = labResultsTask.ToList().ToResults(configuration.ImprimirLogos, configuration.ImprimirCriticos, configuration.ImprimirPrevios);
+            var existingLabResultPdf = labResultsTask.ToList().ToResults(configuration.ImprimirLogos, configuration.ImprimirCriticos, configuration.ImprimirPrevios, paramReferenceValues);
 
             byte[] pdfBytes = await _pdfClient.MergeResults(existingResultPathologyPdf, existingLabResultPdf);
 
             return pdfBytes;
+        }
+
+        public async Task<List<ParameterValueDto>> ReferencesValues(List<int> studies)
+        {
+            var studiesParams = await _catalogClient.GetStudies(studies);
+            var paramReferenceValues = studiesParams.SelectMany(x => x.Parametros.Where(y => y.TipoValor == "11")).SelectMany(x => x.TipoValores).ToList();
+
+            return paramReferenceValues;
         }
 
         public async Task UpdateStatusStudy(int RequestStudyId, byte status, string usuario)
@@ -1103,7 +1159,7 @@ namespace Service.MedicalRecord.Application
         {
             StringBuilder message = new(formula);
 
-            foreach (var par in parameters.OrderByDescending(x => x.Clave.Length))
+            foreach (var par in parameters.OrderByDescending(x => x.Clave.Length).Where(x => !string.IsNullOrEmpty(x.Resultado)))
             {
                 message.Replace(par.Clave, par.Resultado);
             }

@@ -56,7 +56,7 @@ namespace Integration.Pdf.Service
 
             section.PageSetup = document.DefaultPageSetup.Clone();
 
-            section.PageSetup.Orientation = Orientation.Portrait;
+            section.PageSetup.Orientation = Orientation.Landscape;
             section.PageSetup.PageFormat = PageFormat.A4;
 
             section.PageSetup.TopMargin = Unit.FromCentimeter(1);
@@ -71,12 +71,14 @@ namespace Integration.Pdf.Service
 
         static void Format(Section section, List<Col> columns, List<ChartSeries> seriesInfo, List<Dictionary<string, object>> data, List<Dictionary<string, object>> datachart, InvoiceData invoice, List<Col> totalColumns, Dictionary<string, object> totales, HeaderData Header)
         {
-            var fontTitle = new Font("calibri", 20);
-            var fontSubtitle = new Font("calibri", 16);
-            var fontText = new Font("calibri", 12);
+            var fontTitle = new Font("calibri", 14);
+            var fontSubtitle = new Font("calibri", 12);
             var fontTitleChart = new Font("calibri", 11) { Bold = true };
+            var fontText = new Font("calibri", 10);
 
-            var title = new Col(Header.NombreReporte, fontTitle);
+            var contentWidth = section.PageSetup.PageHeight - section.PageSetup.LeftMargin - section.PageSetup.RightMargin;
+
+            var title = Header.NombreReporte;
             var branchType = "Sucursal " + Header.Sucursal;
             var periodType = "Periodo: " + Header.Fecha;
 
@@ -85,28 +87,41 @@ namespace Integration.Pdf.Service
                 branchType = Header.Sucursal = "Todas las Sucursales";
             }
 
-            var branch = new Col(branchType, fontSubtitle);
-            var period = new Col(periodType, fontSubtitle);
+            var printDate = "Fecha de impresión: " + DateTime.Now.ToString("dd/MM/yyyy");
+            var logo = File.ReadAllBytes(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets\\LabRamosLogo.png"));
 
+            Table headerTable = new Table();
 
-            var printDate = new Col("Fecha de impresión: " + DateTime.Now.ToString("dd/MM/yyyy"), fontText, ParagraphAlignment.Right);
-            var logo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets\\LabRamosLogo.png");
+            Column headerColumn = headerTable.AddColumn();
+            headerColumn.Width = contentWidth / 7 * 2;
+            headerColumn.Format.Alignment = ParagraphAlignment.Center;
 
-            section.AddImage(logo);
-            section.AddText(title);
-            section.AddSpace(10);
-            section.AddText(branch);
-            if(!string.IsNullOrWhiteSpace(Header.Extra))
+            Row headerRow = headerTable.AddRow();
+            Paragraph headerParagraph = headerRow.Cells[0].AddParagraph();
+            headerParagraph.AddFormattedText(Header.NombreReporte + "\n", fontTitle);
+            headerParagraph.AddFormattedText(branchType + "\n", fontSubtitle);
+            headerParagraph.AddFormattedText(periodType + "\n", fontSubtitle);
+            if (!string.IsNullOrWhiteSpace(Header.Extra))
             {
-                var company = new Col(Header.Extra, fontSubtitle);
-                section.AddText(company);
+                headerParagraph.AddFormattedText(Header.Extra + "\n", fontSubtitle);
             }
-            section.AddText(period);
-            section.AddSpace(5);
-            section.AddText(printDate);
-            section.AddSpace(10);
+            headerParagraph.AddFormattedText(printDate, fontText);
 
-            var contentWidth = section.PageSetup.PageWidth - section.PageSetup.LeftMargin - section.PageSetup.RightMargin;
+            var headerInfo = new Col[]
+            {
+                new Col(logo, 3, ParagraphAlignment.Left)
+                {
+                    ImagenTamaño = Unit.FromCentimeter(5)
+                },
+                new Col("", 5, ParagraphAlignment.Right)
+                {
+                    Tabla = headerTable
+                }
+            };
+
+            section.AddText(headerInfo);
+
+            section.AddSpace();
 
             Table table = new Table();
             table.Borders.Width = 0.75;
@@ -205,18 +220,31 @@ namespace Integration.Pdf.Service
                         var childrenData = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(item["Children"].ToString());
 
                         var noCol = childrenData.Max(x => x.Count);
+                        var cellSize = (int)contentWidth / noCol;
 
                         for (int i = 0; i < noCol; i++)
                         {
-                            Column column = childrenTable.AddColumn(contentWidth / noCol);
+                            Column column = childrenTable.AddColumn(contentWidth / noCol + 1);
                         }
 
+                        Dictionary<string, object> titles = new Dictionary<string, object>
+                        {
+                            {"Clave", "Clave"},
+                            {"Estudio", "Estudio"},
+                            {"Precio", "Precio"},
+                            {"Desc.", "Desc."},
+                            {"Paquete", "Paquete"},
+                            {"Promoción", "Promoción"},
+                        };
+
+                        childrenData.Insert(0, titles);
+
                         Row childrenRow = childrenTable.AddRow();
-                        Cell titleCell = childrenRow.Cells[0];
-                        titleCell.Borders.Visible = false;
-                        titleCell.MergeRight = noCol - 1;
-                        var paragraph = titleCell.AddParagraph();
-                        paragraph.AddFormattedText("Estudio", fontTitleChart);
+                        Cell titleCell_1 = childrenRow.Cells[0];
+                        titleCell_1.Borders.Visible = false;
+                        titleCell_1.MergeRight = noCol - 1;
+                        var paragraphCell_1 = titleCell_1.AddParagraph();
+                        paragraphCell_1.AddFormattedText("Estudio(s)", fontTitleChart);
 
                         for (int i = 0; i < childrenData.Count; i++)
                         {
@@ -231,6 +259,8 @@ namespace Integration.Pdf.Service
                                 childrenCell.Borders.Visible = false;
 
                                 childrenCell.AddParagraph(values[j].ToString());
+
+
                             }
                         }
 

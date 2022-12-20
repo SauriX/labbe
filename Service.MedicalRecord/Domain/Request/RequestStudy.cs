@@ -32,12 +32,15 @@ namespace Service.MedicalRecord.Domain.Request
         public bool AplicaCopago { get; set; }
         public int? TaponId { get; set; }
         public virtual Cap Tapon { get; set; }
+        public int? MaquilaId { get; set; }
+        public virtual Maquila Maquila { get; set; }
         public decimal Precio { get; set; }
         public decimal Descuento { get; set; }
         public decimal DescuentoPorcentaje { get; set; }
         public decimal PrecioFinal { get; set; }
         public string MedioSolicitado { get; set; }
         public string Observacion { get; set; }
+        public string Metodo { get; set; }
         public virtual RequestStudyWee EstudioWeeClinic { get; set; }
         // Fechas Actualizacion
         public DateTime? FechaPendiente { get; set; }

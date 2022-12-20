@@ -16,16 +16,23 @@ namespace Service.Report.Application
     public class MedicalStatsApplication : BaseApplication, IMedicalStatsApplication
     {
         public readonly IReportRepository _repository;
+        private readonly IMedicalRecordClient _medicalRecordService;
         private readonly IPdfClient _pdfClient;
 
-        public MedicalStatsApplication(IReportRepository repository, IPdfClient pdfClient, IRepository<Branch> branchRepository, IRepository<Medic> medicRepository) : base(branchRepository, medicRepository)
+        public MedicalStatsApplication(IReportRepository repository,
+            IMedicalRecordClient medicalRecordService,
+            IPdfClient pdfClient,
+            IRepository<Branch> branchRepository,
+            IRepository<Medic> medicRepository) : base(branchRepository, medicRepository)
         {
+            _medicalRecordService = medicalRecordService;
             _repository = repository;
             _pdfClient = pdfClient;
         }
+
         public async Task<IEnumerable<MedicalStatsDto>> GetByFilter(ReportFilterDto filter)
         {
-            var data = await _repository.GetByFilter(filter);
+            var data = await _medicalRecordService.GetRequestByFilter(filter);
             var results = data.ToMedicalStatsDto();
 
             return results;
