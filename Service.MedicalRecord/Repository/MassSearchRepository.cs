@@ -30,6 +30,13 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Estudios).ThenInclude(x => x.Estatus)
                 .AsQueryable();
 
+            if (!string.IsNullOrWhiteSpace(filter.Clave))
+            {
+                requests = requests.Where(x => x.Clave.ToLower().Contains(filter.Clave)
+                || x.ClavePatologica.ToLower().Contains(filter.Clave)
+                || (x.Expediente.NombrePaciente + " " + x.Expediente.PrimerApellido + " " + x.Expediente.SegundoApellido).ToLower().Contains(filter.Clave));
+            }
+
             if (filter.TipoFecha != null && filter.TipoFecha == 1 && filter.FechaInicial != null && filter.FechaFinal != null)
             {
                 requests = requests.Where(x => ((DateTime)filter.FechaInicial).Date <= x.FechaCreo.Date && ((DateTime)filter.FechaFinal).Date >= x.FechaCreo.Date);
@@ -89,7 +96,6 @@ namespace Service.MedicalRecord.Repository
                     requests = requests.Where(x => !string.IsNullOrEmpty(x.EnvioCorreo));
                 }
             }
-            //validar medio de entrega
 
             return await requests.ToListAsync();
         }
