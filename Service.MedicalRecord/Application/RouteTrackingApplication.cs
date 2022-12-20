@@ -61,7 +61,7 @@ namespace Service.MedicalRecord.Application
         public async Task<int> UpdateStatus(List<RequestedStudyUpdateDto> requestDto)
         {
             try
-            {
+            {   
                 
                 /* foreach (var item in requestDto)
                  {
