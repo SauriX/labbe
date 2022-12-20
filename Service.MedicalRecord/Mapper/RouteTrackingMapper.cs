@@ -57,14 +57,14 @@ namespace Service.MedicalRecord.Mapper
                 Id = x.EstudioId,
                 Nombre = x.Estudio,
                 Area = "",
-                Status = x.Escaneado?2:1,
+                Status = x.Solicitud.Estudios.Where(y=>y.EstudioId==x.EstudioId).FirstOrDefault().EstatusId ,
                 Registro = x.FechaCreo.ToString(),
                 Seleccion = false,
                 Clave = x.Solicitud.Clave,
                 Expedienteid=x.ExpedienteId.ToString(),
             Solicitudid =x.SolicitudId.ToString(),
-            Entrega=x.FechaMod==System.DateTime.MinValue?"":x.FechaMod.ToString()
-        // NombreEstatus = x.Estatus.Nombre,
+            Entrega=x.FechaMod==System.DateTime.MinValue?"":x.FechaMod.ToString(),
+         NombreEstatus = x.Solicitud.Estudios.Where(y => y.EstudioId == x.EstudioId).FirstOrDefault().Estatus.Nombre ,
     }).ToList();
         }
     }

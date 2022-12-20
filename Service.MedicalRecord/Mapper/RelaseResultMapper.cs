@@ -40,10 +40,12 @@ namespace Service.MedicalRecord.Mapper
                 Area = "",
                 Status = x.Estatus.Nombre,
                 Estatus = x.EstatusId,
-                Registro = x.FechaModifico !=null? x.FechaCreo.ToString(): x.FechaModifico.ToString(),
+                Registro = x.FechaModifico !=null? x.FechaModifico.ToString() : x.FechaCreo.ToString(),
                 Entrega = x.FechaEntrega.ToString(),
-                Tipo = urgencia == 1 ? true : false,
-                SolicitudId = x.SolicitudId
+                Tipo = urgencia == 1 ? true : false, 
+                SolicitudId = x.SolicitudId,
+                Nombre = x.Nombre,
+                Clave = x.Clave.ToString(),
 
             }).ToList();
         }
