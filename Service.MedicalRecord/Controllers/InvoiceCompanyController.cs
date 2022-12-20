@@ -10,17 +10,17 @@ namespace Service.MedicalRecord.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class InvoiceCompany : ControllerBase
+    public class InvoiceCompanyController : ControllerBase
     {
         private readonly IInvoiceCompanyApplication _service;
-        public InvoiceCompany(IInvoiceCompanyApplication service)
+        public InvoiceCompanyController(IInvoiceCompanyApplication service)
         {
             _service = service;
         }
 
         [HttpPost("filter")]
-        [Authorize(Policies.Access)]
-        public async Task<IEnumerable<InvoiceCompanyInfoDto>> GetByFilter(InvoiceCompanyFilterDto filter)
+        //[Authorize(Policies.Access)]
+        public async Task<InvoiceCompanyInfoDto> GetByFilter(InvoiceCompanyFilterDto filter)
         {
             return await _service.GetByFilter(filter);
         }
