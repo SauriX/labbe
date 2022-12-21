@@ -224,7 +224,7 @@ namespace Service.Catalog.Mapper
             return new PriceListInfoStudyDto
             {
                 ListaPrecioId = model.PrecioListaId,
-                ListaPrecio = model.PrecioLista.Nombre,
+                ListaPrecio = model.PrecioLista?.Nombre,
                 EstudioId = model.EstudioId,
                 Nombre = model.Estudio.Nombre,
                 Clave = model.Estudio.Clave,
