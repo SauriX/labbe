@@ -67,7 +67,7 @@ namespace Service.Catalog.Application
 
             var price = await _repository.GetPriceStudyById((int)filterDto.EstudioId, filterDto.SucursalId, filterDto.CompañiaId);
 
-            if ((price == null || price.Precio <= 0) && !filterDto.OmitirPrecio)
+            if (price == null || price.Precio <= 0)
             {
                 throw new CustomException(HttpStatusCode.NotFound, "Lista de precios no configurada");
             }
