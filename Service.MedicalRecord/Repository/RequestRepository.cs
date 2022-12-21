@@ -243,6 +243,8 @@ namespace Service.MedicalRecord.Repository
             _context.CAT_Solicitud.Update(request);
 
             await _context.SaveChangesAsync();
+
+            _context.ChangeTracker.Clear();
         }
 
         public async Task UpdateImage(RequestImage requestImage)

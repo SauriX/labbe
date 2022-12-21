@@ -25,6 +25,7 @@ namespace Service.MedicalRecord.Dtos.Promotion
         public Guid MedicoId { get; set; }
         public Guid CompañiaId { get; set; }
         public Guid ListaPrecioId { get; set; }
+        public bool OmitirPrecio { get; set; }
         public List<string> Estudios { get; set; } = new List<string>();
     }
 }
