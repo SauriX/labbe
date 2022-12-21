@@ -178,6 +178,7 @@ namespace Service.MedicalRecord.Client
         {
             try
             {
+                studies.OmitirPrecio = true;
                 var json = JsonConvert.SerializeObject(studies);
 
                 var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
