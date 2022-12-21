@@ -227,8 +227,8 @@ namespace Service.MedicalRecord.Application
 
             requestDto.Clave = code;
             var newRequest = requestDto.ToModel();
-            newRequest.MedicoId = null; //MEDICS.A_QUIEN_CORRESPONDA;
-            newRequest.CompañiaId = null; //COMPANIES.PARTICULARES;
+            newRequest.MedicoId = MEDICS.A_QUIEN_CORRESPONDA;
+            newRequest.CompañiaId = COMPANIES.PARTICULARES;
             newRequest.CargoTipo = CANTIDAD;
             newRequest.CopagoTipo = CANTIDAD;
             newRequest.DescuentoTipo = CANTIDAD;
@@ -1115,6 +1115,8 @@ namespace Service.MedicalRecord.Application
 
             var studyAndPack = studies.Select(x => new { x.AplicaCargo, x.AplicaCopago, x.AplicaDescuento, x.Precio, x.PrecioFinal })
                 .Concat(packs.Select(x => new { x.AplicaCargo, x.AplicaCopago, x.AplicaDescuento, x.Precio, x.PrecioFinal }));
+
+            totals ??= request.ToRequestTotalDto();
 
             var totalStudies = studyAndPack.Sum(x => x.PrecioFinal);
             var final = totalStudies - totals.Descuento + totals.Cargo;
