@@ -175,7 +175,7 @@ namespace Service.MedicalRecord.Mapper
                     Clave = y.Clave,
                     NombrePaciente = y.Solicitud.Expediente.NombreCompleto,
                     Solicitud = y.Solicitud.Clave,
-                    TaponNombre = y.Tapon.Clave,
+                    TaponNombre = y.Tapon?.Clave,
                     SolicitudId = y.Solicitud.Id,
                     ExpedienteId = y.Solicitud.ExpedienteId
                 }).ToList(),

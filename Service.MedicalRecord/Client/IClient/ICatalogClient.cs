@@ -17,5 +17,7 @@ namespace Service.MedicalRecord.Client.IClient
         Task<List<PriceListInfoPromoDto>> GetPacksPromos(List<PriceListInfoFilterDto> packs);
         Task<BranchFormDto> GetBranch(Guid id);
         Task<RouteFormDto> GetRuta(Guid id);
+        Task<List<RouteFormDto>> GetRutas(List<Guid> id);
+
     }
 }

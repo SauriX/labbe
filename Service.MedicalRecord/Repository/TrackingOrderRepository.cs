@@ -96,13 +96,24 @@ namespace Service.MedicalRecord.Repository
         {
             var listaEstudio = _context.Relacion_Solicitud_Estudio
                 .Include(x => x.Solicitud).ThenInclude(x => x.Expediente)
+                .Include(x=>x.Solicitud)
                 .Include(x => x.Tapon)
                 .AsQueryable();
+            var ordenes = _context.CAT_Seguimiento_Ruta.Include(x => x.Estudios) ;
+            List<Domain.Request.RequestStudy> newlistestudios = new List<Domain.Request.RequestStudy>();
 
+            foreach (var estudio in listaEstudio) {
+                if (!ordenes.Any(x => x.Estudios.Any(y => y.EstudioId == estudio.EstudioId && y.SeguimientoId == estudio.SolicitudId))) {
+
+                    newlistestudios.Add(estudio);
+                        }
+            }
+
+            listaEstudio = newlistestudios.AsQueryable();
             listaEstudio = listaEstudio.Where(x => estudios.Contains(x.EstudioId));
 
-            listaEstudio = listaEstudio.Where(x => x.EstatusId == Status.RequestStudy.TomaDeMuestra || x.EstatusId == Status.RequestStudy.Pendiente);
-
+            listaEstudio = listaEstudio.Where(x => x.EstatusId == Status.RequestStudy.TomaDeMuestra || x.EstatusId ==    Status.RequestStudy.Pendiente);
+                
             return await listaEstudio.ToListAsync();
         }
 

@@ -32,7 +32,7 @@ namespace Service.MedicalRecord.Controllers
         }
 
         [HttpPut]
-      //  [Authorize(Policies.Update)]
+        [Authorize(Policies.Update)]
         public async Task UpdateStatus(List<RequestedStudyUpdateDto> requestDto)
         {
             await _service.UpdateStatus(requestDto);

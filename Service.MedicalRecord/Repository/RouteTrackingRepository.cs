@@ -11,8 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static Service.MedicalRecord.Dictionary.Status;
 
+using Service.MedicalRecord.Domain.Request;
 namespace Service.MedicalRecord.Repository
 {
     public class RouteTrackingRepository:IRouteTrackingRepository
@@ -23,9 +23,37 @@ namespace Service.MedicalRecord.Repository
         {
             _context = context;
         }
+        public async Task<Request> FindAsync(Guid id)
+        {
+            var report = _context.CAT_Solicitud
+                   .Include(x => x.Estudios);
+            var request = await _context.CAT_Solicitud.FindAsync(id);
 
+            return request;
+        }
+        public async Task<List<RequestStudy>> GetStudyById(Guid requestId, IEnumerable<int> studiesIds)
+        {
+            var studies = await _context.Relacion_Solicitud_Estudio
+                .Where(x => x.SolicitudId == requestId && studiesIds.Contains(x.EstudioId))
+                .ToListAsync();
+
+
+            return studies;
+        }
+        public async Task BulkUpdateStudies(Guid requestId, List<RequestStudy> studies)
+        {
+            var config = new BulkConfig();
+            config.SetSynchronizeFilter<RequestStudy>(x => x.SolicitudId == requestId);
+
+            await _context.BulkUpdateAsync(studies, config);
+        }
         public async Task<List<TrackingOrder>> GetAll(RouteTrackingSearchDto search) {
-            var routeTrackingList = _context.CAT_Seguimiento_Ruta.Where(x => x.Estudios.Any(y => y.Solicitud.Estudios.Any(m=>m.EstatusId==Status.RequestStudy.TomaDeMuestra|| m.EstatusId == Status.RequestStudy.EnRuta))).Include(x => x.Estudios).ThenInclude(x=>x.Solicitud.Sucursal).Include(x => x.Estudios).ThenInclude(x=>x.Solicitud.Estudios).ThenInclude(x=>x.Estatus).AsQueryable();
+            var routeTrackingList = _context.CAT_Seguimiento_Ruta.Where(x => x.Estudios.Any(y => y.Solicitud.Estudios.Any(m=>m.EstatusId==Status.RequestStudy.TomaDeMuestra|| m.EstatusId == Status.RequestStudy.EnRuta)))
+                .Include(x => x.Estudios)
+                .ThenInclude(x=>x.Solicitud.Sucursal)
+                .Include(x => x.Estudios)
+                .ThenInclude(x=>x.Solicitud.Estudios.Where(m=>m.EstatusId==Status.RequestStudy.TomaDeMuestra|| m.EstatusId == Status.RequestStudy.EnRuta))
+                .ThenInclude(x=>x.Estatus).AsQueryable();
 
             if (search.Fechas != null && search.Fechas.Length != 0)
             {

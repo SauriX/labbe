@@ -56,6 +56,17 @@
       "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
     {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/route/multiple",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/route/multiple",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
       "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/route/export/list/{search}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [

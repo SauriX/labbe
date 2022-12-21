@@ -3,13 +3,14 @@ using Service.MedicalRecord.Domain.RouteTracking;
 using Service.MedicalRecord.Domain.TrackingOrder;
 using Service.MedicalRecord.Dtos.RouteTracking;
 using Service.MedicalRecord.Dtos.Sampling;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 
 namespace Service.MedicalRecord.Mapper
 {
-    public static  class RouteTrackingMapper
+    public static class RouteTrackingMapper
     {
         public static List<RouteTrackingListDto> ToRouteTrackingDto(this ICollection<TrackingOrder> model)
         {
@@ -21,10 +22,11 @@ namespace Service.MedicalRecord.Mapper
                 Seguimiento = x.Clave,
                 Clave = x.Clave,
                 Sucursal = x.Estudios.Count > 0 ? x.Estudios.FirstOrDefault().Solicitud.Sucursal.Nombre : "",
-                Fecha = x.FechaCreo,
+                Fecha = x.FechaCreo.ToString(),
                 Status = x.Activo.ToString(),
-                Estudios = x.Estudios.ToList().ToStudyRouteTrackingDto(),
-               
+                Estudios = x.Estudios.ToList().ToStudyRouteTrackingDto(x.Id),
+                rutaId = Guid.Parse(x.RutaId)
+
             }).ToList();
         }
         public static RouteTrackingFormDto ToRouteTrackingDto(this TrackingOrder x)
@@ -50,22 +52,23 @@ namespace Service.MedicalRecord.Mapper
 
             };
         }
-        public static List<RouteTrackingStudyListDto> ToStudyRouteTrackingDto(this ICollection<TrackingOrderDetail> model)
+        public static List<RouteTrackingStudyListDto> ToStudyRouteTrackingDto(this ICollection<TrackingOrderDetail> model, Guid ruteid)
         {
             return model.Select(x => new RouteTrackingStudyListDto
             {
                 Id = x.EstudioId,
                 Nombre = x.Estudio,
                 Area = "",
-                Status = x.Solicitud.Estudios.Where(y=>y.EstudioId==x.EstudioId).FirstOrDefault().EstatusId ,
+                Status = x.Solicitud.Estudios.Where(y => y.EstudioId == x.EstudioId).FirstOrDefault()?.EstatusId,
                 Registro = x.FechaCreo.ToString(),
                 Seleccion = false,
                 Clave = x.Solicitud.Clave,
-                Expedienteid=x.ExpedienteId.ToString(),
-            Solicitudid =x.SolicitudId.ToString(),
-            Entrega=x.FechaMod==System.DateTime.MinValue?"":x.FechaMod.ToString(),
-         NombreEstatus = x.Solicitud.Estudios.Where(y => y.EstudioId == x.EstudioId).FirstOrDefault().Estatus.Nombre ,
-    }).ToList();
+                Expedienteid = x.ExpedienteId.ToString(),
+                Solicitudid = x.SolicitudId.ToString(),
+                Entrega = x.FechaMod == System.DateTime.MinValue ? "" : x.FechaMod.ToString(),
+                NombreEstatus = x.Solicitud.Estudios.Where(y => y.EstudioId == x.EstudioId).FirstOrDefault()?.Estatus.Nombre,
+                RouteId = ruteid.ToString(),
+            }).ToList();
         }
     }
 }
