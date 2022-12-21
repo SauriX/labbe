@@ -92,9 +92,10 @@ namespace Service.MedicalRecord.Application
                 int studyCount = 0;
                 foreach (var item in requestDto)
                 {
-                    var ruteOrder = await _repository.getById(item.SolicitudId);
+                    var ruteOrder = await _repository.getById(item.RuteOrder);
                     var solicitudId = ruteOrder.Estudios.FirstOrDefault().SolicitudId;
-                    var request = await GetExistingRequest(ruteOrder.Estudios.FirstOrDefault().SolicitudId);
+
+                    var request = await GetExistingRequest(solicitudId);
 
                     var studiesIds = item.EstudioId;
                     var studies = await _repository.GetStudyById(solicitudId, studiesIds);

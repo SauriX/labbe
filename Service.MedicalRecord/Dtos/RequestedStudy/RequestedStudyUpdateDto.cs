@@ -10,5 +10,7 @@ namespace Service.MedicalRecord.Dtos.RequestedStudy
         public Guid SolicitudId { get; set; }
         public string Usuario { get; set; }
         public List<SamplingCommentDto> Observacion { get; set; }
+
+        public Guid RuteOrder { get; set; }
     }
 }
