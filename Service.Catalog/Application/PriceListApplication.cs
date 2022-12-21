@@ -67,7 +67,7 @@ namespace Service.Catalog.Application
 
             var price = await _repository.GetPriceStudyById((int)filterDto.EstudioId, filterDto.SucursalId, filterDto.CompañiaId);
 
-            if (price == null || price.Precio <= 0)
+            if ((price == null || price.Precio <= 0) && !filterDto.OmitirPrecio)
             {
                 throw new CustomException(HttpStatusCode.NotFound, "Lista de precios no configurada");
             }
@@ -205,7 +205,7 @@ namespace Service.Catalog.Application
 
 
         public async Task<PriceListListDto> Update(PriceListFormDto price)
-            {
+        {
             Helpers.ValidateGuid(price.Id, out Guid guid);
 
             var existing = await _repository.GetById(guid);

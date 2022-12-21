@@ -1127,7 +1127,8 @@ namespace Service.MedicalRecord.Application
             var charT = totals.CargoTipo == 1 ? Math.Round(studyAndPack.Where(x => x.AplicaCargo).Sum(x => x.Precio) * totals.Cargo / 100, 2) : totals.Cargo;
             var charP = totals.CargoTipo == 1 ? totals.Cargo : Math.Round(studyAndPack.Where(x => x.AplicaCargo).Sum(x => x.Precio) * 100 / totalStudies, 2);
 
-            var copT = totals.CopagoTipo == 1 ? Math.Round(studyAndPack.Where(x => x.AplicaCopago).Sum(x => x.Precio) * totals.Copago / 100, 2) : totals.Copago;
+            var copT = request.EsWeeClinic ? studies.Sum(x => x.EstudioWeeClinic.TotalPaciente) :
+                totals.CopagoTipo == 1 ? Math.Round(studyAndPack.Where(x => x.AplicaCopago).Sum(x => x.Precio) * totals.Copago / 100, 2) : totals.Copago;
             var copP = totals.CopagoTipo == 1 ? totals.Copago : Math.Round(studyAndPack.Where(x => x.AplicaCopago).Sum(x => x.Precio) * 100 / totalStudies, 2);
 
             var finalTotal = totalStudies - descT + charT;
