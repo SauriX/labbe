@@ -227,8 +227,8 @@ namespace Service.MedicalRecord.Application
 
             requestDto.Clave = code;
             var newRequest = requestDto.ToModel();
-            newRequest.MedicoId = null; //MEDICS.A_QUIEN_CORRESPONDA;
-            newRequest.CompañiaId = null; //COMPANIES.PARTICULARES;
+            newRequest.MedicoId = MEDICS.A_QUIEN_CORRESPONDA;
+            newRequest.CompañiaId = COMPANIES.PARTICULARES;
             newRequest.CargoTipo = CANTIDAD;
             newRequest.CopagoTipo = CANTIDAD;
             newRequest.DescuentoTipo = CANTIDAD;
@@ -606,19 +606,21 @@ namespace Service.MedicalRecord.Application
                 var pathologicalCode = await GeneratePathologicalCode(request);
                 request.ClavePatologica = pathologicalCode;
 
-                request.TotalEstudios = requestDto.Total.TotalEstudios;
-                request.Descuento = requestDto.Total.Descuento;
-                request.DescuentoTipo = requestDto.Total.DescuentoTipo;
-                request.Cargo = requestDto.Total.Cargo;
-                request.CargoTipo = requestDto.Total.CargoTipo;
-                request.Copago = requestDto.Total.Copago;
-                request.CopagoTipo = requestDto.Total.CopagoTipo;
-                request.Total = requestDto.Total.Total;
-                request.Saldo = requestDto.Total.Saldo;
-                request.UsuarioModificoId = requestDto.UsuarioId;
-                request.FechaModifico = DateTime.Now;
+                //request.TotalEstudios = requestDto.Total.TotalEstudios;
+                //request.Descuento = requestDto.Total.Descuento;
+                //request.DescuentoTipo = requestDto.Total.DescuentoTipo;
+                //request.Cargo = requestDto.Total.Cargo;
+                //request.CargoTipo = requestDto.Total.CargoTipo;
+                //request.Copago = requestDto.Total.Copago;
+                //request.CopagoTipo = requestDto.Total.CopagoTipo;
+                //request.Total = requestDto.Total.Total;
+                //request.Saldo = requestDto.Total.Saldo;
+                //request.UsuarioModificoId = requestDto.UsuarioId;
+                //request.FechaModifico = DateTime.Now;
 
                 await _repository.Update(request);
+
+                await UpdateTotals(request.ExpedienteId, request.Id, requestDto.UsuarioId, requestDto.Total);
 
                 _transaction.CommitTransaction();
 
@@ -747,6 +749,8 @@ namespace Service.MedicalRecord.Application
             }
 
             await _repository.BulkInsertUpdateStudies(requestDto.SolicitudId, studies);
+
+            await UpdateTotals(request.ExpedienteId, request.Id, requestDto.UsuarioId);
         }
 
         public async Task<List<RequestPaymentDto>> CancelPayment(Guid recordId, Guid requestId, List<RequestPaymentDto> paymentsDto)
@@ -1116,6 +1120,8 @@ namespace Service.MedicalRecord.Application
             var studyAndPack = studies.Select(x => new { x.AplicaCargo, x.AplicaCopago, x.AplicaDescuento, x.Precio, x.PrecioFinal })
                 .Concat(packs.Select(x => new { x.AplicaCargo, x.AplicaCopago, x.AplicaDescuento, x.Precio, x.PrecioFinal }));
 
+            totals ??= request.ToRequestTotalDto();
+
             var totalStudies = studyAndPack.Sum(x => x.PrecioFinal);
             var final = totalStudies - totals.Descuento + totals.Cargo;
 
@@ -1125,7 +1131,8 @@ namespace Service.MedicalRecord.Application
             var charT = totals.CargoTipo == 1 ? Math.Round(studyAndPack.Where(x => x.AplicaCargo).Sum(x => x.Precio) * totals.Cargo / 100, 2) : totals.Cargo;
             var charP = totals.CargoTipo == 1 ? totals.Cargo : Math.Round(studyAndPack.Where(x => x.AplicaCargo).Sum(x => x.Precio) * 100 / totalStudies, 2);
 
-            var copT = totals.CopagoTipo == 1 ? Math.Round(studyAndPack.Where(x => x.AplicaCopago).Sum(x => x.Precio) * totals.Copago / 100, 2) : totals.Copago;
+            var copT = request.EsWeeClinic ? studies.Sum(x => x.EstudioWeeClinic.TotalPaciente) :
+                totals.CopagoTipo == 1 ? Math.Round(studyAndPack.Where(x => x.AplicaCopago).Sum(x => x.Precio) * totals.Copago / 100, 2) : totals.Copago;
             var copP = totals.CopagoTipo == 1 ? totals.Copago : Math.Round(studyAndPack.Where(x => x.AplicaCopago).Sum(x => x.Precio) * 100 / totalStudies, 2);
 
             var finalTotal = totalStudies - descT + charT;
@@ -1138,7 +1145,7 @@ namespace Service.MedicalRecord.Application
             request.DescuentoTipo = totals.DescuentoTipo;
             request.Cargo = totals.Cargo;
             request.CargoTipo = totals.CargoTipo;
-            request.Copago = totals.Copago;
+            request.Copago = request.EsWeeClinic ? copT : totals.Copago;
             request.CopagoTipo = totals.CopagoTipo;
             request.Total = userTotal;
             request.Saldo = balance;

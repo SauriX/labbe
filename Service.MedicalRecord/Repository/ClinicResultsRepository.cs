@@ -193,6 +193,7 @@ namespace Service.MedicalRecord.Repository
                 .Where(x => ids.Contains(x.RequestStudyId))
                 .Include(x => x.Medico)
                 .Include(x => x.SolicitudEstudio)
+                .ThenInclude(x => x.EstudioWeeClinic)
                 .Include(x => x.Solicitud).ThenInclude(y => y.Expediente)
                 .ToListAsync();
             return resultExisting;
