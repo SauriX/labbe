@@ -49,7 +49,7 @@ namespace Service.MedicalRecord.Application
             var routes = await _catalogClient.GetRutas(IdRoutes);
             foreach (var item in list)
             {
-                var route= routes.FirstOrDefault();
+                var route= routes.FirstOrDefault(x=>Guid.Parse(x.Id) == item.rutaId);
                 DateTime oDate = Convert.ToDateTime(item.Fecha);
                 item.Fecha = oDate.AddDays(route.TiempoDeEntrega).ToString();
                 routefinal.Add(item);
