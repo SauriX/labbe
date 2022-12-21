@@ -510,10 +510,6 @@ namespace Service.MedicalRecord.Application
                 }
             }
 
-                
-            //{
-            //    canSend = true;
-            //}
             return requestStudies;
         }
 
@@ -565,6 +561,12 @@ namespace Service.MedicalRecord.Application
                         .Where(x => x.Id == request.SolicitudEstudioId)
                         .Select(x => x.Id).ToList();
 
+                    List<RequestStudy> labStudies = existingRequest.Estudios
+                        .Where(x => x.AreaId != Catalogs.Area.HISTOPATOLOGIA)
+                        .Where(x => x.AreaId != Catalogs.Area.CITOLOGIA)
+                        .Where(x => x.Id == request.SolicitudEstudioId)
+                        .Select(x => x).ToList();
+
                     List<int> studyLabResults = new List<int> { };
                     List<ClinicResults> resultsTask = new List<ClinicResults>();
 
@@ -585,7 +587,13 @@ namespace Service.MedicalRecord.Application
 
                     var uploadedFile = await UploadResultFile(pdfBytes, namePdf);
 
-                    await RelateResultFile(request.SolicitudEstudio.EstudioWeeClinic.IdServicio, request.SolicitudEstudio.EstudioWeeClinic.IdNodo, uploadedFile.IdArchivo, NOTA, CARGA_RESULTADOS);
+                    foreach(var estudio in labStudies)
+                    {
+                        await RelateResultFile(estudio.EstudioWeeClinic.IdServicio, estudio.EstudioWeeClinic.IdNodo, uploadedFile.IdArchivo, NOTA, estudio.IdArchivoWeeClinic == null ? CARGA_RESULTADOS : REEMPLAZO_RESULTADOS);
+
+                        await UpdateIdArchivoWeeClinic(uploadedFile.IdArchivo, estudio.Id);
+
+                    }
 
                     var pathName = Path.Combine(MedicalRecordPath, pathPdf.Replace("wwwroot/", "")).Replace("\\", "/");
 
@@ -760,7 +768,9 @@ namespace Service.MedicalRecord.Application
 
                     var uploadedFile = await UploadResultFile(pdfBytes, namePdf);
 
-                    await RelateResultFile(existing.SolicitudEstudio.EstudioWeeClinic.IdServicio, existing.SolicitudEstudio.EstudioWeeClinic.IdNodo, uploadedFile.IdArchivo, NOTA, CARGA_RESULTADOS);
+                    await RelateResultFile(existing.SolicitudEstudio.EstudioWeeClinic.IdServicio, existing.SolicitudEstudio.EstudioWeeClinic.IdNodo, uploadedFile.IdArchivo, NOTA, existing.SolicitudEstudio.IdArchivoWeeClinic == null ? CARGA_RESULTADOS : REEMPLAZO_RESULTADOS);
+
+                    await UpdateIdArchivoWeeClinic(uploadedFile.IdArchivo, existing.SolicitudEstudio.Id);
 
                     var files = new List<SenderFiles>()
                     {
@@ -852,7 +862,9 @@ namespace Service.MedicalRecord.Application
 
                         var uploadedFile = await UploadResultFile(pdfBytes, namePdf);
 
-                        await RelateResultFile(finalResult.SolicitudEstudio.EstudioWeeClinic.IdServicio, finalResult.SolicitudEstudio.EstudioWeeClinic.IdNodo, uploadedFile.IdArchivo, NOTA, CARGA_RESULTADOS);
+                        await RelateResultFile(finalResult.SolicitudEstudio.EstudioWeeClinic.IdServicio, finalResult.SolicitudEstudio.EstudioWeeClinic.IdNodo, uploadedFile.IdArchivo, NOTA, finalResult.SolicitudEstudio.IdArchivoWeeClinic == null ? CARGA_RESULTADOS : REEMPLAZO_RESULTADOS);
+
+                        await UpdateIdArchivoWeeClinic(uploadedFile.IdArchivo, finalResult.SolicitudEstudio.Id);
                     }
                     else
                     {
@@ -909,7 +921,13 @@ namespace Service.MedicalRecord.Application
 
                     var uploadedFile = await UploadResultFile(pdfBytes, namePdf);
 
-                    await RelateResultFile(resultsTask.FirstOrDefault().SolicitudEstudio.EstudioWeeClinic.IdServicio, resultsTask.FirstOrDefault().SolicitudEstudio.EstudioWeeClinic.IdNodo, uploadedFile.IdArchivo, NOTA, CARGA_RESULTADOS);
+                    foreach(var estudio in resultsTask)
+                    {
+                        await RelateResultFile(estudio.SolicitudEstudio.EstudioWeeClinic.IdServicio, estudio.SolicitudEstudio.EstudioWeeClinic.IdNodo, uploadedFile.IdArchivo, NOTA, estudio.SolicitudEstudio.IdArchivoWeeClinic == null ? CARGA_RESULTADOS : REEMPLAZO_RESULTADOS);
+
+                        await UpdateIdArchivoWeeClinic(uploadedFile.IdArchivo, estudio.SolicitudEstudio.Id);
+
+                    }
                 }
 
                 try
@@ -999,7 +1017,9 @@ namespace Service.MedicalRecord.Application
 
                     var uploadedFile = await UploadResultFile(pdfBytes, namePdf);
 
-                    await RelateResultFile(resultTask.SolicitudEstudio.EstudioWeeClinic.IdServicio, resultTask.SolicitudEstudio.EstudioWeeClinic.IdNodo, uploadedFile.IdArchivo, NOTA, CARGA_RESULTADOS);
+                    await RelateResultFile(resultTask.SolicitudEstudio.EstudioWeeClinic.IdServicio, resultTask.SolicitudEstudio.EstudioWeeClinic.IdNodo, uploadedFile.IdArchivo, NOTA, resultTask.SolicitudEstudio.IdArchivoWeeClinic == null ? CARGA_RESULTADOS : REEMPLAZO_RESULTADOS);
+
+                    await UpdateIdArchivoWeeClinic(uploadedFile.IdArchivo, resultTask.SolicitudEstudio.Id);
                 }
             }
 
@@ -1028,8 +1048,13 @@ namespace Service.MedicalRecord.Application
                 files.Add(new SenderFiles(new Uri(pathName), namePdf));
 
                 var uploadedFile = await UploadResultFile(pdfBytes, namePdf);
+                foreach(var estudio in resultsTask)
+                {
+                    await RelateResultFile(estudio.SolicitudEstudio.EstudioWeeClinic.IdServicio, estudio.SolicitudEstudio.EstudioWeeClinic.IdNodo, uploadedFile.IdArchivo, NOTA, estudio.SolicitudEstudio.IdArchivoWeeClinic == null ? CARGA_RESULTADOS : REEMPLAZO_RESULTADOS);
 
-                await RelateResultFile(resultsTask.FirstOrDefault().SolicitudEstudio.EstudioWeeClinic.IdServicio, resultsTask.FirstOrDefault().SolicitudEstudio.EstudioWeeClinic.IdNodo, uploadedFile.IdArchivo, NOTA, CARGA_RESULTADOS);
+                    await UpdateIdArchivoWeeClinic(uploadedFile.IdArchivo, estudio.SolicitudEstudio.Id);
+
+                }
 
 
             }
@@ -1151,7 +1176,20 @@ namespace Service.MedicalRecord.Application
 
             return paramReferenceValues;
         }
+        public async Task UpdateIdArchivoWeeClinic(string idArchivo, int RequestStudyId)
+        {
+            var existingStudy = await _repository.GetStudyById(RequestStudyId);
 
+            if (existingStudy == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
+            }
+
+            existingStudy.IdArchivoWeeClinic = idArchivo;
+
+            await _repository.UpdateStatusStudy(existingStudy);
+
+        }
         public async Task UpdateStatusStudy(int RequestStudyId, byte status, string usuario)
         {
             var existingStudy = await _repository.GetStudyById(RequestStudyId);
