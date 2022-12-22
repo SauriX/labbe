@@ -10,8 +10,9 @@ namespace Service.MedicalRecord.Dtos.RouteTracking
         public Guid Solicitud { get; set; }
         public string Clave { get; set; }
         public string Sucursal { get; set; }
-        public DateTime Fecha { get; set; }
+        public string Fecha { get; set; }
         public string Status { get; set; }
+        public Guid rutaId { get; set; }
         public List<RouteTrackingStudyListDto> Estudios { get; set; }
 
     }

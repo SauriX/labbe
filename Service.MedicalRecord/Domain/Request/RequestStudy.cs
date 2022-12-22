@@ -60,5 +60,6 @@ namespace Service.MedicalRecord.Domain.Request
         // Fechas Actualizacion
         public virtual ICollection<ClinicResults> Resultados { get; set; }
         public virtual ICollection<ClinicalResultsPathological> ResultadosPatologicos { get; set; }
+        public string IdArchivoWeeClinic { get; set; }
     }
 }
