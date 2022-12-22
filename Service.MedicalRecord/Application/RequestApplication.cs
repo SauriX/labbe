@@ -252,7 +252,7 @@ namespace Service.MedicalRecord.Application
 
             var filter = new PriceListInfoFilterDto(0, 0, requestDto.SucursalId, MEDICS.A_QUIEN_CORRESPONDA, COMPANIES.PARTICULARES, Guid.Empty)
             {
-                Estudios = weeStudies.Select(x => x.ClaveCDP).ToList()
+                Estudios = weeStudies.Select(x => x.ClaveInterna).ToList()
             };
 
             var branch = await _branchRepository.GetOne(x => x.Id == requestDto.SucursalId);
@@ -266,7 +266,7 @@ namespace Service.MedicalRecord.Application
 
             foreach (var study in studies)
             {
-                var ws = weeStudies.FirstOrDefault(x => x.ClaveCDP.Trim() == study.Clave.Trim());
+                var ws = weeStudies.FirstOrDefault(x => x.ClaveInterna.Trim() == study.Clave.Trim());
 
                 var weePrice = await _weeService.GetServicePrice(ws.IdServicio, branch.Clave);
                 weePrices.Add(weePrice);
@@ -1125,15 +1125,15 @@ namespace Service.MedicalRecord.Application
             var totalStudies = studyAndPack.Sum(x => x.PrecioFinal);
             var final = totalStudies - totals.Descuento + totals.Cargo;
 
-            var descT = totals.DescuentoTipo == 1 ? Math.Round(studyAndPack.Where(x => x.AplicaDescuento).Sum(x => x.Precio) * totals.Descuento / 100, 2) : totals.Descuento;
-            var descP = totals.DescuentoTipo == 1 ? totals.Descuento : Math.Round(studyAndPack.Where(x => x.AplicaDescuento).Sum(x => x.Precio) * 100 / totalStudies, 2);
+            var descT = totalStudies == 0 ? 0 : totals.DescuentoTipo == 1 ? Math.Round(studyAndPack.Where(x => x.AplicaDescuento).Sum(x => x.Precio) * totals.Descuento / 100, 2) : totals.Descuento;
+            var descP = totalStudies == 0 ? 0 : totals.DescuentoTipo == 1 ? totals.Descuento : Math.Round(studyAndPack.Where(x => x.AplicaDescuento).Sum(x => x.Precio) * 100 / totalStudies, 2);
 
-            var charT = totals.CargoTipo == 1 ? Math.Round(studyAndPack.Where(x => x.AplicaCargo).Sum(x => x.Precio) * totals.Cargo / 100, 2) : totals.Cargo;
-            var charP = totals.CargoTipo == 1 ? totals.Cargo : Math.Round(studyAndPack.Where(x => x.AplicaCargo).Sum(x => x.Precio) * 100 / totalStudies, 2);
+            var charT = totalStudies == 0 ? 0 : totals.CargoTipo == 1 ? Math.Round(studyAndPack.Where(x => x.AplicaCargo).Sum(x => x.Precio) * totals.Cargo / 100, 2) : totals.Cargo;
+            var charP = totalStudies == 0 ? 0 : totals.CargoTipo == 1 ? totals.Cargo : Math.Round(studyAndPack.Where(x => x.AplicaCargo).Sum(x => x.Precio) * 100 / totalStudies, 2);
 
-            var copT = request.EsWeeClinic ? studies.Sum(x => x.EstudioWeeClinic.TotalPaciente) :
+            var copT = totalStudies == 0 ? 0 : request.EsWeeClinic ? studies.Sum(x => x.EstudioWeeClinic.TotalPaciente) :
                 totals.CopagoTipo == 1 ? Math.Round(studyAndPack.Where(x => x.AplicaCopago).Sum(x => x.Precio) * totals.Copago / 100, 2) : totals.Copago;
-            var copP = totals.CopagoTipo == 1 ? totals.Copago : Math.Round(studyAndPack.Where(x => x.AplicaCopago).Sum(x => x.Precio) * 100 / totalStudies, 2);
+            var copP = totalStudies == 0 ? 0 : totals.CopagoTipo == 1 ? totals.Copago : Math.Round(studyAndPack.Where(x => x.AplicaCopago).Sum(x => x.Precio) * 100 / totalStudies, 2);
 
             var finalTotal = totalStudies - descT + charT;
             var userTotal = copT > 0 ? copT : totalStudies - descT + charT;
