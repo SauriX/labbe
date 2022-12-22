@@ -45,6 +45,13 @@ namespace Service.Catalog.Repository
 
             return budgets;
         }
+        
+        public async Task<List<Budget>> GetBudgetsByBranch(List<Guid> branchId)
+        {
+            var budgets = await _context.CAT_Presupuestos.Include(x => x.Sucursal).Where(x => branchId.Contains(x.SucursalId)).ToListAsync();
+
+            return budgets;
+        }
 
         public async Task<Budget> GetById(int id)
         {
