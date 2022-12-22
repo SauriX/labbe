@@ -141,6 +141,8 @@ namespace Service.MedicalRecord.Mapper
                 Id = x.Id,
                 Clave = x.Clave,
                 Nombre = x.Nombre,
+                EstatusId = x.EstatusId,
+                Estatus = x.Estatus.Nombre,
                 MaquilaId = x.MaquilaId,
                 Maquila = x.Maquila?.Nombre ?? "",
                 Precio = x.Precio,

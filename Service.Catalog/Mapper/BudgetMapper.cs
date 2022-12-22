@@ -32,6 +32,7 @@ namespace Service.Catalog.Mapper
                 Nombre = x.Nombre,
                 Sucursal = x.Sucursal.Nombre,
                 Activo = x.Activo,
+                FechaAlta = x.FechaCreo
             });
         }
 

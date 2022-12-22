@@ -18,4 +18,31 @@ namespace Service.Report.Dtos
         public string User { get; set; } 
 
     }
+
+    public class Reporte
+    {
+        public List<Dictionary<string, object>> GetData(ReportFilterDto filter)
+        {
+            string[] rows = { "PACIENTES", "INGRESS" };
+            var data = new List<Dictionary<string, object>>();
+
+            foreach (var item in rows)
+            {
+                var itemData = new Dictionary<string, object>
+                {
+                    ["Nombre"] = item
+                };
+
+                foreach (var s in filter.SucursalId)
+                {
+                    itemData.Add(s.ToString(), 300);
+                }
+
+               
+                data.Add(itemData);
+            }
+
+            return data;
+        }
+    }
 }
