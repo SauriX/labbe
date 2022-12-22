@@ -84,7 +84,7 @@ namespace Service.MedicalRecord.Application
             });
             template.Format();
 
-            return (template.ToByteArray(), $"Busqueda de captura de resultados.xlsx");
+            return (template.ToByteArray(), $"Busqueda y envío de captura de resultados.xlsx");
         }
 
         public async Task<List<RequestsInfoDto>> GetAllCaptureResults(DeliverResultsFilterDto search)

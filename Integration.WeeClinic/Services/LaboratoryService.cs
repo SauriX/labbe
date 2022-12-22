@@ -263,7 +263,7 @@ namespace Integration.WeeClinic.Services
         }
 
         // Servicio 9. Relacionar archivo (PDF Resultado) con el estudio
-        public static async Task<Laboratorio_CargaResultados> Laboratorio_ArchivosResultados_Update(string idServicio, string idNodo, string idArchivo, string nota, int isRemplazarOrnew)
+        public static async Task<Laboratorio_RelacionResultados> Laboratorio_ArchivosResultados_Update(string idServicio, string idNodo, string idArchivo, string nota, int isRemplazarOrnew)
         {
             var url = "api/Laboratorio/Laboratorio_ArchivosResultados_Update";
 
@@ -285,7 +285,7 @@ namespace Integration.WeeClinic.Services
 
             response.ValidateNotEmpty("Datos");
 
-            var results = response.Transform<Laboratorio_CargaResultados>();
+            var results = response.Transform<Laboratorio_RelacionResultados>();
 
             return results;
         }
