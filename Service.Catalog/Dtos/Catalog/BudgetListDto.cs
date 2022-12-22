@@ -1,4 +1,6 @@
-﻿namespace Service.Catalog.Dtos.Catalog
+﻿using System;
+
+namespace Service.Catalog.Dtos.Catalog
 {
     public class BudgetListDto
     {
@@ -7,5 +9,6 @@
         public string Nombre { get; set; }
         public string Sucursal { get; set; }
         public bool Activo { get; set; }
+        public DateTime? FechaAlta { get; set; }
     }
 }
