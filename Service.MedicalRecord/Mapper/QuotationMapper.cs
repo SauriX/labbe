@@ -50,7 +50,7 @@ namespace Service.MedicalRecord.Mapper
                 Expediente = x.Expediente?.Expediente,
                 Correo = x.EnvioCorreo,
                 Whatsapp = x.EnvioWhatsApp,
-                Fecha = x.FechaCreo,
+                Fecha = x.FechaCreo.ToString("d"),
                 Activo = x.Activo,
                 Estudios = x.Estudios.Select(s => new QuotationStudyInfoDto
                 {
