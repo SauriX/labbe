@@ -53,7 +53,7 @@ namespace Service.MedicalRecord.Application
             {
                 IdServicio = x.IdServicio,
                 IdNodo = x.IdNodo,
-                Clave = x.ClaveCDP,
+                Clave = x.ClaveInterna,
                 Nombre = x.CDPNombre,
                 DescripcionWeeClinic = x.DescripcionInterna,
                 Cantidad = Convert.ToInt32(x.CantidadSolicitada)
@@ -198,7 +198,7 @@ namespace Service.MedicalRecord.Application
         {
             var response = await LaboratoryService.Laboratorio_ArchivosResultados_Update(idServicio, idNodo, idArchivo, nota, isRemplazarOrnew);
 
-            var data = response.Archivos;
+            var data = response.Datos;
 
             var assigments = new WeeUploadFileDto
             {
