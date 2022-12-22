@@ -292,6 +292,7 @@ namespace Service.MedicalRecord.Mapper
                 Precio = x.Precio,
                 Descuento = x.Descuento,
                 DescuentoPorcentaje = x.DescuentoPorcentaje,
+                Copago = x.EstudioWeeClinic?.TotalPaciente ?? 0,
                 PrecioFinal = x.PrecioFinal,
                 NombreEstatus = x.Estatus.Nombre,
                 Asignado = x.EstudioWeeClinic?.Asignado ?? true,
