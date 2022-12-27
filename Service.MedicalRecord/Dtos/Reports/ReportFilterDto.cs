@@ -13,6 +13,8 @@ namespace Service.MedicalRecord.Dtos.Reports
         public List<byte> TipoCompañia { get; set; }
         public List<DateTime> Fecha { get; set; }
         public DateTime FechaIndividual { get; set; }
+        public DateTime FechaInicial { get; set; }
+        public DateTime FechaFinal { get; set; }
         public List<DateTime> Hora { get; set; }
         public bool Grafica { get; set; }
         public string User { get; set; }

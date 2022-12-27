@@ -24,6 +24,7 @@ namespace Service.Catalog.Repository
             var indications = _context.CAT_ListaPrecio.AsQueryable()
                     .Include(x => x.Estudios)
                     .ThenInclude(x => x.Estudio).ThenInclude(x => x.Area).ThenInclude(x => x.Departamento)
+                    .Include(x => x.Estudios).ThenInclude(x => x.Estudio).ThenInclude(x => x.Tapon)
                     .Include(x => x.Sucursales).ThenInclude(x => x.Sucursal)
                     .Include(x => x.Compañia).ThenInclude(x => x.Compañia)
                     .Include(x => x.Medicos).ThenInclude(x => x.Medico)
@@ -44,8 +45,8 @@ namespace Service.Catalog.Repository
             var prices = _context.Relacion_ListaP_Estudio
                 .Include(x => x.Estudio.Parameters).ThenInclude(x => x.Parametro.Area.Departamento)
                 .Include(x => x.Estudio.Indications).ThenInclude(x => x.Indicacion)
-                .Include(x => x.Estudio.Tapon)
-                .Include(x => x.Estudio.Maquilador)
+                .Include(x => x.Estudio).ThenInclude(x => x.Tapon)
+                .Include(x => x.Estudio).ThenInclude(x => x.Maquilador)
                 .Include(x => x.PrecioLista)
                 .Where(x => x.EstudioId == studyId);
 
@@ -94,6 +95,7 @@ namespace Service.Catalog.Repository
         {
             var indication = await _context.CAT_ListaPrecio
                 .Include(x => x.Estudios).ThenInclude(x => x.Estudio).ThenInclude(x => x.Area).ThenInclude(x => x.Departamento)
+                .Include(x => x.Estudios).ThenInclude(x => x.Estudio).ThenInclude(x => x.Tapon)
                 .Include(x => x.Sucursales).ThenInclude(x => x.Sucursal)
                 .Include(x => x.Compañia).ThenInclude(x => x.Compañia)
                 .Include(x => x.Medicos).ThenInclude(x => x.Medico)

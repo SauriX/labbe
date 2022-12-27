@@ -78,7 +78,7 @@
       "UpstreamPathTemplate": "/api/catalog/area/export/form/{id}",
       "UpstreamHttpMethod": [ "POST" ]
     },
-    //Area
+    //Costo Fijo
     {
       "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/catalog/costofijo/all/{search}",
       "DownstreamScheme": "https",
@@ -100,6 +100,17 @@
       ],
       "UpstreamPathTemplate": "/api/catalog/costofijo/branch/{branchId}/active",
       "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/catalog/costofijo/getBranches",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/costofijo/getBranches",
+      "UpstreamHttpMethod": [ "POST" ]
     },
     {
       "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/catalog/costofijo/active",

@@ -142,12 +142,13 @@ namespace Service.MedicalRecord.Application
                     {   
                         study.EstatusId = Status.RequestStudy.Validado;
                         study.FechaValidacion = DateTime.Now;
+                        study.UsuarioValidacion = item.Usuario;
                     }
                     else
                     {
                         study.EstatusId = Status.RequestStudy.Liberado;
                         study.FechaLiberado = DateTime.Now;
-
+                        study.UsuarioLiberado = item.Usuario;
 
                     }
                     study.FechaModifico = DateTime.Now;

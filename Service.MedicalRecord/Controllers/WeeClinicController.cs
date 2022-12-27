@@ -91,7 +91,7 @@ namespace Service.MedicalRecord.Controllers
         }
 
         [HttpGet("servicio9")]
-        public async Task<Laboratorio_CargaResultados> Laboratorio_ArchivosResultados_Update(string idServicio, string idNodo, string idArchivo, string nota, int isRemplazarOrnew)
+        public async Task<Laboratorio_RelacionResultados> Laboratorio_ArchivosResultados_Update(string idServicio, string idNodo, string idArchivo, string nota, int isRemplazarOrnew)
         {
             return await LaboratoryService.Laboratorio_ArchivosResultados_Update(idServicio, idNodo, idArchivo, nota, isRemplazarOrnew);
         }
