@@ -57,6 +57,13 @@ namespace Service.Catalog.Application
 
             return budgets.ToBudgetListDto();
         }
+        
+        public async Task<IEnumerable<BudgetListDto>> GetBudgetsByBranch(List<Guid> branchId)
+        {
+            var budgets = await _repository.GetBudgetsByBranch(branchId);
+
+            return budgets.ToBudgetListDto();
+        }
 
         public async Task<BudgetListDto> Create(BudgetFormDto budget)
         {

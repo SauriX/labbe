@@ -12,5 +12,6 @@ namespace Service.Catalog.Dtos.Catalog
         public string Sucursal { get; set; }
         public Guid SucursalId { get; set; }
         public Guid UsuarioId { get; set; }
+        public DateTime FechaAlta { get; set; }
     }
 }

@@ -30,6 +30,13 @@ namespace Service.Catalog.Controllers.Catalog
         {
             return await _budgetService.GetBudgetByBranch(branchId);
         }
+        
+        [HttpPost("costofijo/getBranches")]
+        [Authorize(Policies.Access)]
+        public async Task<IEnumerable<BudgetListDto>> GetBudgetsByBranch(List<Guid> branchId)
+        {
+            return await _budgetService.GetBudgetsByBranch(branchId);
+        }
 
         [HttpGet("costofijo/{id}")]
         [Authorize(Policies.Access)]

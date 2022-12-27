@@ -10,6 +10,7 @@ namespace Service.Catalog.Application.IApplication
         Task<IEnumerable<BudgetListDto>> GetAll(string search);
         Task<IEnumerable<BudgetListDto>> GetActive();
         Task<IEnumerable<BudgetListDto>> GetBudgetByBranch(Guid branchId);
+        Task<IEnumerable<BudgetListDto>> GetBudgetsByBranch(List<Guid> branchId);
         Task<BudgetFormDto> GetById(int id);
         Task<BudgetListDto> Create(BudgetFormDto Catalog);
         Task<BudgetListDto> Update(BudgetFormDto Catalog);

@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Service.Catalog.Dtos.Catalog
+namespace Service.Report.Domain.MedicalRecord
 {
-    public class BudgetListDto
+    public class ServicesCost
     {
         public int Id { get; set; }
         public string Clave { get; set; }
