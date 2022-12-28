@@ -21,16 +21,16 @@ namespace Service.Catalog.Repository
 
         public async Task<List<PriceList>> GetAll(string search)
         {
-            var indications = _context.CAT_ListaPrecio.AsQueryable();
+            var prices = _context.CAT_ListaPrecio.AsQueryable();
 
             search = search.Trim().ToLower();
 
             if (!string.IsNullOrWhiteSpace(search) && search != "all")
             {
-                indications = indications.Where(x => x.Clave.ToLower().Contains(search) || x.Nombre.ToLower().Contains(search));
+                prices= prices.Where(x => x.Clave.ToLower().Contains(search) || x.Nombre.ToLower().Contains(search));
             }
 
-            return await indications.ToListAsync();
+            return await prices.ToListAsync();
         }
 
         public async Task<PriceList_Study> GetPriceStudyById(int studyId, Guid branchId, Guid companyId)
