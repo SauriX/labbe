@@ -33,7 +33,7 @@ namespace Service.Catalog.Application
         public async Task<IEnumerable<PriceListListDto>> GetAll(string search)
         {
             var prices = await _repository.GetAll(search);
-
+            
             return prices.ToPriceListListDto();
         }
 
@@ -41,7 +41,7 @@ namespace Service.Catalog.Application
         {
             var prices = await _repository.GetActive();
 
-            return prices.ToPriceListListDto();
+            return prices.ToPriceListListActiveDto();
         }
 
         public async Task<PriceListFormDto> GetById(string id)

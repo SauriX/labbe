@@ -21,14 +21,7 @@ namespace Service.Catalog.Repository
 
         public async Task<List<PriceList>> GetAll(string search)
         {
-            var indications = _context.CAT_ListaPrecio.AsQueryable()
-                    .Include(x => x.Estudios)
-                    .ThenInclude(x => x.Estudio).ThenInclude(x => x.Area).ThenInclude(x => x.Departamento)
-                    .Include(x => x.Estudios).ThenInclude(x => x.Estudio).ThenInclude(x => x.Tapon)
-                    .Include(x => x.Sucursales).ThenInclude(x => x.Sucursal)
-                    .Include(x => x.Compañia).ThenInclude(x => x.Compañia)
-                    .Include(x => x.Medicos).ThenInclude(x => x.Medico)
-                    .AsQueryable();
+            var indications = _context.CAT_ListaPrecio.AsQueryable();
 
             search = search.Trim().ToLower();
 
@@ -107,7 +100,11 @@ namespace Service.Catalog.Repository
         }
         public async Task<List<PriceList>> GetActive()
         {
-            var prices = await _context.CAT_ListaPrecio.Where(x => x.Activo).ToListAsync();
+            var prices = await _context.CAT_ListaPrecio.Include(x => x.Estudios).ThenInclude(x => x.Estudio).ThenInclude(x => x.Area).ThenInclude(x => x.Departamento)
+                    .Include(x => x.Estudios).ThenInclude(x => x.Estudio).ThenInclude(x => x.Tapon)
+                    .Include(x => x.Sucursales).ThenInclude(x => x.Sucursal)
+                    .Include(x => x.Compañia).ThenInclude(x => x.Compañia)
+                    .Include(x => x.Medicos).ThenInclude(x => x.Medico).Where(x => x.Activo).ToListAsync();
 
             return prices;
         }

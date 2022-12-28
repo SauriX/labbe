@@ -108,6 +108,20 @@ namespace Service.Catalog.Mapper
                 Nombre = x.Nombre,
                 Visibilidad = x?.Visibilidad,
                 Activo = x.Activo,
+
+            });
+        }
+        public static IEnumerable<PriceListListDto> ToPriceListListActiveDto(this List<PriceList> model)
+        {
+            if (model == null) return null;
+
+            return model.Select(x => new PriceListListDto
+            {
+                Id = x.Id,
+                Clave = x.Clave,
+                Nombre = x.Nombre,
+                Visibilidad = x?.Visibilidad,
+                Activo = x.Activo,
                 Estudios = x?.Estudios?.Select(x => new PriceListStudyDto
                 {
                     Id = x.EstudioId,
@@ -142,7 +156,6 @@ namespace Service.Catalog.Mapper
                 })?.ToList(),
             });
         }
-
         public static PriceListFormDto ToPriceListFormDto(this PriceList model)
         {
             if (model == null) return null;
