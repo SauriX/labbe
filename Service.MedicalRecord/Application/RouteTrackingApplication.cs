@@ -19,6 +19,8 @@ using System.Net;
 using System.Threading.Tasks;
 using Service.MedicalRecord.Domain;
 using Service.MedicalRecord.Domain.Request;
+using Service.MedicalRecord.PdfModels;
+
 namespace Service.MedicalRecord.Application
 {
     public class RouteTrackingApplication: IRouteTrackingApplication
@@ -26,14 +28,15 @@ namespace Service.MedicalRecord.Application
         public readonly IRouteTrackingRepository _repository;
         private readonly ICatalogClient _catalogClient;
         private readonly IPdfClient _pdfClient;
-
+        private readonly IIdentityClient _identityClient;
         public object SharedResponses { get; private set; }
 
-        public RouteTrackingApplication(IRouteTrackingRepository repository,ICatalogClient catalog, IPdfClient pdfClient)
+        public RouteTrackingApplication(IRouteTrackingRepository repository,ICatalogClient catalog, IPdfClient pdfClient, IIdentityClient identityClient)
         {
             _repository = repository;
             _catalogClient = catalog;
             _pdfClient = pdfClient;
+            _identityClient = identityClient;
         }
 
         public async Task<List<RouteTrackingListDto>> GetAll(RouteTrackingSearchDto search)
@@ -225,6 +228,47 @@ namespace Service.MedicalRecord.Application
 
 
             return await _pdfClient.PendigForm(request);
+        }
+
+
+        public async Task<byte[]> ExportDeliver(Guid id)
+        {
+
+            var trakingorder = await _repository.getById(id);
+
+            if (trakingorder == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound);
+            }
+           var  order = trakingorder.ToRouteTrackingDtoList();
+
+            var user = await _identityClient.GetByid(trakingorder.Estudios.FirstOrDefault().Solicitud.UsuarioModificoId.ToString());
+
+            var orderForm = order.toDeliverOrder($"{user.Nombre} {user.PrimerApellido} {user.SegundoApellido}");
+
+            List<Col> columns = new()
+            {
+                new Col("Clave de estudio", ParagraphAlignment.Left),
+                new Col("Estudio", ParagraphAlignment.Left),
+                new Col("Temperatura", ParagraphAlignment.Left),
+                new Col("Solicitud", ParagraphAlignment.Left),
+                new Col("Paciente", ParagraphAlignment.Left),
+                new Col("Confirmación muestra origen", ParagraphAlignment.Left),
+                new Col("Confirmación muestra destino", ParagraphAlignment.Left),
+            };
+
+
+            var data = order.Estudios.Select(x => new Dictionary<string, object>
+            {
+                { "Clave de estudio", x.Clave },
+                { "Estudio", x.Nombre },
+                { "Temperatura", Convert.ToDecimal(trakingorder.Temperatura) },
+                { "Solicitud", trakingorder.Estudios.FirstOrDefault(y=>y.SolicitudId == Guid.Parse(x.Solicitudid) && y.EstudioId == x.Id).Solicitud.Clave },
+                { "Paciente", trakingorder.Estudios.FirstOrDefault(y=>y.SolicitudId == Guid.Parse(x.Solicitudid) && y.EstudioId == x.Id).Solicitud.Expediente.NombreCompleto},
+                { "Confirmación muestra origen",  trakingorder.Estudios.FirstOrDefault(y => y.SolicitudId == Guid.Parse(x.Solicitudid) && y.EstudioId == x.Id).Solicitud.Estudios.FirstOrDefault(w=>w.EstudioId==x.Id).EstatusId== Status.RequestStudy.TomaDeMuestra?"si":"no"},
+                { "Confirmación muestra destino", ""}
+            }).ToList();
+            return await _pdfClient.DeliverForm(orderForm);
         }
     }
 }

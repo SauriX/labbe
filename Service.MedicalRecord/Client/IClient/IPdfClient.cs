@@ -1,4 +1,5 @@
 ﻿using Service.MedicalRecord.Dtos.ClinicResults;
+using Service.MedicalRecord.Dtos.DeliverOrder;
 using Service.MedicalRecord.Dtos.PendingRecive;
 using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.WorkList;
@@ -18,5 +19,6 @@ namespace Service.MedicalRecord.Client.IClient
         Task<byte[]> PendigForm(List<PendingReciveDto> order);
         Task<byte[]> GenerateWorkList(WorkListDto workList);
         Task<byte[]> MergeResults(ClinicResultPathologicalPdfDto order, ClinicResultsPdfDto labOrder);
+        Task<byte[]> DeliverForm(DeliverOrderdDto order);
     }
 }
