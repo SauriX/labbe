@@ -41,5 +41,13 @@ namespace Service.MedicalRecord.Controllers
             return File(file, MimeType.XLSX, fileName);
         }
 
+        [HttpPost("download/pdf")]
+        [Authorize(Policies.Download)]
+        public async Task<IActionResult> ExportResultsPdf(MassSearchFilterDto filter)
+        {
+            var file = await _service.DownloadResultsPdf(filter);
+            return File(file, MimeType.PDF, "Resultados Busq. Masiva.pdf");
+        }
+
     }
 }
