@@ -49,7 +49,7 @@ namespace Service.MedicalRecord.Application
             template.AddVariable("Titulo", "Registrar Solicitud de Estudio");
             template.AddVariable("FechaInicio", search.Fecha.First().ToString("dd/MM/yyyy"));
             template.AddVariable("FechaFinal", search.Fecha.Last().ToString("dd/MM/yyyy"));
-            template.AddVariable("Expedientes", studies);
+            template.AddVariable("Solicitudes", studies);
 
             template.Generate();
 
