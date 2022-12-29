@@ -54,7 +54,7 @@ namespace Integration.Pdf.Service
 
             section.PageSetup = document.DefaultPageSetup.Clone();
 
-            section.PageSetup.Orientation = Orientation.Portrait;
+            section.PageSetup.Orientation = Orientation.Landscape;
             section.PageSetup.PageFormat = PageFormat.A4;
 
             section.PageSetup.TopMargin = Unit.FromCentimeter(1);
@@ -62,127 +62,384 @@ namespace Integration.Pdf.Service
             section.PageSetup.LeftMargin = Unit.FromCentimeter(1);
             section.PageSetup.RightMargin = Unit.FromCentimeter(1);
 
-            Format(section, order);
+            Format(section, order,order.Datos);
 
             return document;
         }
 
-        static void Format(Section section, DeliverOrderdDto order)
+        static void Format(Section section, DeliverOrderdDto order, List<Dictionary<string, object>> data)
         {
-            var title = new Col($"Laboratorio Alfonso Ramos S.A. de C.V.", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Right);
+            var logo = File.ReadAllBytes(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets\\LabRamosLogo.png"));
+            var labramoslogo = new Col(logo, 6, ParagraphAlignment.Center)
+            {
+                ImagenTamaño = Unit.FromCentimeter(6)
+            };
+
+             section.AddText(labramoslogo);
+
+            section.AddSpace();
+
+            var title = new Col($"Laboratorio Alfonso Ramos S.A. de C.V.", new Font("Calibri", 13) { Bold = true }, ParagraphAlignment.Center);
             section.AddText(title);
 
             section.AddSpace();
-            var titledoc = new Col($"Formato orden de entrega", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Right);
+            var titledoc = new Col($"Formato orden de entrega", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Center);
             section.AddText(titledoc);
 
             section.AddSpace();
 
+            var titledestin = new Col($"DESTINATARIO", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Center);
+            section.AddText(titledestin);
 
-
-            var line1 = new Col[]
-            {
-                  new Col($"DESTINATARIO", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Center),
-                new Col("Destino:", 3, ParagraphAlignment.Left),
-                new Col($": {order.Destino}", 8, Col.FONT_BOLD, ParagraphAlignment.Left),
-                new Col("", 1),
-                new Col("Responsable de recibido:", 3, ParagraphAlignment.Left),
-                new Col($": ", 4, Col.FONT_BOLD, ParagraphAlignment.Left),
-                new Col("", 1),
-                new Col("Fecha y hora de entrega estimada:", 1, ParagraphAlignment.Left),
-                new Col($": {order.FechaEntestimada}", 3, Col.FONT_BOLD, ParagraphAlignment.Left),
-                new Col("", 1),
-                new Col("Fecha y hora de entrega real:", 1, ParagraphAlignment.Left),
-                new Col($": ", 3, Col.FONT_BOLD, ParagraphAlignment.Left),
-                new Col("", 1),
-                new Col("Firma", 1, ParagraphAlignment.Left),
-                new Col("", 1),
-            };
             section.AddSpace();
-            section.AddBorderedText(line1, right: true, left: true);
-
-            var lineOrigen = new Col[]
+            //tabla destino
+            List<Col> columnsDestino = new List<Col>()
             {
-                  new Col($"ORIGEN", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Center),
-                new Col("Origen:", 3, ParagraphAlignment.Left),
-                new Col($": {order.Destino}", 8, Col.FONT_BOLD, ParagraphAlignment.Left),
-                new Col("", 1),
-                new Col("Responsable de envío:", 3, ParagraphAlignment.Left),
-                new Col($": {order.ResponsableEnvio}", 4, Col.FONT_BOLD, ParagraphAlignment.Left),
-                new Col("", 1),
-                new Col("Nombre del transportista:", 1, ParagraphAlignment.Left),
-                new Col($": {order.TransportistqName}", 3, Col.FONT_BOLD, ParagraphAlignment.Left),
-                new Col("", 1),
-                new Col("Medio de entrega:", 1, ParagraphAlignment.Left),
-                new Col($":Transporte local ", 3, Col.FONT_BOLD, ParagraphAlignment.Left),
-                new Col("", 1),
-                new Col("Fecha y hora de envio:", 1, ParagraphAlignment.Left),
-                new Col($": {order.FechaEntestimada}", 3, Col.FONT_BOLD, ParagraphAlignment.Left),
-                new Col("", 1),
-                new Col("Firma", 1, ParagraphAlignment.Left),
-                new Col("", 1),
+                new Col("Destino", ParagraphAlignment.Left),
+                new Col("Responsable de recibido", ParagraphAlignment.Left),
+                new Col("Fecha y hora de entrega estimada", ParagraphAlignment.Left),
+                new Col("Fecha y hora de entrega real", ParagraphAlignment.Left),
+                new Col("Firma", ParagraphAlignment.Left)
+,
             };
-            section.AddSpace();
-            section.AddBorderedText(line1, right: true, left: true);
+            var destino = new Dictionary<string, object>{
+                { "Destino", order.Destino },
+                { "Responsable de recibido", "" },
+                { "Fecha y hora de entrega estimada",order.FechaEntestimada },
+                { "Fecha y hora de entrega real", ""},
+                { "Firma", ""},
+            };
 
+            var datadestino = new List <Dictionary<string, object>>();
+            datadestino.Add(destino);
+
+            Table tableDestino = new Table();
+            tableDestino.Borders.Width = 0.75;
+            tableDestino.Borders.Color = Colors.LightGray;
+            tableDestino.TopPadding = 3;
+            tableDestino.BottomPadding = 3;
+            var contentWidthDestino = section.PageSetup.PageHeight - section.PageSetup.LeftMargin - section.PageSetup.RightMargin;
+            var colWidthDestino = contentWidthDestino / columnsDestino.Sum(x => x.Tamaño);
+
+            if (columnsDestino == null || columnsDestino.Count == 0)
+            {
+                return;
+            }
+
+            for (int i = 0; i < columnsDestino.Count; i++)
+            {
+                Col item = columnsDestino[i];
+                Column column = tableDestino.AddColumn(colWidthDestino * item.Tamaño);
+                column.Format.Alignment = item.Horizontal;
+            }
+
+            Row rowDestino = tableDestino.AddRow();
+
+            for (int i = 0; i < columnsDestino.Count; i++)
+            {
+                rowDestino.Shading.Color = Colors.Gray;
+                rowDestino.Format.Font.Color = Colors.White;
+
+                Cell cellDestino = rowDestino.Cells[i];
+                cellDestino.Borders.Left.Visible = false;
+                cellDestino.Borders.Right.Visible = false;
+                cellDestino.Borders.Bottom.Visible = false;
+                cellDestino.AddParagraph(columnsDestino[i].Texto);
+            }
+
+            if (datadestino != null && datadestino.Count > 0)
+            {
+                foreach (var item in datadestino)
+                {
+                    rowDestino = tableDestino.AddRow();
+                    for (int i = 0; i < columnsDestino.Count; i++)
+                    {
+                        var key = columnsDestino[i].Texto;
+
+                        if (item.ContainsKey(key))
+                        {
+                            Cell cellDestino = rowDestino.Cells[i];
+                            cellDestino.Borders.Left.Visible = false;
+                            cellDestino.Borders.Right.Visible = false;
+
+                            var format = columnsDestino[i].Formato;
+                            var cellData = item[key].ToString();
+
+                            if (!string.IsNullOrWhiteSpace(format))
+                            {
+                                if (cellData[0] == '[' && cellData[cellData.Length - 1] == ']')
+                                {
+                                    var datalist = JsonConvert.DeserializeObject<List<string>>(cellData);
+                                    datalist.Where(x => x != null).ToList().ForEach(x => cellDestino.AddParagraph(x));
+                                }
+                                else
+                                {
+                                    cellDestino.AddParagraph(Convert.ToDouble(item[key]).ToString(format));
+                                }
+                            }
+                            else
+                            {
+                                var CelldataValidationInicial = ' ';
+                                var CelldataValidationFinal = ' ';
+
+                                if (cellData.Length > 0)
+                                {
+                                    CelldataValidationInicial = cellData[0];
+                                    CelldataValidationFinal = cellData[cellData.Length - 1];
+                                }
+
+                                if (CelldataValidationInicial == '[' && CelldataValidationFinal == ']')
+                                {
+                                    var datalist = JsonConvert.DeserializeObject<List<string>>(cellData);
+                                    datalist.Where(x => x != null).ToList().ForEach(x => cellDestino.AddParagraph(x));
+                                }
+                                else
+                                {
+                                    cellDestino.AddParagraph(cellData);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                tableDestino.Rows.Alignment = RowAlignment.Center;
+            }
+            else
+            {
+                rowDestino = tableDestino.AddRow();
+
+                Cell cell = rowDestino.Cells[0];
+                cell.MergeRight = columnsDestino.Count - 1;
+                cell.Borders.Left.Visible = false;
+                cell.Borders.Right.Visible = false;
+                cell.Borders.Bottom.Visible = false;
+                cell.Format.Alignment = ParagraphAlignment.Center;
+
+                cell.AddParagraph("No hay registros");
+            }
+            section.Add(tableDestino);
+            section.AddSpace(15);
+            //data origen
+            var titleorigen = new Col($"ORIGEN", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Center);
+            List<Col> columnsOrigen = new List<Col>()
+            {
+                new Col("Origen", ParagraphAlignment.Left),
+                new Col("Responsable de envío", ParagraphAlignment.Left),
+                new Col("Nombre del transportista", ParagraphAlignment.Left),
+                new Col("Medio de entrega", ParagraphAlignment.Left),
+                new Col("Fecha y hora de envio", ParagraphAlignment.Left),
+                new Col("Firma", ParagraphAlignment.Left)
+,
+            };
+            var origen = new Dictionary<string, object>{
+                { "Origen", order.Destino },
+                { "Responsable de envío",order.ResponsableEnvio },
+                { "Nombre del transportista",order.TransportistqName },
+                { "Medio de entrega", "Transporte local"},
+                { "Fecha y hora de envio", order.FechaEntestimada},
+                { "Firma", ""},
+            };
+
+            var dataorigen = new List<Dictionary<string, object>>();
+            dataorigen.Add(origen);
+
+            Table tableOrigen = new Table();
+            tableOrigen.Borders.Width = 0.75;
+            tableOrigen.Borders.Color = Colors.LightGray;
+            tableOrigen.TopPadding = 3;
+            tableOrigen.BottomPadding = 3;
+            var contentWidthOrigen = section.PageSetup.PageHeight - section.PageSetup.LeftMargin - section.PageSetup.RightMargin;
+            var colWidthOrigen = contentWidthOrigen / columnsOrigen.Sum(x => x.Tamaño);
+
+            if (columnsOrigen == null || columnsOrigen.Count == 0)
+            {
+                return;
+            }
+
+            for (int i = 0; i < columnsOrigen.Count; i++)
+            {
+                Col item = columnsOrigen[i];
+                Column column = tableOrigen.AddColumn(colWidthOrigen * item.Tamaño);
+                column.Format.Alignment = item.Horizontal;
+            }
+
+            Row rowOrigen = tableOrigen.AddRow();
+
+            for (int i = 0; i < columnsOrigen.Count; i++)
+            {
+                rowOrigen.Shading.Color = Colors.Gray;
+                rowOrigen.Format.Font.Color = Colors.White;
+
+                Cell cellOrigen = rowOrigen.Cells[i];
+                cellOrigen.Borders.Left.Visible = false;
+                cellOrigen.Borders.Right.Visible = false;
+                cellOrigen.Borders.Bottom.Visible = false;
+                cellOrigen.AddParagraph(columnsOrigen[i].Texto);
+            }
+
+            if (dataorigen != null && dataorigen.Count > 0)
+            {
+                foreach (var item in dataorigen)
+                {
+                    rowOrigen = tableOrigen.AddRow();
+                    for (int i = 0; i < columnsOrigen.Count; i++)
+                    {
+                        var key = columnsOrigen[i].Texto;
+
+                        if (item.ContainsKey(key))
+                        {
+                            Cell cellOrigen = rowOrigen.Cells[i];
+                            cellOrigen.Borders.Left.Visible = false;
+                            cellOrigen.Borders.Right.Visible = false;
+
+                            var format = columnsOrigen[i].Formato;
+                            var cellData = item[key].ToString();
+
+                            if (!string.IsNullOrWhiteSpace(format))
+                            {
+                                if (cellData[0] == '[' && cellData[cellData.Length - 1] == ']')
+                                {
+                                    var datalist = JsonConvert.DeserializeObject<List<string>>(cellData);
+                                    datalist.Where(x => x != null).ToList().ForEach(x => cellOrigen.AddParagraph(x));
+                                }
+                                else
+                                {
+                                    cellOrigen.AddParagraph(Convert.ToDouble(item[key]).ToString(format));
+                                }
+                            }
+                            else
+                            {
+                                var CelldataValidationInicial = ' ';
+                                var CelldataValidationFinal = ' ';
+
+                                if (cellData.Length > 0)
+                                {
+                                    CelldataValidationInicial = cellData[0];
+                                    CelldataValidationFinal = cellData[cellData.Length - 1];
+                                }
+
+                                if (CelldataValidationInicial == '[' && CelldataValidationFinal == ']')
+                                {
+                                    var datalist = JsonConvert.DeserializeObject<List<string>>(cellData);
+                                    datalist.Where(x => x != null).ToList().ForEach(x => cellOrigen.AddParagraph(x));
+                                }
+                                else
+                                {
+                                    cellOrigen.AddParagraph(cellData);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                tableOrigen.Rows.Alignment = RowAlignment.Center;
+            }
+            else
+            {
+                rowOrigen = tableOrigen.AddRow();
+
+                Cell cell = rowOrigen.Cells[0];
+                cell.MergeRight = columnsOrigen.Count - 1;
+                cell.Borders.Left.Visible = false;
+                cell.Borders.Right.Visible = false;
+                cell.Borders.Bottom.Visible = false;
+                cell.Format.Alignment = ParagraphAlignment.Center;
+
+                cell.AddParagraph("No hay registros");
+            }
+            section.Add(tableOrigen);
+            section.AddSpace(15);
+
+            //tabla data
             List<Col> columns = order.Columnas;
-            var contentWidth = section.PageSetup.PageWidth - section.PageSetup.LeftMargin - section.PageSetup.RightMargin;
-
             Table table = new Table();
             table.Borders.Width = 0.75;
             table.Borders.Color = Colors.LightGray;
             table.TopPadding = 3;
             table.BottomPadding = 3;
-            Row row = table.AddRow();
-            if (order.Datos!= null && order.Datos.Count > 0)
+            var contentWidth = section.PageSetup.PageHeight - section.PageSetup.LeftMargin - section.PageSetup.RightMargin;
+            var colWidth = contentWidth / columns.Sum(x => x.Tamaño);
+
+            if (columns == null || columns.Count == 0)
             {
-                foreach (var item in order.Datos)
+                return;
+            }
+
+            for (int i = 0; i < columns.Count; i++)
+            {
+                Col item = columns[i];
+                Column column = table.AddColumn(colWidth * item.Tamaño);
+                column.Format.Alignment = item.Horizontal;
+            }
+
+            Row row = table.AddRow();
+
+            for (int i = 0; i < columns.Count; i++)
+            {
+                row.Shading.Color = Colors.Gray;
+                row.Format.Font.Color = Colors.White;
+
+                Cell cell = row.Cells[i];
+                cell.Borders.Left.Visible = false;
+                cell.Borders.Right.Visible = false;
+                cell.Borders.Bottom.Visible = false;
+                cell.AddParagraph(columns[i].Texto);
+            }
+
+            if (data != null && data.Count > 0)
+            {
+                foreach (var item in data)
                 {
                     row = table.AddRow();
                     for (int i = 0; i < columns.Count; i++)
                     {
                         var key = columns[i].Texto;
 
-
-                        Cell cell = row.Cells[i];
-                        cell.Borders.Left.Visible = false;
-                        cell.Borders.Right.Visible = false;
-
-                        var format = columns[i].Formato;
-                        var cellData = item[key].ToString();
-
-
-                        if (!string.IsNullOrWhiteSpace(format))
+                        if (item.ContainsKey(key))
                         {
-                            if (cellData[0] == '[' && cellData[cellData.Length - 1] == ']')
+                            Cell cell = row.Cells[i];
+                            cell.Borders.Left.Visible = false;
+                            cell.Borders.Right.Visible = false;
+
+                            var format = columns[i].Formato;
+                            var cellData = item[key].ToString();
+
+                            if (!string.IsNullOrWhiteSpace(format))
                             {
-                                var datalist = JsonConvert.DeserializeObject<List<string>>(cellData);
-                                datalist.Where(x => x != null).ToList().ForEach(x => cell.AddParagraph(x));
+                                if (cellData[0] == '[' && cellData[cellData.Length - 1] == ']')
+                                {
+                                    var datalist = JsonConvert.DeserializeObject<List<string>>(cellData);
+                                    datalist.Where(x => x != null).ToList().ForEach(x => cell.AddParagraph(x));
+                                }
+                                else
+                                {
+                                    cell.AddParagraph(Convert.ToDouble(item[key]).ToString(format));
+                                }
                             }
                             else
                             {
-                                cell.AddParagraph(Convert.ToDouble("").ToString(format));
+                                var CelldataValidationInicial = ' ';
+                                var CelldataValidationFinal = ' ' ;
+
+                                if (cellData.Length > 0)
+                                {
+                                    CelldataValidationInicial = cellData[0];
+                                    CelldataValidationFinal = cellData[cellData.Length - 1];
+                                }
+
+                                if (CelldataValidationInicial == '[' && CelldataValidationFinal == ']')
+                                {
+                                    var datalist = JsonConvert.DeserializeObject<List<string>>(cellData);
+                                    datalist.Where(x => x != null).ToList().ForEach(x => cell.AddParagraph(x));
+                                }
+                                else
+                                {
+                                    cell.AddParagraph(cellData);
+                                }
                             }
                         }
-                        else
-                        {
-                            if (cellData[0] == '[' && cellData[cellData.Length - 1] == ']')
-                            {
-                                var datalist = JsonConvert.DeserializeObject<List<string>>(cellData);
-                                datalist.Where(x => x != null).ToList().ForEach(x => cell.AddParagraph(x));
-                            }
-                            else
-                            {
-                                cell.AddParagraph(cellData);
-                            }
-                        }
-
-                    
-
                     }
                 }
-
-
 
                 table.Rows.Alignment = RowAlignment.Center;
             }
@@ -199,8 +456,11 @@ namespace Integration.Pdf.Service
 
                 cell.AddParagraph("No hay registros");
             }
+
             section.Add(table);
-            section.AddSpace(25);
+            section.AddSpace(15);
+
         }
+
     }
 }

@@ -13,13 +13,15 @@ using System.Net;
 using System.Threading.Tasks;
 using SharedResponses = Shared.Dictionary.Responses;
 using System.Linq;
+using Service.MedicalRecord.Domain.Catalogs;
+using Service.MedicalRecord.Utils;
 
 namespace Service.MedicalRecord.Application.IApplication
 {
     public class TrackingOrderApplication : ITrackingOrderApplication
     {
         private readonly ITrackingOrderRepository _repository;
-
+        private readonly IRepository<Branch> _branchRepository;
         public TrackingOrderApplication(ITrackingOrderRepository repository)
         {
             _repository = repository;
@@ -27,6 +29,14 @@ namespace Service.MedicalRecord.Application.IApplication
         public async Task<TrackingOrderDto> Create(TrackingOrderFormDto order)
         {
             var newOrder = order.ToModel();
+
+            var date = DateTime.Now.ToString("yyMMdd");
+
+            var branch = await _branchRepository.GetOne(x => x.Id == Guid.Parse(newOrder.SucursalOrigenId));
+            var lastCode = await _repository.GetLastCode(Guid.Parse(newOrder.SucursalOrigenId), date);
+
+            var code = Codes.GetCode(branch.Codigo, lastCode);
+            newOrder.Clave = code;
             await _repository.Create(newOrder);
             return newOrder.ToTrackingOrderFormDto();
         }

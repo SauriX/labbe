@@ -268,6 +268,9 @@ namespace Service.MedicalRecord.Application
                 { "Confirmación muestra origen",  trakingorder.Estudios.FirstOrDefault(y => y.SolicitudId == Guid.Parse(x.Solicitudid) && y.EstudioId == x.Id).Solicitud.Estudios.FirstOrDefault(w=>w.EstudioId==x.Id).EstatusId== Status.RequestStudy.TomaDeMuestra?"si":"no"},
                 { "Confirmación muestra destino", ""}
             }).ToList();
+
+            orderForm.Columnas = columns;
+            orderForm.Datos = data;
             return await _pdfClient.DeliverForm(orderForm);
         }
     }
