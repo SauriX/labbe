@@ -128,7 +128,7 @@ namespace Service.Catalog.Mapper
                     Clave = x.Estudio.Clave,
                     Nombre = x.Estudio.Nombre,
                     Area = x.Estudio.Area?.Nombre ?? "",
-                    Departamento = x.Estudio.Area?.Departamento.Nombre,
+                    Departamento = x.Estudio.Area?.Departamento?.Nombre,
                     Precio = x.Precio,
                     Activo = x.Activo,
                 })?.ToList(),
