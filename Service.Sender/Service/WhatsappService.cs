@@ -26,7 +26,7 @@ namespace Service.Sender.Service
 
             using HttpClient _client = new HttpClient();
 
-            var response = await _client.PostAsync($"https://api.chat-api.com/instance431309/sendMessage?token={token}", stringContent);
+            var response = await _client.PostAsync($"https://api.1msg.io/431309/sendMessage?token={token}", stringContent);
 
             var data = await response.Content.ReadFromJsonAsync<WhatsappResponseDto>();
 
@@ -55,7 +55,7 @@ namespace Service.Sender.Service
 
             using HttpClient _client = new HttpClient();
 
-            var response = await _client.PostAsync($"https://api.chat-api.com/instance431309/sendFile?token={token}", stringContent);
+            var response = await _client.PostAsync($"https://api.1msg.io/431309/sendFile?token={token}", stringContent);
 
             var data = await response.Content.ReadFromJsonAsync<WhatsappResponseDto>();
 
