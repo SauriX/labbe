@@ -15,11 +15,13 @@ namespace Service.MedicalRecord.Mapper
             {
                 Solicitudes = model.Select(x => new WorkListRequestDto
                 {
+                    Id = x.Id,
                     Solicitud = x.Clave,
                     Paciente = x.Expediente.NombreCompleto.ToUpper(),
                     HoraSolicitud = x.FechaCreo.ToString("HH:mm"),
                     Estudios = x.Estudios.Select(s => new WorkListStudyDto
                     {
+                        SolicitudEstudioId = s.Id,
                         EstudioId = s.EstudioId,
                         Estudio = s.Nombre.ToUpper(),
                         Estatus = s.Estatus.Nombre.ToUpper(),

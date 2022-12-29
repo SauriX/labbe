@@ -11,16 +11,30 @@ using ClosedXML.Report;
 using System.Linq;
 using MoreLinq;
 using Shared.Extensions;
+using Service.MedicalRecord.Client.IClient;
+using Service.MedicalRecord.Domain.Catalogs;
+using Service.MedicalRecord.Dtos.WorkList;
+using Shared.Dictionary;
+using Shared.Error;
+using System.Net;
 
 namespace Service.MedicalRecord.Application
 {
     public class MassSearchApplication : IMassSearchApplication
     {
         private readonly IMassSearchRepository _repository;
+        private readonly IWorkListRepository _workListRepository;
+        private readonly ICatalogClient _catalogClient;
+        private readonly IRepository<Branch> _branchRepository;
+        private readonly IPdfClient _pdfClient;
 
-        public MassSearchApplication(IMassSearchRepository repository)
+        public MassSearchApplication(IMassSearchRepository repository, IPdfClient pdfClient, IWorkListRepository workListRepository, ICatalogClient catalogClient, IRepository<Branch> branchRepository)
         {
             _repository = repository;
+            _pdfClient = pdfClient;
+            _catalogClient = catalogClient;
+            _workListRepository = workListRepository;
+            _branchRepository = branchRepository;
         }
 
         public async Task<(byte[] file, string fileName)> ExportList(DeliverResultsFilterDto search)
@@ -85,6 +99,61 @@ namespace Service.MedicalRecord.Application
             template.Format();
 
             return (template.ToByteArray(), $"Busqueda y envío de captura de resultados.xlsx");
+        }
+
+        public async Task<byte[]> DownloadResultsPdf(MassSearchFilterDto filter)
+        {
+            var studies = await GetByFilter(filter);
+            var results = studies.Results.SelectMany(x => x.Parameters).ToList();
+
+            if (filter.Area == 0 && filter.Sucursales != null || filter.Sucursales.Count == 0)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.MissingFilters("El parámetro área y sucursales"));
+            }
+
+            var requests = await _workListRepository.GetMassiveWorkList(filter.Area, filter.Sucursales, filter.Fechas);
+
+            var studiesIds = requests.SelectMany(x => x.Estudios).Select(x => x.EstudioId).ToList();
+            var studyParams = await _catalogClient.GetStudies(studiesIds);
+
+            var data = requests.ToWorkListDto();
+            var branches = await _branchRepository.Get(x => filter.Sucursales.Contains(x.Id));
+
+            data.HojaTrabajo = filter.NombreArea;
+            data.Sucursal = string.Join(", ", branches.Select(x => x.Nombre));
+            data.Fechas = new List<string> { filter.Fechas.First().ToString("dd/MM/yyyy"), filter.Fechas.Last().ToString("dd/MM/yyyy") };
+            data.MostrarResultado = true;
+
+            foreach (var request in data.Solicitudes)
+            {
+                foreach (var study in request.Estudios)
+                {
+                    var st = studyParams.FirstOrDefault(x => x.Id == study.EstudioId);
+                    if (st != null)
+                    {
+                        var parameters = st.Parametros;
+                        foreach (var param in parameters.Where(x => x.TipoValor != "9"))
+                        {
+                            param.SolicitudEstudioId = study.SolicitudEstudioId;
+                            param.EstudioId = study.EstudioId;
+                            var result = results.Find(x => x.SolicitudEstudioId == study.SolicitudEstudioId && x.Id.ToString() == param.Id);
+
+                            study.ResultadoListasTrabajo.Add(new WorkListStudyResultsDto
+                            {
+                                Clave = result.Clave,
+                                Resultado = result.Valor,
+                                Unidades = result.Unidades,
+
+                            });
+                        }
+                    }
+                }
+            }
+
+            var file = await _pdfClient.GenerateWorkList(data);
+
+
+            return file;
         }
 
         public async Task<List<RequestsInfoDto>> GetAllCaptureResults(DeliverResultsFilterDto search)

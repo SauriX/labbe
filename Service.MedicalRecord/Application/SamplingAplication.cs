@@ -50,7 +50,7 @@ namespace Service.MedicalRecord.Application
             template.AddVariable("Titulo", "Toma de Muestra de Estudio");
             template.AddVariable("FechaInicio", search.Fecha.First().ToString("dd/MM/yyyy"));
             template.AddVariable("FechaFinal", search.Fecha.Last().ToString("dd/MM/yyyy"));
-            template.AddVariable("Expedientes", studies);
+            template.AddVariable("Solicitudes", studies);
 
             template.Generate();
 
