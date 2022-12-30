@@ -138,7 +138,7 @@ namespace Service.MedicalRecord.Application
                     var st = studiesParams.FirstOrDefault(x => x.Id == study.EstudioId);
                     if (st == null) continue;
 
-                    study.Parametros = st.Parametros;
+                    study.Parametros = st.Parametros.Where(x => !x.TipoValor.In(VT.Observacion, VT.Etiqueta, VT.SinValor, VT.Texto, VT.Parrafo)).ToList();
                     study.Indicaciones = st.Indicaciones;
                 }
 
@@ -156,7 +156,7 @@ namespace Service.MedicalRecord.Application
                 var st = studiesParams.FirstOrDefault(x => x.Id == study.EstudioId);
                 if (st == null) continue;
 
-                study.Parametros = st.Parametros;
+                study.Parametros = st.Parametros.Where(x => !x.TipoValor.In(VT.Observacion, VT.Etiqueta, VT.SinValor, VT.Texto, VT.Parrafo)).ToList();
                 study.Indicaciones = st.Indicaciones;
 
                 var promos = studiesPromos.Where(x => x.EstudioId == study.EstudioId).ToList();
