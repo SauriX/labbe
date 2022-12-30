@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Service.Report.Context;
+using Service.Report.Domain.Indicators;
 using Service.Report.Domain.Request;
 using Service.Report.Dtos;
 using Service.Report.Repository.IRepository;
 using System;
+using EFCore.BulkExtensions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -223,6 +225,15 @@ namespace Service.Report.Repository
             return await report.ToListAsync();
         }
 
+        public async Task CreateIndicators(List<Indicators> indicator)
+        {
+            await _context.BulkInsertAsync(indicator);
+        }
+        
+        public async Task UpdateIndicators(List<Indicators> indicator)
+        {
+            await _context.BulkUpdateAsync(indicator);
+        }
 
     }
 }

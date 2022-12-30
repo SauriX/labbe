@@ -73,7 +73,7 @@ namespace Service.MedicalRecord.Repository
             return await routeTrackingList.ToListAsync();
         }
         public async Task<TrackingOrder> getById(Guid Id) {
-            var route =await  _context.CAT_Seguimiento_Ruta.Include(x => x.Estudios).ThenInclude(x=>x.Solicitud.Sucursal).AsQueryable().FirstOrDefaultAsync(x=>x.Id==Id);
+            var route = await _context.CAT_Seguimiento_Ruta.Include(x => x.Estudios).ThenInclude(x => x.Solicitud.Sucursal).Include(x => x.Estudios).ThenInclude(x => x.Solicitud.Estatus).Include(x => x.Estudios).ThenInclude(x => x.Solicitud.Estudios).ThenInclude(x => x.Estatus).Include(x => x.Estudios).ThenInclude(x => x.Solicitud.Expediente).AsQueryable().FirstOrDefaultAsync(x=>x.Id==Id);
             return route;
         }
         public async Task Update(RouteTracking route) {

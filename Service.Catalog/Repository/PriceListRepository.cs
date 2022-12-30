@@ -21,23 +21,16 @@ namespace Service.Catalog.Repository
 
         public async Task<List<PriceList>> GetAll(string search)
         {
-            var indications = _context.CAT_ListaPrecio.AsQueryable()
-                    .Include(x => x.Estudios)
-                    .ThenInclude(x => x.Estudio).ThenInclude(x => x.Area).ThenInclude(x => x.Departamento)
-                    .Include(x => x.Estudios).ThenInclude(x => x.Estudio).ThenInclude(x => x.Tapon)
-                    .Include(x => x.Sucursales).ThenInclude(x => x.Sucursal)
-                    .Include(x => x.Compañia).ThenInclude(x => x.Compañia)
-                    .Include(x => x.Medicos).ThenInclude(x => x.Medico)
-                    .AsQueryable();
+            var prices = _context.CAT_ListaPrecio.AsQueryable();
 
             search = search.Trim().ToLower();
 
             if (!string.IsNullOrWhiteSpace(search) && search != "all")
             {
-                indications = indications.Where(x => x.Clave.ToLower().Contains(search) || x.Nombre.ToLower().Contains(search));
+                prices= prices.Where(x => x.Clave.ToLower().Contains(search) || x.Nombre.ToLower().Contains(search));
             }
 
-            return await indications.ToListAsync();
+            return await prices.ToListAsync();
         }
 
         public async Task<PriceList_Study> GetPriceStudyById(int studyId, Guid branchId, Guid companyId)
@@ -107,7 +100,11 @@ namespace Service.Catalog.Repository
         }
         public async Task<List<PriceList>> GetActive()
         {
-            var prices = await _context.CAT_ListaPrecio.Where(x => x.Activo).ToListAsync();
+            var prices = await _context.CAT_ListaPrecio.Include(x => x.Estudios).ThenInclude(x => x.Estudio).ThenInclude(x => x.Area).ThenInclude(x => x.Departamento)
+                    .Include(x => x.Estudios).ThenInclude(x => x.Estudio).ThenInclude(x => x.Tapon)
+                    .Include(x => x.Sucursales).ThenInclude(x => x.Sucursal)
+                    .Include(x => x.Compañia).ThenInclude(x => x.Compañia)
+                    .Include(x => x.Medicos).ThenInclude(x => x.Medico).Where(x => x.Activo).ToListAsync();
 
             return prices;
         }

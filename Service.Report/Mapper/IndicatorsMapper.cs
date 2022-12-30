@@ -1,4 +1,5 @@
-﻿using Service.Report.Domain.MedicalRecord;
+﻿using Service.Report.Domain.Indicators;
+using Service.Report.Domain.MedicalRecord;
 using Service.Report.Dtos.Indicators;
 using System;
 using System.Collections.Generic;
@@ -115,6 +116,23 @@ namespace Service.Report.Mapper
             };
 
             return data;
+        }
+
+        public static List<Indicators> ToModel(this List<IndicatorsStatsDto> dto)
+        {
+            if (dto == null) return null;
+
+            return dto.Select(x => new Indicators
+            {
+                Id = Guid.NewGuid(),
+                Pacientes = x.Pacientes,
+                Ingresos = x.Ingresos,
+                CostoTomaCalculado = x.CostoTomaCalculado,
+                CostoReactivo = x.CostoReactivo,
+                CostoFijo = x.CostoFijo,
+                SucursalId = Guid.Parse(x.Sucursal),
+                UtilidadOperacion = x.UtilidadOperacion
+            }).ToList();
         }
     }
 }
