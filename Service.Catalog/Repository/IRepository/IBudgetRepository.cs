@@ -11,6 +11,7 @@ namespace Service.Catalog.Repository.IRepository
         Task<List<Budget>> GetActive();
         Task<Budget> GetById(int id);
         Task<List<Budget>> GetBudgetByBranch(Guid branchId);
+        Task<List<Budget>> GetBudgetsByBranch(List<Guid> branchId);
         Task<bool> IsDuplicate(Budget budget);
         Task Create(Budget budget);
         Task Update(Budget budget);

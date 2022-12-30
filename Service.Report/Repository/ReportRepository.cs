@@ -161,6 +161,18 @@ namespace Service.Report.Repository
                 query = report.ToQueryString();
             }
 
+            if(search.FechaInicial != DateTime.MinValue && search.FechaFinal != DateTime.MinValue)
+            {
+                report = report.
+                    Where(x => x.Fecha.Date >= search.FechaInicial && x.Fecha.Date <= search.FechaFinal);
+                query = report.ToQueryString();
+            }
+            
+            if(search.FechaIndividual != DateTime.MinValue)
+            {
+                report = report.Where(x => x.Fecha.Date == search.FechaIndividual.Date);
+            }
+
             return await report.ToListAsync();
         }
 
@@ -210,5 +222,7 @@ namespace Service.Report.Repository
 
             return await report.ToListAsync();
         }
+
+
     }
 }

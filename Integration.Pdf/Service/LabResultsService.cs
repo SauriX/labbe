@@ -394,7 +394,7 @@ namespace Integration.Pdf.Service
 
             var line3 = new Col[]
             {
-                        new Col("Paciente Número", 12, fontText, ParagraphAlignment.Left),
+                        new Col("No. Solicitud", 12, fontText, ParagraphAlignment.Left),
                         new Col($": {results.SolicitudInfo?.Clave}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
                         new Col("Sexo", 12, fontText, ParagraphAlignment.Left),
                         new Col($": {results.SolicitudInfo?.Sexo}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
@@ -419,7 +419,7 @@ namespace Integration.Pdf.Service
             };
             header.AddBorderedText(line5, right: false, left: false);
 
-            header.AddSpace(10);
+            header.AddSpace(results.SolicitudInfo?.Paciente.Length > 25 ? 10 : 20);
 
             List<Col> studyHeader = new List<Col>()
                     {

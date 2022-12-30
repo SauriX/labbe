@@ -34,18 +34,22 @@ namespace Service.MedicalRecord.Mapper
                         {
                             Id = solicitud.Id,
                             Clave = solicitud.Clave,
-                            paciente = solicitud.Expediente.NombreCompleto,
-                            edad = solicitud.Expediente.Edad,
+                            Paciente = solicitud.Expediente.NombreCompleto,
+                            Edad = solicitud.Expediente.Edad,
                             Genero = solicitud.Expediente.Genero,
-                            NombreEstudio = estudios[j].Clave,
                             ExpedienteId = solicitud.ExpedienteId,
+                            HoraSolicitud = solicitud.FechaCreo.ToString("HH:mm"),
+                            NombreEstudio = estudios[j].Clave,
                             Parameters = estudios[j].Resultados
                             .Where(x => x.TipoValorId != "9")
                             .Select(x => new MassSearchParameter
                             {
-
+                                Id = x.ParametroId,
+                                SolicitudEstudioId = x.SolicitudEstudioId,
+                                EstudioId = x.EstudioId,
                                 Nombre = x.NombreCorto,
-                                unidades = x.Unidades,
+                                Clave = x.Clave,
+                                Unidades = x.Unidades,
                                 Valor = x.Resultado
                             }).ToList(),
                         });
@@ -58,7 +62,7 @@ namespace Service.MedicalRecord.Mapper
                     {
                         
                         Nombre = x.NombreCorto,
-                        unidades = x.Unidades,
+                        Unidades = x.Unidades,
 
                     }).ToList(),
                     Results = results

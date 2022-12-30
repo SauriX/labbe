@@ -300,9 +300,8 @@ namespace Service.MedicalRecord.Application
                             }
                         }
                         resultsIds.Add(study.Id);
+                        study.Metodo = currentStudy.Metodo;
                     }
-                    study.Metodo = currentStudy.Metodo;
-
                 }
 
 

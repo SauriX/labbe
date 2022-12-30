@@ -25,6 +25,7 @@
         public static string DuplicatedDestiny(string name) => $"{name} no puede ser el mismo que la sucursal de origen, favor de ingresar otro valor";
         public static string EmptyDestiny(string name) => $"{name} no puede estar vacio, favor de ingresar un valor";
         public static string DuplicatedDate(string name) => $"{name} ya se encuentra asignado(a) a otra lealtad, favor de ingresar otro valor";
+        public static string MissingFilters(string name) => $"{name} son requeridos para la descarga del formato";
         public static string RabbitMQError(string url, int retry, string contract, string messageId, string message, string excepciones)
         {
             return $"" +

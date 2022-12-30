@@ -9,6 +9,11 @@ namespace Integration.Pdf.Models
         {
             Color = Colors.Black,
         };
+        public readonly static Font FONT_UNDERLINE = new Font("Calibri", 9)
+        {
+            Color = Colors.Black,
+            Underline = Underline.Dash
+        };
         public readonly static Font FONT_BOLD = new Font("Calibri", 9)
         {
             Color = Colors.Black,

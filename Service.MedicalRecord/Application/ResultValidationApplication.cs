@@ -51,16 +51,21 @@ namespace Service.MedicalRecord.Application
                 }
             }
 
-            var path = Assets.InformeExpedientes;
+            var path = Assets.InformeExpedientesValuidation;
 
             var template = new XLTemplate(path);
 
             template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
             template.AddVariable("Titulo", "Validación de Estudio");
-            if(search.Fecha!=null || search.Fecha.Length <= 0) { 
-            template.AddVariable("FechaInicio", search.Fecha.First().ToString("dd/MM/yyyy"));
-            template.AddVariable("FechaFinal", search.Fecha.Last().ToString("dd/MM/yyyy"));
+            if (search.Fecha != null)
+            {
+                template.AddVariable("FechaInicio", search.Fecha.First().ToString("dd/MM/yyyy"));
+                template.AddVariable("FechaFinal", search.Fecha.Last().ToString("dd/MM/yyyy"));
+            }
+            else {
+                template.AddVariable("FechaInicio", DateTime.MinValue.ToShortDateString());
+                template.AddVariable("FechaFinal", DateTime.Now.ToShortDateString());
             }
             template.AddVariable("Expedientes", studies);
 
@@ -135,11 +140,13 @@ namespace Service.MedicalRecord.Application
                     {
                         study.EstatusId = Status.RequestStudy.Validado;
                         study.FechaValidacion = DateTime.Now;
+                        study.UsuarioValidacion = item.Usuario;
                     }
                     else
                     {
                         study.EstatusId = Status.RequestStudy.Capturado;
                         study.FechaCaptura = DateTime.Now;
+                        study.UsuarioCaptura = item.Usuario;
                     }
                     
                 }
