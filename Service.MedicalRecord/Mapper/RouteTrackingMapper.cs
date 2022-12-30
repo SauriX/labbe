@@ -1,6 +1,8 @@
-﻿using Service.MedicalRecord.Domain.Request;
+﻿using Service.MedicalRecord.Dictionary;
+using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Domain.RouteTracking;
 using Service.MedicalRecord.Domain.TrackingOrder;
+using Service.MedicalRecord.Dtos.DeliverOrder;
 using Service.MedicalRecord.Dtos.RouteTracking;
 using Service.MedicalRecord.Dtos.Sampling;
 using System;
@@ -29,6 +31,24 @@ namespace Service.MedicalRecord.Mapper
 
             }).ToList();
         }
+
+        public static RouteTrackingListDto ToRouteTrackingDtoList(this TrackingOrder x)
+        {
+            if (x == null) return null;
+
+            return  new RouteTrackingListDto
+            {
+                Id = x.Id,
+                Seguimiento = x.Clave,
+                Clave = x.Clave,
+                Sucursal = x.Estudios.Count > 0 ? x.Estudios.FirstOrDefault().Solicitud.Sucursal.Nombre : "",
+                Fecha = x.FechaCreo.ToString(),
+                Status = x.Activo.ToString(),
+                Estudios = x.Estudios.ToList().ToStudyRouteTrackingDto(x.Id),
+                rutaId = Guid.Parse(x.RutaId)
+
+            };
+        }
         public static RouteTrackingFormDto ToRouteTrackingDto(this TrackingOrder x)
         {
             if (x == null) return null;
@@ -54,6 +74,7 @@ namespace Service.MedicalRecord.Mapper
         }
         public static List<RouteTrackingStudyListDto> ToStudyRouteTrackingDto(this ICollection<TrackingOrderDetail> model, Guid ruteid)
         {
+            var modeling = model;
             return model.Select(x => new RouteTrackingStudyListDto
             {
                 Id = x.EstudioId,
@@ -70,5 +91,40 @@ namespace Service.MedicalRecord.Mapper
                 RouteId = ruteid.ToString(),
             }).ToList();
         }
+
+
+        public static List<DeliverOrderStudyDto> toDeliverOrderStudyDto(this ICollection<RouteTrackingStudyListDto> model , TrackingOrder order) {
+            return model.Select(x => new DeliverOrderStudyDto {
+            Clave= x.Clave,
+            Estudio =x.Nombre,
+                Temperatura = Convert.ToDecimal(order.Temperatura),
+                Paciente =order.Estudios.FirstOrDefault(y=>y.SolicitudId == Guid.Parse(x.Solicitudid) && y.EstudioId == x.Id).Solicitud.Expediente.NombreCompleto,
+                ConfirmacionOrigen = order.Estudios.FirstOrDefault(y => y.SolicitudId == Guid.Parse(x.Solicitudid) && y.EstudioId == x.Id).Solicitud.Estudios.FirstOrDefault(w=>w.EstudioId==x.Id).EstatusId== Status.RequestStudy.TomaDeMuestra,
+                ConfirmacionDestino =false,
+
+            }).ToList();
+        }
+
+        public static DeliverOrderdDto toDeliverOrder(this RouteTrackingListDto order,string responsableEnvio) {
+
+            return new DeliverOrderdDto
+            {
+                Destino=order.Sucursal,
+                ResponsableRecive = "",
+                FechaEntestimada = order.Fecha,
+                Origen = order.Sucursal,
+                ResponsableEnvio = responsableEnvio,
+                TransportistqName = "",
+                Medioentrega = "",
+                FechaEnvio = "",
+
+
+            };
+        
+            
+        }
     }
+
+
+
 }

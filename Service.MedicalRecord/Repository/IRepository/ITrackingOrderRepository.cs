@@ -14,5 +14,6 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task<bool> ConfirmarRecoleccion(Guid seguimientoId);
         Task<bool> CancelarRecoleccion(Guid seguimientoId);
         Task<List<Domain.Request.RequestStudy>> FindEstudios(List<int> estudios);
+        Task<string> GetLastCode(Guid branchId, string date);
     }
 }
