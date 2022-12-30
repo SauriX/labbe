@@ -361,6 +361,7 @@ namespace Service.MedicalRecord.Application
                             }
 
                             param.Resultado = result.Resultado;
+                            param.ObservacionesId = result.ObservacionesId ?? "";
                         }
                         param.ResultadoId = result.Id.ToString();
                         param.Formula = result.Formula;
