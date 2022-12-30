@@ -28,6 +28,7 @@ using Service.MedicalRecord.Domain.Quotation;
 using QuotationTemplates = Service.MedicalRecord.Dictionary.EmailTemplates.Quotation;
 using Service.MedicalRecord.Dtos.Promotion;
 using Service.MedicalRecord.Dtos.Request;
+using VT = Shared.Dictionary.Catalogs.ValueType;
 
 namespace Service.MedicalRecord.Application
 {
@@ -138,7 +139,7 @@ namespace Service.MedicalRecord.Application
                     var st = studiesParams.FirstOrDefault(x => x.Id == study.EstudioId);
                     if (st == null) continue;
 
-                    study.Parametros = st.Parametros;
+                    study.Parametros = st.Parametros.Where(x => !x.TipoValor.In(VT.Observacion, VT.Etiqueta, VT.SinValor, VT.Texto, VT.Parrafo)).ToList();
                     study.Indicaciones = st.Indicaciones;
                 }
 
@@ -156,7 +157,7 @@ namespace Service.MedicalRecord.Application
                 var st = studiesParams.FirstOrDefault(x => x.Id == study.EstudioId);
                 if (st == null) continue;
 
-                study.Parametros = st.Parametros;
+                study.Parametros = st.Parametros.Where(x => !x.TipoValor.In(VT.Observacion, VT.Etiqueta, VT.SinValor, VT.Texto, VT.Parrafo)).ToList();
                 study.Indicaciones = st.Indicaciones;
 
                 var promos = studiesPromos.Where(x => x.EstudioId == study.EstudioId).ToList();

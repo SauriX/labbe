@@ -12,7 +12,7 @@ using PL = Shared.Dictionary.Catalogs.PriceList;
 using DEP = Shared.Dictionary.Catalogs.Department;
 using AREAS = Shared.Dictionary.Catalogs.Area;
 using BR = Shared.Dictionary.Catalogs.Branch;
-using ValueTypes = Shared.Dictionary.Catalogs.TipoValor;
+using ValueTypes = Shared.Dictionary.Catalogs.ValueType;
 using Shared.Utils;
 using ClosedXML.Excel;
 using System.Data;
