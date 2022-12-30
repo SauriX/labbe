@@ -14,5 +14,6 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<List<PendingReciveDto>> GetAllRecive(PendingSearchDto search);
         Task<byte[]> Print(PendingSearchDto search);
         Task<int> UpdateStatus(List<RequestedStudyUpdateDto> requestDto);
+        Task<byte[]> ExportDeliver(Guid id);
     }
 }

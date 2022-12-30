@@ -139,7 +139,14 @@ namespace Service.MedicalRecord.Repository
 
             return true;
         }
+        public async Task<string> GetLastCode(Guid branchId, string date)
+        {
+            var lastRequest = await _context.CAT_Expedientes
+                .OrderByDescending(x => x.FechaCreo)
+                .FirstOrDefaultAsync(x => x.IdSucursal == branchId && x.Expediente.StartsWith(date));
 
+            return lastRequest?.Expediente;
+        }
         public async Task<bool> CancelarRecoleccion(Guid seguimientoId)
         {
             var solicitudes = await _context.Relacion_Seguimiento_Solicitud.Where(x => x.SeguimientoId == seguimientoId).ToListAsync();
