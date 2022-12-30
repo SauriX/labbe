@@ -28,6 +28,7 @@ using Service.MedicalRecord.Domain.Quotation;
 using QuotationTemplates = Service.MedicalRecord.Dictionary.EmailTemplates.Quotation;
 using Service.MedicalRecord.Dtos.Promotion;
 using Service.MedicalRecord.Dtos.Request;
+using VT = Shared.Dictionary.Catalogs.ValueType;
 
 namespace Service.MedicalRecord.Application
 {
