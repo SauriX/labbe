@@ -21,7 +21,7 @@ namespace Service.MedicalRecord.Context
         public DbSet<Request> CAT_Solicitud { get; set; }
         public DbSet<RequestStudy> Relacion_Solicitud_Estudio { get; set; }
         public DbSet<RequestStudyWee> Relacion_Estudio_WeeClinic { get; set; }
-        public DbSet<ClinicResults> ClinicResults { get; set; }
+        public DbSet<ClinicResults> Resultados_Clinicos { get; set; }
         public DbSet<RequestPack> Relacion_Solicitud_Paquete { get; set; }
         public DbSet<RequestPayment> Relacion_Solicitud_Pago { get; set; }
         public DbSet<RequestImage> Relacion_Solicitud_Imagen { get; set; }

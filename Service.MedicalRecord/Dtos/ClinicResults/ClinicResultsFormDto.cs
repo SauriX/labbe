@@ -21,6 +21,7 @@ namespace Service.MedicalRecord.Dtos.ClinicResults
         public decimal? CriticoMinimo { get; set; }
         public decimal? CriticoMaximo { get; set; }
         public string Resultado { get; set; }
+        public string ObservacionesId { get; set; }
         public string Formula { get; set; }
         public string NombreCorto { get; set; }
         public byte Estatus { get; set; }

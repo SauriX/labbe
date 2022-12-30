@@ -96,6 +96,7 @@ namespace Service.MedicalRecord.Mapper
                 CriticoMaximo = x.CriticoMaximo,
                 ParametroId = Guid.Parse(x.ParametroId),
                 Resultado = x.Resultado,
+                ObservacionesId = x.ObservacionesId,
                 Unidades = x.UnidadNombre,
                 Formula = x?.Formula,
                 NombreCorto = x?.NombreCorto,
@@ -282,6 +283,7 @@ namespace Service.MedicalRecord.Mapper
                     CriticoMaximo = x.CriticoMaximo,
                     ParametroId = Guid.Parse(x.ParametroId),
                     Resultado = x.Resultado,
+                    ObservacionesId = x.ObservacionesId,
                     Unidades = x.UnidadNombre,
                     Formula = x?.Formula,
                     NombreCorto = x?.NombreCorto
