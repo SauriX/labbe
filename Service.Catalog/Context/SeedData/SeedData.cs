@@ -16,7 +16,7 @@ using BR = Shared.Dictionary.Catalogs.Branch;
 using COMP = Shared.Dictionary.Catalogs.Company;
 using MED = Shared.Dictionary.Catalogs.Medic;
 using OR = Shared.Dictionary.Catalogs.Origin;
-using ValueTypes = Shared.Dictionary.Catalogs.TipoValor;
+using ValueTypes = Shared.Dictionary.Catalogs.ValueType;
 using Service.Catalog.Domain.Parameter;
 using Service.Catalog.Domain.Study;
 using Service.Catalog.Domain.Packet;

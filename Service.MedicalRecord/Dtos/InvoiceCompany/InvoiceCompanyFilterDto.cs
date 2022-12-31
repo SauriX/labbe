@@ -10,5 +10,7 @@ namespace Service.MedicalRecord.Dtos.InvoiceCompany
         public List<Guid> Companias { get; set; }
         public List<Guid> Sucursales { get; set; }
         public List<int> Ciudades { get; set; }
+        public List<string> TipoFactura { get; set; }
+        public string Buscar { get; set; }
     }
 }

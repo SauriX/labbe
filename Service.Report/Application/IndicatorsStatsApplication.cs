@@ -107,5 +107,21 @@ namespace Service.Report.Application
 
             return servicesCost.ServicesCostGeneric();
         }
+
+        public async Task Create(List<IndicatorsStatsDto> indicators)
+        {
+            var newIndicator = indicators.ToModel();
+
+            await _repository.CreateIndicators(newIndicator);
+        }
+        
+        public async Task Update(List<IndicatorsStatsDto> indicators)
+        {
+            var newIndicator = indicators.ToModel();
+
+            await _repository.UpdateIndicators(newIndicator);
+        }
+
+
     }
 }

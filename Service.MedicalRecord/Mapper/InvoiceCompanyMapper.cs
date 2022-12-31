@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Service.MedicalRecord.Domain.Request;
 using System.Linq;
+using System;
 
 namespace Service.MedicalRecord.Mapper
 {
@@ -25,26 +26,45 @@ namespace Service.MedicalRecord.Mapper
                     Cargo = x.Cargo,
                     Clave = x.Clave,
                     Descuento = x.Descuento,
-                    Monto = x.Total,
+                    Monto = x.TotalEstudios,
                     Nombre = x.Expediente.NombreCompleto,
                     Compania = x.Compañia?.Nombre,
-                    //RFC = x.Compañia?.RF
+                    CompaniaId = x.Compañia?.Id,
                     ClavePatologica = x.ClavePatologica,
+                    Saldo = x.Saldo,
                     Facturas = x.Pagos.Select(y => new InvoiceCompanyFacturaDto
                     {
                         FacturaId = y.FacturaId,
-                        Estatus = y.EstatusId,
+                        EstatusId = y.EstatusId,
+                        FechaCreo = y.FechaCreo.ToString("R"),
+                        Estatus = new InvoiceCompanyStatusInvoice
+                        {
+                            Nombre = y.Estatus?.Nombre,
+                            Clave = y.Estatus?.Clave,
+
+                        }
                     }).ToList(),
                     Estudios = x.Estudios.Select(y => new InvoiceCompanyStudiesInfoDto
                     {
+                        SolicitudId = x.Id,
+                        ClaveSolicitud = x.Clave,
                         SolicitudEstudioId = x.Id,
                         Estudio = y.Nombre,
                         Clave = y.Clave,
+                        Area = y.AreaId,
                         Precio = y.Precio,
-                        Area = y.AreaId
+                        PrecioFinal = y.PrecioFinal,
+                        Descuento = y.Descuento,
+                        DescuentoPorcentaje = y.DescuentoPorcentaje,
+
+
                     }).ToList(),
                 }).ToList(),
             };
+        }
+        public static int ToConsecutiveSerie(this RequestPayment model)
+        {
+            return Int32.Parse(model.Serie) + 1;
         }
     }
 }

@@ -7,7 +7,7 @@ namespace Service.Report.Dtos.Indicators
     {
         public Guid Id { get; set; }
         public string Sucursal { get; set; }
-        public decimal Pacientes { get; set; }
+        public int Pacientes { get; set; }
         public decimal Ingresos { get; set; }
         public decimal CostoReactivo { get; set; }
         public decimal CostoTomaCalculado { get; set; }

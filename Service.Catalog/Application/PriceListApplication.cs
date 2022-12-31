@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using VT = Shared.Dictionary.Catalogs.ValueType;
 
 namespace Service.Catalog.Application
 {
@@ -76,6 +77,10 @@ namespace Service.Catalog.Application
             {
                 throw new CustomException(HttpStatusCode.NotFound, "El estudio no contiene parámetros");
             }
+
+            price.Estudio.Parameters = price.Estudio.Parameters
+                .Where(x => !x.Parametro.TipoValor.In(VT.Observacion, VT.Etiqueta, VT.SinValor, VT.Texto, VT.Parrafo))
+                .ToList();
 
             var priceDto = price.ToPriceListInfoStudyDto();
             priceDto.Identificador = Helpers.GenerateRandomHex(6);
@@ -162,6 +167,10 @@ namespace Service.Catalog.Application
                 {
                     throw new CustomException(HttpStatusCode.NotFound, $"Estudio ${study.Clave} no tiene precio configurado");
                 }
+
+                study.Parametros = study.Parametros
+                    .Where(x => !x.TipoValor.In(VT.Observacion, VT.Etiqueta, VT.SinValor, VT.Texto, VT.Parrafo))
+                    .ToList();
 
                 study.Precio = (decimal)studyPrice;
             }

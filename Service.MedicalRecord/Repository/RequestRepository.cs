@@ -212,7 +212,10 @@ namespace Service.MedicalRecord.Repository
 
         public async Task<List<RequestPayment>> GetPayments(Guid requestId)
         {
-            var payments = await _context.Relacion_Solicitud_Pago.Where(x => x.SolicitudId == requestId).OrderBy(x => x.FechaCreo).ToListAsync();
+            var payments = await _context.Relacion_Solicitud_Pago
+                .Where(x => x.SolicitudId == requestId)
+                .OrderBy(x => x.FechaCreo)
+                .ToListAsync();
 
             return payments;
         }
@@ -351,7 +354,7 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Sucursal)
                 .Include(x => x.Estudios).ThenInclude(x => x.Estatus)
                 .Include(x => x.Estudios).ThenInclude(x => x.Tapon)
-                .Include(x => x.Pagos)
+                .Include(x => x.Pagos).ThenInclude(x => x.Estatus).OrderBy(x => x.FechaCreo)
                 .OrderBy(x => x.FechaCreo)
                 .Where(x => x.Procedencia == 2)
                 .AsQueryable();
@@ -370,7 +373,33 @@ namespace Service.MedicalRecord.Repository
             {
                 requests = requests.Where(x => x.CompañiaId != null && filter.Companias.Contains((Guid)x.CompañiaId));
             }
+            if (!string.IsNullOrWhiteSpace(filter.Buscar))
+            {
+                requests = requests.Where(x => x.Clave.ToLower().Contains(filter.Buscar)
+                || x.ClavePatologica.ToLower().Contains(filter.Buscar)
+                || (x.Expediente.NombrePaciente + " " + x.Expediente.PrimerApellido + " " + x.Expediente.SegundoApellido).ToLower().Contains(filter.Buscar));
+            }
+            if(filter.TipoFactura.Count() > 0)
+            {
+                if (filter.TipoFactura.Contains("facturadas"))
+                {
+                    requests = requests.Where(x => x.Pagos.FirstOrDefault().EstatusId != 3 && x.Pagos.Count() > 0);
+
+                }
+                if (filter.TipoFactura.Contains("noFacturadas"))
+                {
+                    requests = requests.Where(x => x.Pagos.Count() == 0);
+
+                }
+                if (filter.TipoFactura.Contains("canceladas"))
+                {
+                    requests = requests.Where(x => x.Pagos.FirstOrDefault().EstatusId == 3);
+
+                }
+            }
             return requests.ToListAsync();
         }
+
+        
     }
 }

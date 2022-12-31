@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.MedicalRecord.Context;
 
 namespace Service.MedicalRecord.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221227172912_Add_Series_Table")]
+    partial class Add_Series_Table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -284,9 +286,6 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("NombreCorto")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ObservacionesId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("Orden")
                         .HasColumnType("int");
 
@@ -323,7 +322,7 @@ namespace Service.MedicalRecord.Migrations
 
                     b.HasIndex("SolicitudId");
 
-                    b.ToTable("Resultados_Clinicos");
+                    b.ToTable("ClinicResults");
                 });
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.ClinicalResultsPathological", b =>

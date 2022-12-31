@@ -37,6 +37,7 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task BulkUpdateWeeStudies(Guid requestId, List<RequestStudyWee> studies);
         Task DeleteImage(Guid requestId, string code);
         Task<List<Request>> InvoiceCompanyFilter(InvoiceCompanyFilterDto filter);
+        
 
     }
 }
