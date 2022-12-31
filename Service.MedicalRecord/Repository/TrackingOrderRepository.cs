@@ -109,12 +109,12 @@ namespace Service.MedicalRecord.Repository
                         }
             }
 
-            listaEstudio = newlistestudios.AsQueryable();
-            listaEstudio = listaEstudio.Where(x => estudios.Contains(x.EstudioId));
 
-            listaEstudio = listaEstudio.Where(x => x.EstatusId == Status.RequestStudy.TomaDeMuestra || x.EstatusId ==    Status.RequestStudy.Pendiente);
+            newlistestudios = newlistestudios.FindAll(x => estudios.Contains(x.EstudioId));
+
+            newlistestudios = newlistestudios.FindAll(x => x.EstatusId == Status.RequestStudy.TomaDeMuestra );
                 
-            return await listaEstudio.ToListAsync();
+            return  newlistestudios;
         }
 
         public async Task<bool> ConfirmarRecoleccion(Guid seguimientoId)
