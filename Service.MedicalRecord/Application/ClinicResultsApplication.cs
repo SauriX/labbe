@@ -324,6 +324,7 @@ namespace Service.MedicalRecord.Application
                     EstudioId = x.EstudioId,
                     Formula = x.Formula,
                     UltimoResultado = x?.UltimoResultado,
+                    UltimaSolicitudId = x?.UltimaSolicitudId,
                     DeltaCheck = x.DeltaCheck,
                     Orden = i,
                     FCSI = x.FCSI
@@ -374,8 +375,22 @@ namespace Service.MedicalRecord.Application
                                 .SelectMany(x => x.Estudios)
                                 .Where(x => x.EstudioId == st.Id)
                                 .SelectMany(x => x.Resultados)
-                                .Where(x => x.ParametroId.ToString() == param.Id).FirstOrDefault()?.Resultado;
-                            param.UltimoResultado = previousResult == null ? null : previousResult;
+                                .Where(x => x.ParametroId.ToString() == param.Id)
+                                .FirstOrDefault();
+
+                            if (previousResult != null)
+                            {
+                                param.UltimoResultado = previousResult.Resultado == null ? null : previousResult.Resultado;
+
+                                var previousRequest = await _repository.GetRequestById(previousResult.SolicitudId);
+                                if (previousRequest != null)
+                                {
+                                    param.UltimaSolicitud = previousRequest.Clave == null ? null : previousRequest.Clave;
+                                    param.UltimaSolicitudId = previousRequest.Id;
+                                    param.UltimoExpedienteId = previousRequest.ExpedienteId;
+                                }
+                            }
+
                         }
                     }
 

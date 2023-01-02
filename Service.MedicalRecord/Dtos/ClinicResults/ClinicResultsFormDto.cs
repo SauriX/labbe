@@ -31,6 +31,7 @@ namespace Service.MedicalRecord.Dtos.ClinicResults
         public string UsuarioClave { get; set; }
         public string UnidadNombre { get; set; }
         public string UltimoResultado { get; set; }
+        public Guid? UltimaSolicitudId { get; set; }
         public bool DeltaCheck { get; set; }
         public int Orden { get; set; }
         public string Clave { get; set; }
