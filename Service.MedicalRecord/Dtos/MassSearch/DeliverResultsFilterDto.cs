@@ -17,6 +17,7 @@ namespace Service.MedicalRecord.Dtos.MassSearch
         public List<int> Estatus { get; set; }
         public List<Guid> Sucursales { get; set; }
         public List<int> Ciudades { get; set; }
+        public List<int?> Area { get; set; }
         public int TipoFecha { get; set; }
         public List<int> TipoSolicitud { get; set; }
     }
