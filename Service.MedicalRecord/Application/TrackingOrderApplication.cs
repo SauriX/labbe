@@ -22,17 +22,18 @@ namespace Service.MedicalRecord.Application.IApplication
     {
         private readonly ITrackingOrderRepository _repository;
         private readonly IRepository<Branch> _branchRepository;
-        public TrackingOrderApplication(ITrackingOrderRepository repository)
+        public TrackingOrderApplication(ITrackingOrderRepository repository, IRepository<Branch> branchRepository)
         {
             _repository = repository;
+            _branchRepository = branchRepository;       
         }
         public async Task<TrackingOrderDto> Create(TrackingOrderFormDto order)
         {
             var newOrder = order.ToModel();
 
             var date = DateTime.Now.ToString("yyMMdd");
-
-            var branch = await _branchRepository.GetOne(x => x.Id == Guid.Parse(newOrder.SucursalOrigenId));
+            var branchid = Guid.Parse(newOrder.SucursalOrigenId);
+            var branch = await _branchRepository.GetOne(x => x.Id == branchid);
             var lastCode = await _repository.GetLastCode(Guid.Parse(newOrder.SucursalOrigenId), date);
 
             var code = Codes.GetCode(branch.Codigo, lastCode);
@@ -76,8 +77,8 @@ namespace Service.MedicalRecord.Application.IApplication
         public async Task<IEnumerable<EstudiosListDto>> FindEstudios(List<int> estudios)
         {
             var estudiosEncontrados = await _repository.FindEstudios(estudios);
-
-            return estudiosEncontrados.ToStudiesRequestRouteDto(); 
+            var estudis = estudiosEncontrados.ToStudiesRequestRouteDto();
+            return estudis;
         }
 
         
