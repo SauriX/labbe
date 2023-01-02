@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Service.MedicalRecord.Dtos.Catalogs
 {
@@ -26,6 +27,9 @@ namespace Service.MedicalRecord.Dtos.Catalogs
         public int SolicitudEstudioId { get; set; }
         public string ResultadoId { get; set; }
         public string UltimoResultado { get; set; }
+        public string UltimaSolicitud { get; set; }
+        public Guid? UltimaSolicitudId { get; set; }
+        public Guid? UltimoExpedienteId { get; set; }
         public string Formula { get; set; }
         public int Orden { get; set; }
         public string FCSI { get; set; }
