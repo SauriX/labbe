@@ -58,13 +58,13 @@ namespace Integration.Pdf.Service
             section.PageSetup.PageFormat = PageFormat.A4;
             if (results.ImprimrLogos)
             {
-                section.PageSetup.TopMargin = Unit.FromCentimeter(8);
+                section.PageSetup.TopMargin = Unit.FromCentimeter(9);
                 section.PageSetup.HeaderDistance = 0.5;
 
             }
             else
             {
-                section.PageSetup.TopMargin = Unit.FromCentimeter(5);
+                section.PageSetup.TopMargin = Unit.FromCentimeter(6);
                 section.PageSetup.HeaderDistance = 5;
             }
             section.PageSetup.BottomMargin = Unit.FromCentimeter(8);
