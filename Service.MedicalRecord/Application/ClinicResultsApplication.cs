@@ -324,6 +324,7 @@ namespace Service.MedicalRecord.Application
                     EstudioId = x.EstudioId,
                     Formula = x.Formula,
                     UltimoResultado = x?.UltimoResultado,
+                    UltimaSolicitudId = x?.UltimaSolicitudId,
                     DeltaCheck = x.DeltaCheck,
                     Orden = i,
                     FCSI = x.FCSI
@@ -374,8 +375,22 @@ namespace Service.MedicalRecord.Application
                                 .SelectMany(x => x.Estudios)
                                 .Where(x => x.EstudioId == st.Id)
                                 .SelectMany(x => x.Resultados)
-                                .Where(x => x.ParametroId.ToString() == param.Id).FirstOrDefault()?.Resultado;
-                            param.UltimoResultado = previousResult == null ? null : previousResult;
+                                .Where(x => x.ParametroId.ToString() == param.Id)
+                                .FirstOrDefault();
+
+                            if (previousResult != null)
+                            {
+                                param.UltimoResultado = previousResult.Resultado == null ? null : previousResult.Resultado;
+
+                                var previousRequest = await _repository.GetRequestById(previousResult.SolicitudId);
+                                if (previousRequest != null)
+                                {
+                                    param.UltimaSolicitud = previousRequest.Clave == null ? null : previousRequest.Clave;
+                                    param.UltimaSolicitudId = previousRequest.Id;
+                                    param.UltimoExpedienteId = previousRequest.ExpedienteId;
+                                }
+                            }
+
                         }
                     }
 
@@ -497,17 +512,17 @@ namespace Service.MedicalRecord.Application
 
             foreach (var results in resultsPerDay)
             {
-                if (results.ToList().Find(x => x.Id == requestStudyId) != null)
-                {
+                //if (results.ToList().Find(x => x.Id == requestStudyId) != null)
+                //{
                     if (results
-                        .Where(x => x.Id != requestStudyId)
                         .All(x => (x.EstatusId != Status.RequestStudy.Enviado || x.EstatusId != Status.RequestStudy.Cancelado) && (x.EstatusId == Status.RequestStudy.Liberado))
+                        //.Where(x => x.Id != requestStudyId)
                         )
                     {
-                        requestStudies = results.ToList();
+                        requestStudies.AddRange(results.ToList());
 
                     }
-                }
+                //}
             }
 
             return requestStudies;
@@ -896,7 +911,7 @@ namespace Service.MedicalRecord.Application
 
                             byte[] pdfBytesWee = await _pdfClient.GenerateLabResults(existingLabResultsPdfWee);
                             string namePdfWee = string.Concat(existingRequest.Clave, ".pdf");
-                            string pathPdfWee = await SaveResulstPdfPath(pdfBytesWee, namePdfWee);
+                            //string pathPdfWee = await SaveResulstPdfPath(pdfBytesWee, namePdfWee);
 
                             var uploadedFileWee = await UploadResultFile(pdfBytesWee, namePdfWee);
 
@@ -1065,7 +1080,7 @@ namespace Service.MedicalRecord.Application
 
                         byte[] pdfBytesWee = await _pdfClient.GenerateLabResults(existingLabResultsPdfWee);
                         string namePdfWee = string.Concat(existingRequest.Clave, ".pdf");
-                        string pathPdfWee = await SaveResulstPdfPath(pdfBytesWee, namePdfWee);
+                        //string pathPdfWee = await SaveResulstPdfPath(pdfBytesWee, namePdfWee);
 
                         var uploadedFileWee = await UploadResultFile(pdfBytesWee, namePdfWee);
 
@@ -1084,6 +1099,8 @@ namespace Service.MedicalRecord.Application
                 string pathPdf = await SaveResulstPdfPath(pdfBytes, namePdf);
 
                 var pathName = Path.Combine(MedicalRecordPath, pathPdf.Replace("wwwroot/", "")).Replace("\\", "/");
+
+                files.Add(new SenderFiles(new Uri(pathName), namePdf));
 
             }
             try

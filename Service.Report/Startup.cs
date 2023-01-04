@@ -267,6 +267,7 @@ namespace Service.Report
             services.AddScoped<IMaquilaInternApplication, MaquilaInternApplication>();
             services.AddScoped<IMaquilaExternApplication, MaquilaExternApplication>();
             services.AddScoped<IBudgetStatsApplication, BudgetStatsApplication>();
+            services.AddScoped<IIndicatorsStatsApplication, IndicatorsStatsApplication>();
 
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));

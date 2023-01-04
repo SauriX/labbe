@@ -209,13 +209,27 @@ namespace Integration.Pdf.Service
                             }
                         }
 
-                        if (results.ImprimirPrevios) col.Insert(2, new Col(param.UltimoResultado != null ? param.UltimoResultado : "-", 6, Col.FONT_SUBTITLE_BOLD));
+                        if (results.ImprimirPrevios) col.Add(new Col(param.UltimoResultado != null ? param.UltimoResultado : "-", 6, Col.FONT_SUBTITLE_BOLD));
                         section.AddBorderedText(col.ToArray(), top: false, right: false, bottom: false, left: false);
 
-                        var fcsiText = new Col(param.FCSI, 14, font2Column, ParagraphAlignment.Left);
-
-                        if(fcsiExists)
+                        if (fcsiExists)
+                        {
+                            var fcsiText = new Col(param.FCSI, 14, font2Column, ParagraphAlignment.Left);
                             section.AddText(fcsiText);
+                        }
+
+                        if (results.ImprimirCriticos)
+                        {
+                            if (param.Resultado != null && typeValueNumeric && (decimal.Parse(param.Resultado) > param.CriticoMaximo || decimal.Parse(param.Resultado) < param.CriticoMinimo))
+                            {
+                                var criticCol = new Col[]
+                                {
+                                    new Col($"**{param.Resultado}", 7, fontCritic, ParagraphAlignment.Left),
+                                };
+                                section.AddBorderedText(criticCol, top: false, right: false, bottom: false, left: false);
+                            }
+
+                        }
                     }
 
                     var methodExists = !string.IsNullOrEmpty(results.SolicitudInfo?.Metodo);
@@ -251,41 +265,6 @@ namespace Integration.Pdf.Service
                     }
 
                     section.AddSpace(10);
-
-                    if (results.ImprimirCriticos)
-                    {
-                        var notNumericTypeValue = studyParam.Where(x => x.Resultado != null &&
-                        (x.TipoValorId != TypeValue.OpcionMultiple
-                        && x.TipoValorId != TypeValue.Numerico1Columna
-                        && x.TipoValorId != TypeValue.Numerico2Columna
-                        && x.TipoValorId != TypeValue.Numerico3Columna
-                        && x.TipoValorId != TypeValue.Numerico4Columna
-                        && x.TipoValorId != TypeValue.Numerico5Columna
-                        && x.TipoValorId != TypeValue.Texto
-                        && x.TipoValorId != TypeValue.Parrafo
-                        && x.TipoValorId != TypeValue.Etiqueta
-                        && x.TipoValorId != TypeValue.Observacion));
-
-                        var checkCritics = notNumericTypeValue.Any(x => decimal.Parse(x.Resultado) >= x.CriticoMaximo || decimal.Parse(x.Resultado) <= x.CriticoMinimo);
-                        var criticTitle = new Col(checkCritics ? "VALORES CRÍTICOS" : "", 14, fontTitle, ParagraphAlignment.Left);
-
-                        section.AddText(criticTitle);
-                        section.AddSpace(5);
-
-                        foreach (var param in notNumericTypeValue)
-                        {
-                            if (param.Resultado != null && (decimal.Parse(param.Resultado) >= param.CriticoMaximo || decimal.Parse(param.Resultado) <= param.CriticoMinimo))
-                            {
-                                var col = new Col[]
-                                {
-                                    new Col(param.Resultado, 7, fontCritic, ParagraphAlignment.Left),
-                                };
-                                section.AddBorderedText(col, top: false, right: false, bottom: false, left: false);
-                            }
-                        }
-                    }
-
-                    section.AddSpace(5);
 
                     if (i < studyParameter.Count - 1)
                     {
@@ -428,7 +407,7 @@ namespace Integration.Pdf.Service
                         new Col("UNIDADES", 6, Col.FONT_SUBTITLE_BOLD),
                         new Col("REFERENCIA", 6, Col.FONT_SUBTITLE_BOLD),
                     };
-            if (results.ImprimirPrevios) studyHeader.Insert(2, new Col("PREVIO", 6, Col.FONT_SUBTITLE_BOLD));
+            if (results.ImprimirPrevios) studyHeader.Add(new Col("PREVIO", 6, Col.FONT_SUBTITLE_BOLD));
             header.AddBorderedText(studyHeader.ToArray(), top: true, right: false, bottom: true, left: false);
         }
 
