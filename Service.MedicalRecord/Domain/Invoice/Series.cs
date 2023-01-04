@@ -8,5 +8,6 @@ namespace Service.MedicalRecord.Domain.Invoice
         public string Clave { get; set; }
         public string Descripcion { get; set; }
         public bool EsFacturaORecibo { get; set; }
+        public Guid SucursalId { get; set; }
     }
 }
