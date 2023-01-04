@@ -225,14 +225,33 @@ namespace Service.Report.Repository
             return await report.ToListAsync();
         }
 
-        public async Task CreateIndicators(List<Indicators> indicator)
+        public async Task CreateIndicators(Indicators indicator)
         {
-            await _context.BulkInsertAsync(indicator);
+            _context.Add(indicator);
+
+            await _context.SaveChangesAsync();
         }
-        
-        public async Task UpdateIndicators(List<Indicators> indicator)
+
+        public async Task UpdateIndicators(Indicators indicator)
         {
-            await _context.BulkUpdateAsync(indicator);
+            _context.Update(indicator);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> IsDuplicate(Indicators indicator)
+        {
+            var isDuplicate = await _context.CAT_Indicadores.AnyAsync(x => x.SucursalId != indicator.SucursalId);
+
+            return isDuplicate;
+        }
+
+        public async Task<Indicators> GetIndicatorById(Guid id)
+        {
+            var indicator = await _context.CAT_Indicadores.FirstOrDefaultAsync(x => x.Id == id);
+
+            return indicator;
+
         }
 
     }

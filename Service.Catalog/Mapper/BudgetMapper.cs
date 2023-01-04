@@ -30,6 +30,7 @@ namespace Service.Catalog.Mapper
                 Id = x.Id,
                 Clave = x.Clave,
                 Nombre = x.Nombre,
+                CostoFijo = x.CostoFijo,
                 Sucursal = x.Sucursal.Nombre,
                 Activo = x.Activo,
                 FechaAlta = x.FechaCreo
@@ -61,6 +62,7 @@ namespace Service.Catalog.Mapper
                 Id = 0,
                 Clave = dto.Clave.Trim(),
                 Nombre = dto.NombreServicio.Trim(),
+                CostoFijo = dto.CostoFijo,
                 SucursalId = dto.SucursalId,
                 Activo = dto.Activo,
                 UsuarioCreoId = dto.UsuarioId,
@@ -77,6 +79,7 @@ namespace Service.Catalog.Mapper
                 Id = model.Id,
                 Clave = dto.Clave.Trim(),
                 Nombre = dto.NombreServicio.Trim(),
+                CostoFijo = dto.CostoFijo,
                 SucursalId = dto.SucursalId,
                 Activo = dto.Activo,
                 UsuarioCreoId = model.UsuarioCreoId,

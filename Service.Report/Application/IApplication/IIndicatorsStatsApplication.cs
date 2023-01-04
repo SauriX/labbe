@@ -9,6 +9,8 @@ namespace Service.Report.Application.IApplication
     {
         Task<List<Dictionary<string, object>>> GetByFilter(ReportFilterDto search);
         Task<List<ServicesCostDto>> GetServicesCosts(ReportFilterDto search);
+        Task<IndicatorsListDto> Create(IndicatorsStatsDto indicators);
+        Task<IndicatorsListDto> Update(IndicatorsStatsDto indicators);
         Task<(byte[] file, string fileName)> ExportSamplingsCost(ReportFilterDto search);
         Task<(byte[] file, string fileName)> ExportServicesCost(ReportFilterDto search);
         Task<(byte[] file, string fileName)> ExportList(ReportFilterDto search);

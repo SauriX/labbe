@@ -1,5 +1,5 @@
-﻿using Service.Catalog.Domain.Branch;
-using System;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Service.Catalog.Domain.Catalog
 {
@@ -19,6 +19,7 @@ namespace Service.Catalog.Domain.Catalog
         }
 
         public decimal CostoFijo { get; set; }
+        public List<string> Ciudad { get; set; }
         public Guid SucursalId { get; set; }
         public virtual Branch.Branch Sucursal { get; set; }
     }

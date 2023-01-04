@@ -38,6 +38,7 @@ namespace Service.Report.Domain.MedicalRecord
         public decimal PrecioEstudios { get; set; }
         public decimal Total { get; set; }
         public decimal Saldo { get; set; }
+        public decimal CostoFijo { get; set; }
         public DateTime Fecha { get; set; }
         public List<RequestStudies> Estudios { get; set; }
     }
