@@ -101,12 +101,12 @@ namespace Service.MedicalRecord.Mapper
                                       : !string.IsNullOrEmpty(x.EnvioWhatsApp)
                                       ? $"Disponible: Whatsapp"
                                       : "No disponible",
-                    FechaEntrega = y.FechaEntrega.ToString("dd/MM/yyyy"),
+                    FechaEntrega = y.FechaEntrega.ToString("dd/MM/yyyy hh:mm"),
                     Estatus = y.Estatus.Nombre,
-                    Registro = y.EstatusId == 6 
-                            ? $"{y.UsuarioLiberado} - {y.FechaLiberado?.ToString("dd/MM/yyyy")}" 
-                            : y.EstatusId == 7 
-                            ? $"{y.UsuarioEnviado} - {y.FechaEnviado?.ToString("dd/MM/yyyy")}" 
+                    Registro = y.EstatusId == Status.RequestStudy.Liberado 
+                            ? $"{y.UsuarioLiberado} {y.FechaLiberado?.ToString("dd/MM/yyyy hh:mm")}" 
+                            : y.EstatusId == Status.RequestStudy.Enviado 
+                            ? $"{y.UsuarioEnviado} {y.FechaEnviado?.ToString("dd/MM/yyyy hh:mm")}" 
                             : "",
                     IsActiveCheckbox = y.EstatusId == Status.RequestStudy.Liberado || y.EstatusId == Status.RequestStudy.Enviado || y.EstatusId == Status.RequestStudy.Entregado
                 }).ToList(),
