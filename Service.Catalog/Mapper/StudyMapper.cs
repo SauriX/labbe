@@ -38,7 +38,9 @@ namespace Service.Catalog.Mapper
                 Parametros = x.Parameters.OrderBy(x => x.Orden).Select(y => y.Parametro).ToParameterValueStudyDto(),
                 Indicaciones = x.Indications.Select(y => y.Indicacion).ToIndicationListDto(),
                 Metodo = x.Metodo?.Nombre,
-                Clave = x.Clave
+                Clave = x.Clave,
+                Tipo = x.SampleType?.Nombre
+
             });
         }
         public static IEnumerable<PriceStudyList> toPriceStudyList(this List<Study> models) {

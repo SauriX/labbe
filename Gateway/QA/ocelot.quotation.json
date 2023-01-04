@@ -197,6 +197,18 @@
       ],
       "UpstreamPathTemplate": "/api/quotation/ticket/{quotationId}",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/quotation/quote//{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/quotation/quote/{id}",
+      "UpstreamHttpMethod": [ "POST" ]
     }
   ]
 }
