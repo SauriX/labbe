@@ -200,11 +200,10 @@
     },
     {
       "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/quotation/quote/{id}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 24048
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/quotation/quote/{id}",
