@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.MedicalRecord.Application.IApplication;
+using Service.MedicalRecord.Dtos.Invoice;
 using Service.MedicalRecord.Dtos.InvoiceCompany;
 using Shared.Dictionary;
 using System.Collections.Generic;
@@ -31,5 +32,13 @@ namespace Service.MedicalRecord.Controllers
         {
             return await _service.GetNextPaymentNumber(serie);
         }
+
+        [HttpPost("checkin")]
+        [Authorize(Policies.Access)]
+        public async Task<InvoiceDto> CheckInPayment(InvoiceCompanyDto invoice)
+        {
+            return await _service.CheckInPayment(invoice);
+        }
+
     }
 }

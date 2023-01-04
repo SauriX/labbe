@@ -23,6 +23,18 @@
       ],
       "UpstreamPathTemplate": "/api/invoiceCompany/getConsecutiveBySerie/{serie}",
       "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/invoiceCompany/checkin",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/invoiceCompany/checkin",
+      "UpstreamHttpMethod": [ "POST" ]
     }
   ]
 }

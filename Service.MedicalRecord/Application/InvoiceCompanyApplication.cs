@@ -1,20 +1,53 @@
 ﻿using Service.MedicalRecord.Application.IApplication;
+using Service.MedicalRecord.Dtos.Invoice;
 using Service.MedicalRecord.Dtos.InvoiceCompany;
 using Service.MedicalRecord.Mapper;
 using Service.MedicalRecord.Repository.IRepository;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
+using Service.MedicalRecord.Client.IClient;
 
 namespace Service.MedicalRecord.Application
 {
     public class InvoiceCompanyApplication : IInvoiceCompanyApplication
     {
         private readonly IRequestRepository _repository;
+        private readonly IBillingClient _billingClient;
 
-        public InvoiceCompanyApplication(IRequestRepository repository)
+        public InvoiceCompanyApplication(IRequestRepository repository, IBillingClient billingClient)
         {
             _repository = repository;
+            _billingClient = billingClient;
+        }
+
+        public async Task<InvoiceDto> CheckInPayment(InvoiceCompanyDto invoice)
+        {
+
+            InvoiceDto invoiceDto = new InvoiceDto
+            {
+                FormaPago = invoice.FormaPago,
+                MetodoPago = invoice.MetodoPago,
+                UsoCFDI = invoice.UsoCFDI,
+                RegimenFiscal = invoice.RegimenFiscal,
+                RFC = invoice.RFC,
+                Cliente = invoice.Cliente,
+                Productos = invoice.Estudios.Select(x => new ProductDto
+                {
+                    Clave = x.Clave,
+                    Descripcion = "",
+                    Precio = x.Precio,
+                    Descuento = x.Descuento,
+                    Cantidad = 1,
+
+                }).ToList(),
+
+            };
+
+            //var invoiceResponse = await _billingClient.CheckInPayment(invoiceDto);
+         
+            return await _billingClient.CheckInPayment(invoiceDto);
         }
 
         public async Task<InvoiceCompanyInfoDto> GetByFilter(InvoiceCompanyFilterDto filter)

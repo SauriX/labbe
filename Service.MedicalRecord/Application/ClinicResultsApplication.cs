@@ -512,17 +512,17 @@ namespace Service.MedicalRecord.Application
 
             foreach (var results in resultsPerDay)
             {
-                if (results.ToList().Find(x => x.Id == requestStudyId) != null)
-                {
+                //if (results.ToList().Find(x => x.Id == requestStudyId) != null)
+                //{
                     if (results
-                        .Where(x => x.Id != requestStudyId)
                         .All(x => (x.EstatusId != Status.RequestStudy.Enviado || x.EstatusId != Status.RequestStudy.Cancelado) && (x.EstatusId == Status.RequestStudy.Liberado))
+                        //.Where(x => x.Id != requestStudyId)
                         )
                     {
-                        requestStudies = results.ToList();
+                        requestStudies.AddRange(results.ToList());
 
                     }
-                }
+                //}
             }
 
             return requestStudies;
@@ -911,7 +911,7 @@ namespace Service.MedicalRecord.Application
 
                             byte[] pdfBytesWee = await _pdfClient.GenerateLabResults(existingLabResultsPdfWee);
                             string namePdfWee = string.Concat(existingRequest.Clave, ".pdf");
-                            string pathPdfWee = await SaveResulstPdfPath(pdfBytesWee, namePdfWee);
+                            //string pathPdfWee = await SaveResulstPdfPath(pdfBytesWee, namePdfWee);
 
                             var uploadedFileWee = await UploadResultFile(pdfBytesWee, namePdfWee);
 
@@ -1080,7 +1080,7 @@ namespace Service.MedicalRecord.Application
 
                         byte[] pdfBytesWee = await _pdfClient.GenerateLabResults(existingLabResultsPdfWee);
                         string namePdfWee = string.Concat(existingRequest.Clave, ".pdf");
-                        string pathPdfWee = await SaveResulstPdfPath(pdfBytesWee, namePdfWee);
+                        //string pathPdfWee = await SaveResulstPdfPath(pdfBytesWee, namePdfWee);
 
                         var uploadedFileWee = await UploadResultFile(pdfBytesWee, namePdfWee);
 
@@ -1099,6 +1099,8 @@ namespace Service.MedicalRecord.Application
                 string pathPdf = await SaveResulstPdfPath(pdfBytes, namePdf);
 
                 var pathName = Path.Combine(MedicalRecordPath, pathPdf.Replace("wwwroot/", "")).Replace("\\", "/");
+
+                files.Add(new SenderFiles(new Uri(pathName), namePdf));
 
             }
             try
