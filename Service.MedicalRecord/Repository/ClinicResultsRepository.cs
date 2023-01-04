@@ -148,6 +148,7 @@ namespace Service.MedicalRecord.Repository
                 {
                     nameof(ClinicResults.Resultado),
                     nameof(ClinicResults.UltimoResultado),
+                    nameof(ClinicResults.UltimaSolicitudId),
                     nameof(ClinicResults.Orden),
                     nameof(ClinicResults.ValorInicial),
                     nameof(ClinicResults.ValorFinal),

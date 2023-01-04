@@ -105,8 +105,13 @@ namespace Service.MedicalRecord.Application
         {
             var studies = await GetByFilter(filter);
             var results = studies.Results.SelectMany(x => x.Parameters).ToList();
+            var requestResults = studies.Results.Select(x => x.Id).ToList();
 
-            if (filter.Area == 0 && filter.Sucursales != null || filter.Sucursales.Count == 0)
+            if (filter.Area == 0 && filter.Sucursales != null)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.MissingFilters("El parámetro área y sucursales"));
+            }
+            else if(filter.Area == 0 && filter.Sucursales.Count == 0)
             {
                 throw new CustomException(HttpStatusCode.Conflict, Responses.MissingFilters("El parámetro área y sucursales"));
             }
@@ -119,6 +124,7 @@ namespace Service.MedicalRecord.Application
             var data = requests.ToWorkListDto();
             var branches = await _branchRepository.Get(x => filter.Sucursales.Contains(x.Id));
 
+            data.Solicitudes = data.Solicitudes.Where(x => requestResults.Contains(x.Id)).ToList();
             data.HojaTrabajo = filter.NombreArea;
             data.Sucursal = string.Join(", ", branches.Select(x => x.Nombre));
             data.Fechas = new List<string> { filter.Fechas.First().ToString("dd/MM/yyyy"), filter.Fechas.Last().ToString("dd/MM/yyyy") };
