@@ -163,14 +163,14 @@ namespace Service.Report.Repository
                 query = report.ToQueryString();
             }
 
-            if(search.FechaInicial != DateTime.MinValue && search.FechaFinal != DateTime.MinValue)
+            if (search.FechaInicial != DateTime.MinValue && search.FechaFinal != DateTime.MinValue)
             {
                 report = report.
                     Where(x => x.Fecha.Date >= search.FechaInicial && x.Fecha.Date <= search.FechaFinal);
                 query = report.ToQueryString();
             }
-            
-            if(search.FechaIndividual != DateTime.MinValue)
+
+            if (search.FechaIndividual != DateTime.MinValue)
             {
                 report = report.Where(x => x.Fecha.Date == search.FechaIndividual.Date);
             }
@@ -225,14 +225,40 @@ namespace Service.Report.Repository
             return await report.ToListAsync();
         }
 
-        public async Task CreateIndicators(List<Indicators> indicator)
+        public async Task<List<Indicators>> GetBudgetByDate(DateTime startDate, DateTime endDate)
         {
-            await _context.BulkInsertAsync(indicator);
+            var budget = await _context.CAT_Indicadores.Where(x => startDate.Date <= x.Fecha.Date && endDate.Date >= x.Fecha.Date).ToListAsync();
+
+            return budget;
         }
-        
-        public async Task UpdateIndicators(List<Indicators> indicator)
+
+        public async Task CreateIndicators(Indicators indicator)
         {
-            await _context.BulkUpdateAsync(indicator);
+            _context.Add(indicator);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateIndicators(Indicators indicator)
+        {
+            _context.Update(indicator);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> IsDuplicate(Indicators indicator)
+        {
+            var isDuplicate = await _context.CAT_Indicadores.AnyAsync(x => x.SucursalId != indicator.SucursalId);
+
+            return isDuplicate;
+        }
+
+        public async Task<Indicators> GetIndicatorById(Guid branchId, DateTime date)
+        {
+            var indicator = await _context.CAT_Indicadores.FirstOrDefaultAsync(x => x.SucursalId == branchId && x.Fecha.Date == date.Date);
+
+            return indicator;
+
         }
 
     }

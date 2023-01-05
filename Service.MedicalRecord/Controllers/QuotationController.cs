@@ -173,5 +173,13 @@ namespace Service.MedicalRecord.Controllers
 
             return File(file, MimeType.PDF, "quotation.pdf");
         }
+        [HttpPost("quote/{id}")]
+        //[Authorize(Policies.Print)]
+        public async Task<IActionResult> PrintQuote(Guid id)
+        {
+            var file = await _service.ExportQuote(id);
+
+            return File(file, MimeType.PDF, "Cotización.pdf");
+        }
     }
 }

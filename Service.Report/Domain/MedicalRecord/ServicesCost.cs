@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Office2010.ExcelAc;
+using System;
+using System.Collections.Generic;
 
 namespace Service.Report.Domain.MedicalRecord
 {
@@ -11,5 +13,9 @@ namespace Service.Report.Domain.MedicalRecord
         public bool Activo { get; set; }
         public DateTime? FechaAlta { get; set; }
         public decimal CostoFijo { get; set; }
+        public List<string> Sucursales => new List<string>
+        {
+            Sucursal
+        };
     }
 }

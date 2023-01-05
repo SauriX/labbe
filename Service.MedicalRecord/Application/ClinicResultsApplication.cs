@@ -1240,6 +1240,7 @@ namespace Service.MedicalRecord.Application
             await _repository.UpdateStatusStudy(existingStudy);
 
         }
+
         public async Task UpdateStatusStudy(int RequestStudyId, byte status, string usuario)
         {
             var existingStudy = await _repository.GetStudyById(RequestStudyId);
@@ -1249,17 +1250,17 @@ namespace Service.MedicalRecord.Application
                 throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
             }
 
-            if (Status.RequestStudy.Capturado == status)
+            if (Status.RequestStudy.Capturado > status)
             {
                 existingStudy.FechaCaptura = DateTime.Now;
                 existingStudy.UsuarioCaptura = usuario.ToString();
             }
-            if (Status.RequestStudy.Validado == status)
+            if (Status.RequestStudy.Validado > status)
             {
                 existingStudy.FechaValidacion = DateTime.Now;
                 existingStudy.UsuarioValidacion = usuario.ToString();
             }
-            if (Status.RequestStudy.Liberado == status)
+            if (Status.RequestStudy.Liberado > status)
             {
                 existingStudy.FechaLiberado = DateTime.Now;
                 existingStudy.UsuarioLiberado = usuario.ToString();
