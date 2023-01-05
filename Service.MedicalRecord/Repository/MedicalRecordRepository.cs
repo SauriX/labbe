@@ -171,12 +171,14 @@ namespace Service.MedicalRecord.Repository
             await _context.SaveChangesAsync();
 
         }
+
         public async Task UpdateTaxData(TaxData taxData)
         {
             _context.CAT_Datos_Fiscales.Update(taxData);
 
             await _context.SaveChangesAsync();
         }
+
         public async Task<string> GetLastCode(Guid branchId, string date)
         {
             var lastRequest = await _context.CAT_Expedientes
@@ -185,12 +187,12 @@ namespace Service.MedicalRecord.Repository
 
             return lastRequest?.Expediente;
         }
-        public async Task<List<Domain.MedicalRecord.MedicalRecord>> Coincidencias(MedicalRecord.Domain.MedicalRecord.MedicalRecord expediente)
+
+        public async Task<List<Domain.MedicalRecord.MedicalRecord>> Coincidencias(Domain.MedicalRecord.MedicalRecord expediente)
         {
             var expedientes = await _context.CAT_Expedientes
-                .Where(x => x.NombrePaciente == expediente.NombrePaciente
-                && x.PrimerApellido == expediente.PrimerApellido
-                && x.FechaDeNacimiento.Date == expediente.FechaDeNacimiento.Date)
+                .Where(x => (x.NombrePaciente + " " + x.PrimerApellido).Contains(expediente.NombrePaciente + " " + expediente.PrimerApellido) ||
+                (expediente.NombrePaciente + " " + expediente.PrimerApellido).Contains(x.NombrePaciente + " " + x.PrimerApellido))
                 .ToListAsync();
 
             return expedientes;
