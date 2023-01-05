@@ -39,5 +39,6 @@ namespace Service.MedicalRecord.Dtos.Request
         public string Usuario { get; set; }
         [JsonIgnore]
         public Guid UsuarioId { get; set; }
+        public bool SaldoPendiente { get; set; }
     }
 }

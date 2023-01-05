@@ -34,7 +34,9 @@ namespace Service.MedicalRecord.Mapper
                 EsNuevo = model.EsNuevo,
                 FolioWeeClinic = model.FolioWeeClinic,
                 Registro = $"{model.FechaCreo:dd/MM/yyyy}",
-                TokenValidado = model.TokenValidado
+                TokenValidado = model.TokenValidado,
+                SaldoPendiente = model.Procedencia == PARTICULAR && model.Saldo > 0,
+
             };
         }
 
