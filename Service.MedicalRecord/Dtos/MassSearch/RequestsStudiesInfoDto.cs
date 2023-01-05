@@ -16,6 +16,10 @@ namespace Service.MedicalRecord.Dtos.MassSearch
         public string Sexo { get; set; }
         public string Compania { get; set; }
         public string Parcialidad { get; set; }
+        public decimal Saldo { get; set; }
+        public bool SaldoPendiente { get; set; }
+        public string EnvioCorreo { get; set; }
+        public string EnvioWhatsapp { get; set; }
         public List<RequestsStudiesInfoDto> Estudios { get; set; }
 
     }

@@ -34,7 +34,7 @@ namespace Service.Sender.Consumers
                 {
                     foreach (var file in message.SenderFiles)
                     {
-                        await _emailService.SendFile(message.Telefono, file.Ruta, file.Nombre);
+                        await _emailService.SendFile(message.Telefono, file.Ruta, file.Nombre, message.Mensaje);
 
                     }
                 }
