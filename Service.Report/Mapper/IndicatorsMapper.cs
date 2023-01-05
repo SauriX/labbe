@@ -2,6 +2,7 @@
 using Service.Report.Domain.MedicalRecord;
 using Service.Report.Dtos.Indicators;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -56,28 +57,29 @@ namespace Service.Report.Mapper
             return data;
         }
 
-        public static List<Dictionary<string, object>> ToIndicatorsStatsDto(this IEnumerable<RequestInfo> model, decimal costoReactivo)
+        public static IEnumerable<IndicatorsStatsDto> ToIndicatorsStatsDto(this IEnumerable<RequestInfo> model)
         {
             if (model == null) return null;
 
             var results = (from c in model
-                           group c by new { c.SucursalId, c.Sucursal, c.CostoFijo } into grupo
+                           group c by new { c.SucursalId, c.Sucursal } into grupo
                            select grupo).Select(grupo =>
                            {
                                return new IndicatorsStatsDto
                                {
                                    Id = Guid.NewGuid(),
                                    Pacientes = grupo.Count(),
+                                   SucursalId = grupo.Key.SucursalId,
                                    Sucursal = grupo.Key.Sucursal,
                                    Ingresos = grupo.Sum(x => x.TotalEstudios),
-                                   CostoReactivo = costoReactivo,
                                    CostoTomaCalculado = grupo.GroupBy(x => x.Expediente).Count() * 8.5m,
-                                   CostoFijo = grupo.Key.CostoFijo
                                };
                            }
                            );
 
-            return results.ToTableIndicatorsStatsDto();
+            return results;
+
+            //return results.ToTableIndicatorsStatsDto();
         }
 
         public static List<ServicesCostDto> ServicesCostGeneric(this IEnumerable<ServicesCost> model)
@@ -141,7 +143,7 @@ namespace Service.Report.Mapper
                 Id = Guid.NewGuid(),
                 CostoReactivo = dto.CostoReactivo,
                 SucursalId = dto.SucursalId,
-                Fecha = DateTime.Now
+                Fecha = dto.FechaAlta
             };
         }
         
@@ -154,7 +156,7 @@ namespace Service.Report.Mapper
                 Id = model.Id,
                 CostoReactivo = dto.CostoReactivo,
                 SucursalId = model.SucursalId,
-                Fecha = model.Fecha
+                Fecha = dto.FechaAlta
             };
         }
     }

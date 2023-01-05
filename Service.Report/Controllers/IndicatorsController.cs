@@ -27,16 +27,23 @@ namespace Service.Report.Controllers.Report
 
         [HttpPost("indicadores")]
         [Authorize(Policies.Create)]
-        public async Task<IndicatorsListDto> CreateArea(IndicatorsStatsDto indicator)
+        public async Task Create(IndicatorsStatsDto indicator)
         {
-            return await _indicatorsStatsService.Create(indicator);
+            await _indicatorsStatsService.Create(indicator);
         }
 
         [HttpPut("indicadores")]
         [Authorize(Policies.Update)]
-        public async Task<IndicatorsListDto> UpdateArea(IndicatorsStatsDto indicator)
+        public async Task Update(IndicatorsStatsDto indicator)
         {
-            return await _indicatorsStatsService.Update(indicator);
+            await _indicatorsStatsService.Update(indicator);
+        }
+
+        [HttpPost("indicadores/getForm")]
+        [Authorize(Policies.Access)]
+        public async Task GetForm(IndicatorsStatsDto indicator)
+        {
+            await _indicatorsStatsService.GetIndicatorForm(indicator);
         }
 
         [HttpPost("indicadores/export/list")]

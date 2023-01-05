@@ -18,8 +18,7 @@ namespace Service.Catalog.Domain.Catalog
             FechaCreo = DateTime.Now;
         }
 
-        public decimal CostoFijo { get; set; }
-        public List<string> Ciudad { get; set; }
+        public decimal CostoFijo { get; set; } 
         public Guid SucursalId { get; set; }
         public virtual Branch.Branch Sucursal { get; set; }
     }

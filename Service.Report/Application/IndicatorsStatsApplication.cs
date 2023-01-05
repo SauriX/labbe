@@ -12,6 +12,7 @@ using Service.Report.Repository.IRepository;
 using Shared.Dictionary;
 using Shared.Error;
 using Shared.Extensions;
+using Shared.Helpers;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections.Generic;
@@ -141,15 +142,19 @@ namespace Service.Report.Application
         {
             var data = await _medicalRecordService.GetRequestByFilter(search);
             var servicesCost = await _catalogService.GetBudgetsByBranch(search.SucursalId);
+            var budget = await _repository.GetBudgetByDate(search.FechaInicial, search.FechaFinal);
 
-            List<Dictionary<string, object>> results = new List<Dictionary<string, object>>();
+            //List<Dictionary<string, object>> results = new List<Dictionary<string, object>>();
 
-            foreach (var item in data)
+            var stats = data.ToIndicatorsStatsDto().ToList();
+
+            foreach (var item in stats)
             {
                 item.CostoFijo = servicesCost.Where(x => x.Sucursales.Contains(item.Sucursal)).Sum(x => x.CostoFijo);
+                item.CostoReactivo = budget.Where(x => x.SucursalId == item.SucursalId).Sum(x => x.CostoReactivo);
             }
 
-            results.AddRange(data.ToIndicatorsStatsDto(0));
+            var results = stats.ToTableIndicatorsStatsDto();
 
             return results;
         }
@@ -161,7 +166,7 @@ namespace Service.Report.Application
             return servicesCost.ServicesCostGeneric();
         }
 
-        public async Task<IndicatorsListDto> Create(IndicatorsStatsDto indicators)
+        public async Task Create(IndicatorsStatsDto indicators)
         {
             if (indicators.CostoFijo <= 0)
             {
@@ -171,15 +176,11 @@ namespace Service.Report.Application
             var newIndicator = indicators.ToModelCreate();
 
             await _repository.CreateIndicators(newIndicator);
-
-            newIndicator = await _repository.GetIndicatorById(newIndicator.Id);
-
-            return newIndicator.ToIndicatorsListDto();
         }
 
-        public async Task<IndicatorsListDto> Update(IndicatorsStatsDto indicators)
+        public async Task Update(IndicatorsStatsDto indicators)
         {
-            var existing = await _repository.GetIndicatorById(indicators.Id);
+            var existing = await _repository.GetIndicatorById(indicators.Id, indicators.FechaAlta);
 
             if (existing == null)
             {
@@ -190,10 +191,29 @@ namespace Service.Report.Application
 
             await _repository.UpdateIndicators(updatedIndicator);
 
-            updatedIndicator = await _repository.GetIndicatorById(updatedIndicator.Id);
-
-            return updatedIndicator.ToIndicatorsListDto();
         }
 
+        public async Task GetIndicatorForm(IndicatorsStatsDto indicators)
+        {
+            try
+            {
+                var existing = await _repository.GetIndicatorById(indicators.SucursalId, indicators.FechaAlta);
+
+                if (existing == null)
+                {
+                    var newIndicator = indicators.ToModelCreate();
+                    await _repository.CreateIndicators(newIndicator);
+                }
+                else
+                {
+                    var updatedIndicator = indicators.ToModelUpdate(existing);
+                    await _repository.UpdateIndicators(updatedIndicator);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

@@ -163,14 +163,14 @@ namespace Service.Report.Repository
                 query = report.ToQueryString();
             }
 
-            if(search.FechaInicial != DateTime.MinValue && search.FechaFinal != DateTime.MinValue)
+            if (search.FechaInicial != DateTime.MinValue && search.FechaFinal != DateTime.MinValue)
             {
                 report = report.
                     Where(x => x.Fecha.Date >= search.FechaInicial && x.Fecha.Date <= search.FechaFinal);
                 query = report.ToQueryString();
             }
-            
-            if(search.FechaIndividual != DateTime.MinValue)
+
+            if (search.FechaIndividual != DateTime.MinValue)
             {
                 report = report.Where(x => x.Fecha.Date == search.FechaIndividual.Date);
             }
@@ -225,6 +225,13 @@ namespace Service.Report.Repository
             return await report.ToListAsync();
         }
 
+        public async Task<List<Indicators>> GetBudgetByDate(DateTime startDate, DateTime endDate)
+        {
+            var budget = await _context.CAT_Indicadores.Where(x => startDate.Date <= x.Fecha.Date && endDate.Date >= x.Fecha.Date).ToListAsync();
+
+            return budget;
+        }
+
         public async Task CreateIndicators(Indicators indicator)
         {
             _context.Add(indicator);
@@ -246,9 +253,9 @@ namespace Service.Report.Repository
             return isDuplicate;
         }
 
-        public async Task<Indicators> GetIndicatorById(Guid id)
+        public async Task<Indicators> GetIndicatorById(Guid branchId, DateTime date)
         {
-            var indicator = await _context.CAT_Indicadores.FirstOrDefaultAsync(x => x.Id == id);
+            var indicator = await _context.CAT_Indicadores.FirstOrDefaultAsync(x => x.SucursalId == branchId && x.Fecha.Date == date.Date);
 
             return indicator;
 
