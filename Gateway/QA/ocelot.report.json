@@ -529,6 +529,17 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
+      "DownstreamPathTemplate": "/LabRamos/services/report/api/report/indicadores",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/LabRamos/services/report/api/report/indicadores",
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
+    },
+    {
       "DownstreamPathTemplate": "/LabRamos/services/report/api/report/indicadores/export/list",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
