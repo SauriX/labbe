@@ -10,5 +10,6 @@ namespace Service.MedicalRecord.Dtos.Request
         public List<IndicationListDto> Indicaciones { get; set; }
         public string Metodo { get; set; }
         public string Clave { get; set; }
+        public string? Tipo { get; set; }
     }
 }

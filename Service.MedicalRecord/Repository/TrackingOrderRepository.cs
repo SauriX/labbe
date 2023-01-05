@@ -103,10 +103,10 @@ namespace Service.MedicalRecord.Repository
             List<Domain.Request.RequestStudy> newlistestudios = new List<Domain.Request.RequestStudy>();
 
             foreach (var estudio in listaEstudio) {
-                if (!ordenes.Any(x => x.Estudios.Any(y => y.EstudioId == estudio.EstudioId && y.SeguimientoId == estudio.SolicitudId))) {
+                if (!ordenes.Any(x => x.Estudios.Any(y => y.EstudioId == estudio.EstudioId && y.SolicitudId == estudio.SolicitudId))) {
 
                     newlistestudios.Add(estudio);
-                        }
+                   }
             }
 
 
