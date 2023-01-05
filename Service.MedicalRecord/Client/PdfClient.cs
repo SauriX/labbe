@@ -6,6 +6,7 @@ using Service.MedicalRecord.Dtos;
 using Service.MedicalRecord.Dtos.ClinicResults;
 using Service.MedicalRecord.Dtos.DeliverOrder;
 using Service.MedicalRecord.Dtos.PendingRecive;
+using Service.MedicalRecord.Dtos.Quotation;
 using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.WorkList;
 using Shared.Error;
@@ -196,6 +197,32 @@ namespace Service.MedicalRecord.Client
                 var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
                 var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Pdf")}/api/pdf/DeliverOrder", stringContent);
+
+                if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+                {
+                    return await response.Content.ReadAsByteArrayAsync();
+                }
+
+                var error = await response.Content.ReadFromJsonAsync<ClientException>();
+
+                var ex = Exceptions.GetException(error);
+
+                throw ex;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public async Task<byte[]> PriceQuoteReport(PriceQuoteDto priceQuote)
+        {
+            try
+            {
+                var json = JsonConvert.SerializeObject(priceQuote);
+
+                var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Pdf")}/api/pdf/quotes", stringContent);
 
                 if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
                 {
