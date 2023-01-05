@@ -124,15 +124,12 @@ namespace Service.MedicalRecord.Application
                     {
                         study.EstatusId = Status.RequestStudy.TomaDeMuestra;
                         study.FechaTomaMuestra = DateTime.Now;
-                        //study.Observacion = item.Observacion.First(x => x.Id == study.Id).Observacion;
                         study.UsuarioTomaMuestra = item.Usuario;
 
                     }
                     else
                     {
                         study.EstatusId = Status.RequestStudy.Pendiente;
-                        study.FechaPendiente = DateTime.Now;
-                        study.UsuarioPendiente = item.Usuario;
                     }
                 }
                 studyCount += studies.Count;

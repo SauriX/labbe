@@ -27,13 +27,20 @@ namespace Service.Report.Client
 
         public async Task<List<ServicesCost>> GetBudgetsByBranch(List<Guid> branchIds)
         {
+            if(branchIds == null || branchIds.Count == 0) return new List<ServicesCost>();
+
             try
             {
                 var json = JsonConvert.SerializeObject(branchIds);
 
                 var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/costofijo/getBranches", stringContent);
+                var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/catalog/costofijo/getBranches", stringContent);
+
+                if(response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.NoContent) 
+                {
+                    return new List<ServicesCost>();
+                }
 
                 if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
                 {
