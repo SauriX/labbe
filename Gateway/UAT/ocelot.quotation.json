@@ -197,6 +197,17 @@
       ],
       "UpstreamPathTemplate": "/api/quotation/deactivate/{quotationId}",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/quotation/quote/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/quotation/quote/{id}",
+      "UpstreamHttpMethod": [ "POST" ]
     }
   ]
 }

@@ -26,5 +26,6 @@ namespace Service.MedicalRecord.Application.IApplication
         Task CancelQuotation(Guid quotationId, Guid userId);
         Task DeleteStudies(QuotationStudyUpdateDto quotationDto);
         Task<byte[]> PrintQuotation(Guid quotationId);
+        Task<byte[]> ExportQuote(Guid id);
     }
 }
