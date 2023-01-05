@@ -128,8 +128,6 @@ namespace Service.MedicalRecord.Application
                     else
                     {
                         study.EstatusId = Status.RequestStudy.TomaDeMuestra;
-                        study.FechaTomaMuestra = DateTime.Now;
-                        study.UsuarioTomaMuestra = item.Usuario;
                     }
                 }
                 studyCount += studies.Count;

@@ -2,6 +2,7 @@
 using Service.Report.Domain.MedicalRecord;
 using Service.Report.Dtos.Indicators;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,35 +18,35 @@ namespace Service.Report.Mapper
 
             var data = new List<Dictionary<string, object>>();
 
-            foreach(var item in rows)
+            foreach (var item in rows)
             {
                 var itemData = new Dictionary<string, object>
                 {
                     ["Nombre"] = item
                 };
 
-                foreach(var branch in model)
+                foreach (var branch in model)
                 {
                     switch (item)
                     {
                         case "PACIENTES":
                             itemData.Add(branch.Sucursal, branch.Pacientes);
-                            break;
+                            continue;
                         case "INGRESOS":
                             itemData.Add(branch.Sucursal, branch.Ingresos);
-                            break;
+                            continue;
                         case "COSTO REACTIVO":
                             itemData.Add(branch.Sucursal, branch.CostoReactivo);
-                            break;
+                            continue;
                         case "COSTO DE TOMA":
                             itemData.Add(branch.Sucursal, branch.CostoTomaCalculado);
-                            break;
+                            continue;
                         case "COSTO FIJO":
                             itemData.Add(branch.Sucursal, branch.CostoFijo);
-                            break;
-                        case "UTILIDAD DE OPERACION":
+                            continue;
+                        case "UTILIDAD DE OPERACIÓN":
                             itemData.Add(branch.Sucursal, branch.UtilidadOperacion);
-                            break;
+                            continue;
                     }
                     itemData.Add(branch.Sucursal, branch.Pacientes);
                 }
@@ -56,27 +57,29 @@ namespace Service.Report.Mapper
             return data;
         }
 
-        public static List<Dictionary<string, object>> ToIndicatorsStatsDto(this IEnumerable<RequestInfo> model, decimal costoFijo, decimal costoReactivo)
+        public static IEnumerable<IndicatorsStatsDto> ToIndicatorsStatsDto(this IEnumerable<RequestInfo> model)
         {
             if (model == null) return null;
 
             var results = (from c in model
-                           group c by new { c.SucursalId, c.Sucursal, c.Id} into grupo
+                           group c by new { c.SucursalId, c.Sucursal } into grupo
                            select grupo).Select(grupo =>
                            {
                                return new IndicatorsStatsDto
                                {
                                    Id = Guid.NewGuid(),
                                    Pacientes = grupo.Count(),
+                                   SucursalId = grupo.Key.SucursalId,
+                                   Sucursal = grupo.Key.Sucursal,
                                    Ingresos = grupo.Sum(x => x.TotalEstudios),
-                                   CostoReactivo = costoReactivo,
-                                   CostoTomaCalculado = grupo.Sum(x => x.TotalEstudios) * 8.5m,
-                                   CostoFijo = costoFijo
+                                   CostoTomaCalculado = grupo.GroupBy(x => x.Expediente).Count() * 8.5m,
                                };
                            }
                            );
 
-            return results.ToTableIndicatorsStatsDto();
+            return results;
+
+            //return results.ToTableIndicatorsStatsDto();
         }
 
         public static List<ServicesCostDto> ServicesCostGeneric(this IEnumerable<ServicesCost> model)
@@ -118,21 +121,43 @@ namespace Service.Report.Mapper
             return data;
         }
 
-        public static List<Indicators> ToModel(this List<IndicatorsStatsDto> dto)
+        public static IndicatorsListDto ToIndicatorsListDto(this Indicators model)
+        {
+            if (model == null) return null;
+
+            return new IndicatorsListDto
+            {
+                Id = model.Id,
+                CostoReactivo = model.CostoReactivo,
+                SucursalId = model.SucursalId,
+                Fecha = model.Fecha
+            };
+        }
+
+        public static Indicators ToModelCreate(this IndicatorsStatsDto dto)
         {
             if (dto == null) return null;
 
-            return dto.Select(x => new Indicators
+            return new Indicators
             {
                 Id = Guid.NewGuid(),
-                Pacientes = x.Pacientes,
-                Ingresos = x.Ingresos,
-                CostoTomaCalculado = x.CostoTomaCalculado,
-                CostoReactivo = x.CostoReactivo,
-                CostoFijo = x.CostoFijo,
-                SucursalId = Guid.Parse(x.Sucursal),
-                UtilidadOperacion = x.UtilidadOperacion
-            }).ToList();
+                CostoReactivo = dto.CostoReactivo,
+                SucursalId = dto.SucursalId,
+                Fecha = dto.FechaAlta
+            };
+        }
+        
+        public static Indicators ToModelUpdate(this IndicatorsStatsDto dto, Indicators model)
+        {
+            if (dto == null) return null;
+
+            return new Indicators
+            {
+                Id = model.Id,
+                CostoReactivo = dto.CostoReactivo,
+                SucursalId = model.SucursalId,
+                Fecha = dto.FechaAlta
+            };
         }
     }
 }

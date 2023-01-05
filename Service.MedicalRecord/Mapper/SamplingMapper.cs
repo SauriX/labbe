@@ -66,16 +66,8 @@ namespace Service.MedicalRecord.Mapper
                     ? x.FechaPendiente?.ToString("dd/MM/yyyy HH:mm") 
                     : x.EstatusId == Status.RequestStudy.TomaDeMuestra
                     ? x.FechaTomaMuestra?.ToString("dd/MM/yyyy HH:mm")
-                    : x.EstatusId == Status.RequestStudy.Solicitado
+                    : x.EstatusId == Status.RequestStudy.Solicitado 
                     ? x.FechaSolicitado?.ToString("dd/MM/yyyy HH:mm")
-                    : x.EstatusId == Status.RequestStudy.Capturado
-                    ? x.FechaCaptura?.ToString("dd/MM/yyyy HH:mm")
-                    : x.EstatusId == Status.RequestStudy.Validado
-                    ? x.FechaValidacion?.ToString("dd/MM/yyyy HH:mm")
-                    : x.EstatusId == Status.RequestStudy.Liberado
-                    ? x.FechaLiberado?.ToString("dd/MM/yyyy HH:mm")
-                    : x.EstatusId == Status.RequestStudy.Enviado
-                    ? x.FechaEnviado?.ToString("dd/MM/yyyy HH:mm")
                     : "",
                 UsuarioActualizacion = x.EstatusId == Status.RequestStudy.Pendiente
                     ? x.UsuarioPendiente
@@ -83,14 +75,6 @@ namespace Service.MedicalRecord.Mapper
                     ? x.UsuarioTomaMuestra
                     : x.EstatusId == Status.RequestStudy.Solicitado
                     ? x.UsuarioSolicitado
-                    : x.EstatusId == Status.RequestStudy.Capturado
-                    ? x.UsuarioCaptura
-                    : x.EstatusId == Status.RequestStudy.Validado
-                    ? x.UsuarioValidacion
-                    : x.EstatusId == Status.RequestStudy.Liberado
-                    ? x.UsuarioLiberado
-                    : x.EstatusId == Status.RequestStudy.Enviado
-                    ? x.UsuarioEnviado
                     : "",
                 Urgencia = x.Solicitud.Urgencia,
             }).ToList();

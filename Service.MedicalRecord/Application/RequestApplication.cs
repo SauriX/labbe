@@ -1070,6 +1070,8 @@ namespace Service.MedicalRecord.Application
                 {
                     var result = results.FirstOrDefault(x => x.IdServicio == study.EstudioWeeClinic.IdServicio);
 
+                    if (result == null) continue;
+
                     if (result.Asignado)
                     {
                         study.EstudioWeeClinic.Asignado = true;

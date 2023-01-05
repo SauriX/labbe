@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Service.Report.Dtos;
 using Service.Report.Dtos.Indicators;
 using Shared.Dictionary;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -22,6 +23,27 @@ namespace Service.Report.Controllers.Report
         public async Task<List<ServicesCostDto>> GetServicesNow(ReportFilterDto search)
         {
             return await _indicatorsStatsService.GetServicesCosts(search);
+        }
+
+        [HttpPost("indicadores")]
+        [Authorize(Policies.Create)]
+        public async Task Create(IndicatorsStatsDto indicator)
+        {
+            await _indicatorsStatsService.Create(indicator);
+        }
+
+        [HttpPut("indicadores")]
+        [Authorize(Policies.Update)]
+        public async Task Update(IndicatorsStatsDto indicator)
+        {
+            await _indicatorsStatsService.Update(indicator);
+        }
+
+        [HttpPost("indicadores/getForm")]
+        [Authorize(Policies.Access)]
+        public async Task GetForm(IndicatorsStatsDto indicator)
+        {
+            await _indicatorsStatsService.GetIndicatorForm(indicator);
         }
 
         [HttpPost("indicadores/export/list")]
