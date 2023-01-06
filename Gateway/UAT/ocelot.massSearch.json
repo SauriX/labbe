@@ -54,6 +54,17 @@
       ],
       "UpstreamPathTemplate": "/api/MassSearch/download/pdf",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/apiMassSearch/order/{recordId}/{requestId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/MassSearch/order/{recordId}/{requestId}",
+      "UpstreamHttpMethod": [ "POST" ]
     }
   ]
 }
