@@ -73,7 +73,14 @@ namespace Service.MedicalRecord.Repository
             return await routeTrackingList.ToListAsync();
         }
         public async Task<TrackingOrder> getById(Guid Id) {
-            var route = await _context.CAT_Seguimiento_Ruta.Include(x => x.Estudios).ThenInclude(x => x.Solicitud.Sucursal).Include(x => x.Estudios).ThenInclude(x => x.Solicitud.Estatus).Include(x => x.Estudios).ThenInclude(x => x.Solicitud.Estudios).ThenInclude(x => x.Estatus).Include(x => x.Estudios).ThenInclude(x => x.Solicitud.Expediente).AsQueryable().FirstOrDefaultAsync(x=>x.Id==Id);
+            var route = await _context.CAT_Seguimiento_Ruta.Include(x => x.Estudios)
+                .ThenInclude(x => x.Solicitud.Sucursal)
+                .Include(x => x.Estudios)
+                .ThenInclude(x => x.Solicitud.Estatus)
+                .Include(x => x.Estudios).ThenInclude(x => x.Solicitud.Estudios)
+                .ThenInclude(x => x.Estatus)
+                .Include(x => x.Estudios)
+                .ThenInclude(x => x.Solicitud.Expediente).AsQueryable().FirstOrDefaultAsync(x=>x.Id==Id);
             return route;
         }
         public async Task Update(RouteTracking route) {
@@ -88,7 +95,15 @@ namespace Service.MedicalRecord.Repository
 
         public async Task<List<TrackingOrder>> GetAllRecive(PendingSearchDto search) {
 
-            var routeTrackingList = _context.CAT_Seguimiento_Ruta.Include(x => x.Estudios).ThenInclude(x => x.Solicitud.Sucursal).Include(x => x.Estudios).ThenInclude(x => x.Solicitud.Estatus).Include(x => x.Estudios).ThenInclude(x => x.Solicitud.Estudios).ThenInclude(x => x.Estatus).Include(x => x.Estudios).ThenInclude(x => x.Solicitud.Expediente).AsQueryable();
+            var routeTrackingList = _context.CAT_Seguimiento_Ruta.Include(x => x.Estudios)
+                .ThenInclude(x => x.Solicitud.Sucursal)
+                .Include(x => x.Estudios)
+                .ThenInclude(x => x.Solicitud.Estatus)
+                .Include(x => x.Estudios)
+                .ThenInclude(x => x.Solicitud.Estudios)
+                .ThenInclude(x => x.Estatus)
+                .Include(x => x.Estudios)
+                .ThenInclude(x => x.Solicitud.Expediente).AsQueryable();
 
             if (search.Fecha != null)
             {
