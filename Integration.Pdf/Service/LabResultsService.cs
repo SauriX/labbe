@@ -58,13 +58,13 @@ namespace Integration.Pdf.Service
             section.PageSetup.PageFormat = PageFormat.A4;
             if (results.ImprimrLogos)
             {
-                section.PageSetup.TopMargin = Unit.FromCentimeter(8);
+                section.PageSetup.TopMargin = Unit.FromCentimeter(8.5);
                 section.PageSetup.HeaderDistance = 0.5;
 
             }
             else
             {
-                section.PageSetup.TopMargin = Unit.FromCentimeter(5);
+                section.PageSetup.TopMargin = Unit.FromCentimeter(5.5);
                 section.PageSetup.HeaderDistance = 5;
             }
             section.PageSetup.BottomMargin = Unit.FromCentimeter(8);
@@ -78,6 +78,7 @@ namespace Integration.Pdf.Service
 
         static void Format(Section section, ClinicResultsPdfDto results)
         {
+            var fontHeader = new Font("calibri", 11);
             var fontText = new Font("calibri", 12);
             var fontParam = new Font("calibri", 12);
             var fontCritic = new Font("calibri", 12) { Bold = true };
@@ -94,7 +95,7 @@ namespace Integration.Pdf.Service
             if (results.CapturaResultados != null)
             {
 
-                RenderHeader(section, results, fontText);
+                RenderHeader(section, results, fontHeader);
 
                 var study = results.CapturaResultados.Select(x => x.Estudio).Distinct().ToList();
                 var studyParameter = results.CapturaResultados.GroupBy(x => x.Estudio).ToList();
@@ -356,45 +357,45 @@ namespace Integration.Pdf.Service
             var line1 = new Col[]
                 {
                         new Col("Doctor (a)", 12, fontText, ParagraphAlignment.Left),
-                        new Col($": {results.SolicitudInfo?.Medico}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
+                        new Col($": {results.SolicitudInfo?.Medico}", 18, Col.FONT_SUBTITLE_RESULTS_BOLD, ParagraphAlignment.Left),
                         new Col("Expediente", 12, fontText, ParagraphAlignment.Left),
-                        new Col($": {results.SolicitudInfo?.Expediente}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left)
+                        new Col($": {results.SolicitudInfo?.Expediente}", 18, Col.FONT_SUBTITLE_RESULTS_BOLD, ParagraphAlignment.Left)
                 };
             header.AddBorderedText(line1, top: true, right: false, left: false);
 
             var line2 = new Col[]
             {
                         new Col("Paciente", 12, fontText, ParagraphAlignment.Left),
-                        new Col($": {results.SolicitudInfo?.Paciente}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
+                        new Col($": {results.SolicitudInfo?.Paciente}", 18, Col.FONT_SUBTITLE_RESULTS_BOLD, ParagraphAlignment.Left),
                         new Col("Edad", 12, fontText, ParagraphAlignment.Left),
-                        new Col($": {results.SolicitudInfo?.Edad}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left)
+                        new Col($": {results.SolicitudInfo?.Edad}", 18, Col.FONT_SUBTITLE_RESULTS_BOLD, ParagraphAlignment.Left)
             };
             header.AddBorderedText(line2, right: false, left: false);
 
             var line3 = new Col[]
             {
                         new Col("No. Solicitud", 12, fontText, ParagraphAlignment.Left),
-                        new Col($": {results.SolicitudInfo?.Clave}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
+                        new Col($": {results.SolicitudInfo?.Clave}", 18, Col.FONT_SUBTITLE_RESULTS_BOLD, ParagraphAlignment.Left),
                         new Col("Sexo", 12, fontText, ParagraphAlignment.Left),
-                        new Col($": {results.SolicitudInfo?.Sexo}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
+                        new Col($": {results.SolicitudInfo?.Sexo}", 18, Col.FONT_SUBTITLE_RESULTS_BOLD, ParagraphAlignment.Left),
             };
             header.AddBorderedText(line3, right: false, left: false);
 
             var line4 = new Col[]
             {
                         new Col("Fecha de Admisión", 12, fontText, ParagraphAlignment.Left),
-                        new Col($": {results.SolicitudInfo?.FechaAdmision}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
+                        new Col($": {results.SolicitudInfo?.FechaAdmision}", 18, Col.FONT_SUBTITLE_RESULTS_BOLD, ParagraphAlignment.Left),
                         new Col("Fecha de Entrega", 12, fontText, ParagraphAlignment.Left),
-                        new Col($": {results.SolicitudInfo?.FechaEntrega}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
+                        new Col($": {results.SolicitudInfo?.FechaEntrega}", 18, Col.FONT_SUBTITLE_RESULTS_BOLD, ParagraphAlignment.Left),
             };
             header.AddBorderedText(line4, right: false, left: false);
 
             var line5 = new Col[]
             {
                         new Col("Compañía", 12, fontText, ParagraphAlignment.Left),
-                        new Col($": {(results.SolicitudInfo?.Compañia == null ? "Particulares" : results.SolicitudInfo.Compañia)}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
+                        new Col($": {(results.SolicitudInfo?.Compañia == null ? "Particulares" : results.SolicitudInfo.Compañia)}", 18, Col.FONT_SUBTITLE_RESULTS_BOLD, ParagraphAlignment.Left),
                         new Col("Impreso a las", 12, fontText, ParagraphAlignment.Left),
-                        new Col($": {DateTime.Now.ToString("t")}", 18, Col.FONT_SUBTITLE_BOLD, ParagraphAlignment.Left),
+                        new Col($": {DateTime.Now.ToString("t")}", 18, Col.FONT_SUBTITLE_RESULTS_BOLD, ParagraphAlignment.Left),
             };
             header.AddBorderedText(line5, right: false, left: false);
 
