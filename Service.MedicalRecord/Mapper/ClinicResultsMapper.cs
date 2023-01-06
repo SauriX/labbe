@@ -46,7 +46,7 @@ namespace Service.MedicalRecord.Mapper
                 Area = "",
                 Estatus = x.EstatusId,
                 Registro = x.FechaCreo.ToString("dd/MM/yyyy HH:mm"),
-                Entrega = x.FechaCreo.AddDays((double)x.Dias).ToString("dd/MM/yyyy HH:mm"),
+                Entrega = x.FechaEntrega.ToString("dd/MM/yyyy HH:mm"),
                 Seleccion = false,
                 Clave = x.Clave,
                 NombreEstatus = x.Estatus.Nombre,
