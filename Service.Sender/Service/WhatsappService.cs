@@ -36,7 +36,7 @@ namespace Service.Sender.Service
             }
         }
 
-        public async Task SendFile(string phone, Uri filePath, string fileName)
+        public async Task SendFile(string phone, Uri filePath, string fileName, string message)
         {
             var token = "01eo1fdxodwi6s88";
             
@@ -46,7 +46,7 @@ namespace Service.Sender.Service
 
             string pdfBase64 = Convert.ToBase64String(pdf);
 
-            var json = JsonConvert.SerializeObject(new { Phone = phone, Body = "data:application/pdf;base64," + pdfBase64, Filename = fileName, Caption = "Diagnóstico" }, new JsonSerializerSettings
+            var json = JsonConvert.SerializeObject(new { Phone = phone, Body = "data:application/pdf;base64," + pdfBase64, Filename = fileName, Caption = message }, new JsonSerializerSettings
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             });

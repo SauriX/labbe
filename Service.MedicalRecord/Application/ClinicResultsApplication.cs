@@ -632,13 +632,13 @@ namespace Service.MedicalRecord.Application
 
                     try
                     {
-                        if (canSendResultBalance(request.Solicitud))
-                        {
-                            await SendTestWhatsapp(files, request.Solicitud.EnvioWhatsApp, userId);
-                            await SendTestEmail(files, request.Solicitud.EnvioCorreo, userId);
+                        //if (canSendResultBalance(request.Solicitud) || EnvioManual)
+                        //{
+                            await SendTestWhatsapp(files, request.Solicitud.EnvioWhatsApp, userId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
+                            await SendTestEmail(files, request.Solicitud.EnvioCorreo, userId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
                             await UpdateStatusStudy(request.SolicitudEstudioId, Status.RequestStudy.Enviado, user);
 
-                        }
+                        //}
                     }
                     catch (Exception ex)
                     {
@@ -649,14 +649,14 @@ namespace Service.MedicalRecord.Application
                 {
                     await UpdateStatusStudy(request.SolicitudEstudioId, Status.RequestStudy.Liberado, user);
 
-                    if (existingRequest.Estudios.All(estudio => estudio.EstatusId == Status.RequestStudy.Liberado))
+                    if (existingRequest.Estudios.All(estudio => estudio.EstatusId == Status.RequestStudy.Liberado || estudio.EstatusId == Status.RequestStudy.Enviado))
                     {
-                        if (canSendResultBalance(request.Solicitud))
-                        {
+                        //if (canSendResultBalance(request.Solicitud) || EnvioManual)
+                        //{
                             var resultsToSend = canSendResultResultsReady(existingRequest, results.First().SolicitudEstudioId);
 
                             await SendResultsFiles(request.SolicitudId, userId, user, resultsToSend);
-                        }
+                        //}
                     }
                 }
             }
@@ -806,15 +806,15 @@ namespace Service.MedicalRecord.Application
                     };
                     try
                     {
-                        if (canSendResultBalance(existing.Solicitud))
-                        {
+                        //if (canSendResultBalance(existing.Solicitud) || EnvioManual)
+                        //{
 
-                            await SendTestWhatsapp(files, existing.Solicitud.EnvioWhatsApp, result.UsuarioId);
+                            await SendTestWhatsapp(files, existing.Solicitud.EnvioWhatsApp, result.UsuarioId,existing.Solicitud.Expediente.NombreCompleto, existing.Solicitud.Clave);
 
-                            await SendTestEmail(files, existing.Solicitud.EnvioCorreo, result.UsuarioId);
+                            await SendTestEmail(files, existing.Solicitud.EnvioCorreo, result.UsuarioId, existing.Solicitud.Expediente.NombreCompleto, existing.Solicitud.Clave);
 
                             await UpdateStatusStudy(result.EstudioId, Status.RequestStudy.Enviado, result.Usuario);
-                        }
+                        //}
 
                     }
                     catch (Exception ex)
@@ -825,8 +825,8 @@ namespace Service.MedicalRecord.Application
                 }
                 else
                 {
-                    if (canSendResultBalance(existing.Solicitud))
-                    {
+                    //if (canSendResultBalance(existing.Solicitud) || EnvioManual)
+                    //{
 
                         await UpdateStatusStudy(result.EstudioId, result.Estatus, result.Usuario);
 
@@ -838,7 +838,7 @@ namespace Service.MedicalRecord.Application
 
                         await SendResultsFiles(existing.SolicitudId, result.UsuarioId, result.Usuario, resultsToSend);
                         //}
-                    }
+                    //}
 
 
                 }
@@ -969,18 +969,19 @@ namespace Service.MedicalRecord.Application
 
                 try
                 {
-                    if (files.Count > 0 && canSendResultBalance(existingRequest))
+                    //if (files.Count > 0 && canSendResultBalance(existingRequest))
+                    if (files.Count > 0)
                     {
                         if (estudios.MediosEnvio.Contains("Whatsapp") && !string.IsNullOrEmpty(existingRequest.EnvioWhatsApp))
                         {
-                            await SendTestWhatsapp(files, existingRequest.EnvioWhatsApp, estudios.UsuarioId);
+                            await SendTestWhatsapp(files, existingRequest.EnvioWhatsApp, estudios.UsuarioId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
 
                         }
 
                         if (estudios.MediosEnvio.Contains("Correo") && !string.IsNullOrEmpty(existingRequest.EnvioCorreo))
                         {
 
-                            await SendTestEmail(files, existingRequest.EnvioCorreo, estudios.UsuarioId);
+                            await SendTestEmail(files, existingRequest.EnvioCorreo, estudios.UsuarioId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
                         }
 
                         foreach (var estudio in studiesToUpdate)
@@ -1106,19 +1107,19 @@ namespace Service.MedicalRecord.Application
             }
             try
             {
-                if (files.Count > 0 && canSendResultBalance(existingRequest))
-                {
+                //if (files.Count > 0 && canSendResultBalance(existingRequest))
+                //{
 
-                    await SendTestWhatsapp(files, existingRequest.EnvioWhatsApp, usuarioId);
+                    await SendTestWhatsapp(files, existingRequest.EnvioWhatsApp, usuarioId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
 
-                    await SendTestEmail(files, existingRequest.EnvioCorreo, usuarioId);
+                    await SendTestEmail(files, existingRequest.EnvioCorreo, usuarioId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
 
                     foreach (var estudio in existingRequest.Estudios)
                     {
                         await UpdateStatusStudy(estudio.Id, Status.RequestStudy.Enviado, usuario);
 
                     }
-                }
+                //}
             }
             catch (Exception ex)
             {
@@ -1127,12 +1128,14 @@ namespace Service.MedicalRecord.Application
             }
         }
 
-        public async Task SendTestEmail(List<SenderFiles> senderFiles, string correo, Guid usuario)
+        public async Task SendTestEmail(List<SenderFiles> senderFiles, string correo, Guid usuario, string nombrePaciente, string claveSolicitud)
         {
 
             var subject = RequestTemplates.Subjects.PathologicalSubject;
             var title = RequestTemplates.Titles.PathologicalTitle;
-            var message = RequestTemplates.Messages.PathologicalMessage;
+            var message = $"{nombrePaciente}, para LABPRATORIOS RAMOS ha sido un placer atenderte, a continuación se brindan los resultados de la solicitud ${claveSolicitud}\n" +
+                "\n" +
+                "Te recordamos que también puedes descargar tu resultados desde nuestra página web https://www.laboratorioramos.com.mx necesitaras tu número de expediente y contraseña proporcionados en tu recibo de pago."; ;
 
 
             var emailToSend = new EmailContract(correo, null, subject, title, message, senderFiles)
@@ -1148,10 +1151,12 @@ namespace Service.MedicalRecord.Application
 
         }
 
-        public async Task SendTestWhatsapp(List<SenderFiles> senderFiles, string telefono, Guid usuario)
+        public async Task SendTestWhatsapp(List<SenderFiles> senderFiles, string telefono, Guid usuario, string nombrePaciente, string claveSolicitud)
         {
 
-            var message = RequestTemplates.Subjects.PathologicalSubject;
+            var message = $"{nombrePaciente}, para LABPRATORIOS RAMOS ha sido un placer atenderte, a continuación se brindan los resultados de la solicitud {claveSolicitud}\n" +
+                "\n" +
+                "Te recordamos que también puedes descargar tu resultados desde nuestra página web https://www.laboratorioramos.com.mx necesitaras tu número de expediente y contraseña proporcionados en tu recibo de pago.";
 
 
             var phone = telefono.Replace("-", "");
