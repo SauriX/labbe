@@ -145,7 +145,6 @@ namespace Service.MedicalRecord.Application
                     else
                     {
                         study.EstatusId = Status.RequestStudy.Capturado;
-
                     }
                     
                 }

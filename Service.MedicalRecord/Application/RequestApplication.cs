@@ -799,7 +799,7 @@ namespace Service.MedicalRecord.Application
             var studiesIds = requestDto.Estudios.Select(x => x.Id);
             var studies = await _repository.GetStudyById(requestDto.SolicitudId, studiesIds);
 
-            studies = studies.Where(x => x.EstatusId == Status.RequestStudy.Pendiente).ToList();
+            studies = studies.Where(x => x.EstatusId == Status.RequestStudy.Pendiente || x.EstatusId == Status.RequestStudy.TomaDeMuestra).ToList();
 
             if (studies == null || studies.Count == 0)
             {
@@ -808,9 +808,17 @@ namespace Service.MedicalRecord.Application
 
             foreach (var study in studies)
             {
-                study.EstatusId = Status.RequestStudy.TomaDeMuestra;
-                study.UsuarioTomaMuestra = requestDto.Usuario;
-                study.FechaTomaMuestra = DateTime.Now;
+                if (study.EstatusId == Status.RequestStudy.Pendiente)
+                {
+                    study.EstatusId = Status.RequestStudy.TomaDeMuestra;
+                    study.FechaTomaMuestra = DateTime.Now;
+                    study.UsuarioTomaMuestra = requestDto.Usuario;
+                }
+                else
+                {
+                    study.EstatusId = Status.RequestStudy.Pendiente;
+                }
+
                 study.UsuarioModificoId = requestDto.UsuarioId;
                 study.FechaModifico = DateTime.Now;
             }
@@ -827,7 +835,7 @@ namespace Service.MedicalRecord.Application
             var studiesIds = requestDto.Estudios.Select(x => x.Id);
             var studies = await _repository.GetStudyById(requestDto.SolicitudId, studiesIds);
 
-            studies = studies.Where(x => x.EstatusId == Status.RequestStudy.TomaDeMuestra).ToList();
+            studies = studies.Where(x => x.EstatusId == Status.RequestStudy.TomaDeMuestra || x.EstatusId == Status.RequestStudy.Solicitado).ToList();
 
             if (studies == null || studies.Count == 0)
             {
@@ -836,9 +844,17 @@ namespace Service.MedicalRecord.Application
 
             foreach (var study in studies)
             {
-                study.EstatusId = Status.RequestStudy.Solicitado;
-                study.UsuarioSolicitado = requestDto.Usuario;
-                study.FechaSolicitado = DateTime.Now;
+                if (study.EstatusId == Status.RequestStudy.TomaDeMuestra)
+                {
+                    study.EstatusId = Status.RequestStudy.Solicitado;
+                    study.FechaSolicitado = DateTime.Now;
+                    study.UsuarioSolicitado = requestDto.Usuario;
+                }
+                else
+                {
+                    study.EstatusId = Status.RequestStudy.TomaDeMuestra;
+                }
+
                 study.UsuarioModificoId = requestDto.UsuarioId;
                 study.FechaModifico = DateTime.Now;
             }

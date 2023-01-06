@@ -34,6 +34,7 @@ using Service.MedicalRecord.Dtos.MassSearch;
 using System.Text;
 using ClosedXML.Report.Utils;
 using Service.MedicalRecord.Dtos.WeeClinic;
+using Service.MedicalRecord.Dtos.Appointment;
 
 namespace Service.MedicalRecord.Application
 {
@@ -1250,17 +1251,17 @@ namespace Service.MedicalRecord.Application
                 throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
             }
 
-            if (Status.RequestStudy.Capturado > status)
+            if (Status.RequestStudy.Capturado == status && existingStudy.EstatusId == Status.RequestStudy.Solicitado)
             {
                 existingStudy.FechaCaptura = DateTime.Now;
                 existingStudy.UsuarioCaptura = usuario.ToString();
             }
-            if (Status.RequestStudy.Validado > status)
+            if (Status.RequestStudy.Validado == status && existingStudy.EstatusId == Status.RequestStudy.Capturado)
             {
                 existingStudy.FechaValidacion = DateTime.Now;
                 existingStudy.UsuarioValidacion = usuario.ToString();
             }
-            if (Status.RequestStudy.Liberado > status)
+            if (Status.RequestStudy.Liberado == status && existingStudy.EstatusId == Status.RequestStudy.Validado)
             {
                 existingStudy.FechaLiberado = DateTime.Now;
                 existingStudy.UsuarioLiberado = usuario.ToString();
@@ -1273,6 +1274,7 @@ namespace Service.MedicalRecord.Application
 
 
             existingStudy.EstatusId = status;
+            existingStudy.FechaModifico = DateTime.Now;
 
             await _repository.UpdateStatusStudy(existingStudy);
         }
