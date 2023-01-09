@@ -11,6 +11,7 @@ namespace Service.MedicalRecord.Mapper
     public static class MassSearchMapper
     {
         private const string ETIQUETA = "9";
+        private const byte PARTICULARES = 2;
         public static MassSearchInfoDto ToMassSearchInfoDto(this List<Request> model, MassSearchFilterDto filter)
         {
             List<int?> filterAreas = new List<int?>() { 5, 34, 23, 44, 28, 17, 41, 9, 20 };
@@ -106,6 +107,10 @@ namespace Service.MedicalRecord.Mapper
                 Sexo = x.Expediente.Genero == "F" ? "Femenino" : "Masculino",
                 Compania = x.Compañia?.Nombre,
                 Parcialidad = x.Parcialidad ? "Sí" : "No",
+                Saldo = x.Saldo,
+                SaldoPendiente = x.Procedencia == PARTICULARES && x.Saldo > 0,
+                EnvioCorreo = x.EnvioCorreo,
+                EnvioWhatsapp = x.EnvioWhatsApp,
                 Estudios = x.Estudios
                 //.Where(y => y.EstatusId == Status.RequestStudy.Liberado || y.EstatusId == Status.RequestStudy.Enviado || y.EstatusId == Status.RequestStudy.Entregado)
                 .Select(y => new RequestsStudiesInfoDto {

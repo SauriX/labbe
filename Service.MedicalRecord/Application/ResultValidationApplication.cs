@@ -145,8 +145,6 @@ namespace Service.MedicalRecord.Application
                     else
                     {
                         study.EstatusId = Status.RequestStudy.Capturado;
-                        study.FechaCaptura = DateTime.Now;
-                        study.UsuarioCaptura = item.Usuario;
                     }
                     
                 }
