@@ -107,7 +107,7 @@ namespace Service.MedicalRecord.Application
             var results = studies.Results.SelectMany(x => x.Parameters).ToList();
             var requestResults = studies.Results.Select(x => x.Id).ToList();
 
-            if (filter.Area == 0 && filter.Sucursales != null)
+            if (filter.Area == 0 && filter.Sucursales == null)
             {
                 throw new CustomException(HttpStatusCode.Conflict, Responses.MissingFilters("El parámetro área y sucursales"));
             }
@@ -174,7 +174,7 @@ namespace Service.MedicalRecord.Application
         {
             var request = await _repository.GetByFilter(filter);
 
-            return request.ToMassSearchInfoDto();
+            return request.ToMassSearchInfoDto(filter);
         }
     }
 }
