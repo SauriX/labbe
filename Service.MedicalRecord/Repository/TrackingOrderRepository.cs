@@ -103,18 +103,18 @@ namespace Service.MedicalRecord.Repository
             List<Domain.Request.RequestStudy> newlistestudios = new List<Domain.Request.RequestStudy>();
 
             foreach (var estudio in listaEstudio) {
-                if (!ordenes.Any(x => x.Estudios.Any(y => y.EstudioId == estudio.EstudioId && y.SeguimientoId == estudio.SolicitudId))) {
+                if (!ordenes.Any(x => x.Estudios.Any(y => y.EstudioId == estudio.EstudioId && y.SolicitudId == estudio.SolicitudId))) {
 
                     newlistestudios.Add(estudio);
-                        }
+                   }
             }
 
-            listaEstudio = newlistestudios.AsQueryable();
-            listaEstudio = listaEstudio.Where(x => estudios.Contains(x.EstudioId));
 
-            listaEstudio = listaEstudio.Where(x => x.EstatusId == Status.RequestStudy.TomaDeMuestra || x.EstatusId ==    Status.RequestStudy.Pendiente);
+            newlistestudios = newlistestudios.FindAll(x => estudios.Contains(x.EstudioId));
+
+            newlistestudios = newlistestudios.FindAll(x => x.EstatusId == Status.RequestStudy.TomaDeMuestra );
                 
-            return await listaEstudio.ToListAsync();
+            return  newlistestudios;
         }
 
         public async Task<bool> ConfirmarRecoleccion(Guid seguimientoId)
@@ -139,7 +139,14 @@ namespace Service.MedicalRecord.Repository
 
             return true;
         }
+        public async Task<string> GetLastCode(Guid branchId, string date)
+        {
+            var lastRequest = await _context.CAT_Expedientes
+                .OrderByDescending(x => x.FechaCreo)
+                .FirstOrDefaultAsync(x => x.IdSucursal == branchId && x.Expediente.StartsWith(date));
 
+            return lastRequest?.Expediente;
+        }
         public async Task<bool> CancelarRecoleccion(Guid seguimientoId)
         {
             var solicitudes = await _context.Relacion_Seguimiento_Solicitud.Where(x => x.SeguimientoId == seguimientoId).ToListAsync();

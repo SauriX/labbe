@@ -52,7 +52,7 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Estudios)
                 .ThenInclude(x=>x.Solicitud.Sucursal)
                 .Include(x => x.Estudios)
-                .ThenInclude(x=>x.Solicitud.Estudios.Where(m=>m.EstatusId==Status.RequestStudy.TomaDeMuestra|| m.EstatusId == Status.RequestStudy.EnRuta))
+                .ThenInclude(x=>x.Solicitud.Estudios)
                 .ThenInclude(x=>x.Estatus).AsQueryable();
 
             if (search.Fechas != null && search.Fechas.Length != 0)
@@ -73,7 +73,14 @@ namespace Service.MedicalRecord.Repository
             return await routeTrackingList.ToListAsync();
         }
         public async Task<TrackingOrder> getById(Guid Id) {
-            var route =await  _context.CAT_Seguimiento_Ruta.Include(x => x.Estudios).ThenInclude(x=>x.Solicitud.Sucursal).AsQueryable().FirstOrDefaultAsync(x=>x.Id==Id);
+            var route = await _context.CAT_Seguimiento_Ruta.Include(x => x.Estudios)
+                .ThenInclude(x => x.Solicitud.Sucursal)
+                .Include(x => x.Estudios)
+                .ThenInclude(x => x.Solicitud.Estatus)
+                .Include(x => x.Estudios).ThenInclude(x => x.Solicitud.Estudios)
+                .ThenInclude(x => x.Estatus)
+                .Include(x => x.Estudios)
+                .ThenInclude(x => x.Solicitud.Expediente).AsQueryable().FirstOrDefaultAsync(x=>x.Id==Id);
             return route;
         }
         public async Task Update(RouteTracking route) {
@@ -88,12 +95,20 @@ namespace Service.MedicalRecord.Repository
 
         public async Task<List<TrackingOrder>> GetAllRecive(PendingSearchDto search) {
 
-            var routeTrackingList = _context.CAT_Seguimiento_Ruta.Include(x => x.Estudios).ThenInclude(x => x.Solicitud.Sucursal).AsQueryable();
+            var routeTrackingList = _context.CAT_Seguimiento_Ruta.Include(x => x.Estudios)
+                .ThenInclude(x => x.Solicitud.Sucursal)
+                .Include(x => x.Estudios)
+                .ThenInclude(x => x.Solicitud.Estatus)
+                .Include(x => x.Estudios)
+                .ThenInclude(x => x.Solicitud.Estudios)
+                .ThenInclude(x => x.Estatus)
+                .Include(x => x.Estudios)
+                .ThenInclude(x => x.Solicitud.Expediente).AsQueryable();
 
             if (search.Fecha != null)
             {
                 routeTrackingList = routeTrackingList.
-                    Where(x => x.FechaCreo.Date == search.Fecha.Date );
+                    Where(x => x.Estudios.Any(y=> y.Solicitud.Estudios.Any(z=> z.FechaEnviado.Value.Date == search.Fecha.Value.Date)) );
             }
 
             if (search.Sucursal!=null && search.Sucursal.Count >0)

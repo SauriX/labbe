@@ -34,7 +34,9 @@ namespace Service.MedicalRecord.Mapper
                 EsNuevo = model.EsNuevo,
                 FolioWeeClinic = model.FolioWeeClinic,
                 Registro = $"{model.FechaCreo:dd/MM/yyyy}",
-                TokenValidado = model.TokenValidado
+                TokenValidado = model.TokenValidado,
+                SaldoPendiente = model.Procedencia == PARTICULAR && model.Saldo > 0,
+
             };
         }
 
@@ -50,8 +52,8 @@ namespace Service.MedicalRecord.Mapper
                 ClavePatologica = x.ClavePatologica,
                 Afiliacion = x.Afiliacion,
                 Paciente = x.Expediente.NombreCompleto,
-                Compañia = x.Procedencia == PARTICULAR ? "Particular" : x.Compañia?.Clave,
-                Procedencia = x.Procedencia == PARTICULAR ? "Particular" : x.Compañia?.Nombre,
+                Compañia = x.Compañia?.Nombre,
+                Procedencia = x.Procedencia == PARTICULAR ? "Particular" : "COMPAÑIÍA",
                 Factura = "",
                 Importe = x.TotalEstudios,
                 Descuento = x.DescuentoTipo == DESCUENTO_DINERO ? x.Descuento : x.Total * x.Descuento,

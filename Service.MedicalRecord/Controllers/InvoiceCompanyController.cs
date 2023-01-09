@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.MedicalRecord.Application.IApplication;
+using Service.MedicalRecord.Dtos.Invoice;
 using Service.MedicalRecord.Dtos.InvoiceCompany;
 using Shared.Dictionary;
 using System.Collections.Generic;
@@ -19,10 +20,25 @@ namespace Service.MedicalRecord.Controllers
         }
 
         [HttpPost("filter")]
-        //[Authorize(Policies.Access)]
+        [Authorize(Policies.Access)]
         public async Task<InvoiceCompanyInfoDto> GetByFilter(InvoiceCompanyFilterDto filter)
         {
             return await _service.GetByFilter(filter);
         }
+
+        [HttpGet("getConsecutiveBySerie/{serie}")]
+        [Authorize(Policies.Access)]
+        public async Task<string> GetConsecutiveBySerie(string serie)
+        {
+            return await _service.GetNextPaymentNumber(serie);
+        }
+
+        [HttpPost("checkin")]
+        [Authorize(Policies.Access)]
+        public async Task<InvoiceDto> CheckInPayment(InvoiceCompanyDto invoice)
+        {
+            return await _service.CheckInPayment(invoice);
+        }
+
     }
 }

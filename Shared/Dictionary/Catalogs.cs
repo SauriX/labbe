@@ -84,7 +84,7 @@ namespace Shared.Dictionary
             public static readonly Guid RECIMP = new("8a51bff5-4edb-4526-a022-34219248ae98");
         }
 
-        public class TipoValor
+        public class ValueType
         {
             public const string SinValor = "0";
             public const string Numerico = "1";

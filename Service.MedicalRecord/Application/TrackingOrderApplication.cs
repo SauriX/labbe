@@ -13,20 +13,31 @@ using System.Net;
 using System.Threading.Tasks;
 using SharedResponses = Shared.Dictionary.Responses;
 using System.Linq;
+using Service.MedicalRecord.Domain.Catalogs;
+using Service.MedicalRecord.Utils;
 
 namespace Service.MedicalRecord.Application.IApplication
 {
     public class TrackingOrderApplication : ITrackingOrderApplication
     {
         private readonly ITrackingOrderRepository _repository;
-
-        public TrackingOrderApplication(ITrackingOrderRepository repository)
+        private readonly IRepository<Branch> _branchRepository;
+        public TrackingOrderApplication(ITrackingOrderRepository repository, IRepository<Branch> branchRepository)
         {
             _repository = repository;
+            _branchRepository = branchRepository;       
         }
         public async Task<TrackingOrderDto> Create(TrackingOrderFormDto order)
         {
             var newOrder = order.ToModel();
+
+            var date = DateTime.Now.ToString("yyMMdd");
+            var branchid = Guid.Parse(newOrder.SucursalOrigenId);
+            var branch = await _branchRepository.GetOne(x => x.Id == branchid);
+            var lastCode = await _repository.GetLastCode(Guid.Parse(newOrder.SucursalOrigenId), date);
+
+            var code = Codes.GetCode(branch.Codigo, lastCode);
+            newOrder.Clave = code;
             await _repository.Create(newOrder);
             return newOrder.ToTrackingOrderFormDto();
         }
@@ -66,8 +77,8 @@ namespace Service.MedicalRecord.Application.IApplication
         public async Task<IEnumerable<EstudiosListDto>> FindEstudios(List<int> estudios)
         {
             var estudiosEncontrados = await _repository.FindEstudios(estudios);
-
-            return estudiosEncontrados.ToStudiesRequestRouteDto(); 
+            var estudis = estudiosEncontrados.ToStudiesRequestRouteDto();
+            return estudis;
         }
 
         

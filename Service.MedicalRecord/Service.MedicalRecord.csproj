@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Dtos\NewFolder\**" />
+    <Content Remove="Dtos\NewFolder\**" />
+    <EmbeddedResource Remove="Dtos\NewFolder\**" />
+    <None Remove="Dtos\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="5.0.3" />
     <PackageReference Include="ClosedXML" Version="0.95.4" />
     <PackageReference Include="ClosedXML.Report" Version="0.2.4" />
@@ -40,7 +47,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dtos\NewFolder\" />
     <Folder Include="wwwroot\layout\excel\trackingOrder\" />
   </ItemGroup>
 

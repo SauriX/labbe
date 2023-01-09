@@ -10,6 +10,7 @@ namespace Service.MedicalRecord.Mapper
 {
     public static class MassSearchMapper
     {
+        private const byte PARTICULARES = 2;
         public static MassSearchInfoDto ToMassSearchInfoDto(this List<Request> model)
         {
             List<int?> filterAreas = new List<int?>() { 5, 34, 23, 44, 28, 17, 41, 9, 20 };
@@ -34,18 +35,22 @@ namespace Service.MedicalRecord.Mapper
                         {
                             Id = solicitud.Id,
                             Clave = solicitud.Clave,
-                            paciente = solicitud.Expediente.NombreCompleto,
-                            edad = solicitud.Expediente.Edad,
+                            Paciente = solicitud.Expediente.NombreCompleto,
+                            Edad = solicitud.Expediente.Edad,
                             Genero = solicitud.Expediente.Genero,
-                            NombreEstudio = estudios[j].Clave,
                             ExpedienteId = solicitud.ExpedienteId,
+                            HoraSolicitud = solicitud.FechaCreo.ToString("HH:mm"),
+                            NombreEstudio = estudios[j].Clave,
                             Parameters = estudios[j].Resultados
                             .Where(x => x.TipoValorId != "9")
                             .Select(x => new MassSearchParameter
                             {
-
+                                Id = x.ParametroId,
+                                SolicitudEstudioId = x.SolicitudEstudioId,
+                                EstudioId = x.EstudioId,
                                 Nombre = x.NombreCorto,
-                                unidades = x.Unidades,
+                                Clave = x.Clave,
+                                Unidades = x.Unidades,
                                 Valor = x.Resultado
                             }).ToList(),
                         });
@@ -58,7 +63,7 @@ namespace Service.MedicalRecord.Mapper
                     {
                         
                         Nombre = x.NombreCorto,
-                        unidades = x.Unidades,
+                        Unidades = x.Unidades,
 
                     }).ToList(),
                     Results = results
@@ -82,6 +87,10 @@ namespace Service.MedicalRecord.Mapper
                 Sexo = x.Expediente.Genero == "F" ? "Femenino" : "Masculino",
                 Compania = x.Compañia?.Nombre,
                 Parcialidad = x.Parcialidad ? "Sí" : "No",
+                Saldo = x.Saldo,
+                SaldoPendiente = x.Procedencia == PARTICULARES && x.Saldo > 0,
+                EnvioCorreo = x.EnvioCorreo,
+                EnvioWhatsapp = x.EnvioWhatsApp,
                 Estudios = x.Estudios
                 //.Where(y => y.EstatusId == Status.RequestStudy.Liberado || y.EstatusId == Status.RequestStudy.Enviado || y.EstatusId == Status.RequestStudy.Entregado)
                 .Select(y => new RequestsStudiesInfoDto {
@@ -97,12 +106,12 @@ namespace Service.MedicalRecord.Mapper
                                       : !string.IsNullOrEmpty(x.EnvioWhatsApp)
                                       ? $"Disponible: Whatsapp"
                                       : "No disponible",
-                    FechaEntrega = y.FechaEntrega.ToString("dd/MM/yyyy"),
+                    FechaEntrega = y.FechaEntrega.ToString("dd/MM/yyyy hh:mm"),
                     Estatus = y.Estatus.Nombre,
-                    Registro = y.EstatusId == 6 
-                            ? $"{y.UsuarioLiberado} - {y.FechaLiberado?.ToString("dd/MM/yyyy")}" 
-                            : y.EstatusId == 7 
-                            ? $"{y.UsuarioEnviado} - {y.FechaEnviado?.ToString("dd/MM/yyyy")}" 
+                    Registro = y.EstatusId == Status.RequestStudy.Liberado 
+                            ? $"{y.UsuarioLiberado} {y.FechaLiberado?.ToString("dd/MM/yyyy hh:mm")}" 
+                            : y.EstatusId == Status.RequestStudy.Enviado 
+                            ? $"{y.UsuarioEnviado} {y.FechaEnviado?.ToString("dd/MM/yyyy hh:mm")}" 
                             : "",
                     IsActiveCheckbox = y.EstatusId == Status.RequestStudy.Liberado || y.EstatusId == Status.RequestStudy.Enviado || y.EstatusId == Status.RequestStudy.Entregado
                 }).ToList(),

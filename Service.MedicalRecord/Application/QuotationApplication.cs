@@ -28,6 +28,8 @@ using Service.MedicalRecord.Domain.Quotation;
 using QuotationTemplates = Service.MedicalRecord.Dictionary.EmailTemplates.Quotation;
 using Service.MedicalRecord.Dtos.Promotion;
 using Service.MedicalRecord.Dtos.Request;
+using VT = Shared.Dictionary.Catalogs.ValueType;
+using Service.MedicalRecord.Dtos.Catalogs;
 
 namespace Service.MedicalRecord.Application
 {
@@ -138,7 +140,7 @@ namespace Service.MedicalRecord.Application
                     var st = studiesParams.FirstOrDefault(x => x.Id == study.EstudioId);
                     if (st == null) continue;
 
-                    study.Parametros = st.Parametros;
+                    study.Parametros = st.Parametros.Where(x => !x.TipoValor.In(VT.Observacion, VT.Etiqueta, VT.SinValor, VT.Texto, VT.Parrafo)).ToList();
                     study.Indicaciones = st.Indicaciones;
                 }
 
@@ -156,7 +158,7 @@ namespace Service.MedicalRecord.Application
                 var st = studiesParams.FirstOrDefault(x => x.Id == study.EstudioId);
                 if (st == null) continue;
 
-                study.Parametros = st.Parametros;
+                study.Parametros = st.Parametros.Where(x => !x.TipoValor.In(VT.Observacion, VT.Etiqueta, VT.SinValor, VT.Texto, VT.Parrafo)).ToList();
                 study.Indicaciones = st.Indicaciones;
 
                 var promos = studiesPromos.Where(x => x.EstudioId == study.EstudioId).ToList();
@@ -430,8 +432,42 @@ namespace Service.MedicalRecord.Application
             await _repository.Update(quotation);
         }
 
-        
 
+        public async Task<byte[]> ExportQuote(Guid id)
+        {
+
+            var quotation = await _repository.GetById(id);
+
+            if (quotation == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound);
+            }
+            var quote = quotation.ToQuotationDto();
+
+            List<int> estudisid = new List<int>();
+
+            foreach (var estudys in quotation.Estudios) {
+                estudisid.Add(estudys.EstudioId);
+            
+            }
+            var estudios =await _catalogClient.GetStudies(estudisid);
+            var quotepdf = quote.toPriceQuotePdf(quotation.Estudios.ToList());
+            var newestudis = new List<StudyQuoteDto>();
+            foreach (var estudy in estudios) {
+                var actualstudy=quotepdf.StudyQuotes.FirstOrDefault(x=> x.StudyId==estudy.Id);
+                actualstudy.PreparacionPaciente = String.Join(", ", estudy.Indicaciones != null ? estudy.Indicaciones.Select(x => x.Descripcion).ToArray() : new string[] { "" }) ;
+                if (estudy.Tipo != null) {
+                    actualstudy.TipoMuestra = estudy.Tipo;
+                }
+
+
+                newestudis.Add(actualstudy);
+            }
+
+
+            quotepdf.StudyQuotes = newestudis;
+            return await _pdfClient.PriceQuoteReport(quotepdf);
+        }
 
         //public async Task<(byte[] file, string fileName)> ExportList(QuotationFilterDto search)
         //{

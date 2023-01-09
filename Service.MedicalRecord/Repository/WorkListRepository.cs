@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using Microsoft.EntityFrameworkCore;
 using Service.MedicalRecord.Context;
 using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Repository.IRepository;
@@ -28,6 +29,27 @@ namespace Service.MedicalRecord.Repository
                 .ToListAsync();
 
             return requests;
+        }
+
+        public async Task<List<Request>> GetMassiveWorkList(int areaId, List<Guid> branchesId, List<DateTime> date)
+        {
+            var requests = _context.CAT_Solicitud
+                .Include(x => x.Expediente)
+                .Include(x => x.Sucursal)
+                .Include(x => x.Estudios.Where(s => s.AreaId == areaId)).ThenInclude(x => x.Estatus)
+                .AsQueryable();
+
+            if (branchesId != null && branchesId.Count > 0)
+            {
+                requests = requests.Where(x => branchesId.Contains(x.SucursalId));
+            }
+
+            if(areaId != 0)
+            {
+                requests = requests.Where(x => x.Estudios.Select(s => s.AreaId).Contains(areaId));
+            }
+
+            return await requests.ToListAsync();
         }
     }
 }

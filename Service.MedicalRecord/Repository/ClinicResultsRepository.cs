@@ -35,7 +35,7 @@ namespace Service.MedicalRecord.Repository
 
         public async Task<ClinicResults> GetById(Guid id)
         {
-            var request = await _context.ClinicResults
+            var request = await _context.Resultados_Clinicos
                 .Include(x => x.Solicitud)
                 .Include(x => x.Solicitud).ThenInclude(x => x.Expediente)
                 .Include(x => x.SolicitudEstudio).ThenInclude(x => x.Estatus)
@@ -46,7 +46,7 @@ namespace Service.MedicalRecord.Repository
 
         public async Task<List<ClinicResults>> GetByRequest(Guid requestId)
         {
-            var request = await _context.ClinicResults
+            var request = await _context.Resultados_Clinicos
                 .Include(x => x.Solicitud)
                 .Include(x => x.Solicitud).ThenInclude(x => x.Expediente)
                 .Include(x => x.SolicitudEstudio).ThenInclude(x => x.Estatus)
@@ -148,6 +148,7 @@ namespace Service.MedicalRecord.Repository
                 {
                     nameof(ClinicResults.Resultado),
                     nameof(ClinicResults.UltimoResultado),
+                    nameof(ClinicResults.UltimaSolicitudId),
                     nameof(ClinicResults.Orden),
                     nameof(ClinicResults.ValorInicial),
                     nameof(ClinicResults.ValorFinal),
@@ -155,6 +156,7 @@ namespace Service.MedicalRecord.Repository
                     nameof(ClinicResults.CriticoMaximo),
                     nameof(ClinicResults.FCSI),
                     nameof(ClinicResults.TipoValorId),
+                    nameof(ClinicResults.ObservacionesId),
                 }
             };
             await _context.BulkUpdateAsync(newParameter, config);
@@ -201,7 +203,7 @@ namespace Service.MedicalRecord.Repository
 
         public async Task<List<ClinicResults>> GetLabResultsById(int id)
         {
-            var resultExisting = await _context.ClinicResults
+            var resultExisting = await _context.Resultados_Clinicos
                 .Where(x => x.SolicitudEstudioId == id)
                 .Include(x => x.SolicitudEstudio)
                 .ThenInclude(x => x.EstudioWeeClinic)
@@ -215,7 +217,7 @@ namespace Service.MedicalRecord.Repository
 
         public async Task<List<ClinicResults>> GetResultsById(Guid id)
         {
-            var resultExisting = await _context.ClinicResults
+            var resultExisting = await _context.Resultados_Clinicos
                 .Where(x => x.SolicitudId == id)
                 .Include(x => x.SolicitudEstudio)
                 .Include(x => x.Solicitud).ThenInclude(y => y.Expediente)

@@ -2,10 +2,11 @@
   "Routes": [
     {
       "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/tracking-order/all",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "axsishost.online"
+          "Host": "localhost",
+          "Port": 24048
         }
       ],
       "UpstreamPathTemplate": "/api/tracking-order/all",
@@ -13,10 +14,11 @@
     },
     {
       "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/TrackingOrder/findStudies",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "axsishost.online"
+          "Host": "localhost",
+          "Port": 24048
         }
       ],
       "UpstreamPathTemplate": "/api/tracking-order/findStudies",
@@ -24,21 +26,35 @@
     },
     {
       "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/TrackingOrder",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "axsishost.online"
+          "Host": "localhost",
+          "Port": 24048
         }
       ],
       "UpstreamPathTemplate": "/api/tracking-order",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/TrackingOrder/export/form",
-      "DownstreamScheme": "https",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/TrackingOrder/{id}",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "axsishost.online"
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/tracking-order/{id}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/TrackingOrder/export/form",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
         }
       ],
       "UpstreamPathTemplate": "/api/tracking-order/export/form",
@@ -46,10 +62,11 @@
     },
     {
       "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/TrackingOrder/confirmarRecoleccion",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "axsishost.online"
+          "Host": "localhost",
+          "Port": 24048
         }
       ],
       "UpstreamPathTemplate": "/api/tracking-order/confirmarRecoleccion",
@@ -57,14 +74,27 @@
     },
     {
       "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/TrackingOrder/cancelarRecoleccion",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "axsishost.online"
+          "Host": "localhost",
+          "Port": 24048
         }
       ],
       "UpstreamPathTemplate": "/api/tracking-order/cancelarRecoleccion",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/TrackingOrder/general",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/tracking-order/general",
+      "UpstreamHttpMethod": [ "PUT" ]
     }
   ]
 }
