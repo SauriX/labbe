@@ -22,14 +22,14 @@ namespace Service.MedicalRecord.Application
         {
             var data = await _repository.GetByQuotation(filter);
 
-            return data.ToQuotationReportDto(); ;
+            return data.ToQuotationReportDto();
         }
 
         public async Task<IEnumerable<ReportInfoDto>> GetRequestByFilter(ReportFilterDto filter)
         {
             var data = await _repository.GetByFilter(filter);
 
-            return data.ToReportRequestDto(); ;
+            return data.ToReportRequestDto();
         }
         
         public async Task<IEnumerable<StudiesDto>> GetStudiesByFilter(ReportFilterDto filter)
