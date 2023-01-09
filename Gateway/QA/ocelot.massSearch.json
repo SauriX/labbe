@@ -54,7 +54,7 @@
       ],
       "UpstreamPathTemplate": "/api/MassSearch/download/pdf",
       "UpstreamHttpMethod": [ "POST" ]
-    }
+    },
     {
       "DownstreamPathTemplate": "/LabRamos/services/records/api/MassSearch/order/{recordId}/{requestId}",
       "DownstreamScheme": "https",
