@@ -107,13 +107,13 @@ namespace Service.MedicalRecord.Application
             var results = studies.Results.SelectMany(x => x.Parameters).ToList();
             var requestResults = studies.Results.Select(x => x.Id).ToList();
 
-            if (filter.Area == 0 && filter.Sucursales != null)
+            if (filter.Area == 0 || filter.Sucursales == null)
             {
-                throw new CustomException(HttpStatusCode.Conflict, Responses.MissingFilters("El parámetro área y sucursales"));
+                throw new CustomException(HttpStatusCode.BadRequest, Responses.MissingFilters("El parámetro área y sucursales"));
             }
-            else if(filter.Area == 0 && filter.Sucursales.Count == 0)
+            else if(filter.Area == 0 || filter.Sucursales.Count == 0)
             {
-                throw new CustomException(HttpStatusCode.Conflict, Responses.MissingFilters("El parámetro área y sucursales"));
+                throw new CustomException(HttpStatusCode.BadRequest, Responses.MissingFilters("El parámetro área y sucursales"));
             }
 
             var requests = await _workListRepository.GetMassiveWorkList(filter.Area, filter.Sucursales, filter.Fechas);
