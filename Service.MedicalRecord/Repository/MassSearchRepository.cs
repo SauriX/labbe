@@ -130,6 +130,7 @@ namespace Service.MedicalRecord.Repository
             if (filter.Estudios != null && filter.Estudios.Count > 0)
             {
                 requests = requests.Where(x => x.Estudios.Any(y => filter.Estudios.Contains(y.EstudioId)));
+
             }
             if (!string.IsNullOrEmpty(filter.Busqueda))
             {
