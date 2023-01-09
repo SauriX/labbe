@@ -33,22 +33,26 @@ namespace Service.Identity.Repository
         {
             var menus = await _context.CAT_Usuario
                 .Include(x => x.Permisos).ThenInclude(x => x.Menu)
-                .Where(x => x.Id == userId )
-                .SelectMany(x => x.Permisos.Where(y => y.Acceder || x.Permisos.Select(p => p.Menu.MenuPadreId).Contains(y.Menu.Id)))
-                .Select(x => x.Menu).Where(x=> x.Id!=29)
-               .ToListAsync();
+                .Where(x => x.Id == userId)
+                .SelectMany(x => x.Permisos.Where(y => y.Acceder))
+                .Select(x => x.Menu).Where(x => x.Id != 29)
+                .OrderBy(x => x.Orden)
+                .ToListAsync();
+
+            var finalMenu = new List<Menu>();
 
             foreach (var menu in menus)
             {
-                if (menu.MenuPadreId != null && !menus.Any(x => x.Id == menu.MenuPadreId))
+                finalMenu.Add(menu);
+                if (menu.MenuPadreId != null && !finalMenu.Any(x => x.Id == menu.MenuPadreId))
                 {
                     var menupadre = await _context.CAT_Menu.FirstOrDefaultAsync(x => x.Id == menu.MenuPadreId);
 
-                    menus.Add(menupadre);
+                    finalMenu.Add(menupadre);
                 }
             }
 
-            return menus;
+            return finalMenu;
         }
 
         public async Task<UserPermission> GetScopes(Guid userId, string controller)
