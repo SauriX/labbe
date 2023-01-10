@@ -84,7 +84,7 @@ namespace Service.Catalog.Application
             newBranch.Codigo = nextConsecutive;
             await _repository.Create(newBranch);
 
-            var contract = new BranchContract(newBranch.Id, newBranch.Codigo, newBranch.Clave, newBranch.Nombre, newBranch.Clinicos, newBranch.Codigopostal, location.First().CiudadId);
+            var contract = new BranchContract(newBranch.Id, newBranch.Codigo, newBranch.Clave, newBranch.Nombre, newBranch.Clinicos, newBranch.Codigopostal, location.First().CiudadId, newBranch.Ciudad);
 
             await _publishEndpoint.Publish(contract);
 
@@ -157,7 +157,7 @@ namespace Service.Catalog.Application
 
             await _repository.Update(updatedBranch);
 
-            var contract = new BranchContract(updatedBranch.Id, updatedBranch.Codigo, updatedBranch.Clave, updatedBranch.Nombre, updatedBranch.Clinicos, updatedBranch.Codigopostal, location.First().CiudadId);
+            var contract = new BranchContract(updatedBranch.Id, updatedBranch.Codigo, updatedBranch.Clave, updatedBranch.Nombre, updatedBranch.Clinicos, updatedBranch.Codigopostal, location.First().CiudadId, updatedBranch.Ciudad);
 
             await _publishEndpoint.Publish(contract);
 
