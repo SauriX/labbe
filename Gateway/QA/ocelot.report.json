@@ -518,6 +518,17 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
+      "DownstreamPathTemplate": "/LabRamos/services/report/api/report/indicadores/toma/filter",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/LabRamos/services/report/api/report/indicadores/toma/filter",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
       "DownstreamPathTemplate": "/LabRamos/services/report/api/report/indicadores/servicios/filter",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -537,6 +548,17 @@
         }
       ],
       "UpstreamPathTemplate": "/LabRamos/services/report/api/report/indicadores",
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/report/api/report/indicadores/toma",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/LabRamos/services/report/api/report/indicadores/toma",
       "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
     {
