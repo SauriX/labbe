@@ -19,7 +19,7 @@
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/RouteTracking/report  ",
+      "UpstreamPathTemplate": "/api/RouteTracking/report",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
@@ -30,7 +30,7 @@
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/LabRamos/services/records/api/RouteTracking/exportOrder/{id}",
+      "UpstreamPathTemplate": "/api/RouteTracking/exportOrder/{id}",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {

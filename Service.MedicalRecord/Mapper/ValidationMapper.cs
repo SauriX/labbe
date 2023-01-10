@@ -29,7 +29,7 @@ namespace Service.MedicalRecord.Mapper
                 Order = x.ExpedienteId.ToString()
             }).ToList();
         }
-
+         
         public static List<ValidationStudyDto> ToStudyValidationDto(this ICollection<RequestStudy> model, byte urgencia)
         {
             return model.Select(x => new ValidationStudyDto
@@ -54,7 +54,7 @@ namespace Service.MedicalRecord.Mapper
                     : x.EstatusId == Status.RequestStudy.Enviado
                     ? x.FechaEnviado?.ToString("dd/MM/yyyy HH:mm")
                     : "",
-                Entrega = x.FechaCreo.AddDays((double)x.Dias).ToString(),
+                Entrega = x.FechaEntrega.ToString() ,
                 NombreEstatus = x.Estatus.Nombre,
                 SolicitudId = x.SolicitudId,
                 Nombre = x.Nombre,
