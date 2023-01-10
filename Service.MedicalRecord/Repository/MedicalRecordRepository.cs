@@ -43,7 +43,7 @@ namespace Service.MedicalRecord.Repository
             if (!string.IsNullOrEmpty(search.expediente))
             {
                 records = records.Where(x => x.Expediente.Contains(search.expediente) ||
-                (x.NombrePaciente.ToLower() + " " + x.PrimerApellido.ToLower()).Contains(search.expediente.ToLower()));
+                (x.NombrePaciente + " " + x.PrimerApellido + " " + x.SegundoApellido).ToLower().Contains(search.expediente.ToLower()));
             }
 
             if (search.fechaNacimiento.Date != DateTime.MinValue.Date)
