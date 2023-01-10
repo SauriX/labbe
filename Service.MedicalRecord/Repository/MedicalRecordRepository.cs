@@ -33,41 +33,42 @@ namespace Service.MedicalRecord.Repository
         public async Task<List<Domain.MedicalRecord.MedicalRecord>> GetNow(MedicalRecordSearch search)
 
         {
-            var expedientes = _context.CAT_Expedientes.AsQueryable();
+            var records = _context.CAT_Expedientes.AsQueryable();
 
             if (!string.IsNullOrEmpty(search.ciudad))
             {
-
-
-                expedientes = expedientes.Where(x => x.Ciudad == search.ciudad);
-
-
+                records = records.Where(x => x.Ciudad == search.ciudad);
             }
+
             if (!string.IsNullOrEmpty(search.expediente))
             {
-                expedientes = expedientes.Where(x => x.Expediente.Contains(search.expediente) || x.NombrePaciente.ToLower().Contains(search.expediente.ToLower()) || x.PrimerApellido.ToLower().Contains(search.expediente.ToLower()));
-
+                records = records.Where(x => x.Expediente.Contains(search.expediente) ||
+                (x.NombrePaciente.ToLower() + " " + x.PrimerApellido.ToLower()).Contains(search.expediente.ToLower()));
             }
+
             if (search.fechaNacimiento.Date != DateTime.MinValue.Date)
             {
-                expedientes = expedientes.Where(x => x.FechaDeNacimiento.Date == search.fechaNacimiento.Date);
-
+                records = records.Where(x => x.FechaDeNacimiento.Date == search.fechaNacimiento.Date);
             }
 
-            if (search.fechaAlta != null && search.fechaAlta[0].Date != DateTime.MinValue.Date && search.fechaAlta[1].Date != DateTime.MinValue.Date)
+            if (string.IsNullOrWhiteSpace(search.expediente) &&
+                search.fechaAlta != null && search.fechaAlta.Length > 1 &&
+                search.fechaAlta[0].Date != DateTime.MinValue.Date && search.fechaAlta[1].Date != DateTime.MinValue.Date)
             {
-                expedientes = expedientes.Where(x => x.FechaCreo.Date >= search.fechaAlta[0].Date && x.FechaCreo.Date <= search.fechaAlta[1].Date);
+                records = records.Where(x => x.FechaCreo.Date >= search.fechaAlta[0].Date && x.FechaCreo.Date <= search.fechaAlta[1].Date);
             }
+
             if (!string.IsNullOrEmpty(search.sucursal))
             {
-                expedientes = expedientes.Where(x => x.IdSucursal == Guid.Parse(search.sucursal));
-
+                records = records.Where(x => x.IdSucursal == Guid.Parse(search.sucursal));
             }
+
             if (!string.IsNullOrEmpty(search.telefono))
             {
-                expedientes = expedientes.Where(x => x.Telefono == search.telefono);
+                records = records.Where(x => x.Telefono == search.telefono);
             }
-            return expedientes.ToList();
+
+            return records.ToList();
         }
 
         public async Task<List<Domain.MedicalRecord.MedicalRecord>> GetActive()
