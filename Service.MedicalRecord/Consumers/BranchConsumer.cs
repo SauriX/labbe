@@ -24,7 +24,7 @@ namespace Service.MedicalRecord.Consumers
             try
             {
                 var message = context.Message;
-                var branch = new Branch(message.Id, message.Codigo, message.Clave, message.Nombre, message.Clinicos, message.CodigoPostal, message.CiudadId);
+                var branch = new Branch(message.Id, message.Codigo, message.Clave, message.Nombre, message.Clinicos, message.CodigoPostal, message.CiudadId, message.Ciudad);
 
                 var existing = await _repository.GetOne(x => x.Id == message.Id);
 
