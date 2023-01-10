@@ -32,26 +32,31 @@ namespace Service.MedicalRecord.Repository
         {
             var quotations = _context.CAT_Cotizacion
                 .Include(x => x.Expediente)
+                .Include(x => x.Sucursal)
                 .Include(x => x.Estudios)
                 .OrderBy(x => x.FechaCreo)
                 .AsQueryable();
 
-            if (filter.FechaAInicial != null && filter.FechaAFinal != null)
+            if (string.IsNullOrWhiteSpace(filter.Expediente) && filter.FechaAInicial != null && filter.FechaAFinal != null)
             {
                 quotations = quotations.Where(x => x.FechaCreo.Date >= ((DateTime)filter.FechaAInicial).Date
                 && x.FechaCreo.Date <= ((DateTime)filter.FechaAFinal).Date);
             }
 
-            if (filter.Sucursales != null && filter.Sucursales.Count > 0)
+            if (filter.Ciudad != null)
             {
-                quotations = quotations.Where(x => x.Sucursal != null && filter.Sucursales.Contains((Guid)x.SucursalId));
+                quotations = quotations.Where(x => x.Sucursal != null && x.Sucursal.Ciudad == filter.Ciudad);
             }
 
-            if (filter.FechaNInicial != null && filter.FechaNFinal != null)
+            if (filter.Sucursales != null && filter.Sucursales.Count > 0)
+            {
+                quotations = quotations.Where(x => x.Sucursal != null && filter.Sucursales.Contains(x.SucursalId));
+            }
+
+            if (filter.FechaNInicial != null)
             {
                 quotations = quotations.Where(x => x.Expediente != null
-                && x.Expediente.FechaDeNacimiento.Date <= ((DateTime)filter.FechaNInicial).Date
-                && x.Expediente.FechaDeNacimiento.Date >= ((DateTime)filter.FechaNFinal).Date);
+                && x.Expediente.FechaDeNacimiento.Date == ((DateTime)filter.FechaNInicial).Date);
             }
 
             if (!string.IsNullOrWhiteSpace(filter.Correo))
