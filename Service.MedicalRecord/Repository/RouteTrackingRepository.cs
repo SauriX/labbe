@@ -105,11 +105,6 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Estudios)
                 .ThenInclude(x => x.Solicitud.Expediente).AsQueryable();
 
-            if (search.Fecha != null)
-            {
-                routeTrackingList = routeTrackingList.
-                    Where(x => x.Estudios.Any(y=> y.Solicitud.Estudios.Any(z=> z.FechaEnviado.Value.Date == search.Fecha.Value.Date)) );
-            }
 
             if (search.Sucursal!=null && search.Sucursal.Count >0)
             {

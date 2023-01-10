@@ -41,7 +41,7 @@ namespace Service.MedicalRecord.Application
 
         public async Task<List<RouteTrackingListDto>> GetAll(RouteTrackingSearchDto search)
         {
-            var routeTrackingList = await _repository.GetAll( search);
+                var routeTrackingList = await _repository.GetAll( search);
             var list = routeTrackingList.ToList().ToRouteTrackingDto();
             List<RouteTrackingListDto> routefinal = new List<RouteTrackingListDto>();
             List<Guid> IdRoutes = new List<Guid>();
@@ -70,18 +70,29 @@ namespace Service.MedicalRecord.Application
         public async Task<int> UpdateStatus(List<RequestedStudyUpdateDto> requestDto)
         {
             try
-            {   
-                
-                /* foreach (var item in requestDto)
+            {
+
+                foreach (var item in requestDto)
                  {
-                     var ruteOrder = await _repository.getById(item.SolicitudId);
-                     var route = new RouteTracking
+                     var ruteOrder = await _repository.getById(item.RuteOrder);
+                    var list = ruteOrder.ToRouteTrackingDtoList();
+                    List<Guid> IdRoutes = new List<Guid>();
+                    IdRoutes.Add(list.rutaId);
+                    var routes = await _catalogClient.GetRutas(IdRoutes);
+                    var route = routes.FirstOrDefault(x => Guid.Parse(x.Id) == list.rutaId);
+                        DateTime oDate = Convert.ToDateTime(list.Fecha);
+                        list.Fecha = oDate.AddDays(route.TiempoDeEntrega).ToString();
+                   
+                    
+
+                 
+                    var routeT = new RouteTracking
                      {
                          Id = Guid.NewGuid(),
                          SegumientoId = Guid.Parse(ruteOrder.Estudios.FirstOrDefault().SeguimientoId.ToString()),
                          RutaId = Guid.Parse(ruteOrder.RutaId),
                          SucursalId = Guid.Parse(ruteOrder.SucursalDestinoId),
-                         FechaDeEntregaEstimada = ruteOrder.FechaCreo,
+                         FechaDeEntregaEstimada =  DateTime.Parse(list.Fecha),
                          SolicitudId = ruteOrder.Estudios.FirstOrDefault().SolicitudId,
                          HoraDeRecoleccion = ruteOrder.FechaCreo,
                          UsuarioCreoId = ruteOrder.UsuarioCreoId,
@@ -89,9 +100,9 @@ namespace Service.MedicalRecord.Application
 
                      };
 
-                     await _repository.Create(route);
+                     await _repository.Create(routeT);
 
-                 }*/
+                 }
                 int studyCount = 0;
                 foreach (var item in requestDto)
                 {
@@ -212,6 +223,12 @@ namespace Service.MedicalRecord.Application
                 register.Sucursal = sucursal.nombre;
                 revefinal.Add(register);
 
+            }
+
+            if (search.Fecha != null)
+            {
+                revefinal = revefinal.AsQueryable().
+                    Where(x => x.Fechaen.Date == search.Fecha.Value.Date).ToList();
             }
             return revefinal;
         }
