@@ -30,6 +30,7 @@ namespace Service.Catalog.Context
         public DbSet<Configuration> CAT_Configuracion { get; set; }
         public DbSet<Area> CAT_Area { get; set; }
         public DbSet<Budget> CAT_Presupuestos { get; set; }
+        public DbSet<BudgetBranch> Relacion_Presupuesto_Sucursal { get; set; }
         public DbSet<Bank> CAT_Banco { get; set; }
         public DbSet<Clinic> CAT_Clinica { get; set; }
         public DbSet<Delivery> CAT_Paqueteria { get; set; }

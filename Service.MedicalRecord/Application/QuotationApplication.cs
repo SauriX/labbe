@@ -30,6 +30,8 @@ using Service.MedicalRecord.Dtos.Promotion;
 using Service.MedicalRecord.Dtos.Request;
 using VT = Shared.Dictionary.Catalogs.ValueType;
 using Service.MedicalRecord.Dtos.Catalogs;
+using COMPANIES = Shared.Dictionary.Catalogs.Company;
+using MEDICS = Shared.Dictionary.Catalogs.Medic;
 
 namespace Service.MedicalRecord.Application
 {
@@ -188,8 +190,8 @@ namespace Service.MedicalRecord.Application
 
             quotationDto.Clave = code;
             var newQuotation = quotationDto.ToModel();
-            newQuotation.MedicoId = null; //MEDICS.A_QUIEN_CORRESPONDA;
-            newQuotation.CompañiaId = null; //COMPANIES.PARTICULARES;
+            newQuotation.MedicoId = MEDICS.A_QUIEN_CORRESPONDA;
+            newQuotation.CompañiaId = COMPANIES.PARTICULARES;
             newQuotation.CargoTipo = CANTIDAD;
             newQuotation.UsuarioCreoId = quotationDto.UsuarioId;
             newQuotation.UsuarioCreo = quotationDto.Usuario;
@@ -293,7 +295,7 @@ namespace Service.MedicalRecord.Application
             await _repository.Update(quotation);
         }
 
-        public async Task UpdateStudies(QuotationStudyUpdateDto quotationDto)
+        public async Task<QuotationStudyUpdateDto> UpdateStudies(QuotationStudyUpdateDto quotationDto)
         {
             try
             {
@@ -301,10 +303,16 @@ namespace Service.MedicalRecord.Application
 
                 var quotation = await GetExistingQuotation(quotationDto.CotizacionId);
 
+                if ((quotationDto.Estudios == null || quotationDto.Estudios.Count == 0)
+                && (quotationDto.Paquetes == null || quotationDto.Paquetes.Count == 0))
+                {
+                    throw new CustomException(HttpStatusCode.BadRequest, "Debe agregar por lo menos un estudio o paquete");
+                }
+
                 var studiesDto = quotationDto.Estudios ?? new List<QuotationStudyDto>();
                 var packStudiesDto = new List<QuotationStudyDto>();
 
-                if (quotationDto.Paquetes != null)
+                if (quotationDto.Paquetes != null && quotationDto.Paquetes.Count > 0)
                 {
                     if (quotationDto.Paquetes.Any(x => x.Estudios == null || x.Estudios.Count == 0))
                     {
@@ -330,11 +338,11 @@ namespace Service.MedicalRecord.Application
 
                 var packs = quotationDto.Paquetes.ToModel(quotationDto.CotizacionId, currentPacks, quotationDto.UsuarioId);
 
-                await _repository.BulkInsertUpdatePacks(quotationDto.CotizacionId, packs);
+                await _repository.BulkUpdateDelete(quotationDto.CotizacionId, packs);
 
                 var studies = studiesDto.ToModel(quotationDto.CotizacionId, currentSudies, quotationDto.UsuarioId);
 
-                await _repository.BulkInsertUpdateStudies(quotationDto.CotizacionId, studies);
+                await _repository.BulkUpdateDeleteStudies(quotationDto.CotizacionId, studies);
 
                 quotation.TotalEstudios = quotationDto.Total.TotalEstudios;
                 quotation.Cargo = quotationDto.Total.Cargo;
@@ -346,11 +354,39 @@ namespace Service.MedicalRecord.Application
                 await _repository.Update(quotation);
 
                 _transaction.CommitTransaction();
+
+                AssignStudiesIds(quotationDto, packs, studies);
+
+                return quotationDto;
             }
             catch (Exception)
             {
                 _transaction.RollbackTransaction();
                 throw;
+            }
+        }
+
+        private static void AssignStudiesIds(QuotationStudyUpdateDto requestDto, List<QuotationPack> packs, List<QuotationStudy> studies)
+        {
+            foreach (var pack in requestDto.Paquetes.Where(x => x.Id == 0))
+            {
+                var newPack = packs.FirstOrDefault(x => x.PaqueteId == pack.PaqueteId && !requestDto.Paquetes.Select(p => p.Id).Contains(x.Id));
+                pack.Id = newPack.Id;
+                packs.Remove(newPack);
+
+                foreach (var study in pack.Estudios)
+                {
+                    var newStudy = studies.FirstOrDefault(x => x.EstudioId == study.EstudioId && x.PaqueteId == pack.Id);
+                    study.Id = newStudy.Id;
+                    studies.Remove(newStudy);
+                }
+            }
+
+            foreach (var study in requestDto.Estudios.Where(x => x.Id == 0))
+            {
+                var newStudy = studies.FirstOrDefault(x => x.EstudioId == study.EstudioId && !requestDto.Estudios.Select(p => p.Id).Contains(x.Id));
+                study.Id = newStudy.Id;
+                studies.Remove(newStudy);
             }
         }
 
@@ -363,11 +399,29 @@ namespace Service.MedicalRecord.Application
                 throw new CustomException(HttpStatusCode.BadGateway, RecordResponses.Quotation.AlreadyCancelled);
             }
 
+            quotation.Activo = false;
             quotation.EstatusId = Status.Quotation.Cancelado;
             quotation.UsuarioModificoId = userId;
             quotation.FechaModifico = DateTime.Now;
 
             await _repository.Update(quotation);
+        }
+
+        public async Task DeleteQuotation(Guid quotationId)
+        {
+            var quotation = await _repository.GetById(quotationId);
+
+            if (quotation == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
+            }
+
+            if (quotation.Estudios.Any() || quotation.Paquetes.Any())
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "No es posible eliminar cotizaciones con estudios");
+            }
+
+            await _repository.Delete(quotation);
         }
 
         public async Task DeleteStudies(QuotationStudyUpdateDto quotationDto)
@@ -378,12 +432,12 @@ namespace Service.MedicalRecord.Application
 
             var studies = await _repository.GetStudyById(quotationDto.CotizacionId, studiesIds);
 
-            if (studies == null || studies.Count == 0)
+            if ((studies == null || studies.Count == 0) && !studiesIds.Any(x => x == 0))
             {
                 throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Quotation.NoStudySelected);
             }
 
-            await _repository.BulkDeleteStudies(Guid.NewGuid(), studies);
+            await _repository.BulkDeleteStudies(quotation.Id, studies);
         }
 
         public async Task<byte[]> PrintQuotation(Guid id)
@@ -400,42 +454,8 @@ namespace Service.MedicalRecord.Application
             return new byte[0x00];
         }
 
-        private async Task<Quotation> GetExistingQuotation(Guid id)
-        {
-            var quotation = await _repository.FindAsync(id);
-
-            if (quotation == null)
-            {
-                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
-            }
-
-            return quotation;
-        }
-
-        private async Task<string> GetNewCode(QuotationDto quotationDto)
-        {
-            var date = DateTime.Now.ToString("yyMMdd");
-
-            var branch = await _branchRepository.GetOne(x => x.Id == quotationDto.SucursalId);
-            var lastCode = await _repository.GetLastCode(quotationDto.SucursalId, date);
-
-            var code = Codes.GetCode(branch.Codigo, lastCode);
-            return code;
-        }
-
-        public async Task DeactivateQuotation(Guid quotationId)
-        {
-            var quotation = await _repository.GetById(quotationId);
-
-            quotation.Activo = false;
-
-            await _repository.Update(quotation);
-        }
-
-
         public async Task<byte[]> ExportQuote(Guid id)
         {
-
             var quotation = await _repository.GetById(id);
 
             if (quotation == null)
@@ -446,17 +466,20 @@ namespace Service.MedicalRecord.Application
 
             List<int> estudisid = new List<int>();
 
-            foreach (var estudys in quotation.Estudios) {
+            foreach (var estudys in quotation.Estudios)
+            {
                 estudisid.Add(estudys.EstudioId);
-            
+
             }
-            var estudios =await _catalogClient.GetStudies(estudisid);
+            var estudios = await _catalogClient.GetStudies(estudisid);
             var quotepdf = quote.toPriceQuotePdf(quotation.Estudios.ToList());
             var newestudis = new List<StudyQuoteDto>();
-            foreach (var estudy in estudios) {
-                var actualstudy=quotepdf.StudyQuotes.FirstOrDefault(x=> x.StudyId==estudy.Id);
-                actualstudy.PreparacionPaciente = String.Join(", ", estudy.Indicaciones != null ? estudy.Indicaciones.Select(x => x.Descripcion).ToArray() : new string[] { "" }) ;
-                if (estudy.Tipo != null) {
+            foreach (var estudy in estudios)
+            {
+                var actualstudy = quotepdf.StudyQuotes.FirstOrDefault(x => x.StudyId == estudy.Id);
+                actualstudy.PreparacionPaciente = String.Join(", ", estudy.Indicaciones != null ? estudy.Indicaciones.Select(x => x.Descripcion).ToArray() : new string[] { "" });
+                if (estudy.Tipo != null)
+                {
                     actualstudy.TipoMuestra = estudy.Tipo;
                 }
 
@@ -513,5 +536,28 @@ namespace Service.MedicalRecord.Application
 
         //    return (template.ToByteArray(), $"Catálogo de Cotizacion ({study.nomprePaciente}).xlsx");
         //}
+
+        private async Task<Quotation> GetExistingQuotation(Guid id)
+        {
+            var quotation = await _repository.FindAsync(id);
+
+            if (quotation == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
+            }
+
+            return quotation;
+        }
+
+        private async Task<string> GetNewCode(QuotationDto quotationDto)
+        {
+            var date = DateTime.Now.ToString("yyMMdd");
+
+            var branch = await _branchRepository.GetOne(x => x.Id == quotationDto.SucursalId);
+            var lastCode = await _repository.GetLastCode(quotationDto.SucursalId, date);
+
+            var code = Codes.GetCode(branch.Codigo, lastCode);
+            return code;
+        }
     }
 }

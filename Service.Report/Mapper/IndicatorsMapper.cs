@@ -22,7 +22,7 @@ namespace Service.Report.Mapper
             {
                 var itemData = new Dictionary<string, object>
                 {
-                    ["Nombre"] = item
+                    ["NOMBRE"] = item
                 };
 
                 foreach (var branch in model)
@@ -78,8 +78,19 @@ namespace Service.Report.Mapper
                            );
 
             return results;
+        }
 
-            //return results.ToTableIndicatorsStatsDto();
+        public static IEnumerable<SamplesCostsDto> ToSamplesCostsDto(this IEnumerable<SamplesCosts> model)
+        {
+            if (model == null) return null;
+
+            return model.Select(sample => new SamplesCostsDto
+            {
+                Id = sample.Id,
+                CostoToma = sample.CostoToma,
+                SucursalId = sample.SucursalId,
+                FechaAlta = sample.FechaAlta
+            }).ToList();
         }
 
         public static List<ServicesCostDto> ServicesCostGeneric(this IEnumerable<ServicesCost> model)
@@ -121,19 +132,6 @@ namespace Service.Report.Mapper
             return data;
         }
 
-        public static IndicatorsListDto ToIndicatorsListDto(this Indicators model)
-        {
-            if (model == null) return null;
-
-            return new IndicatorsListDto
-            {
-                Id = model.Id,
-                CostoReactivo = model.CostoReactivo,
-                SucursalId = model.SucursalId,
-                Fecha = model.Fecha
-            };
-        }
-
         public static Indicators ToModelCreate(this IndicatorsStatsDto dto)
         {
             if (dto == null) return null;
@@ -157,6 +155,32 @@ namespace Service.Report.Mapper
                 CostoReactivo = dto.CostoReactivo,
                 SucursalId = model.SucursalId,
                 Fecha = dto.FechaAlta
+            };
+        }
+        
+        public static SamplesCosts ToSampleCreate(this SamplesCostsDto dto)
+        {
+            if (dto == null) return null;
+
+            return new SamplesCosts
+            {
+                Id = Guid.NewGuid(),
+                CostoToma = dto.CostoToma,
+                SucursalId = dto.SucursalId,
+                FechaAlta = dto.FechaAlta
+            };
+        }
+        
+        public static SamplesCosts ToSampleUpdate(this SamplesCostsDto dto, SamplesCosts model)
+        {
+            if (dto == null) return null;
+
+            return new SamplesCosts
+            {
+                Id = model.Id,
+                CostoToma = dto.CostoToma,
+                SucursalId = model.SucursalId,
+                FechaAlta = dto.FechaAlta
             };
         }
     }

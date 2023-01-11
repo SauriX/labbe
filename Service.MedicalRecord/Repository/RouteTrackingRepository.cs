@@ -101,7 +101,7 @@ namespace Service.MedicalRecord.Repository
             {
                 routeTrackingList = routeTrackingList.Where(x => search.Busqueda.Contains(x.Clave));
             }
-            routeTrackingList = routeTrackingList.Where(x =>  x.SucursalDestinoId == search.Sucursaldest);
+            routeTrackingList = routeTrackingList.Where(x =>  x.SucursalOrigenId == search.Sucursaldest);
             return await routeTrackingList.ToListAsync();
         }
         public async Task<RouteTracking> GetTracking(Guid Id) {

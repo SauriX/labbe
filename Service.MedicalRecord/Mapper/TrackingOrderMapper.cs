@@ -164,21 +164,22 @@ namespace Service.MedicalRecord.Mapper
             if (model == null) return null;
 
 
-            return model.GroupBy(x => x.Solicitud.Id)/*.GroupBy(x => x.Tapon.Clave)*/.Select(x => new EstudiosListDto
+            return model.Select(x => new EstudiosListDto
             {
-                solicitudId = x.FirstOrDefault().SolicitudId,
+                
+                solicitudId = x.SolicitudId,
                 //solicitud = x.,
-                Estudios = x.Select(y => new StudiesRequestRouteDto
+                Estudio =   new StudiesRequestRouteDto
                 {
-                    Estudio = y.Nombre,
-                    EstudioId = y.EstudioId,
-                    Clave = y.Clave,
-                    NombrePaciente = y.Solicitud.Expediente.NombreCompleto,
-                    Solicitud = y.Solicitud.Clave,
-                    TaponNombre = y.Tapon?.Clave,
-                    SolicitudId = y.Solicitud.Id,
-                    ExpedienteId = y.Solicitud.ExpedienteId
-                }).ToList(),
+                    Estudio = x.Nombre,
+                    EstudioId = x.EstudioId,
+                    Clave = x.Clave,
+                    NombrePaciente = x.Solicitud.Expediente.NombreCompleto,
+                    Solicitud = x.Solicitud.Clave,
+                    TaponNombre = x.Tapon?.Clave,
+                    SolicitudId = x.Solicitud.Id,
+                    ExpedienteId = x.Solicitud.ExpedienteId
+                },
             });
         }
     }
