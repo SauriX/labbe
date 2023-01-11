@@ -29,7 +29,24 @@ namespace Service.Catalog.Dtos.PriceList
         public string Maquila { get; set; }
         public decimal Precio { get; set; }
         public decimal PrecioFinal => Precio - Descuento;
-        public DateTime FechaEntrega => DateTime.Now.AddHours(Horas);
+        public DateTime FechaEntrega
+        {
+            get
+            {
+                var datePlusHours = DateTime.Now.AddHours(Horas);
+
+                if (datePlusHours.DayOfWeek == DayOfWeek.Sunday || (datePlusHours.DayOfWeek == DayOfWeek.Saturday && datePlusHours.Hour > 17))
+                {
+                    datePlusHours = datePlusHours.DayOfWeek == DayOfWeek.Sunday ? datePlusHours.AddDays(1) : datePlusHours.AddDays(2);
+                }
+                if (datePlusHours.Hour > 17)
+                {
+                    datePlusHours = datePlusHours.AddDays(1);
+                }
+
+                return new DateTime(datePlusHours.Year, datePlusHours.Month, datePlusHours.Day, 17, 0, 0);
+            }
+        }
         public List<PriceListInfoPromoDto> Promociones { get; set; }
         public IEnumerable<ParameterListDto> Parametros { get; set; }
         public IEnumerable<IndicationListDto> Indicaciones { get; set; }
