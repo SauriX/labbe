@@ -109,7 +109,7 @@ namespace Service.Catalog.Repository
                 reagents.ForEach(x => x.ParametroId = parameter.Id);
 
                 var config = new BulkConfig();
-                config.SetSynchronizeFilter<ParameterReagent>(x => x.ReactivoId == parameter.Id);
+                config.SetSynchronizeFilter<ParameterReagent>(x => x.ParametroId == parameter.Id);
 
                 await _context.BulkInsertAsync(reagents, config);
 

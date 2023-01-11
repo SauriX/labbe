@@ -109,18 +109,6 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/quotation/deactivate/{quotationId}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 24048
-        }
-      ],
-      "UpstreamPathTemplate": "/api/quotation/deactivate/{quotationId}",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
       "DownstreamPathTemplate": "/api/quotation/general",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -191,6 +179,18 @@
       ],
       "UpstreamPathTemplate": "/api/quotation/cancel/{quotationId}",
       "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/quotation/delete/{quotationId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/quotation/delete/{quotationId}",
+      "UpstreamHttpMethod": [ "DELETE" ]
     },
     {
       "DownstreamPathTemplate": "/api/quotation/studies/cancel",

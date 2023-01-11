@@ -152,12 +152,20 @@ namespace Service.MedicalRecord.Repository
             _context.CAT_Cotizacion.Update(quotation);
 
             await _context.SaveChangesAsync();
+        }     
+        
+        public async Task Delete(Quotation quotation)
+        {
+            _context.CAT_Cotizacion.Remove(quotation);
+
+            await _context.SaveChangesAsync();
         }
 
-        public async Task BulkInsertUpdatePacks(Guid quotationId, List<QuotationPack> packs)
+        public async Task BulkUpdateDelete(Guid quotationId, List<QuotationPack> packs)
         {
             var config = new BulkConfig();
             config.SetSynchronizeFilter<QuotationPack>(x => x.CotizacionId == quotationId);
+            config.SetOutputIdentity = true;
 
             await _context.BulkInsertOrUpdateAsync(packs, config);
         }
@@ -170,12 +178,13 @@ namespace Service.MedicalRecord.Repository
             await _context.BulkDeleteAsync(packs, config);
         }
 
-        public async Task BulkInsertUpdateStudies(Guid quotationId, List<QuotationStudy> studies)
+        public async Task BulkUpdateDeleteStudies(Guid quotationId, List<QuotationStudy> studies)
         {
             var config = new BulkConfig();
             config.SetSynchronizeFilter<QuotationStudy>(x => x.CotizacionId == quotationId);
+            config.SetOutputIdentity = true;
 
-            await _context.BulkInsertOrUpdateAsync(studies, config);
+            await _context.BulkInsertOrUpdateOrDeleteAsync(studies, config);
         }
 
         public async Task BulkDeleteStudies(Guid quotationId, List<QuotationStudy> studies)
