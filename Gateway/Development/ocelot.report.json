@@ -565,6 +565,18 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
+      "DownstreamPathTemplate": "/api/report/indicadores/toma/ilter",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 18934
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/indicadores/toma/filter",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/report/indicadores/servicios/filter",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -586,6 +598,18 @@
         }
       ],
       "UpstreamPathTemplate": "/api/report/indicadores",
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/report/indicadores/toma",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 18934
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/indicadores/toma",
       "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
     {
