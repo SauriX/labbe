@@ -108,28 +108,23 @@ namespace Service.Report.Mapper
             }).ToList();
         }
 
-        public static ServicesDto ToServiceCostDto(this IEnumerable<ServicesCost> model)
+        public static IEnumerable<ServicesCostDto> ToServiceCostDto(this IEnumerable<ServicesCost> model)
         {
             if (model == null) return null;
 
-            var results = ServicesCostGeneric(model);
-
-            var costoFijo = results.Select(x => x.CostoFijo).FirstOrDefault();
-
-            var totals = new ServicesCostTimeDto
-            {
-                TotalMensual = costoFijo,
-                TotalSemanal = costoFijo / 6,
-                TotalDiario = costoFijo / 24
-            };
-
-            var data = new ServicesDto
-            {
-                CostoServicios = results,
-                CostoTemporal = totals
-            };
-
-            return data;
+            var results = (from c in model
+                           group c by new { c.Sucursal, c.Nombre } into grupo
+                           select grupo).Select(grupo =>
+                           {
+                               return new ServicesCostDto
+                               {
+                                   Nombre = grupo.Key.Nombre,
+                                   Sucursal = grupo.Key.Sucursal,
+                                   CostoFijo = grupo.Sum(x => x.CostoFijo),
+                               };
+                           });
+            
+            return results;
         }
 
         public static Indicators ToModelCreate(this IndicatorsStatsDto dto)

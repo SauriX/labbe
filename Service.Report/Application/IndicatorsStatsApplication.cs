@@ -394,5 +394,32 @@ namespace Service.Report.Application
                 monthly.Cell(fr1, monthlyData + 2).FormulaA1 = $"={colName}{fr1 - 4}-{colName}{fr1 - 3}-{colName}{fr1 - 2}-{colName}{fr1 - 1}";
             }
         }
+        
+        private void ServiceData(List<RequestInfo> data, List<ServicesCost> servicesCost, List<Indicators> budget, IXLWorksheet monthly, DateTime month)
+        {
+            var stats = servicesCost.ServicesCostGeneric().ToList();
+
+            foreach (var monthlyItem in stats)
+            {
+                monthlyItem.CostoFijo = servicesCost.Where(x => x.Sucursales.Contains(monthlyItem.Sucursal)).Sum(x => x.CostoFijo);
+                monthlyItem.CostoReactivo = budget.Where(x => x.SucursalId == monthlyItem.SucursalId).Sum(x => x.CostoReactivo);
+            }
+
+            var results = stats.ToTableIndicatorsStatsDto();
+
+            var dataTable = GetTable(month.ToString("MMMM yy"), results);
+
+            var tableWithData = monthly.Cell(3, 1).InsertTable(dataTable.AsEnumerable());
+
+            var formRow = 3 - 1;
+
+            List<string> list = results[0].Keys.Where(x => x != "NOMBRE").ToList();
+            for (int monthlyData = 0; monthlyData < list.Count; monthlyData++)
+            {
+                var colName = monthly.Column(monthlyData + 2).ColumnLetter();
+                var fr1 = formRow + 7;
+                monthly.Cell(fr1, monthlyData + 2).FormulaA1 = $"={colName}{fr1 - 4}-{colName}{fr1 - 3}-{colName}{fr1 - 2}-{colName}{fr1 - 1}";
+            }
+        }
     }
 }
