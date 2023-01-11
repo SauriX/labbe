@@ -107,7 +107,7 @@ namespace Service.Report.Application
 
         public async Task<(byte[] file, string fileName)> ExportServicesCost(ReportFilterDto search)
         {
-            var service = await _catalogService.GetBudgetsByBranch(search.SucursalId);
+            var servicesCost = await _catalogService.GetBudgetsByBranch(search.SucursalId);
 
             var path = Assets.ServicesCost;
 
@@ -117,7 +117,7 @@ namespace Service.Report.Application
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
             template.AddVariable("Titulo", "Costos Fijos Mensual");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
-            template.AddVariable("CostoFijo", service);
+            template.AddVariable("CostoFijo", servicesCost);
 
             template.Generate();
 
