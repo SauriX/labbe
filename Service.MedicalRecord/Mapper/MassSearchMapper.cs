@@ -117,15 +117,7 @@ namespace Service.MedicalRecord.Mapper
                     EstudioId = y.Id,
                     Estudio = y.Nombre,
                     isPathological = y.DepartamentoId == Shared.Dictionary.Catalogs.Department.PATOLOGIA,
-                    MedioSolicitado = !string.IsNullOrEmpty(y.MedioSolicitado)
-                                      ? string.Join("/", y.MedioSolicitado.Split(","))
-                                      : !string.IsNullOrEmpty(x.EnvioCorreo) && !string.IsNullOrEmpty(x.EnvioWhatsApp)
-                                      ? $"Disponibles: Whatsapp/Correo"
-                                      : !string.IsNullOrEmpty(x.EnvioCorreo)
-                                      ? $"Disponible: Correo"
-                                      : !string.IsNullOrEmpty(x.EnvioWhatsApp)
-                                      ? $"Disponible: Whatsapp"
-                                      : "No disponible",
+                    MedioSolicitado = y.MedioSolicitado,
                     FechaEntrega = y.FechaEntrega.ToString("dd/MM/yyyy hh:mm"),
                     Estatus = y.Estatus.Nombre,
                     Registro = y.EstatusId == Status.RequestStudy.Liberado 
