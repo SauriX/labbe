@@ -35,10 +35,7 @@ namespace Service.MedicalRecord.Repository
         {
             var records = _context.CAT_Expedientes.AsQueryable();
 
-            if (!string.IsNullOrEmpty(search.ciudad))
-            {
-                records = records.Where(x => x.Ciudad == search.ciudad);
-            }
+
 
             if (!string.IsNullOrEmpty(search.expediente))
             {
