@@ -250,6 +250,13 @@ namespace Service.MedicalRecord.Repository
             _context.ChangeTracker.Clear();
         }
 
+        public async Task Delete(Request request)
+        {
+            _context.CAT_Solicitud.Remove(request);
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task UpdateImage(RequestImage requestImage)
         {
             if (requestImage.Id == 0)
