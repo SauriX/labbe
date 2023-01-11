@@ -169,11 +169,13 @@ namespace Service.MedicalRecord.Application
             List<PendingReciveDto> revefinal = new List<PendingReciveDto>();
             var tracking = await _repository.GetAllRecive(search);
             var recive = tracking.ToPendingReciveDto();
+
             foreach (var item in recive)
             {
                 var register = item;
                 List<ReciveStudyDto> estudios = new List<ReciveStudyDto>();
                 var routeTra = await _repository.GetTracking(Guid.Parse(item.Id));
+
                 var route = await _catalogClient.GetRuta(Guid.Parse(item.Claveroute));
                 var sucursal = await _catalogClient.GetBranch(Guid.Parse(item.Sucursal));
                 if (routeTra != null)
@@ -220,8 +222,24 @@ namespace Service.MedicalRecord.Application
             {
                 throw new CustomException(HttpStatusCode.NotFound);
             }
+
+
             var order = trakingorder.ToRouteTrackingDtoList();
+
+            List<RouteTrackingListDto> routefinal = new List<RouteTrackingListDto>();
+            List<Guid> IdRoutes = new List<Guid>();
+     
+                IdRoutes.Add(order.rutaId);
+            
+            var routes = await _catalogClient.GetRutas(IdRoutes);
+
+                var route = routes.FirstOrDefault(x => Guid.Parse(x.Id) == order.rutaId);
+                DateTime oDate = Convert.ToDateTime(order.Fecha);
+                order.Fecha = oDate.AddDays(route.TiempoDeEntrega).ToString();
+               
+            
             var user = await _identityClient.GetByid(trakingorder.Estudios.FirstOrDefault().Solicitud.UsuarioModificoId.ToString());
+
             var orderForm = order.toDeliverOrder($"{user.Nombre} {user.PrimerApellido} {user.SegundoApellido}");
             List<Col> columns = new()
             {
