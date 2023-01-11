@@ -39,6 +39,8 @@ namespace Service.Catalog.Domain.Company
         public string RazonSocial { get; set; }
         public string Colonia { get; set; }
         public int ColoniaId { get; set; }
+        public string Calle { get; set; }
+        public string Numero { get; set; }
         public string RegimenFiscal { get; set; }
         public int? MetodoDePagoId { get; set; }
         public int? FormaDePagoId { get; set; }

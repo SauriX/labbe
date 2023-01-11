@@ -32,11 +32,29 @@ namespace Service.MedicalRecord.Application
                 UsoCFDI = invoice.UsoCFDI,
                 RegimenFiscal = invoice.RegimenFiscal,
                 RFC = invoice.RFC,
-                Cliente = invoice.Cliente,
+                Cliente = new ClientDto
+                {
+                    RazonSocial = invoice.Cliente.RazonSocial,
+                    RFC = invoice.Cliente.RFC,
+                    RegimenFiscal = invoice.Cliente.RegimenFiscal,
+                    Correo = invoice.Cliente.Correo,
+                    Telefono = invoice.Cliente.Telefono,
+                    CodigoPostal = invoice.Cliente.CodigoPostal,
+                    Calle = invoice.Cliente.Calle,
+                    NumeroExterior = invoice.Cliente.NumeroExterior,
+                    NumeroInterior = "",
+                    Colonia = invoice.Cliente.Colonia,
+                    Ciudad = invoice.Cliente.Ciudad,
+                    Municipio = invoice.Cliente.Municipio,
+                    Estado = invoice.Cliente.Estado,
+                    Pais = invoice.Cliente.Pais,
+                },
+                
+                
                 Productos = invoice.Estudios.Select(x => new ProductDto
                 {
                     Clave = x.Clave,
-                    Descripcion = "",
+                    Descripcion = x.Estudio,
                     Precio = x.Precio,
                     Descuento = x.Descuento,
                     Cantidad = 1,

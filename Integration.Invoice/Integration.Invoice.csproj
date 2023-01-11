@@ -188,7 +188,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>60235</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:57421/</IISUrl>
+          <IISUrl>http://localhost:57421/swagger/ui/index</IISUrl>
           <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
           <IISAppRootUrl>http://localhost:57421/</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
