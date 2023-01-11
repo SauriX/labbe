@@ -100,17 +100,6 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/records/api/quotation/deactivate/{quotationId}",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "axsishost.online"
-        }
-      ],
-      "UpstreamPathTemplate": "/api/quotation/deactivate/{quotationId}",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
       "DownstreamPathTemplate": "/LabRamos/services/records/api/quotation/general",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -175,6 +164,17 @@
       ],
       "UpstreamPathTemplate": "/api/quotation/cancel/{quotationId}",
       "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/quotation/delete/{quotationId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/quotation/delete/{quotationId}",
+      "UpstreamHttpMethod": [ "DELETE" ]
     },
     {
       "DownstreamPathTemplate": "/LabRamos/services/records/api/quotation/studies/cancel",
