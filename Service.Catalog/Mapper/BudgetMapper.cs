@@ -82,7 +82,7 @@ namespace Service.Catalog.Mapper
                 FechaCreo = DateTime.Now,
                 Sucursales = dto.Sucursales.Select(x => new BudgetBranch
                 {
-                    Ciudad = dto.Ciudad,
+                    Ciudad = x.Ciudad,
                     SucursalId = x.SucursalId,
                     Activo = dto.Activo,
                     UsuarioCreoId = dto.UsuarioId,
@@ -109,7 +109,7 @@ namespace Service.Catalog.Mapper
                 Sucursales = dto.Sucursales.Select(x => new BudgetBranch
                 {
                     CostoFijoId = model.Id,
-                    Ciudad = dto.Ciudad,
+                    Ciudad = x.Ciudad,
                     SucursalId = x.SucursalId,
                     Activo = dto.Activo,
                     UsuarioCreoId = (Guid)model.UsuarioCreoId,
@@ -125,7 +125,7 @@ namespace Service.Catalog.Mapper
             return model.Select(x => new BudgetBranchListDto
             {
                 SucursalId = x.SucursalId,
-                Ciudad = x.Sucursal.Ciudad,
+                Ciudad = x.Ciudad,
                 CostoFijoId = x.CostoFijoId
             }).ToList();
         }

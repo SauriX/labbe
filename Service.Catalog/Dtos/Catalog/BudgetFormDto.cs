@@ -10,7 +10,6 @@ namespace Service.Catalog.Dtos.Catalog
         public int Id { get; set; }
         public string Clave { get; set; }
         public string NombreServicio { get; set; }
-        public string Ciudad { get; set; }
         public bool Activo { get; set; }
         public decimal CostoFijo { get; set; }
         public Guid UsuarioId { get; set; }
