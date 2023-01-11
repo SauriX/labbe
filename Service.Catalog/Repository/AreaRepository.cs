@@ -45,6 +45,13 @@ namespace Service.Catalog.Repository
             return areas;
         }
 
+        public async Task<List<Area>> GetAreasByDepartments()
+        {
+            var areas = await _context.CAT_Area.Include(x => x.Departamento).ToListAsync();
+
+            return areas;
+        }
+
         public async Task<Area> GetById(int id)
         {
             var area = await _context.CAT_Area.Include(x => x.Departamento).FirstOrDefaultAsync(x => x.Id == id);

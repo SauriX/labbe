@@ -35,6 +35,17 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/catalog/area/getAreaByDeparment",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/area/getAreaByDeparment",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/catalog/area/{id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
