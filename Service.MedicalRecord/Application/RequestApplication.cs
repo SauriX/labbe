@@ -30,6 +30,7 @@ using Service.MedicalRecord.Dtos.WeeClinic;
 using Integration.WeeClinic.Dtos;
 using Service.MedicalRecord.Dtos.Invoice;
 using VT = Shared.Dictionary.Catalogs.ValueType;
+using Service.MedicalRecord.Dtos.Quotation;
 
 namespace Service.MedicalRecord.Application
 {
@@ -571,6 +572,11 @@ namespace Service.MedicalRecord.Application
                 _transaction.BeginTransaction();
 
                 var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
+                if ((requestDto.Estudios == null || requestDto.Estudios.Count == 0)
+                    && (requestDto.Paquetes == null || requestDto.Paquetes.Count == 0))
+                {
+                    throw new CustomException(HttpStatusCode.BadRequest, "Debe agregar por lo menos un estudio o paquete");
+                }
 
                 var studiesDto = requestDto.Estudios ?? new List<RequestStudyDto>();
                 var packStudiesDto = new List<RequestStudyDto>();
@@ -686,6 +692,23 @@ namespace Service.MedicalRecord.Application
             request.FechaModifico = DateTime.Now;
 
             await _repository.Update(request);
+        }
+
+        public async Task DeleteRequest(Guid recordId, Guid requestId)
+        {
+            var request = await _repository.GetById(requestId);
+
+            if (request == null || request.ExpedienteId != recordId)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
+            }
+
+            if (request.Estudios.Any() || request.Paquetes.Any())
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "No es posible eliminar solicitudes con estudios");
+            }
+
+            await _repository.Delete(request);
         }
 
         public async Task CancelStudies(RequestStudyUpdateDto requestDto)
