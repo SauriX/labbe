@@ -67,15 +67,23 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Compañia)
                 .AsQueryable();
 
-            if (!string.IsNullOrEmpty(search.Buscar))
+            if (!string.IsNullOrWhiteSpace(search.Buscar))
             {
                 report = report.Where(x => x.Clave.Contains(search.Buscar)
-                || (x.Expediente.NombrePaciente + " " + x.Expediente.PrimerApellido + " " + x.Expediente.SegundoApellido).ToLower().Contains(search.Buscar.ToLower()));
+                || x.ClavePatologica.ToLower().Contains(search.Buscar.ToLower())
+                || (x.Expediente.NombrePaciente + " " + x.Expediente.PrimerApellido + " " + x.Expediente.SegundoApellido).ToLower().Contains(search.Buscar));
             }
+
+            if (search.Ciudad != null && search.Ciudad.Count > 0)
+            {
+                report = report.Where(x => search.Ciudad.Contains(x.Sucursal.Ciudad));
+            }
+
             if (search.SucursalId != null && search.SucursalId.Count > 0)
             {
                 report = report.Where(x => search.SucursalId.Contains(x.SucursalId));
             }
+
             if (search.MedicoId != null && search.MedicoId.Count > 0)
             {
                 report = report.Where(x => search.MedicoId.Contains(x.MedicoId.ToString()));
@@ -88,7 +96,7 @@ namespace Service.MedicalRecord.Repository
             {
                 report = report.Where(x => x.Estudios.Any(y => search.Estatus.Contains(y.EstatusId)));
             }
-            if (search.Fecha != null)
+            if (search.Fecha != null && string.IsNullOrWhiteSpace(search.Buscar))
             {
                 report = report.
                     Where(x => x.FechaCreo.Date >= search.Fecha.First().Date && x.FechaCreo.Date <= search.Fecha.Last().Date);
@@ -101,7 +109,7 @@ namespace Service.MedicalRecord.Repository
             {
                 report = report.Where(x => search.TipoSolicitud.Contains(x.Urgencia));
             }
-            if (search.Departamento != null && search.Departamento.Count > 0)
+            if (search.Departamento != null && search.Departamento.Any())
             {
                 report = report.Where(x => x.Estudios.Any(y => search.Departamento.Contains(y.DepartamentoId)));
             }
