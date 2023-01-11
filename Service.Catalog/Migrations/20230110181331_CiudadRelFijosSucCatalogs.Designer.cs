@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230110181331_CiudadRelFijosSucCatalogs")]
+    partial class CiudadRelFijosSucCatalogs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -291,11 +293,10 @@ namespace Service.Catalog.Migrations
 
             modelBuilder.Entity("Service.Catalog.Domain.Catalog.BudgetBranch", b =>
                 {
-                    b.Property<Guid>("SucursalId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("CostoFijoId")
-                        .HasColumnType("int");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
@@ -303,21 +304,29 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("Ciudad")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("CostoFijoId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("FechaModifico")
+                    b.Property<DateTime>("FechaModifico")
                         .HasColumnType("datetime2");
+
+                    b.Property<Guid>("SucursalId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("UsuarioModificoId")
+                    b.Property<Guid>("UsuarioModificoId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("SucursalId", "CostoFijoId");
+                    b.HasKey("Id");
 
                     b.HasIndex("CostoFijoId");
+
+                    b.HasIndex("SucursalId");
 
                     b.ToTable("Relacion_Presupuesto_Sucursal");
                 });
@@ -2905,7 +2914,7 @@ namespace Service.Catalog.Migrations
                     b.HasOne("Service.Catalog.Domain.Catalog.Budget", "CostoFijo")
                         .WithMany("Sucursales")
                         .HasForeignKey("CostoFijoId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Service.Catalog.Domain.Branch.Branch", "Sucursal")

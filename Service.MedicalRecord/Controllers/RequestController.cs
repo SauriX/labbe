@@ -176,6 +176,12 @@ namespace Service.MedicalRecord.Controllers
             await _service.CancelRequest(recordId, requestId, userId);
         }
 
+        [HttpDelete("delete/{recordId}/{requestId}")]
+        public async Task DeleteRequest(Guid recordId, Guid requestId)
+        {
+            await _service.DeleteRequest(recordId, requestId);
+        }
+
         [HttpPut("studies/cancel")]
         [Authorize(Policies.Update)]
         public async Task CancelStudies(RequestStudyUpdateDto requestDto)

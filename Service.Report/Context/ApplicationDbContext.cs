@@ -17,6 +17,7 @@ namespace Service.Report.Context
         public DbSet<RequestPayment> CAT_Corte_Caja { get; set;}
         public DbSet<RequestStudy> Relación_Solicitud_Estudio { get; set; }
         public DbSet<Indicators> CAT_Indicadores { get; set; }
+        public DbSet<SamplesCosts> CAT_CostosToma { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

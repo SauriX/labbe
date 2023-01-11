@@ -18,9 +18,10 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task<List<QuotationPack>> GetPacksByQuotation(Guid quotationId);
         Task Create(Quotation quotation);
         Task Update(Quotation quotation);
-        Task BulkInsertUpdatePacks(Guid quotationId, List<QuotationPack> packs);
+        Task Delete(Quotation quotation);
+        Task BulkUpdateDelete(Guid quotationId, List<QuotationPack> packs);
         Task BulkDeletePacks(Guid quotationId, List<QuotationPack> packs);
-        Task BulkInsertUpdateStudies(Guid quotationId, List<QuotationStudy> studies);
+        Task BulkUpdateDeleteStudies(Guid quotationId, List<QuotationStudy> studies);
         Task BulkDeleteStudies(Guid quotationId, List<QuotationStudy> studies);
     }
 }

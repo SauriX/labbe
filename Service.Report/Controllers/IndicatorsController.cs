@@ -18,6 +18,13 @@ namespace Service.Report.Controllers.Report
             return await _indicatorsStatsService.GetByFilter(search);
         }
         
+        [HttpPost("indicadores/toma/filter")]
+        [Authorize(Policies.Access)]
+        public async Task<List<SamplesCostsDto>> GetSamplesCosttNow(ReportFilterDto search)
+        {
+            return await _indicatorsStatsService.GetBySamplesCosts(search);
+        }
+        
         [HttpPost("indicadores/servicios/filter")]
         [Authorize(Policies.Access)]
         public async Task<List<ServicesCostDto>> GetServicesNow(ReportFilterDto search)
@@ -37,6 +44,13 @@ namespace Service.Report.Controllers.Report
         public async Task Update(IndicatorsStatsDto indicator)
         {
             await _indicatorsStatsService.Update(indicator);
+        }
+        
+        [HttpPut("indicadores/toma")]
+        [Authorize(Policies.Update)]
+        public async Task UpdateSamples(SamplesCostsDto sample)
+        {
+            await _indicatorsStatsService.UpdateSample(sample);
         }
 
         [HttpPost("indicadores/getForm")]

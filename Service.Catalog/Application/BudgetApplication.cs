@@ -3,12 +3,14 @@ using ClosedXML.Report;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dictionary;
 using Service.Catalog.Domain.Catalog;
+using Service.Catalog.Domain.Loyalty;
 using Service.Catalog.Dtos.Catalog;
 using Service.Catalog.Mapper;
 using Service.Catalog.Repository.IRepository;
 using Shared.Dictionary;
 using Shared.Error;
 using Shared.Extensions;
+using Shared.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -55,18 +57,18 @@ namespace Service.Catalog.Application
         {
             var budgets = await _repository.GetBudgetByBranch(branchId);
 
-            return budgets.ToBudgetListDto();
+            return budgets.ToBranchBudgetListDto();
         }
-        
+
         public async Task<IEnumerable<BudgetListDto>> GetBudgetsByBranch(List<Guid> branchId)
         {
             var budgets = await _repository.GetBudgetsByBranch(branchId);
 
-            return budgets.ToBudgetListDto();
+            return budgets.ToBranchBudgetListDto();
         }
 
         public async Task<BudgetListDto> Create(BudgetFormDto budget)
-        {
+        {            
             if (budget.Id != 0)
             {
                 throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
@@ -81,13 +83,6 @@ namespace Service.Catalog.Application
             newBudget = await _repository.GetById(newBudget.Id);
 
             return newBudget.ToBudgetListDto();
-        }
-
-        public async Task<IEnumerable<CatalogListDto>> GetBudgetsByBranch(Guid id)
-        {
-            var catalogs = await _repository.GetBudgets(id);
-
-            return catalogs.ToBudgetDto();
         }
 
         public async Task<BudgetListDto> Update(BudgetFormDto budget)
@@ -122,7 +117,7 @@ namespace Service.Catalog.Application
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
             template.AddVariable("Titulo", "Áreas");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
-            template.AddVariable("Catalogos", catalogs);
+            template.AddVariable("Catalogo", catalogs);
 
             template.Generate();
 
