@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFCore.BulkExtensions;
+using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Context;
 using Service.Catalog.Domain.Catalog;
 using Service.Catalog.Repository.IRepository;
@@ -20,7 +21,7 @@ namespace Service.Catalog.Repository
 
         public async Task<List<Budget>> GetAll(string search)
         {
-            var budget = _context.CAT_Presupuestos.Include(x => x.Sucursal).AsQueryable();
+            var budget = _context.CAT_Presupuestos.Include(x => x.Sucursales).AsQueryable();
 
             search = search.Trim().ToLower();
 
@@ -34,58 +35,110 @@ namespace Service.Catalog.Repository
 
         public async Task<List<Budget>> GetActive()
         {
-            var budgets = await _context.CAT_Presupuestos.Include(x => x.Sucursal).Where(x => x.Activo).ToListAsync();
+            var budgets = await _context.CAT_Presupuestos.Include(x => x.Sucursales).Where(x => x.Activo).ToListAsync();
 
             return budgets;
         }
 
-        public async Task<List<Budget>> GetBudgetByBranch(Guid branchId)
+        public async Task<List<BudgetBranch>> GetBudgetByBranch(Guid branchId)
         {
-            var budgets = await _context.CAT_Presupuestos.Include(x => x.Sucursal).Where(x => x.SucursalId == branchId && x.Activo).ToListAsync();
+            var budgets = await _context.Relacion_Presupuesto_Sucursal
+                .Include(x => x.Sucursal)
+                .Include(x => x.CostoFijo)
+                .Where(x => x.SucursalId == branchId)
+                .ToListAsync();
 
             return budgets;
         }
-        
-        public async Task<List<Budget>> GetBudgetsByBranch(List<Guid> branchId)
+
+        public async Task<List<BudgetBranch>> GetBudgetsByBranch(List<Guid> branchId)
         {
-            var budgets = await _context.CAT_Presupuestos.Include(x => x.Sucursal).Where(x => branchId.Contains(x.SucursalId)).ToListAsync();
+            var budgets = await _context.Relacion_Presupuesto_Sucursal
+                .Include(x => x.Sucursal)
+                .Include(x => x.CostoFijo)
+                .Where(x => branchId.Contains(x.SucursalId))
+                .ToListAsync();
 
             return budgets;
         }
 
         public async Task<Budget> GetById(int id)
         {
-            var budget = await _context.CAT_Presupuestos.Include(x => x.Sucursal).FirstOrDefaultAsync(x => x.Id == id);
+            var budget = await _context.CAT_Presupuestos.Include(x => x.Sucursales).FirstOrDefaultAsync(x => x.Id == id);
 
             return budget;
         }
 
-        public async Task<IEnumerable<Budget>> GetBudgets(Guid id)
+        public async Task<IEnumerable<Budget>> GetBudgets(List<int> ids)
         {
-            var catalog = await _context.CAT_Presupuestos.Where(x => x.SucursalId == id && x.Activo).ToListAsync();
+            var budgets = await _context.CAT_Presupuestos.Include(x => x.Sucursales).Where(x => ids.Contains(x.Id)).ToListAsync();
 
-            return catalog;
+            return budgets;
         }
 
         public async Task<bool> IsDuplicate(Budget catalog)
         {
-            var isDuplicate = await _context.CAT_Presupuestos.AnyAsync(x => x.Id != catalog.Id && x.SucursalId == catalog.SucursalId && (x.Clave == catalog.Clave || x.Nombre == catalog.Nombre));
+            var isDuplicate = await _context.CAT_Presupuestos.AnyAsync(x => x.Id != catalog.Id && (x.Clave == catalog.Clave || x.Nombre == catalog.Nombre));
 
             return isDuplicate;
         }
 
         public async Task Create(Budget budget)
         {
-            _context.CAT_Presupuestos.Add(budget);
+            using var transaction = _context.Database.BeginTransaction();
+            try
+            {
+                var branches = budget.Sucursales.ToList();
 
-            await _context.SaveChangesAsync();
+                budget.Sucursales = null;
+
+                _context.CAT_Presupuestos.Add(budget);
+
+                await _context.SaveChangesAsync();
+
+                branches.ForEach(x => x.CostoFijoId = budget.Id);
+
+                var config = new BulkConfig();
+                config.SetSynchronizeFilter<BudgetBranch>(x => x.CostoFijoId == budget.Id);
+
+                await _context.BulkInsertOrUpdateAsync(branches, config);
+
+                transaction.Commit();
+            }
+            catch (Exception)
+            {
+                transaction.Rollback();
+                throw;
+            }
         }
 
         public async Task Update(Budget budget)
         {
-            _context.CAT_Presupuestos.Add(budget);
+            using var transaction = _context.Database.BeginTransaction();
+            try
+            {
+                var branches = budget.Sucursales.ToList();
 
-            await _context.SaveChangesAsync();
+                budget.Sucursales = null;
+
+                _context.CAT_Presupuestos.Update(budget);
+
+                await _context.SaveChangesAsync();
+
+                branches.ForEach(x => x.CostoFijoId = budget.Id);
+
+                var config = new BulkConfig();
+                config.SetSynchronizeFilter<BudgetBranch>(x => x.CostoFijoId == budget.Id);
+
+                await _context.BulkInsertOrUpdateOrDeleteAsync(branches, config);
+
+                transaction.Commit();
+            }
+            catch (Exception)
+            {
+                transaction.Rollback();
+                throw;
+            }
         }
     }
 }
