@@ -169,7 +169,7 @@ namespace Service.MedicalRecord.Application
             List<PendingReciveDto> revefinal = new List<PendingReciveDto>();
             var tracking = await _repository.GetAllRecive(search);
             var recive = tracking.ToPendingReciveDto();
-
+        
             foreach (var item in recive)
             {
                 var register = item;

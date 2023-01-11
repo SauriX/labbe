@@ -26,7 +26,7 @@ namespace Service.MedicalRecord.Mapper
                 Sucursal = x.Estudios.Count > 0 ? x.Estudios.FirstOrDefault().Solicitud.Sucursal.Nombre : "",
                 Fecha = x.FechaCreo.ToString(),
                 Status = x.Activo.ToString(),
-                Estudios = x.Estudios.ToList().ToStudyRouteTrackingDto(x.Id),
+               // Estudios = x.Estudios.ToList().ToStudyRouteTrackingDto(x.Id),
                 rutaId = Guid.Parse(x.RutaId)
 
             }).ToList();
