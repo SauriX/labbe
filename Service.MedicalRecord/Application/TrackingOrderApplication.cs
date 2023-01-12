@@ -58,7 +58,7 @@ namespace Service.MedicalRecord.Application.IApplication
 
             var estudiosByOrder = existingOrder.Estudios.ToList().Select(x => x.EstudioId).ToList();
 
-            var findStudies = await FindEstudios(estudiosByOrder);
+            var findStudies = await FindAllEstudios(estudiosByOrder,orderId);
 
             return existingOrder.toCurrentOrderDto(findStudies);
 
@@ -81,9 +81,14 @@ namespace Service.MedicalRecord.Application.IApplication
             return estudis;
         }
 
-        
+        private async Task<IEnumerable<EstudiosListDto>> FindAllEstudios(List<int> estudios,Guid orderId)
+        {
+            var estudiosEncontrados = await _repository.FindAllEstudios(estudios);
+            var estudis = estudiosEncontrados.ToStudiesRequestRouteDto(orderId);
+            return estudis;
+        }
 
-        
+
         public async Task<(byte[] file, string fileName)> ExportForm(TrackingOrderFormDto order)
         {
             

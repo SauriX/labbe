@@ -8,7 +8,6 @@ namespace Service.MedicalRecord.Dtos.TrackingOrder
         public Guid SolicitudId { get; set; }
 
         public string Solicitud { get; set; }
-
         public int EstudioId { get; set; }
         public string Estudio { get; set; }
         public Guid ExpedienteId { get; set; }
