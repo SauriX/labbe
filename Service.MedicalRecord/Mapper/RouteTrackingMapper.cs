@@ -17,19 +17,25 @@ namespace Service.MedicalRecord.Mapper
         public static List<RouteTrackingListDto> ToRouteTrackingDto(this ICollection<TrackingOrder> model)
         {
             if (model == null) return null;
+             List< RouteTrackingListDto > routes = new List<RouteTrackingListDto>();
+            foreach (TrackingOrder item in model) {
+                foreach (var estudio in item.Estudios) {
+                    routes.Add(new RouteTrackingListDto
+                    {
+                        Id = item.Id,
+                        Seguimiento = item.Clave,
+                        Clave = item.Clave,
+                        Sucursal = estudio.Solicitud.Sucursal.Nombre,
+                        Fecha = item.FechaCreo.ToString(),
+                        Status = item.Activo.ToString(),
+                        Estudio = $"{estudio.Solicitud.Estudios.FirstOrDefault(x=>x.Id== estudio.EstudioId).Clave}-{estudio.Estudio}",
+                        rutaId = Guid.Parse(item.RutaId),
+                        Solicitud=estudio.Solicitud.Clave
 
-            return model.Select(x => new RouteTrackingListDto
-            {
-                Id = x.Id,
-                Seguimiento = x.Clave,
-                Clave = x.Clave,
-                Sucursal = x.Estudios.Count > 0 ? x.Estudios.FirstOrDefault().Solicitud.Sucursal.Nombre : "",
-                Fecha = x.FechaCreo.ToString(),
-                Status = x.Activo.ToString(),
-               // Estudios = x.Estudios.ToList().ToStudyRouteTrackingDto(x.Id),
-                rutaId = Guid.Parse(x.RutaId)
-
-            }).ToList();
+                    });
+                }
+            }
+            return routes;
         }
 
         public static RouteTrackingListDto ToRouteTrackingDtoList(this TrackingOrder x)
@@ -44,7 +50,7 @@ namespace Service.MedicalRecord.Mapper
                 Sucursal = x.Estudios.Count > 0 ? x.Estudios.FirstOrDefault().Solicitud.Sucursal.Nombre : "",
                 Fecha = x.FechaCreo.ToString(),
                 Status = x.Activo.ToString(),
-                Estudios = x.Estudios.ToList().ToStudyRouteTrackingDto(x.Id),
+               // Estudios = x.Estudios.ToList().ToStudyRouteTrackingDto(x.Id),
                 rutaId = Guid.Parse(x.RutaId)
 
             };
