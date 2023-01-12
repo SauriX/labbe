@@ -52,7 +52,7 @@ namespace Service.MedicalRecord.Application
             {
                 var route = routes.FirstOrDefault(x => Guid.Parse(x.Id) == item.rutaId);
                 DateTime oDate = Convert.ToDateTime(item.Fecha);
-                item.Fecha = oDate.AddDays(route.TiempoDeEntrega).ToString();
+                item.Fecha = oDate.AddDays(route.TiempoDeEntrega).ToShortDateString();
                 routefinal.Add(item);
             }
             return routefinal;
@@ -169,7 +169,7 @@ namespace Service.MedicalRecord.Application
             List<PendingReciveDto> revefinal = new List<PendingReciveDto>();
             var tracking = await _repository.GetAllRecive(search);
             var recive = tracking.ToPendingReciveDto();
-
+        
             foreach (var item in recive)
             {
                 var register = item;
