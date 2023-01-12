@@ -35,6 +35,7 @@ namespace Service.MedicalRecord.Repository
         {
             var records = _context.CAT_Expedientes.AsQueryable();
 
+
             if (!string.IsNullOrEmpty(search.ciudad))
             {
                 records = records.Where(x => x.Ciudad == search.ciudad);
@@ -58,9 +59,9 @@ namespace Service.MedicalRecord.Repository
                 records = records.Where(x => x.FechaCreo.Date >= search.fechaAlta[0].Date && x.FechaCreo.Date <= search.fechaAlta[1].Date);
             }
 
-            if (!string.IsNullOrEmpty(search.sucursal))
+            if (search.sucursal != null && search.sucursal.Count() > 0)
             {
-                records = records.Where(x => x.IdSucursal == Guid.Parse(search.sucursal));
+                records = records.Where(x => search.sucursal.Contains(x.IdSucursal.ToString()));
             }
 
             if (!string.IsNullOrEmpty(search.telefono))
