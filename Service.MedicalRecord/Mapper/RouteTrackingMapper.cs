@@ -28,7 +28,7 @@ namespace Service.MedicalRecord.Mapper
                         Sucursal = estudio.Solicitud.Sucursal.Nombre,
                         Fecha = item.FechaCreo.ToString(),
                         Status = item.Activo.ToString(),
-                        Estudio = $"{estudio.Solicitud.Estudios.FirstOrDefault(x=>x.Id== estudio.EstudioId).Clave}-{estudio.Estudio}",
+                        Estudio = $"{estudio.Solicitud.Estudios.FirstOrDefault(x=>x.EstudioId== estudio.EstudioId).Clave}-{estudio.Estudio}",
                         rutaId = Guid.Parse(item.RutaId),
                         Solicitud=estudio.Solicitud.Clave
 
@@ -38,11 +38,11 @@ namespace Service.MedicalRecord.Mapper
             return routes;
         }
 
-        public static RouteTrackingListDto ToRouteTrackingDtoList(this TrackingOrder x)
+        public static RouteTrackingDeliverListDto ToRouteTrackingDtoList(this TrackingOrder x)
         {
             if (x == null) return null;
 
-            return  new RouteTrackingListDto
+            return  new RouteTrackingDeliverListDto
             {
                 Id = x.Id,
                 Seguimiento = x.Clave,
@@ -50,7 +50,7 @@ namespace Service.MedicalRecord.Mapper
                 Sucursal = x.Estudios.Count > 0 ? x.Estudios.FirstOrDefault().Solicitud.Sucursal.Nombre : "",
                 Fecha = x.FechaCreo.ToString(),
                 Status = x.Activo.ToString(),
-               // Estudios = x.Estudios.ToList().ToStudyRouteTrackingDto(x.Id),
+                Estudios = x.Estudios.ToList().ToStudyRouteTrackingDto(x.Id),
                 rutaId = Guid.Parse(x.RutaId)
 
             };
@@ -111,7 +111,7 @@ namespace Service.MedicalRecord.Mapper
             }).ToList();
         }
 
-        public static DeliverOrderdDto toDeliverOrder(this RouteTrackingListDto order,string responsableEnvio) {
+        public static DeliverOrderdDto toDeliverOrder(this RouteTrackingDeliverListDto order,string responsableEnvio) {
 
             return new DeliverOrderdDto
             {

@@ -52,7 +52,7 @@ namespace Service.MedicalRecord.Application
             {
                 var route = routes.FirstOrDefault(x => Guid.Parse(x.Id) == item.rutaId);
                 DateTime oDate = Convert.ToDateTime(item.Fecha);
-                item.Fecha = oDate.AddDays(route.TiempoDeEntrega).ToString();
+                item.Fecha = oDate.AddDays(route.TiempoDeEntrega).ToShortDateString();
                 routefinal.Add(item);
             }
             return routefinal;
@@ -251,7 +251,7 @@ namespace Service.MedicalRecord.Application
                 new Col("Confirmación muestra origen", ParagraphAlignment.Left),
                 new Col("Confirmación muestra destino", ParagraphAlignment.Left),
             };
-            /*var data = order.Estudios.Select(x => new Dictionary<string, object>
+            var data = order.Estudios.Select(x => new Dictionary<string, object>
             {
                 { "Clave de estudio", x.Clave },
                 { "Estudio", x.Nombre },
@@ -260,9 +260,9 @@ namespace Service.MedicalRecord.Application
                 { "Paciente", trakingorder.Estudios.FirstOrDefault(y=>y.SolicitudId == Guid.Parse(x.Solicitudid) && y.EstudioId == x.Id).Solicitud.Expediente.NombreCompleto},
                 { "Confirmación muestra origen",  trakingorder.Estudios.FirstOrDefault(y => y.SolicitudId == Guid.Parse(x.Solicitudid) && y.EstudioId == x.Id).Solicitud.Estudios.FirstOrDefault(w=>w.EstudioId==x.Id).EstatusId== Status.RequestStudy.TomaDeMuestra?"si":"no"},
                 { "Confirmación muestra destino", ""}
-            }).ToList();*/
+            }).ToList();
             orderForm.Columnas = columns;
-           // orderForm.Datos = data;
+            orderForm.Datos = data;
             return await _pdfClient.DeliverForm(orderForm);
         }
     }

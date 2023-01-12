@@ -178,7 +178,8 @@ namespace Service.MedicalRecord.Mapper
                     Solicitud = x.Solicitud.Clave,
                     TaponNombre = x.Tapon?.Clave,
                     SolicitudId = x.Solicitud.Id,
-                    ExpedienteId = x.Solicitud.ExpedienteId
+                    ExpedienteId = x.Solicitud.ExpedienteId,
+                    Escaneado=true,
                 },
             });
         }
