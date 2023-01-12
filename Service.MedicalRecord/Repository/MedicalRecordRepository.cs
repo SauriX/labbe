@@ -59,9 +59,9 @@ namespace Service.MedicalRecord.Repository
                 records = records.Where(x => x.FechaCreo.Date >= search.fechaAlta[0].Date && x.FechaCreo.Date <= search.fechaAlta[1].Date);
             }
 
-            if (search.sucursal!=null && search.sucursal.Count()>0)
+            if (search.sucursal != null && search.sucursal.Count() > 0)
             {
-                records = records.Where(x => search.sucursal.Contains (x.IdSucursal.ToString()));
+                records = records.Where(x => search.sucursal.Contains(x.IdSucursal.ToString()));
             }
 
             if (!string.IsNullOrEmpty(search.telefono))
