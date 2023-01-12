@@ -15,5 +15,6 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<bool> ConfirmarRecoleccion(Guid seguimientoId);
         Task<bool> CancelarRecoleccion(Guid seguimientoId);
         Task<(byte[] file, string fileName)> ExportForm(TrackingOrderFormDto order);
+        
     }
 }

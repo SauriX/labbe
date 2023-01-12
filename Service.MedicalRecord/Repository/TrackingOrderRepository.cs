@@ -50,12 +50,13 @@ namespace Service.MedicalRecord.Repository
 
                 transaction.Commit();
 
-            }catch (System.Exception)
+            }
+            catch (System.Exception)
             {
                 transaction.Rollback();
                 throw;
             }
-            
+
         }
         public async Task Create(TrackingOrder order)
         {
@@ -72,10 +73,10 @@ namespace Service.MedicalRecord.Repository
                 order.Estudios = null;
 
                 _context.CAT_Seguimiento_Ruta.Add(order);
-                
+
                 await _context.SaveChangesAsync();
 
-                estudios.ForEach(estudio => { estudio.SeguimientoId = order.Id; estudio.Id = Guid.NewGuid();  });
+                estudios.ForEach(estudio => { estudio.SeguimientoId = order.Id; estudio.Id = Guid.NewGuid(); });
 
                 var config = new BulkConfig();
 
@@ -96,27 +97,38 @@ namespace Service.MedicalRecord.Repository
         {
             var listaEstudio = _context.Relacion_Solicitud_Estudio
                 .Include(x => x.Solicitud).ThenInclude(x => x.Expediente)
-                .Include(x=>x.Solicitud)
+                .Include(x => x.Solicitud)
                 .Include(x => x.Tapon)
                 .AsQueryable();
-            var ordenes = _context.CAT_Seguimiento_Ruta.Include(x => x.Estudios) ;
+            var ordenes = _context.CAT_Seguimiento_Ruta.Include(x => x.Estudios);
             List<Domain.Request.RequestStudy> newlistestudios = new List<Domain.Request.RequestStudy>();
 
-            foreach (var estudio in listaEstudio) {
-                if (!ordenes.Any(x => x.Estudios.Any(y => y.EstudioId == estudio.EstudioId && y.SolicitudId == estudio.SolicitudId))) {
+            foreach (var estudio in listaEstudio)
+            {
+                if (!ordenes.Any(x => x.Estudios.Any(y => y.EstudioId == estudio.EstudioId && y.SolicitudId == estudio.SolicitudId)))
+                {
 
                     newlistestudios.Add(estudio);
-                   }
+                }
             }
 
-
             newlistestudios = newlistestudios.FindAll(x => estudios.Contains(x.EstudioId));
+            newlistestudios = newlistestudios.FindAll(x => x.EstatusId == Status.RequestStudy.TomaDeMuestra);
 
-            newlistestudios = newlistestudios.FindAll(x => x.EstatusId == Status.RequestStudy.TomaDeMuestra );
-                
-            return  newlistestudios;
+            return newlistestudios;
         }
+        public async Task<List<Domain.Request.RequestStudy>> FindAllEstudios(List<int> estudios)
+        {
+            var listaEstudio = _context.Relacion_Solicitud_Estudio
+                .Include(x => x.Solicitud).ThenInclude(x => x.Expediente)
+                .Include(x => x.Solicitud)
+                .Include(x => x.Tapon)
+                .AsQueryable();
+            listaEstudio = listaEstudio.Where(x => estudios.Contains(x.EstudioId));
 
+
+            return await listaEstudio.ToListAsync();
+        }
         public async Task<bool> ConfirmarRecoleccion(Guid seguimientoId)
         {
             var solicitudes = await _context.Relacion_Seguimiento_Solicitud.Where(x => x.SeguimientoId == seguimientoId).ToListAsync();
@@ -158,7 +170,7 @@ namespace Service.MedicalRecord.Repository
             listaEstudio = listaEstudio.Where(x => x.EstatusId == Status.RequestStudy.EnRuta);
 
             listaEstudio = listaEstudio.Where(x => lstSolicitudes.Contains(x.SolicitudId));
-            
+
             var estudiosEncontrados = await listaEstudio.ToListAsync();
 
             estudiosEncontrados.ForEach(x => x.EstatusId = Status.RequestStudy.TomaDeMuestra);
@@ -184,6 +196,6 @@ namespace Service.MedicalRecord.Repository
                 .FirstOrDefaultAsync();
         }
 
-        
+
     }
 }

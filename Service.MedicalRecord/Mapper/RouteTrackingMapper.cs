@@ -27,10 +27,11 @@ namespace Service.MedicalRecord.Mapper
                         Clave = item.Clave,
                         Sucursal = estudio.Solicitud.Sucursal.Nombre,
                         Fecha = item.FechaCreo.ToString(),
-                        Status = item.Activo.ToString(),
+                        Status = estudio.Solicitud.Estudios.FirstOrDefault(x => x.EstudioId == estudio.EstudioId).Estatus.Nombre,
                         Estudio = $"{estudio.Solicitud.Estudios.FirstOrDefault(x=>x.EstudioId== estudio.EstudioId).Clave}-{estudio.Estudio}",
                         rutaId = Guid.Parse(item.RutaId),
                         Solicitud=estudio.Solicitud.Clave
+
 
                     });
                 }
