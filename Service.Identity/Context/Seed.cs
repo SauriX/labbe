@@ -170,7 +170,7 @@ namespace Service.Identity.Context
                 new Menu(36, 38, "Validación de resultados", "resultValidation", "resultValidation", 3010),
                 new Menu(37, 38, "Liberación de resultados", "relaseResult", "relaseResult", 3020),
                 new Menu(35, 38, "Listas de trabajo", "worklist", "worklists", 3030),
-                new Menu(31, 38, "Captura de resultados masiva", "massSearch", "massResultSearch", 3040),
+                new Menu(31, 38, "Tablas de captura de resultados", "massSearch", "massResultSearch", 3040),
 
                 // Reportes -> Orden 4000
                 new Menu(22, null, "Reportes" , "report", "reports", 4000),

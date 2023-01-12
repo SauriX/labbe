@@ -12,6 +12,7 @@ using Shared.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Service.Catalog.Application
@@ -56,6 +57,21 @@ namespace Service.Catalog.Application
             var areas = await _repository.GetAreaByDepartment(departmentId);
 
             return areas.ToAreaListDto();
+        }
+
+        public async Task<IEnumerable<DepartmentAreaListDto>> GetAreasByDeparments()
+        {
+            var areas = await _repository.GetAreasByDepartments();
+            var results = (from c in areas
+                           group c by new { c.DepartamentoId, c.Departamento.Nombre } into g
+                           select new DepartmentAreaListDto
+                          {
+                               DepartamentoId = g.Key.DepartamentoId,
+                               Departamento = g.Key.Nombre,
+                               Areas = g.ToList().ToAreaListDto(),
+                          }).ToList();
+
+            return results;
         }
 
         public async Task<AreaListDto> Create(AreaFormDto area)

@@ -1,4 +1,5 @@
-﻿using Service.Catalog.Dtos.Catalog;
+﻿using Service.Catalog.Dtos.Branch;
+using Service.Catalog.Dtos.Catalog;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,6 +10,7 @@ namespace Service.Catalog.Application.IApplication
         Task<IEnumerable<AreaListDto>> GetAll(string search);
         Task<IEnumerable<AreaListDto>> GetActive();
         Task<IEnumerable<AreaListDto>> GetAreaByDepartment(int departmentId);
+        Task<IEnumerable<DepartmentAreaListDto>> GetAreasByDeparments();
         Task<AreaFormDto> GetById(int id);
         Task<AreaListDto> Create(AreaFormDto Catalog);
         Task<AreaListDto> Update(AreaFormDto Catalog);
