@@ -27,16 +27,20 @@ namespace Service.MedicalRecord.Application.IApplication
         private readonly IRouteTrackingRepository _routeTrackingRepository;
         private readonly ICatalogClient _catalogClient;
         public readonly IShipmentTrackingRepository _Shipmentrepository;
-        public TrackingOrderApplication(ITrackingOrderRepository repository, IRepository<Branch> branchRepository, IRouteTrackingRepository routeTrackingRepository,ICatalogClient catalogClient, IShipmentTrackingRepository shipmentrepository)
+        public readonly IRequestRepository _requestRepository;
+
+        public TrackingOrderApplication(ITrackingOrderRepository repository, IRepository<Branch> branchRepository, IRouteTrackingRepository routeTrackingRepository,ICatalogClient catalogClient, IShipmentTrackingRepository shipmentrepository,IRequestRepository requestRepository)
         {
             _repository = repository;
             _branchRepository = branchRepository;
             _routeTrackingRepository = routeTrackingRepository;
             _catalogClient = catalogClient;
             _Shipmentrepository = shipmentrepository;
+            _requestRepository = requestRepository;
         }
         public async Task<TrackingOrderDto> Create(TrackingOrderFormDto order)
         {
+           
             var newOrder = order.ToModel();
 
             var date = DateTime.Now.ToString("yyMMdd");
@@ -46,6 +50,17 @@ namespace Service.MedicalRecord.Application.IApplication
 
             var code = Codes.GetCode(branch.Codigo, lastCode);
             newOrder.Clave = code;
+
+            List<TrackingOrderDetail> trackingOrderDetails = new List<TrackingOrderDetail>();
+
+            foreach (var item in newOrder.Estudios) {
+                var request = await _requestRepository.GetById(item.SolicitudId);
+                var requestStudie = request.Estudios.FirstOrDefault(x=>x.EstudioId == item.EstudioId);
+                item.SolicitudEstudioId = requestStudie.Id;
+                trackingOrderDetails.Add(item);
+            }
+
+            newOrder.Estudios = trackingOrderDetails;
             await _repository.Create(newOrder);
             return newOrder.ToTrackingOrderFormDto();
         }
