@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.MedicalRecord.Context;
 
 namespace Service.MedicalRecord.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230113191603_requeststudyintrakingorder")]
+    partial class requeststudyintrakingorder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1500,6 +1502,12 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("RutaId")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("SolicitudEstudioId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("SolicitudEstudioId1")
+                        .HasColumnType("int");
+
                     b.Property<string>("SucursalDestinoId")
                         .HasColumnType("nvarchar(max)");
 
@@ -1516,6 +1524,8 @@ namespace Service.MedicalRecord.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SolicitudEstudioId1");
 
                     b.ToTable("CAT_Seguimiento_Ruta");
                 });
@@ -1550,9 +1560,6 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<Guid>("SeguimientoId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("SolicitudEstudioId")
-                        .HasColumnType("int");
-
                     b.Property<Guid>("SolicitudId")
                         .HasColumnType("uniqueidentifier");
 
@@ -1568,8 +1575,6 @@ namespace Service.MedicalRecord.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("SeguimientoId");
-
-                    b.HasIndex("SolicitudEstudioId");
 
                     b.HasIndex("SolicitudId");
 
@@ -1871,17 +1876,20 @@ namespace Service.MedicalRecord.Migrations
                     b.Navigation("Solicitud");
                 });
 
+            modelBuilder.Entity("Service.MedicalRecord.Domain.TrackingOrder.TrackingOrder", b =>
+                {
+                    b.HasOne("Service.MedicalRecord.Domain.Request.RequestStudy", "SolicitudEstudio")
+                        .WithMany()
+                        .HasForeignKey("SolicitudEstudioId1");
+
+                    b.Navigation("SolicitudEstudio");
+                });
+
             modelBuilder.Entity("Service.MedicalRecord.Domain.TrackingOrder.TrackingOrderDetail", b =>
                 {
                     b.HasOne("Service.MedicalRecord.Domain.TrackingOrder.TrackingOrder", "Seguimiento")
                         .WithMany("Estudios")
                         .HasForeignKey("SeguimientoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Service.MedicalRecord.Domain.Request.RequestStudy", "SolicitudEstudio")
-                        .WithMany()
-                        .HasForeignKey("SolicitudEstudioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1894,8 +1902,6 @@ namespace Service.MedicalRecord.Migrations
                     b.Navigation("Seguimiento");
 
                     b.Navigation("Solicitud");
-
-                    b.Navigation("SolicitudEstudio");
                 });
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.Appointments.AppointmentDom", b =>
