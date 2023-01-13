@@ -23,7 +23,7 @@ namespace Service.MedicalRecord.Mapper
                     routes.Add(new RouteTrackingListDto
                     {
                         Id = item.Id,
-                        Seguimiento = item.Clave,
+                        Seguimiento = estudio.Solicitud.Estudios.FirstOrDefault(x => x.EstudioId == estudio.EstudioId).EstatusId==Status.RequestStudy.TomaDeMuestra || estudio.Solicitud.Estudios.FirstOrDefault(x => x.EstudioId == estudio.EstudioId).EstatusId == Status.RequestStudy.EnRuta ? item.Clave:"",
                         Clave = item.Clave,
                         Sucursal = estudio.Solicitud.Sucursal.Nombre,
                         Fecha = item.FechaCreo.ToString(),

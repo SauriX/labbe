@@ -61,7 +61,7 @@ namespace Service.MedicalRecord.Application
         {
             var sucursalDestinos = "";
             var TrackingOrder = await _repository.getTrackingOrder(id);
-            var RuteTracking = await _repository.GetRouteTracking(id);
+            var RuteTracking = await _repository.GetRouteTracking(id);  
             var shipment = TrackingOrder.toReciveShipmentTrackingDto(RuteTracking);
             if (!string.IsNullOrEmpty(TrackingOrder.SucursalDestinoId) && RuteTracking != null)
             {

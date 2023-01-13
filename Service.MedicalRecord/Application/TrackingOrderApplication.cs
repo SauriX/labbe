@@ -15,6 +15,8 @@ using SharedResponses = Shared.Dictionary.Responses;
 using System.Linq;
 using Service.MedicalRecord.Domain.Catalogs;
 using Service.MedicalRecord.Utils;
+using Service.MedicalRecord.Client.IClient;
+using Service.MedicalRecord.Domain.RouteTracking;
 
 namespace Service.MedicalRecord.Application.IApplication
 {
@@ -22,10 +24,16 @@ namespace Service.MedicalRecord.Application.IApplication
     {
         private readonly ITrackingOrderRepository _repository;
         private readonly IRepository<Branch> _branchRepository;
-        public TrackingOrderApplication(ITrackingOrderRepository repository, IRepository<Branch> branchRepository)
+        private readonly IRouteTrackingRepository _routeTrackingRepository;
+        private readonly ICatalogClient _catalogClient;
+        public readonly IShipmentTrackingRepository _Shipmentrepository;
+        public TrackingOrderApplication(ITrackingOrderRepository repository, IRepository<Branch> branchRepository, IRouteTrackingRepository routeTrackingRepository,ICatalogClient catalogClient, IShipmentTrackingRepository shipmentrepository)
         {
             _repository = repository;
-            _branchRepository = branchRepository;       
+            _branchRepository = branchRepository;
+            _routeTrackingRepository = routeTrackingRepository;
+            _catalogClient = catalogClient;
+            _Shipmentrepository = shipmentrepository;
         }
         public async Task<TrackingOrderDto> Create(TrackingOrderFormDto order)
         {
@@ -83,7 +91,8 @@ namespace Service.MedicalRecord.Application.IApplication
 
         private async Task<IEnumerable<EstudiosListDto>> FindAllEstudios(List<int> estudios,Guid orderId)
         {
-            var estudiosEncontrados = await _repository.FindAllEstudios(estudios);
+            var estudiosEncontrados = await _repository.FindAllEstudios(estudios,orderId);
+
             var estudis = estudiosEncontrados.ToStudiesRequestRouteDto(orderId);
             return estudis;
         }
@@ -127,6 +136,40 @@ namespace Service.MedicalRecord.Application.IApplication
 
         public async Task<bool> ConfirmarRecoleccion(Guid seguimientoId)
         {
+            var shipment = await _Shipmentrepository.GetRouteTracking(seguimientoId);
+            if (shipment == null)
+            {
+                var ruteOrder = await _routeTrackingRepository.getById(seguimientoId);
+                var list = ruteOrder.ToRouteTrackingDtoList();
+                List<Guid> IdRoutes = new List<Guid>();
+                IdRoutes.Add(list.rutaId);
+                var routes = await _catalogClient.GetRutas(IdRoutes);
+                var route = routes.FirstOrDefault(x => Guid.Parse(x.Id) == list.rutaId);
+                DateTime oDate = Convert.ToDateTime(list.Fecha);
+                list.Fecha = oDate.AddDays(route.TiempoDeEntrega).ToString();
+                var routeT = new RouteTracking
+                {
+                    Id = Guid.NewGuid(),
+                    SegumientoId = Guid.Parse(ruteOrder.Estudios.FirstOrDefault().SeguimientoId.ToString()),
+                    RutaId = Guid.Parse(ruteOrder.RutaId),
+                    SucursalId = Guid.Parse(ruteOrder.SucursalDestinoId),
+                    FechaDeEntregaEstimada = DateTime.Parse(list.Fecha),
+                    SolicitudId = ruteOrder.Estudios.FirstOrDefault().SolicitudId,
+                    HoraDeRecoleccion = DateTime.Now,
+                    UsuarioCreoId = ruteOrder.UsuarioCreoId,
+                    FechaCreo = DateTime.Now,
+
+                };
+                await _routeTrackingRepository.Create(routeT);
+
+            }
+            else {
+                shipment.HoraDeRecoleccion = DateTime.Now;
+                shipment.FechaModifico = DateTime.Now;
+                await _routeTrackingRepository.Update(shipment);
+            }
+               
+         
             return await _repository.ConfirmarRecoleccion(seguimientoId);
 
         }
