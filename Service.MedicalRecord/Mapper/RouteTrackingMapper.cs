@@ -23,7 +23,7 @@ namespace Service.MedicalRecord.Mapper
                     routes.Add(new RouteTrackingListDto
                     {
                         Id = item.Id,
-                        Seguimiento = item.Clave,
+                        Seguimiento = estudio.SolicitudEstudio.EstatusId==Status.RequestStudy.TomaDeMuestra || estudio.SolicitudEstudio.EstatusId == Status.RequestStudy.EnRuta ? item.Clave:"",
                         Clave = item.Clave,
                         Sucursal = estudio.Solicitud.Sucursal.Nombre,
                         Fecha = item.FechaCreo.ToString(),
@@ -33,7 +33,7 @@ namespace Service.MedicalRecord.Mapper
                         Solicitud=estudio.Solicitud.Clave
 
 
-                    });
+                    });;
                 }
             }
             return routes;

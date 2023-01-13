@@ -15,6 +15,9 @@ namespace Service.MedicalRecord.Context.EntityConfiguration.TrackingOrder
             builder.Navigation(x => x.Estudios);
 
 
+
+
+
         }
     }
 }
