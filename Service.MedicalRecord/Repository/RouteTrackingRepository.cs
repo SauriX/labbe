@@ -57,7 +57,7 @@ namespace Service.MedicalRecord.Repository
             }
             if (!string.IsNullOrEmpty(search.Sucursal))
             {
-                routeTrackingList = routeTrackingList.Where(x => search.Sucursal.Contains(x.SucursalOrigenId));
+                routeTrackingList = routeTrackingList.Where(x => search.Sucursal.Contains(x.SucursalDestinoId));
             }
             if (!string.IsNullOrEmpty(search.Buscar))
             {
