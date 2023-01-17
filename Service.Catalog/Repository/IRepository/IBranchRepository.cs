@@ -9,6 +9,7 @@ namespace Service.Catalog.Repository.IRepository
     {
         Task<List<Branch>> GetAll(string search = null);
         Task<Branch> GetById(string id);
+        Task<Branch> GetByName(string name);
         Task<string> GetLastFolio(string ciudad);
         Task<string> GetCodeRange(Guid id);
         Task<(bool, string)> IsDuplicate(Branch branch);

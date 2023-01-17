@@ -1,4 +1,5 @@
 ﻿using Service.MedicalRecord.Domain.Catalogs;
+using Service.MedicalRecord.Domain.Invoice;
 using Service.MedicalRecord.Domain.Status;
 using System;
 using System.Collections.Generic;
@@ -46,8 +47,7 @@ namespace Service.MedicalRecord.Domain.Request
         public string IdPersona { get; set; }
 
         public bool EsWeeClinic => !string.IsNullOrWhiteSpace(FolioWeeClinic);
-
-
+        public virtual ICollection<InvoiceCompany> FacturasCompañia { get; set; }
         public virtual ICollection<RequestPayment> Pagos { get; set; }
         public virtual ICollection<RequestStudy> Estudios { get; set; }
         public virtual ICollection<RequestPack> Paquetes { get; set; }

@@ -45,8 +45,22 @@ namespace Service.Billing.Controllers
             return await _service.Create(invoiceDto);
         }
 
+        [HttpPost("create/invoiceCompany")]
+        public async Task<InvoiceDto> CreateInvoiceCompany(InvoiceDto invoiceDto)
+        {
+            return await _service.CreateInvoiceCompany(invoiceDto);
+        }
+
         [HttpPost("print/xml/{invoiceId}")]
         public async Task<IActionResult> PrintInvoiceXML(Guid invoiceId)
+        {
+            var (file, fileName) = await _service.PrintInvoiceXML(invoiceId);
+
+            return File(file, MimeType.XML, fileName);
+        }
+
+        [HttpPost("print/pdf/{invoiceId}")]
+        public async Task<IActionResult> PrintInvoicePDF(Guid invoiceId)
         {
             var (file, fileName) = await _service.PrintInvoiceXML(invoiceId);
 

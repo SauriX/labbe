@@ -565,7 +565,7 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/report/indicadores/toma/ilter",
+      "DownstreamPathTemplate": "/api/report/indicadores/toma/filter",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -589,6 +589,18 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
+      "DownstreamPathTemplate": "/api/report/indicadores/saveFile",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 18934
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/indicadores/saveFile",
+      "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/report/indicadores",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -610,7 +622,19 @@
         }
       ],
       "UpstreamPathTemplate": "/api/report/indicadores/toma",
-      "UpstreamHttpMethod": [ "POST", "PUT" ]
+      "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/report/indicadores/fijo",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 18934
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/indicadores/fijo",
+      "UpstreamHttpMethod": [ "PUT" ]
     },
     {
       "DownstreamPathTemplate": "/api/report/indicadores/getForm",
@@ -658,6 +682,18 @@
         }
       ],
       "UpstreamPathTemplate": "/api/report/indicadores/export/serviceList",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/report/indicadores/export/serviceListExample",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 18934
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/indicadores/export/serviceListExample",
       "UpstreamHttpMethod": [ "POST" ]
     }
   ]

@@ -51,6 +51,15 @@ namespace Service.MedicalRecord.Context.EntityConfiguration.Request
                 .WithOne(x => x.Solicitud)
                 .HasForeignKey(x => x.SolicitudId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .HasMany(x => x.FacturasCompañia)
+                .WithMany(x => x.Solicitudes)
+                .UsingEntity<Domain.Invoice.RequestInvoiceCompany>(
+                    rc => rc.HasOne(prop => prop.InvoiceCompany).WithMany().HasForeignKey(prop => prop.InvoiceCompanyId),
+                    rc => rc.HasOne(prop => prop.Solicitud).WithMany().HasForeignKey(prop => prop.SolicitudId)
+                );
+                
         }
     }
 }

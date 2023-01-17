@@ -21,7 +21,7 @@ namespace Service.Catalog.Mapper
                 Activo = model.Activo,
             };
         }
-        
+
         public static IEnumerable<BudgetListDto> ToBranchBudgetListDto(this List<BudgetBranch> model)
         {
             if (model == null) return null;
@@ -33,6 +33,7 @@ namespace Service.Catalog.Mapper
                 Nombre = x.CostoFijo.Nombre,
                 CostoFijo = x.CostoFijo.CostoFijo,
                 Activo = x.CostoFijo.Activo,
+                Sucursal = x.Sucursal.Nombre,
                 FechaAlta = x.CostoFijo.FechaCreo
             });
         }
@@ -49,6 +50,16 @@ namespace Service.Catalog.Mapper
                 CostoFijo = x.CostoFijo,
                 Activo = x.Activo,
                 FechaAlta = x.FechaCreo
+            });
+        }
+
+        public static IEnumerable<BudgetListDto> ToBudgetSelectInputDto(this List<Budget> model)
+        {
+            if (model == null) return null;
+
+            return model.Select(x => x.Nombre).Distinct().Select(x => new BudgetListDto
+            {
+                Nombre = x,
             });
         }
 
@@ -89,6 +100,29 @@ namespace Service.Catalog.Mapper
                     FechaCreo = DateTime.Now
                 }).ToList()
             };
+        }
+
+        public static List<Budget> ToModelList(this List<BudgetFormDto> dto)
+        {
+            if (dto == null) return null;
+
+            return dto.Select(x => new Budget
+            {
+                Clave = x.Clave.Trim(),
+                Nombre = x.NombreServicio.Trim(),
+                CostoFijo = x.CostoFijo,
+                Activo = x.Activo,
+                UsuarioCreoId = x.UsuarioId,
+                FechaCreo = DateTime.Now,
+                Sucursales = x.Sucursales.Select(y => new BudgetBranch
+                {
+                    Ciudad = y.Ciudad,
+                    SucursalId = y.SucursalId,
+                    Activo = x.Activo,
+                    UsuarioCreoId = x.UsuarioId,
+                    FechaCreo = DateTime.Now
+                }).ToList()
+            }).ToList();
         }
 
         public static Budget ToModel(this BudgetFormDto dto, Budget model)

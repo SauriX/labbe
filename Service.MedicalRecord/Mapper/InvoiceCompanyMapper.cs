@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Service.MedicalRecord.Domain.Request;
 using System.Linq;
 using System;
+using Service.MedicalRecord.Domain.Invoice;
+using Service.MedicalRecord.Dtos.Invoice;
 
 namespace Service.MedicalRecord.Mapper
 {
@@ -32,15 +34,20 @@ namespace Service.MedicalRecord.Mapper
                     CompaniaId = x.Compañia?.Id,
                     ClavePatologica = x.ClavePatologica,
                     Saldo = x.Saldo,
-                    Facturas = x.Pagos.Select(y => new InvoiceCompanyFacturaDto
+                    Facturas = x.FacturasCompañia.Select(y => new InvoiceCompanyFacturaDto
                     {
                         FacturaId = y.FacturaId,
-                        EstatusId = y.EstatusId,
                         FechaCreo = y.FechaCreo.ToString("R"),
+                        Tipo = y.TipoFactura?.ToString(),
+                        FacturapiId = y.FacturapiId,
+                        SolicitudesId = model
+                        .Where(z => z.FacturasCompañia.Select(p => p.FacturapiId).Contains(y.FacturapiId))
+                        .Select(z => z.Id)
+                        .ToList(),
                         Estatus = new InvoiceCompanyStatusInvoice
                         {
-                            Nombre = y.Estatus?.Nombre,
-                            Clave = y.Estatus?.Clave,
+                            Nombre = y.Estatus,
+                            Clave = y.Estatus[0].ToString(),
 
                         }
                     }).ToList(),
@@ -62,6 +69,21 @@ namespace Service.MedicalRecord.Mapper
                 }).ToList(),
             };
         }
+
+        public static InvoiceCompany ToInvoiceCompany(this InvoiceCompanyDto model, InvoiceDto invoiceResponse)
+        {
+            return new InvoiceCompany
+            {
+                Id = Guid.NewGuid(),
+                Estatus = "Facturado",
+                TipoFactura = "Compañia",
+                FacturaId = model.Id,
+                FacturapiId = invoiceResponse.FacturapiId
+
+            };
+        }
+
+        
         public static int ToConsecutiveSerie(this RequestPayment model)
         {
             return Int32.Parse(model.Serie) + 1;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Service.Catalog.Dtos.Catalog
 {
@@ -18,5 +19,13 @@ namespace Service.Catalog.Dtos.Catalog
         public Guid SucursalId { get; set; }
         public int CostoFijoId { get; set; }
         public string Ciudad { get; set; }
+    }
+
+    public class BudgetFilterDto
+    {
+        public List<Guid> SucursalId { get; set; }
+        public List<string> Ciudad { get; set; }
+        public List<string> Servicios { get; set; }
+        public List<DateTime> Fecha { get; set; }
     }
 }

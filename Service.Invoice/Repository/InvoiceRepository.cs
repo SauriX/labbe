@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFCore.BulkExtensions;
+using Microsoft.EntityFrameworkCore;
 using Service.Billing.Context;
 using Service.Billing.Domain.Invoice;
 using Service.Billing.Repository.IRepository;
@@ -6,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace Service.Billing.Repository
 {
@@ -47,12 +49,71 @@ namespace Service.Billing.Repository
 
             _context.ChangeTracker.Clear();
         }
+        public async Task CreateInvoiceCompany(InvoiceCompany invoice)
+        {
+            using var transaction = _context.Database.BeginTransaction();
+            //using var scope = new TransactionScope();
+            try
+            {
+                var solicitudes = invoice.Solicitudes.ToList();
+
+                invoice.Solicitudes = null;
+                _context.CAT_Factura_Companias.Add(invoice);
+
+                await _context.SaveChangesAsync();
+
+                solicitudes.ForEach(x => x.InvoiceCompanyId = invoice.Id);
+
+                var config = new BulkConfig();
+                config.SetSynchronizeFilter<InvoiceCompanyRequests>(x => x.InvoiceCompanyId == invoice.Id);
+
+                await _context.BulkInsertOrUpdateOrDeleteAsync(solicitudes, config);
+
+                transaction.Commit();
+                //scope.Complete();
+            }
+            catch (System.Exception)
+            {
+                transaction.Rollback();
+                //scope.Dispose();
+                throw;
+            }
+        }
 
         public async Task Update(Invoice invoice)
         {
             _context.CAT_Factura.Update(invoice);
 
             await _context.SaveChangesAsync();
+        }
+
+
+        public async Task UpdateCompany(InvoiceCompany invoice)
+        {
+            using var transaction = _context.Database.BeginTransaction();
+
+            try
+            {
+                var solicitudes = invoice.Solicitudes.ToList();
+
+                invoice.Solicitudes = null;
+
+                _context.CAT_Factura_Companias.Update(invoice);
+
+                await _context.SaveChangesAsync();
+
+                var config = new BulkConfig();
+                config.SetSynchronizeFilter<InvoiceCompanyRequests>(x => x.InvoiceCompanyId == invoice.Id);
+
+                await _context.BulkInsertOrUpdateOrDeleteAsync(solicitudes, config);
+
+                transaction.Commit();
+            }
+            catch (System.Exception)
+            {
+                transaction.Rollback();
+                throw;
+            }
         }
     }
 }
