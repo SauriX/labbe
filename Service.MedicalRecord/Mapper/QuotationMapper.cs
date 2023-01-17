@@ -200,7 +200,6 @@ namespace Service.MedicalRecord.Mapper
                 },
                 Estudios = quotation.Estudios.Select(x => new RequestStudyDto
                 {
-                    AplicaCargo = x.AplicaCargo,
                     AreaId = null,// x.AreaId,
                     Clave = x.Clave,
                     DepartamentoId = null,// x.DepartamentoId,
@@ -224,7 +223,6 @@ namespace Service.MedicalRecord.Mapper
                 Paquetes = quotation.Paquetes.Select(x => new RequestPackDto
                 {
                     PaqueteId = x.PaqueteId,
-                    AplicaCargo = x.AplicaCargo,
                     AreaId = Catalogs.Area.PAQUETES,
                     Clave = x.Clave,
                     DepartamentoId = Catalogs.Department.PAQUETES,

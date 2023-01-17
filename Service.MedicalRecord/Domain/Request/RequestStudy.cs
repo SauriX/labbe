@@ -27,9 +27,6 @@ namespace Service.MedicalRecord.Domain.Request
         public decimal Dias { get; set; }
         public int Horas { get; set; }
         public DateTime FechaEntrega { get; set; }
-        public bool AplicaDescuento { get; set; }
-        public bool AplicaCargo { get; set; }
-        public bool AplicaCopago { get; set; }
         public int? TaponId { get; set; }
         public virtual Cap Tapon { get; set; }
         public int? MaquilaId { get; set; }
