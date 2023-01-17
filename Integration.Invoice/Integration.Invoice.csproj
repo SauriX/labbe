@@ -144,6 +144,7 @@
     <Compile Include="Dtos\FacturapiClientDto.cs" />
     <Compile Include="Dtos\FacturapiDto.cs" />
     <Compile Include="Dtos\FacturapiProductDto.cs" />
+    <Compile Include="Dtos\InvoiceCancelation.cs" />
     <Compile Include="Dtos\InvoiceCreationDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

@@ -3,21 +3,38 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.MedicalRecord.Context;
 
 namespace Service.MedicalRecord.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230113220007_change_relation_many_to_many_invoice_company")]
+    partial class change_relation_many_to_many_invoice_company
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.15")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("InvoiceCompanyRequest", b =>
+                {
+                    b.Property<Guid>("FacturaCompañiaId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SolicitudesId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("FacturaCompañiaId", "SolicitudesId");
+
+                    b.HasIndex("SolicitudesId");
+
+                    b.ToTable("InvoiceCompanyRequest");
+                });
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.Appointments.AppointmentDom", b =>
                 {
@@ -394,9 +411,6 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("TipoFactura")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<Guid>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");
 
@@ -404,38 +418,6 @@ namespace Service.MedicalRecord.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.ToTable("Factura_Compania");
-                });
-
-            modelBuilder.Entity("Service.MedicalRecord.Domain.Invoice.RequestInvoiceCompany", b =>
-                {
-                    b.Property<Guid>("SolicitudId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("InvoiceCompanyId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("FechaCreo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<DateTime?>("FechaModifico")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("UsuarioModificoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("SolicitudId", "InvoiceCompanyId");
-
-                    b.HasIndex("InvoiceCompanyId");
 
                     b.ToTable("Relacion_Solicitud_Factura_Compania");
                 });
@@ -1635,6 +1617,21 @@ namespace Service.MedicalRecord.Migrations
                     b.ToTable("Relacion_Seguimiento_Solicitud");
                 });
 
+            modelBuilder.Entity("InvoiceCompanyRequest", b =>
+                {
+                    b.HasOne("Service.MedicalRecord.Domain.Invoice.InvoiceCompany", null)
+                        .WithMany()
+                        .HasForeignKey("FacturaCompañiaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Service.MedicalRecord.Domain.Request.Request", null)
+                        .WithMany()
+                        .HasForeignKey("SolicitudesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Service.MedicalRecord.Domain.Appointments.AppointmentDom", b =>
                 {
                     b.HasOne("Service.MedicalRecord.Domain.MedicalRecord.MedicalRecord", "Expediente")
@@ -1695,25 +1692,6 @@ namespace Service.MedicalRecord.Migrations
                     b.Navigation("Solicitud");
 
                     b.Navigation("SolicitudEstudio");
-                });
-
-            modelBuilder.Entity("Service.MedicalRecord.Domain.Invoice.RequestInvoiceCompany", b =>
-                {
-                    b.HasOne("Service.MedicalRecord.Domain.Invoice.InvoiceCompany", "InvoiceCompany")
-                        .WithMany()
-                        .HasForeignKey("InvoiceCompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Service.MedicalRecord.Domain.Request.Request", "Solicitud")
-                        .WithMany()
-                        .HasForeignKey("SolicitudId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("InvoiceCompany");
-
-                    b.Navigation("Solicitud");
                 });
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.MedicalRecord.MedicalRecordTaxData", b =>

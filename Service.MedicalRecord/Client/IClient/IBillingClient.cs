@@ -6,5 +6,6 @@ namespace Service.MedicalRecord.Client.IClient
     public interface IBillingClient
     {
         Task<InvoiceDto> CheckInPayment(InvoiceDto invoiceDto);
+        Task<InvoiceDto> CheckInPaymentCompany(InvoiceDto invoiceDto);
     }
 }

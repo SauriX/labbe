@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MoreLinq;
 using Service.MedicalRecord.Context;
+using Service.MedicalRecord.Domain.Invoice;
 using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Dtos.InvoiceCompany;
 using Service.MedicalRecord.Dtos.Request;
@@ -352,6 +353,7 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Expediente)
                 .Include(x => x.Compañia)
                 .Include(x => x.Sucursal)
+                .Include(x => x.FacturasCompañia)
                 .Include(x => x.Estudios).ThenInclude(x => x.Estatus)
                 .Include(x => x.Estudios).ThenInclude(x => x.Tapon)
                 .Include(x => x.Pagos).ThenInclude(x => x.Estatus).OrderBy(x => x.FechaCreo)
@@ -400,6 +402,17 @@ namespace Service.MedicalRecord.Repository
             return requests.ToListAsync();
         }
 
-        
+        public async Task CreateInvoiceCompanyData(InvoiceCompany invoiceCompnay, List<RequestInvoiceCompany> requestInvoiceCompany)
+        {
+            _context.Factura_Compania.Add(invoiceCompnay);
+
+            await _context.SaveChangesAsync();
+
+            var config = new BulkConfig() { SetOutputIdentity = true, PreserveInsertOrder = true };
+
+            await _context.BulkInsertOrUpdateAsync(requestInvoiceCompany, config);
+
+
+        }
     }
 }

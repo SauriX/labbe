@@ -35,6 +35,18 @@
       ],
       "UpstreamPathTemplate": "/api/invoiceCompany/checkin",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/invoiceCompany/checkin/company",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/invoiceCompany/checkin/company",
+      "UpstreamHttpMethod": [ "POST" ]
     }
   ]
 }

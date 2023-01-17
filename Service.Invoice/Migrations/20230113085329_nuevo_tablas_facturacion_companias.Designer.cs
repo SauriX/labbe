@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Billing.Context;
 
 namespace Service.Billing.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230113085329_nuevo_tablas_facturacion_companias")]
+    partial class nuevo_tablas_facturacion_companias
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -120,12 +122,6 @@ namespace Service.Billing.Migrations
                     b.Property<string>("FacturapiId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaModifico")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("FormaPago")
                         .HasColumnType("nvarchar(max)");
 
@@ -141,12 +137,6 @@ namespace Service.Billing.Migrations
                     b.Property<string>("UsoCFDI")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("UsuarioModificoId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.ToTable("CAT_Factura_Companias");
@@ -158,22 +148,10 @@ namespace Service.Billing.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaModifico")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("InvoiceCompanyId")
+                    b.Property<Guid?>("InvoiceCompanyId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("SolicitudId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("UsuarioModificoId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -187,9 +165,7 @@ namespace Service.Billing.Migrations
                 {
                     b.HasOne("Service.Billing.Domain.Invoice.InvoiceCompany", "InvoiceCompany")
                         .WithMany("Solicitudes")
-                        .HasForeignKey("InvoiceCompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("InvoiceCompanyId");
 
                     b.Navigation("InvoiceCompany");
                 });

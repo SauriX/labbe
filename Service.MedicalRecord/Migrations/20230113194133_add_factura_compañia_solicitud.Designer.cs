@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.MedicalRecord.Context;
 
 namespace Service.MedicalRecord.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230113194133_add_factura_compañia_solicitud")]
+    partial class add_factura_compañia_solicitud
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -394,8 +396,8 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("TipoFactura")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("SolicitudId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");
@@ -405,37 +407,7 @@ namespace Service.MedicalRecord.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Factura_Compania");
-                });
-
-            modelBuilder.Entity("Service.MedicalRecord.Domain.Invoice.RequestInvoiceCompany", b =>
-                {
-                    b.Property<Guid>("SolicitudId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("InvoiceCompanyId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("FechaCreo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<DateTime?>("FechaModifico")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("UsuarioModificoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("SolicitudId", "InvoiceCompanyId");
-
-                    b.HasIndex("InvoiceCompanyId");
+                    b.HasIndex("SolicitudId");
 
                     b.ToTable("Relacion_Solicitud_Factura_Compania");
                 });
@@ -1697,21 +1669,13 @@ namespace Service.MedicalRecord.Migrations
                     b.Navigation("SolicitudEstudio");
                 });
 
-            modelBuilder.Entity("Service.MedicalRecord.Domain.Invoice.RequestInvoiceCompany", b =>
+            modelBuilder.Entity("Service.MedicalRecord.Domain.Invoice.InvoiceCompany", b =>
                 {
-                    b.HasOne("Service.MedicalRecord.Domain.Invoice.InvoiceCompany", "InvoiceCompany")
-                        .WithMany()
-                        .HasForeignKey("InvoiceCompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Service.MedicalRecord.Domain.Request.Request", "Solicitud")
-                        .WithMany()
+                        .WithMany("FacturaCompañia")
                         .HasForeignKey("SolicitudId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("InvoiceCompany");
 
                     b.Navigation("Solicitud");
                 });
@@ -1998,6 +1962,8 @@ namespace Service.MedicalRecord.Migrations
             modelBuilder.Entity("Service.MedicalRecord.Domain.Request.Request", b =>
                 {
                     b.Navigation("Estudios");
+
+                    b.Navigation("FacturaCompañia");
 
                     b.Navigation("Imagenes");
 

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
-namespace Service.MedicalRecord.Dtos.Invoice
+namespace Service.Billing.Domain.Invoice
 {
-    public class InvoiceDto
+    public class InvoiceCompany : BaseModel
     {
         public Guid Id { get; set; }
         public string FacturapiId { get; set; }
@@ -18,13 +16,9 @@ namespace Service.MedicalRecord.Dtos.Invoice
         public bool ConNombre { get; set; }
         public string EnvioCorreo { get; set; }
         public string EnvioWhatsapp { get; set; }
-        public Guid? SolicitudId { get; set; }
-        public string Solicitud { get; set; }
-        public Guid? ExpedienteId { get; set; }
-        public string Expediente { get; set; }
-        public string Paciente { get; set; }
-        public ClientDto Cliente { get; set; }
-        public List<Guid> SolicitudesId { get; set; }
-        public List<ProductDto> Productos { get; set; }
+        public Guid CompañiaId { get; set; }
+        public string Compañia { get; set; }
+        public string Estatus { get; set; }
+        public virtual ICollection<InvoiceCompanyRequests> Solicitudes { get; set; }
     }
 }
