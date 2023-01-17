@@ -57,6 +57,11 @@ namespace Service.MedicalRecord.Repository
                 || (x.Expediente.NombrePaciente + " " + x.Expediente.PrimerApellido + " " + x.Expediente.SegundoApellido).ToLower().Contains(filter.Clave));
             }
 
+            if (filter.Ciudad != null)
+            {
+                requests = requests.Where(x => x.Sucursal != null && x.Sucursal.Ciudad == filter.Ciudad);
+            }
+
             if (filter.Sucursales != null && filter.Sucursales.Any())
             {
                 requests = requests.Where(x => filter.Sucursales.Contains(x.SucursalId));
@@ -248,6 +253,13 @@ namespace Service.MedicalRecord.Repository
             await _context.SaveChangesAsync();
 
             _context.ChangeTracker.Clear();
+        }
+
+        public async Task Delete(Request request)
+        {
+            _context.CAT_Solicitud.Remove(request);
+
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateImage(RequestImage requestImage)

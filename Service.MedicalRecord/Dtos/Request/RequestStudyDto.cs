@@ -40,6 +40,8 @@ namespace Service.MedicalRecord.Dtos.Request
         public decimal Copago { get; set; }
         public decimal PrecioFinal { get; set; }
         public string NombreEstatus { get; set; }
+        public string FechaTomaMuestra { get; set; }
+        public string FechaSolicitado { get; set; }
         public string FechaActualizacion { get; set; }
         public string UsuarioActualizacion { get; set; }
         public bool Asignado { get; set; }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.MedicalRecord.Context;
 
 namespace Service.MedicalRecord.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230113192709_requeststudyintrakingorderdetail")]
+    partial class requeststudyintrakingorderdetail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1550,7 +1552,10 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<Guid>("SeguimientoId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("SolicitudEstudioId")
+                    b.Property<Guid>("SolicitudEstudioId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("SolicitudEstudioId1")
                         .HasColumnType("int");
 
                     b.Property<Guid>("SolicitudId")
@@ -1569,7 +1574,7 @@ namespace Service.MedicalRecord.Migrations
 
                     b.HasIndex("SeguimientoId");
 
-                    b.HasIndex("SolicitudEstudioId");
+                    b.HasIndex("SolicitudEstudioId1");
 
                     b.HasIndex("SolicitudId");
 
@@ -1881,9 +1886,7 @@ namespace Service.MedicalRecord.Migrations
 
                     b.HasOne("Service.MedicalRecord.Domain.Request.RequestStudy", "SolicitudEstudio")
                         .WithMany()
-                        .HasForeignKey("SolicitudEstudioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SolicitudEstudioId1");
 
                     b.HasOne("Service.MedicalRecord.Domain.Request.Request", "Solicitud")
                         .WithMany()

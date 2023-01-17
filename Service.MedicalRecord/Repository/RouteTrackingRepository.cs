@@ -47,7 +47,9 @@ namespace Service.MedicalRecord.Repository
                 .ThenInclude(x=>x.Solicitud.Sucursal)
                 .Include(x => x.Estudios)
                 .ThenInclude(x=>x.Solicitud.Estudios)
-                .ThenInclude(x=>x.Estatus).AsQueryable();
+                .ThenInclude(x=>x.Estatus)
+                .Include(x=>x.Estudios)
+            .ThenInclude(x=>x.SolicitudEstudio).AsQueryable();
             if (search.Fechas != null && search.Fechas.Length != 0)
             {
                 routeTrackingList = routeTrackingList.

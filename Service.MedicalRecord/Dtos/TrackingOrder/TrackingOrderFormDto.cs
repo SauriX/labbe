@@ -22,7 +22,7 @@ namespace Service.MedicalRecord.Dtos.TrackingOrder
         public DateTime FechaCreo { get; set; }
         public Guid UsuarioModId { get; set; }
         public DateTime FechaMod { get; set; }
-
+        
         public StudiesRequestRouteDto[] Estudios { get; set; }
         public int HoraDeRecoleccion { get; set; }
 
@@ -33,5 +33,6 @@ namespace Service.MedicalRecord.Dtos.TrackingOrder
         public string PacienteId { get; set; }
         public bool Escaneado { get; set; }
         public Guid UsuarioId { get; set; }
+       
     }
 }
