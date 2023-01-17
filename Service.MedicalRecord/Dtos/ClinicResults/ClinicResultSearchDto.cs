@@ -14,6 +14,7 @@ namespace Service.MedicalRecord.Dtos.ClinicResults
         public string Buscar { get; set; }
         public List<int?> Departamento { get; set; }
         public List<int?> Area { get; set; }
+        public List<string> Ciudad { get; set; }
         public List<byte> TipoSolicitud { get; set; }
         public List<int> Procedencia { get; set; }
 

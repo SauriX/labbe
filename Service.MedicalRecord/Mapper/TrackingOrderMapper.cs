@@ -1,4 +1,5 @@
-﻿using Service.MedicalRecord.Domain.TrackingOrder;
+﻿using Service.MedicalRecord.Dictionary;
+using Service.MedicalRecord.Domain.TrackingOrder;
 using Service.MedicalRecord.Dtos.TrackingOrder;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,8 @@ namespace Service.MedicalRecord.Mapper
                     Escaneado = x.Escaneado,
 
 
-                }).ToArray()
+                }).ToArray(),
+
 
 
             };
@@ -44,6 +46,7 @@ namespace Service.MedicalRecord.Mapper
         {
             return new TrackingOrderCurrentDto
             {
+                Id = model.Id,
                 DiaRecoleccion = model.DiaRecoleccion,
                 MuestraId = model.MuestraId,
                 Temperatura = model.Temperatura,
@@ -56,6 +59,7 @@ namespace Service.MedicalRecord.Mapper
                 Clave = model.Clave,
                 //Fecha = model.FechaCreo,
                 EstudiosAgrupados = estudios.ToList(),
+                IsInRute = estudios.Any(x => x.IsInRute && x.orderId == model.Id)
             };
         }
         public static TrackingOrder toUpdateModel(this TrackingOrderFormDto dto, TrackingOrder model)
@@ -159,26 +163,54 @@ namespace Service.MedicalRecord.Mapper
                 Clave = model.Clave
             };
         }
-        public static IEnumerable<EstudiosListDto> ToStudiesRequestRouteDto(this IEnumerable<Domain.Request.RequestStudy> model)
+        public static IEnumerable<EstudiosListDto> ToStudiesRequestRouteDto(this IEnumerable<Domain.Request.RequestStudy> model )
         {
             if (model == null) return null;
 
 
-            return model.GroupBy(x => x.Solicitud.Id)/*.GroupBy(x => x.Tapon.Clave)*/.Select(x => new EstudiosListDto
+            return model.Select(x => new EstudiosListDto
             {
-                solicitudId = x.FirstOrDefault().SolicitudId,
-                //solicitud = x.,
-                Estudios = x.Select(y => new StudiesRequestRouteDto
+                
+                solicitudId = x.SolicitudId,
+                IsInRute = x.Solicitud.Estudios.Any(y => y.EstatusId == Status.RequestStudy.EnRuta && x.EstudioId == y.EstudioId),
+                Estudio =   new StudiesRequestRouteDto
                 {
-                    Estudio = y.Nombre,
-                    EstudioId = y.EstudioId,
-                    Clave = y.Clave,
-                    NombrePaciente = y.Solicitud.Expediente.NombreCompleto,
-                    Solicitud = y.Solicitud.Clave,
-                    TaponNombre = y.Tapon?.Clave,
-                    SolicitudId = y.Solicitud.Id,
-                    ExpedienteId = y.Solicitud.ExpedienteId
-                }).ToList(),
+                    Estudio = x.Nombre,
+                    EstudioId = x.EstudioId,
+                    Clave = x.Clave,
+                    NombrePaciente = x.Solicitud.Expediente.NombreCompleto,
+                    Solicitud = x.Solicitud.Clave,
+                    TaponNombre = x.Tapon?.Clave,
+                    SolicitudId = x.Solicitud.Id,
+                    ExpedienteId = x.Solicitud.ExpedienteId,
+                    Escaneado=true,
+                },
+            });
+        }
+
+        public static IEnumerable<EstudiosListDto> ToStudiesRequestRouteDto(this IEnumerable<Domain.Request.RequestStudy> model, Guid orderId)
+        {
+            if (model == null) return null;
+
+
+            return model.Select(x => new EstudiosListDto
+            {
+
+                solicitudId = x.SolicitudId,
+                IsInRute = x.Solicitud.Estudios.Any(y => y.EstatusId == Status.RequestStudy.EnRuta && x.EstudioId == y.EstudioId),
+                orderId = orderId,
+                Estudio = new StudiesRequestRouteDto
+                {
+                    Estudio = x.Nombre,
+                    EstudioId = x.EstudioId,
+                    Clave = x.Clave,
+                    NombrePaciente = x.Solicitud.Expediente.NombreCompleto,
+                    Solicitud = x.Solicitud.Clave,
+                    TaponNombre = x.Tapon?.Clave,
+                    SolicitudId = x.Solicitud.Id,
+                    ExpedienteId = x.Solicitud.ExpedienteId,
+                    Escaneado = true,
+                },
             });
         }
     }

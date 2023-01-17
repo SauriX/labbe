@@ -11,11 +11,15 @@ namespace Service.Report.Repository.IRepository
     {
         Task<List<Request>> GetByFilter(ReportFilterDto search);
         Task<List<RequestPayment>> GetPaymentByFilter(ReportFilterDto search);
-        Task<List<Indicators>> GetBudgetByDate(DateTime startDate, DateTime endDate);
         Task<List<RequestStudy>> GetByStudies(ReportFilterDto search);
+        Task<List<Indicators>> GetBudgetByDate(DateTime startDate, DateTime endDate);
+        Task<List<SamplesCosts>> GetSamplesCostsByDate(ReportModalFilterDto search);
         Task CreateIndicators(Indicators indicator);
         Task UpdateIndicators(Indicators indicator);
-        Task<bool> IsDuplicate(Indicators indicator);
+        Task CreateSamples(List<SamplesCosts> sample);
+        Task UpdateSamples(SamplesCosts sample);
+        Task<bool> IsIndicatorDuplicate(Indicators indicator);
         Task<Indicators> GetIndicatorById(Guid branchId, DateTime date);
+        Task<SamplesCosts> GetSampleCostById(Guid branchId, DateTime date);
     }
 }

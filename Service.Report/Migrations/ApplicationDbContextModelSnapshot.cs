@@ -97,6 +97,29 @@ namespace Service.Report.Migrations
                     b.ToTable("CAT_Indicadores");
                 });
 
+            modelBuilder.Entity("Service.Report.Domain.Indicators.SamplesCosts", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("CostoToma")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("FechaAlta")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Sucursal")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("SucursalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CAT_CostosToma");
+                });
+
             modelBuilder.Entity("Service.Report.Domain.MedicalRecord.MedicalRecord", b =>
                 {
                     b.Property<Guid>("Id")

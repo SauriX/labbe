@@ -27,6 +27,7 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task Create(Request request);
         Task CreatePayment(RequestPayment request);
         Task Update(Request request);
+        Task Delete(Request request);
         Task UpdateImage(RequestImage requestImage);
         Task UpdateStudy(RequestStudy study);
         Task UpdatePayment(RequestPayment payment);

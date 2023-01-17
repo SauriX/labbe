@@ -41,21 +41,26 @@ namespace Service.MedicalRecord.Repository
                 .OrderBy(x => x.FechaCreo)
                 .AsQueryable();
 
-            if (filter.TipoFecha != null && filter.TipoFecha == 1 && filter.FechaInicial != null && filter.FechaFinal != null)
+            if (string.IsNullOrWhiteSpace(filter.Clave) && filter.TipoFecha != null && filter.TipoFecha == 1 && filter.FechaInicial != null && filter.FechaFinal != null)
             {
                 requests = requests.Where(x => ((DateTime)filter.FechaInicial).Date <= x.FechaCreo.Date && ((DateTime)filter.FechaFinal).Date >= x.FechaCreo.Date);
             }
 
-            if (filter.TipoFecha != null && filter.TipoFecha == 2 && filter.FechaInicial != null && filter.FechaFinal != null)
+            if (string.IsNullOrWhiteSpace(filter.Clave) && filter.TipoFecha != null && filter.TipoFecha == 2 && filter.FechaInicial != null && filter.FechaFinal != null)
             {
-                requests = requests.Where(x => x.Estudios.Any(x => ((DateTime)filter.FechaInicial).Date <= x.FechaEntrega && ((DateTime)filter.FechaFinal).Date >= x.FechaEntrega));
+                requests = requests.Where(x => x.Estudios.Any(x => ((DateTime)filter.FechaInicial).Date <= x.FechaEntrega.Date && ((DateTime)filter.FechaFinal).Date >= x.FechaEntrega.Date));
             }
 
             if (!string.IsNullOrWhiteSpace(filter.Clave))
             {
-                requests = requests.Where(x => x.Clave.ToLower().Contains(filter.Clave)
-                || x.ClavePatologica.ToLower().Contains(filter.Clave)
+                requests = requests.Where(x => x.Clave.Contains(filter.Clave)
+                || x.ClavePatologica.ToLower().Contains(filter.Clave.ToLower())
                 || (x.Expediente.NombrePaciente + " " + x.Expediente.PrimerApellido + " " + x.Expediente.SegundoApellido).ToLower().Contains(filter.Clave));
+            }
+
+            if (filter.Ciudad != null)
+            {
+                requests = requests.Where(x => x.Sucursal != null && x.Sucursal.Ciudad == filter.Ciudad);
             }
 
             if (filter.Sucursales != null && filter.Sucursales.Any())
@@ -251,6 +256,13 @@ namespace Service.MedicalRecord.Repository
             _context.ChangeTracker.Clear();
         }
 
+        public async Task Delete(Request request)
+        {
+            _context.CAT_Solicitud.Remove(request);
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task UpdateImage(RequestImage requestImage)
         {
             if (requestImage.Id == 0)
@@ -381,7 +393,7 @@ namespace Service.MedicalRecord.Repository
                 || x.ClavePatologica.ToLower().Contains(filter.Buscar)
                 || (x.Expediente.NombrePaciente + " " + x.Expediente.PrimerApellido + " " + x.Expediente.SegundoApellido).ToLower().Contains(filter.Buscar));
             }
-            if(filter.TipoFactura.Count() > 0)
+            if (filter.TipoFactura.Count() > 0)
             {
                 if (filter.TipoFactura.Contains("facturadas"))
                 {

@@ -225,11 +225,27 @@ namespace Service.Report.Repository
             return await report.ToListAsync();
         }
 
+        // Indicadores
         public async Task<List<Indicators>> GetBudgetByDate(DateTime startDate, DateTime endDate)
         {
-            var budget = await _context.CAT_Indicadores.Where(x => startDate.Date <= x.Fecha.Date && endDate.Date >= x.Fecha.Date).ToListAsync();
+            var budget = new List<Indicators>();
+            if (startDate != endDate)
+            {
+                budget = await _context.CAT_Indicadores.Where(x => startDate.Date <= x.Fecha.Date && endDate.Date >= x.Fecha.Date).ToListAsync();
+            }
+            else
+            {
+                budget = await _context.CAT_Indicadores.Where(x => startDate.Date == x.Fecha.Date).ToListAsync();
+            }
 
             return budget;
+        }
+
+        public async Task<List<SamplesCosts>> GetSamplesCostsByDate(ReportModalFilterDto search)
+        {
+            var samplesCosts = await _context.CAT_CostosToma.Where(x => x.FechaAlta.Date >= search.Fecha.First().Date && x.FechaAlta.Date <= search.Fecha.Last().Date).ToListAsync();
+
+            return samplesCosts;
         }
 
         public async Task CreateIndicators(Indicators indicator)
@@ -245,8 +261,20 @@ namespace Service.Report.Repository
 
             await _context.SaveChangesAsync();
         }
+        
+        public async Task CreateSamples(List<SamplesCosts> sample)
+        {
+            await _context.BulkInsertAsync(sample);
+        }
+        
+        public async Task UpdateSamples(SamplesCosts sample)
+        {
+            _context.Update(sample);
 
-        public async Task<bool> IsDuplicate(Indicators indicator)
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> IsIndicatorDuplicate(Indicators indicator)
         {
             var isDuplicate = await _context.CAT_Indicadores.AnyAsync(x => x.SucursalId != indicator.SucursalId);
 
@@ -258,8 +286,14 @@ namespace Service.Report.Repository
             var indicator = await _context.CAT_Indicadores.FirstOrDefaultAsync(x => x.SucursalId == branchId && x.Fecha.Date == date.Date);
 
             return indicator;
-
         }
 
+        public async Task<SamplesCosts> GetSampleCostById(Guid branchId, DateTime date)
+        {
+            var sample = await _context.CAT_CostosToma.FirstOrDefaultAsync(x => x.SucursalId == branchId && x.FechaAlta.Month == date.Month && x.FechaAlta.Year == date.Year);
+
+            return sample;
+        }
+        
     }
 }

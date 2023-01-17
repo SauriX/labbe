@@ -1,10 +1,16 @@
 ﻿using ClosedXML.Excel;
 using ClosedXML.Report;
+using ClosedXML.Report.Utils;
+using DocumentFormat.OpenXml.Bibliography;
+using MassTransit.Logging;
+using Microsoft.AspNetCore.Http;
+using MoreLinq;
 using Service.Report.Application.IApplication;
 using Service.Report.Client.IClient;
 using Service.Report.Dictionary;
 using Service.Report.Domain.Catalogs;
 using Service.Report.Domain.Indicators;
+using Service.Report.Domain.MedicalRecord;
 using Service.Report.Dtos;
 using Service.Report.Dtos.Indicators;
 using Service.Report.Mapper;
@@ -16,6 +22,8 @@ using Shared.Helpers;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -38,9 +46,9 @@ namespace Service.Report.Application
             _repository = repository;
         }
 
-        public async Task<(byte[] file, string fileName)> ExportSamplingsCost(ReportFilterDto search)
+        public async Task<(byte[] file, string fileName)> ExportSamplingsCost(ReportModalFilterDto search)
         {
-            var samplings = await _medicalRecordService.GetRequestByFilter(search);
+            var samplings = await GetBySamplesCosts(search);
 
             var path = Assets.SamplingsCost;
 
@@ -65,36 +73,14 @@ namespace Service.Report.Application
 
         public async Task<(byte[] file, string fileName)> ExportList(ReportFilterDto search)
         {
-            var service = await _catalogService.GetBudgetsByBranch(search.SucursalId);
-
-            List<string> sucursales = new List<string>()
+            var reportFilter = new ReportModalFilterDto
             {
-                "U200",
-                "U300",
-                "Cumbres"
+                SucursalId = search.SucursalId,
             };
 
-            List<string> pacientes = new List<string>()
-            {
-                "PACIENTES",
-                "90",
-                "12",
-                "30"
-            };
-
-            List<string> ingresos = new List<string>()
-            {
-                "INGRESOS",
-                "900",
-                "1200",
-                "3000"
-            };
-
-            List<object> data = new List<object>()
-            {
-                pacientes,
-                ingresos
-            };
+            var data = await _medicalRecordService.GetRequestByFilter(search);
+            var servicesCost = await _catalogService.GetBudgetsByBranch(reportFilter);
+            var budget = await _repository.GetBudgetByDate(search.FechaInicial, search.FechaFinal);
 
             var path = Assets.Indicators;
 
@@ -102,20 +88,32 @@ namespace Service.Report.Application
 
             template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
-            template.AddVariable("Titulo", "Costos Fijos Mensual");
+            template.AddVariable("TituloDiario", "Reporte Indicadores Diario");
+            template.AddVariable("TituloSemanal", "Reporte Indicadores Semanal");
+            template.AddVariable("TituloMensual", "Reporte Indicadores Mensual");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
-            template.AddVariable("Sucursales", sucursales);
-            template.AddVariable("Indicadores_Mensuales", data);
-            template.AddVariable("Dia", "Diciembre 2022");
 
+            var daily = template.Workbook.Worksheet("Diario");
+            var weekly = template.Workbook.Worksheet("Semanal");
+            var monthly = template.Workbook.Worksheet("Mensual");
+
+            DailyData(data, servicesCost, budget, daily);
+
+            WeeklyData(data, servicesCost, budget, weekly, search.FechaInicial);
+
+            MonthlyData(data, servicesCost, budget, monthly, search.FechaInicial);
+
+            template.Generate();
             template.Format();
+
+            template.Workbook.CalculateMode = XLCalculateMode.Auto;
 
             return (template.ToByteArray(), "Reporte Indicadores.xlsx");
         }
 
-        public async Task<(byte[] file, string fileName)> ExportServicesCost(ReportFilterDto search)
+        public async Task<(byte[] file, string fileName)> ExportServicesCost(ReportModalFilterDto search)
         {
-            var service = await _catalogService.GetBudgetsByBranch(search.SucursalId);
+            var servicesCost = await _catalogService.GetBudgetsByBranch(search);
 
             var path = Assets.ServicesCost;
 
@@ -125,33 +123,166 @@ namespace Service.Report.Application
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
             template.AddVariable("Titulo", "Costos Fijos Mensual");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
-            template.AddVariable("CostoFijo", service);
+            template.AddVariable("CostoFijo", servicesCost);
+
+            var service = template.Workbook.Worksheet("CostoFijo");
+            ServiceData(servicesCost, service);
 
             template.Generate();
-
-            var range = template.Workbook.Worksheet("CostoFijo").Range("CostoFijo");
-            var table = template.Workbook.Worksheet("CostoFijo").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
-            table.Theme = XLTableTheme.TableStyleMedium2;
-
             template.Format();
 
             return (template.ToByteArray(), "Costos Fijos Mensual.xlsx");
         }
 
+        public async Task<(byte[] file, string fileName)> ExportServicesCostSample()
+        {
+            var path = Assets.ServicesCostExample;
+            var template = new XLTemplate(path);
+
+            template.Generate();
+            template.Format();
+
+            return (template.ToByteArray(), "Costos Fijos Ejemplo.xlsx");
+        }
+
+        public async Task SaveServiceFile(IFormFile archivo, Guid userId)
+        {
+            XLWorkbook serviceWorKbook = new XLWorkbook(archivo.OpenReadStream());
+            IXLWorksheet serviceSheet = serviceWorKbook.Worksheet(1);
+
+            var rows = serviceSheet.RangeUsed().RowsUsed();
+            var columns = serviceSheet.RangeUsed().ColumnsUsed();
+
+            List<BudgetFormDto> budget = new();
+
+            var serviceName = new BudgetFormDto();
+
+            foreach (var row in rows)
+            {
+                var rowNumber = row.RowNumber();
+
+                foreach (var column in columns)
+                {
+                    if (column.Cell(1).IsEmpty())
+                    {
+                        continue;
+                    }
+
+                    var colNumber = column.ColumnNumber() - 1;
+                    if (!row.Cell(colNumber).IsEmpty() && rowNumber > 2)
+                    {
+                        if (colNumber > 1)
+                        {
+                            var branchName = column.Cell(1).GetString();
+                            var getBranch = await _catalogService.GetBranchByName(branchName);
+
+                            serviceName = new BudgetFormDto
+                            {
+                                NombreServicio = row.Cell(1).GetString(),
+                                CostoFijo = (decimal)row.Cell(colNumber).GetDouble(),
+                                Sucursal = new BudgetBranchListDto
+                                {
+                                    Ciudad = getBranch.Ciudad,
+                                    SucursalId = Guid.Parse(getBranch.IdSucursal)
+                                },
+                            };
+                        }
+
+                        budget.Add(serviceName);
+                    }
+                }
+            }
+
+            var list = budget.GroupBy(x => new { x.CostoFijo, x.NombreServicio }).ToList();
+
+            List<BudgetFormDto> toBudgetForm = new();
+            foreach (var item in list)
+            {
+                toBudgetForm.Add(new BudgetFormDto
+                {
+                    Id = 0,
+                    Clave = item.First().NombreServicio,
+                    CostoFijo = item.First().CostoFijo,
+                    NombreServicio = item.First().NombreServicio,
+                    Activo = true,
+                    Fecha = DateTime.Now,
+                    UsuarioId = userId,
+                    Sucursales = item.Select(x => x.Sucursal).ToList()
+                });
+            }
+
+            try
+            {
+                await _catalogService.CreateList(toBudgetForm);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task<List<Dictionary<string, object>>> GetByFilter(ReportFilterDto search)
         {
+            var reportFilter = new ReportModalFilterDto
+            {
+                SucursalId = search.SucursalId,
+            };
+
             var data = await _medicalRecordService.GetRequestByFilter(search);
-            var servicesCost = await _catalogService.GetBudgetsByBranch(search.SucursalId);
+            var servicesCost = await _catalogService.GetBudgetsByBranch(reportFilter);
             var budget = await _repository.GetBudgetByDate(search.FechaInicial, search.FechaFinal);
 
-            //List<Dictionary<string, object>> results = new List<Dictionary<string, object>>();
+            var records = data.GroupBy(x => x.Expediente).Count();
 
             var stats = data.ToIndicatorsStatsDto().ToList();
+
+            var missingSamplesCosts = new List<SamplesCostsDto>();
 
             foreach (var item in stats)
             {
                 item.CostoFijo = servicesCost.Where(x => x.Sucursales.Contains(item.Sucursal)).Sum(x => x.CostoFijo);
                 item.CostoReactivo = budget.Where(x => x.SucursalId == item.SucursalId).Sum(x => x.CostoReactivo);
+
+                var sampleBudget = await _repository.GetSampleCostById(item.SucursalId, search.FechaIndividual);
+
+                if (sampleBudget != null)
+                {
+                    item.CostoTomaCalculado = item.Expedientes * sampleBudget.CostoToma;
+                }
+                else
+                {
+                    missingSamplesCosts.Add(new SamplesCostsDto
+                    {
+                        SucursalId = item.SucursalId,
+                        Sucursal = item.Sucursal,
+                        FechaAlta = search.FechaIndividual,
+                        CostoToma = 8.5m
+                    });
+                }
+            }
+
+            var newSamples = missingSamplesCosts.Select(x => new SamplesCosts
+            {
+                Id = Guid.NewGuid(),
+                SucursalId = x.SucursalId,
+                Sucursal = x.Sucursal,
+                CostoToma = x.CostoToma,
+                FechaAlta = x.FechaAlta,
+            }).ToList();
+
+            await _repository.CreateSamples(newSamples);
+
+            if (missingSamplesCosts != null || missingSamplesCosts.Count > 0)
+            {
+                foreach (var item in stats)
+                {
+                    var sampleBudget = await _repository.GetSampleCostById(item.SucursalId, search.FechaIndividual);
+
+                    if (sampleBudget != null)
+                    {
+                        item.CostoTomaCalculado = item.Expedientes * sampleBudget.CostoToma;
+                    }
+                }
             }
 
             var results = stats.ToTableIndicatorsStatsDto();
@@ -159,11 +290,18 @@ namespace Service.Report.Application
             return results;
         }
 
-        public async Task<List<ServicesCostDto>> GetServicesCosts(ReportFilterDto search)
+        public async Task<List<SamplesCostsDto>> GetBySamplesCosts(ReportModalFilterDto search)
         {
-            var servicesCost = await _catalogService.GetBudgetsByBranch(search.SucursalId);
+            var samples = await _repository.GetSamplesCostsByDate(search);
 
-            return servicesCost.ServicesCostGeneric();
+            return samples.ToSamplesCostsDto().ToList();
+        }
+
+        public async Task<InvoiceServicesDto> GetServicesCosts(ReportModalFilterDto search)
+        {
+            var servicesCost = await _catalogService.GetBudgetsByBranch(search);
+
+            return servicesCost.ToServiceCostGroupDto();
         }
 
         public async Task Create(IndicatorsStatsDto indicators)
@@ -190,7 +328,25 @@ namespace Service.Report.Application
             var updatedIndicator = indicators.ToModelUpdate(existing);
 
             await _repository.UpdateIndicators(updatedIndicator);
+        }
 
+        public async Task UpdateSample(SamplesCostsDto sample)
+        {
+            var existing = await _repository.GetSampleCostById(sample.SucursalId, sample.FechaAlta);
+
+            if (existing == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
+            }
+
+            var updatedSample = sample.ToSampleUpdate(existing);
+
+            await _repository.UpdateSamples(updatedSample);
+        }
+
+        public async Task UpdateService(ServiceUpdateDto service)
+        {
+            await _catalogService.UpdateService(service);
         }
 
         public async Task GetIndicatorForm(IndicatorsStatsDto indicators)
@@ -213,6 +369,184 @@ namespace Service.Report.Application
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        private DataTable GetTable(string date, List<Dictionary<string, object>> data)
+        {
+            DataTable table = new DataTable();
+            table.Columns.Add(date, typeof(string));
+
+            foreach (var item in data[0].Keys.Where(x => x != "NOMBRE"))
+            {
+                table.Columns.Add(item, typeof(double));
+            }
+
+            foreach (var item in data)
+            {
+                var rowData = new List<object>();
+
+                foreach (var key in item.Keys)
+                {
+                    rowData.Add(item[key]);
+                }
+
+                table.Rows.Add(rowData.ToArray());
+            }
+
+            return table;
+        }
+
+        private static DateTime FirstDateOfWeek(int year, int weekOfYear)
+        {
+            DateTime jan1 = new DateTime(year, 1, 1);
+
+            int daysOffset = (int)CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek - (int)jan1.DayOfWeek;
+
+            DateTime firstMonday = jan1.AddDays(daysOffset);
+
+            int firstWeek = CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(jan1, CultureInfo.CurrentCulture.DateTimeFormat.CalendarWeekRule, CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek);
+
+            if (firstWeek <= 1)
+            {
+                weekOfYear -= 1;
+            }
+
+            return firstMonday.AddDays(weekOfYear * 7);
+        }
+
+        private void DailyData(List<RequestInfo> data, List<ServicesCost> servicesCost, List<Indicators> budget, IXLWorksheet daily)
+        {
+            List<IGrouping<DateTime, RequestInfo>> dailyList = data.GroupBy(x => x.Fecha.Date).OrderBy(x => x.Key).ToList();
+            for (int i = 0; i < dailyList.Count; i++)
+            {
+                IGrouping<DateTime, RequestInfo> item = dailyList[i];
+
+                DateTime date = item.Key;
+
+                var stats = item.ToIndicatorsStatsDto().ToList();
+
+                foreach (var item2 in stats)
+                {
+                    item2.CostoFijo = servicesCost.Where(x => x.Sucursales.Contains(item2.Sucursal)).Sum(x => x.CostoFijo);
+                    item2.CostoReactivo = budget.Where(x => x.SucursalId == item2.SucursalId).Sum(x => x.CostoReactivo);
+                }
+
+                var results = stats.ToTableIndicatorsStatsDto();
+                var dataTable = GetTable(date.ToString("d"), results);
+
+                var tableWithData = daily.Cell(3 + (8 * i), 1).InsertTable(dataTable.AsEnumerable());
+
+                var formRow = 3 + (8 * i) - 1;
+
+                List<string> listD = results[0].Keys.Where(x => x != "NOMBRE").ToList();
+                for (int dailyData = 0; dailyData < listD.Count; dailyData++)
+                {
+                    var colName = daily.Column(dailyData + 2).ColumnLetter();
+                    var fr1 = formRow + 7;
+                    daily.Cell(fr1, dailyData + 2).FormulaA1 = $"={colName}{fr1 - 4}-{colName}{fr1 - 3}-{colName}{fr1 - 2}-{colName}{fr1 - 1}";
+                }
+            }
+        }
+
+        private void WeeklyData(List<RequestInfo> data, List<ServicesCost> servicesCost, List<Indicators> budget, IXLWorksheet weekly, DateTime yearOfWeek)
+        {
+            List<IGrouping<int, RequestInfo>> weeklyList = data.GroupBy(i => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(i.Fecha, CalendarWeekRule.FirstDay, DayOfWeek.Monday)).OrderBy(x => x.Key).ToList();
+            for (int i = 0; i < weeklyList.Count; i++)
+            {
+                IGrouping<int, RequestInfo> item = weeklyList[i];
+
+                DateTime date = FirstDateOfWeek(yearOfWeek.Year, item.Key);
+
+                var stats = item.ToIndicatorsStatsDto().ToList();
+
+                foreach (var weeklyItem in stats)
+                {
+                    weeklyItem.CostoFijo = servicesCost.Where(x => x.Sucursales.Contains(weeklyItem.Sucursal)).Sum(x => x.CostoFijo);
+                    weeklyItem.CostoReactivo = budget.Where(x => x.SucursalId == weeklyItem.SucursalId).Sum(x => x.CostoReactivo);
+                }
+
+                var results = stats.ToTableIndicatorsStatsDto();
+
+                var dataTable = GetTable(date.ToString("d") + "-" + date.AddDays(6).ToString("d"), results);
+
+                var tableWithData = weekly.Cell(3 + (8 * i), 1).InsertTable(dataTable.AsEnumerable());
+
+                var formRow = 3 + (8 * i) - 1;
+
+                List<string> listW = results[0].Keys.Where(x => x != "NOMBRE").ToList();
+                for (int weeklyData = 0; weeklyData < listW.Count; weeklyData++)
+                {
+                    var colName = weekly.Column(weeklyData + 2).ColumnLetter();
+                    var fr1 = formRow + 7;
+                    weekly.Cell(fr1, weeklyData + 2).FormulaA1 = $"={colName}{fr1 - 4}-{colName}{fr1 - 3}-{colName}{fr1 - 2}-{colName}{fr1 - 1}";
+                }
+            }
+        }
+
+        private void MonthlyData(List<RequestInfo> data, List<ServicesCost> servicesCost, List<Indicators> budget, IXLWorksheet monthly, DateTime month)
+        {
+            var stats = data.ToIndicatorsStatsDto().ToList();
+
+            foreach (var monthlyItem in stats)
+            {
+                monthlyItem.CostoFijo = servicesCost.Where(x => x.Sucursales.Contains(monthlyItem.Sucursal)).Sum(x => x.CostoFijo);
+                monthlyItem.CostoReactivo = budget.Where(x => x.SucursalId == monthlyItem.SucursalId).Sum(x => x.CostoReactivo);
+            }
+
+            var results = stats.ToTableIndicatorsStatsDto();
+
+            var dataTable = GetTable(month.ToString("MMMM yy"), results);
+
+            var tableWithData = monthly.Cell(3, 1).InsertTable(dataTable.AsEnumerable());
+
+            var formRow = 3 - 1;
+
+            List<string> list = results[0].Keys.Where(x => x != "NOMBRE").ToList();
+            for (int monthlyData = 0; monthlyData < list.Count; monthlyData++)
+            {
+                var colName = monthly.Column(monthlyData + 2).ColumnLetter();
+                var fr1 = formRow + 7;
+                monthly.Cell(fr1, monthlyData + 2).FormulaA1 = $"={colName}{fr1 - 4}-{colName}{fr1 - 3}-{colName}{fr1 - 2}-{colName}{fr1 - 1}";
+            }
+        }
+
+        private void ServiceData(List<ServicesCost> servicesCost, IXLWorksheet serviceSheet)
+        {
+            var stats = servicesCost.ToServiceCostDto().ToList();
+
+            var groupData = servicesCost.GroupBy(x => new { ((DateTime)x.FechaAlta).Month, ((DateTime)x.FechaAlta).Year }).ToList();
+
+            for (int i = 0; i < groupData.Count; i++)
+            {
+                var group = groupData[i];
+                var date = new DateTime(group.Key.Year, group.Key.Month, 1).ToString("MMMM yy", new CultureInfo("ES"));
+                var data = group.ToList();
+
+                var results = data.ToTableServiceCostDto();
+                var serviceName = data.Select(x => x.Nombre).Distinct().ToList();
+
+                var dataTable = GetTable(date, results);
+
+                var tableWithData = serviceSheet.Cell(3 + ((results.Count + 3) * i), 1).InsertTable(dataTable.AsEnumerable());
+
+                var formRow = 3 + ((results.Count + 3) * i) - 1;
+
+                List<string> list = results[0].Keys.Where(x => x != "NOMBRE").ToList();
+                for (int serviceData = 0; serviceData < list.Count; serviceData++)
+                {
+                    var colName = serviceSheet.Column(serviceData + 2).ColumnLetter();
+
+                    var frDaily = formRow + serviceName.Count + 5;
+                    var frWeekly = formRow + serviceName.Count + 4;
+                    var frMonthly = formRow + serviceName.Count + 3;
+
+                    var serviceRange = serviceSheet.Range($"{colName}{formRow + 2}:{colName}{formRow + serviceName.Count + 1}");
+
+                    serviceSheet.Cell(frDaily, serviceData + 2).FormulaA1 = $"=SUM({serviceRange})/ 24";
+                    serviceSheet.Cell(frWeekly, serviceData + 2).FormulaA1 = $"=SUM({serviceRange}) / 6";
+                    serviceSheet.Cell(frMonthly, serviceData + 2).FormulaA1 = $"=SUM({serviceRange})";
+                }
             }
         }
     }

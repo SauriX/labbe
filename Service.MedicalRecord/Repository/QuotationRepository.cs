@@ -32,26 +32,31 @@ namespace Service.MedicalRecord.Repository
         {
             var quotations = _context.CAT_Cotizacion
                 .Include(x => x.Expediente)
+                .Include(x => x.Sucursal)
                 .Include(x => x.Estudios)
                 .OrderBy(x => x.FechaCreo)
                 .AsQueryable();
 
-            if (filter.FechaAInicial != null && filter.FechaAFinal != null)
+            if (string.IsNullOrWhiteSpace(filter.Expediente) && filter.FechaAInicial != null && filter.FechaAFinal != null)
             {
                 quotations = quotations.Where(x => x.FechaCreo.Date >= ((DateTime)filter.FechaAInicial).Date
                 && x.FechaCreo.Date <= ((DateTime)filter.FechaAFinal).Date);
             }
 
-            if (filter.Sucursales != null && filter.Sucursales.Count > 0)
+            if (filter.Ciudad != null)
             {
-                quotations = quotations.Where(x => x.Sucursal != null && filter.Sucursales.Contains((Guid)x.SucursalId));
+                quotations = quotations.Where(x => x.Sucursal != null && x.Sucursal.Ciudad == filter.Ciudad);
             }
 
-            if (filter.FechaNInicial != null && filter.FechaNFinal != null)
+            if (filter.Sucursales != null && filter.Sucursales.Count > 0)
+            {
+                quotations = quotations.Where(x => x.Sucursal != null && filter.Sucursales.Contains(x.SucursalId));
+            }
+
+            if (filter.FechaNInicial != null)
             {
                 quotations = quotations.Where(x => x.Expediente != null
-                && x.Expediente.FechaDeNacimiento.Date <= ((DateTime)filter.FechaNInicial).Date
-                && x.Expediente.FechaDeNacimiento.Date >= ((DateTime)filter.FechaNFinal).Date);
+                && x.Expediente.FechaDeNacimiento.Date == ((DateTime)filter.FechaNInicial).Date);
             }
 
             if (!string.IsNullOrWhiteSpace(filter.Correo))
@@ -147,12 +152,20 @@ namespace Service.MedicalRecord.Repository
             _context.CAT_Cotizacion.Update(quotation);
 
             await _context.SaveChangesAsync();
+        }     
+        
+        public async Task Delete(Quotation quotation)
+        {
+            _context.CAT_Cotizacion.Remove(quotation);
+
+            await _context.SaveChangesAsync();
         }
 
-        public async Task BulkInsertUpdatePacks(Guid quotationId, List<QuotationPack> packs)
+        public async Task BulkUpdateDelete(Guid quotationId, List<QuotationPack> packs)
         {
             var config = new BulkConfig();
             config.SetSynchronizeFilter<QuotationPack>(x => x.CotizacionId == quotationId);
+            config.SetOutputIdentity = true;
 
             await _context.BulkInsertOrUpdateAsync(packs, config);
         }
@@ -165,12 +178,13 @@ namespace Service.MedicalRecord.Repository
             await _context.BulkDeleteAsync(packs, config);
         }
 
-        public async Task BulkInsertUpdateStudies(Guid quotationId, List<QuotationStudy> studies)
+        public async Task BulkUpdateDeleteStudies(Guid quotationId, List<QuotationStudy> studies)
         {
             var config = new BulkConfig();
             config.SetSynchronizeFilter<QuotationStudy>(x => x.CotizacionId == quotationId);
+            config.SetOutputIdentity = true;
 
-            await _context.BulkInsertOrUpdateAsync(studies, config);
+            await _context.BulkInsertOrUpdateOrDeleteAsync(studies, config);
         }
 
         public async Task BulkDeleteStudies(Guid quotationId, List<QuotationStudy> studies)

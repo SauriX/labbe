@@ -18,7 +18,6 @@ namespace Service.MedicalRecord.Domain.TrackingOrder
         public DateTime DiaRecoleccion { get; set; }
         public string MuestraId { get; set; }
         public bool EscaneoCodigoBarras { get; set; }
-        
         public double Temperatura { get; set; }
         public bool Activo { get; set; }
         public Guid UsuarioCreoId { get; set; }

@@ -518,6 +518,17 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
+      "DownstreamPathTemplate": "/LabRamos/services/report/api/report/indicadores/toma/filter",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/LabRamos/services/report/api/report/indicadores/toma/filter",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
       "DownstreamPathTemplate": "/LabRamos/services/report/api/report/indicadores/servicios/filter",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -538,6 +549,39 @@
       ],
       "UpstreamPathTemplate": "/LabRamos/services/report/api/report/indicadores",
       "UpstreamHttpMethod": [ "POST", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/report/api/report/indicadores/saveFile",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/LabRamos/services/report/api/report/indicadores/saveFile",
+      "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/report/api/report/indicadores/toma",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/LabRamos/services/report/api/report/indicadores/toma",
+      "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/report/api/report/indicadores/fijo",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/LabRamos/services/report/api/report/indicadores/fijo",
+      "UpstreamHttpMethod": [ "PUT" ]
     },
     {
       "DownstreamPathTemplate": "/LabRamos/services/report/api/report/indicadores/export/list",
@@ -570,6 +614,17 @@
         }
       ],
       "UpstreamPathTemplate": "/LabRamos/services/report/api/report/indicadores/export/serviceList",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/report/api/report/indicadores/export/serviceListExample",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/LabRamos/services/report/api/report/indicadores/export/serviceListExample",
       "UpstreamHttpMethod": [ "POST" ]
     }
   ]

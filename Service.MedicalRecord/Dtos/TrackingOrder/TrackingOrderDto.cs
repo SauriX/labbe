@@ -31,5 +31,6 @@ namespace Service.MedicalRecord.Dtos.TrackingOrder
         public double Temperatura { get; set; }
         public bool Activo { get; set; }
         public List<EstudiosListDto> EstudiosAgrupados { get; set; }
+        public bool IsInRute { get; set; }
     }
 }

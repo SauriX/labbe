@@ -164,6 +164,9 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Ciudad")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<short>("CiudadId")
                         .HasColumnType("smallint");
 
@@ -1614,6 +1617,9 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<Guid>("SeguimientoId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("SolicitudEstudioId")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("SolicitudId")
                         .HasColumnType("uniqueidentifier");
 
@@ -1629,6 +1635,8 @@ namespace Service.MedicalRecord.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("SeguimientoId");
+
+                    b.HasIndex("SolicitudEstudioId");
 
                     b.HasIndex("SolicitudId");
 
@@ -1957,6 +1965,12 @@ namespace Service.MedicalRecord.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Service.MedicalRecord.Domain.Request.RequestStudy", "SolicitudEstudio")
+                        .WithMany()
+                        .HasForeignKey("SolicitudEstudioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Service.MedicalRecord.Domain.Request.Request", "Solicitud")
                         .WithMany()
                         .HasForeignKey("SolicitudId")
@@ -1966,6 +1980,8 @@ namespace Service.MedicalRecord.Migrations
                     b.Navigation("Seguimiento");
 
                     b.Navigation("Solicitud");
+
+                    b.Navigation("SolicitudEstudio");
                 });
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.Appointments.AppointmentDom", b =>

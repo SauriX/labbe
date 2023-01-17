@@ -10,16 +10,25 @@ namespace Service.MedicalRecord.Mapper
 {
     public static class MassSearchMapper
     {
+        private const string ETIQUETA = "9";
         private const byte PARTICULARES = 2;
-        public static MassSearchInfoDto ToMassSearchInfoDto(this List<Request> model)
+        public static MassSearchInfoDto ToMassSearchInfoDto(this List<Request> model, MassSearchFilterDto filter)
         {
             List<int?> filterAreas = new List<int?>() { 5, 34, 23, 44, 28, 17, 41, 9, 20 };
 
-            var parameters = model.SelectMany(x => x.Estudios)
-                .SelectMany(x => x.Resultados)
-                .Distinct()
-                .Where(x => x.TipoValorId != "9")
-                .ToList();
+            var parameters = model.SelectMany(x => x.Estudios);
+
+            if (filter.Estudios != null && filter.Estudios.Count > 0)
+            {
+                parameters = parameters.Where(x => filter.Estudios.Contains(x.EstudioId));
+
+            }
+            var resultsStudy = parameters
+            .SelectMany(x => x.Resultados)
+            .Where(x => x.TipoValorId != ETIQUETA)
+            .GroupBy(x => x.TipoValorId)
+            .Select(x => x.First())
+            .ToList();
 
             List<MassSearchResult> results = new List<MassSearchResult>() { };
 
@@ -27,13 +36,21 @@ namespace Service.MedicalRecord.Mapper
             {
                 var solicitud = model[i];
                 var estudios = solicitud.Estudios.ToList();
-                for (int j = 0; j < solicitud.Estudios.Count; j++)
+
+                if (filter.Estudios != null && filter.Estudios.Count > 0)
+                {
+                    estudios = estudios.Where(x => filter.Estudios.Contains(x.EstudioId)).ToList();
+
+                }
+                    
+                for (int j = 0; j < estudios.Count(); j++)
                 {
                     if (filterAreas.Contains(estudios[j].AreaId))
                     {
                         results.Add(new MassSearchResult
                         {
                             Id = solicitud.Id,
+                            ReuqestStudyId = estudios[j].Id,
                             Clave = solicitud.Clave,
                             Paciente = solicitud.Expediente.NombreCompleto,
                             Edad = solicitud.Expediente.Edad,
@@ -51,7 +68,8 @@ namespace Service.MedicalRecord.Mapper
                                 Nombre = x.NombreCorto,
                                 Clave = x.Clave,
                                 Unidades = x.Unidades,
-                                Valor = x.Resultado
+                                Valor = x.Resultado,
+                                TipoValorId = x.TipoValorId
                             }).ToList(),
                         });
                     }
@@ -59,11 +77,13 @@ namespace Service.MedicalRecord.Mapper
             }
             return new MassSearchInfoDto
                 {
-                    Parameters = parameters.Select(x => new MassSearchParameter
+                    Parameters = resultsStudy.Select(x => new MassSearchParameter
                     {
-                        
+                        Id= x.ParametroId,
+                        TipoValorId = x.TipoValorId,
                         Nombre = x.NombreCorto,
                         Unidades = x.Unidades,
+                        Clave = x.Clave
 
                     }).ToList(),
                     Results = results
@@ -97,15 +117,7 @@ namespace Service.MedicalRecord.Mapper
                     EstudioId = y.Id,
                     Estudio = y.Nombre,
                     isPathological = y.DepartamentoId == Shared.Dictionary.Catalogs.Department.PATOLOGIA,
-                    MedioSolicitado = !string.IsNullOrEmpty(y.MedioSolicitado)
-                                      ? string.Join("/", y.MedioSolicitado.Split(","))
-                                      : !string.IsNullOrEmpty(x.EnvioCorreo) && !string.IsNullOrEmpty(x.EnvioWhatsApp)
-                                      ? $"Disponibles: Whatsapp/Correo"
-                                      : !string.IsNullOrEmpty(x.EnvioCorreo)
-                                      ? $"Disponible: Correo"
-                                      : !string.IsNullOrEmpty(x.EnvioWhatsApp)
-                                      ? $"Disponible: Whatsapp"
-                                      : "No disponible",
+                    MedioSolicitado = y.MedioSolicitado,
                     FechaEntrega = y.FechaEntrega.ToString("dd/MM/yyyy hh:mm"),
                     Estatus = y.Estatus.Nombre,
                     Registro = y.EstatusId == Status.RequestStudy.Liberado 
