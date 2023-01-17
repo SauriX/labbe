@@ -18,5 +18,6 @@ namespace Service.MedicalRecord.Dtos.Reports
         public List<DateTime> Hora { get; set; }
         public bool Grafica { get; set; }
         public string User { get; set; }
+        public List<string> Ciudad { get; set; }
     }
 }
