@@ -35,8 +35,10 @@ namespace Service.MedicalRecord.Dtos.InvoiceCompany
     public class InvoiceCompanyFacturaDto
     {
         public Guid FacturaId { get; set; }
-        public byte EstatusId { get; set; }
+        public string FacturapiId { get; set; }
         public string FechaCreo { get; set; }
+        public List<Guid> SolicitudesId { get; set; }
+        public string Tipo { get; set; }
         public InvoiceCompanyStatusInvoice Estatus { get; set; }
     }
     public class InvoiceCompanyStatusInvoice

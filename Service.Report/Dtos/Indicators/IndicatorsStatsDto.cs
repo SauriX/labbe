@@ -17,6 +17,7 @@ namespace Service.Report.Dtos.Indicators
         public DateTime FechaAlta { get; set; }
         public decimal UtilidadOperacion => Ingresos - (CostoReactivo + CostoTomaCalculado + CostoFijo);
         public decimal CostoFijo { get; set; }
+        public int Expedientes { get; set; }
     }
 
     public class IndicatorsListDto

@@ -1,5 +1,7 @@
 ﻿using ClosedXML.Excel;
 using ClosedXML.Report;
+using MassTransit;
+using MassTransit.Util;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dictionary;
 using Service.Catalog.Domain.Catalog;
@@ -50,7 +52,7 @@ namespace Service.Catalog.Application
         {
             var budgets = await _repository.GetActive();
 
-            return budgets.ToBudgetListDto();
+            return budgets.ToBudgetSelectInputDto();
         }
 
         public async Task<IEnumerable<BudgetListDto>> GetBudgetByBranch(Guid branchId)
@@ -60,9 +62,9 @@ namespace Service.Catalog.Application
             return budgets.ToBranchBudgetListDto();
         }
 
-        public async Task<IEnumerable<BudgetListDto>> GetBudgetsByBranch(List<Guid> branchId)
+        public async Task<IEnumerable<BudgetListDto>> GetBudgetsByBranch(BudgetFilterDto search)
         {
-            var budgets = await _repository.GetBudgetsByBranch(branchId);
+            var budgets = await _repository.GetBudgetsByBranch(search);
 
             return budgets.ToBranchBudgetListDto();
         }
@@ -85,6 +87,13 @@ namespace Service.Catalog.Application
             return newBudget.ToBudgetListDto();
         }
 
+        public async Task CreateList(List<BudgetFormDto> budgets)
+        {
+            var newBudget = budgets.ToModelList();
+
+            await _repository.CreateList(newBudget);
+        }
+
         public async Task<BudgetListDto> Update(BudgetFormDto budget)
         {
             var existing = await _repository.GetById(budget.Id);
@@ -103,6 +112,21 @@ namespace Service.Catalog.Application
             updateBudget = await _repository.GetById(updateBudget.Id);
 
             return updateBudget.ToBudgetListDto();
+        }
+
+        public async Task UpdateService(ServiceUpdateDto service, Guid userId)
+        {
+            var existing = await _repository.GetById(service.Id);
+
+            if (existing == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
+            }
+
+            existing.CostoFijo = service.CostoFijo;
+            existing.UsuarioModificoId = userId;
+
+            await _repository.Update(existing);
         }
 
         public async Task<byte[]> ExportList(string search)

@@ -4,6 +4,7 @@ using Service.Report.Dtos.Indicators;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace Service.Report.Mapper
@@ -48,7 +49,6 @@ namespace Service.Report.Mapper
                             itemData.Add(branch.Sucursal, branch.UtilidadOperacion);
                             continue;
                     }
-                    itemData.Add(branch.Sucursal, branch.Pacientes);
                 }
 
                 data.Add(itemData);
@@ -72,7 +72,7 @@ namespace Service.Report.Mapper
                                    SucursalId = grupo.Key.SucursalId,
                                    Sucursal = grupo.Key.Sucursal,
                                    Ingresos = grupo.Sum(x => x.TotalEstudios),
-                                   CostoTomaCalculado = grupo.GroupBy(x => x.Expediente).Count() * 8.5m,
+                                   Expedientes = grupo.GroupBy(x => x.Expediente).Count()
                                };
                            }
                            );
@@ -89,8 +89,51 @@ namespace Service.Report.Mapper
                 Id = sample.Id,
                 CostoToma = sample.CostoToma,
                 SucursalId = sample.SucursalId,
-                FechaAlta = sample.FechaAlta
+                Sucursal = sample.Sucursal,
+                FechaAlta = sample.FechaAlta,
+                Aplica = sample.FechaAlta.ToString("MMMM yy", new CultureInfo("ES"))
             }).ToList();
+        } 
+
+        public static List<Dictionary<string, object>> ToTableServiceCostDto(this List<ServicesCost> model)
+        {
+            if (model == null) return null;
+
+            List<string> servicesName = new();
+            var data = new List<Dictionary<string, object>>();
+
+            foreach (var service in model)
+            {
+                if (!servicesName.Contains(service.Nombre))
+                {
+                    servicesName.Add(service.Nombre);
+                }
+            }
+
+            servicesName.Add("");
+            servicesName.Add("Total mesual");
+            servicesName.Add("Total semanal");
+            servicesName.Add("Total diario");
+
+            foreach (var item in servicesName)
+            {
+                var itemData = new Dictionary<string, object>
+                {
+                    ["NOMBRE"] = item
+                };
+
+                foreach (var branch in model)
+                {
+                    if (item == branch.Nombre)
+                    {
+                        itemData.Add(branch.Sucursal, branch.CostoFijo);
+                    }
+                }
+
+                data.Add(itemData);
+            }
+
+            return data;
         }
 
         public static List<ServicesCostDto> ServicesCostGeneric(this IEnumerable<ServicesCost> model)
@@ -108,28 +151,48 @@ namespace Service.Report.Mapper
             }).ToList();
         }
 
-        public static ServicesDto ToServiceCostDto(this IEnumerable<ServicesCost> model)
+        public static IEnumerable<ServicesCostDto> ToServiceCostDto(this IEnumerable<ServicesCost> model)
         {
             if (model == null) return null;
 
-            var results = ServicesCostGeneric(model);
+            var results = (from c in model
+                           group c by new { c.Sucursal, c.Nombre } into grupo
+                           select grupo).Select(grupo =>
+                           {
+                               return new ServicesCostDto
+                               {
+                                   Nombre = grupo.Key.Nombre,
+                                   Sucursal = grupo.Key.Sucursal,
+                                   CostoFijo = grupo.Sum(x => x.CostoFijo),
+                               };
+                           });
 
-            var costoFijo = results.Select(x => x.CostoFijo).FirstOrDefault();
+            return results;
+        }
+        
+        public static InvoiceServicesDto ToServiceCostGroupDto(this IEnumerable<ServicesCost> model)
+        {
+            if (model == null) return null;
 
-            var totals = new ServicesCostTimeDto
+            var grupos = model.GroupBy(x => new {x.Id, x.CostoFijo} ).Select(y => y.ToList()).ToList();
+
+            var services = grupos.Select(x => new ServicesCostDto
             {
-                TotalMensual = costoFijo,
-                TotalSemanal = costoFijo / 6,
-                TotalDiario = costoFijo / 24
+                Id = x.First().Id,
+                Sucursal = string.Join(", ", x.Select(x => x.Sucursal)),
+                Nombre = x.First().Nombre,
+                CostoFijo = x.First().CostoFijo,
+                CostosFijos = x.Sum(x => x.CostoFijo),
+                FechaAlta = x.First().FechaAlta
+            }).ToList();
+
+            var totals = new InvoiceServicesDto
+            {
+                Servicios = services,
+                TotalMensual = services.Sum(x => x.CostosFijos),
             };
 
-            var data = new ServicesDto
-            {
-                CostoServicios = results,
-                CostoTemporal = totals
-            };
-
-            return data;
+            return totals;
         }
 
         public static Indicators ToModelCreate(this IndicatorsStatsDto dto)
@@ -144,7 +207,7 @@ namespace Service.Report.Mapper
                 Fecha = dto.FechaAlta
             };
         }
-        
+
         public static Indicators ToModelUpdate(this IndicatorsStatsDto dto, Indicators model)
         {
             if (dto == null) return null;
@@ -157,7 +220,7 @@ namespace Service.Report.Mapper
                 Fecha = dto.FechaAlta
             };
         }
-        
+
         public static SamplesCosts ToSampleCreate(this SamplesCostsDto dto)
         {
             if (dto == null) return null;
@@ -167,10 +230,10 @@ namespace Service.Report.Mapper
                 Id = Guid.NewGuid(),
                 CostoToma = dto.CostoToma,
                 SucursalId = dto.SucursalId,
-                FechaAlta = dto.FechaAlta
+                FechaAlta = DateTime.Now
             };
         }
-        
+
         public static SamplesCosts ToSampleUpdate(this SamplesCostsDto dto, SamplesCosts model)
         {
             if (dto == null) return null;
@@ -180,7 +243,8 @@ namespace Service.Report.Mapper
                 Id = model.Id,
                 CostoToma = dto.CostoToma,
                 SucursalId = model.SucursalId,
-                FechaAlta = dto.FechaAlta
+                Sucursal = model.Sucursal,
+                FechaAlta = model.FechaAlta
             };
         }
     }

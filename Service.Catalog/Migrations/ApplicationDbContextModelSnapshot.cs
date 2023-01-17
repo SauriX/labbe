@@ -821,6 +821,9 @@ namespace Service.Catalog.Migrations
                     b.Property<int?>("CFDIId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Calle")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Ciudad")
                         .HasColumnType("nvarchar(max)");
 
@@ -831,6 +834,12 @@ namespace Service.Catalog.Migrations
 
                     b.Property<string>("CodigoPostal")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Colonia")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ColoniaId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Contrasena")
                         .IsRequired()
@@ -866,6 +875,9 @@ namespace Service.Catalog.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("Numero")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("NumeroDeCuenta")
                         .HasColumnType("nvarchar(max)");
 
@@ -883,6 +895,9 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("RazonSocial")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RegimenFiscal")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("UsuarioCreoId")

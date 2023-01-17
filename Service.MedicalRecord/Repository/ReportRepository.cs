@@ -42,6 +42,11 @@ namespace Service.MedicalRecord.Repository
                 .AsQueryable();
 
             var query = report.ToQueryString();
+            
+            if (search.Ciudad != null && search.Ciudad.Count > 0)
+            {
+                report = report.Where(x => search.Ciudad.Contains(x.Sucursal.Ciudad));
+            }
 
             if (search.SucursalId != null && search.SucursalId.Count > 0)
             {
@@ -151,6 +156,11 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Paquete)
                 .AsQueryable();
 
+            if (search.Ciudad != null && search.Ciudad.Count > 0)
+            {
+                report = report.Where(x => search.Ciudad.Contains(x.Solicitud.Sucursal.Ciudad));
+            }
+
             if (search.SucursalId != null && search.SucursalId.Count > 0)
             {
                 report = report.Where(x => search.SucursalId.Contains(x.Solicitud.SucursalId));
@@ -183,6 +193,12 @@ namespace Service.MedicalRecord.Repository
                 .AsQueryable();
 
             var query = report.ToQueryString();
+
+            if (search.Ciudad != null && search.Ciudad.Count > 0)
+            {
+                report = report.Where(x => search.Ciudad.Contains(x.Sucursal.Ciudad));
+                query = report.ToQueryString();
+            }
 
             if (search.SucursalId != null && search.SucursalId.Count > 0)
             {

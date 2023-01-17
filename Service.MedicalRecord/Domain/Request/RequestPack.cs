@@ -17,9 +17,6 @@ namespace Service.MedicalRecord.Domain.Request
         public string Promocion { get; set; }
         public int DepartamentoId { get; set; }
         public int AreaId { get; set; }
-        public bool AplicaDescuento { get; set; }
-        public bool AplicaCargo { get; set; }
-        public bool AplicaCopago { get; set; }
         public decimal Dias { get; set; }
         public int Horas { get; set; }
         public decimal Precio { get; set; }
