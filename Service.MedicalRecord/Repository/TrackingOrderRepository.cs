@@ -223,6 +223,9 @@ namespace Service.MedicalRecord.Repository
             return await _context.CAT_Seguimiento_Ruta
                 .Where(x => x.Id == orderId)
                 .Include(x => x.Estudios)
+                .ThenInclude(x => x.SolicitudEstudio.Tapon)
+                .Include(x => x.Estudios)
+                .ThenInclude(x=>x.Solicitud.Expediente)
                 .FirstOrDefaultAsync();
         }
 
