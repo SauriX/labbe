@@ -559,6 +559,7 @@ namespace Service.MedicalRecord.Application
                 _transaction.BeginTransaction();
 
                 var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
+
                 if ((requestDto.Estudios == null || requestDto.Estudios.Count == 0)
                     && (requestDto.Paquetes == null || requestDto.Paquetes.Count == 0))
                 {
