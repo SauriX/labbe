@@ -149,6 +149,7 @@ namespace Service.MedicalRecord.Application
 
             return $"{date}{consecutive:D5}";
         }
-       
+
+        
     }
 }
