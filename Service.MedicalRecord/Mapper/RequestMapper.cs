@@ -13,8 +13,6 @@ namespace Service.MedicalRecord.Mapper
         private const byte VIGENTE = 1;
         private const byte PARTICULAR = 2;
         private const byte URGENCIA_NORMAL = 1;
-        //private const byte DESCUENTO_PORCENTAJE = 1;
-        private const byte DESCUENTO_DINERO = 2;
 
         public static RequestDto ToRequestDto(this Request model)
         {
@@ -56,7 +54,7 @@ namespace Service.MedicalRecord.Mapper
                 Procedencia = x.Procedencia == PARTICULAR ? "Particular" : "COMPAÑIÍA",
                 Factura = "",
                 Importe = x.TotalEstudios,
-                Descuento = x.DescuentoTipo == DESCUENTO_DINERO ? x.Descuento : x.Total * x.Descuento,
+                Descuento = x.Descuento,
                 Total = x.Total,
                 Saldo = x.Saldo,
                 FolioWeeClinic = x.FolioWeeClinic,
@@ -98,11 +96,8 @@ namespace Service.MedicalRecord.Mapper
             {
                 TotalEstudios = model.TotalEstudios,
                 Descuento = model.Descuento,
-                DescuentoTipo = model.DescuentoTipo,
                 Cargo = model.Cargo,
-                CargoTipo = model.CargoTipo,
                 Copago = model.Copago,
-                CopagoTipo = model.CopagoTipo,
                 Total = model.Total,
                 Saldo = model.Saldo,
             };
@@ -248,9 +243,6 @@ namespace Service.MedicalRecord.Mapper
                 Horas = x.Horas,
                 DepartamentoId = x.DepartamentoId,
                 AreaId = x.AreaId,
-                AplicaDescuento = x.AplicaDescuento,
-                AplicaCargo = x.AplicaCargo,
-                AplicaCopago = x.AplicaCopago,
                 Precio = x.Precio,
                 Descuento = x.Descuento,
                 DescuentoPorcentaje = x.DescuentoPorcentaje,
@@ -288,9 +280,6 @@ namespace Service.MedicalRecord.Mapper
                 FechaEntrega = x.FechaEntrega,
                 DepartamentoId = x.DepartamentoId,
                 AreaId = x.AreaId,
-                AplicaDescuento = x.AplicaDescuento,
-                AplicaCargo = x.AplicaCargo,
-                AplicaCopago = x.AplicaCopago,
                 Precio = x.Precio,
                 Descuento = x.Descuento,
                 DescuentoPorcentaje = x.DescuentoPorcentaje,
@@ -395,9 +384,6 @@ namespace Service.MedicalRecord.Mapper
                     Promocion = x.Promocion,
                     DepartamentoId = x.DepartamentoId,
                     AreaId = x.AreaId,
-                    AplicaDescuento = x.AplicaDescuento,
-                    AplicaCargo = x.AplicaCargo,
-                    AplicaCopago = x.AplicaCopago,
                     Dias = x.Dias,
                     Horas = x.Horas,
                     Precio = x.Precio,
@@ -436,9 +422,6 @@ namespace Service.MedicalRecord.Mapper
                     DepartamentoId = x.DepartamentoId,
                     AreaId = x.AreaId,
                     EstatusId = study?.EstatusId ?? Status.RequestStudy.Pendiente,
-                    AplicaDescuento = x.AplicaDescuento,
-                    AplicaCargo = x.AplicaCargo,
-                    AplicaCopago = x.AplicaCopago,
                     Dias = x.Dias,
                     Horas = x.Horas,
                     FechaEntrega = x.FechaEntrega,

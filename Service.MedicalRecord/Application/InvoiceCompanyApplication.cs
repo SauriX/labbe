@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Service.MedicalRecord.Client.IClient;
+using Service.MedicalRecord.Domain.Invoice;
 
 namespace Service.MedicalRecord.Application
 {
@@ -32,11 +33,29 @@ namespace Service.MedicalRecord.Application
                 UsoCFDI = invoice.UsoCFDI,
                 RegimenFiscal = invoice.RegimenFiscal,
                 RFC = invoice.RFC,
-                Cliente = invoice.Cliente,
+                Cliente = new ClientDto
+                {
+                    RazonSocial = invoice.Cliente.RazonSocial,
+                    RFC = invoice.Cliente.RFC,
+                    RegimenFiscal = invoice.Cliente.RegimenFiscal,
+                    Correo = invoice.Cliente.Correo,
+                    Telefono = invoice.Cliente.Telefono,
+                    CodigoPostal = invoice.Cliente.CodigoPostal,
+                    Calle = invoice.Cliente.Calle,
+                    NumeroExterior = invoice.Cliente.NumeroExterior,
+                    NumeroInterior = "",
+                    Colonia = invoice.Cliente.Colonia,
+                    Ciudad = invoice.Cliente.Ciudad,
+                    Municipio = invoice.Cliente.Municipio,
+                    Estado = invoice.Cliente.Estado,
+                    Pais = invoice.Cliente.Pais,
+                },
+                
+                
                 Productos = invoice.Estudios.Select(x => new ProductDto
                 {
                     Clave = x.Clave,
-                    Descripcion = "",
+                    Descripcion = x.Estudio,
                     Precio = x.Precio,
                     Descuento = x.Descuento,
                     Cantidad = 1,
@@ -48,6 +67,71 @@ namespace Service.MedicalRecord.Application
             //var invoiceResponse = await _billingClient.CheckInPayment(invoiceDto);
          
             return await _billingClient.CheckInPayment(invoiceDto);
+        }
+
+        public async Task<InvoiceDto> CheckInPaymentCompany(InvoiceCompanyDto invoice)
+        {
+
+            InvoiceDto invoiceDto = new InvoiceDto
+            {
+                FormaPago = invoice.FormaPago,
+                MetodoPago = invoice.MetodoPago,
+                UsoCFDI = invoice.UsoCFDI,
+                RegimenFiscal = invoice.RegimenFiscal,
+                RFC = invoice.RFC,
+                SolicitudesId = invoice.SolicitudesId,
+                Cliente = new ClientDto
+                {
+                    RazonSocial = invoice.Cliente.RazonSocial,
+                    RFC = invoice.Cliente.RFC,
+                    RegimenFiscal = invoice.Cliente.RegimenFiscal,
+                    Correo = invoice.Cliente.Correo,
+                    Telefono = invoice.Cliente.Telefono,
+                    CodigoPostal = invoice.Cliente.CodigoPostal,
+                    Calle = invoice.Cliente.Calle,
+                    NumeroExterior = invoice.Cliente.NumeroExterior,
+                    NumeroInterior = "",
+                    Colonia = invoice.Cliente.Colonia,
+                    Ciudad = invoice.Cliente.Ciudad,
+                    Municipio = invoice.Cliente.Municipio,
+                    Estado = invoice.Cliente.Estado,
+                    Pais = invoice.Cliente.Pais,
+                },
+
+
+                Productos = invoice.Estudios.Select(x => new ProductDto
+                {
+                    Clave = x.Clave,
+                    Descripcion = x.Estudio,
+                    Precio = x.Precio,
+                    Descuento = x.Descuento,
+                    Cantidad = 1,
+
+                }).ToList(),
+
+            };
+
+            var invoiceResponse = await _billingClient.CheckInPaymentCompany(invoiceDto);
+
+            var invoiceCompany = invoice.ToInvoiceCompany(invoiceResponse);
+
+            List<RequestInvoiceCompany> requestsInvoiceCompany = new();
+
+            foreach (var solicitud in invoice.SolicitudesId)
+            {
+                requestsInvoiceCompany.Add(new RequestInvoiceCompany
+                {
+                    Activo = true,
+                    SolicitudId = solicitud,
+                    InvoiceCompanyId = invoiceCompany.Id,
+
+                });
+                
+            }
+
+            await _repository.CreateInvoiceCompanyData(invoiceCompany, requestsInvoiceCompany);
+
+            return invoiceResponse;
         }
 
         public async Task<InvoiceCompanyInfoDto> GetByFilter(InvoiceCompanyFilterDto filter)

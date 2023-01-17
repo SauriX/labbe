@@ -70,6 +70,20 @@ namespace Integration.Invoice.Service
 
             return data;
         }
+        public static async Task<string> Cancel(InvoiceCancelation data)
+        {
+            var facturapi = new FacturapiClient(API_KEY);
+
+            var invoiceData = new Dictionary<string, object>
+            {
+                ["motive"] = data.Motivo,
+                
+            };
+
+            var invoice = await facturapi.Invoice.CancelAsync(data.FacturapiId, invoiceData);
+
+            return invoice.CancellationStatus;
+        }
 
         public static async Task<Facturapi.Invoice> GetById(string invoiceId)
         {

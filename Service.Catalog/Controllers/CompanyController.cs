@@ -43,7 +43,7 @@ namespace Service.Catalog.Controllers
         [HttpPost]
         [Authorize(Policies.Create)]
         public async Task Create(CompanyFormDto Company)
-        {
+            {
 
             await _Services.Create(Company);
         }

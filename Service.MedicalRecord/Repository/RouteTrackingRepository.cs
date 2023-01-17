@@ -57,7 +57,7 @@ namespace Service.MedicalRecord.Repository
             }
             if (!string.IsNullOrEmpty(search.Sucursal))
             {
-                routeTrackingList = routeTrackingList.Where(x => search.Sucursal.Contains(x.SucursalOrigenId));
+                routeTrackingList = routeTrackingList.Where(x => search.Sucursal.Contains(x.SucursalDestinoId));
             }
             if (!string.IsNullOrEmpty(search.Buscar))
             {
@@ -103,7 +103,7 @@ namespace Service.MedicalRecord.Repository
             {
                 routeTrackingList = routeTrackingList.Where(x => search.Busqueda.Contains(x.Clave));
             }
-            routeTrackingList = routeTrackingList.Where(x =>  x.SucursalOrigenId == search.Sucursaldest);
+            routeTrackingList = routeTrackingList.Where(x =>  x.SucursalDestinoId == search.Sucursaldest);
             return await routeTrackingList.ToListAsync();
         }
         public async Task<RouteTracking> GetTracking(Guid Id) {

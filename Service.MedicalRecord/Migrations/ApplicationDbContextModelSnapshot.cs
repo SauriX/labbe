@@ -376,6 +376,73 @@ namespace Service.MedicalRecord.Migrations
                     b.ToTable("Cat_Captura_ResultadosPatologicos");
                 });
 
+            modelBuilder.Entity("Service.MedicalRecord.Domain.Invoice.InvoiceCompany", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Estatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("FacturaId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FacturapiId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaModifico")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TipoFactura")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UsuarioCreoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UsuarioModificoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Factura_Compania");
+                });
+
+            modelBuilder.Entity("Service.MedicalRecord.Domain.Invoice.RequestInvoiceCompany", b =>
+                {
+                    b.Property<Guid>("SolicitudId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("InvoiceCompanyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("FechaCreo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<DateTime?>("FechaModifico")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UsuarioCreoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UsuarioModificoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("SolicitudId", "InvoiceCompanyId");
+
+                    b.HasIndex("InvoiceCompanyId");
+
+                    b.ToTable("Relacion_Solicitud_Factura_Compania");
+                });
+
             modelBuilder.Entity("Service.MedicalRecord.Domain.Invoice.Series", b =>
                 {
                     b.Property<Guid>("Id")
@@ -781,9 +848,6 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<decimal>("Cargo")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<byte>("CargoTipo")
-                        .HasColumnType("tinyint");
-
                     b.Property<string>("Clave")
                         .HasColumnType("nvarchar(max)");
 
@@ -796,14 +860,8 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<decimal>("Copago")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<byte>("CopagoTipo")
-                        .HasColumnType("tinyint");
-
                     b.Property<decimal>("Descuento")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<byte>("DescuentoTipo")
-                        .HasColumnType("tinyint");
 
                     b.Property<string>("EnvioCorreo")
                         .HasColumnType("nvarchar(max)");
@@ -949,15 +1007,6 @@ namespace Service.MedicalRecord.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("AplicaCargo")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("AplicaCopago")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("AplicaDescuento")
-                        .HasColumnType("bit");
-
                     b.Property<int>("AreaId")
                         .HasColumnType("int");
 
@@ -1094,15 +1143,6 @@ namespace Service.MedicalRecord.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("AplicaCargo")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("AplicaCopago")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("AplicaDescuento")
-                        .HasColumnType("bit");
 
                     b.Property<int?>("AreaId")
                         .HasColumnType("int");
@@ -1636,6 +1676,25 @@ namespace Service.MedicalRecord.Migrations
                     b.Navigation("Solicitud");
 
                     b.Navigation("SolicitudEstudio");
+                });
+
+            modelBuilder.Entity("Service.MedicalRecord.Domain.Invoice.RequestInvoiceCompany", b =>
+                {
+                    b.HasOne("Service.MedicalRecord.Domain.Invoice.InvoiceCompany", "InvoiceCompany")
+                        .WithMany()
+                        .HasForeignKey("InvoiceCompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Service.MedicalRecord.Domain.Request.Request", "Solicitud")
+                        .WithMany()
+                        .HasForeignKey("SolicitudId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("InvoiceCompany");
+
+                    b.Navigation("Solicitud");
                 });
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.MedicalRecord.MedicalRecordTaxData", b =>

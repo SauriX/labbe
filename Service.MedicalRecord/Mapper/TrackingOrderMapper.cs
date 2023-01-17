@@ -188,7 +188,7 @@ namespace Service.MedicalRecord.Mapper
             });
         }
 
-        public static IEnumerable<EstudiosListDto> ToStudiesRequestRouteDto(this IEnumerable<Domain.Request.RequestStudy> model, Guid orderId)
+        public static IEnumerable<EstudiosListDto> ToStudiesRequestRouteDto(this IEnumerable<TrackingOrderDetail> model, Guid orderId)
         {
             if (model == null) return null;
 
@@ -197,19 +197,20 @@ namespace Service.MedicalRecord.Mapper
             {
 
                 solicitudId = x.SolicitudId,
-                IsInRute = x.Solicitud.Estudios.Any(y => y.EstatusId == Status.RequestStudy.EnRuta && x.EstudioId == y.EstudioId),
+                IsInRute = x.SolicitudEstudio.EstatusId == Status.RequestStudy.EnRuta ,
                 orderId = orderId,
                 Estudio = new StudiesRequestRouteDto
                 {
-                    Estudio = x.Nombre,
+                    Estudio = x.Estudio,
                     EstudioId = x.EstudioId,
-                    Clave = x.Clave,
+                    Clave = x.SolicitudEstudio.Clave,
                     NombrePaciente = x.Solicitud.Expediente.NombreCompleto,
                     Solicitud = x.Solicitud.Clave,
-                    TaponNombre = x.Tapon?.Clave,
                     SolicitudId = x.Solicitud.Id,
                     ExpedienteId = x.Solicitud.ExpedienteId,
                     Escaneado = true,
+                    Temperatura = x.Temperatura
+
                 },
             });
         }

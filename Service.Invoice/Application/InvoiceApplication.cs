@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace Service.Billing.Application
 {
@@ -79,6 +80,33 @@ namespace Service.Billing.Application
                 throw;
             }
         }
+        public async Task<InvoiceDto> CreateInvoiceCompany(InvoiceDto invoiceDto)
+        {
+            
+            try
+            {
+                var invoice = invoiceDto.ToModelCompany();
+
+
+                var facturapiInvoice = invoiceDto.ToFacturapiDto();
+                facturapiInvoice.ClaveExterna = invoice.Id.ToString();
+
+                var facturapiResponse = await _invoiceClient.CreateInvoice(facturapiInvoice);
+
+                invoice.FacturapiId = facturapiResponse.FacturapiId;
+                await _repository.CreateInvoiceCompany(invoice);
+
+                invoiceDto.Id = invoice.Id;
+                invoiceDto.FacturapiId = facturapiResponse.FacturapiId;
+
+                return invoiceDto;
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
+        }
 
         public async Task<(byte[], string)> PrintInvoiceXML(Guid invoiceId)
         {
@@ -87,6 +115,14 @@ namespace Service.Billing.Application
             var xml = await _invoiceClient.GetInvoiceXML(invoice.FacturapiId);
 
             return new(xml, invoice.FacturapiId + ".xml");
+        }
+        public async Task<(byte[], string)> PrintInvoicePDF(Guid invoiceId)
+        {
+            var invoice = await GetExistingInvoice(invoiceId);
+
+            var pdf = await _invoiceClient.GetInvoicePDF(invoice.FacturapiId);
+
+            return new(pdf, invoice.FacturapiId + ".pdf");
         }
 
         private async Task<Invoice> GetExistingInvoice(Guid invoiceId)
@@ -100,5 +136,6 @@ namespace Service.Billing.Application
 
             return invoice;
         }
+
     }
 }

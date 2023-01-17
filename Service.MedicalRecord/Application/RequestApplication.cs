@@ -48,9 +48,6 @@ namespace Service.MedicalRecord.Application
         private readonly IMedicalRecordRepository _recordRepository;
         private readonly IBillingClient _billingClient;
 
-        private const byte PORCENTAJE = 1;
-        private const byte CANTIDAD = 2;
-
         public RequestApplication(
             ITransactionProvider transaction,
             IRequestRepository repository,
@@ -231,9 +228,6 @@ namespace Service.MedicalRecord.Application
             var newRequest = requestDto.ToModel();
             newRequest.MedicoId = MEDICS.A_QUIEN_CORRESPONDA;
             newRequest.CompañiaId = COMPANIES.PARTICULARES;
-            newRequest.CargoTipo = CANTIDAD;
-            newRequest.CopagoTipo = CANTIDAD;
-            newRequest.DescuentoTipo = CANTIDAD;
             newRequest.UsuarioCreoId = requestDto.UsuarioId;
             newRequest.UsuarioCreo = requestDto.Usuario;
 
@@ -276,7 +270,6 @@ namespace Service.MedicalRecord.Application
                 study.EstatusId = Status.RequestStudy.Pendiente;
                 study.Precio = weePrice.Paciente.Total + weePrice.Aseguradora.Total;
                 study.PrecioFinal = weePrice.Paciente.Total + weePrice.Aseguradora.Total;
-                study.AplicaCopago = weePrice.Total.Copago > 0;
                 study.EstudioWeeClinic = new RequestStudyWee(ws.IdNodo, ws.IdServicio, ws.Cubierto, weePrice.Paciente.Total, weePrice.Aseguradora.Total, ws.IsAvaliable, ws.RestanteDays, ws.Vigencia, ws.IsCancel);
             }
 
@@ -285,9 +278,6 @@ namespace Service.MedicalRecord.Application
 
             newRequest.MedicoId = MEDICS.A_QUIEN_CORRESPONDA;
             newRequest.CompañiaId = COMPANIES.PARTICULARES;
-            newRequest.CargoTipo = PORCENTAJE;
-            newRequest.CopagoTipo = PORCENTAJE;
-            newRequest.DescuentoTipo = PORCENTAJE;
             newRequest.UsuarioCreo = requestDto.Usuario;
 
             var weeData = weeStudies.First();
@@ -298,12 +288,9 @@ namespace Service.MedicalRecord.Application
             newRequest.Estudios = studies;
 
             newRequest.TotalEstudios = weePrices.Sum(x => x.Paciente.Total + x.Aseguradora.Total);
-            newRequest.Descuento = weePrices.Sum(x => x.Paciente.Descuento + x.Paciente.Descuento);
-            newRequest.DescuentoTipo = CANTIDAD;
+            newRequest.Descuento = weePrices.Sum(x => x.Paciente.Descuento + x.Aseguradora.Descuento);
             newRequest.Cargo = 0;
-            newRequest.CargoTipo = CANTIDAD;
             newRequest.Copago = weePrices.Sum(x => x.Paciente.Total);
-            newRequest.CopagoTipo = CANTIDAD;
             newRequest.Total = newRequest.TotalEstudios - (newRequest.TotalEstudios - newRequest.Copago);
             newRequest.Saldo = newRequest.Copago;
             newRequest.UsuarioModificoId = requestDto.UsuarioId;
@@ -572,6 +559,7 @@ namespace Service.MedicalRecord.Application
                 _transaction.BeginTransaction();
 
                 var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
+
                 if ((requestDto.Estudios == null || requestDto.Estudios.Count == 0)
                     && (requestDto.Paquetes == null || requestDto.Paquetes.Count == 0))
                 {
@@ -1121,11 +1109,8 @@ namespace Service.MedicalRecord.Application
 
                 request.TotalEstudios = assigned.Sum(x => x.PrecioFinal);
                 request.Descuento = assigned.Sum(x => x.Descuento);
-                request.DescuentoTipo = CANTIDAD;
                 request.Cargo = 0;
-                request.CargoTipo = CANTIDAD;
                 request.Copago = assigned.Sum(x => x.EstudioWeeClinic.TotalPaciente);
-                request.CopagoTipo = CANTIDAD;
                 request.Total = request.TotalEstudios - (request.TotalEstudios - request.Copago);
                 request.Saldo = request.Copago;
                 request.UsuarioModificoId = userId;
@@ -1159,38 +1144,38 @@ namespace Service.MedicalRecord.Application
             packs = packs.Where(x => true).ToList();
             payments = payments.Where(x => x.EstatusId.In(Status.RequestPayment.Pagado, Status.RequestPayment.Facturado)).ToList();
 
-            var studyAndPack = studies.Select(x => new { x.AplicaCargo, x.AplicaCopago, x.AplicaDescuento, x.Precio, x.PrecioFinal })
-                .Concat(packs.Select(x => new { x.AplicaCargo, x.AplicaCopago, x.AplicaDescuento, x.Precio, x.PrecioFinal }));
+            //var studyAndPack = studies.Select(x => new { x.AplicaCargo, x.AplicaCopago, x.AplicaDescuento, x.Precio, x.PrecioFinal })
+            //    .Concat(packs.Select(x => new { x.AplicaCargo, x.AplicaCopago, x.AplicaDescuento, x.Precio, x.PrecioFinal }));
 
-            totals ??= request.ToRequestTotalDto();
+            //totals ??= request.ToRequestTotalDto();
 
-            var totalStudies = studyAndPack.Sum(x => x.PrecioFinal);
-            var final = totalStudies - totals.Descuento + totals.Cargo;
+            //var totalStudies = studyAndPack.Sum(x => x.PrecioFinal);
+            //var final = totalStudies - totals.Descuento + totals.Cargo;
 
-            var descT = totalStudies == 0 ? 0 : totals.DescuentoTipo == 1 ? Math.Round(studyAndPack.Where(x => x.AplicaDescuento).Sum(x => x.Precio) * totals.Descuento / 100, 2) : totals.Descuento;
-            var descP = totalStudies == 0 ? 0 : totals.DescuentoTipo == 1 ? totals.Descuento : Math.Round(studyAndPack.Where(x => x.AplicaDescuento).Sum(x => x.Precio) * 100 / totalStudies, 2);
+            //var descT = totalStudies == 0 ? 0 : totals.DescuentoTipo == 1 ? Math.Round(studyAndPack.Where(x => x.AplicaDescuento).Sum(x => x.Precio) * totals.Descuento / 100, 2) : totals.Descuento;
+            //var descP = totalStudies == 0 ? 0 : totals.DescuentoTipo == 1 ? totals.Descuento : Math.Round(studyAndPack.Where(x => x.AplicaDescuento).Sum(x => x.Precio) * 100 / totalStudies, 2);
 
-            var charT = totalStudies == 0 ? 0 : totals.CargoTipo == 1 ? Math.Round(studyAndPack.Where(x => x.AplicaCargo).Sum(x => x.Precio) * totals.Cargo / 100, 2) : totals.Cargo;
-            var charP = totalStudies == 0 ? 0 : totals.CargoTipo == 1 ? totals.Cargo : Math.Round(studyAndPack.Where(x => x.AplicaCargo).Sum(x => x.Precio) * 100 / totalStudies, 2);
+            //var charT = totalStudies == 0 ? 0 : totals.CargoTipo == 1 ? Math.Round(studyAndPack.Where(x => x.AplicaCargo).Sum(x => x.Precio) * totals.Cargo / 100, 2) : totals.Cargo;
+            //var charP = totalStudies == 0 ? 0 : totals.CargoTipo == 1 ? totals.Cargo : Math.Round(studyAndPack.Where(x => x.AplicaCargo).Sum(x => x.Precio) * 100 / totalStudies, 2);
 
-            var copT = totalStudies == 0 ? 0 : request.EsWeeClinic ? studies.Sum(x => x.EstudioWeeClinic.TotalPaciente) :
-                totals.CopagoTipo == 1 ? Math.Round(studyAndPack.Where(x => x.AplicaCopago).Sum(x => x.Precio) * totals.Copago / 100, 2) : totals.Copago;
-            var copP = totalStudies == 0 ? 0 : totals.CopagoTipo == 1 ? totals.Copago : Math.Round(studyAndPack.Where(x => x.AplicaCopago).Sum(x => x.Precio) * 100 / totalStudies, 2);
+            //var copT = totalStudies == 0 ? 0 : request.EsWeeClinic ? studies.Sum(x => x.EstudioWeeClinic.TotalPaciente) :
+            //    totals.CopagoTipo == 1 ? Math.Round(studyAndPack.Where(x => x.AplicaCopago).Sum(x => x.Precio) * totals.Copago / 100, 2) : totals.Copago;
+            //var copP = totalStudies == 0 ? 0 : totals.CopagoTipo == 1 ? totals.Copago : Math.Round(studyAndPack.Where(x => x.AplicaCopago).Sum(x => x.Precio) * 100 / totalStudies, 2);
 
-            var finalTotal = totalStudies - descT + charT;
-            var userTotal = copT > 0 ? copT : totalStudies - descT + charT;
+            //var finalTotal = totalStudies - descT + charT;
+            //var userTotal = copT > 0 ? copT : totalStudies - descT + charT;
 
-            var balance = finalTotal - payments.Sum(x => x.Cantidad);
+            //var balance = finalTotal - payments.Sum(x => x.Cantidad);
 
-            request.TotalEstudios = totalStudies;
-            request.Descuento = totals.Descuento;
-            request.DescuentoTipo = totals.DescuentoTipo;
-            request.Cargo = totals.Cargo;
-            request.CargoTipo = totals.CargoTipo;
-            request.Copago = request.EsWeeClinic ? copT : totals.Copago;
-            request.CopagoTipo = totals.CopagoTipo;
-            request.Total = userTotal;
-            request.Saldo = balance;
+            //request.TotalEstudios = totalStudies;
+            //request.Descuento = totals.Descuento;
+            //request.DescuentoTipo = totals.DescuentoTipo;
+            //request.Cargo = totals.Cargo;
+            //request.CargoTipo = totals.CargoTipo;
+            //request.Copago = request.EsWeeClinic ? copT : totals.Copago;
+            //request.CopagoTipo = totals.CopagoTipo;
+            //request.Total = userTotal;
+            //request.Saldo = balance;
             request.UsuarioModificoId = userId;
             request.FechaModifico = DateTime.Now;
 
