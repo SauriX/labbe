@@ -103,6 +103,18 @@ namespace Service.Catalog.Application
             return branch.ToBranchFormDto();
         }
 
+        public async Task<BranchFormDto> GetByName(string name)
+        {
+            var branch = await _repository.GetByName(name);
+
+            if (branch == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
+            }
+
+            return branch.ToBranchFormDto();
+        }
+
         public async Task<string> GetCodeRange(Guid id)
         {
             var codeRange = await _repository.GetCodeRange(id);

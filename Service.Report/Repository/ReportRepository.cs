@@ -241,7 +241,7 @@ namespace Service.Report.Repository
             return budget;
         }
 
-        public async Task<List<SamplesCosts>> GetSamplesCostsByDate(ReportFilterDto search)
+        public async Task<List<SamplesCosts>> GetSamplesCostsByDate(ReportModalFilterDto search)
         {
             var samplesCosts = await _context.CAT_CostosToma.Where(x => x.FechaAlta.Date >= search.Fecha.First().Date && x.FechaAlta.Date <= search.Fecha.Last().Date).ToListAsync();
 
