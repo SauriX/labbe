@@ -16,4 +16,10 @@ namespace Service.Catalog.Dtos.Catalog
         public DateTime Fecha { get; set; }
         public IEnumerable<BudgetBranchListDto> Sucursales { get; set; }
     }
+
+    public class ServiceUpdateDto
+    {
+        public int Id { get; set; }
+        public decimal CostoFijo { get; set; }
+    }
 }

@@ -17,7 +17,16 @@ namespace Service.Report.Dtos
         public DateTime FechaFinal { get; set; }
         public List<DateTime> Hora { get; set; }
         public bool Grafica { get; set; }
-        public string User { get; set; } 
+        public string User { get; set; }
+        public List<int> Servicios { get; set; }
+        public List<string> Ciudad { get; set; }
+    }
 
+    public class ReportModalFilterDto
+    {
+        public List<string> Servicios { get; set; }
+        public List<string> Ciudad { get; set; }
+        public List<Guid> SucursalId { get; set; }
+        public List<DateTime> Fecha { get; set; }
     }
 }

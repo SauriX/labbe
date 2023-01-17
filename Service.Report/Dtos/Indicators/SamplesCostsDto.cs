@@ -9,5 +9,6 @@ namespace Service.Report.Dtos.Indicators
         public Guid SucursalId { get; set; }
         public string Sucursal { get; set; }
         public DateTime FechaAlta { get; set; }
+        public string Aplica { get; set; }
     }
 }

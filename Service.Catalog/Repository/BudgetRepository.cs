@@ -1,7 +1,9 @@
 ﻿using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
+using MoreLinq;
 using Service.Catalog.Context;
 using Service.Catalog.Domain.Catalog;
+using Service.Catalog.Dtos.Catalog;
 using Service.Catalog.Repository.IRepository;
 using System;
 using System.Collections.Generic;
@@ -51,15 +53,34 @@ namespace Service.Catalog.Repository
             return budgets;
         }
 
-        public async Task<List<BudgetBranch>> GetBudgetsByBranch(List<Guid> branchId)
+        public async Task<List<BudgetBranch>> GetBudgetsByBranch(BudgetFilterDto search)
         {
-            var budgets = await _context.Relacion_Presupuesto_Sucursal
+            var budgets = _context.Relacion_Presupuesto_Sucursal
                 .Include(x => x.Sucursal)
                 .Include(x => x.CostoFijo)
-                .Where(x => branchId.Contains(x.SucursalId))
-                .ToListAsync();
+                .AsQueryable();
 
-            return budgets;
+            if (search.Ciudad != null && search.Ciudad.Count > 0)
+            {
+                budgets = budgets.Where(x => search.Ciudad.Contains(x.Ciudad));
+            }
+
+            if (search.SucursalId != null && search.SucursalId.Count > 0)
+            {
+                budgets = budgets.Where(x => search.SucursalId.Contains(x.SucursalId));
+            }
+
+            if (search.Servicios != null && search.Servicios.Count > 0)
+            {
+                budgets = budgets.Where(x => search.Servicios.Contains(x.CostoFijo.Nombre));
+            }
+
+            if (search.Fecha != null)
+            {
+                budgets = budgets.Where(x => x.FechaCreo.Date >= search.Fecha.First().Date && x.FechaCreo.Date <= search.Fecha.Last().Date);
+            }
+
+            return await budgets.ToListAsync();
         }
 
         public async Task<Budget> GetById(int id)
@@ -110,6 +131,13 @@ namespace Service.Catalog.Repository
                 transaction.Rollback();
                 throw;
             }
+        }
+
+        public async Task CreateList(List<Budget> budgets)
+        {
+            _context.CAT_Presupuestos.AddRange(budgets);
+
+            await _context.SaveChangesAsync();
         }
 
         public async Task Update(Budget budget)
