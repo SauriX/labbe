@@ -39,6 +39,12 @@ namespace Service.MedicalRecord.Controllers
         {
             return await _service.CheckInPayment(invoice);
         }
+        [HttpPost("checkin/company")]
+        [Authorize(Policies.Access)]
+        public async Task<InvoiceDto> CheckInPaymentCompany(InvoiceCompanyDto invoice)
+        {
+            return await _service.CheckInPaymentCompany(invoice);
+        }
 
     }
 }

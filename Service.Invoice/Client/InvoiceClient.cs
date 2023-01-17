@@ -89,5 +89,45 @@ namespace Service.Billing.Client
                 throw;
             }
         }
+        public async Task<byte[]> GetInvoicePDF(string facturapiId)
+        {
+            try
+            {
+                var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Invoice")}/api/invoice/pdf/{facturapiId}");
+
+                if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+                {
+                    return await response.Content.ReadAsByteArrayAsync();
+                }
+
+                var error = await response.Content.ReadFromJsonAsync<ClientExceptionFramework>();
+
+                throw new CustomException(HttpStatusCode.BadRequest, error.ExceptionMessage);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public async Task<byte[]> Cancel(InvoiceCancelation factura)
+        {
+            try
+            {
+                var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Invoice")}/api/invoice/pdf/{factura.FacturapiId}");
+
+                if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+                {
+                    return await response.Content.ReadAsByteArrayAsync();
+                }
+
+                var error = await response.Content.ReadFromJsonAsync<ClientExceptionFramework>();
+
+                throw new CustomException(HttpStatusCode.BadRequest, error.ExceptionMessage);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
