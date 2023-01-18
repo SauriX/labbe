@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.MedicalRecord.Context;
 
 namespace Service.MedicalRecord.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230118190148_Eliminar_series")]
+    partial class Eliminar_series
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -885,12 +887,6 @@ namespace Service.MedicalRecord.Migrations
 
                     b.Property<decimal>("Saldo")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Serie")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SerieNumero")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("SucursalId")
                         .HasColumnType("uniqueidentifier");
