@@ -120,6 +120,13 @@ namespace Service.MedicalRecord.Repository
             return request;
         }
 
+        public async Task<string> GetReceiptSeries(Guid branchId)
+        {
+            var series = await _context.Series.OrderBy(x => x.FechaCreo).LastOrDefaultAsync(x => x.SucursalId == branchId && !x.EsFacturaORecibo);
+
+            return series?.Clave;
+        }
+
         public async Task<string> GetLastCode(Guid branchId, string date)
         {
             var lastRequest = await _context.CAT_Solicitud
@@ -228,9 +235,12 @@ namespace Service.MedicalRecord.Repository
 
         public async Task<string> GetLastPaymentCode(string serie, string year)
         {
-            var last = await _context.Relacion_Solicitud_Pago.OrderBy(x => x.FechaCreo).LastOrDefaultAsync(x => x.Serie == serie && x.Numero.StartsWith(year));
+            var last = await _context.CAT_Solicitud
+                .Where(x => x.Serie == serie && x.SerieNumero.StartsWith(year))
+                .OrderBy(x => Convert.ToInt32(x.SerieNumero ?? "0"))
+                .LastOrDefaultAsync();
 
-            return last?.Numero;
+            return last?.Serie;
         }
 
         public async Task Create(Request request)

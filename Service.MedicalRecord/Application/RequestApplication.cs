@@ -234,6 +234,16 @@ namespace Service.MedicalRecord.Application
             newRequest.UsuarioCreoId = requestDto.UsuarioId;
             newRequest.UsuarioCreo = requestDto.Usuario;
 
+            var series = await _repository.GetReceiptSeries(requestDto.SucursalId);
+
+            if (series != null)
+            {
+                var next = await GetNextPaymentNumber(series);
+
+                newRequest.Serie = series;
+                newRequest.SerieNumero = next;
+            }
+
             await _repository.Create(newRequest);
 
             return newRequest.Id.ToString();
