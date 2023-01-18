@@ -20,7 +20,7 @@ namespace Service.Catalog.Repository
 
         public async Task<List<Series>> GetByBranch(Guid branchId, byte type)
         {
-            var series = await _context.CAT_Serie.Where(x => x.SucursalId == branchId && x.TipoSerie == type).ToListAsync();
+            var series = await _context.CAT_Serie.Where(x => x.SucursalId == branchId && x.TipoSerie == type && x.Activo).ToListAsync();
 
             return series;
         }
