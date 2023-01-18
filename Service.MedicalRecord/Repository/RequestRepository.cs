@@ -120,13 +120,6 @@ namespace Service.MedicalRecord.Repository
             return request;
         }
 
-        public async Task<string> GetReceiptSeries(Guid branchId)
-        {
-            var series = await _context.Series.OrderBy(x => x.FechaCreo).LastOrDefaultAsync(x => x.SucursalId == branchId && !x.EsFacturaORecibo);
-
-            return series?.Clave;
-        }
-
         public async Task<string> GetLastCode(Guid branchId, string date)
         {
             var lastRequest = await _context.CAT_Solicitud

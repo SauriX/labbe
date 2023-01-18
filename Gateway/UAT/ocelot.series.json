@@ -1,0 +1,15 @@
+﻿{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/series/branch/{branchId}/{type}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/series/branch/{branchId}/{type}",
+      "UpstreamHttpMethod": [ "GET" ]
+    }
+  ]
+}

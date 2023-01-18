@@ -13,7 +13,6 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task<Request> FindAsync(Guid id);
         Task<List<Request>> GetByFilter(RequestFilterDto filter);
         Task<Request> GetById(Guid id);
-        Task<string> GetReceiptSeries(Guid branchId);
         Task<string> GetLastCode(Guid branchId, string date);
         Task<string> GetLastPathologicalCode(Guid branchId, string date, string type);
         Task<RequestStudy> GetStudyById(Guid requestId, int studyId);
