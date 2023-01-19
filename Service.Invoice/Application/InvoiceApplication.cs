@@ -1,6 +1,7 @@
 ﻿using Service.Billing.Application.IApplication;
 using Service.Billing.Client.IClient;
 using Service.Billing.Domain.Invoice;
+using Service.Billing.Dtos.Facturapi;
 using Service.Billing.Dtos.Invoice;
 using Service.Billing.Mapper;
 using Service.Billing.Repository.IRepository;
@@ -107,22 +108,48 @@ namespace Service.Billing.Application
                 throw;
             }
         }
-
-        public async Task<(byte[], string)> PrintInvoiceXML(Guid invoiceId)
+        public async Task<string> Cancel(InvoiceCancelation invoiceDto)
         {
-            var invoice = await GetExistingInvoice(invoiceId);
 
-            var xml = await _invoiceClient.GetInvoiceXML(invoice.FacturapiId);
+            try
+            {
+                
 
-            return new(xml, invoice.FacturapiId + ".xml");
+                var facturapiResponse = await _invoiceClient.Cancel(invoiceDto);
+                if (facturapiResponse.ToLower() == "canceled")
+                {
+                    var invoice = await _repository.GetInvoiceCompanyByFacturapiId(invoiceDto.FacturapiId);
+
+                    invoice.Estatus = "Cancelado";
+
+                    await _repository.UpdateInvoiceCompany(invoice);
+                }
+
+
+                return facturapiResponse;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
-        public async Task<(byte[], string)> PrintInvoicePDF(Guid invoiceId)
+
+        public async Task<(byte[], string)> PrintInvoiceXML(string invoiceId)
         {
-            var invoice = await GetExistingInvoice(invoiceId);
+            //var invoice = await GetExistingInvoice(invoiceId);
 
-            var pdf = await _invoiceClient.GetInvoicePDF(invoice.FacturapiId);
+            var xml = await _invoiceClient.GetInvoiceXML(invoiceId);
 
-            return new(pdf, invoice.FacturapiId + ".pdf");
+            return new(xml, invoiceId + ".xml");
+        }
+        public async Task<(byte[], string)> PrintInvoicePDF(string invoiceId)
+        {
+            //var invoice = await GetExistingInvoice(invoiceId);
+
+            var pdf = await _invoiceClient.GetInvoicePDF(invoiceId);
+
+            return new(pdf, invoiceId + ".pdf");
         }
 
         private async Task<Invoice> GetExistingInvoice(Guid invoiceId)

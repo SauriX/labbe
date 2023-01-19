@@ -7,6 +7,7 @@ using System;
 using Microsoft.AspNetCore.Authorization;
 using Shared.Dictionary;
 using Service.Billing.Dtos.Invoice;
+using Service.Billing.Dtos.Facturapi;
 
 namespace Service.Billing.Controllers
 {
@@ -50,9 +51,14 @@ namespace Service.Billing.Controllers
         {
             return await _service.CreateInvoiceCompany(invoiceDto);
         }
+        [HttpPost("cancel")]
+        public async Task<string> CancelInvoiceCompany(InvoiceCancelation invoiceDto)
+        {
+            return await _service.Cancel(invoiceDto);
+        }
 
         [HttpPost("print/xml/{invoiceId}")]
-        public async Task<IActionResult> PrintInvoiceXML(Guid invoiceId)
+        public async Task<IActionResult> PrintInvoiceXML(string invoiceId)
         {
             var (file, fileName) = await _service.PrintInvoiceXML(invoiceId);
 
@@ -60,7 +66,7 @@ namespace Service.Billing.Controllers
         }
 
         [HttpPost("print/pdf/{invoiceId}")]
-        public async Task<IActionResult> PrintInvoicePDF(Guid invoiceId)
+        public async Task<IActionResult> PrintInvoicePDF(string invoiceId)
         {
             var (file, fileName) = await _service.PrintInvoicePDF(invoiceId);
 

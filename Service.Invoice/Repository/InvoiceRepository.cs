@@ -115,5 +115,20 @@ namespace Service.Billing.Repository
                 throw;
             }
         }
+        public async Task UpdateInvoiceCompany(InvoiceCompany invoiceCompnay)
+        {
+            _context.CAT_Factura_Companias.Update(invoiceCompnay);
+
+            await _context.SaveChangesAsync();
+
+            _context.ChangeTracker.Clear();
+        }
+        public async Task<InvoiceCompany> GetInvoiceCompanyByFacturapiId(string id)
+        {
+            var request = await _context.CAT_Factura_Companias
+                .FirstOrDefaultAsync(x => x.FacturapiId == id);
+
+            return request;
+        }
     }
 }

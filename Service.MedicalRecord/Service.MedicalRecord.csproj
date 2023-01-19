@@ -48,6 +48,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\layout\excel\trackingOrder\" />
+    <Folder Include="wwwroot\temp\Invoices\" />
   </ItemGroup>
 
 </Project>

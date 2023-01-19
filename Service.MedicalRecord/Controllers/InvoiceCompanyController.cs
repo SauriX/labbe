@@ -48,7 +48,7 @@ namespace Service.MedicalRecord.Controllers
         {
             return await _service.CheckInPaymentCompany(invoice);
         }
-        [HttpGet("download/pdf/{facturapiId}")]
+        [HttpPost("download/pdf/{facturapiId}")]
         [Authorize(Policies.Access)]
         public async Task<IActionResult> DownloadPDF(string facturapiId)
         {
@@ -57,7 +57,7 @@ namespace Service.MedicalRecord.Controllers
             return File(file, MimeType.PDF, "Facturacion compañias.pdf");
         }
 
-        [HttpGet("print/pdf{facturapiId}")]
+        [HttpPost("print/pdf/{facturapiId}")]
         [Authorize(Policies.Access)]
         public async Task<IActionResult>  PrintPDF(string facturapiId)
         {
@@ -65,6 +65,33 @@ namespace Service.MedicalRecord.Controllers
 
             return File(file, MimeType.PDF, "Facturacion compañias.pdf");
         }
+        [HttpPost("send")]
+        [Authorize(Policies.Access)]
+        public async Task<bool> EnvioFactura(InvoiceCompanyDeliverDto envio)
+        {
+            await _service.EnvioFactura(envio);
+
+            return true;
+        }
+        [HttpPost("cancel")]
+        [Authorize(Policies.Access)]
+        public async Task<string> CancelInvoiceCompany(InvoiceCancelation invoice)
+        {
+            return await _service.Cancel(invoice);
+        }
+
+        [HttpPost("ticket")]
+        [Authorize(Policies.Download)]
+        public async Task<IActionResult> PrintTicket(ReceiptCompanyDto receipt)
+        {
+            var userName = HttpContext.Items["userName"].ToString();
+
+            var file = await _service.PrintTicket(receipt);
+
+            return File(file, MimeType.PDF, "ticket.pdf");
+        }
+
+
 
     }
 }

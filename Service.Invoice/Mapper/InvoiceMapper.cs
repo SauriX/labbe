@@ -120,6 +120,7 @@ namespace Service.Billing.Mapper
                 ConNombre = dto.ConNombre,
                 EnvioCorreo = dto.EnvioCorreo,
                 EnvioWhatsapp = dto.EnvioWhatsapp,
+                Estatus = "Facturado",
                 Solicitudes = dto.SolicitudesId.Select(x => new InvoiceCompanyRequests
                 {
                     Id = Guid.NewGuid(),
