@@ -109,25 +109,22 @@ namespace Service.Billing.Client
                 throw;
             }
         }
-        public async Task<byte[]> Cancel(InvoiceCancelation factura)
+        public async Task<string> Cancel(InvoiceCancelation factura)
         {
-            try
+            var json = JsonConvert.SerializeObject(factura);
+
+            var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Invoice")}/api/invoice/cancel", stringContent);
+
+            if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
             {
-                var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Invoice")}/api/invoice/pdf/{factura.FacturapiId}");
-
-                if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
-                {
-                    return await response.Content.ReadAsByteArrayAsync();
-                }
-
-                var error = await response.Content.ReadFromJsonAsync<ClientExceptionFramework>();
-
-                throw new CustomException(HttpStatusCode.BadRequest, error.ExceptionMessage);
+                return await response.Content.ReadFromJsonAsync<string>();
             }
-            catch (Exception)
-            {
-                throw;
-            }
+
+            var error = await response.Content.ReadFromJsonAsync<ClientExceptionFramework>();
+
+            throw new CustomException(HttpStatusCode.BadRequest, error.ExceptionMessage);
         }
     }
 }

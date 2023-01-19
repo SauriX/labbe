@@ -11,5 +11,8 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<string> GetNextPaymentNumber(string serie);
         Task<InvoiceDto> CheckInPayment(InvoiceCompanyDto invoice);
         Task<InvoiceDto> CheckInPaymentCompany(InvoiceCompanyDto invoice);
+        Task<bool> EnvioFactura(InvoiceCompanyDeliverDto envio);
+        Task<string> Cancel(InvoiceCancelation invoiceDto);
+        Task<byte[]> PrintTicket(ReceiptCompanyDto receipt);
     }
 }

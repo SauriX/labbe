@@ -12,6 +12,7 @@ namespace Service.MedicalRecord.Client.IClient
     public interface IPdfClient
     {
         Task<byte[]> GenerateTicket(RequestTicketDto ticket);
+        Task<byte[]> GenerateInvoiceCompanyTicket(RequestTicketDto ticket);
         Task<byte[]> GenerateQuotation();
         Task<byte[]> GenerateOrder(RequestOrderDto order);
         Task<byte[]> GenerateTags(List<RequestTagDto> tags);
