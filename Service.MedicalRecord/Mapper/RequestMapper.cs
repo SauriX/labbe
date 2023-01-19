@@ -118,6 +118,7 @@ namespace Service.MedicalRecord.Mapper
                 Serie = model.Serie,
                 Numero = model.Numero,
                 FacturaId = model.FacturaId,
+                SerieFactura = model.SerieFactura,
                 FacturapiId = model.FacturapiId,
                 UsuarioRegistra = model.UsuarioRegistra,
                 EstatusId = model.EstatusId

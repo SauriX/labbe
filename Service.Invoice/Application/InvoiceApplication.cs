@@ -57,6 +57,9 @@ namespace Service.Billing.Application
             {
                 var invoice = invoiceDto.ToModel();
 
+                var seriesNo = await GetNextSeriesNumber(invoiceDto.Serie);
+                invoice.SerieNumero = seriesNo;
+
                 await _repository.Create(invoice);
 
                 var facturapiInvoice = invoiceDto.ToFacturapiDto();
@@ -71,6 +74,7 @@ namespace Service.Billing.Application
 
                 invoiceDto.Id = invoice.Id;
                 invoiceDto.FacturapiId = facturapiResponse.FacturapiId;
+                invoiceDto.SerieNumero = invoice.SerieNumero;
 
                 return invoiceDto;
             }
@@ -80,9 +84,10 @@ namespace Service.Billing.Application
                 throw;
             }
         }
+
         public async Task<InvoiceDto> CreateInvoiceCompany(InvoiceDto invoiceDto)
         {
-            
+
             try
             {
                 var invoice = invoiceDto.ToModelCompany();
@@ -103,7 +108,7 @@ namespace Service.Billing.Application
             }
             catch (Exception)
             {
-                
+
                 throw;
             }
         }
@@ -116,6 +121,7 @@ namespace Service.Billing.Application
 
             return new(xml, invoice.FacturapiId + ".xml");
         }
+
         public async Task<(byte[], string)> PrintInvoicePDF(Guid invoiceId)
         {
             var invoice = await GetExistingInvoice(invoiceId);
@@ -137,5 +143,14 @@ namespace Service.Billing.Application
             return invoice;
         }
 
+        public async Task<string> GetNextSeriesNumber(string serie)
+        {
+            var date = DateTime.Now.ToString("yy");
+
+            var lastCode = await _repository.GetLastSeriesCode(serie, date);
+            var consecutive = lastCode == null ? 1 : Convert.ToInt32(lastCode.Replace(date, "")) + 1;
+
+            return $"{date}{consecutive:D5}";
+        }
     }
 }
