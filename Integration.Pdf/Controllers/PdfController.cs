@@ -37,6 +37,28 @@ namespace Integration.Pdf.Controllers
 
             return result;
         }
+        [HttpPost]
+        [Route("invoiceCompany/ticket")]
+        public HttpResponseMessage InvoiceCompanyTicket(RequestTicketDto order)
+        {
+            var file = InvoiceCompanyTicketService.Generate(order);
+
+            var result = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new ByteArrayContent(file)
+            };
+
+            result.Content.Headers.ContentDisposition =
+                new ContentDispositionHeaderValue("attachment")
+                {
+                    FileName = "ticket.pdf"
+                };
+
+            result.Content.Headers.ContentType =
+                new MediaTypeHeaderValue("application/pdf");
+
+            return result;
+        }
 
         [HttpGet]
         [Route("quotation")]

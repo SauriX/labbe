@@ -1,108 +1,99 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/invoiceCompany/filter",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/invoiceCompany/filter",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 24048
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/invoiceCompany/filter",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/invoiceCompany/getConsecutiveBySerie/{serie}",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/invoiceCompany/getConsecutiveBySerie/{serie}",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 24048
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/invoiceCompany/getConsecutiveBySerie/{serie}",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/invoiceCompany/checkin",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/invoiceCompany/checkin",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 24048
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/invoiceCompany/checkin",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/invoiceCompany/checkin/company",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/invoiceCompany/checkin/company",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 24048
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/invoiceCompany/checkin/company",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/invoiceCompany/download/pdf/{facturapiId}",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/invoiceCompany/download/pdf/{facturapiId}",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 24048
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/invoiceCompany/download/pdf/{facturapiId}",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/invoiceCompany/print/pdf/{facturapiId}",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/invoiceCompany/print/pdf/{facturapiId}",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 24048
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/invoiceCompany/print/pdf/{facturapiId}",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/invoiceCompany/send",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/invoiceCompany/send",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 24048
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/invoiceCompany/send",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/invoiceCompany/cancel",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/invoiceCompany/cancel",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 24048
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/invoiceCompany/cancel",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/invoiceCompany/ticket",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/invoiceCompany/ticket",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 24048
+          "Host": "axsishost.online"
         }
       ],
       "UpstreamPathTemplate": "/api/invoiceCompany/ticket",
@@ -110,3 +101,4 @@
     }
   ]
 }
+

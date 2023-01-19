@@ -429,5 +429,38 @@ namespace Service.MedicalRecord.Repository
 
 
         }
+
+        public async Task UpdateInvoiceCompany(InvoiceCompany invoiceCompnay)
+        {
+            _context.Factura_Compania.Update(invoiceCompnay);
+
+            await _context.SaveChangesAsync();
+
+            _context.ChangeTracker.Clear();
+        }
+        public async Task<InvoiceCompany> GetInvoiceCompanyByFacturapiId(string id)
+        {
+            var request = await _context.Factura_Compania
+                .FirstOrDefaultAsync(x => x.FacturapiId == id);
+
+            return request;
+        }
+
+        public async Task<List<Domain.Request.RequestStudy>> GetRequestsStudyByListId(List<Guid> solicitudesId)
+        {
+            
+            return await _context.Relacion_Solicitud_Estudio
+                .Where(x => solicitudesId.Contains(x.SolicitudId))
+                .ToListAsync(); 
+
+        }
+        public async Task<List<Domain.Request.Request>> GetRequestsByListId(List<Guid> solicitudesId)
+        {
+
+            return await _context.CAT_Solicitud
+                .Where(x => solicitudesId.Contains(x.Id))
+                .ToListAsync();
+
+        }
     }
 }

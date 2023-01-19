@@ -25,6 +25,18 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/company/contacts/{Id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+
+        }
+      ],
+      "UpstreamPathTemplate": "/api/company/contacts/{Id}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/company",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -71,6 +83,6 @@
       ],
       "UpstreamPathTemplate": "/api/company/paswwordgenerator",
       "UpstreamHttpMethod": [ "POST" ]
-    },
+    }
   ]
 }
