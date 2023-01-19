@@ -34,7 +34,8 @@ namespace Service.MedicalRecord.Mapper
                 Registro = $"{model.FechaCreo:dd/MM/yyyy}",
                 TokenValidado = model.TokenValidado,
                 SaldoPendiente = model.Procedencia == PARTICULAR && model.Saldo > 0,
-
+                Urgencia = model.Urgencia,
+                Procedencia = model.Procedencia
             };
         }
 

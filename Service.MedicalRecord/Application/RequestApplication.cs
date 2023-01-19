@@ -24,6 +24,7 @@ using Service.MedicalRecord.Domain.Request;
 using AREAS = Shared.Dictionary.Catalogs.Area;
 using COMPANIES = Shared.Dictionary.Catalogs.Company;
 using MEDICS = Shared.Dictionary.Catalogs.Medic;
+using ORIGIN = Shared.Dictionary.Catalogs.Origin;
 using Service.MedicalRecord.Dtos.Promotion;
 using Service.MedicalRecord.Domain.Catalogs;
 using Service.MedicalRecord.Dtos.WeeClinic;
@@ -47,6 +48,8 @@ namespace Service.MedicalRecord.Application
         private readonly IRepository<Branch> _branchRepository;
         private readonly IMedicalRecordRepository _recordRepository;
         private readonly IBillingClient _billingClient;
+
+        private const byte URGENCIA_CARGO = 3;
 
         public RequestApplication(
             ITransactionProvider transaction,
@@ -230,6 +233,16 @@ namespace Service.MedicalRecord.Application
             newRequest.CompañiaId = COMPANIES.PARTICULARES;
             newRequest.UsuarioCreoId = requestDto.UsuarioId;
             newRequest.UsuarioCreo = requestDto.Usuario;
+
+            //var series = await _repository.GetReceiptSeries(requestDto.SucursalId);
+
+            //if (series != null)
+            //{
+            //    var next = await GetNextPaymentNumber(series);
+
+            //    newRequest.Serie = series;
+            //    newRequest.SerieNumero = next;
+            //}
 
             await _repository.Create(newRequest);
 
@@ -493,6 +506,9 @@ namespace Service.MedicalRecord.Application
         {
             var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
 
+            var prevOrigin = request.Procedencia;
+            var prevUrgency = request.Urgencia;
+
             request.Procedencia = requestDto.Procedencia;
             request.CompañiaId = requestDto.CompañiaId;
             request.MedicoId = requestDto.MedicoId;
@@ -505,6 +521,11 @@ namespace Service.MedicalRecord.Application
             request.FechaModifico = DateTime.Now;
 
             await _repository.Update(request);
+
+            if (requestDto.Procedencia != prevOrigin || requestDto.Urgencia != prevUrgency)
+            {
+                await UpdateTotals(requestDto.ExpedienteId, requestDto.SolicitudId, requestDto.UsuarioId);
+            }
         }
 
         public async Task SendTestEmail(RequestSendDto requestDto)
@@ -601,21 +622,9 @@ namespace Service.MedicalRecord.Application
                 var pathologicalCode = await GeneratePathologicalCode(request);
                 request.ClavePatologica = pathologicalCode;
 
-                //request.TotalEstudios = requestDto.Total.TotalEstudios;
-                //request.Descuento = requestDto.Total.Descuento;
-                //request.DescuentoTipo = requestDto.Total.DescuentoTipo;
-                //request.Cargo = requestDto.Total.Cargo;
-                //request.CargoTipo = requestDto.Total.CargoTipo;
-                //request.Copago = requestDto.Total.Copago;
-                //request.CopagoTipo = requestDto.Total.CopagoTipo;
-                //request.Total = requestDto.Total.Total;
-                //request.Saldo = requestDto.Total.Saldo;
-                //request.UsuarioModificoId = requestDto.UsuarioId;
-                //request.FechaModifico = DateTime.Now;
-
                 await _repository.Update(request);
 
-                await UpdateTotals(request.ExpedienteId, request.Id, requestDto.UsuarioId, requestDto.Total);
+                await UpdateTotals(request.ExpedienteId, request.Id, requestDto.UsuarioId);
 
                 _transaction.CommitTransaction();
 
@@ -1131,7 +1140,7 @@ namespace Service.MedicalRecord.Application
             }
         }
 
-        private async Task UpdateTotals(Guid recordId, Guid requestId, Guid userId, RequestTotalDto totals = null)
+        private async Task UpdateTotals(Guid recordId, Guid requestId, Guid userId)
         {
             var request = await GetExistingRequest(recordId, requestId);
 
@@ -1140,42 +1149,30 @@ namespace Service.MedicalRecord.Application
 
             var payments = await _repository.GetPayments(requestId);
 
-            studies = studies.Where(x => x.EstatusId != Status.RequestStudy.Cancelado).ToList();
-            packs = packs.Where(x => true).ToList();
+            studies = studies.Where(x => x.EstatusId != Status.RequestStudy.Cancelado && (x.EstudioWeeClinic == null || x.EstudioWeeClinic.Asignado)).ToList();
+            packs = packs.Where(x => !x.Cancelado).ToList();
             payments = payments.Where(x => x.EstatusId.In(Status.RequestPayment.Pagado, Status.RequestPayment.Facturado)).ToList();
 
-            //var studyAndPack = studies.Select(x => new { x.AplicaCargo, x.AplicaCopago, x.AplicaDescuento, x.Precio, x.PrecioFinal })
-            //    .Concat(packs.Select(x => new { x.AplicaCargo, x.AplicaCopago, x.AplicaDescuento, x.Precio, x.PrecioFinal }));
+            var studyAndPack = studies.Select(x => new { x.Descuento, x.Precio, x.PrecioFinal, Copago = x.EstudioWeeClinic?.TotalPaciente ?? 0 })
+                .Concat(packs.Select(x => new { x.Descuento, x.Precio, x.PrecioFinal, Copago = 0m }));
 
-            //totals ??= request.ToRequestTotalDto();
+            var totalStudies = studyAndPack.Sum(x => x.PrecioFinal);
 
-            //var totalStudies = studyAndPack.Sum(x => x.PrecioFinal);
-            //var final = totalStudies - totals.Descuento + totals.Cargo;
+            var discount = totalStudies == 0 ? 0 : studyAndPack.Sum(x => x.Descuento);
+            var charge = totalStudies == 0 ? 0 : request.Urgencia == URGENCIA_CARGO ? totalStudies * .10m : 0;
+            var cup = totalStudies == 0 ? 0 : request.EsWeeClinic ? studyAndPack.Sum(x => x.Copago) :
+                request.Procedencia == ORIGIN.COMPAÑIA ? payments.Sum(x => x.Cantidad) : 0;
 
-            //var descT = totalStudies == 0 ? 0 : totals.DescuentoTipo == 1 ? Math.Round(studyAndPack.Where(x => x.AplicaDescuento).Sum(x => x.Precio) * totals.Descuento / 100, 2) : totals.Descuento;
-            //var descP = totalStudies == 0 ? 0 : totals.DescuentoTipo == 1 ? totals.Descuento : Math.Round(studyAndPack.Where(x => x.AplicaDescuento).Sum(x => x.Precio) * 100 / totalStudies, 2);
+            var finalTotal = totalStudies - discount + charge;
+            var userTotal = cup > 0 ? cup : finalTotal;
+            var balance = finalTotal - payments.Sum(x => x.Cantidad);
 
-            //var charT = totalStudies == 0 ? 0 : totals.CargoTipo == 1 ? Math.Round(studyAndPack.Where(x => x.AplicaCargo).Sum(x => x.Precio) * totals.Cargo / 100, 2) : totals.Cargo;
-            //var charP = totalStudies == 0 ? 0 : totals.CargoTipo == 1 ? totals.Cargo : Math.Round(studyAndPack.Where(x => x.AplicaCargo).Sum(x => x.Precio) * 100 / totalStudies, 2);
-
-            //var copT = totalStudies == 0 ? 0 : request.EsWeeClinic ? studies.Sum(x => x.EstudioWeeClinic.TotalPaciente) :
-            //    totals.CopagoTipo == 1 ? Math.Round(studyAndPack.Where(x => x.AplicaCopago).Sum(x => x.Precio) * totals.Copago / 100, 2) : totals.Copago;
-            //var copP = totalStudies == 0 ? 0 : totals.CopagoTipo == 1 ? totals.Copago : Math.Round(studyAndPack.Where(x => x.AplicaCopago).Sum(x => x.Precio) * 100 / totalStudies, 2);
-
-            //var finalTotal = totalStudies - descT + charT;
-            //var userTotal = copT > 0 ? copT : totalStudies - descT + charT;
-
-            //var balance = finalTotal - payments.Sum(x => x.Cantidad);
-
-            //request.TotalEstudios = totalStudies;
-            //request.Descuento = totals.Descuento;
-            //request.DescuentoTipo = totals.DescuentoTipo;
-            //request.Cargo = totals.Cargo;
-            //request.CargoTipo = totals.CargoTipo;
-            //request.Copago = request.EsWeeClinic ? copT : totals.Copago;
-            //request.CopagoTipo = totals.CopagoTipo;
-            //request.Total = userTotal;
-            //request.Saldo = balance;
+            request.TotalEstudios = totalStudies;
+            request.Descuento = discount;
+            request.Cargo = charge;
+            request.Copago = cup;
+            request.Total = userTotal;
+            request.Saldo = balance;
             request.UsuarioModificoId = userId;
             request.FechaModifico = DateTime.Now;
 

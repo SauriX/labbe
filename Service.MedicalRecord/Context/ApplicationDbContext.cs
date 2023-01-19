@@ -41,7 +41,6 @@ namespace Service.MedicalRecord.Context
         public DbSet<TrackingOrderDetail> Relacion_Seguimiento_Solicitud { get; set; }
         public DbSet<RouteTracking> Cat_PendientesDeEnviar { get; set; }
         public DbSet<ClinicalResultsPathological> Cat_Captura_ResultadosPatologicos { get; set; }
-        public DbSet<Series> Series { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
