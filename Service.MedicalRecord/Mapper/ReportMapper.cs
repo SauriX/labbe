@@ -109,6 +109,7 @@ namespace Service.MedicalRecord.Mapper
                     ClavePatalogica = request.ClavePatologica ?? "",
                     SucursalId = request.SucursalId,
                     Sucursal = request.Sucursal.Nombre,
+                    Ciudad = request.Sucursal.Ciudad,
                     EstatusId = request.EstatusId,
                     NombreEstatus = request.Estatus?.Nombre,
                     Procedencia = request.Procedencia,

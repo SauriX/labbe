@@ -167,6 +167,7 @@ namespace Service.MedicalRecord.Repository
                     nameof(ClinicResults.ObservacionesId),
                 }
             };
+
             await _context.BulkUpdateAsync(newParameter, config);
         }
 

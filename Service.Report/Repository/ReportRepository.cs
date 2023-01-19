@@ -241,11 +241,41 @@ namespace Service.Report.Repository
             return budget;
         }
 
-        public async Task<List<SamplesCosts>> GetSamplesCostsByDate(ReportModalFilterDto search)
+        public async Task<List<SamplesCosts>> GetSamplesByDate(DateTime startDate, DateTime endDate)
         {
-            var samplesCosts = await _context.CAT_CostosToma.Where(x => x.FechaAlta.Date >= search.Fecha.First().Date && x.FechaAlta.Date <= search.Fecha.Last().Date).ToListAsync();
+            var sample = new List<SamplesCosts>();
+            if (startDate != endDate)
+            {
+                sample = await _context.CAT_CostosToma.Where(x => startDate.Month <= x.FechaAlta.Month && endDate.Month >= x.FechaAlta.Month).ToListAsync();
+            }
+            else
+            {
+                sample = await _context.CAT_CostosToma.Where(x => startDate.Month == x.FechaAlta.Month).ToListAsync();
+            }
 
-            return samplesCosts;
+            return sample;
+        }
+
+        public async Task<List<SamplesCosts>> GetSamplesCostsByFilter(ReportModalFilterDto search)
+        {
+            var samplesCosts = _context.CAT_CostosToma.AsQueryable();
+
+            if (search.Fecha != null)
+            {
+                samplesCosts = samplesCosts.Where(x => x.FechaAlta.Date >= search.Fecha.First().Date && x.FechaAlta.Date <= search.Fecha.Last().Date);
+            }
+
+            if (search.SucursalId != null && search.SucursalId.Count > 0)
+            {
+                samplesCosts = samplesCosts.Where(x => search.SucursalId.Contains(x.SucursalId));
+            }
+
+            if (search.Ciudad != null && search.Ciudad.Count > 0)
+            {
+                samplesCosts = samplesCosts.Where(x => search.Ciudad.Contains(x.Ciudad));
+            }
+
+            return await samplesCosts.ToListAsync();
         }
 
         public async Task CreateIndicators(Indicators indicator)
@@ -261,12 +291,12 @@ namespace Service.Report.Repository
 
             await _context.SaveChangesAsync();
         }
-        
+
         public async Task CreateSamples(List<SamplesCosts> sample)
         {
             await _context.BulkInsertAsync(sample);
         }
-        
+
         public async Task UpdateSamples(SamplesCosts sample)
         {
             _context.Update(sample);
@@ -294,6 +324,6 @@ namespace Service.Report.Repository
 
             return sample;
         }
-        
+
     }
 }
