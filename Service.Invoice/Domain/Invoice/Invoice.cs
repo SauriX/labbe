@@ -6,6 +6,8 @@ namespace Service.Billing.Domain.Invoice
     public class Invoice : BaseModel
     {
         public Guid Id { get; set; }
+        public string Serie { get; set; }
+        public string SerieNumero { get; set; }
         public string FacturapiId { get; set; }
         public string FormaPago { get; set; }
         public string MetodoPago { get; set; }

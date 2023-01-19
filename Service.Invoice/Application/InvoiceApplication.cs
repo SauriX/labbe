@@ -58,6 +58,9 @@ namespace Service.Billing.Application
             {
                 var invoice = invoiceDto.ToModel();
 
+                var seriesNo = await GetNextSeriesNumber(invoiceDto.Serie);
+                invoice.SerieNumero = seriesNo;
+
                 await _repository.Create(invoice);
 
                 var facturapiInvoice = invoiceDto.ToFacturapiDto();
@@ -72,6 +75,7 @@ namespace Service.Billing.Application
 
                 invoiceDto.Id = invoice.Id;
                 invoiceDto.FacturapiId = facturapiResponse.FacturapiId;
+                invoiceDto.SerieNumero = invoice.SerieNumero;
 
                 return invoiceDto;
             }
@@ -81,9 +85,10 @@ namespace Service.Billing.Application
                 throw;
             }
         }
+
         public async Task<InvoiceDto> CreateInvoiceCompany(InvoiceDto invoiceDto)
         {
-            
+
             try
             {
                 var invoice = invoiceDto.ToModelCompany();
@@ -104,7 +109,7 @@ namespace Service.Billing.Application
             }
             catch (Exception)
             {
-                
+
                 throw;
             }
         }
@@ -113,7 +118,7 @@ namespace Service.Billing.Application
 
             try
             {
-                
+
 
                 var facturapiResponse = await _invoiceClient.Cancel(invoiceDto);
                 if (facturapiResponse.ToLower() == "canceled")
@@ -135,19 +140,20 @@ namespace Service.Billing.Application
             }
         }
 
-        public async Task<(byte[], string)> PrintInvoiceXML(string invoiceId)
+        public async Task<(byte[], string)> PrintInvoiceXML(Guid invoiceId)
         {
-            //var invoice = await GetExistingInvoice(invoiceId);
+            var invoice = await GetExistingInvoice(invoiceId);
 
-            var xml = await _invoiceClient.GetInvoiceXML(invoiceId);
+            var xml = await _invoiceClient.GetInvoiceXML(invoice.FacturapiId);
 
             return new(xml, invoiceId + ".xml");
         }
-        public async Task<(byte[], string)> PrintInvoicePDF(string invoiceId)
-        {
-            //var invoice = await GetExistingInvoice(invoiceId);
 
-            var pdf = await _invoiceClient.GetInvoicePDF(invoiceId);
+        public async Task<(byte[], string)> PrintInvoicePDF(Guid invoiceId)
+        {
+            var invoice = await GetExistingInvoice(invoiceId);
+
+            var pdf = await _invoiceClient.GetInvoicePDF(invoice.FacturapiId);
 
             return new(pdf, invoiceId + ".pdf");
         }
@@ -164,5 +170,14 @@ namespace Service.Billing.Application
             return invoice;
         }
 
+        public async Task<string> GetNextSeriesNumber(string serie)
+        {
+            var date = DateTime.Now.ToString("yy");
+
+            var lastCode = await _repository.GetLastSeriesCode(serie, date);
+            var consecutive = lastCode == null ? 1 : Convert.ToInt32(lastCode.Replace(date, "")) + 1;
+
+            return $"{date}{consecutive:D5}";
+        }
     }
 }
