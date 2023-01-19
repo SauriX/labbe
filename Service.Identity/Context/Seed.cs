@@ -165,15 +165,19 @@ namespace Service.Identity.Context
                 new Menu(34, 24, "Detalle de seguimiento de envio", "shipmentTracking", "shipmentTracking", 2090),
 
                 // Resultados -> Orden 3000
-                new Menu(38, null, "Resultados", "results", "results", 3000), // Ultimo
+                new Menu(37, null, "Resultados", "results", "results", 3000), // Ultimo
                 new Menu(30, 38, "Captura de Resultados (Clínicos)", "clinicResults", "clinicResults", 3000),
-                new Menu(36, 38, "Validación de resultados", "resultValidation", "resultValidation", 3010),
-                new Menu(37, 38, "Liberación de resultados", "relaseResult", "relaseResult", 3020),
+                //new Menu(36, 38, "Validación de resultados", "resultValidation", "resultValidation", 3010),
+                new Menu(36, 38, "Liberación de resultados", "relaseResult", "relaseResult", 3020),
                 new Menu(35, 38, "Listas de trabajo", "worklist", "worklists", 3030),
                 new Menu(31, 38, "Tablas de captura de resultados", "massSearch", "massResultSearch", 3040),
 
                 // Reportes -> Orden 4000
                 new Menu(22, null, "Reportes" , "report", "reports", 4000),
+
+                // Facturacion -> Orden 6000
+                new Menu(39, null, "Facturación", "invoice", "invoice", 6000),
+                new Menu(40, 39, "Facturación por companía", "invoiceCompany", "invoice", 6010),
             };
 
             return menus;

@@ -58,6 +58,32 @@ namespace Service.MedicalRecord.Client
                 throw;
             }
         }
+        public async Task<byte[]> GenerateInvoiceCompanyTicket(RequestTicketDto ticket)
+        {
+            try
+            {
+                var json = JsonConvert.SerializeObject(ticket);
+
+                var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Pdf")}/api/pdf/invoiceCompany/ticket", stringContent);
+
+                if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+                {
+                    return await response.Content.ReadAsByteArrayAsync();
+                }
+
+                var error = await response.Content.ReadFromJsonAsync<ClientException>();
+
+                var ex = Exceptions.GetException(error);
+
+                throw ex;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public async Task<byte[]> GenerateQuotation()
         {

@@ -40,6 +40,11 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task DeleteImage(Guid requestId, string code);
         Task<List<Request>> InvoiceCompanyFilter(InvoiceCompanyFilterDto filter);
         Task CreateInvoiceCompanyData(InvoiceCompany invoiceCompnay, List<RequestInvoiceCompany> requestInvoiceCompany);
+        Task UpdateInvoiceCompany(InvoiceCompany invoiceCompnay);
+        Task<InvoiceCompany> GetInvoiceCompanyByFacturapiId(string id);
+        Task<List<Domain.Request.RequestStudy>> GetRequestsStudyByListId(List<Guid> solicitudesId);
+        Task<List<Domain.Request.Request>> GetRequestsByListId(List<Guid> solicitudesId);
+
 
 
 
