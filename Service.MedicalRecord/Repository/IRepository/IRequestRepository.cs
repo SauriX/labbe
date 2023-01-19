@@ -41,7 +41,7 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task<List<Request>> InvoiceCompanyFilter(InvoiceCompanyFilterDto filter);
         Task CreateInvoiceCompanyData(InvoiceCompany invoiceCompnay, List<RequestInvoiceCompany> requestInvoiceCompany);
 
-        
+
 
     }
 }
