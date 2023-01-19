@@ -76,5 +76,11 @@ namespace Service.Catalog.Controllers
         {
             return _Services.GeneratePassword();
         }
+        [HttpGet("contacts/{Id}")]
+        [Authorize(Policies.Access)]
+        public async Task<List<ContactListDto>> GetContactsByCompany(Guid Id)
+        {
+            return await _Services.GetContactsByCompany(Id);
+        }
     }
 }

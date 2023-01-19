@@ -15,5 +15,6 @@ namespace Service.Catalog.Application.IApplication
         Task<(byte[] file, string fileName)> ExportList(string search);
         Task<(byte[] file, string fileName)> ExportForm(Guid id);
         string GeneratePassword();
+        Task<List<ContactListDto>> GetContactsByCompany(Guid Id);
     }
 }

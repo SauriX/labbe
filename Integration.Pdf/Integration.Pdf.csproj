@@ -218,6 +218,7 @@
     <Compile Include="Dtos\RequestTicketDto.cs" />
     <Compile Include="Service\CashRegisterService.cs" />
     <Compile Include="Service\DeliverOrderService.cs" />
+    <Compile Include="Service\InvoiceCompanyTicketService.cs" />
     <Compile Include="Service\InvoiceService.cs" />
     <Compile Include="Service\LabResultsService.cs" />
     <Compile Include="Service\MantainService.cs" />

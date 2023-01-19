@@ -23,6 +23,7 @@ namespace Service.MedicalRecord.Domain.Request
         public decimal Descuento { get; set; }
         public decimal DescuentoPorcentaje { get; set; }
         public decimal PrecioFinal { get; set; }
+        public bool Cancelado => false;
         public virtual ICollection<RequestStudy> Estudios { get; set; }
     }
 }

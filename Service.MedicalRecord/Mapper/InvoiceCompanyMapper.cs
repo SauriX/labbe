@@ -5,6 +5,7 @@ using System.Linq;
 using System;
 using Service.MedicalRecord.Domain.Invoice;
 using Service.MedicalRecord.Dtos.Invoice;
+using Service.MedicalRecord.Dtos.Request;
 
 namespace Service.MedicalRecord.Mapper
 {
@@ -87,6 +88,36 @@ namespace Service.MedicalRecord.Mapper
         public static int ToConsecutiveSerie(this RequestPayment model)
         {
             return Int32.Parse(model.Serie) + 1;
+        }
+        public static RequestTicketDto ToRequestTicketDto(this ReceiptCompanyDto model, List<Domain.Request.RequestStudy> requestStudies, List<Domain.Request.Request> requests)
+        {
+
+            var totalEstudios = requestStudies.Sum(x => x.Precio);
+            var subtotal = totalEstudios - (totalEstudios / 100) * 16;
+            var iva = (totalEstudios / 100) * 16;
+            var saldo = requests.Sum(x => x.Saldo);
+            var anticipo = requests.Sum(x => x.Copago); //TODO: como calcular el anticipo? 
+            var descuento = requests.Sum(x => x.Descuento);  
+
+            return new RequestTicketDto
+            {
+                DireccionSucursal = "Laboratorio Alfonso Ramos, S.A. de C.V. Avenida Humberto Lobo #555 A, Col. del Valle C.P. 66220 San Pedro Garza García, Nuevo León.",
+                Contacto = "Tel/WhatsApp: 81 4170 0769 RFC: LAR900731TL0",
+                Sucursal = $"SUCURSAL {model.Sucursal}", // "SUCURSAL MONTERREY"
+                Folio = model.Folio,
+                Fecha = DateTime.Now.ToString("dd/MM/yyyy"),
+                Atiende = model.Atiende.ToUpper(),
+                Subtotal = subtotal.ToString("C"),
+                Descuento = descuento.ToString("C"),
+                IVA = iva.ToString("C"),
+                Total = totalEstudios.ToString("C"),
+                Anticipo = anticipo.ToString("C"),
+                Saldo = saldo.ToString("C"),
+                Usuario = "",
+                Contraseña = "",
+                ContactoTelefono = ""
+                
+            };
         }
     }
 }

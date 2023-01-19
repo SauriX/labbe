@@ -228,9 +228,12 @@ namespace Service.MedicalRecord.Repository
 
         public async Task<string> GetLastPaymentCode(string serie, string year)
         {
-            var last = await _context.Relacion_Solicitud_Pago.OrderBy(x => x.FechaCreo).LastOrDefaultAsync(x => x.Serie == serie && x.Numero.StartsWith(year));
+            var last = await _context.CAT_Solicitud
+                .Where(x => x.Serie == serie && x.SerieNumero.StartsWith(year))
+                .OrderBy(x => Convert.ToInt32(x.SerieNumero ?? "0"))
+                .LastOrDefaultAsync();
 
-            return last?.Numero;
+            return last?.Serie;
         }
 
         public async Task Create(Request request)
@@ -424,6 +427,39 @@ namespace Service.MedicalRecord.Repository
 
             await _context.BulkInsertOrUpdateAsync(requestInvoiceCompany, config);
 
+
+        }
+
+        public async Task UpdateInvoiceCompany(InvoiceCompany invoiceCompnay)
+        {
+            _context.Factura_Compania.Update(invoiceCompnay);
+
+            await _context.SaveChangesAsync();
+
+            _context.ChangeTracker.Clear();
+        }
+        public async Task<InvoiceCompany> GetInvoiceCompanyByFacturapiId(string id)
+        {
+            var request = await _context.Factura_Compania
+                .FirstOrDefaultAsync(x => x.FacturapiId == id);
+
+            return request;
+        }
+
+        public async Task<List<Domain.Request.RequestStudy>> GetRequestsStudyByListId(List<Guid> solicitudesId)
+        {
+            
+            return await _context.Relacion_Solicitud_Estudio
+                .Where(x => solicitudesId.Contains(x.SolicitudId))
+                .ToListAsync(); 
+
+        }
+        public async Task<List<Domain.Request.Request>> GetRequestsByListId(List<Guid> solicitudesId)
+        {
+
+            return await _context.CAT_Solicitud
+                .Where(x => solicitudesId.Contains(x.Id))
+                .ToListAsync();
 
         }
     }
