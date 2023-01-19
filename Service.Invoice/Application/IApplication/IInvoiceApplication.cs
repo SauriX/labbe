@@ -14,7 +14,7 @@ namespace Service.Billing.Application.IApplication
         Task<InvoiceDto> Create(InvoiceDto invoiceDto);
         Task<InvoiceDto> CreateInvoiceCompany(InvoiceDto invoiceDto);
         Task<string> Cancel(InvoiceCancelation invoiceDto);
-        Task<(byte[], string)> PrintInvoiceXML(string invoiceId);
-        Task<(byte[], string)> PrintInvoicePDF(string invoiceId);
+        Task<(byte[], string)> PrintInvoiceXML(Guid invoiceId);
+        Task<(byte[], string)> PrintInvoicePDF(Guid invoiceId);
     }
 }

@@ -11,6 +11,18 @@
       ],
       "UpstreamPathTemplate": "/api/invoice/print/xml/{invoiceId}",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/invoice/print/pdf/{invoiceId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 52975
+        }
+      ],
+      "UpstreamPathTemplate": "/api/invoice/print/pdf/{invoiceId}",
+      "UpstreamHttpMethod": [ "POST" ]
     }
   ]
 }

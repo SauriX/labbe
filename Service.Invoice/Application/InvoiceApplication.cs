@@ -118,7 +118,7 @@ namespace Service.Billing.Application
 
             try
             {
-                
+
 
                 var facturapiResponse = await _invoiceClient.Cancel(invoiceDto);
                 if (facturapiResponse.ToLower() == "canceled")
@@ -140,20 +140,20 @@ namespace Service.Billing.Application
             }
         }
 
-        public async Task<(byte[], string)> PrintInvoiceXML(string invoiceId)
+        public async Task<(byte[], string)> PrintInvoiceXML(Guid invoiceId)
         {
-            //var invoice = await GetExistingInvoice(invoiceId);
+            var invoice = await GetExistingInvoice(invoiceId);
 
-            var xml = await _invoiceClient.GetInvoiceXML(invoiceId);
+            var xml = await _invoiceClient.GetInvoiceXML(invoice.FacturapiId);
 
             return new(xml, invoiceId + ".xml");
         }
 
         public async Task<(byte[], string)> PrintInvoicePDF(Guid invoiceId)
         {
-            //var invoice = await GetExistingInvoice(invoiceId);
+            var invoice = await GetExistingInvoice(invoiceId);
 
-            var pdf = await _invoiceClient.GetInvoicePDF(invoiceId);
+            var pdf = await _invoiceClient.GetInvoicePDF(invoice.FacturapiId);
 
             return new(pdf, invoiceId + ".pdf");
         }
