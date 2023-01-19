@@ -166,11 +166,10 @@ namespace Service.Identity.Context
 
                 // Resultados -> Orden 3000
                 new Menu(37, null, "Resultados", "results", "results", 3000), // Ultimo
-                new Menu(30, 38, "Captura de Resultados (Clínicos)", "clinicResults", "clinicResults", 3000),
-                //new Menu(36, 38, "Validación de resultados", "resultValidation", "resultValidation", 3010),
-                new Menu(36, 38, "Liberación de resultados", "relaseResult", "relaseResult", 3020),
-                new Menu(35, 38, "Listas de trabajo", "worklist", "worklists", 3030),
-                new Menu(31, 38, "Tablas de captura de resultados", "massSearch", "massResultSearch", 3040),
+                new Menu(30, 37, "Captura de Resultados (Clínicos)", "clinicResults", "clinicResults", 3000),
+                new Menu(36, 37, "Liberación de resultados", "relaseResult", "relaseResult", 3010),
+                new Menu(35, 37, "Listas de trabajo", "worklist", "worklists", 3020),
+                new Menu(31, 37, "Tablas de captura de resultados", "massSearch", "massResultSearch", 3030),
 
                 // Reportes -> Orden 4000
                 new Menu(22, null, "Reportes" , "report", "reports", 4000),
