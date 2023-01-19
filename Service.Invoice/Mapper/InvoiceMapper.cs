@@ -87,6 +87,7 @@ namespace Service.Billing.Mapper
             return new Invoice
             {
                 Id = Guid.NewGuid(),
+                Serie = dto.Serie,
                 FormaPago = dto.FormaPago,
                 MetodoPago = dto.MetodoPago,
                 UsoCFDI = dto.UsoCFDI,
