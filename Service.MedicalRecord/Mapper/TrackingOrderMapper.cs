@@ -1,5 +1,6 @@
 ﻿using Service.MedicalRecord.Dictionary;
 using Service.MedicalRecord.Domain.TrackingOrder;
+using Service.MedicalRecord.Dtos.RouteTracking;
 using Service.MedicalRecord.Dtos.TrackingOrder;
 using System;
 using System.Collections.Generic;
@@ -196,7 +197,7 @@ namespace Service.MedicalRecord.Mapper
             return model.Select(x => new EstudiosListDto
             {
 
-                solicitudId = x.SolicitudId,
+                solicitudId = x.SolicitudId,    
                 IsInRute = x.SolicitudEstudio.EstatusId == Status.RequestStudy.EnRuta ,
                 orderId = orderId,
                 Estudio = new StudiesRequestRouteDto
@@ -213,6 +214,21 @@ namespace Service.MedicalRecord.Mapper
 
                 },
             });
+        }
+
+        public static IEnumerable<RquestStudiesDto> torequestedStudi(this IEnumerable<Domain.Request.RequestStudy> model) {
+
+                if (model == null) return null;
+            return model.Select(x=> new RquestStudiesDto { 
+                Id = x.EstudioId,
+                Clave = x.Clave,
+                Estudio = x.Nombre,
+                Estatus = x.Estatus.Nombre,
+                Dias = x.Dias.ToString(),
+                Fecha = x.FechaTomaMuestra.ToString(),
+                EstatusId = x.EstatusId
+            });
+
         }
     }
 }

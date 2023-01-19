@@ -12,6 +12,17 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/TrackingOrder/findStudies/{solicitud}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/tracking-order/findStudies/{solicitud}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/LabRamos/services/records/api/TrackingOrder/findStudies",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -20,6 +31,17 @@
         }
       ],
       "UpstreamPathTemplate": "/api/tracking-order/findStudies",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/TrackingOrder/findStudiesall",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/tracking-order/findStudiesall",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
