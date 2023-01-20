@@ -1,7 +1,6 @@
-﻿using Service.MedicalRecord.Domain;
-using System;
+﻿using System;
 
-namespace Service.Catalog.Domain.Series
+namespace Service.Billing.Domain.Series
 {
     public class Series : BaseModel
     {
@@ -11,6 +10,6 @@ namespace Service.Catalog.Domain.Series
         public byte TipoSerie { get; set; }
         public Guid SucursalId { get; set; }
         public bool Activo { get; set; }
-        public virtual Branch.Branch Sucursal { get; set; }
+        //public virtual Branch.Branch Sucursal { get; set; }
     }
 }

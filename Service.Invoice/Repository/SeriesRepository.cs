@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Service.Catalog.Context;
-using Service.Catalog.Domain.Series;
-using Service.Catalog.Repository.IRepository;
+using Service.Billing.Context;
+using Service.Billing.Domain.Series;
+using Service.Billing.Repository.IRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
