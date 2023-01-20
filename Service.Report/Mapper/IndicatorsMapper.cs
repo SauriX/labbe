@@ -92,7 +92,7 @@ namespace Service.Report.Mapper
                                {
                                    Id = Guid.NewGuid(),
                                    Pacientes = grupo.Count(),
-                                   Ciudad = "Total" + grupo.Key.Ciudad,
+                                   Ciudad = grupo.Key.Ciudad,
                                    Ingresos = grupo.Sum(x => x.TotalEstudios),
                                    Expedientes = grupo.GroupBy(x => x.Expediente).Count(),
                                };
@@ -119,25 +119,27 @@ namespace Service.Report.Mapper
 
                 foreach (var branch in model)
                 {
+                    var totalCity = "Total " + branch.Ciudad;
+
                     switch (item)
                     {
                         case "PACIENTES":
-                            itemData.Add(branch.Ciudad, branch.Pacientes);
+                            itemData.Add(totalCity, branch.Pacientes);
                             continue;
                         case "INGRESOS":
-                            itemData.Add(branch.Ciudad, branch.Ingresos);
+                            itemData.Add(totalCity, branch.Ingresos);
                             continue;
                         case "COSTO REACTIVO":
-                            itemData.Add(branch.Ciudad, branch.CostoReactivo);
+                            itemData.Add(totalCity, branch.CostoReactivo);
                             continue;
                         case "COSTO DE TOMA":
-                            itemData.Add(branch.Ciudad, branch.CostoTomaCalculado);
+                            itemData.Add(totalCity, branch.CostoTomaCalculado);
                             continue;
                         case "COSTO FIJO":
-                            itemData.Add(branch.Ciudad, branch.CostoFijo);
+                            itemData.Add(totalCity, branch.CostoFijo);
                             continue;
                         case "UTILIDAD DE OPERACIÓN":
-                            itemData.Add(branch.Ciudad, branch.UtilidadOperacion);
+                            itemData.Add(totalCity, branch.UtilidadOperacion);
                             continue;
                     }
                 }
@@ -162,6 +164,7 @@ namespace Service.Report.Mapper
                 FechaAlta = sample.FechaAlta,
                 Aplica = sample.FechaAlta.ToString("MMMM yy", new CultureInfo("ES")),
                 Ciudad = sample.Ciudad,
+                FechaMod = sample.FechaModificacion
             }).ToList();
         } 
 

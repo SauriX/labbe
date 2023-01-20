@@ -92,7 +92,14 @@ namespace Service.Report.Application
             template.AddVariable("TituloDiario", "Reporte Indicadores Diario");
             template.AddVariable("TituloSemanal", "Reporte Indicadores Semanal");
             template.AddVariable("TituloMensual", "Reporte Indicadores Mensual");
-            template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
+
+            var dateOfFilter = search.FechaInicial.ToString("dd/MM/yyyy") + " AL " + search.FechaFinal.ToString("dd/MM/yyyy");
+            template.AddVariable("Fecha", $"{dateOfFilter}");
+
+            int daysInMonth = DateTime.DaysInMonth(year: search.FechaFinal.Year, month: search.FechaFinal.Month);
+            var firstDayOfMonth = new DateTime(search.FechaFinal.Year, search.FechaFinal.Month, 1).ToString("dd/MM/yyyy");
+            var lastDayOfMonth = new DateTime(search.FechaFinal.Year, search.FechaFinal.Month, daysInMonth).ToString("dd/MM/yyyy");
+            template.AddVariable("FechaMensual", $"{firstDayOfMonth} AL {lastDayOfMonth}");
 
             var daily = template.Workbook.Worksheet("Diario");
             var weekly = template.Workbook.Worksheet("Semanal");
@@ -493,7 +500,7 @@ namespace Service.Report.Application
             }
         }
 
-        private void MonthlyData(List<RequestInfo> data, List<ServicesCost> servicesCost, List<Indicators> budget, List<SamplesCosts> samplesCost, IXLWorksheet monthly, DateTime month)
+        private async Task MonthlyData(List<RequestInfo> data, List<ServicesCost> servicesCost, List<Indicators> budget, List<SamplesCosts> samplesCost, IXLWorksheet monthly, DateTime month)
         {
             var stats = data.ToIndicatorsStatsDto().ToList();
 
@@ -520,7 +527,7 @@ namespace Service.Report.Application
                 var fr1 = formRow + 7;
                 monthly.Cell(fr1, monthlyData + 2).FormulaA1 = $"={colName}{fr1 - 4}-{colName}{fr1 - 3}-{colName}{fr1 - 2}-{colName}{fr1 - 1}";
 
-                if(monthlyData == list.Count)
+                if((monthlyData + 1) == list.Count)
                 {
                     lastRow = fr1;
                 }
@@ -528,23 +535,28 @@ namespace Service.Report.Application
 
             var totalStats = data.ToTotals().ToList();
 
-            foreach (var monthlyItem in stats)
+            foreach (var totalItem in totalStats)
             {
-                monthlyItem.CostoFijo = servicesCost.Where(x => x.Sucursales.Contains(monthlyItem.Sucursal)).Sum(x => x.CostoFijo);
-                monthlyItem.CostoReactivo = budget.Where(x => x.SucursalId == monthlyItem.SucursalId).Sum(x => x.CostoReactivo);
-                monthlyItem.CostoTomaCalculado = samplesCost.Where(x => x.SucursalId == monthlyItem.SucursalId).Select(x => x.CostoToma).FirstOrDefault() * monthlyItem.Expedientes;
+                var getBranch = await _catalogService.GetBranchByName(totalItem.Ciudad);
+
+                totalItem.Sucursal = getBranch.Nombre;
+                totalItem.SucursalId = Guid.Parse(getBranch.IdSucursal);
+
+                totalItem.CostoFijo = servicesCost.Where(x => x.Sucursales.Contains(totalItem.Sucursal)).Sum(x => x.CostoFijo);
+                totalItem.CostoReactivo = budget.Where(x => x.SucursalId == totalItem.SucursalId).Sum(x => x.CostoReactivo);
+                totalItem.CostoTomaCalculado = samplesCost.Where(x => x.SucursalId == totalItem.SucursalId).Select(x => x.CostoToma).FirstOrDefault() * totalItem.Expedientes;
             }
 
             var totals = totalStats.ToTableTotals();
 
             var totalsTable = GetTable("Total Acumulado", totals);
 
-            var tableWithTotalData = monthly.Cell(lastRow + 2, 1).InsertTable(dataTable.AsEnumerable());
+            var tableWithTotalData = monthly.Cell(lastRow + 2, 1).InsertTable(totalsTable.AsEnumerable());
 
-            var totalRow = lastRow - 1;
+            var totalRow = lastRow + 1;
 
             List<string> totalList = totals[0].Keys.Where(x => x != "NOMBRE").ToList();
-            for (int totalData = 0; totalData < list.Count; totalData++)
+            for (int totalData = 0; totalData < totalList.Count; totalData++)
             {
                 var colName = monthly.Column(totalData + 2).ColumnLetter();
                 var fr1 = totalRow + 7;
