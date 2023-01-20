@@ -20,6 +20,7 @@ namespace Service.MedicalRecord.Domain.TrackingOrder
         public Guid UsuarioModId { get; set; }
         public DateTime FechaMod { get; set; }
         public int SolicitudEstudioId { get; set; }
+        public bool IsExtra { get; set; }
         public virtual Domain.Request.RequestStudy SolicitudEstudio { get; set; }
     }
 }

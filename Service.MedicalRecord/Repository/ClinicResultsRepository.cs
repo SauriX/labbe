@@ -165,8 +165,10 @@ namespace Service.MedicalRecord.Repository
                     nameof(ClinicResults.FCSI),
                     nameof(ClinicResults.TipoValorId),
                     nameof(ClinicResults.ObservacionesId),
+                    nameof(ClinicResults.SolicitudEstudioId)
                 }
             };
+
             await _context.BulkUpdateAsync(newParameter, config);
         }
 

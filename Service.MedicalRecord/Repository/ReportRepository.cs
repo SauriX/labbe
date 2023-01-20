@@ -130,7 +130,7 @@ namespace Service.MedicalRecord.Repository
             if (search.FechaInicial != DateTime.MinValue && search.FechaFinal != DateTime.MinValue)
             {
                 report = report.
-                    Where(x => x.FechaCreo.Date >= search.FechaInicial && x.FechaCreo.Date <= search.FechaFinal);
+                    Where(x => x.FechaCreo.Date >= search.FechaInicial.Date && x.FechaCreo.Date <= search.FechaFinal.Date);
                 query = report.ToQueryString();
             }
 

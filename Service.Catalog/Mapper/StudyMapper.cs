@@ -28,11 +28,22 @@ namespace Service.Catalog.Mapper
                 Activo = x.Activo,
             });
         }
-        public static IEnumerable<StudyListDto> ToStudyListDtos(this List<Study> model)
+        public static IEnumerable<StudyListDto> ToStudyListDtos(this List<Study> model, List<int> ids)
         {
             if (model == null) return null;
 
-            return model.Select(x => new StudyListDto
+            List<Study> completeStudies = new();
+
+            foreach(var id in ids)
+            {
+                Study study = model.Where(x => x.Id == id).FirstOrDefault();
+                if(study != null)
+                {
+                    completeStudies.Add(study);
+                }
+            }
+
+            return completeStudies.Select(x => new StudyListDto
             {
                 Id = x.Id,
                 Parametros = x.Parameters.OrderBy(x => x.Orden).Select(y => y.Parametro).ToParameterValueStudyDto(),

@@ -7,6 +7,7 @@ namespace Service.Report.Dtos.Indicators
     {
         public Guid Id { get; set; }
         public string Sucursal { get; set; }
+        public string Ciudad { get; set; }
         public Guid SucursalId { get; set; }
         public int Pacientes { get; set; }
         public decimal Ingresos { get; set; }
