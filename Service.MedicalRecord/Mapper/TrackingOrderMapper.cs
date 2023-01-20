@@ -72,7 +72,7 @@ namespace Service.MedicalRecord.Mapper
                 Temperatura = dto.Temperatura,
                 SucursalDestinoId = dto.SucursalDestinoId,
                 SucursalOrigenId = dto.SucursalOrigenId,
-                UsuarioCreoId = dto.UsuarioCreoId,
+                UsuarioCreoId = model.UsuarioCreoId,
                 FechaMod = DateTime.Now,
                 Activo = dto.Activo,
                 EscaneoCodigoBarras = dto.EscaneoCodigoBarras,
