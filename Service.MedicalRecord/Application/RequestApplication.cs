@@ -234,6 +234,16 @@ namespace Service.MedicalRecord.Application
             newRequest.UsuarioCreoId = requestDto.UsuarioId;
             newRequest.UsuarioCreo = requestDto.Usuario;
 
+            //var series = await _repository.GetReceiptSeries(requestDto.SucursalId);
+
+            //if (series != null)
+            //{
+            //    var next = await GetNextPaymentNumber(series);
+
+            //    newRequest.Serie = series;
+            //    newRequest.SerieNumero = next;
+            //}
+
             await _repository.Create(newRequest);
 
             return newRequest.Id.ToString();
@@ -374,7 +384,12 @@ namespace Service.MedicalRecord.Application
         {
             if (checkInDto.Pagos == null || checkInDto.Pagos.Count == 0)
             {
-                throw new CustomException(HttpStatusCode.BadRequest, "No se seleccionó ningun pago");
+                throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.NoPaymentSelected);
+            }
+
+            if (new bool[] { checkInDto.Desglozado, checkInDto.Simple, checkInDto.PorConcepto }.Count(x => x) != 1)
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "Debe seleccionar solo una opción entre Desglozado por estudio, Simple o Por Concepto");
             }
 
             var request = await GetExistingRequest(checkInDto.ExpedienteId, checkInDto.SolicitudId);
@@ -385,6 +400,11 @@ namespace Service.MedicalRecord.Application
             if (!paymentsToCheckIn.Any())
             {
                 throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.NoPaymentSelected);
+            }
+
+            if (checkInDto.Detalle.Sum(x => x.Precio) != paymentsToCheckIn.Sum(x => x.Cantidad))
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "La suma de las cantidades de pagos y detalle no coincide");
             }
 
             var maxPay = paymentsToCheckIn.OrderByDescending(x => x.Cantidad).FirstOrDefault();
@@ -410,12 +430,13 @@ namespace Service.MedicalRecord.Application
                 ExpedienteId = checkInDto.ExpedienteId,
                 Solicitud = request.Clave,
                 SolicitudId = checkInDto.SolicitudId,
+                Serie = checkInDto.Serie,
                 UsoCFDI = checkInDto.UsoCFDI,
                 FormaPago = maxPay.FormaPago,
                 RegimenFiscal = taxData.RegimenFiscal,
                 RFC = taxData.RFC,
                 Paciente = record.NombreCompleto,
-                ConNombre = checkInDto.ConNombre,
+                ConNombre = checkInDto.Simple,
                 Desglozado = checkInDto.Desglozado,
                 EnvioCorreo = checkInDto.EnvioCorreo ? request.EnvioCorreo : null,
                 EnvioWhatsapp = checkInDto.EnvioWhatsapp ? request.EnvioWhatsApp : null,
@@ -436,14 +457,19 @@ namespace Service.MedicalRecord.Application
                 },
             };
 
-            if (checkInDto.ConNombre)
+            if (checkInDto.Simple || checkInDto.PorConcepto)
             {
+                if (checkInDto.Detalle.Count != 1)
+                {
+                    throw new CustomException(HttpStatusCode.BadRequest, "Las facturas simples o por concepto solo deben tener un detalle");
+                }
+
                 invoiceDto.Productos = new List<ProductDto>
                 {
                     new ProductDto
                     {
-                        Clave = "Pago a Solicitud",
-                        Descripcion = $"Pago cantidad ${totalQty}",
+                        Clave = checkInDto.Detalle[0].Clave,
+                        Descripcion = checkInDto.Detalle[0].Descripcion,
                         Precio = totalQty,
                         Cantidad = 1,
                         Descuento = 0,
@@ -480,6 +506,7 @@ namespace Service.MedicalRecord.Application
             {
                 payment.EstatusId = Status.RequestPayment.Facturado;
                 payment.FacturaId = invoiceResponse.Id;
+                payment.SerieFactura = invoiceResponse.Serie + " " + invoiceResponse.SerieNumero;
                 payment.FacturapiId = invoiceResponse.FacturapiId;
                 payment.UsuarioModificoId = checkInDto.UsuarioId;
                 payment.FechaModifico = DateTime.Now;

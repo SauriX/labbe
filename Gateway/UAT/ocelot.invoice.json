@@ -10,6 +10,17 @@
       ],
       "UpstreamPathTemplate": "/api/invoice/print/xml/{invoiceId}",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/billing/api/invoice/print/pdf/{invoiceId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/invoice/print/pdf/{invoiceId}",
+      "UpstreamHttpMethod": [ "POST" ]
     }
   ]
 }

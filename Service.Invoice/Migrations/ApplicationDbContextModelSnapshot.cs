@@ -70,6 +70,12 @@ namespace Service.Billing.Migrations
                     b.Property<string>("RegimenFiscal")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Serie")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SerieNumero")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Solicitud")
                         .HasColumnType("nvarchar(max)");
 

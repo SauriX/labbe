@@ -173,6 +173,10 @@ namespace Service.Identity.Context
 
                 // Reportes -> Orden 4000
                 new Menu(22, null, "Reportes" , "report", "reports", 4000),
+
+                // Facturacion -> Orden 6000
+                new Menu(39, null, "Facturación", "invoice", "invoice", 6000),
+                new Menu(40, 39, "Facturación por companía", "invoiceCompany", "invoice", 6010),
             };
 
             return menus;

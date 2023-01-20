@@ -886,6 +886,12 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<decimal>("Saldo")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("Serie")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SerieNumero")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("SucursalId")
                         .HasColumnType("uniqueidentifier");
 
@@ -1079,6 +1085,9 @@ namespace Service.MedicalRecord.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Serie")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SerieFactura")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("SolicitudId")

@@ -2649,6 +2649,9 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Clave")
                         .HasColumnType("nvarchar(max)");
 

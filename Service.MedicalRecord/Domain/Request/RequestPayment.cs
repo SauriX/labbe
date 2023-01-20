@@ -19,6 +19,7 @@ namespace Service.MedicalRecord.Domain.Request
         public byte EstatusId { get; set; }
         public virtual StatusRequestPayment Estatus { get; set; }
         public Guid FacturaId { get; set; }
+        public string SerieFactura { get; set; }
         public string FacturapiId { get; set; }
     }
 }

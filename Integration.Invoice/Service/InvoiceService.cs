@@ -82,7 +82,7 @@ namespace Integration.Invoice.Service
 
             var invoice = await facturapi.Invoice.CancelAsync(data.FacturapiId, invoiceData);
 
-            return invoice.CancellationStatus;
+            return invoice.Status;
         }
 
         public static async Task<Facturapi.Invoice> GetById(string invoiceId)

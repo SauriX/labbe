@@ -87,6 +87,7 @@ namespace Service.Billing.Mapper
             return new Invoice
             {
                 Id = Guid.NewGuid(),
+                Serie = dto.Serie,
                 FormaPago = dto.FormaPago,
                 MetodoPago = dto.MetodoPago,
                 UsoCFDI = dto.UsoCFDI,
@@ -120,6 +121,7 @@ namespace Service.Billing.Mapper
                 ConNombre = dto.ConNombre,
                 EnvioCorreo = dto.EnvioCorreo,
                 EnvioWhatsapp = dto.EnvioWhatsapp,
+                Estatus = "Facturado",
                 Solicitudes = dto.SolicitudesId.Select(x => new InvoiceCompanyRequests
                 {
                     Id = Guid.NewGuid(),

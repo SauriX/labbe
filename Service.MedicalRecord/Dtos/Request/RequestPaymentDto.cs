@@ -16,6 +16,7 @@ namespace Service.MedicalRecord.Dtos.Request
         public string Numero { get; set; }
         public DateTime FechaPago { get; set; }
         public Guid FacturaId { get; set; }
+        public string SerieFactura { get; set; }
         public string FacturapiId { get; set; }
         public string UsuarioRegistra { get; set; }
         public byte EstatusId { get; set; }

@@ -41,6 +41,16 @@ namespace Service.Billing.Repository
             return invoices;
         }
 
+        public async Task<string> GetLastSeriesCode(string serie, string year)
+        {
+            var last = await _context.CAT_Factura
+                .Where(x => x.Serie == serie && x.SerieNumero.StartsWith(year))
+                .OrderBy(x => Convert.ToInt32(x.SerieNumero ?? "0"))
+                .LastOrDefaultAsync();
+
+            return last?.SerieNumero;
+        }
+
         public async Task Create(Invoice invoice)
         {
             _context.CAT_Factura.Add(invoice);
@@ -49,6 +59,7 @@ namespace Service.Billing.Repository
 
             _context.ChangeTracker.Clear();
         }
+
         public async Task CreateInvoiceCompany(InvoiceCompany invoice)
         {
             using var transaction = _context.Database.BeginTransaction();
@@ -87,7 +98,6 @@ namespace Service.Billing.Repository
             await _context.SaveChangesAsync();
         }
 
-
         public async Task UpdateCompany(InvoiceCompany invoice)
         {
             using var transaction = _context.Database.BeginTransaction();
@@ -114,6 +124,21 @@ namespace Service.Billing.Repository
                 transaction.Rollback();
                 throw;
             }
+        }
+        public async Task UpdateInvoiceCompany(InvoiceCompany invoiceCompnay)
+        {
+            _context.CAT_Factura_Companias.Update(invoiceCompnay);
+
+            await _context.SaveChangesAsync();
+
+            _context.ChangeTracker.Clear();
+        }
+        public async Task<InvoiceCompany> GetInvoiceCompanyByFacturapiId(string id)
+        {
+            var request = await _context.CAT_Factura_Companias
+                .FirstOrDefaultAsync(x => x.FacturapiId == id);
+
+            return request;
         }
     }
 }
