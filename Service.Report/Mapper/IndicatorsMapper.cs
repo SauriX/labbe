@@ -72,13 +72,84 @@ namespace Service.Report.Mapper
                                    SucursalId = grupo.Key.SucursalId,
                                    Sucursal = grupo.Key.Sucursal,
                                    Ingresos = grupo.Sum(x => x.TotalEstudios),
-                                   Expedientes = grupo.GroupBy(x => x.Expediente).Count()
+                                   Expedientes = grupo.GroupBy(x => x.Expediente).Count(),
                                };
                            }
                            );
 
             return results;
         }
+
+        public static IEnumerable<IndicatorsStatsDto> ToTotals(this IEnumerable<RequestInfo> model)
+        {
+            if (model == null) return null;
+
+            var results = (from c in model
+                           group c by new { c.Ciudad } into grupo
+                           select grupo).Select(grupo =>
+                           {
+                               return new IndicatorsStatsDto
+                               {
+                                   Id = Guid.NewGuid(),
+                                   Pacientes = grupo.Count(),
+                                   Ciudad = grupo.Key.Ciudad,
+                                   Ingresos = grupo.Sum(x => x.TotalEstudios),
+                                   Expedientes = grupo.GroupBy(x => x.Expediente).Count(),
+                               };
+                           }
+                           );
+
+            return results;
+        }
+
+        public static List<Dictionary<string, object>> ToTableTotals(this List<IndicatorsStatsDto> model)
+        {
+            if (model == null) return null;
+
+            string[] rows = { "PACIENTES", "INGRESOS", "COSTO REACTIVO", "COSTO DE TOMA", "COSTO FIJO", "UTILIDAD DE OPERACIÓN" };
+
+            var data = new List<Dictionary<string, object>>();
+
+            foreach (var item in rows)
+            {
+                var itemData = new Dictionary<string, object>
+                {
+                    ["NOMBRE"] = item
+                };
+
+                foreach (var branch in model)
+                {
+                    var totalCity = "Total " + branch.Ciudad;
+
+                    switch (item)
+                    {
+                        case "PACIENTES":
+                            itemData.Add(totalCity, branch.Pacientes);
+                            continue;
+                        case "INGRESOS":
+                            itemData.Add(totalCity, branch.Ingresos);
+                            continue;
+                        case "COSTO REACTIVO":
+                            itemData.Add(totalCity, branch.CostoReactivo);
+                            continue;
+                        case "COSTO DE TOMA":
+                            itemData.Add(totalCity, branch.CostoTomaCalculado);
+                            continue;
+                        case "COSTO FIJO":
+                            itemData.Add(totalCity, branch.CostoFijo);
+                            continue;
+                        case "UTILIDAD DE OPERACIÓN":
+                            itemData.Add(totalCity, branch.UtilidadOperacion);
+                            continue;
+                    }
+                }
+
+                data.Add(itemData);
+            }
+
+            return data;
+        }
+
 
         public static IEnumerable<SamplesCostsDto> ToSamplesCostsDto(this IEnumerable<SamplesCosts> model)
         {
@@ -91,7 +162,9 @@ namespace Service.Report.Mapper
                 SucursalId = sample.SucursalId,
                 Sucursal = sample.Sucursal,
                 FechaAlta = sample.FechaAlta,
-                Aplica = sample.FechaAlta.ToString("MMMM yy", new CultureInfo("ES"))
+                Aplica = sample.FechaAlta.ToString("MMMM yy", new CultureInfo("ES")),
+                Ciudad = sample.Ciudad,
+                FechaMod = sample.FechaModificacion
             }).ToList();
         } 
 
@@ -134,21 +207,6 @@ namespace Service.Report.Mapper
             }
 
             return data;
-        }
-
-        public static List<ServicesCostDto> ServicesCostGeneric(this IEnumerable<ServicesCost> model)
-        {
-            if (model == null) return null;
-
-            return model.Select(service => new ServicesCostDto
-            {
-                Id = service.Id,
-                Clave = service.Clave,
-                Nombre = service.Nombre,
-                Sucursal = service.Sucursal,
-                CostoFijo = service.CostoFijo,
-                FechaAlta = service.FechaAlta,
-            }).ToList();
         }
 
         public static IEnumerable<ServicesCostDto> ToServiceCostDto(this IEnumerable<ServicesCost> model)
@@ -221,19 +279,6 @@ namespace Service.Report.Mapper
             };
         }
 
-        public static SamplesCosts ToSampleCreate(this SamplesCostsDto dto)
-        {
-            if (dto == null) return null;
-
-            return new SamplesCosts
-            {
-                Id = Guid.NewGuid(),
-                CostoToma = dto.CostoToma,
-                SucursalId = dto.SucursalId,
-                FechaAlta = DateTime.Now
-            };
-        }
-
         public static SamplesCosts ToSampleUpdate(this SamplesCostsDto dto, SamplesCosts model)
         {
             if (dto == null) return null;
@@ -244,7 +289,9 @@ namespace Service.Report.Mapper
                 CostoToma = dto.CostoToma,
                 SucursalId = model.SucursalId,
                 Sucursal = model.Sucursal,
-                FechaAlta = model.FechaAlta
+                FechaAlta = model.FechaAlta, 
+                Ciudad = model.Ciudad,
+                FechaModificacion = DateTime.Now
             };
         }
     }

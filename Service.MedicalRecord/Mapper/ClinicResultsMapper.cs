@@ -76,7 +76,8 @@ namespace Service.MedicalRecord.Mapper
                     : x.EstatusId == Status.RequestStudy.Enviado
                     ? x.UsuarioEnviado
                     : "",
-                Urgencia = x.Solicitud.Urgencia
+                Urgencia = x.Solicitud.Urgencia,
+                SolicitudEstudioId = x.Id
             }).ToList();
         }
 
