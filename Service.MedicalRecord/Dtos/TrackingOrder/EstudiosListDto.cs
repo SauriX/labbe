@@ -9,6 +9,7 @@ namespace Service.MedicalRecord.Dtos.TrackingOrder
         public Guid solicitudId { get; set; }
         public bool IsInRute { get; set; }
         public Guid orderId { get; set; }
+        public bool IsExtra { get; set; }
         public StudiesRequestRouteDto Estudio { get; set; }
     }
 }

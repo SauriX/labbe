@@ -77,9 +77,9 @@ namespace Service.MedicalRecord.Mapper
                 Activo = dto.Activo,
                 EscaneoCodigoBarras = dto.EscaneoCodigoBarras,
                 MaquiladorId = dto.MaquiladorId,
-                RutaId = dto.RutaId,
+                RutaId = model.RutaId,
                 DiaRecoleccion = dto.DiaRecoleccion,
-                Clave = dto.Clave,
+                Clave = model.Clave,
                 Estudios = dto.Estudios.Select(x => new TrackingOrderDetail
                 {
                     SolicitudId = x.SolicitudId,
@@ -129,7 +129,8 @@ namespace Service.MedicalRecord.Mapper
                     NombrePaciente = x.NombrePaciente,
                     Temperatura = x.Temperatura,
                     Escaneado =false,
-                    FechaCreo = DateTime.Now
+                    FechaCreo = DateTime.Now,
+                    IsExtra = x.IsExtra
                     
 
                 }).ToList()
@@ -164,7 +165,7 @@ namespace Service.MedicalRecord.Mapper
                 Clave = model.Clave
             };
         }
-        public static IEnumerable<EstudiosListDto> ToStudiesRequestRouteDto(this IEnumerable<Domain.Request.RequestStudy> model )
+        public static IEnumerable<EstudiosListDto> ToStudiesRequestRouteDto(this IEnumerable<Domain.Request.RequestStudy> model,bool isExtra = false )
         {
             if (model == null) return null;
 
@@ -185,7 +186,9 @@ namespace Service.MedicalRecord.Mapper
                     SolicitudId = x.Solicitud.Id,
                     ExpedienteId = x.Solicitud.ExpedienteId,
                     Escaneado=true,
+                    IsExtra = isExtra
                 },
+                IsExtra = isExtra
             });
         }
 

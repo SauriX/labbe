@@ -139,7 +139,7 @@ namespace Service.MedicalRecord.Application.IApplication
         public async Task<IEnumerable<EstudiosListDto>> FindAllEstudios(List<int> estudios, string request)
         {
             var estudiosEncontrados = await _repository.FindAllEstudios(estudios,request);
-            var estudis = estudiosEncontrados.ToStudiesRequestRouteDto();
+            var estudis = estudiosEncontrados.ToStudiesRequestRouteDto(true);
             return estudis;
         }
         public async Task<IEnumerable<RquestStudiesDto>> FindRequestEstudios(string request)
