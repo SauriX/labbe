@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Domain.TrackingOrder;
+using Service.MedicalRecord.Dtos.RouteTracking;
 using Service.MedicalRecord.Dtos.TrackingOrder;
 using Shared.Dictionary;
 using System;
@@ -50,6 +51,20 @@ namespace Service.MedicalRecord.Controllers
         public async Task<IEnumerable<EstudiosListDto>> FindEstudios(List<int> estudios)
         {
             return await _service.FindEstudios(estudios);
+        }
+
+        [HttpPost("findStudiesall")]
+        [Authorize(Policies.Access)]
+        public async Task<IEnumerable<EstudiosListDto>> FindEstudiosAll(SearchStudies search)
+        {
+            return await _service.FindAllEstudios(search.estudios,search.solicitud);
+
+        }
+        [HttpGet("findStudies/{solicitud}")]
+        [Authorize(Policies.Access)]
+        public async Task<IEnumerable<RquestStudiesDto>> FindRequestEstudios(string solicitud)
+        {
+            return await _service.FindRequestEstudios(solicitud);
         }
 
         [HttpPost("confirmarRecoleccion")]
