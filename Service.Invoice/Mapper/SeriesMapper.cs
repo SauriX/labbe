@@ -19,7 +19,9 @@ namespace Service.Billing.Mapper
                 Id = x.Id,
                 Clave = x.Clave,
                 Descripcion = x.Descripcion,
-                //Sucursal = x.Sucursal?.Clave,
+                Sucursal = x.Sucursal,
+                Año = x.FechaCreo.Year.ToString("yyyy"),
+                CFDI = x.CFDI,
                 Activo = x.Activo,
                 TipoSerie = x.TipoSerie == TIPO_FACTURA ? "Factura" : "Recibo"
             });
