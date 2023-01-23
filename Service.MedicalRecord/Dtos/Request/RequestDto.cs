@@ -23,9 +23,11 @@ namespace Service.MedicalRecord.Dtos.Request
         public string NombreCompania { get; set; }
         public string ClaveMedico { get; set; }
         public string Observaciones { get; set; }
+        public string Paciente { get; set; }
         public Guid? SolicitudId { get; set; }
         public Guid ExpedienteId { get; set; }
         public Guid SucursalId { get; set; }
+        public string Sucursal { get; set; }
         public string Clave { get; set; }
         public string ClavePatologica { get; set; }
         public string Registro { get; set; }
