@@ -20,7 +20,6 @@ using Service.Catalog.Domain.Tapon;
 using Service.Catalog.Domain.Equipment;
 using System.Reflection;
 using Service.Catalog.Domain.EquipmentMantain;
-using Service.Catalog.Domain.Series;
 
 namespace Service.Catalog.Context
 {
@@ -91,7 +90,6 @@ namespace Service.Catalog.Context
         public DbSet<EquipmentBranch> Relacion_Equipo_Sucursal { get; set; }
         public DbSet<Mantain> CAT_Mantenimiento_Equipo { get; set; }
         public DbSet<MantainImages> CAT_Mantenimiento_Equipo_Images { get; set; }
-        public DbSet<Series> CAT_Serie { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

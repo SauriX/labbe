@@ -1,10 +1,10 @@
-﻿using Service.Catalog.Domain.Series;
-using Service.Catalog.Dtos.Series;
+﻿using Service.Billing.Domain.Series;
+using Service.Billing.Dtos.Series;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Service.Catalog.Mapper
+namespace Service.Billing.Mapper
 {
     public static class SeriesMapper
     {
@@ -19,7 +19,9 @@ namespace Service.Catalog.Mapper
                 Id = x.Id,
                 Clave = x.Clave,
                 Descripcion = x.Descripcion,
-                Sucursal = x.Sucursal?.Clave,
+                Sucursal = x.Sucursal,
+                Año = x.FechaCreo.Year.ToString("yyyy"),
+                CFDI = x.CFDI,
                 Activo = x.Activo,
                 TipoSerie = x.TipoSerie == TIPO_FACTURA ? "Factura" : "Recibo"
             });
