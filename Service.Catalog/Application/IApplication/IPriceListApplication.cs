@@ -9,6 +9,7 @@ namespace Service.Catalog.Application.IApplication
     {
         Task<IEnumerable<PriceListListDto>> GetAll(string search);
         Task<PriceListFormDto> GetById(string Id);
+        Task<List<PriceListStudyDto>> GetStudiesById(string Id);
         Task<PriceListInfoStudyDto> GetPriceStudyById(PriceListInfoFilterDto filterDto);
         Task<List<PriceListInfoStudyDto>> GetPriceStudyByCodes(PriceListInfoFilterDto filterDto);
         Task<PriceListInfoPackDto> GetPricePackById(PriceListInfoFilterDto filterDto);

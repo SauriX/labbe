@@ -9,6 +9,7 @@ namespace Service.Catalog.Repository.IRepository
     {
         Task<List<PriceList>> GetAll(string search);
         Task<PriceList> GetById(Guid Id);
+        Task<List<PriceList_Study>> GetStudiesById(Guid Id);
         Task<PriceList_Study> GetPriceStudyById(int studyId, Guid branchId, Guid companyId);
         Task<List<PriceList_Study>> GetPriceStudyById(Guid priceListId, IEnumerable<int> studyId);
         Task<PriceList_Packet> GetPricePackById(int packId, Guid branchId, Guid companyId);

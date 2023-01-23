@@ -156,6 +156,19 @@ namespace Service.Catalog.Mapper
                 })?.ToList(),
             });
         }
+        public static List<PriceListStudyDto> ToPriceListStudyDto(this List<PriceList_Study> model)
+        {
+            return model.Select(x => new PriceListStudyDto
+            {
+                Id = x.EstudioId,
+                Clave = x.Estudio.Clave.Trim(),
+                Nombre = x.Estudio.Nombre.Trim(),
+                Area = x.Estudio.Area?.Nombre ?? "",
+                Departamento = x.Estudio.Area?.Departamento?.Nombre,
+                Precio = x.Precio,
+                Activo = x.Activo,
+            }).ToList();
+        }
         public static PriceListFormDto ToPriceListFormDto(this PriceList model)
         {
             if (model == null) return null;
@@ -169,16 +182,16 @@ namespace Service.Catalog.Mapper
                 Activo = model.Activo,
                 UsuarioCreoId = model.UsuarioCreoId,
                 FechaCreo = DateTime.Now,
-                Estudios = model.Estudios?.Select(x => new PriceListStudyDto
-                {
-                    Id = x.EstudioId,
-                    Clave = x.Estudio.Clave.Trim(),
-                    Nombre = x.Estudio.Nombre.Trim(),
-                    Area = x.Estudio.Area?.Nombre??"",
-                    Departamento = x.Estudio.Area?.Departamento?.Nombre,
-                    Precio = x.Precio,
-                    Activo = x.Activo,
-                })?.ToList(),
+                //Estudios = model.Estudios?.Select(x => new PriceListStudyDto
+                //{
+                //    Id = x.EstudioId,
+                //    Clave = x.Estudio.Clave.Trim(),
+                //    Nombre = x.Estudio.Nombre.Trim(),
+                //    Area = x.Estudio.Area?.Nombre??"",
+                //    Departamento = x.Estudio.Area?.Departamento?.Nombre,
+                //    Precio = x.Precio,
+                //    Activo = x.Activo,
+                //})?.ToList(),
                 Paquete = model.Paquete?.Select(x => new PriceListStudyDto
                 {
                     Id = x.PaqueteId,

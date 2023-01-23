@@ -60,6 +60,12 @@ namespace Service.Catalog.Controllers
         {
             return await _service.GetById(id);
         }
+        [HttpGet("studies/{id}")]
+        [Authorize(Policies.Access)]
+        public async Task<PriceListStudyDto> GetStudiesById(string id)
+        {
+            return await _service.GetStudiesById(id);
+        }
 
         [HttpPost]
         [Authorize(Policies.Create)]
