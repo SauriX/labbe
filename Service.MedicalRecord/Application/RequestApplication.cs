@@ -402,11 +402,6 @@ namespace Service.MedicalRecord.Application
                 throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.NoPaymentSelected);
             }
 
-            if (checkInDto.Detalle.Sum(x => x.Precio) != paymentsToCheckIn.Sum(x => x.Cantidad))
-            {
-                throw new CustomException(HttpStatusCode.BadRequest, "La suma de las cantidades de pagos y detalle no coincide");
-            }
-
             var maxPay = paymentsToCheckIn.OrderByDescending(x => x.Cantidad).FirstOrDefault();
 
             var totalQty = paymentsToCheckIn.Sum(x => x.Cantidad);
