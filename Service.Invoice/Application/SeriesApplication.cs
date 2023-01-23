@@ -1,12 +1,12 @@
-﻿using Service.Catalog.Application.IApplication;
-using Service.Catalog.Dtos.Series;
-using Service.Catalog.Mapper;
-using Service.Catalog.Repository.IRepository;
+﻿using Service.Billing.Application.IApplication;
+using Service.Billing.Dtos.Series;
+using Service.Billing.Mapper;
+using Service.Billing.Repository.IRepository;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Service.Catalog.Application
+namespace Service.Billing.Application
 {
     public class SeriesApplication : ISeriesApplication
     {
