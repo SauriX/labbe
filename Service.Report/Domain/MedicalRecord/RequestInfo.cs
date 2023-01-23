@@ -18,6 +18,7 @@ namespace Service.Report.Domain.MedicalRecord
         public string ClavePatalogica { get; set; }
         public Guid SucursalId { get; set; }
         public string Sucursal { get; set; }
+        public string Ciudad { get; set; }
         public byte EstatusId { get; set; }
         public string NombreEstatus { get; set; }
         public byte Procedencia { get; set; }

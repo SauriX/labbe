@@ -81,6 +81,7 @@ namespace Service.Report.Application
             var data = await _medicalRecordService.GetRequestByFilter(search);
             var servicesCost = await _catalogService.GetBudgetsByBranch(reportFilter);
             var budget = await _repository.GetBudgetByDate(search.FechaInicial, search.FechaFinal);
+            var samplesCost = await _repository.GetSamplesByDate(search.FechaFinal, search.FechaFinal);
 
             var path = Assets.Indicators;
 
@@ -91,17 +92,24 @@ namespace Service.Report.Application
             template.AddVariable("TituloDiario", "Reporte Indicadores Diario");
             template.AddVariable("TituloSemanal", "Reporte Indicadores Semanal");
             template.AddVariable("TituloMensual", "Reporte Indicadores Mensual");
-            template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
+
+            var dateOfFilter = search.FechaInicial.ToString("dd/MM/yyyy") + " AL " + search.FechaFinal.ToString("dd/MM/yyyy");
+            template.AddVariable("Fecha", $"{dateOfFilter}");
+
+            int daysInMonth = DateTime.DaysInMonth(year: search.FechaFinal.Year, month: search.FechaFinal.Month);
+            var firstDayOfMonth = new DateTime(search.FechaFinal.Year, search.FechaFinal.Month, 1).ToString("dd/MM/yyyy");
+            var lastDayOfMonth = new DateTime(search.FechaFinal.Year, search.FechaFinal.Month, daysInMonth).ToString("dd/MM/yyyy");
+            template.AddVariable("FechaMensual", $"{firstDayOfMonth} AL {lastDayOfMonth}");
 
             var daily = template.Workbook.Worksheet("Diario");
             var weekly = template.Workbook.Worksheet("Semanal");
             var monthly = template.Workbook.Worksheet("Mensual");
 
-            DailyData(data, servicesCost, budget, daily);
+            DailyData(data, servicesCost, budget, samplesCost, daily);
 
-            WeeklyData(data, servicesCost, budget, weekly, search.FechaInicial);
+            WeeklyData(data, servicesCost, budget, samplesCost, weekly, search.FechaInicial);
 
-            MonthlyData(data, servicesCost, budget, monthly, search.FechaInicial);
+            MonthlyData(data, servicesCost, budget, samplesCost, monthly, search.FechaInicial);
 
             template.Generate();
             template.Format();
@@ -243,6 +251,8 @@ namespace Service.Report.Application
                 item.CostoFijo = servicesCost.Where(x => x.Sucursales.Contains(item.Sucursal)).Sum(x => x.CostoFijo);
                 item.CostoReactivo = budget.Where(x => x.SucursalId == item.SucursalId).Sum(x => x.CostoReactivo);
 
+                var city = await _catalogService.GetBranchByName(item.Sucursal);
+
                 var sampleBudget = await _repository.GetSampleCostById(item.SucursalId, search.FechaIndividual);
 
                 if (sampleBudget != null)
@@ -256,7 +266,9 @@ namespace Service.Report.Application
                         SucursalId = item.SucursalId,
                         Sucursal = item.Sucursal,
                         FechaAlta = search.FechaIndividual,
-                        CostoToma = 8.5m
+                        CostoToma = 8.5m,
+                        Ciudad = city.Ciudad,
+                        FechaMod = DateTime.Now
                     });
                 }
             }
@@ -268,6 +280,8 @@ namespace Service.Report.Application
                 Sucursal = x.Sucursal,
                 CostoToma = x.CostoToma,
                 FechaAlta = x.FechaAlta,
+                FechaModificacion = x.FechaMod,
+                Ciudad = x.Ciudad
             }).ToList();
 
             await _repository.CreateSamples(newSamples);
@@ -292,7 +306,7 @@ namespace Service.Report.Application
 
         public async Task<List<SamplesCostsDto>> GetBySamplesCosts(ReportModalFilterDto search)
         {
-            var samples = await _repository.GetSamplesCostsByDate(search);
+            var samples = await _repository.GetSamplesCostsByFilter(search);
 
             return samples.ToSamplesCostsDto().ToList();
         }
@@ -415,7 +429,7 @@ namespace Service.Report.Application
             return firstMonday.AddDays(weekOfYear * 7);
         }
 
-        private void DailyData(List<RequestInfo> data, List<ServicesCost> servicesCost, List<Indicators> budget, IXLWorksheet daily)
+        private void DailyData(List<RequestInfo> data, List<ServicesCost> servicesCost, List<Indicators> budget, List<SamplesCosts> samplesCost, IXLWorksheet daily)
         {
             List<IGrouping<DateTime, RequestInfo>> dailyList = data.GroupBy(x => x.Fecha.Date).OrderBy(x => x.Key).ToList();
             for (int i = 0; i < dailyList.Count; i++)
@@ -426,10 +440,11 @@ namespace Service.Report.Application
 
                 var stats = item.ToIndicatorsStatsDto().ToList();
 
-                foreach (var item2 in stats)
+                foreach (var dailyItem in stats)
                 {
-                    item2.CostoFijo = servicesCost.Where(x => x.Sucursales.Contains(item2.Sucursal)).Sum(x => x.CostoFijo);
-                    item2.CostoReactivo = budget.Where(x => x.SucursalId == item2.SucursalId).Sum(x => x.CostoReactivo);
+                    dailyItem.CostoFijo = servicesCost.Where(x => x.Sucursales.Contains(dailyItem.Sucursal)).Sum(x => x.CostoFijo);
+                    dailyItem.CostoReactivo = budget.Where(x => x.SucursalId == dailyItem.SucursalId).Sum(x => x.CostoReactivo);
+                    dailyItem.CostoTomaCalculado = samplesCost.Where(x => x.SucursalId == dailyItem.SucursalId).Select(x => x.CostoToma).FirstOrDefault() * dailyItem.Expedientes;
                 }
 
                 var results = stats.ToTableIndicatorsStatsDto();
@@ -449,7 +464,7 @@ namespace Service.Report.Application
             }
         }
 
-        private void WeeklyData(List<RequestInfo> data, List<ServicesCost> servicesCost, List<Indicators> budget, IXLWorksheet weekly, DateTime yearOfWeek)
+        private void WeeklyData(List<RequestInfo> data, List<ServicesCost> servicesCost, List<Indicators> budget, List<SamplesCosts> samplesCost, IXLWorksheet weekly, DateTime yearOfWeek)
         {
             List<IGrouping<int, RequestInfo>> weeklyList = data.GroupBy(i => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(i.Fecha, CalendarWeekRule.FirstDay, DayOfWeek.Monday)).OrderBy(x => x.Key).ToList();
             for (int i = 0; i < weeklyList.Count; i++)
@@ -464,6 +479,7 @@ namespace Service.Report.Application
                 {
                     weeklyItem.CostoFijo = servicesCost.Where(x => x.Sucursales.Contains(weeklyItem.Sucursal)).Sum(x => x.CostoFijo);
                     weeklyItem.CostoReactivo = budget.Where(x => x.SucursalId == weeklyItem.SucursalId).Sum(x => x.CostoReactivo);
+                    weeklyItem.CostoTomaCalculado = samplesCost.Where(x => x.SucursalId == weeklyItem.SucursalId).Select(x => x.CostoToma).FirstOrDefault() * weeklyItem.Expedientes;
                 }
 
                 var results = stats.ToTableIndicatorsStatsDto();
@@ -484,7 +500,7 @@ namespace Service.Report.Application
             }
         }
 
-        private void MonthlyData(List<RequestInfo> data, List<ServicesCost> servicesCost, List<Indicators> budget, IXLWorksheet monthly, DateTime month)
+        private async Task MonthlyData(List<RequestInfo> data, List<ServicesCost> servicesCost, List<Indicators> budget, List<SamplesCosts> samplesCost, IXLWorksheet monthly, DateTime month)
         {
             var stats = data.ToIndicatorsStatsDto().ToList();
 
@@ -492,6 +508,7 @@ namespace Service.Report.Application
             {
                 monthlyItem.CostoFijo = servicesCost.Where(x => x.Sucursales.Contains(monthlyItem.Sucursal)).Sum(x => x.CostoFijo);
                 monthlyItem.CostoReactivo = budget.Where(x => x.SucursalId == monthlyItem.SucursalId).Sum(x => x.CostoReactivo);
+                monthlyItem.CostoTomaCalculado = samplesCost.Where(x => x.SucursalId == monthlyItem.SucursalId).Select(x => x.CostoToma).FirstOrDefault() * monthlyItem.Expedientes;
             }
 
             var results = stats.ToTableIndicatorsStatsDto();
@@ -501,6 +518,7 @@ namespace Service.Report.Application
             var tableWithData = monthly.Cell(3, 1).InsertTable(dataTable.AsEnumerable());
 
             var formRow = 3 - 1;
+            int lastRow = new();
 
             List<string> list = results[0].Keys.Where(x => x != "NOMBRE").ToList();
             for (int monthlyData = 0; monthlyData < list.Count; monthlyData++)
@@ -508,6 +526,41 @@ namespace Service.Report.Application
                 var colName = monthly.Column(monthlyData + 2).ColumnLetter();
                 var fr1 = formRow + 7;
                 monthly.Cell(fr1, monthlyData + 2).FormulaA1 = $"={colName}{fr1 - 4}-{colName}{fr1 - 3}-{colName}{fr1 - 2}-{colName}{fr1 - 1}";
+
+                if((monthlyData + 1) == list.Count)
+                {
+                    lastRow = fr1;
+                }
+            }
+
+            var totalStats = data.ToTotals().ToList();
+
+            foreach (var totalItem in totalStats)
+            {
+                var getBranch = await _catalogService.GetBranchByName(totalItem.Ciudad);
+
+                totalItem.Sucursal = getBranch.Nombre;
+                totalItem.SucursalId = Guid.Parse(getBranch.IdSucursal);
+
+                totalItem.CostoFijo = servicesCost.Where(x => x.Sucursales.Contains(totalItem.Sucursal)).Sum(x => x.CostoFijo);
+                totalItem.CostoReactivo = budget.Where(x => x.SucursalId == totalItem.SucursalId).Sum(x => x.CostoReactivo);
+                totalItem.CostoTomaCalculado = samplesCost.Where(x => x.SucursalId == totalItem.SucursalId).Select(x => x.CostoToma).FirstOrDefault() * totalItem.Expedientes;
+            }
+
+            var totals = totalStats.ToTableTotals();
+
+            var totalsTable = GetTable("Total Acumulado", totals);
+
+            var tableWithTotalData = monthly.Cell(lastRow + 2, 1).InsertTable(totalsTable.AsEnumerable());
+
+            var totalRow = lastRow + 1;
+
+            List<string> totalList = totals[0].Keys.Where(x => x != "NOMBRE").ToList();
+            for (int totalData = 0; totalData < totalList.Count; totalData++)
+            {
+                var colName = monthly.Column(totalData + 2).ColumnLetter();
+                var fr1 = totalRow + 7;
+                monthly.Cell(fr1, totalData + 2).FormulaA1 = $"={colName}{fr1 - 4}-{colName}{fr1 - 3}-{colName}{fr1 - 2}-{colName}{fr1 - 1}";
             }
         }
 
