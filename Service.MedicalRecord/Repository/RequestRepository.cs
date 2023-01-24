@@ -233,7 +233,7 @@ namespace Service.MedicalRecord.Repository
                 .OrderBy(x => Convert.ToInt32(x.SerieNumero ?? "0"))
                 .LastOrDefaultAsync();
 
-            return last?.Serie;
+            return last?.SerieNumero;
         }
 
         public async Task Create(Request request)

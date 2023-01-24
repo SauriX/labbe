@@ -23,6 +23,7 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<string> ConvertToRequest(RequestConvertDto requestDto);
         Task<RequestPaymentDto> CreatePayment(RequestPaymentDto requestDto);
         Task<IEnumerable<RequestPaymentDto>> CheckInPayment(RequestCheckInDto checkInDto);
+        Task<string> UpdateSeries(RequestDto requestDto);
         Task UpdateGeneral(RequestGeneralDto requestDto);
         Task UpdateTotals(RequestTotalDto requestDto);
         Task<RequestStudyUpdateDto> UpdateStudies(RequestStudyUpdateDto requestDto);

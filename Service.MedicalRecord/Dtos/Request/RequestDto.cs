@@ -39,6 +39,8 @@ namespace Service.MedicalRecord.Dtos.Request
         public List<string> Servicios { get; set; }
         public byte Urgencia { get; set; }
         public byte Procedencia { get; set; }
+        public string Serie { get; set; }
+        public string SerieNumero { get; set; }
         [JsonIgnore]
         public string Usuario { get; set; }
         [JsonIgnore]
