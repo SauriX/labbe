@@ -61,6 +61,7 @@ namespace Service.Billing
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddScoped<IIdentityClient, IdentityClient>();
+            services.AddScoped<ICatalogClient, CatalogClient>();
             services.AddScoped<IInvoiceClient, InvoiceClient>();
 
             services.AddHttpClient<IIdentityClient, IdentityClient>(client =>
@@ -68,6 +69,20 @@ namespace Service.Billing
                 var token = new HttpContextAccessor().HttpContext.Request.Headers["Authorization"].ToString();
 
                 client.BaseAddress = new Uri(Configuration["ClientUrls:Identity"]);
+
+                if (!string.IsNullOrWhiteSpace(token))
+                {
+                    client.DefaultRequestHeaders.Add("Authorization", token);
+                }
+
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            });
+
+            services.AddHttpClient<ICatalogClient, CatalogClient>(client =>
+            {
+                var token = new HttpContextAccessor().HttpContext.Request.Headers["Authorization"].ToString();
+
+                client.BaseAddress = new Uri(Configuration["ClientUrls:Catalog"]);
 
                 if (!string.IsNullOrWhiteSpace(token))
                 {
@@ -179,8 +194,11 @@ namespace Service.Billing
             });
 
             services.AddScoped<IInvoiceApplication, InvoiceApplication>();
+            services.AddScoped<ISeriesApplication, SeriesApplication>();
 
             services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+            services.AddScoped<ISeriesRepository, SeriesRepository>();
+
         }
 
 

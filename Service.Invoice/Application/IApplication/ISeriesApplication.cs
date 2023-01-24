@@ -1,9 +1,9 @@
-﻿using Service.Catalog.Dtos.Series;
+﻿using Service.Billing.Dtos.Series;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Service.Catalog.Application.IApplication
+namespace Service.Billing.Application.IApplication
 {
     public interface ISeriesApplication
     {
