@@ -37,7 +37,9 @@ namespace Service.MedicalRecord.Mapper
                 TokenValidado = model.TokenValidado,
                 SaldoPendiente = model.Procedencia == PARTICULAR && model.Saldo > 0,
                 Urgencia = model.Urgencia,
-                Procedencia = model.Procedencia
+                Procedencia = model.Procedencia,
+                Serie = model.Serie,
+                SerieNumero = model.SerieNumero
             };
         }
 
