@@ -16,6 +16,7 @@ namespace Service.Billing.Dto.Series
         public string Nombre { get; set; }
         public byte TipoSerie { get; set; }
         public string Contraseña { get; set; }
+        public bool CFDI { get; set; }
         public IFormFile ArchivoCer { get; set; }
         public IFormFile ArchivoKey { get; set; }
         public bool Activo { get; set; }

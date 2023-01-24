@@ -28,6 +28,7 @@ namespace Service.Catalog.Context
         public ApplicationDbContext(DbContextOptions options) : base(options) { }
 
         public DbSet<Configuration> CAT_Configuracion { get; set; }
+        public DbSet<TaxConfiguration> CAT_Configuracion_Fiscal { get; set; }
         public DbSet<Area> CAT_Area { get; set; }
         public DbSet<Budget> CAT_Presupuestos { get; set; }
         public DbSet<BudgetBranch> Relacion_Presupuesto_Sucursal { get; set; }

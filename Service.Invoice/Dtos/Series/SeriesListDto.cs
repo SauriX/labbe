@@ -11,4 +11,12 @@
         public bool CFDI { get; set; }
         public string Año { get; set; }
     }
+
+    public class TicketListDto
+    {
+        public int Id { get; set; }
+        public string Clave { get; set; }
+        public string TipoSerie { get; set; }
+        public string Fecha { get; set; }
+    }
 }

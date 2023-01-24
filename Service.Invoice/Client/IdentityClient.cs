@@ -1,10 +1,12 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Service.Billing.Client.IClient;
 using Service.Billing.Dtos.Scopes;
 using Shared.Error;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Service.Billing.Client

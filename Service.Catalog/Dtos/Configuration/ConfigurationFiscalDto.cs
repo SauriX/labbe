@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using System;
 
 namespace Service.Catalog.Dtos.Configuration
 {
@@ -13,6 +14,7 @@ namespace Service.Catalog.Dtos.Configuration
         public string Calle { get; set; }
         public string Numero { get; set; }
         public string Telefono { get; set; }
+        public Guid UsuarioId { get; set; }
     }
 
     public class ConfigurationFiscalDtoValidator : AbstractValidator<ConfigurationFiscalDto>
