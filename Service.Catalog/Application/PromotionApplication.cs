@@ -46,7 +46,6 @@ namespace Service.Catalog.Application
             {
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
-
             return parameter.ToPromotionFormDto();
         }
 

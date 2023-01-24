@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Service.MedicalRecord.Domain;
 using Service.MedicalRecord.Domain.Appointments;
+using Service.MedicalRecord.Domain.Invoice;
 using Service.MedicalRecord.Domain.MedicalRecord;
 using Service.MedicalRecord.Domain.Quotation;
 using Service.MedicalRecord.Domain.Request;
@@ -18,12 +19,14 @@ namespace Service.MedicalRecord.Context
         public DbSet<Domain.MedicalRecord.MedicalRecord> CAT_Expedientes { get; set; }
         public DbSet<TaxData> CAT_Datos_Fiscales { get; set; }
         public DbSet<MedicalRecordTaxData> Relacion_Expediente_Factura { get; set; }
+        public DbSet<RequestInvoiceCompany> Relacion_Solicitud_Factura_Compania { get; set; }
         public DbSet<Request> CAT_Solicitud { get; set; }
         public DbSet<RequestStudy> Relacion_Solicitud_Estudio { get; set; }
         public DbSet<RequestStudyWee> Relacion_Estudio_WeeClinic { get; set; }
-        public DbSet<ClinicResults> ClinicResults { get; set; }
+        public DbSet<ClinicResults> Resultados_Clinicos { get; set; }
         public DbSet<RequestPack> Relacion_Solicitud_Paquete { get; set; }
         public DbSet<RequestPayment> Relacion_Solicitud_Pago { get; set; }
+        public DbSet<InvoiceCompany> Factura_Compania { get; set; }
         public DbSet<RequestImage> Relacion_Solicitud_Imagen { get; set; }
         public DbSet<AppointmentLab> CAT_Cita_Lab { get; set; }
         public DbSet<AppointmentDom> CAT_Cita_Dom { get; set; }

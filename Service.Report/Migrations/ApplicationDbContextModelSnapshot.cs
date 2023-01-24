@@ -83,38 +83,47 @@ namespace Service.Report.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("CostoFijo")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<decimal>("CostoReactivo")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("CostoTomaCalculado")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("FechaFinal")
+                    b.Property<DateTime>("Fecha")
                         .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaInicial")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("Ingresos")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("Pacientes")
-                        .HasColumnType("int");
 
                     b.Property<Guid>("SucursalId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("UtilidadOperacion")
+                    b.HasKey("Id");
+
+                    b.ToTable("CAT_Indicadores");
+                });
+
+            modelBuilder.Entity("Service.Report.Domain.Indicators.SamplesCosts", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Ciudad")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("CostoToma")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("FechaAlta")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaModificacion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Sucursal")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("SucursalId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SucursalId");
-
-                    b.ToTable("CAT_Indicadores");
+                    b.ToTable("CAT_CostosToma");
                 });
 
             modelBuilder.Entity("Service.Report.Domain.MedicalRecord.MedicalRecord", b =>
@@ -148,7 +157,7 @@ namespace Service.Report.Migrations
 
             modelBuilder.Entity("Service.Report.Domain.Request.Request", b =>
                 {
-                    b.Property<Guid>("SolicitudId")
+                    b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Cargo")
@@ -190,7 +199,7 @@ namespace Service.Report.Migrations
                     b.Property<byte>("Urgencia")
                         .HasColumnType("tinyint");
 
-                    b.HasKey("SolicitudId");
+                    b.HasKey("Id");
 
                     b.HasIndex("EmpresaId");
 
@@ -356,17 +365,6 @@ namespace Service.Report.Migrations
                     b.HasIndex("SolicitudId", "PaqueteId");
 
                     b.ToTable("Relación_Solicitud_Estudio");
-                });
-
-            modelBuilder.Entity("Service.Report.Domain.Indicators.Indicators", b =>
-                {
-                    b.HasOne("Service.Report.Domain.Catalogs.Branch", "Sucursal")
-                        .WithMany()
-                        .HasForeignKey("SucursalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Sucursal");
                 });
 
             modelBuilder.Entity("Service.Report.Domain.Request.Request", b =>

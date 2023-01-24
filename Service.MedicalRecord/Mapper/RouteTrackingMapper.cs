@@ -1,6 +1,8 @@
-﻿using Service.MedicalRecord.Domain.Request;
+﻿using Service.MedicalRecord.Dictionary;
+using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Domain.RouteTracking;
 using Service.MedicalRecord.Domain.TrackingOrder;
+using Service.MedicalRecord.Dtos.DeliverOrder;
 using Service.MedicalRecord.Dtos.RouteTracking;
 using Service.MedicalRecord.Dtos.Sampling;
 using System;
@@ -15,8 +17,33 @@ namespace Service.MedicalRecord.Mapper
         public static List<RouteTrackingListDto> ToRouteTrackingDto(this ICollection<TrackingOrder> model)
         {
             if (model == null) return null;
+             List< RouteTrackingListDto > routes = new List<RouteTrackingListDto>();
+            foreach (TrackingOrder item in model) {
+                foreach (var estudio in item.Estudios) {
+                    routes.Add(new RouteTrackingListDto
+                    {
+                        Id = item.Id,
+                        Seguimiento = estudio.SolicitudEstudio.EstatusId==Status.RequestStudy.TomaDeMuestra || estudio.SolicitudEstudio.EstatusId == Status.RequestStudy.EnRuta ? estudio.IsExtra? $"{item.Clave}-incluido":item.Clave:"",
+                        Clave = item.Clave,
+                        Sucursal = estudio.Solicitud.Sucursal.Nombre,
+                        Fecha = item.FechaCreo.ToString(),
+                        Status = estudio.Solicitud.Estudios.FirstOrDefault(x => x.EstudioId == estudio.EstudioId).Estatus.Nombre,
+                        Estudio = $"{estudio.Solicitud.Estudios.FirstOrDefault(x=>x.EstudioId== estudio.EstudioId).Clave}-{estudio.Estudio}",
+                        rutaId = Guid.Parse(item.RutaId),
+                        Solicitud=estudio.Solicitud.Clave
 
-            return model.Select(x => new RouteTrackingListDto
+
+                    });;
+                }
+            }
+            return routes;
+        }
+
+        public static RouteTrackingDeliverListDto ToRouteTrackingDtoList(this TrackingOrder x)
+        {
+            if (x == null) return null;
+
+            return  new RouteTrackingDeliverListDto
             {
                 Id = x.Id,
                 Seguimiento = x.Clave,
@@ -27,7 +54,7 @@ namespace Service.MedicalRecord.Mapper
                 Estudios = x.Estudios.ToList().ToStudyRouteTrackingDto(x.Id),
                 rutaId = Guid.Parse(x.RutaId)
 
-            }).ToList();
+            };
         }
         public static RouteTrackingFormDto ToRouteTrackingDto(this TrackingOrder x)
         {
@@ -54,6 +81,7 @@ namespace Service.MedicalRecord.Mapper
         }
         public static List<RouteTrackingStudyListDto> ToStudyRouteTrackingDto(this ICollection<TrackingOrderDetail> model, Guid ruteid)
         {
+            var modeling = model;
             return model.Select(x => new RouteTrackingStudyListDto
             {
                 Id = x.EstudioId,
@@ -68,7 +96,43 @@ namespace Service.MedicalRecord.Mapper
                 Entrega = x.FechaMod == System.DateTime.MinValue ? "" : x.FechaMod.ToString(),
                 NombreEstatus = x.Solicitud.Estudios.Where(y => y.EstudioId == x.EstudioId).FirstOrDefault()?.Estatus.Nombre,
                 RouteId = ruteid.ToString(),
+                
             }).ToList();
         }
+
+
+        public static List<DeliverOrderStudyDto> toDeliverOrderStudyDto(this ICollection<RouteTrackingStudyListDto> model , TrackingOrder order) {
+            return model.Select(x => new DeliverOrderStudyDto {
+            Clave= x.Clave,
+            Estudio =x.Nombre,
+                Temperatura = Convert.ToDecimal(order.Temperatura),
+                Paciente =order.Estudios.FirstOrDefault(y=>y.SolicitudId == Guid.Parse(x.Solicitudid) && y.EstudioId == x.Id).Solicitud.Expediente.NombreCompleto,
+                ConfirmacionOrigen = order.Estudios.FirstOrDefault(y => y.SolicitudId == Guid.Parse(x.Solicitudid) && y.EstudioId == x.Id).Solicitud.Estudios.FirstOrDefault(w=>w.EstudioId==x.Id).EstatusId== Status.RequestStudy.TomaDeMuestra,
+                ConfirmacionDestino =false,
+
+            }).ToList();
+        }
+
+        public static DeliverOrderdDto toDeliverOrder(this RouteTrackingDeliverListDto order,string responsableEnvio) {
+
+            return new DeliverOrderdDto
+            {
+                Destino=order.Sucursal,
+                ResponsableRecive = "",
+                FechaEntestimada = order.Fecha,
+                Origen = order.Sucursal,
+                ResponsableEnvio = responsableEnvio,
+                TransportistqName = "",
+                Medioentrega = "",
+                FechaEnvio = "",
+
+
+            };
+        
+            
+        }
     }
+
+
+
 }

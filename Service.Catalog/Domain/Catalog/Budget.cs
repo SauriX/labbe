@@ -1,5 +1,5 @@
-﻿using Service.Catalog.Domain.Branch;
-using System;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Service.Catalog.Domain.Catalog
 {
@@ -9,17 +9,15 @@ namespace Service.Catalog.Domain.Catalog
         {
         }
 
-        public Budget(int id, Guid sucursalId, string clave, string nombre)
+        public Budget(int id, string clave, string nombre)
         {
             Id = id;
-            SucursalId = sucursalId;
             Clave = clave;
             Nombre = nombre;
             FechaCreo = DateTime.Now;
         }
 
-        public decimal CostoFijo { get; set; }
-        public Guid SucursalId { get; set; }
-        public virtual Branch.Branch Sucursal { get; set; }
+        public decimal CostoFijo { get; set; } 
+        public virtual ICollection<BudgetBranch> Sucursales { get; set; }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Service.Billing.Domain.Invoice;
+using Service.Billing.Domain.Series;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace Service.Billing.Context
@@ -9,6 +11,9 @@ namespace Service.Billing.Context
         public ApplicationDbContext(DbContextOptions options) : base(options) { }
 
         public DbSet<Invoice> CAT_Factura { get; set; }
+        public DbSet<InvoiceCompany> CAT_Factura_Companias { get; set; }
+        public DbSet<InvoiceCompanyRequests> Relacion_Factura_Solicitudes { get; set; }
+        public DbSet<Series> CAT_Serie { get; internal set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

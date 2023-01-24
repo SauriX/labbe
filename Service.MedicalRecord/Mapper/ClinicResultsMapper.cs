@@ -46,7 +46,7 @@ namespace Service.MedicalRecord.Mapper
                 Area = "",
                 Estatus = x.EstatusId,
                 Registro = x.FechaCreo.ToString("dd/MM/yyyy HH:mm"),
-                Entrega = x.FechaCreo.AddDays((double)x.Dias).ToString("dd/MM/yyyy HH:mm"),
+                Entrega = x.FechaEntrega.ToString("dd/MM/yyyy HH:mm"),
                 Seleccion = false,
                 Clave = x.Clave,
                 NombreEstatus = x.Estatus.Nombre,
@@ -76,7 +76,8 @@ namespace Service.MedicalRecord.Mapper
                     : x.EstatusId == Status.RequestStudy.Enviado
                     ? x.UsuarioEnviado
                     : "",
-                Urgencia = x.Solicitud.Urgencia
+                Urgencia = x.Solicitud.Urgencia,
+                SolicitudEstudioId = x.Id
             }).ToList();
         }
 
@@ -96,11 +97,13 @@ namespace Service.MedicalRecord.Mapper
                 CriticoMaximo = x.CriticoMaximo,
                 ParametroId = Guid.Parse(x.ParametroId),
                 Resultado = x.Resultado,
+                ObservacionesId = x.ObservacionesId,
                 Unidades = x.UnidadNombre,
                 Formula = x?.Formula,
                 NombreCorto = x?.NombreCorto,
                 DeltaCheck = x.DeltaCheck,
                 UltimoResultado = x?.UltimoResultado,
+                UltimaSolicitudId = x.UltimaSolicitudId,
                 Orden = i,
                 Clave = x.Clave,
                 FCSI = x.FCSI,
@@ -137,7 +140,7 @@ namespace Service.MedicalRecord.Mapper
                 MedicoId = model.MedicoId,
                 MuestraRecibida = model.MuestraRecibida,
                 ImagenPatologica = model.ImagenPatologica,
-                
+
 
             };
         }
@@ -251,6 +254,7 @@ namespace Service.MedicalRecord.Mapper
                     UnidadNombre = results.Unidades,
                     Estudio = results.SolicitudEstudio.Nombre,
                     UltimoResultado = results.UltimoResultado,
+                    UltimaSolicitudId = results.UltimaSolicitudId,
                     DeltaCheck = results.DeltaCheck,
                     Orden = results.Orden,
                     Clave = results.Clave,
@@ -282,11 +286,12 @@ namespace Service.MedicalRecord.Mapper
                     CriticoMaximo = x.CriticoMaximo,
                     ParametroId = Guid.Parse(x.ParametroId),
                     Resultado = x.Resultado,
+                    ObservacionesId = x.ObservacionesId,
                     Unidades = x.UnidadNombre,
                     Formula = x?.Formula,
                     NombreCorto = x?.NombreCorto
                 };
-            }).ToList(); 
+            }).ToList();
         }
 
         public static ClinicResultPathologicalPdfDto toInformationPdfResult(this List<ClinicalResultsPathological> result, bool ImprimirLogos)

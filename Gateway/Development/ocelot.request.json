@@ -157,6 +157,18 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
+      "DownstreamPathTemplate": "/api/request/series",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/request/series",
+      "UpstreamHttpMethod": [ "PUT" ]
+    }, 
+    {
       "DownstreamPathTemplate": "/api/request/general",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -203,6 +215,18 @@
       ],
       "UpstreamPathTemplate": "/api/request/cancel/{recordId}/{requestId}",
       "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/request/delete/{recordId}/{requestId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/request/delete/{recordId}/{requestId}",
+      "UpstreamHttpMethod": [ "DELETE" ]
     },
     {
       "DownstreamPathTemplate": "/api/request/studies/cancel",

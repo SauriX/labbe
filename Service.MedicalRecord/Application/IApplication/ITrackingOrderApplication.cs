@@ -1,4 +1,5 @@
 ﻿using Service.MedicalRecord.Domain.TrackingOrder;
+using Service.MedicalRecord.Dtos.RouteTracking;
 using Service.MedicalRecord.Dtos.TrackingOrder;
 using System;
 using System.Collections.Generic;
@@ -15,5 +16,9 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<bool> ConfirmarRecoleccion(Guid seguimientoId);
         Task<bool> CancelarRecoleccion(Guid seguimientoId);
         Task<(byte[] file, string fileName)> ExportForm(TrackingOrderFormDto order);
+        Task<IEnumerable<RquestStudiesDto>> FindRequestEstudios(string request);
+        Task<IEnumerable<EstudiosListDto>> FindAllEstudios(List<int> estudios, string request);
+
+
     }
 }

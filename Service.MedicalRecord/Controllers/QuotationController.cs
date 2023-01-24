@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Dtos.Quotation;
+using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.WeeClinic;
 using Shared.Dictionary;
 using System;
@@ -107,14 +108,6 @@ namespace Service.MedicalRecord.Controllers
             return await _service.ConvertToRequest(quotationId, userId, userName);
         }
 
-        [HttpPost("deactivate/{quotationId}")]
-        [Authorize(Policies.Create)]
-        public async Task DeactivateQuotation(Guid quotationId)
-        {
-
-            await _service.DeactivateQuotation(quotationId);
-        }
-
         [HttpPut("general")]
         [Authorize(Policies.Update)]
         public async Task UpdateGeneral(QuotationGeneralDto quotationDto)
@@ -144,9 +137,11 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("studies")]
         [Authorize(Policies.Create)]
-        public async Task UpdateStudies(QuotationStudyUpdateDto quotationDto)
+        public async Task<QuotationStudyUpdateDto> UpdateStudies(QuotationStudyUpdateDto quotationDto)
         {
-            await _service.UpdateStudies(quotationDto);
+            quotationDto.UsuarioId = (Guid)HttpContext.Items["userId"];
+
+            return await _service.UpdateStudies(quotationDto);
         }
 
         [HttpPut("cancel/{quotationId}")]
@@ -158,8 +153,13 @@ namespace Service.MedicalRecord.Controllers
             await _service.CancelQuotation(quotationId, userId);
         }
 
+        [HttpDelete("delete/{quotationId}")]
+        public async Task DeleteQuotation(Guid quotationId)
+        {
+            await _service.DeleteQuotation(quotationId);
+        }
+
         [HttpPut("studies/cancel")]
-        [Authorize(Policies.Update)]
         public async Task DeleteStudies(QuotationStudyUpdateDto quotationDto)
         {
             await _service.DeleteStudies(quotationDto);
@@ -172,6 +172,15 @@ namespace Service.MedicalRecord.Controllers
             var file = await _service.PrintQuotation(quotationId);
 
             return File(file, MimeType.PDF, "quotation.pdf");
+        }
+
+        [HttpPost("quote/{id}")]
+        //[Authorize(Policies.Print)]
+        public async Task<IActionResult> PrintQuote(Guid id)
+        {
+            var file = await _service.ExportQuote(id);
+
+            return File(file, MimeType.PDF, "Cotización.pdf");
         }
     }
 }

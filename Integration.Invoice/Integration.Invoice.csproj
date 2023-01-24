@@ -144,6 +144,7 @@
     <Compile Include="Dtos\FacturapiClientDto.cs" />
     <Compile Include="Dtos\FacturapiDto.cs" />
     <Compile Include="Dtos\FacturapiProductDto.cs" />
+    <Compile Include="Dtos\InvoiceCancelation.cs" />
     <Compile Include="Dtos\InvoiceCreationDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -189,8 +190,6 @@
           <DevelopmentServerPort>60235</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:57421/</IISUrl>
-          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
-          <IISAppRootUrl>http://localhost:57421/</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

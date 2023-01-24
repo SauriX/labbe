@@ -23,10 +23,12 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<string> ConvertToRequest(RequestConvertDto requestDto);
         Task<RequestPaymentDto> CreatePayment(RequestPaymentDto requestDto);
         Task<IEnumerable<RequestPaymentDto>> CheckInPayment(RequestCheckInDto checkInDto);
+        Task<string> UpdateSeries(RequestDto requestDto);
         Task UpdateGeneral(RequestGeneralDto requestDto);
         Task UpdateTotals(RequestTotalDto requestDto);
         Task<RequestStudyUpdateDto> UpdateStudies(RequestStudyUpdateDto requestDto);
         Task CancelRequest(Guid recordId, Guid requestId, Guid userId);
+        Task DeleteRequest(Guid recordId, Guid requestId);
         Task CancelStudies(RequestStudyUpdateDto requestDto);
         Task<List<RequestPaymentDto>> CancelPayment(Guid recordId, Guid requestId, List<RequestPaymentDto> requestDto);
         Task<int> SendStudiesToSampling(RequestStudyUpdateDto requestDto);

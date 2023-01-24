@@ -28,9 +28,6 @@ namespace Service.MedicalRecord.Dtos.Request
         public int? AreaId { get; set; }
         public byte EstatusId { get; set; }
         public string Estatus { get; set; }
-        public bool AplicaDescuento { get; set; }
-        public bool AplicaCargo { get; set; }
-        public bool AplicaCopago { get; set; }
         public decimal Dias { get; set; }
         public int Horas { get; set; }
         public DateTime FechaEntrega { get => fechaEntrega == DateTime.MinValue ? DateTime.Now : fechaEntrega; set => fechaEntrega = value; }
@@ -40,6 +37,8 @@ namespace Service.MedicalRecord.Dtos.Request
         public decimal Copago { get; set; }
         public decimal PrecioFinal { get; set; }
         public string NombreEstatus { get; set; }
+        public string FechaTomaMuestra { get; set; }
+        public string FechaSolicitado { get; set; }
         public string FechaActualizacion { get; set; }
         public string UsuarioActualizacion { get; set; }
         public bool Asignado { get; set; }

@@ -72,5 +72,13 @@ namespace Integration.Invoice.Controllers
 
             return result;
         }
+
+        [HttpPost]
+        [Route("cancel")]
+        public async Task<object> Cancel(InvoiceCancelation invoiceDto)
+        {
+            var file = await InvoiceService.Cancel(invoiceDto);
+            return file;
+        }
     }
 }

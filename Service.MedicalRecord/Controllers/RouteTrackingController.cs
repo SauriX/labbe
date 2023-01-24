@@ -44,6 +44,13 @@ namespace Service.MedicalRecord.Controllers
             var (file, fileName) = await _service.ExportForm(order);
             return File(file, MimeType.XLSX, fileName);
         }
+        [HttpPost("exportOrder/{id}")]
+     //   [Authorize(Policies.Download)]
+        public async Task<IActionResult> ExportDeliverOrder(string id)
+        {
+            var file = await _service.ExportDeliver(Guid.Parse(id));
+            return File(file, MimeType.PDF, "Orden de envio.pdf");
+        }
         [HttpPost("allrecive")]
         [Authorize(Policies.Access)]
         public async Task<List<PendingReciveDto>> GetAllRecive(PendingSearchDto search)     {

@@ -87,6 +87,7 @@ namespace Service.Billing.Mapper
             return new Invoice
             {
                 Id = Guid.NewGuid(),
+                Serie = dto.Serie,
                 FormaPago = dto.FormaPago,
                 MetodoPago = dto.MetodoPago,
                 UsoCFDI = dto.UsoCFDI,
@@ -101,6 +102,31 @@ namespace Service.Billing.Mapper
                 ExpedienteId = dto.ExpedienteId,
                 Expediente = dto.Expediente,
                 Paciente = dto.Paciente,
+            };
+        }
+        
+        public static InvoiceCompany ToModelCompany(this InvoiceDto dto)
+        {
+            if (dto == null) return null;
+
+            return new InvoiceCompany
+            {
+                Id = Guid.NewGuid(),
+                FormaPago = dto.FormaPago,
+                MetodoPago = dto.MetodoPago,
+                UsoCFDI = dto.UsoCFDI,
+                RegimenFiscal = dto.Cliente.RegimenFiscal,
+                RFC = dto.Cliente.RFC,
+                Desglozado = dto.Desglozado,
+                ConNombre = dto.ConNombre,
+                EnvioCorreo = dto.EnvioCorreo,
+                EnvioWhatsapp = dto.EnvioWhatsapp,
+                Estatus = "Facturado",
+                Solicitudes = dto.SolicitudesId.Select(x => new InvoiceCompanyRequests
+                {
+                    Id = Guid.NewGuid(),
+                    SolicitudId = x
+                }).ToList(),
             };
         }
     }

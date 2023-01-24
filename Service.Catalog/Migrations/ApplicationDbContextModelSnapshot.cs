@@ -278,9 +278,6 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("Nombre")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("SucursalId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid?>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");
 
@@ -289,9 +286,40 @@ namespace Service.Catalog.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SucursalId");
-
                     b.ToTable("CAT_Presupuestos");
+                });
+
+            modelBuilder.Entity("Service.Catalog.Domain.Catalog.BudgetBranch", b =>
+                {
+                    b.Property<Guid>("SucursalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("CostoFijoId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Ciudad")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaModifico")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UsuarioCreoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UsuarioModificoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("SucursalId", "CostoFijoId");
+
+                    b.HasIndex("CostoFijoId");
+
+                    b.ToTable("Relacion_Presupuesto_Sucursal");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Catalog.Clinic", b =>
@@ -793,6 +821,9 @@ namespace Service.Catalog.Migrations
                     b.Property<int?>("CFDIId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Calle")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Ciudad")
                         .HasColumnType("nvarchar(max)");
 
@@ -803,6 +834,12 @@ namespace Service.Catalog.Migrations
 
                     b.Property<string>("CodigoPostal")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Colonia")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ColoniaId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Contrasena")
                         .IsRequired()
@@ -838,6 +875,9 @@ namespace Service.Catalog.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("Numero")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("NumeroDeCuenta")
                         .HasColumnType("nvarchar(max)");
 
@@ -855,6 +895,9 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("RazonSocial")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RegimenFiscal")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("UsuarioCreoId")
@@ -2872,13 +2915,21 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Departamento");
                 });
 
-            modelBuilder.Entity("Service.Catalog.Domain.Catalog.Budget", b =>
+            modelBuilder.Entity("Service.Catalog.Domain.Catalog.BudgetBranch", b =>
                 {
+                    b.HasOne("Service.Catalog.Domain.Catalog.Budget", "CostoFijo")
+                        .WithMany("Sucursales")
+                        .HasForeignKey("CostoFijoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Service.Catalog.Domain.Branch.Branch", "Sucursal")
                         .WithMany()
                         .HasForeignKey("SucursalId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("CostoFijo");
 
                     b.Navigation("Sucursal");
                 });
@@ -3506,6 +3557,11 @@ namespace Service.Catalog.Migrations
             modelBuilder.Entity("Service.Catalog.Domain.Branch.Branch", b =>
                 {
                     b.Navigation("Departamentos");
+                });
+
+            modelBuilder.Entity("Service.Catalog.Domain.Catalog.Budget", b =>
+                {
+                    b.Navigation("Sucursales");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Catalog.Equipos", b =>

@@ -1,4 +1,6 @@
-﻿using Service.MedicalRecord.Domain.TrackingOrder;
+﻿using Service.MedicalRecord.Dictionary;
+using Service.MedicalRecord.Domain.TrackingOrder;
+using Service.MedicalRecord.Dtos.RouteTracking;
 using Service.MedicalRecord.Dtos.TrackingOrder;
 using System;
 using System.Collections.Generic;
@@ -35,7 +37,8 @@ namespace Service.MedicalRecord.Mapper
                     Escaneado = x.Escaneado,
 
 
-                }).ToArray()
+                }).ToArray(),
+
 
 
             };
@@ -44,6 +47,7 @@ namespace Service.MedicalRecord.Mapper
         {
             return new TrackingOrderCurrentDto
             {
+                Id = model.Id,
                 DiaRecoleccion = model.DiaRecoleccion,
                 MuestraId = model.MuestraId,
                 Temperatura = model.Temperatura,
@@ -56,6 +60,7 @@ namespace Service.MedicalRecord.Mapper
                 Clave = model.Clave,
                 //Fecha = model.FechaCreo,
                 EstudiosAgrupados = estudios.ToList(),
+                IsInRute = estudios.Any(x => x.IsInRute && x.orderId == model.Id)
             };
         }
         public static TrackingOrder toUpdateModel(this TrackingOrderFormDto dto, TrackingOrder model)
@@ -67,14 +72,14 @@ namespace Service.MedicalRecord.Mapper
                 Temperatura = dto.Temperatura,
                 SucursalDestinoId = dto.SucursalDestinoId,
                 SucursalOrigenId = dto.SucursalOrigenId,
-                UsuarioCreoId = dto.UsuarioCreoId,
+                UsuarioCreoId = model.UsuarioCreoId,
                 FechaMod = DateTime.Now,
                 Activo = dto.Activo,
                 EscaneoCodigoBarras = dto.EscaneoCodigoBarras,
                 MaquiladorId = dto.MaquiladorId,
-                RutaId = dto.RutaId,
+                RutaId = model.RutaId,
                 DiaRecoleccion = dto.DiaRecoleccion,
-                Clave = dto.Clave,
+                Clave = model.Clave,
                 Estudios = dto.Estudios.Select(x => new TrackingOrderDetail
                 {
                     SolicitudId = x.SolicitudId,
@@ -124,7 +129,8 @@ namespace Service.MedicalRecord.Mapper
                     NombrePaciente = x.NombrePaciente,
                     Temperatura = x.Temperatura,
                     Escaneado =false,
-                    FechaCreo = DateTime.Now
+                    FechaCreo = DateTime.Now,
+                    IsExtra = x.IsExtra
                     
 
                 }).ToList()
@@ -159,27 +165,73 @@ namespace Service.MedicalRecord.Mapper
                 Clave = model.Clave
             };
         }
-        public static IEnumerable<EstudiosListDto> ToStudiesRequestRouteDto(this IEnumerable<Domain.Request.RequestStudy> model)
+        public static IEnumerable<EstudiosListDto> ToStudiesRequestRouteDto(this IEnumerable<Domain.Request.RequestStudy> model,bool isExtra = false )
         {
             if (model == null) return null;
 
 
-            return model.GroupBy(x => x.Solicitud.Id)/*.GroupBy(x => x.Tapon.Clave)*/.Select(x => new EstudiosListDto
+            return model.Select(x => new EstudiosListDto
             {
-                solicitudId = x.FirstOrDefault().SolicitudId,
-                //solicitud = x.,
-                Estudios = x.Select(y => new StudiesRequestRouteDto
+                
+                solicitudId = x.SolicitudId,
+                IsInRute = x.Solicitud.Estudios.Any(y => y.EstatusId == Status.RequestStudy.EnRuta && x.EstudioId == y.EstudioId),
+                Estudio =   new StudiesRequestRouteDto
                 {
-                    Estudio = y.Nombre,
-                    EstudioId = y.EstudioId,
-                    Clave = y.Clave,
-                    NombrePaciente = y.Solicitud.Expediente.NombreCompleto,
-                    Solicitud = y.Solicitud.Clave,
-                    TaponNombre = y.Tapon?.Clave,
-                    SolicitudId = y.Solicitud.Id,
-                    ExpedienteId = y.Solicitud.ExpedienteId
-                }).ToList(),
+                    Estudio = x.Nombre,
+                    EstudioId = x.EstudioId,
+                    Clave = x.Clave,
+                    NombrePaciente = x.Solicitud.Expediente.NombreCompleto,
+                    Solicitud = x.Solicitud.Clave,
+                    TaponNombre = x.Tapon?.Clave,
+                    SolicitudId = x.Solicitud.Id,
+                    ExpedienteId = x.Solicitud.ExpedienteId,
+                    Escaneado=true,
+                    IsExtra = isExtra
+                },
+                IsExtra = isExtra
             });
+        }
+
+        public static IEnumerable<EstudiosListDto> ToStudiesRequestRouteDto(this IEnumerable<TrackingOrderDetail> model, Guid orderId)
+        {
+            if (model == null) return null;
+
+
+            return model.Select(x => new EstudiosListDto
+            {
+
+                solicitudId = x.SolicitudId,    
+                IsInRute = x.SolicitudEstudio.EstatusId == Status.RequestStudy.EnRuta ,
+                orderId = orderId,
+                Estudio = new StudiesRequestRouteDto
+                {
+                    Estudio = x.Estudio,
+                    EstudioId = x.EstudioId,
+                    Clave = x.SolicitudEstudio.Clave,
+                    NombrePaciente = x.Solicitud.Expediente.NombreCompleto,
+                    Solicitud = x.Solicitud.Clave,
+                    SolicitudId = x.Solicitud.Id,
+                    ExpedienteId = x.Solicitud.ExpedienteId,
+                    Escaneado = true,
+                    Temperatura = x.Temperatura
+
+                },
+            });
+        }
+
+        public static IEnumerable<RquestStudiesDto> torequestedStudi(this IEnumerable<Domain.Request.RequestStudy> model) {
+
+                if (model == null) return null;
+            return model.Select(x=> new RquestStudiesDto { 
+                Id = x.EstudioId,
+                Clave = x.Clave,
+                Estudio = x.Nombre,
+                Estatus = x.Estatus.Nombre,
+                Dias = x.Dias.ToString(),
+                Fecha = x.FechaTomaMuestra.ToString(),
+                EstatusId = x.EstatusId
+            });
+
         }
     }
 }

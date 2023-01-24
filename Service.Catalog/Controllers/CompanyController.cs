@@ -43,7 +43,7 @@ namespace Service.Catalog.Controllers
         [HttpPost]
         [Authorize(Policies.Create)]
         public async Task Create(CompanyFormDto Company)
-        {
+            {
 
             await _Services.Create(Company);
         }
@@ -75,6 +75,12 @@ namespace Service.Catalog.Controllers
         public string GeneratePassword()
         {
             return _Services.GeneratePassword();
+        }
+        [HttpGet("contacts/{Id}")]
+        [Authorize(Policies.Access)]
+        public async Task<List<ContactListDto>> GetContactsByCompany(Guid Id)
+        {
+            return await _Services.GetContactsByCompany(Id);
         }
     }
 }

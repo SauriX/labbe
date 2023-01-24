@@ -36,7 +36,7 @@ namespace Service.Catalog.Application
         {
             var studies = await _repository.GetByIds(ids);
 
-            return studies.ToStudyListDtos();
+            return studies.ToStudyListDtos(ids);
         }
 
         public async Task<StudyFormDto> Create(StudyFormDto study)

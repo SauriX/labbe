@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MoreLinq;
 using Service.MedicalRecord.Context;
+using Service.MedicalRecord.Domain.Invoice;
 using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Dtos.InvoiceCompany;
 using Service.MedicalRecord.Dtos.Request;
@@ -40,21 +41,26 @@ namespace Service.MedicalRecord.Repository
                 .OrderBy(x => x.FechaCreo)
                 .AsQueryable();
 
-            if (filter.TipoFecha != null && filter.TipoFecha == 1 && filter.FechaInicial != null && filter.FechaFinal != null)
+            if (string.IsNullOrWhiteSpace(filter.Clave) && filter.TipoFecha != null && filter.TipoFecha == 1 && filter.FechaInicial != null && filter.FechaFinal != null)
             {
                 requests = requests.Where(x => ((DateTime)filter.FechaInicial).Date <= x.FechaCreo.Date && ((DateTime)filter.FechaFinal).Date >= x.FechaCreo.Date);
             }
 
-            if (filter.TipoFecha != null && filter.TipoFecha == 2 && filter.FechaInicial != null && filter.FechaFinal != null)
+            if (string.IsNullOrWhiteSpace(filter.Clave) && filter.TipoFecha != null && filter.TipoFecha == 2 && filter.FechaInicial != null && filter.FechaFinal != null)
             {
-                requests = requests.Where(x => x.Estudios.Any(x => ((DateTime)filter.FechaInicial).Date <= x.FechaEntrega && ((DateTime)filter.FechaFinal).Date >= x.FechaEntrega));
+                requests = requests.Where(x => x.Estudios.Any(x => ((DateTime)filter.FechaInicial).Date <= x.FechaEntrega.Date && ((DateTime)filter.FechaFinal).Date >= x.FechaEntrega.Date));
             }
 
             if (!string.IsNullOrWhiteSpace(filter.Clave))
             {
-                requests = requests.Where(x => x.Clave.ToLower().Contains(filter.Clave)
-                || x.ClavePatologica.ToLower().Contains(filter.Clave)
+                requests = requests.Where(x => x.Clave.Contains(filter.Clave)
+                || x.ClavePatologica.ToLower().Contains(filter.Clave.ToLower())
                 || (x.Expediente.NombrePaciente + " " + x.Expediente.PrimerApellido + " " + x.Expediente.SegundoApellido).ToLower().Contains(filter.Clave));
+            }
+
+            if (filter.Ciudad != null)
+            {
+                requests = requests.Where(x => x.Sucursal != null && x.Sucursal.Ciudad == filter.Ciudad);
             }
 
             if (filter.Sucursales != null && filter.Sucursales.Any())
@@ -212,16 +218,22 @@ namespace Service.MedicalRecord.Repository
 
         public async Task<List<RequestPayment>> GetPayments(Guid requestId)
         {
-            var payments = await _context.Relacion_Solicitud_Pago.Where(x => x.SolicitudId == requestId).OrderBy(x => x.FechaCreo).ToListAsync();
+            var payments = await _context.Relacion_Solicitud_Pago
+                .Where(x => x.SolicitudId == requestId)
+                .OrderBy(x => x.FechaCreo)
+                .ToListAsync();
 
             return payments;
         }
 
         public async Task<string> GetLastPaymentCode(string serie, string year)
         {
-            var last = await _context.Relacion_Solicitud_Pago.OrderBy(x => x.FechaCreo).LastOrDefaultAsync(x => x.Serie == serie && x.Numero.StartsWith(year));
+            var last = await _context.CAT_Solicitud
+                .Where(x => x.Serie == serie && x.SerieNumero.StartsWith(year))
+                .OrderBy(x => Convert.ToInt32(x.SerieNumero ?? "0"))
+                .LastOrDefaultAsync();
 
-            return last?.Numero;
+            return last?.SerieNumero;
         }
 
         public async Task Create(Request request)
@@ -245,6 +257,13 @@ namespace Service.MedicalRecord.Repository
             await _context.SaveChangesAsync();
 
             _context.ChangeTracker.Clear();
+        }
+
+        public async Task Delete(Request request)
+        {
+            _context.CAT_Solicitud.Remove(request);
+
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateImage(RequestImage requestImage)
@@ -349,9 +368,10 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Expediente)
                 .Include(x => x.Compañia)
                 .Include(x => x.Sucursal)
+                .Include(x => x.FacturasCompañia)
                 .Include(x => x.Estudios).ThenInclude(x => x.Estatus)
                 .Include(x => x.Estudios).ThenInclude(x => x.Tapon)
-                .Include(x => x.Pagos)
+                .Include(x => x.Pagos).ThenInclude(x => x.Estatus).OrderBy(x => x.FechaCreo)
                 .OrderBy(x => x.FechaCreo)
                 .Where(x => x.Procedencia == 2)
                 .AsQueryable();
@@ -370,7 +390,77 @@ namespace Service.MedicalRecord.Repository
             {
                 requests = requests.Where(x => x.CompañiaId != null && filter.Companias.Contains((Guid)x.CompañiaId));
             }
+            if (!string.IsNullOrWhiteSpace(filter.Buscar))
+            {
+                requests = requests.Where(x => x.Clave.ToLower().Contains(filter.Buscar)
+                || x.ClavePatologica.ToLower().Contains(filter.Buscar)
+                || (x.Expediente.NombrePaciente + " " + x.Expediente.PrimerApellido + " " + x.Expediente.SegundoApellido).ToLower().Contains(filter.Buscar));
+            }
+            if (filter.TipoFactura.Count() > 0)
+            {
+                if (filter.TipoFactura.Contains("facturadas"))
+                {
+                    requests = requests.Where(x => x.Pagos.FirstOrDefault().EstatusId != 3 && x.Pagos.Count() > 0);
+
+                }
+                if (filter.TipoFactura.Contains("noFacturadas"))
+                {
+                    requests = requests.Where(x => x.Pagos.Count() == 0);
+
+                }
+                if (filter.TipoFactura.Contains("canceladas"))
+                {
+                    requests = requests.Where(x => x.Pagos.FirstOrDefault().EstatusId == 3);
+
+                }
+            }
             return requests.ToListAsync();
+        }
+
+        public async Task CreateInvoiceCompanyData(InvoiceCompany invoiceCompnay, List<RequestInvoiceCompany> requestInvoiceCompany)
+        {
+            _context.Factura_Compania.Add(invoiceCompnay);
+
+            await _context.SaveChangesAsync();
+
+            var config = new BulkConfig() { SetOutputIdentity = true, PreserveInsertOrder = true };
+
+            await _context.BulkInsertOrUpdateAsync(requestInvoiceCompany, config);
+
+
+        }
+
+        public async Task UpdateInvoiceCompany(InvoiceCompany invoiceCompnay)
+        {
+            _context.Factura_Compania.Update(invoiceCompnay);
+
+            await _context.SaveChangesAsync();
+
+            _context.ChangeTracker.Clear();
+        }
+        public async Task<InvoiceCompany> GetInvoiceCompanyByFacturapiId(string id)
+        {
+            var request = await _context.Factura_Compania
+                .FirstOrDefaultAsync(x => x.FacturapiId == id);
+
+            return request;
+        }
+
+        public async Task<List<Domain.Request.RequestStudy>> GetRequestsStudyByListId(List<Guid> solicitudesId)
+        {
+            
+            return await _context.Relacion_Solicitud_Estudio
+                .Where(x => solicitudesId.Contains(x.SolicitudId))
+                .ToListAsync(); 
+
+        }
+        public async Task<List<Domain.Request.Request>> GetRequestsByListId(List<Guid> solicitudesId)
+        {
+
+            return await _context.CAT_Solicitud
+                .Where(x => solicitudesId.Contains(x.Id))
+                .ToListAsync();
+
         }
     }
 }

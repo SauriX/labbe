@@ -13,8 +13,6 @@ namespace Service.MedicalRecord.Mapper
         private const byte VIGENTE = 1;
         private const byte PARTICULAR = 2;
         private const byte URGENCIA_NORMAL = 1;
-        //private const byte DESCUENTO_PORCENTAJE = 1;
-        private const byte DESCUENTO_DINERO = 2;
 
         public static RequestDto ToRequestDto(this Request model)
         {
@@ -28,13 +26,20 @@ namespace Service.MedicalRecord.Mapper
                 ClaveMedico = model.Medico?.Clave,
                 Observaciones = model.Observaciones,
                 ExpedienteId = model.ExpedienteId,
+                Paciente = model.Expediente.NombreCompleto,
                 SucursalId = model.SucursalId,
+                Sucursal = model.Sucursal.Nombre,
                 Clave = model.Clave,
                 Parcialidad = model.Parcialidad,
                 EsNuevo = model.EsNuevo,
                 FolioWeeClinic = model.FolioWeeClinic,
                 Registro = $"{model.FechaCreo:dd/MM/yyyy}",
-                TokenValidado = model.TokenValidado
+                TokenValidado = model.TokenValidado,
+                SaldoPendiente = model.Procedencia == PARTICULAR && model.Saldo > 0,
+                Urgencia = model.Urgencia,
+                Procedencia = model.Procedencia,
+                Serie = model.Serie,
+                SerieNumero = model.SerieNumero
             };
         }
 
@@ -50,11 +55,11 @@ namespace Service.MedicalRecord.Mapper
                 ClavePatologica = x.ClavePatologica,
                 Afiliacion = x.Afiliacion,
                 Paciente = x.Expediente.NombreCompleto,
-                Compañia = x.Procedencia == PARTICULAR ? "Particular" : x.Compañia?.Clave,
-                Procedencia = x.Procedencia == PARTICULAR ? "Particular" : x.Compañia?.Nombre,
+                Compañia = x.Compañia?.Nombre,
+                Procedencia = x.Procedencia == PARTICULAR ? "Particular" : "COMPAÑIÍA",
                 Factura = "",
                 Importe = x.TotalEstudios,
-                Descuento = x.DescuentoTipo == DESCUENTO_DINERO ? x.Descuento : x.Total * x.Descuento,
+                Descuento = x.Descuento,
                 Total = x.Total,
                 Saldo = x.Saldo,
                 FolioWeeClinic = x.FolioWeeClinic,
@@ -96,11 +101,8 @@ namespace Service.MedicalRecord.Mapper
             {
                 TotalEstudios = model.TotalEstudios,
                 Descuento = model.Descuento,
-                DescuentoTipo = model.DescuentoTipo,
                 Cargo = model.Cargo,
-                CargoTipo = model.CargoTipo,
                 Copago = model.Copago,
-                CopagoTipo = model.CopagoTipo,
                 Total = model.Total,
                 Saldo = model.Saldo,
             };
@@ -120,6 +122,7 @@ namespace Service.MedicalRecord.Mapper
                 Serie = model.Serie,
                 Numero = model.Numero,
                 FacturaId = model.FacturaId,
+                SerieFactura = model.SerieFactura,
                 FacturapiId = model.FacturapiId,
                 UsuarioRegistra = model.UsuarioRegistra,
                 EstatusId = model.EstatusId
@@ -246,9 +249,6 @@ namespace Service.MedicalRecord.Mapper
                 Horas = x.Horas,
                 DepartamentoId = x.DepartamentoId,
                 AreaId = x.AreaId,
-                AplicaDescuento = x.AplicaDescuento,
-                AplicaCargo = x.AplicaCargo,
-                AplicaCopago = x.AplicaCopago,
                 Precio = x.Precio,
                 Descuento = x.Descuento,
                 DescuentoPorcentaje = x.DescuentoPorcentaje,
@@ -286,9 +286,6 @@ namespace Service.MedicalRecord.Mapper
                 FechaEntrega = x.FechaEntrega,
                 DepartamentoId = x.DepartamentoId,
                 AreaId = x.AreaId,
-                AplicaDescuento = x.AplicaDescuento,
-                AplicaCargo = x.AplicaCargo,
-                AplicaCopago = x.AplicaCopago,
                 Precio = x.Precio,
                 Descuento = x.Descuento,
                 DescuentoPorcentaje = x.DescuentoPorcentaje,
@@ -297,7 +294,11 @@ namespace Service.MedicalRecord.Mapper
                 NombreEstatus = x.Estatus.Nombre,
                 Asignado = x.EstudioWeeClinic?.Asignado ?? true,
                 Metodo = x.Metodo,
-                FechaActualizacion = x.EstatusId == Status.RequestStudy.TomaDeMuestra
+                FechaTomaMuestra = x.FechaTomaMuestra?.ToString("dd/MM/yyyy HH:mm"),
+                FechaSolicitado = x.FechaSolicitado?.ToString("dd/MM/yyyy HH:mm"),
+                FechaActualizacion = x.EstatusId == Status.RequestStudy.Pendiente
+                    ? x.FechaCreo.ToString("dd/MM/yyyy HH:mm")
+                    : x.EstatusId == Status.RequestStudy.TomaDeMuestra
                     ? x.FechaTomaMuestra?.ToString("dd/MM/yyyy HH:mm")
                     : x.EstatusId == Status.RequestStudy.Solicitado
                     ? x.FechaSolicitado?.ToString("dd/MM/yyyy HH:mm")
@@ -389,9 +390,6 @@ namespace Service.MedicalRecord.Mapper
                     Promocion = x.Promocion,
                     DepartamentoId = x.DepartamentoId,
                     AreaId = x.AreaId,
-                    AplicaDescuento = x.AplicaDescuento,
-                    AplicaCargo = x.AplicaCargo,
-                    AplicaCopago = x.AplicaCopago,
                     Dias = x.Dias,
                     Horas = x.Horas,
                     Precio = x.Precio,
@@ -430,9 +428,6 @@ namespace Service.MedicalRecord.Mapper
                     DepartamentoId = x.DepartamentoId,
                     AreaId = x.AreaId,
                     EstatusId = study?.EstatusId ?? Status.RequestStudy.Pendiente,
-                    AplicaDescuento = x.AplicaDescuento,
-                    AplicaCargo = x.AplicaCargo,
-                    AplicaCopago = x.AplicaCopago,
                     Dias = x.Dias,
                     Horas = x.Horas,
                     FechaEntrega = x.FechaEntrega,

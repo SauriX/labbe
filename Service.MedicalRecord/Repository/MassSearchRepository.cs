@@ -83,6 +83,10 @@ namespace Service.MedicalRecord.Repository
             {
                 requests = requests.Where(x => x.Estudios.Any(y => filter.Departamentos.Contains(y.DepartamentoId)));
             }
+            if (filter.Area != null && filter.Area.Count > 0)
+            {
+                requests = requests.Where(x => x.Estudios.Any(y => filter.Area.Contains(y.AreaId)));
+            }
             if (filter.MediosEntrega != null)
             {
                 if (filter.MediosEntrega.Contains("Whatsapp"))
@@ -126,6 +130,7 @@ namespace Service.MedicalRecord.Repository
             if (filter.Estudios != null && filter.Estudios.Count > 0)
             {
                 requests = requests.Where(x => x.Estudios.Any(y => filter.Estudios.Contains(y.EstudioId)));
+
             }
             if (!string.IsNullOrEmpty(filter.Busqueda))
             {

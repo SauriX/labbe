@@ -23,9 +23,11 @@ namespace Service.MedicalRecord.Dtos.Request
         public string NombreCompania { get; set; }
         public string ClaveMedico { get; set; }
         public string Observaciones { get; set; }
+        public string Paciente { get; set; }
         public Guid? SolicitudId { get; set; }
         public Guid ExpedienteId { get; set; }
         public Guid SucursalId { get; set; }
+        public string Sucursal { get; set; }
         public string Clave { get; set; }
         public string ClavePatologica { get; set; }
         public string Registro { get; set; }
@@ -35,9 +37,14 @@ namespace Service.MedicalRecord.Dtos.Request
         public bool EsWeeClinic => !string.IsNullOrEmpty(FolioWeeClinic);
         public bool TokenValidado { get; set; }
         public List<string> Servicios { get; set; }
+        public byte Urgencia { get; set; }
+        public byte Procedencia { get; set; }
+        public string Serie { get; set; }
+        public string SerieNumero { get; set; }
         [JsonIgnore]
         public string Usuario { get; set; }
         [JsonIgnore]
         public Guid UsuarioId { get; set; }
+        public bool SaldoPendiente { get; set; }
     }
 }

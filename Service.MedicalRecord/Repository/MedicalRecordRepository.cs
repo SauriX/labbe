@@ -33,41 +33,43 @@ namespace Service.MedicalRecord.Repository
         public async Task<List<Domain.MedicalRecord.MedicalRecord>> GetNow(MedicalRecordSearch search)
 
         {
-            var expedientes = _context.CAT_Expedientes.AsQueryable();
+            var records = _context.CAT_Expedientes.AsQueryable();
+
 
             if (!string.IsNullOrEmpty(search.ciudad))
             {
-
-
-                expedientes = expedientes.Where(x => x.Ciudad == search.ciudad);
-
-
+                records = records.Where(x => x.Ciudad == search.ciudad);
             }
+
             if (!string.IsNullOrEmpty(search.expediente))
             {
-                expedientes = expedientes.Where(x => x.Expediente.Contains(search.expediente) || x.NombrePaciente.ToLower().Contains(search.expediente.ToLower()) || x.PrimerApellido.ToLower().Contains(search.expediente.ToLower()));
-
+                records = records.Where(x => x.Expediente.Contains(search.expediente) ||
+                (x.NombrePaciente + " " + x.PrimerApellido + " " + x.SegundoApellido).ToLower().Contains(search.expediente.ToLower()));
             }
+
             if (search.fechaNacimiento.Date != DateTime.MinValue.Date)
             {
-                expedientes = expedientes.Where(x => x.FechaDeNacimiento.Date == search.fechaNacimiento.Date);
-
+                records = records.Where(x => x.FechaDeNacimiento.Date == search.fechaNacimiento.Date);
             }
 
-            if (search.fechaAlta != null && search.fechaAlta[0].Date != DateTime.MinValue.Date && search.fechaAlta[1].Date != DateTime.MinValue.Date)
+            if (string.IsNullOrWhiteSpace(search.expediente) &&
+                search.fechaAlta != null && search.fechaAlta.Length > 1 &&
+                search.fechaAlta[0].Date != DateTime.MinValue.Date && search.fechaAlta[1].Date != DateTime.MinValue.Date)
             {
-                expedientes = expedientes.Where(x => x.FechaCreo.Date >= search.fechaAlta[0].Date && x.FechaCreo.Date <= search.fechaAlta[1].Date);
+                records = records.Where(x => x.FechaCreo.Date >= search.fechaAlta[0].Date && x.FechaCreo.Date <= search.fechaAlta[1].Date);
             }
-            if (!string.IsNullOrEmpty(search.sucursal))
-            {
-                expedientes = expedientes.Where(x => x.IdSucursal == Guid.Parse(search.sucursal));
 
+            if (search.sucursal != null && search.sucursal.Count() > 0)
+            {
+                records = records.Where(x => search.sucursal.Contains(x.IdSucursal.ToString()));
             }
+
             if (!string.IsNullOrEmpty(search.telefono))
             {
-                expedientes = expedientes.Where(x => x.Telefono == search.telefono);
+                records = records.Where(x => x.Telefono == search.telefono);
             }
-            return expedientes.ToList();
+
+            return records.ToList();
         }
 
         public async Task<List<Domain.MedicalRecord.MedicalRecord>> GetActive()
@@ -171,12 +173,14 @@ namespace Service.MedicalRecord.Repository
             await _context.SaveChangesAsync();
 
         }
+
         public async Task UpdateTaxData(TaxData taxData)
         {
             _context.CAT_Datos_Fiscales.Update(taxData);
 
             await _context.SaveChangesAsync();
         }
+
         public async Task<string> GetLastCode(Guid branchId, string date)
         {
             var lastRequest = await _context.CAT_Expedientes
@@ -185,12 +189,12 @@ namespace Service.MedicalRecord.Repository
 
             return lastRequest?.Expediente;
         }
-        public async Task<List<Domain.MedicalRecord.MedicalRecord>> Coincidencias(MedicalRecord.Domain.MedicalRecord.MedicalRecord expediente)
+
+        public async Task<List<Domain.MedicalRecord.MedicalRecord>> Coincidencias(Domain.MedicalRecord.MedicalRecord expediente)
         {
             var expedientes = await _context.CAT_Expedientes
-                .Where(x => x.NombrePaciente == expediente.NombrePaciente
-                && x.PrimerApellido == expediente.PrimerApellido
-                && x.FechaDeNacimiento.Date == expediente.FechaDeNacimiento.Date)
+                .Where(x => (x.NombrePaciente + " " + x.PrimerApellido).Contains(expediente.NombrePaciente + " " + expediente.PrimerApellido) ||
+                (expediente.NombrePaciente + " " + expediente.PrimerApellido).Contains(x.NombrePaciente + " " + x.PrimerApellido))
                 .ToListAsync();
 
             return expedientes;

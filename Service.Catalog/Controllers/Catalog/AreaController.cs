@@ -70,5 +70,11 @@ namespace Service.Catalog.Controllers.Catalog
 
             return File(file, MimeType.XLSX, $"Catálogo de Áreas ({code}).xlsx");
         }
+
+        [HttpGet("area/getAreaByDeparment")]
+        public async Task<IEnumerable<DepartmentAreaListDto>> GetAreaByDeparment()
+        {
+            return await _areaService.GetAreasByDeparments();
+        }
     }
 }

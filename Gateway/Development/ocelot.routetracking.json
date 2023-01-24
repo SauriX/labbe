@@ -21,7 +21,19 @@
           "Port": 24048
         }
       ],
-      "UpstreamPathTemplate": "/api/RouteTracking/report  ",
+      "UpstreamPathTemplate": "/api/RouteTracking/report",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/RouteTracking/exportOrder/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/RouteTracking/exportOrder/{id}",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {

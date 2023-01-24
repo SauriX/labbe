@@ -1,4 +1,5 @@
-﻿using Service.MedicalRecord.Domain.RouteTracking;
+﻿using Service.MedicalRecord.Dictionary;
+using Service.MedicalRecord.Domain.RouteTracking;
 using Service.MedicalRecord.Domain.TrackingOrder;
 using Service.MedicalRecord.Dtos.PendingRecive;
 using System.Collections.Generic;
@@ -11,29 +12,37 @@ namespace Service.MedicalRecord.Mapper
         public static List<PendingReciveDto> ToPendingReciveDto(this List<TrackingOrder> model)
         {
             if (model == null) return null;
-
-            return model.Select(x => new PendingReciveDto
+            List<PendingReciveDto> Recive = new List<PendingReciveDto>();
+            foreach (TrackingOrder item in model)
             {
-                Id = x.Id.ToString(),
-                Nseguimiento = x.Clave,
-                Claveroute = x.RutaId,
-                Sucursal =x.SucursalOrigenId,
-                Fechareal=x.FechaMod,
-                Study = x.Estudios.Select(y=> new ReciveStudyDto {
+                foreach (var estudio in item.Estudios)
+                {
+                    Recive.Add(
+                        new PendingReciveDto
+                        {
+                            Id = item.Id.ToString(),
+                            Nseguimiento = estudio.SolicitudEstudio.EstatusId == Status.RequestStudy.TomaDeMuestra || estudio.SolicitudEstudio.EstatusId == Status.RequestStudy.EnRuta ? estudio.IsExtra ? $"{item.Clave}-incluido" : item.Clave : "",
+                            Claveroute =item.RutaId,
+                            Solicitud = estudio.Solicitud.Clave,
+                            Estudio = $"{estudio.SolicitudEstudio.Clave}-{estudio.Estudio}",
+                            Sucursal = item.SucursalOrigenId,
+                            Fechareal = item.FechaMod,
+                            Status = new StatusDto
+                            {
+                                Created = true,
+                                Smpling = true,
+                                Route = false,
+                                Entregado = false,
+                            },
 
-                    Id = y.Id.ToString(),
-                    Estudio = y.Estudio,
-                    Solicitud =y.Solicitud.Clave.ToString(),
-                    Check=y.FechaMod
-                }).ToList(),
-                Status = new StatusDto {
-                    Created = true,
-                    Smpling = true,
-                    Route = false,
-                    Entregado =false,
-                },
+                        }
+                        );
+                
+                
+                }
 
-            }).ToList();
+            }
+            return Recive;
         }
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Dtos.MassSearch;
 using Shared.Dictionary;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -13,10 +14,11 @@ namespace Service.MedicalRecord.Controllers
     public class MassSearchController : ControllerBase
     {
         private readonly IMassSearchApplication _service;
-
-        public MassSearchController(IMassSearchApplication service)
+        private readonly IRequestApplication _requestService;
+        public MassSearchController(IMassSearchApplication service,IRequestApplication requestApplication)
         {
             _service = service;
+            _requestService = requestApplication;
         }
 
         [HttpPost("GetByFilter")]
@@ -39,6 +41,26 @@ namespace Service.MedicalRecord.Controllers
         {
             var (file, fileName) = await _service.ExportList(search);
             return File(file, MimeType.XLSX, fileName);
+        }
+
+        [HttpPost("download/pdf")]
+        [Authorize(Policies.Download)]
+        public async Task<IActionResult> ExportResultsPdf(MassSearchFilterDto filter)
+        {
+            var file = await _service.DownloadResultsPdf(filter);
+            return File(file, MimeType.PDF, "Resultados Busq. Masiva.pdf");
+        }
+
+        [HttpPost("order/{recordId}/{requestId}")]
+        //[Authorize(Policies.Print)]
+        [Authorize(Policies.Access)]
+        public async Task<IActionResult> PrintOrder(Guid recordId, Guid requestId)
+        {
+            var userName = HttpContext.Items["userName"].ToString();
+
+            var file = await _requestService.PrintOrder(recordId, requestId, userName);
+
+            return File(file, MimeType.PDF, "Orden.pdf");
         }
 
     }

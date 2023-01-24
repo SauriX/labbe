@@ -24,11 +24,14 @@ using Service.MedicalRecord.Domain.Request;
 using AREAS = Shared.Dictionary.Catalogs.Area;
 using COMPANIES = Shared.Dictionary.Catalogs.Company;
 using MEDICS = Shared.Dictionary.Catalogs.Medic;
+using ORIGIN = Shared.Dictionary.Catalogs.Origin;
 using Service.MedicalRecord.Dtos.Promotion;
 using Service.MedicalRecord.Domain.Catalogs;
 using Service.MedicalRecord.Dtos.WeeClinic;
 using Integration.WeeClinic.Dtos;
 using Service.MedicalRecord.Dtos.Invoice;
+using VT = Shared.Dictionary.Catalogs.ValueType;
+using Service.MedicalRecord.Dtos.Quotation;
 
 namespace Service.MedicalRecord.Application
 {
@@ -46,8 +49,7 @@ namespace Service.MedicalRecord.Application
         private readonly IMedicalRecordRepository _recordRepository;
         private readonly IBillingClient _billingClient;
 
-        private const byte PORCENTAJE = 1;
-        private const byte CANTIDAD = 2;
+        private const byte URGENCIA_CARGO = 3;
 
         public RequestApplication(
             ITransactionProvider transaction,
@@ -145,7 +147,7 @@ namespace Service.MedicalRecord.Application
                     var st = studiesParams.FirstOrDefault(x => x.Id == study.EstudioId);
                     if (st == null) continue;
 
-                    study.Parametros = st.Parametros;
+                    study.Parametros = st.Parametros.Where(x => !x.TipoValor.In(VT.Observacion, VT.Etiqueta, VT.SinValor, VT.Texto, VT.Parrafo)).ToList();
                     study.Indicaciones = st.Indicaciones;
                 }
 
@@ -165,7 +167,7 @@ namespace Service.MedicalRecord.Application
                 var st = studiesParams.FirstOrDefault(x => x.Id == study.EstudioId);
                 if (st == null) continue;
 
-                study.Parametros = st.Parametros;
+                study.Parametros = st.Parametros.Where(x => !x.TipoValor.In(VT.Observacion, VT.Etiqueta, VT.SinValor, VT.Texto, VT.Parrafo)).ToList();
                 study.Indicaciones = st.Indicaciones;
 
                 var promos = studiesPromos.Where(x => x.EstudioId == study.EstudioId).ToList();
@@ -229,11 +231,19 @@ namespace Service.MedicalRecord.Application
             var newRequest = requestDto.ToModel();
             newRequest.MedicoId = MEDICS.A_QUIEN_CORRESPONDA;
             newRequest.CompañiaId = COMPANIES.PARTICULARES;
-            newRequest.CargoTipo = CANTIDAD;
-            newRequest.CopagoTipo = CANTIDAD;
-            newRequest.DescuentoTipo = CANTIDAD;
             newRequest.UsuarioCreoId = requestDto.UsuarioId;
             newRequest.UsuarioCreo = requestDto.Usuario;
+
+            var series = await _billingClient.GetBranchSeries(requestDto.SucursalId, 2);
+
+            if (series != null && series.Count > 0)
+            {
+                var serie = series.OrderBy(x => x.Id).Last();
+                var next = await GetNextPaymentNumber(serie.Clave);
+
+                newRequest.Serie = serie.Clave;
+                newRequest.SerieNumero = next;
+            }
 
             await _repository.Create(newRequest);
 
@@ -274,7 +284,6 @@ namespace Service.MedicalRecord.Application
                 study.EstatusId = Status.RequestStudy.Pendiente;
                 study.Precio = weePrice.Paciente.Total + weePrice.Aseguradora.Total;
                 study.PrecioFinal = weePrice.Paciente.Total + weePrice.Aseguradora.Total;
-                study.AplicaCopago = weePrice.Total.Copago > 0;
                 study.EstudioWeeClinic = new RequestStudyWee(ws.IdNodo, ws.IdServicio, ws.Cubierto, weePrice.Paciente.Total, weePrice.Aseguradora.Total, ws.IsAvaliable, ws.RestanteDays, ws.Vigencia, ws.IsCancel);
             }
 
@@ -283,9 +292,6 @@ namespace Service.MedicalRecord.Application
 
             newRequest.MedicoId = MEDICS.A_QUIEN_CORRESPONDA;
             newRequest.CompañiaId = COMPANIES.PARTICULARES;
-            newRequest.CargoTipo = PORCENTAJE;
-            newRequest.CopagoTipo = PORCENTAJE;
-            newRequest.DescuentoTipo = PORCENTAJE;
             newRequest.UsuarioCreo = requestDto.Usuario;
 
             var weeData = weeStudies.First();
@@ -296,12 +302,9 @@ namespace Service.MedicalRecord.Application
             newRequest.Estudios = studies;
 
             newRequest.TotalEstudios = weePrices.Sum(x => x.Paciente.Total + x.Aseguradora.Total);
-            newRequest.Descuento = weePrices.Sum(x => x.Paciente.Descuento + x.Paciente.Descuento);
-            newRequest.DescuentoTipo = CANTIDAD;
+            newRequest.Descuento = weePrices.Sum(x => x.Paciente.Descuento + x.Aseguradora.Descuento);
             newRequest.Cargo = 0;
-            newRequest.CargoTipo = CANTIDAD;
             newRequest.Copago = weePrices.Sum(x => x.Paciente.Total);
-            newRequest.CopagoTipo = CANTIDAD;
             newRequest.Total = newRequest.TotalEstudios - (newRequest.TotalEstudios - newRequest.Copago);
             newRequest.Saldo = newRequest.Copago;
             newRequest.UsuarioModificoId = requestDto.UsuarioId;
@@ -382,7 +385,12 @@ namespace Service.MedicalRecord.Application
         {
             if (checkInDto.Pagos == null || checkInDto.Pagos.Count == 0)
             {
-                throw new CustomException(HttpStatusCode.BadRequest, "No se seleccionó ningun pago");
+                throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.NoPaymentSelected);
+            }
+
+            if (new bool[] { checkInDto.Desglozado, checkInDto.Simple, checkInDto.PorConcepto }.Count(x => x) != 1)
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "Debe seleccionar solo una opción entre Desglozado por estudio, Simple o Por Concepto");
             }
 
             var request = await GetExistingRequest(checkInDto.ExpedienteId, checkInDto.SolicitudId);
@@ -418,12 +426,13 @@ namespace Service.MedicalRecord.Application
                 ExpedienteId = checkInDto.ExpedienteId,
                 Solicitud = request.Clave,
                 SolicitudId = checkInDto.SolicitudId,
+                Serie = checkInDto.Serie,
                 UsoCFDI = checkInDto.UsoCFDI,
                 FormaPago = maxPay.FormaPago,
                 RegimenFiscal = taxData.RegimenFiscal,
                 RFC = taxData.RFC,
                 Paciente = record.NombreCompleto,
-                ConNombre = checkInDto.ConNombre,
+                ConNombre = checkInDto.Simple,
                 Desglozado = checkInDto.Desglozado,
                 EnvioCorreo = checkInDto.EnvioCorreo ? request.EnvioCorreo : null,
                 EnvioWhatsapp = checkInDto.EnvioWhatsapp ? request.EnvioWhatsApp : null,
@@ -444,14 +453,19 @@ namespace Service.MedicalRecord.Application
                 },
             };
 
-            if (checkInDto.ConNombre)
+            if (checkInDto.Simple || checkInDto.PorConcepto)
             {
+                if (checkInDto.Detalle.Count != 1)
+                {
+                    throw new CustomException(HttpStatusCode.BadRequest, "Las facturas simples o por concepto solo deben tener un detalle");
+                }
+
                 invoiceDto.Productos = new List<ProductDto>
                 {
                     new ProductDto
                     {
-                        Clave = "Pago a Solicitud",
-                        Descripcion = $"Pago cantidad ${totalQty}",
+                        Clave = checkInDto.Detalle[0].Clave,
+                        Descripcion = checkInDto.Detalle[0].Descripcion,
                         Precio = totalQty,
                         Cantidad = 1,
                         Descuento = 0,
@@ -488,6 +502,7 @@ namespace Service.MedicalRecord.Application
             {
                 payment.EstatusId = Status.RequestPayment.Facturado;
                 payment.FacturaId = invoiceResponse.Id;
+                payment.SerieFactura = invoiceResponse.Serie + " " + invoiceResponse.SerieNumero;
                 payment.FacturapiId = invoiceResponse.FacturapiId;
                 payment.UsuarioModificoId = checkInDto.UsuarioId;
                 payment.FechaModifico = DateTime.Now;
@@ -500,9 +515,40 @@ namespace Service.MedicalRecord.Application
             return checkedIn;
         }
 
+        public async Task<string> UpdateSeries(RequestDto requestDto)
+        {
+            var request = await GetExistingRequest(requestDto.ExpedienteId, (Guid)requestDto.SolicitudId);
+
+            if (string.IsNullOrWhiteSpace(requestDto.Serie))
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "Debe seleccionar una serie");
+            }
+
+            var series = await _billingClient.GetBranchSeries(request.SucursalId, 2);
+
+            if (!series.Select(x => x.Clave).Contains(requestDto.Serie))
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "La serie no es valida");
+            }
+
+            var next = await GetNextPaymentNumber(requestDto.Serie);
+
+            request.Serie = requestDto.Serie;
+            request.SerieNumero = next;
+            request.UsuarioModificoId = requestDto.UsuarioId;
+            request.FechaModifico = DateTime.Now;
+
+            await _repository.Update(request);
+
+            return next;
+        }
+
         public async Task UpdateGeneral(RequestGeneralDto requestDto)
         {
             var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
+
+            var prevOrigin = request.Procedencia;
+            var prevUrgency = request.Urgencia;
 
             request.Procedencia = requestDto.Procedencia;
             request.CompañiaId = requestDto.CompañiaId;
@@ -516,6 +562,11 @@ namespace Service.MedicalRecord.Application
             request.FechaModifico = DateTime.Now;
 
             await _repository.Update(request);
+
+            if (requestDto.Procedencia != prevOrigin || requestDto.Urgencia != prevUrgency)
+            {
+                await UpdateTotals(requestDto.ExpedienteId, requestDto.SolicitudId, requestDto.UsuarioId);
+            }
         }
 
         public async Task SendTestEmail(RequestSendDto requestDto)
@@ -571,6 +622,12 @@ namespace Service.MedicalRecord.Application
 
                 var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
 
+                if ((requestDto.Estudios == null || requestDto.Estudios.Count == 0)
+                    && (requestDto.Paquetes == null || requestDto.Paquetes.Count == 0))
+                {
+                    throw new CustomException(HttpStatusCode.BadRequest, "Debe agregar por lo menos un estudio o paquete");
+                }
+
                 var studiesDto = requestDto.Estudios ?? new List<RequestStudyDto>();
                 var packStudiesDto = new List<RequestStudyDto>();
 
@@ -606,21 +663,9 @@ namespace Service.MedicalRecord.Application
                 var pathologicalCode = await GeneratePathologicalCode(request);
                 request.ClavePatologica = pathologicalCode;
 
-                //request.TotalEstudios = requestDto.Total.TotalEstudios;
-                //request.Descuento = requestDto.Total.Descuento;
-                //request.DescuentoTipo = requestDto.Total.DescuentoTipo;
-                //request.Cargo = requestDto.Total.Cargo;
-                //request.CargoTipo = requestDto.Total.CargoTipo;
-                //request.Copago = requestDto.Total.Copago;
-                //request.CopagoTipo = requestDto.Total.CopagoTipo;
-                //request.Total = requestDto.Total.Total;
-                //request.Saldo = requestDto.Total.Saldo;
-                //request.UsuarioModificoId = requestDto.UsuarioId;
-                //request.FechaModifico = DateTime.Now;
-
                 await _repository.Update(request);
 
-                await UpdateTotals(request.ExpedienteId, request.Id, requestDto.UsuarioId, requestDto.Total);
+                await UpdateTotals(request.ExpedienteId, request.Id, requestDto.UsuarioId);
 
                 _transaction.CommitTransaction();
 
@@ -685,6 +730,23 @@ namespace Service.MedicalRecord.Application
             request.FechaModifico = DateTime.Now;
 
             await _repository.Update(request);
+        }
+
+        public async Task DeleteRequest(Guid recordId, Guid requestId)
+        {
+            var request = await _repository.GetById(requestId);
+
+            if (request == null || request.ExpedienteId != recordId)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
+            }
+
+            if (request.Estudios.Any() || request.Paquetes.Any())
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "No es posible eliminar solicitudes con estudios");
+            }
+
+            await _repository.Delete(request);
         }
 
         public async Task CancelStudies(RequestStudyUpdateDto requestDto)
@@ -798,7 +860,7 @@ namespace Service.MedicalRecord.Application
             var studiesIds = requestDto.Estudios.Select(x => x.Id);
             var studies = await _repository.GetStudyById(requestDto.SolicitudId, studiesIds);
 
-            studies = studies.Where(x => x.EstatusId == Status.RequestStudy.Pendiente).ToList();
+            studies = studies.Where(x => x.EstatusId == Status.RequestStudy.Pendiente || x.EstatusId == Status.RequestStudy.TomaDeMuestra).ToList();
 
             if (studies == null || studies.Count == 0)
             {
@@ -807,9 +869,17 @@ namespace Service.MedicalRecord.Application
 
             foreach (var study in studies)
             {
-                study.EstatusId = Status.RequestStudy.TomaDeMuestra;
-                study.UsuarioTomaMuestra = requestDto.Usuario;
-                study.FechaTomaMuestra = DateTime.Now;
+                if (study.EstatusId == Status.RequestStudy.Pendiente)
+                {
+                    study.EstatusId = Status.RequestStudy.TomaDeMuestra;
+                    study.FechaTomaMuestra = DateTime.Now;
+                    study.UsuarioTomaMuestra = requestDto.Usuario;
+                }
+                else
+                {
+                    study.EstatusId = Status.RequestStudy.Pendiente;
+                }
+
                 study.UsuarioModificoId = requestDto.UsuarioId;
                 study.FechaModifico = DateTime.Now;
             }
@@ -826,7 +896,7 @@ namespace Service.MedicalRecord.Application
             var studiesIds = requestDto.Estudios.Select(x => x.Id);
             var studies = await _repository.GetStudyById(requestDto.SolicitudId, studiesIds);
 
-            studies = studies.Where(x => x.EstatusId == Status.RequestStudy.TomaDeMuestra).ToList();
+            studies = studies.Where(x => x.EstatusId == Status.RequestStudy.TomaDeMuestra || x.EstatusId == Status.RequestStudy.Solicitado).ToList();
 
             if (studies == null || studies.Count == 0)
             {
@@ -835,9 +905,17 @@ namespace Service.MedicalRecord.Application
 
             foreach (var study in studies)
             {
-                study.EstatusId = Status.RequestStudy.Solicitado;
-                study.UsuarioSolicitado = requestDto.Usuario;
-                study.FechaSolicitado = DateTime.Now;
+                if (study.EstatusId == Status.RequestStudy.TomaDeMuestra)
+                {
+                    study.EstatusId = Status.RequestStudy.Solicitado;
+                    study.FechaSolicitado = DateTime.Now;
+                    study.UsuarioSolicitado = requestDto.Usuario;
+                }
+                else
+                {
+                    study.EstatusId = Status.RequestStudy.TomaDeMuestra;
+                }
+
                 study.UsuarioModificoId = requestDto.UsuarioId;
                 study.FechaModifico = DateTime.Now;
             }
@@ -1069,6 +1147,8 @@ namespace Service.MedicalRecord.Application
                 {
                     var result = results.FirstOrDefault(x => x.IdServicio == study.EstudioWeeClinic.IdServicio);
 
+                    if (result == null) continue;
+
                     if (result.Asignado)
                     {
                         study.EstudioWeeClinic.Asignado = true;
@@ -1079,11 +1159,8 @@ namespace Service.MedicalRecord.Application
 
                 request.TotalEstudios = assigned.Sum(x => x.PrecioFinal);
                 request.Descuento = assigned.Sum(x => x.Descuento);
-                request.DescuentoTipo = CANTIDAD;
                 request.Cargo = 0;
-                request.CargoTipo = CANTIDAD;
                 request.Copago = assigned.Sum(x => x.EstudioWeeClinic.TotalPaciente);
-                request.CopagoTipo = CANTIDAD;
                 request.Total = request.TotalEstudios - (request.TotalEstudios - request.Copago);
                 request.Saldo = request.Copago;
                 request.UsuarioModificoId = userId;
@@ -1104,7 +1181,7 @@ namespace Service.MedicalRecord.Application
             }
         }
 
-        private async Task UpdateTotals(Guid recordId, Guid requestId, Guid userId, RequestTotalDto totals = null)
+        private async Task UpdateTotals(Guid recordId, Guid requestId, Guid userId)
         {
             var request = await GetExistingRequest(recordId, requestId);
 
@@ -1113,40 +1190,28 @@ namespace Service.MedicalRecord.Application
 
             var payments = await _repository.GetPayments(requestId);
 
-            studies = studies.Where(x => x.EstatusId != Status.RequestStudy.Cancelado).ToList();
-            packs = packs.Where(x => true).ToList();
+            studies = studies.Where(x => x.EstatusId != Status.RequestStudy.Cancelado && (x.EstudioWeeClinic == null || x.EstudioWeeClinic.Asignado)).ToList();
+            packs = packs.Where(x => !x.Cancelado).ToList();
             payments = payments.Where(x => x.EstatusId.In(Status.RequestPayment.Pagado, Status.RequestPayment.Facturado)).ToList();
 
-            var studyAndPack = studies.Select(x => new { x.AplicaCargo, x.AplicaCopago, x.AplicaDescuento, x.Precio, x.PrecioFinal })
-                .Concat(packs.Select(x => new { x.AplicaCargo, x.AplicaCopago, x.AplicaDescuento, x.Precio, x.PrecioFinal }));
-
-            totals ??= request.ToRequestTotalDto();
+            var studyAndPack = studies.Select(x => new { x.Descuento, x.Precio, x.PrecioFinal, Copago = x.EstudioWeeClinic?.TotalPaciente ?? 0 })
+                .Concat(packs.Select(x => new { x.Descuento, x.Precio, x.PrecioFinal, Copago = 0m }));
 
             var totalStudies = studyAndPack.Sum(x => x.PrecioFinal);
-            var final = totalStudies - totals.Descuento + totals.Cargo;
 
-            var descT = totalStudies == 0 ? 0 : totals.DescuentoTipo == 1 ? Math.Round(studyAndPack.Where(x => x.AplicaDescuento).Sum(x => x.Precio) * totals.Descuento / 100, 2) : totals.Descuento;
-            var descP = totalStudies == 0 ? 0 : totals.DescuentoTipo == 1 ? totals.Descuento : Math.Round(studyAndPack.Where(x => x.AplicaDescuento).Sum(x => x.Precio) * 100 / totalStudies, 2);
+            var discount = totalStudies == 0 ? 0 : studyAndPack.Sum(x => x.Descuento);
+            var charge = totalStudies == 0 ? 0 : request.Urgencia == URGENCIA_CARGO ? totalStudies * .10m : 0;
+            var cup = totalStudies == 0 ? 0 : request.EsWeeClinic ? studyAndPack.Sum(x => x.Copago) :
+                request.Procedencia == ORIGIN.COMPAÑIA ? payments.Sum(x => x.Cantidad) : 0;
 
-            var charT = totalStudies == 0 ? 0 : totals.CargoTipo == 1 ? Math.Round(studyAndPack.Where(x => x.AplicaCargo).Sum(x => x.Precio) * totals.Cargo / 100, 2) : totals.Cargo;
-            var charP = totalStudies == 0 ? 0 : totals.CargoTipo == 1 ? totals.Cargo : Math.Round(studyAndPack.Where(x => x.AplicaCargo).Sum(x => x.Precio) * 100 / totalStudies, 2);
-
-            var copT = totalStudies == 0 ? 0 : request.EsWeeClinic ? studies.Sum(x => x.EstudioWeeClinic.TotalPaciente) :
-                totals.CopagoTipo == 1 ? Math.Round(studyAndPack.Where(x => x.AplicaCopago).Sum(x => x.Precio) * totals.Copago / 100, 2) : totals.Copago;
-            var copP = totalStudies == 0 ? 0 : totals.CopagoTipo == 1 ? totals.Copago : Math.Round(studyAndPack.Where(x => x.AplicaCopago).Sum(x => x.Precio) * 100 / totalStudies, 2);
-
-            var finalTotal = totalStudies - descT + charT;
-            var userTotal = copT > 0 ? copT : totalStudies - descT + charT;
-
+            var finalTotal = totalStudies - discount + charge;
+            var userTotal = cup > 0 ? cup : finalTotal;
             var balance = finalTotal - payments.Sum(x => x.Cantidad);
 
             request.TotalEstudios = totalStudies;
-            request.Descuento = totals.Descuento;
-            request.DescuentoTipo = totals.DescuentoTipo;
-            request.Cargo = totals.Cargo;
-            request.CargoTipo = totals.CargoTipo;
-            request.Copago = request.EsWeeClinic ? copT : totals.Copago;
-            request.CopagoTipo = totals.CopagoTipo;
+            request.Descuento = discount;
+            request.Cargo = charge;
+            request.Copago = cup;
             request.Total = userTotal;
             request.Saldo = balance;
             request.UsuarioModificoId = userId;

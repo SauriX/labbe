@@ -49,7 +49,7 @@ namespace Service.MedicalRecord.Application
             template.AddVariable("Titulo", "Registrar Solicitud de Estudio");
             template.AddVariable("FechaInicio", search.Fecha.First().ToString("dd/MM/yyyy"));
             template.AddVariable("FechaFinal", search.Fecha.Last().ToString("dd/MM/yyyy"));
-            template.AddVariable("Expedientes", studies);
+            template.AddVariable("Solicitudes", studies);
 
             template.Generate();
 
@@ -128,8 +128,6 @@ namespace Service.MedicalRecord.Application
                     else
                     {
                         study.EstatusId = Status.RequestStudy.TomaDeMuestra;
-                        study.FechaTomaMuestra = DateTime.Now;
-                        study.UsuarioTomaMuestra = item.Usuario;
                     }
                 }
                 studyCount += studies.Count;

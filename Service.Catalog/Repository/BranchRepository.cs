@@ -1,4 +1,5 @@
 ﻿using EFCore.BulkExtensions;
+using MassTransit.Futures.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Context;
 using Service.Catalog.Domain.Branch;
@@ -42,6 +43,16 @@ namespace Service.Catalog.Repository
                 .Include(x => x.Colonia).ThenInclude(x => x.Ciudad).ThenInclude(x => x.Estado)
                 .Include(x => x.Departamentos).ThenInclude(x => x.Departamento)
                 .FirstOrDefaultAsync(x => x.Id == Guid.Parse(id));
+
+            return branch;
+        }
+
+        public async Task<Branch> GetByName(string name)
+        {
+            var branch = await _context.CAT_Sucursal
+                .Include(x => x.Colonia).ThenInclude(x => x.Ciudad).ThenInclude(x => x.Estado)
+                .Include(x => x.Departamentos).ThenInclude(x => x.Departamento)
+                .FirstOrDefaultAsync(x => x.Nombre == name || x.Ciudad == name);
 
             return branch;
         }

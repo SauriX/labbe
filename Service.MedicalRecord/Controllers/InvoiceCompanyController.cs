@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.MedicalRecord.Application.IApplication;
+using Service.MedicalRecord.Client.IClient;
+using Service.MedicalRecord.Dtos.Invoice;
 using Service.MedicalRecord.Dtos.InvoiceCompany;
 using Shared.Dictionary;
 using System.Collections.Generic;
@@ -13,16 +15,83 @@ namespace Service.MedicalRecord.Controllers
     public class InvoiceCompanyController : ControllerBase
     {
         private readonly IInvoiceCompanyApplication _service;
-        public InvoiceCompanyController(IInvoiceCompanyApplication service)
+        private readonly IBillingClient _billingClient;
+        public InvoiceCompanyController(IInvoiceCompanyApplication service, IBillingClient billingClient)
         {
             _service = service;
+            _billingClient = billingClient;
         }
 
         [HttpPost("filter")]
-        //[Authorize(Policies.Access)]
+        [Authorize(Policies.Access)]
         public async Task<InvoiceCompanyInfoDto> GetByFilter(InvoiceCompanyFilterDto filter)
         {
             return await _service.GetByFilter(filter);
         }
+
+        [HttpGet("getConsecutiveBySerie/{serie}")]
+        [Authorize(Policies.Access)]
+        public async Task<string> GetConsecutiveBySerie(string serie)
+        {
+            return await _service.GetNextPaymentNumber(serie);
+        }
+
+        [HttpPost("checkin")]
+        [Authorize(Policies.Access)]
+        public async Task<InvoiceDto> CheckInPayment(InvoiceCompanyDto invoice)
+        {
+            return await _service.CheckInPayment(invoice);
+        }
+        [HttpPost("checkin/company")]
+        [Authorize(Policies.Access)]
+        public async Task<InvoiceDto> CheckInPaymentCompany(InvoiceCompanyDto invoice)
+        {
+            return await _service.CheckInPaymentCompany(invoice);
+        }
+        [HttpPost("download/pdf/{facturapiId}")]
+        [Authorize(Policies.Access)]
+        public async Task<IActionResult> DownloadPDF(string facturapiId)
+        {
+            var file = await _billingClient.DownloadPDF(facturapiId);
+
+            return File(file, MimeType.PDF, "Facturacion compañias.pdf");
+        }
+
+        [HttpPost("print/pdf/{facturapiId}")]
+        [Authorize(Policies.Access)]
+        public async Task<IActionResult>  PrintPDF(string facturapiId)
+        {
+            var file = await _billingClient.DownloadPDF(facturapiId);
+
+            return File(file, MimeType.PDF, "Facturacion compañias.pdf");
+        }
+        [HttpPost("send")]
+        [Authorize(Policies.Access)]
+        public async Task<bool> EnvioFactura(InvoiceCompanyDeliverDto envio)
+        {
+            await _service.EnvioFactura(envio);
+
+            return true;
+        }
+        [HttpPost("cancel")]
+        [Authorize(Policies.Access)]
+        public async Task<string> CancelInvoiceCompany(InvoiceCancelation invoice)
+        {
+            return await _service.Cancel(invoice);
+        }
+
+        [HttpPost("ticket")]
+        [Authorize(Policies.Download)]
+        public async Task<IActionResult> PrintTicket(ReceiptCompanyDto receipt)
+        {
+            var userName = HttpContext.Items["userName"].ToString();
+
+            var file = await _service.PrintTicket(receipt);
+
+            return File(file, MimeType.PDF, "ticket.pdf");
+        }
+
+
+
     }
 }

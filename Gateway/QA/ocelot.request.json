@@ -133,6 +133,17 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/request/series",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/request/series",
+      "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
       "DownstreamPathTemplate": "/LabRamos/services/records/api/request/general",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -175,6 +186,17 @@
       ],
       "UpstreamPathTemplate": "/api/request/cancel/{recordId}/{requestId}",
       "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/request/delete/{recordId}/{requestId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/request/delete/{recordId}/{requestId}",
+      "UpstreamHttpMethod": [ "DELETE" ]
     },
     {
       "DownstreamPathTemplate": "/LabRamos/services/records/api/request/studies/cancel",

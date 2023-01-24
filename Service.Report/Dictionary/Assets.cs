@@ -8,6 +8,7 @@
         public const string PatientStatsChart = "wwwroot/layout/excel/PatientStats/EstadísticaPacientesGrafica.xlsx";
         public const string SamplingsCost = "wwwroot/layout/excel/Indicators/CostoTomaListado.xlsx";
         public const string ServicesCost = "wwwroot/layout/excel/Indicators/CostoFijoListado.xlsx";
+        public const string ServicesCostExample = "wwwroot/layout/excel/Indicators/CostoFijoEjemplo.xlsx";
         public const string Indicators = "wwwroot/layout/excel/Indicators/IndicadoresListado.xlsx";
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Service.MedicalRecord.Dictionary;
 using Service.MedicalRecord.Domain.Quotation;
+using Service.MedicalRecord.Dtos.Catalogs;
 using Service.MedicalRecord.Dtos.Quotation;
 using Service.MedicalRecord.Dtos.Request;
 using Shared.Dictionary;
@@ -7,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace Service.MedicalRecord.Mapper
 {
@@ -198,7 +200,6 @@ namespace Service.MedicalRecord.Mapper
                 },
                 Estudios = quotation.Estudios.Select(x => new RequestStudyDto
                 {
-                    AplicaCargo = x.AplicaCargo,
                     AreaId = null,// x.AreaId,
                     Clave = x.Clave,
                     DepartamentoId = null,// x.DepartamentoId,
@@ -222,7 +223,6 @@ namespace Service.MedicalRecord.Mapper
                 Paquetes = quotation.Paquetes.Select(x => new RequestPackDto
                 {
                     PaqueteId = x.PaqueteId,
-                    AplicaCargo = x.AplicaCargo,
                     AreaId = Catalogs.Area.PAQUETES,
                     Clave = x.Clave,
                     DepartamentoId = Catalogs.Department.PAQUETES,
@@ -324,6 +324,44 @@ namespace Service.MedicalRecord.Mapper
                     FechaModifico = study == null ? null : DateTime.Now,
                 };
             }).ToList();
+        }
+
+        public static List<StudyQuoteDto> ToStudyQuotePdf(this IEnumerable<QuotationStudyDto> dto)
+        {
+            if (dto == null) return new List<StudyQuoteDto>();
+
+            return dto.Select(x =>
+            {
+
+                return new StudyQuoteDto
+                {
+                    StudyId= x.EstudioId,
+                    Clave = x.Clave,
+                    Nombre = x.Nombre,
+                    Precio = x.Precio.ToString(),
+                    Descuento = x.Descuento.ToString(),
+                    IVA = new StringBuilder().Append("$ ").Append(Decimal.ToDouble(x.PrecioFinal) * .16).ToString(),
+                    PrecioFinal = new StringBuilder().Append("$ ").Append(x.PrecioFinal-x.Descuento).ToString(),
+                    TiempoEntrega = $"{x.Dias.ToString("0.##")} Dias",
+                    TipoMuestra = "---------------------------",
+                    PreparacionPaciente =  String.Join(", ", x.Indicaciones!=null?x.Indicaciones:new List<IndicationListDto>() ),
+                };
+            }).ToList();
+        }
+        public static PriceQuoteDto toPriceQuotePdf(this QuotationDto data, List<QuotationStudy> model) {
+
+            var estudios = model.ToQuotationStudyDto().ToStudyQuotePdf();
+
+            return new PriceQuoteDto
+            {
+                Fecha = data.Registro,
+                FechaImpresion = System.DateTime.Now.ToShortDateString(),
+                StudyQuotes = estudios,
+                Total = $"$ {Decimal.ToDouble(estudios.Sum(x => decimal.Parse(x.Precio)))- estudios.Sum(x => double.Parse(x.Precio)) * .16}",
+                Descuento = $"$ {estudios.Sum(x => decimal.Parse(x.Descuento))}",
+                Iva = $"$ {estudios.Sum(x =>  double.Parse(x.Precio)) * .16}",
+                Totalpagar =$"$ {estudios.Sum(x => decimal.Parse(x.Precio)) - estudios.Sum(x => decimal.Parse(x.Descuento))}"
+            };
         }
     }
 }

@@ -81,8 +81,16 @@ namespace Integration.Pdf.Service
             var branches = new Col($"SUCURSAL ({workList.Sucursal})");
             header.AddText(branches);
 
-            var date = new Col($"FECHA ({workList.Fecha} {workList.HoraInicio}) AL ({workList.Fecha} {workList.HoraFin})");
-            header.AddText(date);
+            if (workList.MostrarResultado)
+            {
+                var date = new Col($"FECHA ({workList.Fechas.First()}) AL ({workList.Fechas.Last()})");
+                header.AddText(date);
+            }
+            else
+            {
+                var date = new Col($"FECHA ({workList.Fecha} {workList.HoraInicio}) AL ({workList.Fecha} {workList.HoraFin})");
+                header.AddText(date);
+            }
 
             var headers = new Col[]
             {
@@ -122,11 +130,23 @@ namespace Integration.Pdf.Service
                     };
                     row.AddText(studyName);
 
-                    foreach (var parameters in study.ListasTrabajo.ToChunks(8, true))
+                    if (workList.MostrarResultado)
                     {
-                        var param = parameters.Select(x => new Col(x) { Fill = string.IsNullOrEmpty(x) ? (TabLeader?)null : TabLeader.Lines }).ToArray();
-                        row.AddText(param);
+                        foreach(var param in study.ResultadoListasTrabajo.ToChunks(4, true))
+                        {
+                            var resultParam = param.Where(x => x != null).Select(x => new Col($"{x.Clave}: {x.Resultado} {(x.Resultado == null ? "" : x.Unidades ?? "")}") { Fill = !string.IsNullOrEmpty(x.Resultado) ? (TabLeader?)null : TabLeader.Lines }).ToArray();
+                            row.AddText(resultParam);
+                        }
+                    } 
+                    else
+                    {
+                        foreach (var parameters in study.ListasTrabajo.ToChunks(8, true))
+                        {
+                            var param = parameters.Select(x => new Col(x) { Fill = string.IsNullOrEmpty(x) ? (TabLeader?)null : TabLeader.Lines }).ToArray();
+                            row.AddText(param);
+                        }
                     }
+
                 }
 
                 if (i < workList.Solicitudes.Count - 1)

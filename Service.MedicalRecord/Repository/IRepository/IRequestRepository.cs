@@ -1,4 +1,5 @@
-﻿using Service.MedicalRecord.Domain.Request;
+﻿using Service.MedicalRecord.Domain.Invoice;
+using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Dtos.InvoiceCompany;
 using Service.MedicalRecord.Dtos.Request;
 using System;
@@ -26,6 +27,7 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task Create(Request request);
         Task CreatePayment(RequestPayment request);
         Task Update(Request request);
+        Task Delete(Request request);
         Task UpdateImage(RequestImage requestImage);
         Task UpdateStudy(RequestStudy study);
         Task UpdatePayment(RequestPayment payment);
@@ -37,6 +39,14 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task BulkUpdateWeeStudies(Guid requestId, List<RequestStudyWee> studies);
         Task DeleteImage(Guid requestId, string code);
         Task<List<Request>> InvoiceCompanyFilter(InvoiceCompanyFilterDto filter);
+        Task CreateInvoiceCompanyData(InvoiceCompany invoiceCompnay, List<RequestInvoiceCompany> requestInvoiceCompany);
+        Task UpdateInvoiceCompany(InvoiceCompany invoiceCompnay);
+        Task<InvoiceCompany> GetInvoiceCompanyByFacturapiId(string id);
+        Task<List<Domain.Request.RequestStudy>> GetRequestsStudyByListId(List<Guid> solicitudesId);
+        Task<List<Domain.Request.Request>> GetRequestsByListId(List<Guid> solicitudesId);
+
+
+
 
     }
 }

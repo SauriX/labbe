@@ -1,6 +1,7 @@
 ﻿using Service.Billing.Application.IApplication;
 using Service.Billing.Client.IClient;
 using Service.Billing.Domain.Invoice;
+using Service.Billing.Dtos.Facturapi;
 using Service.Billing.Dtos.Invoice;
 using Service.Billing.Mapper;
 using Service.Billing.Repository.IRepository;
@@ -11,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace Service.Billing.Application
 {
@@ -56,6 +58,9 @@ namespace Service.Billing.Application
             {
                 var invoice = invoiceDto.ToModel();
 
+                var seriesNo = await GetNextSeriesNumber(invoiceDto.Serie);
+                invoice.SerieNumero = seriesNo;
+
                 await _repository.Create(invoice);
 
                 var facturapiInvoice = invoiceDto.ToFacturapiDto();
@@ -70,6 +75,7 @@ namespace Service.Billing.Application
 
                 invoiceDto.Id = invoice.Id;
                 invoiceDto.FacturapiId = facturapiResponse.FacturapiId;
+                invoiceDto.SerieNumero = invoice.SerieNumero;
 
                 return invoiceDto;
             }
@@ -80,13 +86,76 @@ namespace Service.Billing.Application
             }
         }
 
+        public async Task<InvoiceDto> CreateInvoiceCompany(InvoiceDto invoiceDto)
+        {
+
+            try
+            {
+                var invoice = invoiceDto.ToModelCompany();
+
+
+                var facturapiInvoice = invoiceDto.ToFacturapiDto();
+                facturapiInvoice.ClaveExterna = invoice.Id.ToString();
+
+                var facturapiResponse = await _invoiceClient.CreateInvoice(facturapiInvoice);
+
+                invoice.FacturapiId = facturapiResponse.FacturapiId;
+                await _repository.CreateInvoiceCompany(invoice);
+
+                invoiceDto.Id = invoice.Id;
+                invoiceDto.FacturapiId = facturapiResponse.FacturapiId;
+
+                return invoiceDto;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public async Task<string> Cancel(InvoiceCancelation invoiceDto)
+        {
+
+            try
+            {
+
+
+                var facturapiResponse = await _invoiceClient.Cancel(invoiceDto);
+                if (facturapiResponse.ToLower() == "canceled")
+                {
+                    var invoice = await _repository.GetInvoiceCompanyByFacturapiId(invoiceDto.FacturapiId);
+
+                    invoice.Estatus = "Cancelado";
+
+                    await _repository.UpdateInvoiceCompany(invoice);
+                }
+
+
+                return facturapiResponse;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         public async Task<(byte[], string)> PrintInvoiceXML(Guid invoiceId)
         {
             var invoice = await GetExistingInvoice(invoiceId);
 
             var xml = await _invoiceClient.GetInvoiceXML(invoice.FacturapiId);
 
-            return new(xml, invoice.FacturapiId + ".xml");
+            return new(xml, invoiceId + ".xml");
+        }
+
+        public async Task<(byte[], string)> PrintInvoicePDF(Guid invoiceId)
+        {
+            var invoice = await GetExistingInvoice(invoiceId);
+
+            var pdf = await _invoiceClient.GetInvoicePDF(invoice.FacturapiId);
+
+            return new(pdf, invoiceId + ".pdf");
         }
 
         private async Task<Invoice> GetExistingInvoice(Guid invoiceId)
@@ -99,6 +168,16 @@ namespace Service.Billing.Application
             }
 
             return invoice;
+        }
+
+        public async Task<string> GetNextSeriesNumber(string serie)
+        {
+            var date = DateTime.Now.ToString("yy");
+
+            var lastCode = await _repository.GetLastSeriesCode(serie, date);
+            var consecutive = lastCode == null ? 1 : Convert.ToInt32(lastCode.Replace(date, "")) + 1;
+
+            return $"{date}{consecutive:D5}";
         }
     }
 }

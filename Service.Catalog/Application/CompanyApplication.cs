@@ -180,5 +180,17 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("El Nombre del contacto"));
             }
         }
+
+        public async Task<List<ContactListDto>> GetContactsByCompany(Guid Id)
+        {
+            var company = await _repository.GetById(Id);
+
+            if (company == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
+            }
+
+            return company.Contacts.ToContactListDto().ToList();
+        }
     }
 }
