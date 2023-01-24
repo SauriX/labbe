@@ -89,7 +89,7 @@ namespace Service.Identity.Application
         }
 
         public async Task<UserFormDto> GetById(string id)
-        {
+            {
             var validGuid = Guid.TryParse(id, out Guid guid);
 
             if (!validGuid)
