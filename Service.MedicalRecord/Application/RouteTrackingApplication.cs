@@ -174,7 +174,6 @@ namespace Service.MedicalRecord.Application
             foreach (var item in recive)
             {
                 var register = item;
-                List<ReciveStudyDto> estudios = new List<ReciveStudyDto>();
                 var routeTra = await _repository.GetTracking(Guid.Parse(item.Id));
 
                 var route = await _catalogClient.GetRuta(Guid.Parse(item.Claveroute));
@@ -182,12 +181,6 @@ namespace Service.MedicalRecord.Application
                 if (routeTra != null)
                 {
                     register.Status.Route = true;
-                    foreach (var study in item.Study)
-                    {
-                        study.Horarecoleccion = routeTra.HoraDeRecoleccion;
-                        estudios.Add(study);
-                    }
-                    register.Horaen = routeTra.FechaDeEntregaEstimada;
                     register.Fechaen = routeTra.FechaDeEntregaEstimada;
                 }
                 if (item.Fechareal != DateTime.MinValue)
