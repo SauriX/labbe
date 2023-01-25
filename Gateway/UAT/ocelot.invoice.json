@@ -1,6 +1,17 @@
 ﻿{
   "Routes": [
     {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/billing/api/invoice/all",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/invoice/all",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/LabRamos-uat/services/billing/api/invoice/print/xml/{invoiceId}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [

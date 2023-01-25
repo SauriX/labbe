@@ -33,7 +33,7 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<int> SendStudiesToSampling(RequestStudyUpdateDto requestDto);
         Task<int> SendStudiesToRequest(RequestStudyUpdateDto requestDto);
         Task AddPartiality(RequestPartialityDto requestDto);
-        Task<byte[]> PrintTicket(Guid recordId, Guid requestId, Guid paymentId, string userName);
+        Task<byte[]> PrintTicket(Guid recordId, Guid requestId, string userName);
         Task<byte[]> PrintOrder(Guid recordId, Guid requestId, string userName);
         Task<byte[]> PrintTags(Guid recordId, Guid requestId, List<RequestTagDto> tags);
         Task<string> SaveImage(RequestImageDto requestDto);

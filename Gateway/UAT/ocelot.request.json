@@ -243,7 +243,7 @@
       "UpstreamHttpMethod": [ "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/request/ticket/{recordId}/{requestId}/{paymentId}",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/request/ticket/{recordId}/{requestId}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -254,7 +254,7 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/request/order/{recordId}/{requestId}",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/request/order/{recordId}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {

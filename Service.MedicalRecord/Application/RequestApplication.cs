@@ -912,7 +912,7 @@ namespace Service.MedicalRecord.Application
             await _repository.Update(request);
         }
 
-        public async Task<byte[]> PrintTicket(Guid recordId, Guid requestId, Guid paymentId, string userName)
+        public async Task<byte[]> PrintTicket(Guid recordId, Guid requestId, string userName)
         {
             var request = await _repository.GetById(requestId);
 
@@ -922,7 +922,7 @@ namespace Service.MedicalRecord.Application
             }
 
             var payments = await _repository.GetPayments(requestId);
-            var payment = payments.FirstOrDefault(x => x.Id == paymentId);
+            var payment = payments.FirstOrDefault();
 
             if (payment == null)
             {

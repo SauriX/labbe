@@ -27,6 +27,20 @@ namespace Service.MedicalRecord.Client
             _configuration = configuration;
         }
 
+        public async Task<List<InvoiceDto>> getAllInvoice()
+        {
+
+            var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Billing")}/api/invoice/all");
+
+            if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+            {
+                return await response.Content.ReadFromJsonAsync<List<InvoiceDto>>();
+            }
+
+            var error = await response.Content.ReadFromJsonAsync<ClientException>();
+
+            throw new CustomException(HttpStatusCode.BadRequest, error.Errors);
+        }
         public async Task<InvoiceDto> CheckInPayment(InvoiceDto invoiceDto)
         {
             var json = JsonConvert.SerializeObject(invoiceDto);

@@ -18,24 +18,35 @@ namespace Service.MedicalRecord.Repository
         }
 
         public async Task<List<Domain.Request.Request>> GetNotas(InvoiceCatalogSearch search) {
-            var request = _context.CAT_Solicitud.Include(x=>x.Compañia).Include(x=>x.Sucursal.Ciudad).AsQueryable();
-            if (search.Fecha != null) {
-                request = request.Where(x=> x.FechaCreo.Date == search.Fecha.Date);
-            
+            var request = _context.CAT_Solicitud.Include(x=>x.Compañia).Include(x=>x.Sucursal).AsQueryable();
+            if (search.Fecha != null ) {
+                request = request.Where(x => x.FechaCreo.Date > search.Fecha[0].Date && x.FechaCreo.Date < search.Fecha[1].Date);
+
             }
 
             if (!string.IsNullOrEmpty(search.Buscar)) {
                 request = request.Where(x=>x.SerieNumero == search.Buscar || x.Clave == search.Buscar);
             
             }
-            if (!string.IsNullOrEmpty(search.Sucursal)) {
-                request = request.Where(x=> x.SucursalId.ToString() == search.Sucursal);
+            if (search.Sucursal != null && search.Sucursal.Length > 0) {
+                request = request.Where(x => search.Sucursal.Any(y => y == x.SucursalId.ToString()));
             }
 
+            if (!string.IsNullOrEmpty(search.Ciudad)) {
+                request = request.Where(x=>x.Sucursal.Ciudad == search.Ciudad);
+            }
             var requestFilter = await request.ToListAsync();
             return requestFilter;
         }
 
-        
+
+        public async Task<Domain.Request.Request> GetSolicitudbyclave(string clave)
+        {
+            var request =await _context.CAT_Solicitud.Include(x => x.Compañia).Include(x => x.Sucursal).ToListAsync();
+            var requestFilter = request.FirstOrDefault(x=>x.Clave==clave);
+            
+            return requestFilter;
+        }
+
     }
 }

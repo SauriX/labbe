@@ -20,6 +20,10 @@ namespace Service.Billing.Repository
             _context = context;
         }
 
+        public async Task<List<Invoice>> GetAllInvoice() { 
+            var invoices = await _context.CAT_Factura.ToListAsync();
+            return invoices;
+        }
         public async Task<Invoice> GetById(Guid invoiceId)
         {
             var invoice = await _context.CAT_Factura.FindAsync(invoiceId);

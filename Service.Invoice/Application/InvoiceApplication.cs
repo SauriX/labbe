@@ -28,7 +28,11 @@ namespace Service.Billing.Application
             _repository = repository;
             _invoiceClient = invoiceClient;
         }
-
+        public async Task<List<InvoiceDto>> GetAllInvoice()
+        {
+            var invoices = await _repository.GetAllInvoice();
+            return invoices.ToInvoiceDto();
+        }
         public async Task<InvoiceDto> GetById(Guid invoiceId)
         {
             var invoice = await GetExistingInvoice(invoiceId);

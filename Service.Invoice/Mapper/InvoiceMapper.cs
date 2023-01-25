@@ -15,7 +15,7 @@ namespace Service.Billing.Mapper
 
             return new InvoiceDto
             {
-                Id = Guid.NewGuid(),
+                Id = model.Id,
                 FormaPago = model.FormaPago,
                 MetodoPago = model.MetodoPago,
                 UsoCFDI = model.UsoCFDI,
@@ -30,6 +30,8 @@ namespace Service.Billing.Mapper
                 ExpedienteId = model.ExpedienteId,
                 Expediente = model.Expediente,
                 Paciente = model.Paciente,
+                CreationDate = model.FechaCreo,
+                FacturapiId = model.FacturapiId,
             };
         }
 
