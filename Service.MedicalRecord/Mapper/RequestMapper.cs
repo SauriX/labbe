@@ -26,7 +26,9 @@ namespace Service.MedicalRecord.Mapper
                 ClaveMedico = model.Medico?.Clave,
                 Observaciones = model.Observaciones,
                 ExpedienteId = model.ExpedienteId,
+                Paciente = model.Expediente.NombreCompleto,
                 SucursalId = model.SucursalId,
+                Sucursal = model.Sucursal.Nombre,
                 Clave = model.Clave,
                 Parcialidad = model.Parcialidad,
                 EsNuevo = model.EsNuevo,
@@ -35,7 +37,9 @@ namespace Service.MedicalRecord.Mapper
                 TokenValidado = model.TokenValidado,
                 SaldoPendiente = model.Procedencia == PARTICULAR && model.Saldo > 0,
                 Urgencia = model.Urgencia,
-                Procedencia = model.Procedencia
+                Procedencia = model.Procedencia,
+                Serie = model.Serie,
+                SerieNumero = model.SerieNumero
             };
         }
 
@@ -118,6 +122,7 @@ namespace Service.MedicalRecord.Mapper
                 Serie = model.Serie,
                 Numero = model.Numero,
                 FacturaId = model.FacturaId,
+                SerieFactura = model.SerieFactura,
                 FacturapiId = model.FacturapiId,
                 UsuarioRegistra = model.UsuarioRegistra,
                 EstatusId = model.EstatusId

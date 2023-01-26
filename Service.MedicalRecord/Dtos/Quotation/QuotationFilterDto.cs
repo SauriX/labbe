@@ -14,5 +14,6 @@ namespace Service.MedicalRecord.Dtos.Quotation
         public DateTime? FechaNInicial { get; set; }
         public DateTime? FechaNFinal { get; set; }
         public string Expediente { get; set; }
+        public string Clave { get; set; }
     }
 }

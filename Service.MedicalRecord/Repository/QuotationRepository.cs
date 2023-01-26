@@ -37,6 +37,11 @@ namespace Service.MedicalRecord.Repository
                 .OrderBy(x => x.FechaCreo)
                 .AsQueryable();
 
+            if (!string.IsNullOrEmpty(filter.Clave))
+            {
+                quotations = quotations.Where(x => x.Clave == filter.Clave);
+            }
+
             if (string.IsNullOrWhiteSpace(filter.Expediente) && filter.FechaAInicial != null && filter.FechaAFinal != null)
             {
                 quotations = quotations.Where(x => x.FechaCreo.Date >= ((DateTime)filter.FechaAInicial).Date

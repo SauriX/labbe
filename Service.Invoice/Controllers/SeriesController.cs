@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Service.Catalog.Application.IApplication;
-using Service.Catalog.Dtos.Series;
+using Service.Billing.Application.IApplication;
+using Service.Billing.Dtos.Series;
 using System;
 using System.Collections;
 using System.Collections.Generic;

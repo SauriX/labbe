@@ -17,6 +17,7 @@ using Service.MedicalRecord.Domain.Catalogs;
 using Service.MedicalRecord.Utils;
 using Service.MedicalRecord.Client.IClient;
 using Service.MedicalRecord.Domain.RouteTracking;
+using Service.MedicalRecord.Dtos.RouteTracking;
 
 namespace Service.MedicalRecord.Application.IApplication
 {
@@ -135,7 +136,18 @@ namespace Service.MedicalRecord.Application.IApplication
             var estudis = estudiosEncontrados.ToStudiesRequestRouteDto();
             return estudis;
         }
-
+        public async Task<IEnumerable<EstudiosListDto>> FindAllEstudios(List<int> estudios, string request)
+        {
+            var estudiosEncontrados = await _repository.FindAllEstudios(estudios,request);
+            var estudis = estudiosEncontrados.ToStudiesRequestRouteDto(true);
+            return estudis;
+        }
+        public async Task<IEnumerable<RquestStudiesDto>> FindRequestEstudios(string request)
+        {
+            var estudiosEncontrados = await _repository.FindStudiesRequest(request);
+            var estudis = estudiosEncontrados.torequestedStudi();
+            return estudis;
+        }
         public async Task<(byte[] file, string fileName)> ExportForm(TrackingOrderFormDto order)
         {
             

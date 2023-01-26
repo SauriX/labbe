@@ -234,15 +234,16 @@ namespace Service.MedicalRecord.Application
             newRequest.UsuarioCreoId = requestDto.UsuarioId;
             newRequest.UsuarioCreo = requestDto.Usuario;
 
-            //var series = await _repository.GetReceiptSeries(requestDto.SucursalId);
+            var series = await _billingClient.GetBranchSeries(requestDto.SucursalId, 2);
 
-            //if (series != null)
-            //{
-            //    var next = await GetNextPaymentNumber(series);
+            if (series != null && series.Count > 0)
+            {
+                var serie = series.OrderBy(x => x.Id).Last();
+                var next = await GetNextPaymentNumber(serie.Clave);
 
-            //    newRequest.Serie = series;
-            //    newRequest.SerieNumero = next;
-            //}
+                newRequest.Serie = serie.Clave;
+                newRequest.SerieNumero = next;
+            }
 
             await _repository.Create(newRequest);
 
@@ -384,7 +385,12 @@ namespace Service.MedicalRecord.Application
         {
             if (checkInDto.Pagos == null || checkInDto.Pagos.Count == 0)
             {
-                throw new CustomException(HttpStatusCode.BadRequest, "No se seleccionó ningun pago");
+                throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.NoPaymentSelected);
+            }
+
+            if (new bool[] { checkInDto.Desglozado, checkInDto.Simple, checkInDto.PorConcepto }.Count(x => x) != 1)
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "Debe seleccionar solo una opción entre Desglozado por estudio, Simple o Por Concepto");
             }
 
             var request = await GetExistingRequest(checkInDto.ExpedienteId, checkInDto.SolicitudId);
@@ -420,12 +426,13 @@ namespace Service.MedicalRecord.Application
                 ExpedienteId = checkInDto.ExpedienteId,
                 Solicitud = request.Clave,
                 SolicitudId = checkInDto.SolicitudId,
+                Serie = checkInDto.Serie,
                 UsoCFDI = checkInDto.UsoCFDI,
                 FormaPago = maxPay.FormaPago,
                 RegimenFiscal = taxData.RegimenFiscal,
                 RFC = taxData.RFC,
                 Paciente = record.NombreCompleto,
-                ConNombre = checkInDto.ConNombre,
+                ConNombre = checkInDto.Simple,
                 Desglozado = checkInDto.Desglozado,
                 EnvioCorreo = checkInDto.EnvioCorreo ? request.EnvioCorreo : null,
                 EnvioWhatsapp = checkInDto.EnvioWhatsapp ? request.EnvioWhatsApp : null,
@@ -446,14 +453,19 @@ namespace Service.MedicalRecord.Application
                 },
             };
 
-            if (checkInDto.ConNombre)
+            if (checkInDto.Simple || checkInDto.PorConcepto)
             {
+                if (checkInDto.Detalle.Count != 1)
+                {
+                    throw new CustomException(HttpStatusCode.BadRequest, "Las facturas simples o por concepto solo deben tener un detalle");
+                }
+
                 invoiceDto.Productos = new List<ProductDto>
                 {
                     new ProductDto
                     {
-                        Clave = "Pago a Solicitud",
-                        Descripcion = $"Pago cantidad ${totalQty}",
+                        Clave = checkInDto.Detalle[0].Clave,
+                        Descripcion = checkInDto.Detalle[0].Descripcion,
                         Precio = totalQty,
                         Cantidad = 1,
                         Descuento = 0,
@@ -490,6 +502,7 @@ namespace Service.MedicalRecord.Application
             {
                 payment.EstatusId = Status.RequestPayment.Facturado;
                 payment.FacturaId = invoiceResponse.Id;
+                payment.SerieFactura = invoiceResponse.Serie + " " + invoiceResponse.SerieNumero;
                 payment.FacturapiId = invoiceResponse.FacturapiId;
                 payment.UsuarioModificoId = checkInDto.UsuarioId;
                 payment.FechaModifico = DateTime.Now;
@@ -500,6 +513,34 @@ namespace Service.MedicalRecord.Application
             var checkedIn = paymentsToCheckIn.ToRequestPaymentDto();
 
             return checkedIn;
+        }
+
+        public async Task<string> UpdateSeries(RequestDto requestDto)
+        {
+            var request = await GetExistingRequest(requestDto.ExpedienteId, (Guid)requestDto.SolicitudId);
+
+            if (string.IsNullOrWhiteSpace(requestDto.Serie))
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "Debe seleccionar una serie");
+            }
+
+            var series = await _billingClient.GetBranchSeries(request.SucursalId, 2);
+
+            if (!series.Select(x => x.Clave).Contains(requestDto.Serie))
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "La serie no es valida");
+            }
+
+            var next = await GetNextPaymentNumber(requestDto.Serie);
+
+            request.Serie = requestDto.Serie;
+            request.SerieNumero = next;
+            request.UsuarioModificoId = requestDto.UsuarioId;
+            request.FechaModifico = DateTime.Now;
+
+            await _repository.Update(request);
+
+            return next;
         }
 
         public async Task UpdateGeneral(RequestGeneralDto requestDto)

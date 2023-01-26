@@ -2642,47 +2642,6 @@ namespace Service.Catalog.Migrations
                     b.ToTable("Relacion_Ruta_Estudio");
                 });
 
-            modelBuilder.Entity("Service.Catalog.Domain.Series.Series", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Clave")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Descripcion")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaModifico")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("SucursalId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<byte>("TipoSerie")
-                        .HasColumnType("tinyint");
-
-                    b.Property<Guid>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("UsuarioModificoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SucursalId");
-
-                    b.ToTable("CAT_Serie");
-                });
-
             modelBuilder.Entity("Service.Catalog.Domain.Study.PacketStudy", b =>
                 {
                     b.Property<int>("EstudioId")
@@ -3503,17 +3462,6 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Estudio");
 
                     b.Navigation("Ruta");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Series.Series", b =>
-                {
-                    b.HasOne("Service.Catalog.Domain.Branch.Branch", "Sucursal")
-                        .WithMany()
-                        .HasForeignKey("SucursalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Sucursal");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Study.PacketStudy", b =>

@@ -1087,6 +1087,9 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("Serie")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("SerieFactura")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("SolicitudId")
                         .HasColumnType("uniqueidentifier");
 
@@ -1554,6 +1557,9 @@ namespace Service.MedicalRecord.Migrations
 
                     b.Property<DateTime>("FechaMod")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsExtra")
+                        .HasColumnType("bit");
 
                     b.Property<string>("NombrePaciente")
                         .HasColumnType("nvarchar(max)");

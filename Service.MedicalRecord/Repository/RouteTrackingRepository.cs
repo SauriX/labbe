@@ -94,7 +94,10 @@ namespace Service.MedicalRecord.Repository
                 .ThenInclude(x => x.Solicitud.Estudios)
                 .ThenInclude(x => x.Estatus)
                 .Include(x => x.Estudios)
-                .ThenInclude(x => x.Solicitud.Expediente).AsQueryable();
+                .ThenInclude(x => x.Solicitud.Expediente)
+                .Include(x => x.Estudios)
+                .ThenInclude(x=>x.SolicitudEstudio)
+                .AsQueryable();
             if (search.Sucursal!=null && search.Sucursal.Count >0)
             {
                 routeTrackingList = routeTrackingList.Where(x => search.Sucursal.Contains(x.SucursalOrigenId));

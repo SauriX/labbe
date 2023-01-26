@@ -35,6 +35,7 @@ using System.Text;
 using ClosedXML.Report.Utils;
 using Service.MedicalRecord.Dtos.WeeClinic;
 using Service.MedicalRecord.Dtos.Appointment;
+using System.Text.Json;
 
 namespace Service.MedicalRecord.Application
 {
@@ -260,7 +261,7 @@ namespace Service.MedicalRecord.Application
 
             List<RequestStudy> methodStudies = new List<RequestStudy>();
 
-            foreach(var studyMethod in studies.Where(x => x.Metodo == null))
+            foreach (var studyMethod in studies.Where(x => x.Metodo == null))
             {
                 var method = studiesParams.FirstOrDefault(x => x.Id == studyMethod.EstudioId).Metodo;
                 if (method != null)
@@ -268,7 +269,7 @@ namespace Service.MedicalRecord.Application
                     studyMethod.Metodo = method;
                     methodStudies.Add(studyMethod);
                 }
-                    
+
             }
 
             if (methodStudies.Any())
@@ -342,122 +343,124 @@ namespace Service.MedicalRecord.Application
                 var st = studiesParams.FirstOrDefault(x => x.Id == study.EstudioId);
                 if (st == null) continue;
 
-                study.Parametros = st.Parametros;
+                study.Parametros = JsonSerializer.Deserialize<List<ParameterListDto>>(JsonSerializer.Serialize(st.Parametros));
                 study.Indicaciones = st.Indicaciones;
                 study.Metodo = st.Metodo;
+            }
 
-                foreach (var param in study.Parametros)
+            foreach (var result in results)
+            {
+                var study = studiesDto.FirstOrDefault(x => x.Id == result.SolicitudEstudioId);
+                if (study == null) continue;
+
+                var st = studiesParams.FirstOrDefault(x => x.Id == study.EstudioId);
+                if (st == null) continue;
+
+                var param = study.Parametros.FirstOrDefault(x => x.Id == result.ParametroId.ToString() && !x.Asignado);
+
+                //foreach (var param in study.Parametros)
+                //{
+                if (!string.IsNullOrWhiteSpace(result.Formula) && !string.IsNullOrWhiteSpace(result.Resultado))
                 {
-                    var result = results.Find(x => x.SolicitudEstudioId == study.Id && x.ParametroId.ToString() == param.Id);
-                    if (result != null)
+                    param.Resultado = GetFormula(results.Where(x => x.SolicitudEstudioId == study.Id && x.Clave != null).ToList(), result.Formula);
+                }
+                else
+                {
+                    param.Resultado = result.Resultado;
+                    param.ObservacionesId = result.ObservacionesId ?? "";
+                }
+                param.ResultadoId = result.Id.ToString();
+                param.Formula = result.Formula;
+                param.Asignado = true;
+
+                if (param.DeltaCheck)
+                {
+                    var listRequests = await _repository.GetSecondLastRequest(result.Solicitud.ExpedienteId);
+                    var previousResult = listRequests.Where(x => x.Id != result.SolicitudId)
+                        .Where(x => x.FechaCreo < result.Solicitud.FechaCreo)
+                        .SelectMany(x => x.Estudios)
+                        .Where(x => x.EstudioId == st.Id)
+                        .SelectMany(x => x.Resultados)
+                        .Where(x => x.ParametroId.ToString() == param.Id)
+                        .FirstOrDefault();
+
+                    if (previousResult != null)
                     {
-                        if (!string.IsNullOrWhiteSpace(result.Formula) && !string.IsNullOrWhiteSpace(result.Resultado))
+                        param.UltimoResultado = previousResult.Resultado == null ? null : previousResult.Resultado;
+
+                        var previousRequest = await _repository.GetRequestById(previousResult.SolicitudId);
+                        if (previousRequest != null)
                         {
-                            param.Resultado = GetFormula(results.Where(x => x.SolicitudEstudioId == study.Id && x.Clave != null).ToList(), result.Formula);
-                        }
-                        else
-                        {
-                            if (result == null)
-                            {
-                                continue;
-                            }
-
-                            param.Resultado = result.Resultado;
-                            param.ObservacionesId = result.ObservacionesId ?? "";
-                        }
-                        param.ResultadoId = result.Id.ToString();
-                        param.Formula = result.Formula;
-
-                        if (param.DeltaCheck)
-                        {
-                            var listRequests = await _repository.GetSecondLastRequest(result.Solicitud.ExpedienteId);
-                            var previousResult = listRequests.Where(x => x.Id != result.SolicitudId)
-                                .Where(x => x.FechaCreo < result.Solicitud.FechaCreo)
-                                .SelectMany(x => x.Estudios)
-                                .Where(x => x.EstudioId == st.Id)
-                                .SelectMany(x => x.Resultados)
-                                .Where(x => x.ParametroId.ToString() == param.Id)
-                                .FirstOrDefault();
-
-                            if (previousResult != null)
-                            {
-                                param.UltimoResultado = previousResult.Resultado == null ? null : previousResult.Resultado;
-
-                                var previousRequest = await _repository.GetRequestById(previousResult.SolicitudId);
-                                if (previousRequest != null)
-                                {
-                                    param.UltimaSolicitud = previousRequest.Clave == null ? null : previousRequest.Clave;
-                                    param.UltimaSolicitudId = previousRequest.Id;
-                                    param.UltimoExpedienteId = previousRequest.ExpedienteId;
-                                }
-                            }
-
+                            param.UltimaSolicitud = previousRequest.Clave == null ? null : previousRequest.Clave;
+                            param.UltimaSolicitudId = previousRequest.Id;
+                            param.UltimoExpedienteId = previousRequest.ExpedienteId;
                         }
                     }
 
-                    if (param.TipoValores != null && param.TipoValores.Count != 0)
-                    {
-                        var ageRange = request.Expediente.Edad >= param.TipoValores.FirstOrDefault().RangoEdadInicial && request.Expediente.Edad <= param.TipoValores.FirstOrDefault().RangoEdadFinal;
+                }
 
-                        switch (param.TipoValor)
-                        {
-                            case "1":
-                                param.ValorInicial = param.TipoValores.FirstOrDefault().ValorInicial.ToString();
-                                param.ValorFinal = param.TipoValores.FirstOrDefault().ValorFinal.ToString();
-                                param.CriticoMinimo = param.TipoValores.FirstOrDefault().CriticoMinimo;
-                                param.CriticoMaximo = param.TipoValores.FirstOrDefault().CriticoMaximo;
-                                break;
-                            case "2":
-                                if (request.Expediente.Genero == "F")
-                                {
-                                    param.ValorInicial = param.TipoValores.FirstOrDefault().MujerValorInicial.ToString();
-                                    param.ValorFinal = param.TipoValores.FirstOrDefault().MujerValorFinal.ToString();
-                                    param.CriticoMinimo = param.TipoValores.FirstOrDefault().MujerCriticoMinimo;
-                                    param.CriticoMaximo = param.TipoValores.FirstOrDefault().MujerCriticoMaximo;
-                                }
-                                else if (request.Expediente.Genero == "M")
-                                {
-                                    param.ValorInicial = param.TipoValores.FirstOrDefault().HombreValorInicial.ToString();
-                                    param.ValorFinal = param.TipoValores.FirstOrDefault().HombreValorFinal.ToString();
-                                    param.CriticoMinimo = param.TipoValores.FirstOrDefault().HombreCriticoMinimo;
-                                    param.CriticoMaximo = param.TipoValores.FirstOrDefault().HombreCriticoMaximo;
-                                }
-                                break;
-                            case "3":
-                                if (ageRange)
-                                {
-                                    param.ValorInicial = param.TipoValores.FirstOrDefault().ValorInicialNumerico.ToString();
-                                    param.ValorFinal = param.TipoValores.FirstOrDefault().ValorFinalNumerico.ToString();
-                                }
-                                break;
-                            case "4":
-                                if (ageRange && request.Expediente.Genero == "F")
-                                {
-                                    param.ValorInicial = param.TipoValores.FirstOrDefault().MujerValorInicial.ToString();
-                                    param.ValorFinal = param.TipoValores.FirstOrDefault().MujerValorFinal.ToString();
-                                    param.CriticoMinimo = param.TipoValores.FirstOrDefault().MujerCriticoMinimo;
-                                    param.CriticoMaximo = param.TipoValores.FirstOrDefault().MujerCriticoMaximo;
-                                }
-                                else if (ageRange && request.Expediente.Genero == "M")
-                                {
-                                    param.ValorInicial = param.TipoValores.FirstOrDefault().HombreValorInicial.ToString();
-                                    param.ValorFinal = param.TipoValores.FirstOrDefault().HombreValorFinal.ToString();
-                                    param.CriticoMinimo = param.TipoValores.FirstOrDefault().HombreCriticoMinimo;
-                                    param.CriticoMaximo = param.TipoValores.FirstOrDefault().HombreCriticoMaximo;
-                                }
-                                break;
-                            case "5":
-                            case "6":
-                            case "11":
-                            case "12":
-                            case "13":
-                            case "14":
-                                param.TipoValores = param.TipoValores;
-                                break;
-                            case "9":
-                                param.ValorInicial = "\n";
-                                break;
-                        }
+                if (param.TipoValores != null && param.TipoValores.Count != 0)
+                {
+                    var ageRange = request.Expediente.Edad >= param.TipoValores.FirstOrDefault().RangoEdadInicial && request.Expediente.Edad <= param.TipoValores.FirstOrDefault().RangoEdadFinal;
+
+                    switch (param.TipoValor)
+                    {
+                        case "1":
+                            param.ValorInicial = param.TipoValores.FirstOrDefault().ValorInicial.ToString();
+                            param.ValorFinal = param.TipoValores.FirstOrDefault().ValorFinal.ToString();
+                            param.CriticoMinimo = param.TipoValores.FirstOrDefault().CriticoMinimo;
+                            param.CriticoMaximo = param.TipoValores.FirstOrDefault().CriticoMaximo;
+                            break;
+                        case "2":
+                            if (request.Expediente.Genero == "F")
+                            {
+                                param.ValorInicial = param.TipoValores.FirstOrDefault().MujerValorInicial.ToString();
+                                param.ValorFinal = param.TipoValores.FirstOrDefault().MujerValorFinal.ToString();
+                                param.CriticoMinimo = param.TipoValores.FirstOrDefault().MujerCriticoMinimo;
+                                param.CriticoMaximo = param.TipoValores.FirstOrDefault().MujerCriticoMaximo;
+                            }
+                            else if (request.Expediente.Genero == "M")
+                            {
+                                param.ValorInicial = param.TipoValores.FirstOrDefault().HombreValorInicial.ToString();
+                                param.ValorFinal = param.TipoValores.FirstOrDefault().HombreValorFinal.ToString();
+                                param.CriticoMinimo = param.TipoValores.FirstOrDefault().HombreCriticoMinimo;
+                                param.CriticoMaximo = param.TipoValores.FirstOrDefault().HombreCriticoMaximo;
+                            }
+                            break;
+                        case "3":
+                            if (ageRange)
+                            {
+                                param.ValorInicial = param.TipoValores.FirstOrDefault().ValorInicialNumerico.ToString();
+                                param.ValorFinal = param.TipoValores.FirstOrDefault().ValorFinalNumerico.ToString();
+                            }
+                            break;
+                        case "4":
+                            if (ageRange && request.Expediente.Genero == "F")
+                            {
+                                param.ValorInicial = param.TipoValores.FirstOrDefault().MujerValorInicial.ToString();
+                                param.ValorFinal = param.TipoValores.FirstOrDefault().MujerValorFinal.ToString();
+                                param.CriticoMinimo = param.TipoValores.FirstOrDefault().MujerCriticoMinimo;
+                                param.CriticoMaximo = param.TipoValores.FirstOrDefault().MujerCriticoMaximo;
+                            }
+                            else if (ageRange && request.Expediente.Genero == "M")
+                            {
+                                param.ValorInicial = param.TipoValores.FirstOrDefault().HombreValorInicial.ToString();
+                                param.ValorFinal = param.TipoValores.FirstOrDefault().HombreValorFinal.ToString();
+                                param.CriticoMinimo = param.TipoValores.FirstOrDefault().HombreCriticoMinimo;
+                                param.CriticoMaximo = param.TipoValores.FirstOrDefault().HombreCriticoMaximo;
+                            }
+                            break;
+                        case "5":
+                        case "6":
+                        case "11":
+                        case "12":
+                        case "13":
+                        case "14":
+                            param.TipoValores = param.TipoValores;
+                            break;
+                        case "9":
+                            param.ValorInicial = "\n";
+                            break;
                     }
                 }
             }
@@ -490,7 +493,7 @@ namespace Service.MedicalRecord.Application
                 Headers = new HeaderDictionary(),
                 ContentType = "application/pdf"
             };
-            
+
             var assignment = await _weeService.UploadResultFile(file);
 
             return assignment;
@@ -508,21 +511,21 @@ namespace Service.MedicalRecord.Application
                 .ToList()
                 .GroupBy(x => x.FechaEntrega.Date);
 
-           
+
             List<RequestStudy> requestStudies = new List<RequestStudy>();
 
             foreach (var results in resultsPerDay)
             {
                 //if (results.ToList().Find(x => x.Id == requestStudyId) != null)
                 //{
-                    if (results
-                        .All(x => (x.EstatusId != Status.RequestStudy.Enviado || x.EstatusId != Status.RequestStudy.Cancelado) && (x.EstatusId == Status.RequestStudy.Liberado))
-                        //.Where(x => x.Id != requestStudyId)
-                        )
-                    {
-                        requestStudies.AddRange(results.ToList());
+                if (results
+                    .All(x => (x.EstatusId != Status.RequestStudy.Enviado || x.EstatusId != Status.RequestStudy.Cancelado) && (x.EstatusId == Status.RequestStudy.Liberado))
+                    //.Where(x => x.Id != requestStudyId)
+                    )
+                {
+                    requestStudies.AddRange(results.ToList());
 
-                    }
+                }
                 //}
             }
 
@@ -586,7 +589,7 @@ namespace Service.MedicalRecord.Application
                     List<int> studyLabResults = new List<int> { };
                     List<ClinicResults> resultsTask = new List<ClinicResults>();
 
-                   
+
 
                     foreach (var resultPath in labResults)
                     {
@@ -598,7 +601,7 @@ namespace Service.MedicalRecord.Application
                         if (finalResult.First().Solicitud.EsWeeClinic)
                         {
 
-                            List<ClinicResults>  resultsTaskWee = finalResult;
+                            List<ClinicResults> resultsTaskWee = finalResult;
                             List<int> studyLabResultsWee = resultsTaskWee.Select(x => x.EstudioId).ToList();
                             var paramReferenceValuesWee = await ReferencesValues(studyLabResultsWee);
                             var existingLabResultsPdfWee = resultsTask.ToResults(true, true, true, paramReferenceValuesWee);
@@ -634,9 +637,9 @@ namespace Service.MedicalRecord.Application
                     {
                         //if (canSendResultBalance(request.Solicitud) || EnvioManual)
                         //{
-                            await SendTestWhatsapp(files, request.Solicitud.EnvioWhatsApp, userId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
-                            await SendTestEmail(files, request.Solicitud.EnvioCorreo, userId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
-                            await UpdateStatusStudy(request.SolicitudEstudioId, Status.RequestStudy.Enviado, user);
+                        await SendTestWhatsapp(files, request.Solicitud.EnvioWhatsApp, userId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
+                        await SendTestEmail(files, request.Solicitud.EnvioCorreo, userId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
+                        await UpdateStatusStudy(request.SolicitudEstudioId, Status.RequestStudy.Enviado, user);
 
                         //}
                     }
@@ -653,9 +656,9 @@ namespace Service.MedicalRecord.Application
                     {
                         //if (canSendResultBalance(request.Solicitud) || EnvioManual)
                         //{
-                            var resultsToSend = canSendResultResultsReady(existingRequest, results.First().SolicitudEstudioId);
+                        var resultsToSend = canSendResultResultsReady(existingRequest, results.First().SolicitudEstudioId);
 
-                            await SendResultsFiles(request.SolicitudId, userId, user, resultsToSend);
+                        await SendResultsFiles(request.SolicitudId, userId, user, resultsToSend);
                         //}
                     }
                 }
@@ -809,11 +812,11 @@ namespace Service.MedicalRecord.Application
                         //if (canSendResultBalance(existing.Solicitud) || EnvioManual)
                         //{
 
-                            await SendTestWhatsapp(files, existing.Solicitud.EnvioWhatsApp, result.UsuarioId,existing.Solicitud.Expediente.NombreCompleto, existing.Solicitud.Clave);
+                        await SendTestWhatsapp(files, existing.Solicitud.EnvioWhatsApp, result.UsuarioId, existing.Solicitud.Expediente.NombreCompleto, existing.Solicitud.Clave);
 
-                            await SendTestEmail(files, existing.Solicitud.EnvioCorreo, result.UsuarioId, existing.Solicitud.Expediente.NombreCompleto, existing.Solicitud.Clave);
+                        await SendTestEmail(files, existing.Solicitud.EnvioCorreo, result.UsuarioId, existing.Solicitud.Expediente.NombreCompleto, existing.Solicitud.Clave);
 
-                            await UpdateStatusStudy(result.EstudioId, Status.RequestStudy.Enviado, result.Usuario);
+                        await UpdateStatusStudy(result.EstudioId, Status.RequestStudy.Enviado, result.Usuario);
                         //}
 
                     }
@@ -828,16 +831,16 @@ namespace Service.MedicalRecord.Application
                     //if (canSendResultBalance(existing.Solicitud) || EnvioManual)
                     //{
 
-                        await UpdateStatusStudy(result.EstudioId, result.Estatus, result.Usuario);
+                    await UpdateStatusStudy(result.EstudioId, result.Estatus, result.Usuario);
 
-                        var existingRequest = await _repository.GetRequestById(existing.SolicitudId);
+                    var existingRequest = await _repository.GetRequestById(existing.SolicitudId);
 
-                        //if (existingRequest.Estudios.All(estudio => estudio.EstatusId == Status.RequestStudy.Liberado))
-                        //{
-                        var resultsToSend = canSendResultResultsReady(existingRequest, existing.RequestStudyId);
+                    //if (existingRequest.Estudios.All(estudio => estudio.EstatusId == Status.RequestStudy.Liberado))
+                    //{
+                    var resultsToSend = canSendResultResultsReady(existingRequest, existing.RequestStudyId);
 
-                        await SendResultsFiles(existing.SolicitudId, result.UsuarioId, result.Usuario, resultsToSend);
-                        //}
+                    await SendResultsFiles(existing.SolicitudId, result.UsuarioId, result.Usuario, resultsToSend);
+                    //}
                     //}
 
 
@@ -1110,15 +1113,15 @@ namespace Service.MedicalRecord.Application
                 //if (files.Count > 0 && canSendResultBalance(existingRequest))
                 //{
 
-                    await SendTestWhatsapp(files, existingRequest.EnvioWhatsApp, usuarioId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
+                await SendTestWhatsapp(files, existingRequest.EnvioWhatsApp, usuarioId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
 
-                    await SendTestEmail(files, existingRequest.EnvioCorreo, usuarioId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
+                await SendTestEmail(files, existingRequest.EnvioCorreo, usuarioId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
 
-                    foreach (var estudio in existingRequest.Estudios)
-                    {
-                        await UpdateStatusStudy(estudio.Id, Status.RequestStudy.Enviado, usuario);
+                foreach (var estudio in existingRequest.Estudios)
+                {
+                    await UpdateStatusStudy(estudio.Id, Status.RequestStudy.Enviado, usuario);
 
-                    }
+                }
                 //}
             }
             catch (Exception ex)

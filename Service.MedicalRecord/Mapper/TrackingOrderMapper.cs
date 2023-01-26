@@ -1,5 +1,6 @@
 ﻿using Service.MedicalRecord.Dictionary;
 using Service.MedicalRecord.Domain.TrackingOrder;
+using Service.MedicalRecord.Dtos.RouteTracking;
 using Service.MedicalRecord.Dtos.TrackingOrder;
 using System;
 using System.Collections.Generic;
@@ -71,14 +72,14 @@ namespace Service.MedicalRecord.Mapper
                 Temperatura = dto.Temperatura,
                 SucursalDestinoId = dto.SucursalDestinoId,
                 SucursalOrigenId = dto.SucursalOrigenId,
-                UsuarioCreoId = dto.UsuarioCreoId,
+                UsuarioCreoId = model.UsuarioCreoId,
                 FechaMod = DateTime.Now,
                 Activo = dto.Activo,
                 EscaneoCodigoBarras = dto.EscaneoCodigoBarras,
                 MaquiladorId = dto.MaquiladorId,
-                RutaId = dto.RutaId,
+                RutaId = model.RutaId,
                 DiaRecoleccion = dto.DiaRecoleccion,
-                Clave = dto.Clave,
+                Clave = model.Clave,
                 Estudios = dto.Estudios.Select(x => new TrackingOrderDetail
                 {
                     SolicitudId = x.SolicitudId,
@@ -128,7 +129,8 @@ namespace Service.MedicalRecord.Mapper
                     NombrePaciente = x.NombrePaciente,
                     Temperatura = x.Temperatura,
                     Escaneado =false,
-                    FechaCreo = DateTime.Now
+                    FechaCreo = DateTime.Now,
+                    IsExtra = x.IsExtra
                     
 
                 }).ToList()
@@ -163,7 +165,7 @@ namespace Service.MedicalRecord.Mapper
                 Clave = model.Clave
             };
         }
-        public static IEnumerable<EstudiosListDto> ToStudiesRequestRouteDto(this IEnumerable<Domain.Request.RequestStudy> model )
+        public static IEnumerable<EstudiosListDto> ToStudiesRequestRouteDto(this IEnumerable<Domain.Request.RequestStudy> model,bool isExtra = false )
         {
             if (model == null) return null;
 
@@ -184,7 +186,9 @@ namespace Service.MedicalRecord.Mapper
                     SolicitudId = x.Solicitud.Id,
                     ExpedienteId = x.Solicitud.ExpedienteId,
                     Escaneado=true,
+                    IsExtra = isExtra
                 },
+                IsExtra = isExtra
             });
         }
 
@@ -196,7 +200,7 @@ namespace Service.MedicalRecord.Mapper
             return model.Select(x => new EstudiosListDto
             {
 
-                solicitudId = x.SolicitudId,
+                solicitudId = x.SolicitudId,    
                 IsInRute = x.SolicitudEstudio.EstatusId == Status.RequestStudy.EnRuta ,
                 orderId = orderId,
                 Estudio = new StudiesRequestRouteDto
@@ -213,6 +217,21 @@ namespace Service.MedicalRecord.Mapper
 
                 },
             });
+        }
+
+        public static IEnumerable<RquestStudiesDto> torequestedStudi(this IEnumerable<Domain.Request.RequestStudy> model) {
+
+                if (model == null) return null;
+            return model.Select(x=> new RquestStudiesDto { 
+                Id = x.EstudioId,
+                Clave = x.Clave,
+                Estudio = x.Nombre,
+                Estatus = x.Estatus.Nombre,
+                Dias = x.Dias.ToString(),
+                Fecha = x.FechaTomaMuestra.ToString(),
+                EstatusId = x.EstatusId
+            });
+
         }
     }
 }
