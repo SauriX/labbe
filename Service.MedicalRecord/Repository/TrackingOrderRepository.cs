@@ -93,6 +93,18 @@ namespace Service.MedicalRecord.Repository
                 throw;
             }
         }
+        public async Task<List<Domain.Request.RequestStudy>> FindStudiesRequest(string Solicitud) {
+            var listaEstudio = _context.Relacion_Solicitud_Estudio
+            .Include(x => x.Solicitud).ThenInclude(x => x.Expediente)
+            .Include(x => x.Solicitud)
+            .Include(x => x.Tapon)
+            .Include(x=>x.Estatus)
+           .AsQueryable();
+            
+            listaEstudio = listaEstudio.Where(x=>x.Solicitud.Clave == Solicitud && x.EstatusId == Status.RequestStudy.TomaDeMuestra);
+            return listaEstudio.ToList()    ;
+            
+        }
         public async Task<List<Domain.Request.RequestStudy>> FindEstudios(List<int> estudios)
         {
             var listaEstudio = _context.Relacion_Solicitud_Estudio
@@ -117,36 +129,31 @@ namespace Service.MedicalRecord.Repository
 
             return newlistestudios;
         }
-        public async Task<List<Domain.Request.RequestStudy>> FindAllEstudios(List<int> estudios,Guid seguimientoId)
+        public async Task<List<Domain.Request.RequestStudy>> FindAllEstudios(List<int> estudios,string solicitud)
         {
-
             var listaEstudio = _context.Relacion_Solicitud_Estudio
                 .Include(x => x.Solicitud).ThenInclude(x => x.Expediente)
                 .Include(x => x.Solicitud)
                 .Include(x => x.Tapon)
                 .AsQueryable();
-            var order = _context.CAT_Seguimiento_Ruta.Include(x => x.Estudios).ThenInclude(x=>x.Solicitud.Estudios).FirstOrDefault(x => x.Id == seguimientoId);
-            var lstSolicitudes = order.Estudios;
-            List<Domain.Request.RequestStudy> requestStudies = new List<Domain.Request.RequestStudy>();
 
+            listaEstudio = listaEstudio.Where(x=>x.Solicitud.Clave == solicitud);
+            var ordenes = _context.CAT_Seguimiento_Ruta.Include(x => x.Estudios);
+            List<Domain.Request.RequestStudy> newlistestudios = new List<Domain.Request.RequestStudy>();
 
-            foreach (var item in lstSolicitudes) {
-              var lista =  listaEstudio.Where(x=>x.SolicitudId==item.SolicitudId && x.EstudioId == item.EstudioId);
-                var filterrequestedstudy = lista.ToList();
-                requestStudies.AddRange(filterrequestedstudy);
+            foreach (var estudio in listaEstudio)
+            {
+                if (!ordenes.Any(x => x.Estudios.Any(y => y.EstudioId == estudio.EstudioId && y.SolicitudId == estudio.SolicitudId)))
+                {
+
+                    newlistestudios.Add(estudio);
+                }
             }
 
-            /*foreach (var estudio in estudios) {
-               var estudilist= lstSolicitudes.Where(x=>x.EstudioId== estudio).ToList();
-                var requestetstudies = listaEstudio.Where(x => x.EstudioId == estudio);
-                var filterrequestedstudy = requestetstudies.ToList().FindAll(x=> estudilist.Any(y=>y.SolicitudId==x.SolicitudId));
+            newlistestudios = newlistestudios.FindAll(x => estudios.Contains(x.EstudioId));
+            newlistestudios = newlistestudios.FindAll(x => x.EstatusId == Status.RequestStudy.TomaDeMuestra);
 
-                requestStudies.AddRange(filterrequestedstudy);
-            }*/
-
-            var filteredStudies = requestStudies.ToList().FindAll(x => x.EstatusId == Status.RequestStudy.TomaDeMuestra || x.EstatusId == Status.RequestStudy.EnRuta);
-
-            return filteredStudies;
+            return newlistestudios;
         }
         public async Task<bool> ConfirmarRecoleccion(Guid seguimientoId)
         {

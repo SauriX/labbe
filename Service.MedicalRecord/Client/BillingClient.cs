@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http.Json;
 using Service.MedicalRecord.Dtos.InvoiceCompany;
+using Service.MedicalRecord.Dtos.Series;
 
 namespace Service.MedicalRecord.Client
 {
@@ -25,6 +26,20 @@ namespace Service.MedicalRecord.Client
         {
             _client = client;
             _configuration = configuration;
+        }
+
+        public async Task<List<SeriesDto>> GetBranchSeries(Guid branchId, byte type)
+        {
+            var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Billing")}/api/series/branch/{branchId}/{type}");
+
+            if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+            {
+                return await response.Content.ReadFromJsonAsync<List<SeriesDto>>();
+            }
+
+            var error = await response.Content.ReadFromJsonAsync<ClientException>();
+
+            throw new CustomException(HttpStatusCode.BadRequest, error.Errors);
         }
 
         public async Task<InvoiceDto> CheckInPayment(InvoiceDto invoiceDto)
@@ -44,6 +59,7 @@ namespace Service.MedicalRecord.Client
 
             throw new CustomException(HttpStatusCode.BadRequest, error.Errors);
         }
+
         public async Task<InvoiceDto> CheckInPaymentCompany(InvoiceDto invoiceDto)
         {
             var json = JsonConvert.SerializeObject(invoiceDto);
@@ -61,6 +77,7 @@ namespace Service.MedicalRecord.Client
 
             throw new CustomException(HttpStatusCode.BadRequest, error.Errors);
         }
+
         public async Task<byte[]> DownloadPDF(string invoiceId)
         {
             var json = JsonConvert.SerializeObject(invoiceId);
@@ -78,6 +95,7 @@ namespace Service.MedicalRecord.Client
 
             throw new CustomException(HttpStatusCode.BadRequest, error.Errors);
         }
+
         public async Task<string> CancelInvoice(InvoiceCancelation invoiceDto)
         {
             var json = JsonConvert.SerializeObject(invoiceDto);

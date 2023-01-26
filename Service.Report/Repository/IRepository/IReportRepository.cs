@@ -13,7 +13,8 @@ namespace Service.Report.Repository.IRepository
         Task<List<RequestPayment>> GetPaymentByFilter(ReportFilterDto search);
         Task<List<RequestStudy>> GetByStudies(ReportFilterDto search);
         Task<List<Indicators>> GetBudgetByDate(DateTime startDate, DateTime endDate);
-        Task<List<SamplesCosts>> GetSamplesCostsByDate(ReportModalFilterDto search);
+        Task<List<SamplesCosts>> GetSamplesByDate(DateTime startDate, DateTime endDate);
+        Task<List<SamplesCosts>> GetSamplesCostsByFilter(ReportModalFilterDto search);
         Task CreateIndicators(Indicators indicator);
         Task UpdateIndicators(Indicators indicator);
         Task CreateSamples(List<SamplesCosts> sample);

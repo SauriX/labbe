@@ -10,5 +10,7 @@ namespace Service.Report.Dtos.Indicators
         public string Sucursal { get; set; }
         public DateTime FechaAlta { get; set; }
         public string Aplica { get; set; }
+        public DateTime? FechaMod { get; set; }
+        public string Ciudad { get; set; }
     }
 }

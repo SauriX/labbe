@@ -14,6 +14,7 @@ namespace Service.MedicalRecord.Dtos.TrackingOrder
         public string NombrePaciente { get; set; }
         public decimal Temperatura { get; set; }
         public bool Escaneado { get; set; }
+        public bool IsExtra { get; set; }
         public string TaponNombre { get; set; }
         public Guid UsuarioCreoId { get; set; }
         public DateTime FechoCreo { get; set; }

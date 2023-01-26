@@ -6,7 +6,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 44379
+          "Port": 20347
         }
       ],
       "UpstreamPathTemplate": "/api/series/branch/{branchId}/{type}",
