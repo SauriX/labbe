@@ -16,7 +16,7 @@ namespace Service.Catalog.Mapper
             return new TaxConfiguration
             {
                 Id = Guid.NewGuid(),
-                RFC = dto.Rfc,
+                RFC = dto.RFC,
                 RazonSocial = dto.RazonSocial,
                 Telefono = dto.Telefono,
                 CodigoPostal = dto.CodigoPostal,
@@ -37,7 +37,7 @@ namespace Service.Catalog.Mapper
             return new TaxConfiguration
             {
                 Id = model.Id,
-                RFC = dto.Rfc,
+                RFC = dto.RFC,
                 RazonSocial = dto.RazonSocial,
                 Telefono = dto.Telefono,
                 CodigoPostal = dto.CodigoPostal,

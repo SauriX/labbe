@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Service.Billing.Client.IClient;
 using Service.Billing.Domain.Catalogs;
+using Service.Billing.Dto.Series;
 using Shared.Error;
 using Shared.Helpers;
 using System;
@@ -46,6 +47,25 @@ namespace Service.Billing.Client
                 var ex = Exceptions.GetException(error);
 
                 throw ex;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<OwnerInfoDto> GetFiscalConfig()
+        {
+            try
+            {
+                var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/configuration/fiscal");
+
+                if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+                {
+                    return await response.Content.ReadFromJsonAsync<OwnerInfoDto>();
+                }
+
+                throw new CustomException(response.StatusCode, response.ReasonPhrase);
             }
             catch (Exception)
             {

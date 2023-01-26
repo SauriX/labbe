@@ -52,7 +52,7 @@ namespace Service.Catalog.Mapper
         {
             return new ConfigurationFiscalDto
             {
-                Rfc = model.FirstOrDefault(x => x.Id == FiscalRFC).Valor,
+                RFC = model.FirstOrDefault(x => x.Id == FiscalRFC).Valor,
                 RazonSocial = model.FirstOrDefault(x => x.Id == FiscalRazonSocial).Valor,
                 CodigoPostal = model.FirstOrDefault(x => x.Id == FiscalCP).Valor,
                 Estado = model.FirstOrDefault(x => x.Id == FiscalEstado).Valor,
@@ -127,7 +127,7 @@ namespace Service.Catalog.Mapper
                 {
                     Id = FiscalRFC,
                     Descripcion = model.FirstOrDefault(x => x.Id == FiscalRFC).Descripcion,
-                    Valor = dto.Rfc.Trim()
+                    Valor = dto.RFC.Trim()
                 },
                 new Configuration
                 {

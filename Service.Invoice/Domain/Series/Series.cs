@@ -6,6 +6,8 @@ namespace Service.Billing.Domain.Series
     {
         public int Id { get; set; }
         public string Clave { get; set; }
+        public string Nombre { get; set; }
+        public string Contraseña { get; set; }
         public string Descripcion { get; set; }
         public byte TipoSerie { get; set; }
         public Guid SucursalId { get; set; }
@@ -17,5 +19,6 @@ namespace Service.Billing.Domain.Series
         public Guid EmisorId { get; set; }
         public string ArchivoKey { get; set; }
         public string ArchivoCer { get; set; }
+        public string SucursalKey { get; set; }
     }
 }

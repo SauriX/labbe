@@ -76,5 +76,26 @@ namespace Service.Billing.Repository
 
             return series;
         }
+
+        public async Task<Series> GetById(int id)
+        {
+            var serie = await _context.CAT_Serie.FindAsync(id);
+
+            return serie;
+        }
+
+        public async Task Create(Series serie)
+        {
+            _context.Add(serie);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task Update(Series serie)
+        {
+            _context.Update(serie);
+
+            await _context.SaveChangesAsync();
+        }
     }
 }
