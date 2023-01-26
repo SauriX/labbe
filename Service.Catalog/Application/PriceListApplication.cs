@@ -59,19 +59,19 @@ namespace Service.Catalog.Application
             return price.ToPriceListFormDto();
         }
 
-        public async Task<List<PriceListStudyDto>> GetStudiesById(string Id)
+        public async Task<List<PriceListStudyDto>> GetStudiesById(PriceListStudiesPaginateDto filter)
         {
 
-            Helpers.ValidateGuid(Id, out Guid guid);
+            //Helpers.ValidateGuid(Id, out Guid guid);
 
-            var studies = await _repository.GetStudiesById(guid);
+            var studies = await _repository.GetStudiesById(filter.id);
 
             if (studies == null)
             {
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
 
-            return studies.ToPriceListFormDto();
+            return studies.ToPriceListStudyDto(filter);
         }
 
         public async Task<PriceListInfoStudyDto> GetPriceStudyById(PriceListInfoFilterDto filterDto)

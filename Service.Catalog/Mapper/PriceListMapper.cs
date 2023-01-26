@@ -156,9 +156,9 @@ namespace Service.Catalog.Mapper
                 })?.ToList(),
             });
         }
-        public static List<PriceListStudyDto> ToPriceListStudyDto(this List<PriceList_Study> model)
+        public static List<PriceListStudyDto> ToPriceListStudyDto(this List<PriceList_Study> model, PriceListStudiesPaginateDto filter)
         {
-            return model.Select(x => new PriceListStudyDto
+            return model.Skip(filter.skip).Take(filter.take).Select(x => new PriceListStudyDto
             {
                 Id = x.EstudioId,
                 Clave = x.Estudio.Clave.Trim(),

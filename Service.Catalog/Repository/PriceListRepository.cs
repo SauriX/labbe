@@ -100,10 +100,12 @@ namespace Service.Catalog.Repository
         }
         public async Task<List<PriceList_Study>> GetStudiesById(Guid Id)
         {
+
             return await _context.Relacion_ListaP_Estudio
                 .Include(x => x.Estudio).ThenInclude(x => x.Area).ThenInclude(x => x.Departamento)
                 .Include(x => x.Estudio).ThenInclude(x => x.Tapon)
                 .Where(x => x.PrecioListaId == Id)
+                .OrderBy(x => x.PrecioListaId)
                 .ToListAsync();
 
         }
