@@ -234,15 +234,16 @@ namespace Service.MedicalRecord.Application
             newRequest.UsuarioCreoId = requestDto.UsuarioId;
             newRequest.UsuarioCreo = requestDto.Usuario;
 
-            //var series = await _repository.GetReceiptSeries(requestDto.SucursalId);
+            var series = await _billingClient.GetBranchSeries(requestDto.SucursalId, 2);
 
-            //if (series != null)
-            //{
-            //    var next = await GetNextPaymentNumber(series);
+            if (series != null && series.Count > 0)
+            {
+                var serie = series.OrderBy(x => x.Id).Last();
+                var next = await GetNextPaymentNumber(serie.Clave);
 
-            //    newRequest.Serie = series;
-            //    newRequest.SerieNumero = next;
-            //}
+                newRequest.Serie = serie.Clave;
+                newRequest.SerieNumero = next;
+            }
 
             await _repository.Create(newRequest);
 
@@ -402,11 +403,6 @@ namespace Service.MedicalRecord.Application
                 throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.NoPaymentSelected);
             }
 
-            if (checkInDto.Detalle.Sum(x => x.Precio) != paymentsToCheckIn.Sum(x => x.Cantidad))
-            {
-                throw new CustomException(HttpStatusCode.BadRequest, "La suma de las cantidades de pagos y detalle no coincide");
-            }
-
             var maxPay = paymentsToCheckIn.OrderByDescending(x => x.Cantidad).FirstOrDefault();
 
             var totalQty = paymentsToCheckIn.Sum(x => x.Cantidad);
@@ -517,6 +513,34 @@ namespace Service.MedicalRecord.Application
             var checkedIn = paymentsToCheckIn.ToRequestPaymentDto();
 
             return checkedIn;
+        }
+
+        public async Task<string> UpdateSeries(RequestDto requestDto)
+        {
+            var request = await GetExistingRequest(requestDto.ExpedienteId, (Guid)requestDto.SolicitudId);
+
+            if (string.IsNullOrWhiteSpace(requestDto.Serie))
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "Debe seleccionar una serie");
+            }
+
+            var series = await _billingClient.GetBranchSeries(request.SucursalId, 2);
+
+            if (!series.Select(x => x.Clave).Contains(requestDto.Serie))
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "La serie no es valida");
+            }
+
+            var next = await GetNextPaymentNumber(requestDto.Serie);
+
+            request.Serie = requestDto.Serie;
+            request.SerieNumero = next;
+            request.UsuarioModificoId = requestDto.UsuarioId;
+            request.FechaModifico = DateTime.Now;
+
+            await _repository.Update(request);
+
+            return next;
         }
 
         public async Task UpdateGeneral(RequestGeneralDto requestDto)

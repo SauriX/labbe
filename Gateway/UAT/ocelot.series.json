@@ -1,7 +1,7 @@
 ﻿{
   "Routes": [
     {
-      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/series/branch/{branchId}/{type}",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/billing/api/series/branch/{branchId}/{type}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {

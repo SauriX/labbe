@@ -140,6 +140,15 @@ namespace Service.MedicalRecord.Controllers
             return await _service.CheckInPayment(checkInDto);
         }
 
+        [HttpPut("series")]
+        [Authorize(Policies.Update)]
+        public async Task<string> UpdateSeries(RequestDto requestDto)
+        {
+            requestDto.UsuarioId = (Guid)HttpContext.Items["userId"];
+
+            return await _service.UpdateSeries(requestDto);
+        }
+
         [HttpPut("general")]
         [Authorize(Policies.Update)]
         public async Task UpdateGeneral(RequestGeneralDto requestDto)
