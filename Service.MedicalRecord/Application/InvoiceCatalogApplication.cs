@@ -44,24 +44,20 @@ namespace Service.MedicalRecord.Application
 
         public async Task<List<InvoiceCatalogList>> getFacturas(InvoiceCatalogSearch search) {
             
-            var facturas = await _billingClient.getAllInvoice();
+            var facturas = await _billingClient.getAllInvoice(search);
             var facturasQ = facturas.AsQueryable();
-            if (search.Fecha != null || search.Sucursal.Length >0)
-            {
-                facturasQ = facturasQ.Where(x => x.CreationDate.Date > search.Fecha[0].Date && x.CreationDate.Date < search.Fecha[1].Date);
-
-            }
-
-            if (!string.IsNullOrEmpty(search.Buscar))
-            {
-                facturasQ = facturasQ.Where(x => x.SerieNumero == search.Buscar || x.Solicitud == search.Buscar);
-
-            }
             facturas = facturasQ.ToList();
                 var invoices = facturas.ToInvoiceList();
+            List<string> nSolicitudes = new List<string>();
+            foreach (var invoice in invoices)
+            {
+
+                nSolicitudes.Add(invoice.Solicitud);
+            }
+            var solicitudes = await _repository.GetSolicitudbyclave(nSolicitudes);
             List<InvoiceCatalogList> invoiceList = new List<InvoiceCatalogList>();
             foreach (var invoice in invoices) {
-                var solicitud = await _repository.GetSolicitudbyclave(invoice.Solicitud);
+                var solicitud = solicitudes.Find(x=>x.Clave == invoice.Solicitud);
                 invoice.SucursalId = solicitud.SucursalId.ToString();
                 invoice.Compañia = solicitud.Compañia.Nombre;
                 invoice.Ciudad = solicitud.Sucursal.Ciudad;

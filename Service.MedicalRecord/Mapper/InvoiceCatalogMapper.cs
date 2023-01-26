@@ -12,7 +12,7 @@ namespace Service.MedicalRecord.Mapper
             if (invoice == null) return null;
 
             return invoice.Select(x=> new InvoiceCatalogList {
-                Id = x.FacturapiId.ToString(),
+                Id = x.Id.ToString(),
                 Clave = x.SerieNumero,
                 Serie = x.Serie,
                 Descripcion = x.UsoCFDI,
@@ -22,6 +22,8 @@ namespace Service.MedicalRecord.Mapper
                 Tipo="FAC",
                 SolicitudId=x.SolicitudId.ToString(),
                 ExpedienteId =x.ExpedienteId.ToString(),
+                
+                
             }).ToList();
         }
         public static List<InvoiceCatalogList> ToInvoiceList(this List<Domain.Request.Request> invoice)

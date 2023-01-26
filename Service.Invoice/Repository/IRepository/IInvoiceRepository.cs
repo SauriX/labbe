@@ -1,4 +1,5 @@
 ﻿using Service.Billing.Domain.Invoice;
+using Service.Billing.Dtos.Invoice;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace Service.Billing.Repository.IRepository
         Task UpdateCompany(InvoiceCompany invoice);
         Task<InvoiceCompany> GetInvoiceCompanyByFacturapiId(string id);
         Task UpdateInvoiceCompany(InvoiceCompany invoiceCompnay);
-        Task<List<Invoice>> GetAllInvoice();
+        Task<List<Invoice>> GetAllInvoice(InvoiceSearch search);
+  
     }
 }

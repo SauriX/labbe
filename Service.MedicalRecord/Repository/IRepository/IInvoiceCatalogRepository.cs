@@ -7,6 +7,6 @@ namespace Service.MedicalRecord.Repository.IRepository
     public interface IInvoiceCatalogRepository
     {
         Task<List<Domain.Request.Request>> GetNotas(InvoiceCatalogSearch search);
-        Task<Domain.Request.Request> GetSolicitudbyclave(string clave);
+        Task<List<Domain.Request.Request>> GetSolicitudbyclave(List<string> clave);
     }
 }

@@ -29,5 +29,6 @@ namespace Service.MedicalRecord.Dtos.Invoice
         public DateTime CreationDate { get; set; }
         public List<Guid> SolicitudesId { get; set; }
         public List<ProductDto> Productos { get; set; }
+        public string Tipo { get; set; }
     }
 }

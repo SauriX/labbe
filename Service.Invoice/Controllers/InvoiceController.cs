@@ -21,10 +21,10 @@ namespace Service.Billing.Controllers
         {
             _service = service;
         }
-        [HttpGet("all")]
-        public async Task<List<InvoiceDto>> GetAll()
+        [HttpPost("all")]
+        public async Task<List<InvoiceDto>> GetAll(InvoiceSearch search)
         {
-            return await _service.GetAllInvoice();
+            return await _service.GetAllInvoice(search);
         }
 
         [HttpGet("{invoiceId}")]

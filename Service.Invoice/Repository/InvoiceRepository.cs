@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Service.Billing.Context;
 using Service.Billing.Domain.Invoice;
+using Service.Billing.Dtos.Invoice;
 using Service.Billing.Repository.IRepository;
 using System;
 using System.Collections.Generic;
@@ -20,9 +21,22 @@ namespace Service.Billing.Repository
             _context = context;
         }
 
-        public async Task<List<Invoice>> GetAllInvoice() { 
-            var invoices = await _context.CAT_Factura.ToListAsync();
-            return invoices;
+        public async Task<List<Invoice>> GetAllInvoice(InvoiceSearch search) {
+            var invoices = _context.CAT_Factura.AsQueryable(); ;
+            if (search.Fecha != null)
+            {
+                invoices = invoices.Where(x => x.FechaCreo.Date > search.Fecha[0].Date && x.FechaCreo.Date < search.Fecha[1].Date);
+
+            }
+
+            if (!string.IsNullOrEmpty(search.Buscar))
+            {
+                invoices = invoices.Where(x => x.SerieNumero == search.Buscar || x.Solicitud == search.Buscar);
+
+            }
+
+            var invoicesFilter = await invoices.ToListAsync();
+            return invoicesFilter;
         }
         public async Task<Invoice> GetById(Guid invoiceId)
         {

@@ -40,10 +40,10 @@ namespace Service.MedicalRecord.Repository
         }
 
 
-        public async Task<Domain.Request.Request> GetSolicitudbyclave(string clave)
+        public async Task<List<Domain.Request.Request>> GetSolicitudbyclave(List<string> clave)
         {
             var request =await _context.CAT_Solicitud.Include(x => x.Compañia).Include(x => x.Sucursal).ToListAsync();
-            var requestFilter = request.FirstOrDefault(x=>x.Clave==clave);
+            var requestFilter = request.FindAll(x=> clave.Any (y=>x.Clave==y));
             
             return requestFilter;
         }

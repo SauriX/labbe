@@ -9,7 +9,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/invoice/all",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": [ "POST" ]
     },
     {
       "DownstreamPathTemplate": "/LabRamos-uat/services/billing/api/invoice/print/xml/{invoiceId}",

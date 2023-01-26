@@ -15,5 +15,6 @@
         public string Ciudad { get; set; }
         public string SolicitudId { get; set; }
         public string ExpedienteId { get; set; }
+       
     }
 }

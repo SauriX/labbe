@@ -1,5 +1,9 @@
 ﻿using Service.MedicalRecord.Dtos.Invoice;
+using Service.MedicalRecord.Dtos.InvoiceCatalog;
 using Service.MedicalRecord.Dtos.InvoiceCompany;
+using Service.MedicalRecord.Dtos.Series;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Service.MedicalRecord.Client.IClient
@@ -11,6 +15,6 @@ namespace Service.MedicalRecord.Client.IClient
         Task<InvoiceDto> CheckInPaymentCompany(InvoiceDto invoiceDto);
         Task<byte[]> DownloadPDF(string invoiceId);
         Task<string> CancelInvoice(InvoiceCancelation invoiceDto);
-        Task<List<InvoiceDto>> getAllInvoice();
+        Task<List<InvoiceDto>> getAllInvoice(InvoiceCatalogSearch search);
     }
 }

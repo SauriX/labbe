@@ -10,7 +10,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/invoice/all",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": [ "POST" ]
     },
     {
       "DownstreamPathTemplate": "/api/invoice/print/xml/{invoiceId}",
