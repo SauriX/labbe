@@ -51,18 +51,18 @@ namespace Service.Catalog.Controllers
             return serie;
         }
 
-        [HttpPost("{id}")]
+        [HttpGet("{id}/{tipoSerie}")]
         [Authorize(Policies.Access)]
-        public async Task<SeriesDto> GetById(int id)
+        public async Task<SeriesDto> GetById(int id, byte tipoSerie)
         {
-            var serie = await _service.GetById(id);
+            var serie = await _service.GetById(id, tipoSerie);
 
             return serie;
         }
 
         [HttpPost("invoice")]
         [Authorize(Policies.Access)]
-        public async Task CreateInvoice(SeriesDto serie)
+        public async Task CreateInvoice([FromForm] SeriesDto serie)
         {
             serie.UsuarioId = (Guid)HttpContext.Items["userId"];
             await _service.CreateInvoice(serie);
@@ -70,7 +70,7 @@ namespace Service.Catalog.Controllers
 
         [HttpPut("invoice")]
         [Authorize(Policies.Access)]
-        public async Task UpdateInvoice(SeriesDto serie)
+        public async Task UpdateInvoice([FromForm] SeriesDto serie)
         {
             await _service.UpdateInvoice(serie);
         }
@@ -80,7 +80,7 @@ namespace Service.Catalog.Controllers
         public async Task CreateTicket(TicketDto ticket)
         {
             ticket.UsuarioId = (Guid)HttpContext.Items["userId"];
-            await _service.UpdateTicket(ticket);
+            await _service.CreateTicket(ticket);
         }
 
         [HttpPut("ticket")]

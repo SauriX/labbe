@@ -26,6 +26,8 @@ namespace Service.Catalog.Mapper
         public const int FiscalNumero = 14;
         public const int FiscalTelefono = 15;
         public const int FiscalCiudad = 16;
+        public const int FiscalCorreo = 17;
+        public const int FiscalWebSite = 18;
 
         public static ConfigurationEmailDto ToConfigurationEmailDto(this List<Configuration> model, bool pass = false)
         {
@@ -61,6 +63,8 @@ namespace Service.Catalog.Mapper
                 Calle = model.FirstOrDefault(x => x.Id == FiscalCalle).Valor,
                 Numero = model.FirstOrDefault(x => x.Id == FiscalNumero).Valor,
                 Telefono = model.FirstOrDefault(x => x.Id == FiscalTelefono).Valor,
+                Correo = model.FirstOrDefault(x => x.Id == FiscalCorreo).Valor,
+                WebSite = model.FirstOrDefault(x => x.Id == FiscalWebSite).Valor,
             };
         }
 
@@ -176,6 +180,18 @@ namespace Service.Catalog.Mapper
                     Id = FiscalTelefono,
                     Descripcion = model.FirstOrDefault(x => x.Id == FiscalTelefono).Descripcion,
                     Valor = dto.Telefono?.Trim()
+                },
+                new Configuration
+                {
+                    Id = FiscalCorreo,
+                    Descripcion = model.FirstOrDefault(x => x.Id == FiscalCorreo).Descripcion,
+                    Valor = dto.Correo?.Trim()
+                },
+                new Configuration
+                {
+                    Id = FiscalWebSite,
+                    Descripcion = model.FirstOrDefault(x => x.Id == FiscalWebSite).Descripcion,
+                    Valor = dto.WebSite?.Trim()
                 },
             };
 

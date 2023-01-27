@@ -92,24 +92,24 @@ namespace Service.Catalog.Application
             var configuration = fiscal.ToModel(current);
             await _repository.Update(configuration);
 
-            var currentTaxConfig = await _repository.GetByTaxId(fiscal.UsuarioId);
+            //var currentTaxConfig = await _repository.GetByTaxId(fiscal.UsuarioId);
 
-            if(currentTaxConfig != null)
-            {
-                var taxConfiguration = fiscal.ToModelUpdate(currentTaxConfig);
+            //if(currentTaxConfig != null)
+            //{
+            //    var taxConfiguration = fiscal.ToModelUpdate(currentTaxConfig);
 
-                await _repository.UpdateTax(taxConfiguration);
-            }
-            else
-            {
-                var taxConfiguration = fiscal.ToModelCreate();
+            //    await _repository.UpdateTax(taxConfiguration);
+            //}
+            //else
+            //{
+            //    var taxConfiguration = fiscal.ToModelCreate();
 
-                var user = await _identityClient.GetUserById(fiscal.UsuarioId.ToString());
-                taxConfiguration.SucursalId = user.SucursalId;
-                taxConfiguration.Nombre = user.Nombre;
+            //    var user = await _identityClient.GetUserById(fiscal.UsuarioId.ToString());
+            //    taxConfiguration.SucursalId = user.SucursalId;
+            //    taxConfiguration.Nombre = user.Nombre;
 
-                await _repository.CreateTax(taxConfiguration);
-            }
+            //    await _repository.CreateTax(taxConfiguration);
+            //}
         }
     }
 }

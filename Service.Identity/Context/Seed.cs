@@ -177,7 +177,7 @@ namespace Service.Identity.Context
                 // Facturacion -> Orden 6000
                 new Menu(39, null, "Facturación", "invoice", "invoice", 6000),
                 new Menu(40, 39, "Facturación por companía", "invoiceCompany", "invoice", 6010),
-                new Menu(42, 39, "Cat. facturas y recibos", "series", "series", 6020),
+                new Menu(42, 39, "Series de facturas y recibos", "series", "series", 6020),
             };
 
             return menus;

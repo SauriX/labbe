@@ -14,6 +14,8 @@ namespace Service.Catalog.Dtos.Configuration
         public string Calle { get; set; }
         public string Numero { get; set; }
         public string Telefono { get; set; }
+        public string Correo { get; set; }
+        public string WebSite { get; set; }
         public Guid UsuarioId { get; set; }
     }
 

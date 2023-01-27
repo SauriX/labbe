@@ -30,12 +30,12 @@ namespace Service.Billing.Repository
                 series = series.Where(x => x.Clave == filter.Buscar);
             }
 
-            if(filter.Ciudad.Count > 0 || filter.Ciudad != null)
+            if(filter.Ciudad != null && filter.Ciudad.Count > 0)
             {
                 series = series.Where(x => filter.Ciudad.Contains(x.Ciudad));
             }
 
-            if(filter.Sucursales.Count > 0 || filter.Sucursales != null)
+            if(filter.Sucursales != null && filter.Sucursales.Count > 0)
             {
                 series = series.Where(x => filter.Sucursales.Contains(x.SucursalId));
             }
@@ -77,11 +77,18 @@ namespace Service.Billing.Repository
             return series;
         }
 
-        public async Task<Series> GetById(int id)
+        public async Task<Series> GetById(int id, byte tipo)
         {
-            var serie = await _context.CAT_Serie.FindAsync(id);
+            var serie = await _context.CAT_Serie.FirstOrDefaultAsync(x => x.Id == id && x.TipoSerie == tipo);
 
             return serie;
+        }
+
+        public async Task<bool> IsDuplicate(Series serie)
+        {
+            var isDuplicate = await _context.CAT_Serie.AnyAsync(x => x.Id != serie.Id && (x.Clave == serie.Clave || x.Nombre == serie.Nombre));
+
+            return isDuplicate;
         }
 
         public async Task Create(Series serie)

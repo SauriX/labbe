@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Service.Billing.Application.IApplication;
 using Service.Billing.Client.IClient;
 using Service.Billing.Dictionary;
+using Service.Billing.Domain.Series;
 using Service.Billing.Dto.Series;
 using Service.Billing.Dtos.Series;
 using Service.Billing.Mapper;
@@ -58,18 +59,17 @@ namespace Service.Billing.Application
 
             if (newSerie.TipoSerie == TIPO_FACTURA)
             {
-                var user = await _identityClient.GetUserById(newSerie.UsuarioId.ToString());
-
-                var userBranch = await _catalogClient.GetBranchByName(user.SucursalId.ToString());
+                var userBranch = await _catalogClient.GetBranchById(newSerie.EmisorId.ToString());
                 var userConfiguration = await _catalogClient.GetFiscalConfig();
-                var defaultBranch = await _catalogClient.GetBranchByName(newSerie.SucursalId.ToString());
+                var defaultBranch = await _catalogClient.GetBranchById(newSerie.SucursalId.ToString());
 
                 var userData = userBranch.ToOwnerInfoDto();
                 var expeditionData = defaultBranch.ToExpeditionPlaceDto();
 
-                userData.WebSite = "www.laboratorioramos.com.mx";
+                userData.WebSite = userConfiguration.WebSite ?? "www.laboratorioramos.com.mx";
                 userData.RFC = userConfiguration.RFC ?? "";
                 userData.RazonSocial = userConfiguration.RazonSocial ?? "";
+                userData.Correo = userConfiguration.Correo ?? "";
 
                 data = new SeriesDto
                 {
@@ -91,22 +91,30 @@ namespace Service.Billing.Application
             return data;
         }
 
-        public async Task<SeriesDto> GetById(int id)
+        public async Task<SeriesDto> GetById(int id, byte tipo)
         {
-            var serie = await _repository.GetById(id);
+            var serie = await _repository.GetById(id, tipo);
 
-            var userBranch = await _catalogClient.GetBranchByName(serie.EmisorId.ToString());
-            var defaultBranch = await _catalogClient.GetBranchByName(serie.SucursalId.ToString());
+            var userBranch = await _catalogClient.GetBranchById(serie.EmisorId.ToString());
+            var userConfiguration = await _catalogClient.GetFiscalConfig();
+            var defaultBranch = await _catalogClient.GetBranchById(serie.SucursalId.ToString());
 
             var userData = userBranch.ToOwnerInfoDto();
             var expeditionData = defaultBranch.ToExpeditionPlaceDto();
             var invoiceData = serie.ToInvoiceSerieDto();
 
+            userData.WebSite = userConfiguration.WebSite ?? "www.laboratorioramos.com.mx";
+            userData.RFC = userConfiguration.RFC ?? "";
+            userData.RazonSocial = userConfiguration.RazonSocial ?? "";
+            userData.Correo = userConfiguration.Correo ?? "";
+
+            invoiceData.Id = id;
             invoiceData.ClaveCer = Path.Combine(BillingPath, serie.ArchivoCer.Replace("wwwroot/file/series", "")).Replace("\\", "/");
             invoiceData.ClaveKey = Path.Combine(BillingPath, serie.ArchivoKey.Replace("wwwroot/file/series", "")).Replace("\\", "/");
 
             var data = new SeriesDto
             {
+                Id = id,
                 Factura = invoiceData,
                 Emisor = userData,
                 Expedicion = expeditionData,
@@ -116,12 +124,12 @@ namespace Service.Billing.Application
             return data;
         }
 
-        private static async Task<string> SaveFilePath(IFormFile cer, IFormFile key, string nombre)
+        private static async Task<string> SaveFilePath(IFormFile archivo, string nombre)
         {
             var path = Path.Combine("wwwroot/file/series", nombre);
-            var name = cer != null ? string.Concat(cer, ".cer") : string.Concat(key, ".key");
+            var name = archivo.FileName;
 
-            var isSaved = cer != null ? await cer.SaveFileAsync(path, name) : await key.SaveFileAsync(path, name);
+            var isSaved = await archivo.SaveFileAsync(path, name);
 
             if (isSaved)
             {
@@ -134,16 +142,17 @@ namespace Service.Billing.Application
         public async Task CreateInvoice(SeriesDto serie)
         {
             var data = serie.ToModelCreate();
-            
-            var expeditionBranch = await _catalogClient.GetBranchByName(serie.Expedicion.Municipio);
-            data.SucursalId = Guid.Parse(expeditionBranch.IdSucursal);
+
+            await CheckDuplicate(data);
+
+            var expeditionBranch = await _catalogClient.GetBranchById(serie.Expedicion.SucursalId);
             data.Sucursal = expeditionBranch.Nombre;
             data.Ciudad = expeditionBranch.Ciudad;
 
-            var fileName = serie.Factura.Id + "/" + serie.Factura.Nombre;
+            var branchName = data.Sucursal;
 
-            var cerFile = await SaveFilePath(serie.Factura.ArchivoCer, null, fileName);
-            var keyFile = await SaveFilePath(null, serie.Factura.ArchivoKey, fileName);
+            var cerFile = await SaveFilePath(serie.Factura.ArchivoCer, branchName);
+            var keyFile = await SaveFilePath(serie.Factura.ArchivoKey, branchName);
 
             if (!string.IsNullOrEmpty(cerFile) && !string.IsNullOrEmpty(keyFile))
             {
@@ -162,26 +171,30 @@ namespace Service.Billing.Application
         {
             var data = ticket.ToTicketCreate();
 
+            await CheckDuplicate(data);
+
             await _repository.Create(data);
         }
 
         public async Task UpdateTicket(TicketDto ticket)
         {
-            var existingSerie = await _repository.GetById((int)ticket.Id);
+            var existingSerie = await _repository.GetById((int)ticket.Id, ticket.TipoSerie);
 
-            if(existingSerie == null)
+            if (existingSerie == null)
             {
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
 
             var data = ticket.ToTicketUpdate(existingSerie);
 
+            await CheckDuplicate(data);
+
             await _repository.Update(data);
         }
 
         public async Task UpdateInvoice(SeriesDto serie)
         {
-            var existingSerie = await _repository.GetById((int)serie.Id);
+            var existingSerie = await _repository.GetById((int)serie.Id, serie.Factura.TipoSerie);
 
             if (existingSerie == null)
             {
@@ -190,18 +203,21 @@ namespace Service.Billing.Application
 
             var data = serie.ToModelUpdate(existingSerie);
 
-            var fileName = serie.Factura.Id + "/" + serie.Factura.Nombre;
+            var expeditionBranch = await _catalogClient.GetBranchById(serie.Expedicion.SucursalId);
+            data.Sucursal = expeditionBranch.Nombre;
+            data.Ciudad = expeditionBranch.Ciudad;
 
-            var cerFile = await SaveFilePath(serie.Factura.ArchivoCer, null, fileName);
-            var keyFile = await SaveFilePath(null, serie.Factura.ArchivoKey, fileName);
-
-            if (cerFile == existingSerie.ArchivoCer)
+            if (serie.Factura.ArchivoCer != null)
             {
+                File.Delete(data.ArchivoCer);
+                var cerFile = await SaveFilePath(serie.Factura.ArchivoCer, data.Sucursal);
                 data.ArchivoCer = cerFile;
             }
 
-            if(keyFile == existingSerie.ArchivoKey)
+            if (serie.Factura.ArchivoKey != null)
             {
+                File.Delete(data.ArchivoKey);
+                var keyFile = await SaveFilePath(serie.Factura.ArchivoKey, data.Sucursal);
                 data.ArchivoKey = keyFile;
             }
 
@@ -218,7 +234,7 @@ namespace Service.Billing.Application
 
             template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
-            template.AddVariable("Titulo", "Catálogo de facturas y recibos");
+            template.AddVariable("Titulo", "Series de facturas y recibos");
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
             template.AddVariable("Series", invoice);
 
@@ -230,7 +246,17 @@ namespace Service.Billing.Application
 
             template.Format();
 
-            return (template.ToByteArray(), "Catálogo de facturas y recibos.xlsx");
+            return (template.ToByteArray(), "Series de facturas y recibos.xlsx");
+        }
+
+        private async Task CheckDuplicate(Series serie)
+        {
+            var isDuplicate = await _repository.IsDuplicate(serie);
+
+            if (isDuplicate)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o el nombre"));
+            }
         }
     }
 }

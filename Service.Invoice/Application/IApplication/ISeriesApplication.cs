@@ -11,7 +11,7 @@ namespace Service.Billing.Application.IApplication
         Task<IEnumerable<SeriesListDto>> GetByBranch(Guid branchId, byte type);
         Task<IEnumerable<SeriesListDto>> GetByFilter(SeriesFilterDto filter);
         Task<SeriesDto> GetByNewForm(SeriesNewDto newSerie);
-        Task<SeriesDto> GetById(int id);
+        Task<SeriesDto> GetById(int id, byte tipo);
         Task CreateInvoice(SeriesDto serie);
         Task UpdateTicket(TicketDto ticket);
         Task CreateTicket(TicketDto ticket);

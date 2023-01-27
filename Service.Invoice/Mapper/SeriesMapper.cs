@@ -23,23 +23,11 @@ namespace Service.Billing.Mapper
                 Clave = x.Clave,
                 Descripcion = x.Descripcion,
                 Sucursal = x.Sucursal,
-                Año = x.FechaCreo.Year.ToString("yyyy"),
+                Año = x.FechaCreo.Year.ToString(),
                 CFDI = x.CFDI,
                 Activo = x.Activo,
-                TipoSerie = x.TipoSerie == TIPO_FACTURA ? "Factura" : "Recibo"
-            });
-        }
-
-        public static IEnumerable<TicketListDto> ToTicketListDto(this List<Series> model)
-        {
-            if (model == null) return null;
-
-            return model.Select(x => new TicketListDto
-            {
-                Id = x.Id,
-                Clave = x.Clave,
-                Fecha = x.FechaCreo.ToString("dddd/MM/yyyy"),
-                TipoSerie = x.TipoSerie == TIPO_FACTURA ? "Factura" : "Recibo"
+                TipoSerie = x.TipoSerie == TIPO_FACTURA ? "FAC" : "REC",
+                Tipo = x.TipoSerie
             });
         }
 
@@ -53,11 +41,13 @@ namespace Service.Billing.Mapper
                 Contraseña = dto.Factura.Contraseña,
                 Activo = dto.Factura.Estatus,
                 CFDI = dto.Factura.CFDI,
+                TipoSerie = dto.Factura.TipoSerie,
                 Descripcion = dto.Factura.Observaciones,
                 SucursalKey = dto.Factura.SucursalKey,
                 Clave = dto.Factura.Clave,
                 EmisorId = Guid.Parse("698E416E-E5CB-4E7A-90ED-74448D408F20"),
                 UsuarioCreoId = dto.UsuarioId,
+                SucursalId = Guid.Parse(dto.Expedicion.SucursalId),
                 FechaCreo = dto.Factura.Año,
             };
         }
@@ -70,6 +60,7 @@ namespace Service.Billing.Mapper
             {
                 Nombre = dto.Nombre,
                 Clave = dto.Clave,
+                TipoSerie = dto.TipoSerie,
                 FechaCreo = DateTime.Now
             };
         }
@@ -107,8 +98,7 @@ namespace Service.Billing.Mapper
                 EmisorId = Guid.Parse("698E416E-E5CB-4E7A-90ED-74448D408F20"),
                 UsuarioCreoId = model.UsuarioCreoId,
                 FechaCreo = dto.Factura.Año,
-                Sucursal = model.Sucursal,
-                SucursalId = model.SucursalId,
+                SucursalId = Guid.Parse(dto.Expedicion.SucursalId),
                 UsuarioModificoId = dto.UsuarioId,
                 FechaModifico = DateTime.Now,
             };
@@ -125,6 +115,7 @@ namespace Service.Billing.Mapper
                 Clave = model.Clave,
                 Contraseña = model.Contraseña,
                 Nombre = model.Nombre,
+                SucursalKey = model.SucursalKey,
                 Observaciones = model.Descripcion,
             };
         }

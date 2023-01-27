@@ -7,6 +7,7 @@
         public string Descripcion { get; set; }
         public string Sucursal { get; set; }
         public string TipoSerie { get; set; }
+        public byte Tipo { get; set; }
         public bool Activo { get; set; }
         public bool CFDI { get; set; }
         public string Año { get; set; }

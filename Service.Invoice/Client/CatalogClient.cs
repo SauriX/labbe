@@ -54,6 +54,29 @@ namespace Service.Billing.Client
             }
         }
 
+        public async Task<BranchInfo> GetBranchById(string id)
+        {
+            try
+            {
+                var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/branch/{id}");
+
+                if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+                {
+                    return await response.Content.ReadFromJsonAsync<BranchInfo>();
+                }
+
+                var error = await response.Content.ReadFromJsonAsync<ClientException>();
+
+                var ex = Exceptions.GetException(error);
+
+                throw ex;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task<OwnerInfoDto> GetFiscalConfig()
         {
             try

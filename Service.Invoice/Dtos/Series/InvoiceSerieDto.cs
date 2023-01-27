@@ -23,6 +23,11 @@ namespace Service.Billing.Dto.Series
 
     public class InvoiceSerieDto
     {
+        public InvoiceSerieDto()
+        {
+            Año = DateTime.Now;
+        }
+
         public int Id { get; set; }
         public string Clave { get; set; }
         public string Nombre { get; set; }
@@ -61,7 +66,7 @@ namespace Service.Billing.Dto.Series
     public class ExpeditionPlaceDto
     {
         public string CodigoPostal { get; set; }
-        public string Pais { get; set; }
+        public string Pais => "México";
         public string Estado { get; set; }
         public string Municipio { get; set; }
         public string Calle { get; set; }
@@ -69,5 +74,6 @@ namespace Service.Billing.Dto.Series
         public string NoExterior { get; set; }
         public string NoInterior { get; set; }
         public string Telefono { get; set; }
+        public string SucursalId { get; set; }
     }
 }

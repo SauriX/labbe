@@ -6,7 +6,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 20347
+          "Port": 52975
         }
       ],
       "UpstreamPathTemplate": "/api/series/branch/{branchId}/{type}",
@@ -18,7 +18,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 44379
+          "Port": 52975
         }
       ],
       "UpstreamPathTemplate": "/api/series/filter",
@@ -30,23 +30,23 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 44379
+          "Port": 52975
         }
       ],
       "UpstreamPathTemplate": "/api/series/new",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/series/{id}",
+      "DownstreamPathTemplate": "/api/series/{id}/{tipoSerie}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 44379
+          "Port": 52975
         }
       ],
-      "UpstreamPathTemplate": "/api/series/{id}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamPathTemplate": "/api/series/{id}/{tipoSerie}",
+      "UpstreamHttpMethod": [ "GET" ]
     },
     {
       "DownstreamPathTemplate": "/api/series/invoice",
@@ -54,11 +54,11 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 44379
+          "Port": 52975
         }
       ],
       "UpstreamPathTemplate": "/api/series/invoice",
-      "UpstreamHttpMethod": [ "POST, PUT" ]
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
     {
       "DownstreamPathTemplate": "/api/series/ticket",
@@ -66,11 +66,11 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 44379
+          "Port": 52975
         }
       ],
       "UpstreamPathTemplate": "/api/series/ticket",
-      "UpstreamHttpMethod": [ "POST, PUT" ]
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
     {
       "DownstreamPathTemplate": "/api/series/export/list",
@@ -78,10 +78,10 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 44379
+          "Port": 52975
         }
       ],
-      "UpstreamPathTemplate": "/api/series/ticket",
+      "UpstreamPathTemplate": "/api/series/export/list",
       "UpstreamHttpMethod": [ "POST" ]
     }
   ]
