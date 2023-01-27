@@ -32,14 +32,20 @@ namespace Service.MedicalRecord.Mapper
          
         public static List<ValidationStudyDto> ToStudyValidationDto(this ICollection<RequestStudy> model, byte urgencia)
         {
-            return model.Select(x => new ValidationStudyDto
-            {
-                Id = x.EstudioId,
-               Study = $"{x.Clave}-{x.Nombre}",
-                Area = "",
-                Status = x.Estatus.Nombre,
-                Estatus= x.EstatusId,
-                Registro = x.EstatusId == Status.RequestStudy.Pendiente
+            List < ValidationStudyDto > studyList = new List < ValidationStudyDto >();
+
+            var index = 1;
+
+            foreach (var x in model) {
+
+                studyList.Add(new ValidationStudyDto
+                {
+                    Id = x.EstudioId,
+                    Study = $"{x.Clave}-{x.Nombre}",
+                    Area = "",
+                    Status = x.Estatus.Nombre,
+                    Estatus = x.EstatusId,
+                    Registro = x.EstatusId == Status.RequestStudy.Pendiente
                     ? x.FechaPendiente?.ToString("dd/MM/yyyy HH:mm")
                     : x.EstatusId == Status.RequestStudy.TomaDeMuestra
                     ? x.FechaTomaMuestra?.ToString("dd/MM/yyyy HH:mm")
@@ -54,14 +60,20 @@ namespace Service.MedicalRecord.Mapper
                     : x.EstatusId == Status.RequestStudy.Enviado
                     ? x.FechaEnviado?.ToString("dd/MM/yyyy HH:mm")
                     : "",
-                Entrega = x.FechaEntrega.ToString() ,
-                NombreEstatus = x.Estatus.Nombre,
-                SolicitudId = x.SolicitudId,
-                Nombre = x.Nombre,
-                Clave = x.Clave.ToString(),
-                Tipo = urgencia == 1 ? true : false,
+                    Entrega = x.FechaEntrega.ToString(),
+                    NombreEstatus = x.Estatus.Nombre,
+                    SolicitudId = x.SolicitudId,
+                    Nombre = x.Nombre,
+                    Clave = x.Clave.ToString(),
+                    Tipo = urgencia == 1 ? true : false,
+                    Index = index
 
-            }).ToList();
+                });
+                index++;
+            }
+
+
+            return studyList;
         }
     }
 }
