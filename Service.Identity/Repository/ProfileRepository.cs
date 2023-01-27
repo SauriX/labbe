@@ -21,7 +21,10 @@ namespace Service.Identity.Repository
 
         public async Task<User> GetById(Guid id)
         {
-            return await _context.CAT_Usuario.Include(x => x.Rol).FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.CAT_Usuario
+                .Include(x => x.Rol)
+                .Include(x => x.Sucursales)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<User> GetByCode(string code)

@@ -1,5 +1,6 @@
 ﻿using Service.Identity.Dtos.Profile;
 using Service.Identity.Dtos.User;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,6 +10,7 @@ namespace Service.Identity.Application.IApplication
     {
         Task<IEnumerable<UserListDto>> GetAll(string search);
         Task<UserFormDto> GetById(string id);
+        Task<UserListDto> UpdateBranch(Guid id, Guid userId);
         string GeneratePassword();
         Task<IEnumerable<UserPermissionDto>> GetPermission();
         Task<string> GenerateCode(UserCodeDto data, string suffix = null);

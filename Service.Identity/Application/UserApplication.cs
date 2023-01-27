@@ -106,6 +106,25 @@ namespace Service.Identity.Application
 
             return user.ToUserFormDto(key);
         }
+        public async Task<UserListDto> UpdateBranch(Guid id, Guid userId)
+        {
+            var existing = await _repository.GetById(userId);
+
+            if (existing == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
+            }
+
+            existing.SucursalId = id;
+
+            await _repository.UpdateBranch(existing);
+
+            User updatedUser = await _repository.GetById(userId);
+
+            return updatedUser.ToUserListDto();
+
+
+        }
 
         public string GeneratePassword()
         {
@@ -309,5 +328,7 @@ namespace Service.Identity.Application
             }
             return password;
         }
+
+        
     }
 }
