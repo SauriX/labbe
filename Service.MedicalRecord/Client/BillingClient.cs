@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using System.Net.Http.Json;
 using Service.MedicalRecord.Dtos.InvoiceCompany;
 using Service.MedicalRecord.Dtos.Series;
+using Service.MedicalRecord.Dtos.InvoiceCatalog;
 
 namespace Service.MedicalRecord.Client
 {
@@ -28,13 +29,32 @@ namespace Service.MedicalRecord.Client
             _configuration = configuration;
         }
 
+
+        public async Task<List<InvoiceDto>> getAllInvoice(InvoiceCatalogSearch search)
+        {
+            var json = JsonConvert.SerializeObject(search);
+
+            var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Billing")}/api/invoice/all",stringContent);
+
+            if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+            {
+                return await response.Content.ReadFromJsonAsync<List<InvoiceDto>>();
+            }
+
+            var error = await response.Content.ReadFromJsonAsync<ClientException>();
+
+            throw new CustomException(HttpStatusCode.BadRequest, error.Errors);
+        }
         public async Task<List<SeriesDto>> GetBranchSeries(Guid branchId, byte type)
+                    
         {
             var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Billing")}/api/series/branch/{branchId}/{type}");
 
             if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
             {
                 return await response.Content.ReadFromJsonAsync<List<SeriesDto>>();
+
             }
 
             var error = await response.Content.ReadFromJsonAsync<ClientException>();

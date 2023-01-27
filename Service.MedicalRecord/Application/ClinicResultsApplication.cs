@@ -516,17 +516,13 @@ namespace Service.MedicalRecord.Application
 
             foreach (var results in resultsPerDay)
             {
-                //if (results.ToList().Find(x => x.Id == requestStudyId) != null)
-                //{
                 if (results
                     .All(x => (x.EstatusId != Status.RequestStudy.Enviado || x.EstatusId != Status.RequestStudy.Cancelado) && (x.EstatusId == Status.RequestStudy.Liberado))
-                    //.Where(x => x.Id != requestStudyId)
                     )
                 {
                     requestStudies.AddRange(results.ToList());
 
                 }
-                //}
             }
 
             return requestStudies;
@@ -1285,6 +1281,11 @@ namespace Service.MedicalRecord.Application
         public async Task<ClinicResultsPathologicalInfoDto> GetResultPathological(int RequestStudyId)
         {
             var results = await _repository.GetResultPathologicalById(RequestStudyId);
+            if (results == null)
+            {
+                //throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
+                return null;
+            }
             return results.ToPathologicalInfoDto();
         }
 

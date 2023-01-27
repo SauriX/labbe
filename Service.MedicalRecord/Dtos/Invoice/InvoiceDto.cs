@@ -26,7 +26,9 @@ namespace Service.MedicalRecord.Dtos.Invoice
         public string Expediente { get; set; }
         public string Paciente { get; set; }
         public ClientDto Cliente { get; set; }
+        public DateTime CreationDate { get; set; }
         public List<Guid> SolicitudesId { get; set; }
         public List<ProductDto> Productos { get; set; }
+        public string Tipo { get; set; }
     }
 }

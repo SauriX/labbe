@@ -132,6 +132,18 @@
       "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
     {
+      "DownstreamPathTemplate": "/LabRamos/services/identity/api/user/updateBranch/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+
+        }
+      ],
+      "UpstreamPathTemplate": "/api/user/updateBranch/{id}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
       "DownstreamPathTemplate": "/LabRamos/services/identity/api/user/password",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [

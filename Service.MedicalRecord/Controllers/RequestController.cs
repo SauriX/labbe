@@ -246,13 +246,13 @@ namespace Service.MedicalRecord.Controllers
             await _service.AddPartiality(requestDto);
         }
 
-        [HttpPost("ticket/{recordId}/{requestId}/{paymentId}")]
+        [HttpPost("ticket/{recordId}/{requestId}")]
         [Authorize(Policies.Download)]
-        public async Task<IActionResult> PrintTicket(Guid recordId, Guid requestId, Guid paymentId)
+        public async Task<IActionResult> PrintTicket(Guid recordId, Guid requestId)
         {
             var userName = HttpContext.Items["userName"].ToString();
 
-            var file = await _service.PrintTicket(recordId, requestId, paymentId, userName);
+            var file = await _service.PrintTicket(recordId, requestId, userName);
 
             return File(file, MimeType.PDF, "ticket.pdf");
         }

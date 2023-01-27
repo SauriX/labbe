@@ -348,7 +348,7 @@ namespace Service.MedicalRecord.Mapper
                 };
             }).ToList();
         }
-        public static PriceQuoteDto toPriceQuotePdf(this QuotationDto data, List<QuotationStudy> model) {
+        public static PriceQuoteDto toPriceQuotePdf(this QuotationDto data, List<QuotationStudy> model, decimal cargo) {
 
             var estudios = model.ToQuotationStudyDto().ToStudyQuotePdf();
 
@@ -357,10 +357,10 @@ namespace Service.MedicalRecord.Mapper
                 Fecha = data.Registro,
                 FechaImpresion = System.DateTime.Now.ToShortDateString(),
                 StudyQuotes = estudios,
-                Total = $"$ {Decimal.ToDouble(estudios.Sum(x => decimal.Parse(x.Precio)))- estudios.Sum(x => double.Parse(x.Precio)) * .16}",
+                Total = $"$ {(Decimal.ToDouble(estudios.Sum(x => decimal.Parse(x.Precio)))- estudios.Sum(x => double.Parse(x.Precio)) + Decimal.ToDouble(cargo)) * .16}",
                 Descuento = $"$ {estudios.Sum(x => decimal.Parse(x.Descuento))}",
-                Iva = $"$ {estudios.Sum(x =>  double.Parse(x.Precio)) * .16}",
-                Totalpagar =$"$ {estudios.Sum(x => decimal.Parse(x.Precio)) - estudios.Sum(x => decimal.Parse(x.Descuento))}"
+                Iva = $"$ {(estudios.Sum(x =>  double.Parse(x.Precio)) + Decimal.ToDouble(cargo)) * .16}",
+                Totalpagar =$"$ {estudios.Sum(x => decimal.Parse(x.Precio)) - estudios.Sum(x => decimal.Parse(x.Descuento)) + cargo}"
             };
         }
     }

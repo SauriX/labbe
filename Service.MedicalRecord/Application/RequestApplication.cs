@@ -170,6 +170,8 @@ namespace Service.MedicalRecord.Application
                 study.Parametros = st.Parametros.Where(x => !x.TipoValor.In(VT.Observacion, VT.Etiqueta, VT.SinValor, VT.Texto, VT.Parrafo)).ToList();
                 study.Indicaciones = st.Indicaciones;
 
+                study.Tipo = study.Parametros.Count() > 0 ? "LABORATORIO" : "PATOLOGICO";
+
                 var promos = studiesPromos.Where(x => x.EstudioId == study.EstudioId).ToList();
                 study.Promociones = promos;
 
@@ -936,7 +938,7 @@ namespace Service.MedicalRecord.Application
             await _repository.Update(request);
         }
 
-        public async Task<byte[]> PrintTicket(Guid recordId, Guid requestId, Guid paymentId, string userName)
+        public async Task<byte[]> PrintTicket(Guid recordId, Guid requestId, string userName)
         {
             var request = await _repository.GetById(requestId);
 
@@ -946,7 +948,7 @@ namespace Service.MedicalRecord.Application
             }
 
             var payments = await _repository.GetPayments(requestId);
-            var payment = payments.FirstOrDefault(x => x.Id == paymentId);
+            var payment = payments.FirstOrDefault();
 
             if (payment == null)
             {
