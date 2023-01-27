@@ -58,6 +58,7 @@ namespace Service.Identity.Application
                 RequiereCambio = !user.FlagPassword,
                 Sucursal = user.SucursalId.ToString(),
                 Admin = user.RolId == Catalogs.Role.ADMIN,
+                Sucursales = user.Sucursales.Select(x => x.BranchId).ToList()
             };
         }
 

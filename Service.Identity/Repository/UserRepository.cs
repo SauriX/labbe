@@ -36,7 +36,11 @@ namespace Service.Identity.Repository
 
         public async Task<User> GetById(Guid id)
         {
-            var user = await _context.CAT_Usuario.Include(x => x.Rol).Include(x => x.Imagenes).FirstOrDefaultAsync(x => x.Id == id);
+            var user = await _context.CAT_Usuario
+                .Include(x => x.Rol)
+                .Include(x => x.Imagenes)
+                .Include(x => x.Sucursales)
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             user.Permisos = await GetPermission(id);
 
@@ -79,8 +83,12 @@ namespace Service.Identity.Repository
             {
 
                 var permissions = user.Permisos.ToList();
+                var sucrusales = user.Sucursales.ToList();
 
                 user.Permisos = null;
+
+                user.Sucursales = null;
+
                 _context.CAT_Usuario.Update(user);
 
                 await _context.SaveChangesAsync();
@@ -90,8 +98,10 @@ namespace Service.Identity.Repository
 
                     var config = new BulkConfig();
                     config.SetSynchronizeFilter<UserPermission>(x => x.UsuarioId == user.Id);
-
                     await _context.BulkInsertOrUpdateOrDeleteAsync(permissions, config);
+
+                    config.SetSynchronizeFilter<UserBranches>(x => x.UsuarioId == user.Id);
+                    await _context.BulkInsertOrUpdateOrDeleteAsync(sucrusales, config);
                 }
 
                 transaction.Commit();
@@ -102,6 +112,32 @@ namespace Service.Identity.Repository
                 throw;
             }
         }
+
+        public async Task UpdateBranch(User user, bool updatePermission = true)
+        {
+            using var transaction = _context.Database.BeginTransaction();
+
+            try
+            {
+                user.Permisos = null;
+
+                user.Sucursales = null;
+
+                _context.CAT_Usuario.Update(user);
+
+                await _context.SaveChangesAsync();
+
+                transaction.Commit();
+            }
+            catch (System.Exception)
+            {
+                transaction.Rollback();
+                throw;
+            }
+        }
+
+
+
 
         private async Task<List<UserPermission>> GetPermissions(Guid? id = null)
         {
