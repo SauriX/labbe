@@ -15,7 +15,7 @@ namespace Service.Billing.Mapper
 
             return new InvoiceDto
             {
-                Id = Guid.NewGuid(),
+                Id = model.Id,
                 FormaPago = model.FormaPago,
                 MetodoPago = model.MetodoPago,
                 UsoCFDI = model.UsoCFDI,
@@ -30,9 +30,45 @@ namespace Service.Billing.Mapper
                 ExpedienteId = model.ExpedienteId,
                 Expediente = model.Expediente,
                 Paciente = model.Paciente,
+                CreationDate = model.FechaCreo,
+                FacturapiId = model.FacturapiId,
+                Serie = model.Serie,
+                SerieNumero= model.SerieNumero,
             };
         }
+        public static List<InvoiceDto> ToInvoiceDto(this InvoiceCompany model)
+        {
+            if (model == null) return null;
 
+            return model.Solicitudes.Select(x=>new InvoiceDto
+            {
+                Id = model.Id,
+                FormaPago = model.FormaPago,
+                MetodoPago = model.MetodoPago,
+                UsoCFDI = model.UsoCFDI,
+                RegimenFiscal = model.RegimenFiscal,
+                RFC = model.RFC,
+                Desglozado = model.Desglozado,
+                ConNombre = model.ConNombre,
+                EnvioCorreo = model.EnvioCorreo,
+                EnvioWhatsapp = model.EnvioWhatsapp,
+                CreationDate = model.FechaCreo,
+                FacturapiId = model.FacturapiId,
+               SolicitudId= x.SolicitudId ,
+       
+
+    }).ToList();
+        }
+        public static List<InvoiceDto> ToInvoiceDto(this List<InvoiceCompany> model)
+        {
+            List<InvoiceDto> list = new List<InvoiceDto>();
+            if (model == null) return null;
+            foreach (InvoiceCompany company in model) {
+                var invoice = company.ToInvoiceDto();
+                list.AddRange(invoice);
+            }
+            return list;
+        }
         public static List<InvoiceDto> ToInvoiceDto(this List<Invoice> model)
         {
             if (model == null) return null;

@@ -1,4 +1,5 @@
 ﻿using Service.MedicalRecord.Dtos.Invoice;
+using Service.MedicalRecord.Dtos.InvoiceCatalog;
 using Service.MedicalRecord.Dtos.InvoiceCompany;
 using Service.MedicalRecord.Dtos.Series;
 using System;
@@ -14,5 +15,6 @@ namespace Service.MedicalRecord.Client.IClient
         Task<InvoiceDto> CheckInPaymentCompany(InvoiceDto invoiceDto);
         Task<byte[]> DownloadPDF(string invoiceId);
         Task<string> CancelInvoice(InvoiceCancelation invoiceDto);
+        Task<List<InvoiceDto>> getAllInvoice(InvoiceCatalogSearch search);
     }
 }
