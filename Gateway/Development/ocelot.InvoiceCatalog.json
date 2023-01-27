@@ -1,0 +1,28 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/InvoiceCatalog",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/InvoiceCatalog",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/InvoiceCatalog/export/list",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/InvoiceCatalog/export/list",
+      "UpstreamhttpsMethod": [ "POST" ]
+    }
+  ]
+}
