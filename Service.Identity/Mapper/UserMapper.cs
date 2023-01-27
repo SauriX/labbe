@@ -66,6 +66,7 @@ namespace Service.Identity.Mapper
                 Activo = model.Activo,
                 Permisos = model.Permisos.ToUserPermissionDto(),
                 Images = images,
+                Sucursales = model.Sucursales.Select(x => x.BranchId).ToList(),
             };
         }
 
@@ -106,8 +107,20 @@ namespace Service.Identity.Mapper
                 Activo = dto.Activo,
                 UsuarioCreoId = dto.UsuarioId,
                 FechaCreo = DateTime.Now,
-                Permisos = dto.Permisos.ToModel(dto.UsuarioId)
+                Permisos = dto.Permisos.ToModel(dto.UsuarioId),
+                Sucursales = dto.Sucursales.ToUserBranchesModel(dto.UsuarioId)
             };
+        }
+
+        public static List<UserBranches> ToUserBranchesModel(this IEnumerable<Guid> dto, Guid userId)
+        {
+            return dto.Select(x => new UserBranches
+            {
+                BranchId = x,
+                UsuarioId = userId,
+                FechaCreo = DateTime.Now,
+                UsuarioCreoId = userId,
+            }).ToList();
         }
 
         public static User ToModel(this UserFormDto dto, User model, string key)
@@ -130,7 +143,8 @@ namespace Service.Identity.Mapper
                 FechaCreo = model.FechaCreo,
                 UsuarioModificoId = dto.UsuarioId,
                 FechaModifico = DateTime.Now,
-                Permisos = dto.Permisos.ToModel(model.Permisos, model.Id, dto.UsuarioId)
+                Permisos = dto.Permisos.ToModel(model.Permisos, model.Id, dto.UsuarioId),
+                Sucursales = dto.Sucursales.ToUserBranchesModel(dto.UsuarioId)
             };
         }
 

@@ -25,6 +25,7 @@ namespace Service.Identity.Domain.User
         public DateTime? FechaModifico { get; set; }
 
         public virtual ICollection<UserPermission> Permisos { get; set; }
+        public virtual ICollection<UserBranches> Sucursales { get; set; }
         public virtual ICollection<RequestImage> Imagenes { get; set; }
     }
 }

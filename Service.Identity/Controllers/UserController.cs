@@ -58,6 +58,13 @@ namespace Service.Identity.Controllers
         {
             return await _service.GenerateCode(data);
         }
+        [HttpPost("updateBranch/{id}")]
+        [Authorize(Policies.Access)]
+        public async Task<UserListDto> UpdateBranch(Guid id)
+        {
+            var userId = (Guid)HttpContext.Items["userId"];
+            return await _service.UpdateBranch(id, userId);
+        }
 
         [HttpPost]
         [Authorize(Policies.Create)]
