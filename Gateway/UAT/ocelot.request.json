@@ -261,7 +261,7 @@
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/request/ticket/{recordId}/{requestId}/{paymentId}",
+      "UpstreamPathTemplate": "/api/request/ticket/{recordId}/{requestId}",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
