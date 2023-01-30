@@ -221,6 +221,31 @@ namespace Service.Identity.Migrations
                     b.ToTable("CAT_Usuario");
                 });
 
+            modelBuilder.Entity("Service.Identity.Domain.User.UserBranches", b =>
+                {
+                    b.Property<Guid>("UsuarioId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaModifico")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UsuarioCreoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UsuarioModificoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("UsuarioId", "BranchId");
+
+                    b.ToTable("Relacion_User_Sucursal");
+                });
+
             modelBuilder.Entity("Service.Identity.Domain.User.UserPermission", b =>
                 {
                     b.Property<Guid>("UsuarioId")
@@ -319,6 +344,17 @@ namespace Service.Identity.Migrations
                     b.Navigation("Rol");
                 });
 
+            modelBuilder.Entity("Service.Identity.Domain.User.UserBranches", b =>
+                {
+                    b.HasOne("Service.Identity.Domain.User.User", "Usuario")
+                        .WithMany("Sucursales")
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Usuario");
+                });
+
             modelBuilder.Entity("Service.Identity.Domain.User.UserPermission", b =>
                 {
                     b.HasOne("Service.Identity.Domain.Menu.Menu", "Menu")
@@ -353,6 +389,8 @@ namespace Service.Identity.Migrations
                     b.Navigation("Imagenes");
 
                     b.Navigation("Permisos");
+
+                    b.Navigation("Sucursales");
                 });
 #pragma warning restore 612, 618
         }

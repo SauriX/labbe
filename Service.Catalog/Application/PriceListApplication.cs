@@ -59,6 +59,21 @@ namespace Service.Catalog.Application
             return price.ToPriceListFormDto();
         }
 
+        public async Task<List<PriceListStudyDto>> GetStudiesById(PriceListStudiesPaginateDto filter)
+        {
+
+            //Helpers.ValidateGuid(Id, out Guid guid);
+
+            var studies = await _repository.GetStudiesById(filter.id);
+
+            if (studies == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
+            }
+
+            return studies.ToPriceListStudyDto(filter);
+        }
+
         public async Task<PriceListInfoStudyDto> GetPriceStudyById(PriceListInfoFilterDto filterDto)
         {
             if (filterDto.EstudioId == null)
@@ -351,5 +366,7 @@ namespace Service.Catalog.Application
 
 
         }
+
+        
     }
 }

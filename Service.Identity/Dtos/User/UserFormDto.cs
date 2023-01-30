@@ -19,5 +19,6 @@ namespace Service.Identity.Dtos.User
         public Guid UsuarioId { get; set; }
         public List<UserPermissionDto> Permisos { get; set; }
         public List<String> Images { get; set; }
+        public List<Guid> Sucursales { get; set; }
     }
 }

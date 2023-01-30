@@ -457,7 +457,7 @@ namespace Service.MedicalRecord.Application
         public async Task<byte[]> ExportQuote(Guid id)
         {
             var quotation = await _repository.GetById(id);
-
+            var quotationStudies = await GetStudies(id);
             if (quotation == null)
             {
                 throw new CustomException(HttpStatusCode.NotFound);
@@ -472,7 +472,7 @@ namespace Service.MedicalRecord.Application
 
             }
             var estudios = await _catalogClient.GetStudies(estudisid);
-            var quotepdf = quote.toPriceQuotePdf(quotation.Estudios.ToList());
+            var quotepdf = quote.toPriceQuotePdf(quotation.Estudios.ToList(),quotationStudies.Total.Cargo);
             var newestudis = new List<StudyQuoteDto>();
             foreach (var estudy in estudios)
             {
@@ -489,6 +489,7 @@ namespace Service.MedicalRecord.Application
 
 
             quotepdf.StudyQuotes = newestudis;
+           
             return await _pdfClient.PriceQuoteReport(quotepdf);
         }
 

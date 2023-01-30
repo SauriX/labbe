@@ -1,4 +1,7 @@
-﻿namespace Service.Identity.Dtos.Profile
+﻿using System;
+using System.Collections.Generic;
+
+namespace Service.Identity.Dtos.Profile
 {
     public class ProfileDto
     {
@@ -7,5 +10,6 @@
         public bool RequiereCambio { get; set; }
         public string Sucursal { get; set; }
         public bool Admin { get; set; }
+        public List<Guid> Sucursales { get; set; }
     }
 }
