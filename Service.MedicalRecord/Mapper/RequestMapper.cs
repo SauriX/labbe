@@ -136,7 +136,7 @@ namespace Service.MedicalRecord.Mapper
             return model.Select(x => x.ToRequestPaymentDto());
         }
 
-        public static RequestTicketDto ToRequestTicketDto(this Request model, RequestPayment payment, List<RequestPayment> payments, string userName)
+        public static RequestTicketDto ToRequestTicketDto(this Request model, List<RequestPayment> payments, string userName)
         {
             if (model == null) return null;
 
@@ -145,7 +145,7 @@ namespace Service.MedicalRecord.Mapper
                 DireccionSucursal = "Laboratorio Alfonso Ramos, S.A. de C.V. Avenida Humberto Lobo #555 A, Col. del Valle C.P. 66220 San Pedro Garza García, Nuevo León.",
                 Contacto = "Tel/WhatsApp: 81 4170 0769 RFC: LAR900731TL0",
                 Sucursal = $"SUCURSAL {model.Sucursal.Nombre}", // "SUCURSAL MONTERREY"
-                Folio = payment.Serie + "-" + payment.Numero,
+                Folio = model.Serie + "-" + model.SerieNumero,
                 Fecha = DateTime.Now.ToString("dd/MM/yyyy"),
                 Atiende = userName.ToUpper(),
                 Paciente = model.Expediente.NombreCompleto.ToUpper(),
@@ -154,7 +154,7 @@ namespace Service.MedicalRecord.Mapper
                 Solicitud = model.Clave,
                 FechaEntrega = "",
                 Medico = model.Medico?.Nombre?.ToUpper(),
-                FormaPago = payment.FormaPago.Split(" ", 2)[1],
+                //FormaPago = payment.FormaPago.Split(" ", 2)[1],
                 Subtotal = model.TotalEstudios.ToString("C"),
                 Descuento = model.Descuento.ToString("C"),
                 IVA = (model.TotalEstudios * .16m).ToString("C"),
@@ -165,10 +165,15 @@ namespace Service.MedicalRecord.Mapper
                 MonederoUtilizado = 0.ToString("C"),
                 MonederoGenerado = 0.ToString("C"),
                 MonederoAcumulado = 0.ToString("C"),
-                CodigoPago = payment.Serie + "-" + payment.Numero,
+                CodigoPago = model.Serie + "-" + model.SerieNumero,
                 Usuario = "",
                 Contraseña = "",
                 ContactoTelefono = "",
+                Pagos = payments.GroupBy(x => x.FormaPago).Select(x => new RequestTicketPaymentDto
+                {
+                    FormaPago = x.Key.Substring(x.Key.IndexOf(" ")).ToUpper(),
+                    Cantidad = x.Sum(p => p.Cantidad).ToString("C")
+                }).ToList(),
                 Estudios = model.Paquetes.Select(x => new RequestTicketStudyDto
                 {
                     Cantidad = "1",
