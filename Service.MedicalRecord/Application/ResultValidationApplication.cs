@@ -174,7 +174,7 @@ namespace Service.MedicalRecord.Application
 
             var existingRequest = await _clinicresultrepository.GetRequestById(estudiosSeleccionados.SolicitudId);
             var estudioId = estudiosSeleccionados.EstudiosId[0];
-            var existingStudy = existingRequest.Estudios.ToList().Find(x => x.EstudioId == estudiosSeleccionados.EstudiosId[0].EstudioId);
+            var existingStudy = existingRequest.Estudios.ToList().Find(x => x.Id== estudiosSeleccionados.EstudiosId[0].EstudioId);
             var area = existingStudy.DepartamentoId;
             List<int> labsResults = new List<int>();
             if ( area== Catalogs.Department.PATOLOGIA)

@@ -34,13 +34,13 @@ namespace Service.MedicalRecord.Mapper
         {
             List < ValidationStudyDto > studyList = new List < ValidationStudyDto >();
 
-            var index = 1;
+
 
             foreach (var x in model) {
 
                 studyList.Add(new ValidationStudyDto
                 {
-                    Id = x.EstudioId,
+                    Id = x.Id,
                     Study = $"{x.Clave}-{x.Nombre}",
                     Area = "",
                     Status = x.Estatus.Nombre,
@@ -66,10 +66,10 @@ namespace Service.MedicalRecord.Mapper
                     Nombre = x.Nombre,
                     Clave = x.Clave.ToString(),
                     Tipo = urgencia == 1 ? true : false,
-                    Index = index
+               
 
                 });
-                index++;
+
             }
 
 
