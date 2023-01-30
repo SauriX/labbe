@@ -46,6 +46,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Integration.WeeClinic", "In
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.Billing", "Service.Invoice\Service.Billing.csproj", "{419B67AD-E2B1-4B99-B6DA-1870E0E6FA37}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.NetPay", "Integration.NetPay\Integration.NetPay.csproj", "{4046809F-29B0-467B-B28B-23DA99680813}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -108,6 +110,10 @@ Global
 		{419B67AD-E2B1-4B99-B6DA-1870E0E6FA37}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{419B67AD-E2B1-4B99-B6DA-1870E0E6FA37}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{419B67AD-E2B1-4B99-B6DA-1870E0E6FA37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4046809F-29B0-467B-B28B-23DA99680813}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4046809F-29B0-467B-B28B-23DA99680813}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4046809F-29B0-467B-B28B-23DA99680813}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4046809F-29B0-467B-B28B-23DA99680813}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -127,6 +133,7 @@ Global
 		{5FDF9FFF-573F-4BB2-B5D2-676C569EB34B} = {38F43A51-621A-49F1-A8F3-0237FCFA5158}
 		{0A03C3CC-EEC4-4B00-9BB5-DABF4E446076} = {88C6FFD3-C6C9-4063-B9CA-D116A425C90C}
 		{419B67AD-E2B1-4B99-B6DA-1870E0E6FA37} = {C7C144B8-70CD-45A2-9900-B1FBC8DD4008}
+		{4046809F-29B0-467B-B28B-23DA99680813} = {88C6FFD3-C6C9-4063-B9CA-D116A425C90C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F389A348-AA84-40EA-ACB9-C8E4728CD0AA}

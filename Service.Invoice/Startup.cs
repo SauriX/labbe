@@ -1,4 +1,6 @@
 using FluentValidation.AspNetCore;
+using Integration.NetPay.Services;
+using Integration.NetPay.Services.IServices;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -25,9 +27,11 @@ using Service.Billing.Repository.IRepository;
 using Service.Billing.Requirements;
 using Service.Billing.Transactions;
 using Shared.Dictionary;
+using Shared.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Net.Http;
 using System.Reflection;
 using System.Text;
 namespace Service.Billing
@@ -104,6 +108,12 @@ namespace Service.Billing
                 }
 
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            });
+
+            services.AddHttpClient<IAuthService, AuthService>(client =>
+            {
+                client.BaseAddress = new Uri("http://nubeqa.netpay.com.mx:3334");
+                client.SetBasicAuthentication("trusted-app", "secret");
             });
 
             services.AddSwaggerGen(c =>
