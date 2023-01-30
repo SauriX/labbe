@@ -95,31 +95,49 @@ namespace Service.Billing.Application
         {
             var serie = await _repository.GetById(id, tipo);
 
-            var userBranch = await _catalogClient.GetBranchById(serie.EmisorId.ToString());
-            var userConfiguration = await _catalogClient.GetFiscalConfig();
-            var defaultBranch = await _catalogClient.GetBranchById(serie.SucursalId.ToString());
+            _ = new SeriesDto();
+            SeriesDto data;
 
-            var userData = userBranch.ToOwnerInfoDto();
-            var expeditionData = defaultBranch.ToExpeditionPlaceDto();
             var invoiceData = serie.ToInvoiceSerieDto();
 
-            userData.WebSite = userConfiguration.WebSite ?? "www.laboratorioramos.com.mx";
-            userData.RFC = userConfiguration.RFC ?? "";
-            userData.RazonSocial = userConfiguration.RazonSocial ?? "";
-            userData.Correo = userConfiguration.Correo ?? "";
-
-            invoiceData.Id = id;
-            invoiceData.ClaveCer = Path.Combine(BillingPath, serie.ArchivoCer.Replace("wwwroot/file/series", "")).Replace("\\", "/");
-            invoiceData.ClaveKey = Path.Combine(BillingPath, serie.ArchivoKey.Replace("wwwroot/file/series", "")).Replace("\\", "/");
-
-            var data = new SeriesDto
+            if (tipo == TIPO_FACTURA)
             {
-                Id = id,
-                Factura = invoiceData,
-                Emisor = userData,
-                Expedicion = expeditionData,
-                UsuarioId = serie.UsuarioCreoId
-            };
+                var userBranch = await _catalogClient.GetBranchById(serie.EmisorId.ToString());
+                var userConfiguration = await _catalogClient.GetFiscalConfig();
+                var defaultBranch = await _catalogClient.GetBranchById(serie.SucursalId.ToString());
+
+                var userData = userBranch.ToOwnerInfoDto();
+                var expeditionData = defaultBranch.ToExpeditionPlaceDto();
+
+                userData.WebSite = userConfiguration.WebSite ?? "www.laboratorioramos.com.mx";
+                userData.RFC = userConfiguration.RFC ?? "";
+                userData.RazonSocial = userConfiguration.RazonSocial ?? "";
+                userData.Correo = userConfiguration.Correo ?? "";
+
+                invoiceData.Id = id;
+                invoiceData.ClaveCer = Path.Combine(BillingPath, serie.ArchivoCer.Replace("wwwroot/file/series", "")).Replace("\\", "/");
+                invoiceData.ClaveKey = Path.Combine(BillingPath, serie.ArchivoKey.Replace("wwwroot/file/series", "")).Replace("\\", "/");
+
+                data = new SeriesDto
+                {
+                    Id = id,
+                    Factura = invoiceData,
+                    Emisor = userData,
+                    Expedicion = expeditionData,
+                    UsuarioId = serie.UsuarioCreoId
+                };
+            }
+            else
+            {
+                data = new SeriesDto
+                {
+                    Id = id,
+                    Factura = invoiceData,
+                    Emisor = new OwnerInfoDto(),
+                    Expedicion = new ExpeditionPlaceDto(),
+                    UsuarioId = serie.UsuarioCreoId
+                };
+            }
 
             return data;
         }
