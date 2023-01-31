@@ -231,6 +231,7 @@
     <Compile Include="Service\ReportService.cs" />
     <Compile Include="Service\TagService.cs" />
     <Compile Include="Service\TicketService.cs" />
+    <Compile Include="Utils\Assets.cs" />
     <Compile Include="Utils\BarCode.cs" />
   </ItemGroup>
   <ItemGroup>
