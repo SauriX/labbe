@@ -980,6 +980,65 @@ namespace Service.Catalog.Migrations
                     b.ToTable("CAT_Configuracion");
                 });
 
+            modelBuilder.Entity("Service.Catalog.Domain.Configuration.TaxConfiguration", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Calle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CodigoPostal")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Colonia")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Estado")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Municipio")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NoExterior")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NoInterior")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Pais")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RFC")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RazonSocial")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("SucursalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Telefono")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UsuarioId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("WebSite")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CAT_Configuracion_Fiscal");
+                });
+
             modelBuilder.Entity("Service.Catalog.Domain.Constant.City", b =>
                 {
                     b.Property<short>("Id")
@@ -2642,6 +2701,71 @@ namespace Service.Catalog.Migrations
                     b.ToTable("Relacion_Ruta_Estudio");
                 });
 
+            modelBuilder.Entity("Service.Catalog.Domain.Series.Serie", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ArchivoCer")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ArchivoKey")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("CFDI")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Ciudad")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Clave")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Contraseña")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("EmisorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaModifico")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("SucursalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("SucursalKey")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte>("TipoSerie")
+                        .HasColumnType("tinyint");
+
+                    b.Property<Guid>("UsuarioCreoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UsuarioModificoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SucursalId");
+
+                    b.ToTable("CAT_Serie");
+                });
+
             modelBuilder.Entity("Service.Catalog.Domain.Study.PacketStudy", b =>
                 {
                     b.Property<int>("EstudioId")
@@ -3464,6 +3588,17 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Ruta");
                 });
 
+            modelBuilder.Entity("Service.Catalog.Domain.Series.Serie", b =>
+                {
+                    b.HasOne("Service.Catalog.Domain.Branch.Branch", "Sucursal")
+                        .WithMany("Series")
+                        .HasForeignKey("SucursalId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Sucursal");
+                });
+
             modelBuilder.Entity("Service.Catalog.Domain.Study.PacketStudy", b =>
                 {
                     b.HasOne("Service.Catalog.Domain.Study.Study", "Estudio")
@@ -3557,6 +3692,8 @@ namespace Service.Catalog.Migrations
             modelBuilder.Entity("Service.Catalog.Domain.Branch.Branch", b =>
                 {
                     b.Navigation("Departamentos");
+
+                    b.Navigation("Series");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Catalog.Budget", b =>

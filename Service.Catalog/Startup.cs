@@ -15,6 +15,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Service.Catalog.Application;
 using Service.Catalog.Application.IApplication;
+using Service.Catalog.Repository;
+using Service.Catalog.Repository.IRepository;
 using Service.Catalog.Client;
 using Service.Catalog.Client.IClient;
 using Service.Catalog.Consumers.Error;
@@ -24,8 +26,6 @@ using Service.Catalog.Domain.Equipment;
 using Service.Catalog.Domain.Parameter;
 using Service.Catalog.Domain.Provenance;
 using Service.Catalog.Middleware;
-using Service.Catalog.Repository;
-using Service.Catalog.Repository.IRepository;
 using Service.Catalog.Requirements;
 using Service.Catalog.Settings;
 using Service.MedicalRecord.Client;
@@ -251,6 +251,7 @@ namespace Service.Catalog
             services.AddScoped<ILoyaltyApplication, LoyaltyApplication>();
             services.AddScoped<IRouteApplication, RouteApplication>();
             services.AddScoped<IBudgetApplication, BudgetApplication>();
+            services.AddScoped<ISeriesApplication, SeriesApplication>();
 
             services.AddScoped<ICatalogRepository<Delivery>, CatalogRepository<Delivery>>();
             services.AddScoped<ICatalogRepository<Area>, CatalogRepository<Area>>();
@@ -291,6 +292,8 @@ namespace Service.Catalog
             services.AddScoped<IEquipmentMantainRepository, EquipmentMantainRepository>();
             services.AddScoped<IEquipmentApplication, EquipmentApplication>();
             services.AddScoped<IBudgetRepository, BudgetRepository>();
+            services.AddScoped<ISeriesRepository, SeriesRepository>();
+
 
         }
 

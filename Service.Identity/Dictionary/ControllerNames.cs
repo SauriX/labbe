@@ -34,6 +34,7 @@
         public const string MassSearch = "MassSearch";
         public const string Sampling = "Sampling";
         public const string RelaseResult = "RelaseResult";
+        public const string Series = "series";
 
     }
 }

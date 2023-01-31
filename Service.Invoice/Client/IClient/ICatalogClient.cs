@@ -9,5 +9,6 @@ namespace Service.Billing.Client.IClient
     public interface ICatalogClient
     {
         Task<BranchInfo> GetBranchByName(string name);
+        Task<BranchInfo> GetBranchById(string id);
     }
 }
