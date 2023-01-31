@@ -56,6 +56,17 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/identity/api/scopes/series",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/scopes/series",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/LabRamos-uat/services/identity/api/scopes/equipment",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
