@@ -148,6 +148,7 @@ namespace Service.Identity.Context
                 new Menu(18, 1, "Maquilador", "maquila", "maquila", 1170),
                 new Menu(28, 1, "Admin. Equipos", "equipment", "equipment", 1180),
                 new Menu(29, 1, "Mantenimiento", "mantain","equipmentMantain", 1190),
+                new Menu(41, 1, "Series de facturas y recibos", "series", "series", 1200),
 
                 // Parametros de sistema -> Orden 5000
                 new Menu(20, null, "Parámetros de sistema", "configuration", "configuration", 5000),
@@ -166,18 +167,18 @@ namespace Service.Identity.Context
 
                 // Resultados -> Orden 3000
                 new Menu(37, null, "Resultados", "results", "results", 3000), // Ultimo
-                new Menu(30, 37, "Captura de Resultados (Clínicos)", "clinicResults", "clinicResults", 3000),
-                new Menu(36, 37, "Liberación de resultados", "relaseResult", "relaseResult", 3010),
-                new Menu(35, 37, "Listas de trabajo", "worklist", "worklists", 3020),
-                new Menu(31, 37, "Tablas de captura de resultados", "massSearch", "massResultSearch", 3030),
+                new Menu(30, 37, "Captura de Resultados (Clínicos)", "clinicResults", "clinicResults", 3010),
+                new Menu(36, 37, "Liberación de resultados", "relaseResult", "relaseResult", 3020),
+                new Menu(35, 37, "Listas de trabajo", "worklist", "worklists", 3030),
+                new Menu(31, 37, "Tablas de captura de resultados", "massSearch", "massResultSearch", 3040),
 
                 // Reportes -> Orden 4000
                 new Menu(22, null, "Reportes" , "report", "reports", 4000),
 
                 // Facturacion -> Orden 6000
-                new Menu(39, null, "Facturación", "invoice", "invoice", 6000),
-                new Menu(40, 39, "Facturación por companía", "invoiceCompany", "invoice", 6010),
-                 new Menu(41, 39, "Catalogo de facturas y recibos", "InvoiceCatalog", "invoiceCatalog", 6011),
+                new Menu(38, null, "Facturación", "invoice", "invoice", 6000),
+                new Menu(39, 38, "Facturación por companía", "invoiceCompany", "invoice", 6010),
+                new Menu(40, 38, "Catalogo de facturas y recibos", "InvoiceCatalog", "invoiceCatalog", 6011),
             };
 
             return menus;

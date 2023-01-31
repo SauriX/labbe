@@ -1,4 +1,4 @@
-﻿namespace Service.Billing.Dtos.Series
+﻿namespace Service.Catalog.Dtos.Series
 {
     public class TicketSerieDto
     {

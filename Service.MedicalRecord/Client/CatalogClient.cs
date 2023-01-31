@@ -68,6 +68,17 @@ namespace Service.MedicalRecord.Client
 
             throw new CustomException(response.StatusCode, response.ReasonPhrase);
         }
+        public async Task<List<BranchCityDto>> GetBranchbycity()
+        {
+            var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/branch/getSucursalByCity");
+
+            if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+            {
+                return await response.Content.ReadFromJsonAsync<List<BranchCityDto>>();
+            }
+
+            throw new CustomException(response.StatusCode, response.ReasonPhrase);
+        }
 
         public async Task<RouteFormDto> GetRuta(Guid id)
         {

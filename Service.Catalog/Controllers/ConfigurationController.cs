@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dtos.Configuration;
 using Shared.Dictionary;
+using System;
 using System.Threading.Tasks;
 
 namespace Service.Catalog.Controllers
@@ -56,6 +57,7 @@ namespace Service.Catalog.Controllers
         [Authorize(Policies.Update)]
         public async Task UpdateFiscal(ConfigurationFiscalDto fiscal)
         {
+            fiscal.UsuarioId = (Guid)HttpContext.Items["userId"];
             await _service.UpdateFiscal(fiscal);
         }
     }

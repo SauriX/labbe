@@ -22,6 +22,7 @@
         public const string MaquiladorForm = "wwwroot/layout/excel/Maquilador/MaquiladorFormulario.xlsx";
         public const string ParameterList = "wwwroot/layout/excel/parameter/ParameterListado.xlsx";
         public const string ParameterForm = "wwwroot/layout/excel/parameter/ParameterFormulario.xlsx";
+        public const string SeriesList = "wwwroot/layout/excel/Series/SeriesListado.xlsx";
         public const string StudyList = "wwwroot/layout/excel/study/StudyListado.xlsx";
         public const string StudyForm = "wwwroot/layout/excel/study/StudyFormulario.xlsx";
         public const string PriceListList = "wwwroot/layout/excel/PriceList/ListadePrecioListado.xlsx";

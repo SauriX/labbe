@@ -189,54 +189,6 @@ namespace Service.Billing.Migrations
                     b.ToTable("Relacion_Factura_Solicitudes");
                 });
 
-            modelBuilder.Entity("Service.Billing.Domain.Series.Series", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("CFDI")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Ciudad")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Clave")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Descripcion")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaModifico")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Sucursal")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("SucursalId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<byte>("TipoSerie")
-                        .HasColumnType("tinyint");
-
-                    b.Property<Guid>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("UsuarioModificoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CAT_Serie");
-                });
-
             modelBuilder.Entity("Service.Billing.Domain.Invoice.InvoiceCompanyRequests", b =>
                 {
                     b.HasOne("Service.Billing.Domain.Invoice.InvoiceCompany", "InvoiceCompany")
