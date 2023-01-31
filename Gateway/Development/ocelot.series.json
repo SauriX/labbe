@@ -6,7 +6,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 52975
+          "Port": 20347
         }
       ],
       "UpstreamPathTemplate": "/api/series/branch/{branchId}/{type}",
@@ -18,7 +18,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 52975
+          "Port": 20347
         }
       ],
       "UpstreamPathTemplate": "/api/series/filter",
@@ -30,7 +30,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 52975
+          "Port": 20347
         }
       ],
       "UpstreamPathTemplate": "/api/series/new",
@@ -42,10 +42,22 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 52975
+          "Port": 20347
         }
       ],
       "UpstreamPathTemplate": "/api/series/{id}/{tipoSerie}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/series/{branchId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/series/{branchId}",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
@@ -54,7 +66,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 52975
+          "Port": 20347
         }
       ],
       "UpstreamPathTemplate": "/api/series/invoice",
@@ -66,7 +78,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 52975
+          "Port": 20347
         }
       ],
       "UpstreamPathTemplate": "/api/series/ticket",
@@ -78,7 +90,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 52975
+          "Port": 20347
         }
       ],
       "UpstreamPathTemplate": "/api/series/export/list",

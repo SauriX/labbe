@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 
-namespace Service.Billing.Dto.Series
+namespace Service.Catalog.Dto.Series
 {
     public class SeriesDto
     {

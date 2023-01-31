@@ -1,19 +1,18 @@
-﻿using Service.Billing.Domain.Catalogs;
-using Service.Billing.Domain.Series;
-using Service.Billing.Dto.Series;
-using Service.Billing.Dtos.Series;
+﻿using Service.Catalog.Domain.Branch;
+using Service.Catalog.Domain.Series;
+using Service.Catalog.Dto.Series;
+using Service.Catalog.Dtos.Series;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Service.Billing.Mapper
+namespace Service.Catalog.Mapper
 {
     public static class SeriesMapper
     {
         private const byte TIPO_FACTURA = 1;
 
-        public static IEnumerable<SeriesListDto> ToSeriesListDto(this List<Series> model)
+        public static IEnumerable<SeriesListDto> ToSeriesListDto(this List<Serie> model)
         {
             if (model == null) return null;
 
@@ -22,7 +21,7 @@ namespace Service.Billing.Mapper
                 Id = x.Id,
                 Clave = x.Clave,
                 Descripcion = x.Descripcion,
-                Sucursal = x.Sucursal,
+                Sucursal = x.Sucursal.Nombre,
                 Año = x.FechaCreo.Year.ToString(),
                 CFDI = x.CFDI,
                 Activo = x.Activo,
@@ -31,11 +30,11 @@ namespace Service.Billing.Mapper
             });
         }
 
-        public static Series ToModelCreate(this SeriesDto dto)
+        public static Serie ToModelCreate(this SeriesDto dto)
         {
             if (dto == null) return null;
 
-            return new Series
+            return new Serie
             {
                 Nombre = dto.Factura.Nombre,
                 Contraseña = dto.Factura.Contraseña,
@@ -52,11 +51,11 @@ namespace Service.Billing.Mapper
             };
         }
 
-        public static Series ToTicketCreate(this TicketDto dto)
+        public static Serie ToTicketCreate(this TicketDto dto)
         {
             if (dto == null) return null;
 
-            return new Series
+            return new Serie
             {
                 Nombre = dto.Nombre,
                 Clave = dto.Clave,
@@ -65,11 +64,11 @@ namespace Service.Billing.Mapper
             };
         }
 
-        public static Series ToTicketUpdate(this TicketDto dto, Series model)
+        public static Serie ToTicketUpdate(this TicketDto dto, Serie model)
         {
             if (dto == null) return null;
 
-            return new Series
+            return new Serie
             {
                 Id = model.Id,
                 Nombre = dto.Nombre,
@@ -80,11 +79,11 @@ namespace Service.Billing.Mapper
             };
         }
 
-        public static Series ToModelUpdate(this SeriesDto dto, Series model)
+        public static Serie ToModelUpdate(this SeriesDto dto, Serie model)
         {
             if (dto == null) return null;
 
-            return new Series
+            return new Serie
             {
                 Id = model.Id,
                 Nombre = dto.Factura.Nombre,
@@ -104,7 +103,7 @@ namespace Service.Billing.Mapper
             };
         }
 
-        public static InvoiceSerieDto ToInvoiceSerieDto(this Series model)
+        public static InvoiceSerieDto ToInvoiceSerieDto(this Serie model)
         {
             if (model == null) return null;
 
@@ -120,7 +119,7 @@ namespace Service.Billing.Mapper
             };
         }
 
-        public static OwnerInfoDto ToOwnerInfoDto(this BranchInfo branch)
+        public static OwnerInfoDto ToOwnerInfoDto(this Branch branch)
         {
             if (branch == null) return null;
 
@@ -128,31 +127,33 @@ namespace Service.Billing.Mapper
             {
                 Nombre = branch.Nombre,
                 Calle = branch.Calle,
-                Colonia = branch.Colonia,
+                Colonia = branch.Colonia.Colonia,
                 Ciudad = branch.Ciudad,
                 Estado = branch.Estado,
                 Correo = branch.Correo,
-                NoExterior = branch.NumeroExt,
-                NoInterior = branch.NumeroInt,
+                NoExterior = branch.NumeroExterior,
+                NoInterior = branch.NumeroInterior,
                 Telefono = branch.Telefono,
-                CodigoPostal = branch.CodigoPostal,
+                CodigoPostal = branch.Codigopostal,
+                
             };
         }
 
-        public static ExpeditionPlaceDto ToExpeditionPlaceDto(this BranchInfo branch)
+        public static ExpeditionPlaceDto ToExpeditionPlaceDto(this Branch branch)
         {
             if (branch == null) return null;
 
             return new ExpeditionPlaceDto
             {
                 Calle = branch.Calle,
-                Colonia = branch.Colonia,
+                Colonia = branch.Colonia.Colonia,
                 Municipio = branch.Ciudad,
                 Estado = branch.Estado,
-                NoExterior = branch.NumeroExt,
-                NoInterior = branch.NumeroInt,
+                NoExterior = branch.NumeroExterior,
+                NoInterior = branch.NumeroInterior,
                 Telefono = branch.Telefono,
-                CodigoPostal = branch.CodigoPostal,
+                CodigoPostal = branch.Codigopostal,
+                SucursalId = branch.Id.ToString()
             };
         }
     }

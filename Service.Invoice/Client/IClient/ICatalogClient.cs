@@ -1,5 +1,4 @@
 ﻿using Service.Billing.Domain.Catalogs;
-using Service.Billing.Dto.Series;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +10,5 @@ namespace Service.Billing.Client.IClient
     {
         Task<BranchInfo> GetBranchByName(string name);
         Task<BranchInfo> GetBranchById(string id);
-        Task<OwnerInfoDto> GetFiscalConfig();
     }
 }

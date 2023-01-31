@@ -2,14 +2,12 @@
 using ClosedXML.Report;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using Service.Billing.Application.IApplication;
-using Service.Billing.Client.IClient;
-using Service.Billing.Dictionary;
-using Service.Billing.Domain.Series;
-using Service.Billing.Dto.Series;
-using Service.Billing.Dtos.Series;
-using Service.Billing.Mapper;
-using Service.Billing.Repository.IRepository;
+using Service.Catalog.Application.IApplication;
+using Service.Catalog.Dto.Series;
+using Service.Catalog.Dtos.Series;
+using Service.Catalog.Mapper;
+using Service.Catalog.Repository.IRepository;
+using Service.Catalog.Client.IClient;
 using Shared.Dictionary;
 using Shared.Error;
 using Shared.Extensions;
@@ -18,23 +16,28 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using Service.Catalog.Dictionary;
+using Service.Catalog.Domain.Series;
+using Service.Catalog.Domain.Branch;
 
-namespace Service.Billing.Application
+namespace Service.Catalog.Application
 {
     public class SeriesApplication : ISeriesApplication
     {
         private readonly ISeriesRepository _repository;
         private readonly IIdentityClient _identityClient;
-        private readonly ICatalogClient _catalogClient;
-        private readonly string BillingPath;
+        private readonly IBranchRepository _branchRepository;
+        private readonly IConfigurationApplication _configurationApplication;
+        private readonly string CatalogPath;
         private const int TIPO_FACTURA = 1;
 
-        public SeriesApplication(ISeriesRepository repository, IIdentityClient identityClient, ICatalogClient catalogClient, IConfiguration configuration)
+        public SeriesApplication(ISeriesRepository repository, IIdentityClient identityClient, IBranchRepository branchRepository, IConfigurationApplication configurationApplication, IConfiguration configuration)
         {
             _repository = repository;
             _identityClient = identityClient;
-            _catalogClient = catalogClient;
-            BillingPath = configuration.GetValue<string>("ClientUrls:Billing") + configuration.GetValue<string>("ClientRoutes:Billing");
+            _branchRepository = branchRepository;
+            _configurationApplication = configurationApplication;
+            CatalogPath = configuration.GetValue<string>("ClientUrls:Catalog") + configuration.GetValue<string>("ClientRoutes:Catalog");
 
         }
 
@@ -59,12 +62,10 @@ namespace Service.Billing.Application
 
             if (newSerie.TipoSerie == TIPO_FACTURA)
             {
-                var userBranch = await _catalogClient.GetBranchById(newSerie.EmisorId.ToString());
-                var userConfiguration = await _catalogClient.GetFiscalConfig();
-                var defaultBranch = await _catalogClient.GetBranchById(newSerie.SucursalId.ToString());
+                var userBranch = await _branchRepository.GetById(newSerie.EmisorId.ToString());
+                var userConfiguration = await _configurationApplication.GetFiscal();
 
                 var userData = userBranch.ToOwnerInfoDto();
-                var expeditionData = defaultBranch.ToExpeditionPlaceDto();
 
                 userData.WebSite = userConfiguration.WebSite ?? "www.laboratorioramos.com.mx";
                 userData.RFC = userConfiguration.RFC ?? "";
@@ -75,7 +76,7 @@ namespace Service.Billing.Application
                 {
                     Factura = new InvoiceSerieDto(),
                     Emisor = userData,
-                    Expedicion = expeditionData
+                    Expedicion = new ExpeditionPlaceDto()
                 };
             }
             else
@@ -102,9 +103,9 @@ namespace Service.Billing.Application
 
             if (tipo == TIPO_FACTURA)
             {
-                var userBranch = await _catalogClient.GetBranchById(serie.EmisorId.ToString());
-                var userConfiguration = await _catalogClient.GetFiscalConfig();
-                var defaultBranch = await _catalogClient.GetBranchById(serie.SucursalId.ToString());
+                var userBranch = await _branchRepository.GetById(serie.EmisorId.ToString());
+                var userConfiguration = await _configurationApplication.GetFiscal();
+                var defaultBranch = await _branchRepository.GetById(serie.SucursalId.ToString());
 
                 var userData = userBranch.ToOwnerInfoDto();
                 var expeditionData = defaultBranch.ToExpeditionPlaceDto();
@@ -115,8 +116,8 @@ namespace Service.Billing.Application
                 userData.Correo = userConfiguration.Correo ?? "";
 
                 invoiceData.Id = id;
-                invoiceData.ClaveCer = Path.Combine(BillingPath, serie.ArchivoCer.Replace("wwwroot/file/series", "")).Replace("\\", "/");
-                invoiceData.ClaveKey = Path.Combine(BillingPath, serie.ArchivoKey.Replace("wwwroot/file/series", "")).Replace("\\", "/");
+                invoiceData.ClaveCer = Path.Combine(CatalogPath, serie.ArchivoCer.Replace("wwwroot/file/series", "")).Replace("\\", "/");
+                invoiceData.ClaveKey = Path.Combine(CatalogPath, serie.ArchivoKey.Replace("wwwroot/file/series", "")).Replace("\\", "/");
 
                 data = new SeriesDto
                 {
@@ -142,6 +143,13 @@ namespace Service.Billing.Application
             return data;
         }
 
+        public async Task<ExpeditionPlaceDto> GetBranch(string branchId)
+        {
+            var branch = await _branchRepository.GetById(branchId);
+
+            return branch.ToExpeditionPlaceDto();
+        }
+
         private static async Task<string> SaveFilePath(IFormFile archivo, string nombre)
         {
             var path = Path.Combine("wwwroot/file/series", nombre);
@@ -163,11 +171,10 @@ namespace Service.Billing.Application
 
             await CheckDuplicate(data);
 
-            var expeditionBranch = await _catalogClient.GetBranchById(serie.Expedicion.SucursalId);
-            data.Sucursal = expeditionBranch.Nombre;
-            data.Ciudad = expeditionBranch.Ciudad;
+            var branch = await _branchRepository.GetById(serie.Expedicion.SucursalId);
 
-            var branchName = data.Sucursal;
+            data.Ciudad = branch.Ciudad;
+            var branchName = branch.Nombre;
 
             var cerFile = await SaveFilePath(serie.Factura.ArchivoCer, branchName);
             var keyFile = await SaveFilePath(serie.Factura.ArchivoKey, branchName);
@@ -221,21 +228,22 @@ namespace Service.Billing.Application
 
             var data = serie.ToModelUpdate(existingSerie);
 
-            var expeditionBranch = await _catalogClient.GetBranchById(serie.Expedicion.SucursalId);
-            data.Sucursal = expeditionBranch.Nombre;
-            data.Ciudad = expeditionBranch.Ciudad;
+            var branch = await _branchRepository.GetById(serie.Expedicion.SucursalId);
+
+            data.Ciudad = branch.Ciudad;
+            var branchName = branch.Nombre;
 
             if (serie.Factura.ArchivoCer != null)
             {
                 File.Delete(data.ArchivoCer);
-                var cerFile = await SaveFilePath(serie.Factura.ArchivoCer, data.Sucursal);
+                var cerFile = await SaveFilePath(serie.Factura.ArchivoCer, branchName);
                 data.ArchivoCer = cerFile;
             }
 
             if (serie.Factura.ArchivoKey != null)
             {
                 File.Delete(data.ArchivoKey);
-                var keyFile = await SaveFilePath(serie.Factura.ArchivoKey, data.Sucursal);
+                var keyFile = await SaveFilePath(serie.Factura.ArchivoKey, branchName);
                 data.ArchivoKey = keyFile;
             }
 
@@ -267,7 +275,7 @@ namespace Service.Billing.Application
             return (template.ToByteArray(), "Series de facturas y recibos.xlsx");
         }
 
-        private async Task CheckDuplicate(Series serie)
+        private async Task CheckDuplicate(Serie serie)
         {
             var isDuplicate = await _repository.IsDuplicate(serie);
 

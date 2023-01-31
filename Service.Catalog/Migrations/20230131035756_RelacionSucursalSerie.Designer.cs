@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230131035756_RelacionSucursalSerie")]
+    partial class RelacionSucursalSerie
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -145,6 +147,32 @@ namespace Service.Catalog.Migrations
                     b.HasIndex("EstadoId");
 
                     b.ToTable("CAT_Sucursal_Folio");
+                });
+
+            modelBuilder.Entity("Service.Catalog.Domain.Branch.BranchSerie", b =>
+                {
+                    b.Property<Guid>("SucursalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SerieId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("BranchId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UsuarioCreoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("SucursalId", "SerieId");
+
+                    b.HasIndex("BranchId");
+
+                    b.HasIndex("SerieId");
+
+                    b.ToTable("Relacion_Sucursal_Serie");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Branch.BranchStudy", b =>
@@ -2744,6 +2772,9 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("Nombre")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Sucursal")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("SucursalId")
                         .HasColumnType("uniqueidentifier");
 
@@ -2760,8 +2791,6 @@ namespace Service.Catalog.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SucursalId");
 
                     b.ToTable("CAT_Serie");
                 });
@@ -3026,6 +3055,29 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Ciudad");
 
                     b.Navigation("Estado");
+                });
+
+            modelBuilder.Entity("Service.Catalog.Domain.Branch.BranchSerie", b =>
+                {
+                    b.HasOne("Service.Catalog.Domain.Branch.Branch", null)
+                        .WithMany("Series")
+                        .HasForeignKey("BranchId");
+
+                    b.HasOne("Service.Catalog.Domain.Series.Serie", "Serie")
+                        .WithMany()
+                        .HasForeignKey("SerieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Service.Catalog.Domain.Branch.Branch", "Sucursal")
+                        .WithMany()
+                        .HasForeignKey("SucursalId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Serie");
+
+                    b.Navigation("Sucursal");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Catalog.Area", b =>
@@ -3586,17 +3638,6 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Estudio");
 
                     b.Navigation("Ruta");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Series.Serie", b =>
-                {
-                    b.HasOne("Service.Catalog.Domain.Branch.Branch", "Sucursal")
-                        .WithMany("Series")
-                        .HasForeignKey("SucursalId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Sucursal");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Study.PacketStudy", b =>

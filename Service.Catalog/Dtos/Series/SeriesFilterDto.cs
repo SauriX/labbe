@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Service.Billing.Dto.Series
+namespace Service.Catalog.Dto.Series
 {
     public class SeriesFilterDto
     {

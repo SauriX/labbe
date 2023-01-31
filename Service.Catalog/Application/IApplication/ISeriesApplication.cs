@@ -1,10 +1,10 @@
-﻿using Service.Billing.Dto.Series;
-using Service.Billing.Dtos.Series;
+﻿using Service.Catalog.Dto.Series;
+using Service.Catalog.Dtos.Series;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Service.Billing.Application.IApplication
+namespace Service.Catalog.Application.IApplication
 {
     public interface ISeriesApplication
     {
@@ -12,6 +12,7 @@ namespace Service.Billing.Application.IApplication
         Task<IEnumerable<SeriesListDto>> GetByFilter(SeriesFilterDto filter);
         Task<SeriesDto> GetByNewForm(SeriesNewDto newSerie);
         Task<SeriesDto> GetById(int id, byte tipo);
+        Task<ExpeditionPlaceDto> GetBranch(string branchId);
         Task CreateInvoice(SeriesDto serie);
         Task UpdateTicket(TicketDto ticket);
         Task CreateTicket(TicketDto ticket);

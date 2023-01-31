@@ -1,14 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Service.Billing.Context;
-using Service.Billing.Domain.Series;
-using Service.Billing.Dto.Series;
-using Service.Billing.Repository.IRepository;
+using Service.Catalog.Context;
+using Service.Catalog.Domain.Branch;
+using Service.Catalog.Domain.Series;
+using Service.Catalog.Dto.Series;
+using Service.Catalog.Repository.IRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Service.Billing.Repository
+namespace Service.Catalog.Repository
 {
     public class SeriesRepository : ISeriesRepository
     {
@@ -21,9 +22,9 @@ namespace Service.Billing.Repository
             _context = context;
         }
 
-        public async Task<List<Series>> GetByFilter(SeriesFilterDto filter)
+        public async Task<List<Serie>> GetByFilter(SeriesFilterDto filter)
         {
-            var series = _context.CAT_Serie.AsQueryable();
+            var series = _context.CAT_Serie.Include(x => x.Sucursal).AsQueryable();
 
             if (!string.IsNullOrEmpty(filter.Buscar))
             {
@@ -70,35 +71,35 @@ namespace Service.Billing.Repository
             return await series.ToListAsync();
         }
 
-        public async Task<List<Series>> GetByBranch(Guid branchId, byte type)
+        public async Task<List<Serie>> GetByBranch(Guid branchId, byte type)
         {
-            var series = await _context.CAT_Serie.Where(x => x.SucursalId == branchId && x.TipoSerie == type && x.Activo).ToListAsync();
+            var series = await _context.CAT_Serie.Include(x => x.Sucursal).Where(x => x.SucursalId == branchId && x.TipoSerie == type && x.Activo).ToListAsync();
 
             return series;
         }
 
-        public async Task<Series> GetById(int id, byte tipo)
+        public async Task<Serie> GetById(int id, byte tipo)
         {
-            var serie = await _context.CAT_Serie.FirstOrDefaultAsync(x => x.Id == id && x.TipoSerie == tipo);
+            var serie = await _context.CAT_Serie.Include(x => x.Sucursal).FirstOrDefaultAsync(x => x.Id == id && x.TipoSerie == tipo);
 
             return serie;
         }
 
-        public async Task<bool> IsDuplicate(Series serie)
+        public async Task<bool> IsDuplicate(Serie serie)
         {
-            var isDuplicate = await _context.CAT_Serie.AnyAsync(x => x.Id != serie.Id && (x.Clave == serie.Clave || x.Nombre == serie.Nombre));
+            var isDuplicate = await _context.CAT_Serie.Include(x => x.Sucursal).AnyAsync(x => x.Id != serie.Id && (x.Clave == serie.Clave || x.Nombre == serie.Nombre));
 
             return isDuplicate;
         }
 
-        public async Task Create(Series serie)
+        public async Task Create(Serie serie)
         {
             _context.Add(serie);
 
             await _context.SaveChangesAsync();
         }
 
-        public async Task Update(Series serie)
+        public async Task Update(Serie serie)
         {
             _context.Update(serie);
 

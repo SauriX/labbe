@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\file\series\" />
+    <Folder Include="wwwroot\layout\excel\" />
   </ItemGroup>
 
 </Project>
