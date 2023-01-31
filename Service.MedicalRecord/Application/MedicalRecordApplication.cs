@@ -17,6 +17,7 @@ using Shared.Error;
 using Shared.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -48,7 +49,17 @@ namespace Service.MedicalRecord.Application
         public async Task<List<MedicalRecordsListDto>> GetNow(MedicalRecordSearch search)
         {
             var expedientes = await _repository.GetNow(search);
+            var expedientesListDto = expedientes.AsQueryable();
 
+            var sucursales = await _catalogClient.GetBranchbycity();
+
+            if (!string.IsNullOrEmpty(search.ciudad))
+            {
+               var ciudad = sucursales.FirstOrDefault(x=>x.Ciudad == search.ciudad);
+                expedientesListDto = expedientesListDto.Where(x => ciudad.Sucursales.Any(y=> Guid.Parse(y.IdSucursal) == x.IdSucursal) );
+            }
+
+            expedientes = expedientesListDto.ToList();
             return expedientes.ToMedicalRecordsListDto();
         }
 
