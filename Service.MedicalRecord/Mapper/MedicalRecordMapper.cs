@@ -18,7 +18,7 @@ namespace Service.MedicalRecord.Mapper
             {
                 Id = x.Id,
                 Expediente = x.Expediente,
-                NomprePaciente = $"{x.NombrePaciente} {x.PrimerApellido}",
+                NomprePaciente = $"{x.NombrePaciente.Trim()} {x.PrimerApellido.Trim()}",
                 Genero = x.Genero,
                 Edad = x.Edad,
                 FechaNacimiento = x.FechaDeNacimiento.Date.ToShortDateString().ToString(),
@@ -214,8 +214,8 @@ namespace Service.MedicalRecord.Mapper
             return new MedicalRecord.Domain.MedicalRecord.MedicalRecord
             {
                 Expediente = model.Expediente,
-                NombrePaciente = model.Nombre,
-                PrimerApellido = model.Apellido,
+                NombrePaciente = model.Nombre.Trim(),
+                PrimerApellido = model.Apellido.Trim(),
                 SegundoApellido = "",
                 Genero = model.Sexo,
                 FechaDeNacimiento = model.FechaNacimiento,
@@ -243,8 +243,8 @@ namespace Service.MedicalRecord.Mapper
             {
                 Id = model.Id,
                 Expediente = model.Expediente,
-                NombrePaciente = dto.Nombre,
-                PrimerApellido = dto.Apellido,
+                NombrePaciente = dto.Nombre.Trim(),
+                PrimerApellido = dto.Apellido.Trim(),
                 SegundoApellido = "",
                 Genero = dto.Sexo,
                 FechaDeNacimiento = dto.FechaNacimiento,
