@@ -1,5 +1,6 @@
 ﻿using Integration.NetPay.Services.IServices;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -68,6 +69,8 @@ namespace Integration.NetPay.Services
             return await response.Content.ReadAsStringAsync();
         }
 
+        public string token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsib2F1dGgyX2lkIl0sInVzZXJfbmFtZSI6ImludGVncmFjaW9uZXNAbmV0cGF5LmNvbS5teCIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdLCJleHAiOjE2NzUyNDU2NzgsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdLCJqdGkiOiIzNTMxNTUyNS0wMWM3LTRhYzAtOWEyOC1jMDUwZWU5NmY5OTUiLCJjbGllbnRfaWQiOiJ0cnVzdGVkLWFwcCJ9.EXu9680m9BNB2jMoH7M7EewF1iC6buMYlt4EwZuEAZPoh2iwKH6RxJOS-8GBdc-mC5co06r7iB59Zgr5w5MbyiyfEN1pUJ1nMn77tTJs1po8RnDmGpIlihlPE6gb2EQUzJ0ibSyIGEbj9wMAjREhKOnAVqTbonbQRS2FGdmVtOPNOwzaxNwezLdWe4p-W61usx3Af4E1mrcWywKRJowW3s911sFf2i5547K1TQ82joiwEfOISRzPwrroiDhESYmgaO91c2wfpFpZs4mAsDx7_0T_I9tzMJkvRF7TBwFTkUkfqxubh4CJxcC6azdZc6Gf3N_QQRJoimUzIT7de336yg";
+
         public async Task<string> Check()
         {
             var url = "integration-service/transactions/sale";
@@ -87,6 +90,8 @@ namespace Integration.NetPay.Services
             });
 
             var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);// $"Bearer {token}";
 
             var response = await _httpClient.PostAsync(url, stringContent);
 

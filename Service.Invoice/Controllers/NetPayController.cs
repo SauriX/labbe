@@ -119,7 +119,7 @@ namespace Service.Billing.Controllers
 
         [HttpPost("test")]
         //public async Task<object> GetData(NetPayResponse test)
-        public async Task<object> GetData(Dictionary<string, object> test)
+        public async Task<object> GetData(NetPayResponse test)
         {
             var a = test;
 
