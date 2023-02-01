@@ -23,9 +23,9 @@ namespace Service.Billing.Repository
 
         public async Task<List<Invoice>> GetAllInvoice(InvoiceSearch search) {
             var invoices = _context.CAT_Factura.AsQueryable(); ;
-            if (search.Fecha != null)
+            if (string.IsNullOrEmpty(search.Buscar)&&search.Fecha != null)
             {
-                invoices = invoices.Where(x => x.FechaCreo.Date > search.Fecha[0].Date && x.FechaCreo.Date < search.Fecha[1].Date);
+                invoices = invoices.Where(x => x.FechaCreo.Date >= search.Fecha[0].Date && x.FechaCreo.Date <= search.Fecha[1].Date);
 
             }
 

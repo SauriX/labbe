@@ -69,9 +69,12 @@ namespace Service.MedicalRecord.Application
                 invoicesQ = invoicesQ.Where(x => search.Sucursal.Any(y=> y==x.SucursalId.ToString() ));
             }
 
-            if (!string.IsNullOrEmpty(search.Ciudad))
+            if (search.Ciudad !=null)
             {
-                invoicesQ = invoicesQ.Where(x => x.Ciudad == search.Ciudad);
+                if (search.Ciudad?.Length > 0) {
+                    invoicesQ = invoicesQ.Where(x => search.Ciudad.Contains(x.Ciudad));
+                }
+                
             }
 
             return invoicesQ.ToList();
