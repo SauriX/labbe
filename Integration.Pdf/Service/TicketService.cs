@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using ZXing;
 
 namespace Integration.Pdf.Service
@@ -68,6 +69,11 @@ namespace Integration.Pdf.Service
 
         static void Format(Section section, RequestTicketDto ticket)
         {
+            section.AddSpace();
+
+            var logo = new Col(Assets.GetLogoBytes()) { ImagenTamaño = Unit.FromCentimeter(4), };
+            section.AddText(logo);
+
             var branchInfo = new Col($"Laboratorio Alfonso Ramos, S.A. de C.V. {ticket.DireccionSucursal}");
             section.AddText(branchInfo);
 
@@ -134,12 +140,16 @@ namespace Integration.Pdf.Service
             var paymentType = new Col($"FORMA DE PAGO: {ticket.FormaPago}", Col.FONT_BOLD);
             section.AddText(paymentType);
 
-            section.AddText(new[] { new Col("SUBTOTAL", 1, ParagraphAlignment.Left), new Col(ticket.Subtotal, 1, ParagraphAlignment.Right), new Col("") });
-            section.AddText(new[] { new Col("DESCUENTO", 1, ParagraphAlignment.Left), new Col(ticket.Descuento, 1, ParagraphAlignment.Right), new Col("") });
-            section.AddText(new[] { new Col("IVA", 1, ParagraphAlignment.Left), new Col(ticket.IVA, 1, ParagraphAlignment.Right), new Col("") });
-            section.AddText(new[] { new Col("TOTAL", 1, ParagraphAlignment.Left), new Col(ticket.Total, 1, ParagraphAlignment.Right), new Col("") });
-            section.AddText(new[] { new Col("ANTICIPO", 1, ParagraphAlignment.Left), new Col(ticket.Anticipo, 1, ParagraphAlignment.Right), new Col("") });
-            section.AddText(new[] { new Col("SALDO", 1, ParagraphAlignment.Left), new Col(ticket.Saldo, 1, ParagraphAlignment.Right), new Col("") });
+            section.AddText(new[] { new Col(""), new Col("SUBTOTAL", 3, ParagraphAlignment.Left), new Col(ticket.Subtotal, 2, ParagraphAlignment.Right) });
+            section.AddText(new[] { new Col(""), new Col("DESCUENTO", 3, ParagraphAlignment.Left), new Col(ticket.Descuento, 2, ParagraphAlignment.Right) });
+            section.AddText(new[] { new Col(""), new Col("IVA", 3, ParagraphAlignment.Left), new Col(ticket.IVA, 2, ParagraphAlignment.Right) });
+            section.AddText(new[] { new Col(""), new Col("TOTAL", 3, ParagraphAlignment.Left), new Col(ticket.Total, 2, ParagraphAlignment.Right) });
+            //section.AddText(new[] { new Col("ANTICIPO", 1, ParagraphAlignment.Left), new Col(ticket.Anticipo, 1, ParagraphAlignment.Right), new Col("") });
+            foreach (var payment in ticket.Pagos.OrderBy(x => x.FormaPago))
+            {
+                section.AddText(new[] { new Col(""), new Col(payment.FormaPago, 3, ParagraphAlignment.Left), new Col(payment.Cantidad, 2, ParagraphAlignment.Right) });
+            }
+            section.AddText(new[] { new Col(""), new Col("SALDO", 3, ParagraphAlignment.Left), new Col(ticket.Saldo, 2, ParagraphAlignment.Right) });
 
             //var totalString = new Col("SON: CIENTO SETENTA Y CINCO PESOS 00/100 M.N");
             //section.AddText(totalString);

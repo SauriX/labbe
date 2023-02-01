@@ -1,4 +1,5 @@
 ﻿using Service.Catalog.Domain.Constant;
+using Service.Catalog.Domain.Series;
 using System;
 using System.Collections.Generic;
 
@@ -56,5 +57,6 @@ namespace Service.Catalog.Domain.Branch
         public DateTime? FechaModifico { get; set; }
         public bool Matriz { get; set; }
         public virtual IEnumerable<BranchDepartment> Departamentos { get; set; }
+        public virtual ICollection<Serie> Series { get; set; }
     }
 }

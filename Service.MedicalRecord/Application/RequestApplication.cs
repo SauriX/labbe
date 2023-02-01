@@ -938,7 +938,7 @@ namespace Service.MedicalRecord.Application
             await _repository.Update(request);
         }
 
-        public async Task<byte[]> PrintTicket(Guid recordId, Guid requestId, Guid paymentId, string userName)
+        public async Task<byte[]> PrintTicket(Guid recordId, Guid requestId, string userName)
         {
             var request = await _repository.GetById(requestId);
 
@@ -948,16 +948,10 @@ namespace Service.MedicalRecord.Application
             }
 
             var payments = await _repository.GetPayments(requestId);
-            var payment = payments.FirstOrDefault(x => x.Id == paymentId);
 
-            if (payment == null)
-            {
-                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
-            }
+            payments = payments.Where(x => !x.EstatusId.In(Status.RequestPayment.Cancelado, Status.RequestPayment.FacturaCancelada)).ToList();
 
-            payments = payments.Where(x => x.FechaCreo < payment.FechaCreo && !x.EstatusId.In(Status.RequestPayment.Cancelado, Status.RequestPayment.FacturaCancelada)).ToList();
-
-            var order = request.ToRequestTicketDto(payment, payments, userName);
+            var order = request.ToRequestTicketDto(payments, userName);
 
             return await _pdfClient.GenerateTicket(order);
         }

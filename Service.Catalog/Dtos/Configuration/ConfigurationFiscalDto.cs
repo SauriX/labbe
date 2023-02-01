@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
+using System;
 
 namespace Service.Catalog.Dtos.Configuration
 {
     public class ConfigurationFiscalDto
     {
-        public string Rfc { get; set; }
+        public string RFC { get; set; }
         public string RazonSocial { get; set; }
         public string CodigoPostal { get; set; }
         public string Estado { get; set; }
@@ -13,13 +14,16 @@ namespace Service.Catalog.Dtos.Configuration
         public string Calle { get; set; }
         public string Numero { get; set; }
         public string Telefono { get; set; }
+        public string Correo { get; set; }
+        public string WebSite { get; set; }
+        public Guid UsuarioId { get; set; }
     }
 
     public class ConfigurationFiscalDtoValidator : AbstractValidator<ConfigurationFiscalDto>
     {
         public ConfigurationFiscalDtoValidator()
         {
-            RuleFor(x => x.Rfc).NotEmpty().MaximumLength(4000);
+            RuleFor(x => x.RFC).NotEmpty().MaximumLength(4000);
             RuleFor(x => x.RazonSocial).NotEmpty().MaximumLength(4000);
             RuleFor(x => x.CodigoPostal).NotEmpty().MaximumLength(4000);
             RuleFor(x => x.Estado).NotEmpty().MaximumLength(4000);

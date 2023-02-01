@@ -21,6 +21,11 @@ namespace Service.Billing.Controllers
         {
             _service = service;
         }
+        [HttpPost("all")]
+        public async Task<List<InvoiceDto>> GetAll(InvoiceSearch search)
+        {
+            return await _service.GetAllInvoice(search);
+        }
 
         [HttpGet("{invoiceId}")]
         public async Task<InvoiceDto> GetById(Guid invoiceId)

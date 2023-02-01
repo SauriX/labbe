@@ -42,6 +42,7 @@ namespace Service.Catalog.Repository
             var branch = await _context.CAT_Sucursal
                 .Include(x => x.Colonia).ThenInclude(x => x.Ciudad).ThenInclude(x => x.Estado)
                 .Include(x => x.Departamentos).ThenInclude(x => x.Departamento)
+                .Include(x => x.Series)
                 .FirstOrDefaultAsync(x => x.Id == Guid.Parse(id));
 
             return branch;
@@ -52,6 +53,7 @@ namespace Service.Catalog.Repository
             var branch = await _context.CAT_Sucursal
                 .Include(x => x.Colonia).ThenInclude(x => x.Ciudad).ThenInclude(x => x.Estado)
                 .Include(x => x.Departamentos).ThenInclude(x => x.Departamento)
+                .Include(x => x.Series)
                 .FirstOrDefaultAsync(x => x.Nombre == name || x.Ciudad == name);
 
             return branch;
@@ -109,6 +111,7 @@ namespace Service.Catalog.Repository
                 var departments = branch.Departamentos.ToList();
 
                 branch.Departamentos = null;
+
                 _context.CAT_Sucursal.Add(branch);
 
                 await _context.SaveChangesAsync();
@@ -143,10 +146,10 @@ namespace Service.Catalog.Repository
 
                 await _context.SaveChangesAsync();
 
-                var config = new BulkConfig();
-                config.SetSynchronizeFilter<BranchDepartment>(x => x.SucursalId == branch.Id);
+                var departmentConfig = new BulkConfig();
+                departmentConfig.SetSynchronizeFilter<BranchDepartment>(x => x.SucursalId == branch.Id);
 
-                await _context.BulkInsertOrUpdateOrDeleteAsync(departments, config);
+                await _context.BulkInsertOrUpdateOrDeleteAsync(departments, departmentConfig);
 
                 transaction.Commit();
             }

@@ -194,10 +194,8 @@ namespace Service.Billing
             });
 
             services.AddScoped<IInvoiceApplication, InvoiceApplication>();
-            services.AddScoped<ISeriesApplication, SeriesApplication>();
 
             services.AddScoped<IInvoiceRepository, InvoiceRepository>();
-            services.AddScoped<ISeriesRepository, SeriesRepository>();
 
         }
 

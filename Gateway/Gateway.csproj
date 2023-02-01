@@ -22,8 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Development\ocelot.medicalRecord.json" />
-    <None Include="Development\ocelot.pack.json" />
     <None Include="UAT\ocelot.pack.json" />
   </ItemGroup>
 
@@ -38,12 +36,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Development\ocelot.mantain.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="Development\ocelot.maquilador.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Update="UAT\ocelot.mantain.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

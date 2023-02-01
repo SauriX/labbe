@@ -24,6 +24,11 @@ namespace Service.Catalog.Context.EntityConfiguration.Branch
                 .WithOne(x => x.Sucursal)
                 //.HasForeignKey(x => x.ClinicaId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .HasMany(x => x.Series)
+                .WithOne(x => x.Sucursal)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

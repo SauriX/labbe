@@ -1,6 +1,18 @@
 ﻿{
   "Routes": [
     {
+      "DownstreamPathTemplate": "/api/invoice/all",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 52975
+        }
+      ],
+      "UpstreamPathTemplate": "/api/invoice/all",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/invoice/print/xml/{invoiceId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

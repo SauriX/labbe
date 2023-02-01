@@ -1,4 +1,5 @@
 ﻿using Service.Catalog.Domain.Branch;
+using Service.Catalog.Domain.Series;
 using Service.Catalog.Dtos.Branch;
 using System;
 using System.Collections.Generic;
@@ -56,6 +57,13 @@ namespace Service.Catalog.Mapper
                     UsuarioCreoId = dto.UsuarioId,
                     FechaCreo = DateTime.Now
                 }).ToList(),
+                Series = dto.Series.Select(x => new Serie
+                {
+                    Id = x.Id,
+                    SucursalId = Guid.Parse(dto.IdSucursal),
+                    UsuarioCreoId = dto.UsuarioId,
+                    FechaCreo = DateTime.Now,
+                }).ToList(),
                 Matriz = dto.Matriz
             };
         }
@@ -85,6 +93,7 @@ namespace Service.Catalog.Mapper
                 PresupuestosId = model.Clinicos,
                 Telefono = model.Telefono,
                 Departamentos = model.Departamentos.ToBranchDepartmentDto(),
+                Series = model.Series.ToList().ToSeriesListDto(),
                 Matriz = model.Matriz,
                 Colonia = model.Colonia.Colonia
 
@@ -141,6 +150,13 @@ namespace Service.Catalog.Mapper
                     UsuarioCreoId = dto.UsuarioId,
                     FechaCreo = DateTime.Now
                 }).ToList(),
+                Series = dto.Series.Select(x => new Serie
+                {
+                    SucursalId = model.Id,
+                    Id = x.Id,
+                    UsuarioCreoId = dto.UsuarioId,
+                    FechaCreo = DateTime.Now
+                }).ToList()
             };
         }
     }

@@ -33,13 +33,10 @@ namespace Service.MedicalRecord.Repository
         public async Task<List<Domain.MedicalRecord.MedicalRecord>> GetNow(MedicalRecordSearch search)
 
         {
-            var records = _context.CAT_Expedientes.AsQueryable();
+             var records = _context.CAT_Expedientes.AsQueryable();
 
 
-            if (!string.IsNullOrEmpty(search.ciudad))
-            {
-                records = records.Where(x => x.Ciudad == search.ciudad);
-            }
+
 
             if (!string.IsNullOrEmpty(search.expediente))
             {
@@ -52,7 +49,7 @@ namespace Service.MedicalRecord.Repository
                 records = records.Where(x => x.FechaDeNacimiento.Date == search.fechaNacimiento.Date);
             }
 
-            if (string.IsNullOrWhiteSpace(search.expediente) &&
+            if (search.fechaNacimiento.Date == DateTime.MinValue.Date  && string.IsNullOrEmpty(search.telefono)  && (search.sucursal == null || search.sucursal.Count() <= 0) && string.IsNullOrEmpty(search.ciudad) && string.IsNullOrWhiteSpace(search.expediente) &&
                 search.fechaAlta != null && search.fechaAlta.Length > 1 &&
                 search.fechaAlta[0].Date != DateTime.MinValue.Date && search.fechaAlta[1].Date != DateTime.MinValue.Date)
             {
