@@ -23,6 +23,8 @@ namespace Service.Catalog.Application
         private readonly IPriceListRepository _repository;
         private readonly IPromotionRepository _promotionRepository;
         private readonly IStudyRepository _studyRepository;
+        const int PATOLOGIA = 3;
+        const int IMAGENOLOGIA = 2;
 
         public PriceListApplication(IPriceListRepository repository, IPromotionRepository promotionRepository, IStudyRepository studyRepository)
         {
@@ -88,7 +90,7 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.NotFound, "Lista de precios no configurada");
             }
 
-            if (price.Estudio.Parameters == null || price.Estudio.Parameters.Count == 0)
+            if ((price.Estudio.Parameters == null || price.Estudio.Parameters.Count == 0) && (price.Estudio.DepartamentoId != PATOLOGIA && price.Estudio.DepartamentoId != IMAGENOLOGIA ))
             {
                 throw new CustomException(HttpStatusCode.NotFound, "El estudio no contiene parámetros");
             }
