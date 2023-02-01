@@ -31,7 +31,7 @@ namespace Service.MedicalRecord.Dtos.Request
         public string Usuario { get; set; }
         public string Contraseña { get; set; }
         public string ContactoTelefono { get; set; }
-
+        public List<RequestTicketPaymentDto> Pagos { get; set; } = new List<RequestTicketPaymentDto>();
         public List<RequestTicketStudyDto> Estudios { get; set; } = new List<RequestTicketStudyDto>();
     }
 
@@ -43,5 +43,11 @@ namespace Service.MedicalRecord.Dtos.Request
         public string Precio { get; set; }
         public string Descuento { get; set; }
         public string Total { get; set; }
+    }
+
+    public class RequestTicketPaymentDto
+    {
+        public string FormaPago { get; set; }
+        public string Cantidad { get; set; }
     }
 }

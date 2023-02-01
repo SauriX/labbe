@@ -61,7 +61,7 @@ namespace Service.MedicalRecord.Repository
             {
                 report = report.Where(x => x.Estudios.Any(y => search.Estatus.Contains(y.EstatusId)));
             }
-            if (search.Fecha != null)
+            if (search.Fecha != null && string.IsNullOrWhiteSpace(search.Buscar))
             {
                 report = report.
                     Where(x => x.FechaCreo.Date >= search.Fecha.First().Date && x.FechaCreo.Date <= search.Fecha.Last().Date);
