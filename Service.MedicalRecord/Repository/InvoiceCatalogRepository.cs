@@ -20,7 +20,7 @@ namespace Service.MedicalRecord.Repository
         public async Task<List<Domain.Request.Request>> GetNotas(InvoiceCatalogSearch search) {
             var request = _context.CAT_Solicitud.Include(x=>x.Compañia).Include(x=>x.Sucursal).AsQueryable();
             if (search.Fecha != null ) {
-                request = request.Where(x => x.FechaCreo.Date > search.Fecha[0].Date && x.FechaCreo.Date < search.Fecha[1].Date);
+                request = request.Where(x => x.FechaCreo.Date >= search.Fecha[0].Date && x.FechaCreo.Date <= search.Fecha[1].Date);
 
             }
 
