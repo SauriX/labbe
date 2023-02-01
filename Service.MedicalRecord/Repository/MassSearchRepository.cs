@@ -30,6 +30,15 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Estudios).ThenInclude(x => x.Estatus)
                 .AsQueryable();
 
+            if (string.IsNullOrWhiteSpace(filter.Clave) && filter.TipoFecha != null && filter.TipoFecha == 1 && filter.FechaInicial != null && filter.FechaFinal != null)
+            {
+                requests = requests.Where(x => ((DateTime)filter.FechaInicial).Date <= x.FechaCreo.Date && ((DateTime)filter.FechaFinal).Date >= x.FechaCreo.Date);
+            }
+            if (string.IsNullOrWhiteSpace(filter.Clave) && filter.TipoFecha != null && filter.TipoFecha == 2 && filter.FechaInicial != null && filter.FechaFinal != null)
+            {
+                requests = requests.Where(x => x.Estudios.Any(x => ((DateTime)filter.FechaInicial).Date <= x.FechaEntrega && ((DateTime)filter.FechaFinal).Date >= x.FechaEntrega));
+            }
+
             if (!string.IsNullOrWhiteSpace(filter.Clave))
             {
                 requests = requests.Where(x => x.Clave.ToLower().Contains(filter.Clave)
@@ -37,14 +46,6 @@ namespace Service.MedicalRecord.Repository
                 || (x.Expediente.NombrePaciente + " " + x.Expediente.PrimerApellido + " " + x.Expediente.SegundoApellido).ToLower().Contains(filter.Clave));
             }
 
-            if (filter.TipoFecha != null && filter.TipoFecha == 1 && filter.FechaInicial != null && filter.FechaFinal != null)
-            {
-                requests = requests.Where(x => ((DateTime)filter.FechaInicial).Date <= x.FechaCreo.Date && ((DateTime)filter.FechaFinal).Date >= x.FechaCreo.Date);
-            }
-            if (filter.TipoFecha != null && filter.TipoFecha == 2 && filter.FechaInicial != null && filter.FechaFinal != null)
-            {
-                requests = requests.Where(x => x.Estudios.Any(x => ((DateTime)filter.FechaInicial).Date <= x.FechaEntrega && ((DateTime)filter.FechaFinal).Date >= x.FechaEntrega));
-            }
             if (filter.Sucursales != null && filter.Sucursales.Any())
             {
                 requests = requests.Where(x => filter.Sucursales.Contains(x.SucursalId));
