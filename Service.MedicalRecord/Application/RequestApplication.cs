@@ -565,6 +565,7 @@ namespace Service.MedicalRecord.Application
             request.Urgencia = requestDto.Urgencia;
             request.EnvioCorreo = requestDto.Correo;
             request.EnvioWhatsApp = requestDto.Whatsapp;
+            request.EnvioMedico = requestDto.EnvioMedico;
             request.Observaciones = requestDto.Observaciones;
             request.UsuarioModificoId = requestDto.UsuarioId;
             request.FechaModifico = DateTime.Now;
