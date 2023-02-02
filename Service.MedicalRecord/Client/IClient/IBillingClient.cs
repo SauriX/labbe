@@ -10,7 +10,6 @@ namespace Service.MedicalRecord.Client.IClient
 {
     public interface IBillingClient
     {
-        Task<List<SeriesDto>> GetBranchSeries(Guid branchId, byte type);
         Task<InvoiceDto> CheckInPayment(InvoiceDto invoiceDto);
         Task<InvoiceDto> CheckInPaymentCompany(InvoiceDto invoiceDto);
         Task<byte[]> DownloadPDF(string invoiceId);
