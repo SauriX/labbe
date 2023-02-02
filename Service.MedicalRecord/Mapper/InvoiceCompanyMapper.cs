@@ -35,6 +35,7 @@ namespace Service.MedicalRecord.Mapper
                     CompaniaId = x.Compañia?.Id,
                     ClavePatologica = x.ClavePatologica,
                     Saldo = x.Saldo,
+                    ExpedienteId = x.ExpedienteId,
                     Facturas = x.FacturasCompañia.Select(y => new InvoiceCompanyFacturaDto
                     {
                         FacturaId = y.FacturaId,
