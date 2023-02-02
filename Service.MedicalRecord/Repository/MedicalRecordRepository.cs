@@ -60,6 +60,10 @@ namespace Service.MedicalRecord.Repository
             {
                 records = records.Where(x => search.sucursal.Contains(x.IdSucursal.ToString()));
             }
+            if (!string.IsNullOrEmpty(search.Correo))
+            {
+                records = records.Where(x => x.Correo == search.Correo);
+            }
 
             if (!string.IsNullOrEmpty(search.telefono))
             {

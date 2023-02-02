@@ -1,4 +1,7 @@
-﻿namespace Service.Identity.Dtos.Scopes
+﻿using System;
+using System.Collections.Generic;
+
+namespace Service.Identity.Dtos.Scopes
 {
     public class ScopesDto
     {
@@ -10,5 +13,6 @@
         public bool Imprimir { get; set; }
         public bool EnviarCorreo { get; set; }
         public bool EnviarWapp { get; set; }
+        public List<Guid> SucursalesId { get; set; }
     }
 }

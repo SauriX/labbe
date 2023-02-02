@@ -66,7 +66,9 @@ namespace Service.Identity.Application
         {
             var permission = await _repository.GetScopes(userId, controller);
 
-            return permission.ToScopesDto();
+            var user = await _repository.GetById(userId);
+
+            return permission.ToScopesDto(user);
         }
 
         public async Task<ProfileDto> Login(LoginDto credentials)

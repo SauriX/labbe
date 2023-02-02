@@ -7,9 +7,6 @@
   <ItemGroup>
     <Content Remove="Development\appsettings.json" />
     <Content Remove="Development\ocelot - Copia.report.json" />
-    <Content Remove="Development\ocelot.medicalRecord.json" />
-    <Content Remove="Development\ocelot.pack.json" />
-    <Content Remove="QA\ocelot.pack.json" />
     <Content Remove="UAT\ocelot.pack.json" />
   </ItemGroup>
 
