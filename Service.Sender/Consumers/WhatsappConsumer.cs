@@ -43,13 +43,11 @@ namespace Service.Sender.Consumers
                             foreach (var file in message.SenderFiles)
                             {
                                 await _emailService.SendFile(item, file.Ruta, file.Nombre, message.Mensaje);
-
                             }
                         }
                         else
                         {
                             await _emailService.Send(item, message.Mensaje);
-
                         }
 
                         if (message.Notificar)
@@ -59,8 +57,11 @@ namespace Service.Sender.Consumers
                             await _hubContext.Clients.Group(message.RemitenteId).SendAsync("Notify", notification);
                         }
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
+                        var notification = new NotificationContract($"Hubo un error al enviar el whatsapp al número {item}: {e.Message}", true);
+
+                        await _hubContext.Clients.Group(message.RemitenteId).SendAsync("Notify", notification);
                         continue;
                     }
                 }
