@@ -60,11 +60,12 @@ namespace Service.Identity.Repository
 
         public async Task<UserPermission> GetScopes(Guid userId, string controller)
         {
-            return await _context.CAT_Usuario
+             var permisos = await _context.CAT_Usuario
                 .Include(x => x.Permisos).ThenInclude(x => x.Menu)
                 .Where(x => x.Id == userId)
                 .SelectMany(x => x.Permisos)
                 .FirstOrDefaultAsync(x => x.Menu.Controlador.ToLower() == controller.ToLower());
+            return permisos;
         }
     }
 }

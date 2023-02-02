@@ -14,5 +14,6 @@ namespace Service.MedicalRecord.Dtos.RelaseResult
         public List<string> Compañia { get; set; }
         public List<string> Sucursal { get; set; }
         public List<int> Estatus { get; set; }
+        public List<Guid> SucursalesId { get; set; }
     }
 }

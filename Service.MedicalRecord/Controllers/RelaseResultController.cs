@@ -28,6 +28,7 @@ namespace Service.MedicalRecord.Controllers
         [Authorize(Policies.Access)]
         public async Task<List<RelaceList>> GetAll(SearchRelase search)
         {
+            search.SucursalesId = (List<Guid>)HttpContext.Items["sucursales"];
             var requestedStudy = await _service.GetAll(search);
             return requestedStudy;
         }

@@ -49,7 +49,7 @@ namespace Service.MedicalRecord.Controllers
         public async Task<AppointmentList> CreateLab(AppointmentForm appointmentLab)
         {
 
-            return await _service.CreateLab(appointmentLab); 
+            return await _service.CreateLab(appointmentLab);
         }
         [HttpPost("Dom")]
         [Authorize(Policies.Create)]
@@ -87,32 +87,32 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpGet("email/{requestId}/{email}/{typo}")]
         // [Authorize(Policies.Mail)]
-        public async Task SendTestEmail(Guid requestId, string email,string typo)
+        public async Task SendTestEmail(Guid requestId, string email, string typo)
         {
             var requestDto = new RequestSendDto
             {
                 ExpedienteId = Guid.Empty,
                 SolicitudId = requestId,
-                Correo = email,
+                Correos = new List<string> { email },
                 UsuarioId = (Guid)HttpContext.Items["userId"]
             };
 
-            await _service.SendTestEmail(requestDto,typo);
+            await _service.SendTestEmail(requestDto, typo);
         }
 
         [HttpGet("whatsapp/{requestId}/{phone}/{typo}")]
         // [Authorize(Policies.Wapp)]
-        public async Task SendTestWhatsapp(Guid requestId, string phone,string typo)
+        public async Task SendTestWhatsapp(Guid requestId, string phone, string typo)
         {
             var requestDto = new RequestSendDto
             {
                 ExpedienteId = Guid.Empty,
                 SolicitudId = requestId,
-                Telefono = phone,
+                Telefonos = new List<string> { phone },
                 UsuarioId = (Guid)HttpContext.Items["userId"]
             };
 
-            await _service.SendTestWhatsapp(requestDto,typo);
+            await _service.SendTestWhatsapp(requestDto, typo);
         }
     }
 }

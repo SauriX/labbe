@@ -79,7 +79,7 @@ namespace Service.Sender
                     {
                         x.AddSignalRHub<NotificationHub>();
                         re.ConfigureConsumer<EmailConsumer>(context);
-                        re.DiscardFaultedMessages();
+                        //re.DiscardFaultedMessages();
                     });
 
                     configurator.ReceiveEndpoint(queueNames.EmailFault, re =>

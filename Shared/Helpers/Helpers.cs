@@ -3,6 +3,7 @@ using Shared.Error;
 using System;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace Shared.Helpers
 {
@@ -31,6 +32,20 @@ namespace Shared.Helpers
             }
 
             return result + random.Next(16).ToString("X");
+        }
+
+        public static string AddNumberSeparator(string input)
+        {
+            input = input.Replace("-", "");
+
+            if (input.Length != 10)
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "La longitud del número debe ser de 10 dígitos");
+            }
+
+            var pattern = "(.{3})(.{3})(.{2})(.{2})";
+            var result = Regex.Replace(input, pattern, "$1-$2-$3-$4");
+            return result;
         }
     }
 }
