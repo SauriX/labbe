@@ -338,7 +338,7 @@ namespace Service.MedicalRecord.Mapper
                     StudyId= x.EstudioId,
                     Clave = x.Clave,
                     Nombre = x.Nombre,
-                    Precio = x.Precio.ToString(),
+                    Precio = $"{Decimal.ToDouble(x.Precio)- (Decimal.ToDouble(x.PrecioFinal) * .16)}",
                     Descuento = x.Descuento.ToString(),
                     IVA = new StringBuilder().Append("$ ").Append(Decimal.ToDouble(x.PrecioFinal) * .16).ToString(),
                     PrecioFinal = new StringBuilder().Append("$ ").Append(x.PrecioFinal-x.Descuento).ToString(),
