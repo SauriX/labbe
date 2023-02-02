@@ -85,7 +85,7 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/request/email/{recordId}/{requestId}/{email}",
+      "DownstreamPathTemplate": "/api/request/email/{recordId}/{requestId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -93,11 +93,11 @@
           "Port": 24048
         }
       ],
-      "UpstreamPathTemplate": "/api/request/email/{recordId}/{requestId}/{email}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamPathTemplate": "/api/request/email/{recordId}/{requestId}",
+      "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/request/whatsapp/{recordId}/{requestId}/{phone}",
+      "DownstreamPathTemplate": "/api/request/whatsapp/{recordId}/{requestId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -105,8 +105,8 @@
           "Port": 24048
         }
       ],
-      "UpstreamPathTemplate": "/api/request/whatsapp/{recordId}/{requestId}/{phone}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamPathTemplate": "/api/request/whatsapp/{recordId}/{requestId}",
+      "UpstreamHttpMethod": [ "POST" ]
     },
     {
       "DownstreamPathTemplate": "/api/request",
@@ -167,7 +167,7 @@
       ],
       "UpstreamPathTemplate": "/api/request/series",
       "UpstreamHttpMethod": [ "PUT" ]
-    }, 
+    },
     {
       "DownstreamPathTemplate": "/api/request/general",
       "DownstreamScheme": "http",

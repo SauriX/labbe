@@ -89,7 +89,7 @@ namespace Service.MedicalRecord.Mapper
                 Urgencia = model.Urgencia,
                 Correo = model.EnvioCorreo,
                 Whatsapp = model.EnvioWhatsApp,
-                Observaciones = model.Observaciones
+                Observaciones = model.Observaciones.Trim()
             };
         }
 

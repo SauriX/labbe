@@ -9,6 +9,7 @@ using Service.Sender.Service.IService;
 using Service.Sender.SignalR;
 using Shared.Helpers;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Service.Sender.Consumers
@@ -30,26 +31,38 @@ namespace Service.Sender.Consumers
             {
                 var message = context.Message;
 
-                if(message.SenderFiles != null && message.SenderFiles.Count > 0)
+                var isSingle = !string.IsNullOrWhiteSpace(message.Telefono);
+                if (isSingle) message.TelefonoMultiple = new List<string> { message.Telefono };
+
+                foreach (var item in message.TelefonoMultiple)
                 {
-                    foreach (var file in message.SenderFiles)
+                    try
                     {
-                        await _emailService.SendFile(message.Telefono, file.Ruta, file.Nombre, message.Mensaje);
+                        if (message.SenderFiles != null && message.SenderFiles.Count > 0)
+                        {
+                            foreach (var file in message.SenderFiles)
+                            {
+                                await _emailService.SendFile(item, file.Ruta, file.Nombre, message.Mensaje);
 
+                            }
+                        }
+                        else
+                        {
+                            await _emailService.Send(item, message.Mensaje);
+
+                        }
+
+                        if (message.Notificar)
+                        {
+                            var notification = new NotificationContract($"Whatsapp enviado correctamente al número {item}", true);
+
+                            await _hubContext.Clients.Group(message.RemitenteId).SendAsync("Notify", notification);
+                        }
                     }
-                }
-                else
-                {
-                    await _emailService.Send(message.Telefono, message.Mensaje);
-
-                }
-
-
-                if (message.Notificar)
-                {
-                    var notification = new NotificationContract("Whatsapp enviado correctamente", true);
-
-                    await _hubContext.Clients.Group(message.RemitenteId).SendAsync("Notify", notification);
+                    catch (Exception)
+                    {
+                        continue;
+                    }
                 }
             }
             catch (Exception)
