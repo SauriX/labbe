@@ -38,7 +38,17 @@ namespace Service.Sender.Consumers
                 }
                 else
                 {
-                    await _emailService.Send(message.ParaMultiple, message.Asunto, message.Titulo, message.Contenido);
+                    if (message.CorreoIndividual)
+                    {
+                        foreach (var item in message.ParaMultiple)
+                        {
+                            await _emailService.Send(item, message.Asunto, message.Titulo, message.Contenido, message.SenderFiles);
+                        }
+                    }
+                    else
+                    {
+                        await _emailService.Send(message.ParaMultiple, message.Asunto, message.Titulo, message.Contenido);
+                    }
                 }
 
                 if (message.Notificar)
