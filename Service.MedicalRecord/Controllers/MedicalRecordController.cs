@@ -30,7 +30,7 @@ namespace Service.MedicalRecord.Controllers
         }
 
         [HttpPost("now")]
-        [Authorize(Policies.Access)]
+        //[Authorize(Policies.Access)]
         public async Task<List<MedicalRecordsListDto>> GetNow(MedicalRecordSearch search = null)
         {
             return await _service.GetNow(search);

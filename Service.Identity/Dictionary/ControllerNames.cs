@@ -35,6 +35,7 @@
         public const string Sampling = "Sampling";
         public const string RelaseResult = "RelaseResult";
         public const string Series = "series";
+        public const string Quotation = "quotation";
 
     }
 }
