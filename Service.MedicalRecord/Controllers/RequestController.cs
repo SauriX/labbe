@@ -29,6 +29,7 @@ namespace Service.MedicalRecord.Controllers
         [Authorize(Policies.Access)]
         public async Task<IEnumerable<RequestInfoDto>> GetByFilter(RequestFilterDto filter)
         {
+            filter.SucursalesId = (List<Guid>)HttpContext.Items["sucursales"];
             return await _service.GetByFilter(filter);
         }
 

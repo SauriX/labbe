@@ -9,7 +9,7 @@ namespace Service.Identity.Mapper
 {
     public static class ProfileMapper
     {
-        public static ScopesDto ToScopesDto(this UserPermission permission)
+        public static ScopesDto ToScopesDto(this UserPermission permission, User user)
         {
             if (permission == null) return null;
 
@@ -23,6 +23,7 @@ namespace Service.Identity.Mapper
                 Imprimir = permission.Imprimir,
                 EnviarCorreo = permission.EnviarCorreo,
                 EnviarWapp = permission.EnviarWapp,
+                SucursalesId = user.Sucursales.Select(x => x.BranchId).ToList(),
             };
         }
 

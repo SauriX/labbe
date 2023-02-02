@@ -1,7 +1,8 @@
 ﻿{
   "Routes": [
+    
     {
-      "DownstreamPathTemplate": "/api/scopes/catalog",
+      "DownstreamPathTemplate": "/api/scopes/{controller}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -9,127 +10,7 @@
           "Port": 45216
         }
       ],
-      "UpstreamPathTemplate": "/api/scopes/catalog",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/scopes/price",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 45216
-        }
-      ],
-      "UpstreamPathTemplate": "/api/scopes/price",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/scopes/configuration",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 45216
-        }
-      ],
-      "UpstreamPathTemplate": "/api/scopes/configuration",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/scopes/MedicalRecord",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 45216
-        }
-      ],
-      "UpstreamPathTemplate": "/api/scopes/MedicalRecord",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/scopes/request",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 45216
-        }
-      ],
-      "UpstreamPathTemplate": "/api/scopes/request",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/scopes/report",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 45216
-        }
-      ],
-      "UpstreamPathTemplate": "/api/scopes/report",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/scopes/series",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 45216
-        }
-      ],
-      "UpstreamPathTemplate": "/api/scopes/series",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/scopes/equipment",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 45216
-        }
-      ],
-      "UpstreamPathTemplate": "/api/scopes/equipment",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/scopes/tracking-order",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 45216
-        }
-      ],
-      "UpstreamPathTemplate": "/api/scopes/tracking-order",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/scopes/MassSearch",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 45216
-        }
-      ],
-      "UpstreamPathTemplate": "/api/scopes/MassSearch",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/scopes/samplig",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 45216
-        }
-      ],
-      "UpstreamPathTemplate": "/api/scopes/samplig",
+      "UpstreamPathTemplate": "/api/scopes/{controller}",
       "UpstreamHttpMethod": [ "GET" ]
     }
   ]
