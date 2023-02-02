@@ -14,6 +14,7 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task<List<Domain.MedicalRecord.MedicalRecord>> GetNow(MedicalRecordSearch search);
         Task<List<Domain.MedicalRecord.MedicalRecord>> GetActive();
         Task<List<TaxData>> GetTaxData(Guid recordId);
+        Task<Domain.MedicalRecord.MedicalRecord> Find(Guid id);
         Task<Domain.MedicalRecord.MedicalRecord> GetById(Guid id);
         Task<TaxData> GetTaxDataById(Guid id, Guid recordId);
         Task Create(Domain.MedicalRecord.MedicalRecord expediente, IEnumerable<TaxDataDto> taxdata);
