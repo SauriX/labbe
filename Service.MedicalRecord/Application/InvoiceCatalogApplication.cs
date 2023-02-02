@@ -36,8 +36,11 @@ namespace Service.MedicalRecord.Application
             list.AddRange(notas.ToInvoiceList());
             var facturas = await getFacturas(search);
             list.AddRange(facturas);
-            if (!string.IsNullOrEmpty(search.Tipo)) {
-                list = list.FindAll(x=> x.Tipo == search.Tipo);
+            if (search.Tipo!= null) {
+                if (search.Tipo.Length > 0) {
+                    list = list.FindAll(x => search.Tipo.Contains(x.Tipo));
+                }
+                
             }
             return list;
         }
