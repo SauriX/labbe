@@ -338,10 +338,10 @@ namespace Service.MedicalRecord.Mapper
                     StudyId= x.EstudioId,
                     Clave = x.Clave,
                     Nombre = x.Nombre,
-                    Precio = $"{Decimal.ToDouble(x.Precio)- (Decimal.ToDouble(x.PrecioFinal) * .16)}",
+                    Precio = $"${Decimal.ToDouble(x.Precio)- (Decimal.ToDouble(x.Precio) * .16)}",
                     Descuento = x.Descuento.ToString(),
-                    IVA = new StringBuilder().Append("$ ").Append(Decimal.ToDouble(x.PrecioFinal) * .16).ToString(),
-                    PrecioFinal = new StringBuilder().Append("$ ").Append(x.PrecioFinal-x.Descuento).ToString(),
+                    IVA = new StringBuilder().Append("$ ").Append(Decimal.ToDouble(x.Precio) * .16).ToString(),
+                    PrecioFinal = new StringBuilder().Append("$ ").Append(x.Precio-x.Descuento).ToString(),
                     TiempoEntrega = $"{x.Dias.ToString("0.##")} Dias",
                     TipoMuestra = "---------------------------",
                     PreparacionPaciente =  String.Join(", ", x.Indicaciones!=null?x.Indicaciones:new List<IndicationListDto>() ),
@@ -357,10 +357,10 @@ namespace Service.MedicalRecord.Mapper
                 Fecha = data.Registro,
                 FechaImpresion = System.DateTime.Now.ToShortDateString(),
                 StudyQuotes = estudios,
-                Total = $"$ {(Decimal.ToDouble(estudios.Sum(x => decimal.Parse(x.Precio)))- estudios.Sum(x => double.Parse(x.Precio)) + Decimal.ToDouble(cargo)) * .16}",
-                Descuento = $"$ {estudios.Sum(x => decimal.Parse(x.Descuento))}",
-                Iva = $"$ {(estudios.Sum(x =>  double.Parse(x.Precio)) + Decimal.ToDouble(cargo)) * .16}",
-                Totalpagar =$"$ {estudios.Sum(x => decimal.Parse(x.Precio)) - estudios.Sum(x => decimal.Parse(x.Descuento)) + cargo}"
+                Total = $"$ {Decimal.ToDouble(model.Sum(x => x.Precio)) - ((Decimal.ToDouble(model.Sum(x => x.Precio)) + Decimal.ToDouble(cargo)) * .16)}",
+                Descuento = $"$ {model.Sum(x => x.Descuento)}",
+                Iva = $"$ { Decimal.ToDouble(model.Sum(x =>  x.Precio) + cargo) * .16}",
+                Totalpagar =$"$ {model.Sum(x =>x.Precio) - model.Sum(x => x.Descuento) + cargo}"
             };
         }
     }
