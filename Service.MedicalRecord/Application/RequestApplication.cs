@@ -973,18 +973,47 @@ namespace Service.MedicalRecord.Application
         public async Task<byte[]> PrintTags(Guid recordId, Guid requestId, List<RequestTagDto> tags)
         {
             var request = await _repository.GetById(requestId);
+            var requestDate = request.FechaCreo;
+
+            var lastCode = await _repository.GetLastTagCode(requestDate.ToString("ddMMyy"));
+
+            var code = Codes.GetTagCode(request.EstatusId.ToString(), lastCode, requestDate);
 
             if (request == null || request.ExpedienteId != recordId)
             {
                 throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
             }
 
-            foreach (var tag in tags)
+            List<RequestTagDto> printTags = new();
+            List<string> nameStudy = new();
+            var sumTag = 0;
+
+            foreach (var tag in tags.OrderBy(x => x.Orden))
             {
-                tag.Clave = request.Clave;
-                tag.ClaveEtiqueta = request.Clave;
-                tag.Paciente = request.Expediente.NombreCompleto;
+                sumTag += tag.Cantidad;
+                nameStudy.Add(tag.Estudios);
+
+                if(sumTag <= 1)
+                {
+                    tag.Clave = code;
+                    tag.ClaveEtiqueta = code;
+                    tag.Paciente = request.Expediente.NombreCompleto;
+
+                    tag.Estudios = string.Join(", ", nameStudy);
+                    tag.Cantidad = sumTag;
+
+                    sumTag = 0;
+                    nameStudy = new();
+                }
+                else
+                {
+                    continue;
+                }
             }
+
+            var saveTags = tags.ToRequestTag(requestId);
+
+            await _repository.BulkInsertUpdateTags(requestId, saveTags);
 
             return await _pdfClient.GenerateTags(tags);
         }

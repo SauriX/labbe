@@ -129,6 +129,23 @@ namespace Service.MedicalRecord.Mapper
             };
         }
 
+        public static List<RequestTag> ToRequestTag(this IEnumerable<RequestTagDto> dto, Guid requestId)
+        {
+            if (dto == null) return null;
+
+            return dto.Select((x, i) => new RequestTag
+            {
+                Clave = x.ClaveEtiqueta,
+                Nombre = x.NombreInfo,
+                Cantidad = x.Cantidad,
+                Fecha = DateTime.Now,
+                Orden = i,
+                SolicitudId = requestId,
+                Tapon = x.Tapon,
+                Suero = x.Suero
+            }).ToList();
+        }
+
         public static IEnumerable<RequestPaymentDto> ToRequestPaymentDto(this List<RequestPayment> model)
         {
             if (model == null) return null;
