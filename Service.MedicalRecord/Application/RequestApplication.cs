@@ -32,6 +32,7 @@ using Integration.WeeClinic.Dtos;
 using Service.MedicalRecord.Dtos.Invoice;
 using VT = Shared.Dictionary.Catalogs.ValueType;
 using Service.MedicalRecord.Dtos.Quotation;
+using Shared.Helpers;
 
 namespace Service.MedicalRecord.Application
 {
@@ -227,16 +228,25 @@ namespace Service.MedicalRecord.Application
 
         public async Task<string> Create(RequestDto requestDto)
         {
+            var record = await _recordRepository.Find(requestDto.ExpedienteId);
+
+            if (record == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, "El expediente no es válido");
+            }
+
             var code = await GetNewCode(requestDto);
 
             requestDto.Clave = code;
             var newRequest = requestDto.ToModel();
             newRequest.MedicoId = MEDICS.A_QUIEN_CORRESPONDA;
             newRequest.CompañiaId = COMPANIES.PARTICULARES;
+            newRequest.EnvioCorreo = record.Correo;
+            newRequest.EnvioWhatsApp = record.Celular;
             newRequest.UsuarioCreoId = requestDto.UsuarioId;
             newRequest.UsuarioCreo = requestDto.Usuario;
 
-            var series = await _billingClient.GetBranchSeries(requestDto.SucursalId, 2);
+            var series = await _catalogClient.GetBranchSeries(requestDto.SucursalId, 2);
 
             if (series != null && series.Count > 0)
             {
@@ -526,7 +536,7 @@ namespace Service.MedicalRecord.Application
                 throw new CustomException(HttpStatusCode.BadRequest, "Debe seleccionar una serie");
             }
 
-            var series = await _billingClient.GetBranchSeries(request.SucursalId, 2);
+            var series = await _catalogClient.GetBranchSeries(request.SucursalId, 2);
 
             if (!series.Select(x => x.Clave).Contains(requestDto.Serie))
             {
@@ -552,6 +562,11 @@ namespace Service.MedicalRecord.Application
             var prevOrigin = request.Procedencia;
             var prevUrgency = request.Urgencia;
 
+            if (!string.IsNullOrEmpty(requestDto.Whatsapp))
+            {
+                requestDto.Whatsapp = string.Join(",", requestDto.Whatsapp.Split(",").Select(x => Helpers.AddNumberSeparator(x)));
+            }
+
             request.Procedencia = requestDto.Procedencia;
             request.CompañiaId = requestDto.CompañiaId;
             request.MedicoId = requestDto.MedicoId;
@@ -559,6 +574,7 @@ namespace Service.MedicalRecord.Application
             request.Urgencia = requestDto.Urgencia;
             request.EnvioCorreo = requestDto.Correo;
             request.EnvioWhatsApp = requestDto.Whatsapp;
+            request.EnvioMedico = requestDto.EnvioMedico;
             request.Observaciones = requestDto.Observaciones;
             request.UsuarioModificoId = requestDto.UsuarioId;
             request.FechaModifico = DateTime.Now;
@@ -579,10 +595,11 @@ namespace Service.MedicalRecord.Application
             var title = RequestTemplates.Titles.RequestCode(request.Clave);
             var message = RequestTemplates.Messages.TestMessage;
 
-            var emailToSend = new EmailContract(requestDto.Correo, null, subject, title, message)
+            var emailToSend = new EmailContract(requestDto.Correos, subject, title, message)
             {
                 Notificar = true,
-                RemitenteId = requestDto.UsuarioId.ToString()
+                RemitenteId = requestDto.UsuarioId.ToString(),
+                CorreoIndividual = true
             };
 
             var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, "/", _queueNames.Email)));
@@ -596,9 +613,13 @@ namespace Service.MedicalRecord.Application
 
             var message = RequestTemplates.Messages.TestMessage;
 
-            var phone = requestDto.Telefono.Replace("-", "");
-            phone = phone.Length == 10 ? "52" + phone : phone;
-            var emailToSend = new WhatsappContract(phone, message)
+            var phones = requestDto.Telefonos.Select(x =>
+            {
+                x = ("52" + x.Replace("-", ""))[^12..];
+                return x;
+            }).ToList();
+
+            var emailToSend = new WhatsappContract(phones, message)
             {
                 Notificar = true,
                 RemitenteId = requestDto.UsuarioId.ToString()

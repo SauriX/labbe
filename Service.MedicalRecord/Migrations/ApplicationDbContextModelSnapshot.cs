@@ -831,6 +831,9 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("EnvioCorreo")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("EnvioMedico")
+                        .HasColumnType("bit");
+
                     b.Property<string>("EnvioWhatsApp")
                         .HasColumnType("nvarchar(max)");
 

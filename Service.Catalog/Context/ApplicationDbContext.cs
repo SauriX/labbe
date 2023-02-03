@@ -20,6 +20,7 @@ using Service.Catalog.Domain.Tapon;
 using Service.Catalog.Domain.Equipment;
 using System.Reflection;
 using Service.Catalog.Domain.EquipmentMantain;
+using Service.Catalog.Domain.Series;
 
 namespace Service.Catalog.Context
 {
@@ -28,6 +29,7 @@ namespace Service.Catalog.Context
         public ApplicationDbContext(DbContextOptions options) : base(options) { }
 
         public DbSet<Configuration> CAT_Configuracion { get; set; }
+        public DbSet<TaxConfiguration> CAT_Configuracion_Fiscal { get; set; }
         public DbSet<Area> CAT_Area { get; set; }
         public DbSet<Budget> CAT_Presupuestos { get; set; }
         public DbSet<BudgetBranch> Relacion_Presupuesto_Sucursal { get; set; }
@@ -90,6 +92,7 @@ namespace Service.Catalog.Context
         public DbSet<EquipmentBranch> Relacion_Equipo_Sucursal { get; set; }
         public DbSet<Mantain> CAT_Mantenimiento_Equipo { get; set; }
         public DbSet<MantainImages> CAT_Mantenimiento_Equipo_Images { get; set; }
+        public DbSet<Serie> CAT_Serie { get; internal set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

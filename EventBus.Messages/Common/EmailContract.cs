@@ -4,9 +4,22 @@ namespace EventBus.Messages.Common
 {
     public class EmailContract
     {
-        public EmailContract(string para, IEnumerable<string> paraMultiple, string asunto, string titulo, string contenido, List<SenderFiles> senderFiles = null)
+        public EmailContract()
+        {
+        }
+
+        public EmailContract(string para, string asunto, string titulo, string contenido, List<SenderFiles> senderFiles = null)
         {
             Para = para;
+            Asunto = asunto;
+            Titulo = titulo;
+            Contenido = contenido;
+            SenderFiles = senderFiles;
+
+        }
+
+        public EmailContract(IEnumerable<string> paraMultiple, string asunto, string titulo, string contenido, List<SenderFiles> senderFiles = null)
+        {
             ParaMultiple = paraMultiple;
             Asunto = asunto;
             Titulo = titulo;
@@ -23,5 +36,6 @@ namespace EventBus.Messages.Common
         public List<SenderFiles> SenderFiles { get; set; }
         public string RemitenteId { get; set; }
         public bool Notificar { get; set; }
+        public bool CorreoIndividual { get; set; }
     }
 }

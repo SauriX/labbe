@@ -2,6 +2,7 @@
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Service.Catalog.Application.IApplication;
+using Service.Catalog.Client.IClient;
 using Service.Catalog.Dtos.Configuration;
 using Service.Catalog.Mapper;
 using Service.Catalog.Repository.IRepository;
@@ -22,12 +23,14 @@ namespace Service.Catalog.Application
         private readonly string _key;
         private readonly ISendEndpointProvider _sendEndpointProvider;
         private readonly IConfigurationRepository _repository;
+        private readonly IIdentityClient _identityClient;
 
-        public ConfigurationApplication(IConfiguration configuration, ISendEndpointProvider sendEndpointProvider, IConfigurationRepository repository)
+        public ConfigurationApplication(IConfiguration configuration, ISendEndpointProvider sendEndpointProvider, IConfigurationRepository repository, IIdentityClient identityClient)
         {
             _key = configuration.GetValue<string>("EmailPassKey");
             _sendEndpointProvider = sendEndpointProvider;
             _repository = repository;
+            _identityClient = identityClient;
         }
 
         public async Task<ConfigurationEmailDto> GetEmail(bool pass = false)
@@ -87,8 +90,26 @@ namespace Service.Catalog.Application
             var current = await _repository.GetAll();
 
             var configuration = fiscal.ToModel(current);
-
             await _repository.Update(configuration);
+
+            //var currentTaxConfig = await _repository.GetByTaxId(fiscal.UsuarioId);
+
+            //if(currentTaxConfig != null)
+            //{
+            //    var taxConfiguration = fiscal.ToModelUpdate(currentTaxConfig);
+
+            //    await _repository.UpdateTax(taxConfiguration);
+            //}
+            //else
+            //{
+            //    var taxConfiguration = fiscal.ToModelCreate();
+
+            //    var user = await _identityClient.GetUserById(fiscal.UsuarioId.ToString());
+            //    taxConfiguration.SucursalId = user.SucursalId;
+            //    taxConfiguration.Nombre = user.Nombre;
+
+            //    await _repository.CreateTax(taxConfiguration);
+            //}
         }
     }
 }

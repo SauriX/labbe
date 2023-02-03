@@ -6,6 +6,7 @@ using Service.MedicalRecord.Dtos.Catalogs;
 using Service.MedicalRecord.Dtos.Promotion;
 using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.Route;
+using Service.MedicalRecord.Dtos.Series;
 using Shared.Error;
 using Shared.Helpers;
 using System;
@@ -231,6 +232,21 @@ namespace Service.MedicalRecord.Client
             {
                 throw;
             }
+        }
+
+        public async Task<List<SeriesDto>> GetBranchSeries(Guid branchId, byte type)
+
+        {
+            var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/series/branch/{branchId}/{type}");
+
+            if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+            {
+                return await response.Content.ReadFromJsonAsync<List<SeriesDto>>();
+            }
+
+            var error = await response.Content.ReadFromJsonAsync<ClientException>();
+
+            throw new CustomException(HttpStatusCode.BadRequest, error.Errors);
         }
     }
 }

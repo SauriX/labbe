@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Service.Catalog.Dtos.Series;
+using System;
 using System.Collections.Generic;
 
 namespace Service.Catalog.Dtos.Branch
@@ -26,5 +27,6 @@ namespace Service.Catalog.Dtos.Branch
         public Guid UsuarioId { get; set; }
         public bool Matriz { get; set; }
         public IEnumerable<BranchDepartmentDto> Departamentos { get; set; }
+        public IEnumerable<SeriesListDto> Series { get; set; }
     }
 }

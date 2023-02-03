@@ -218,7 +218,7 @@ namespace Service.MedicalRecord.Application
                 var title = RequestTemplates.Titles.RequestCode(request.expediente);
                 var message = RequestTemplates.Messages.TestMessage;
 
-                var emailToSend = new EmailContract(requestDto.Correo, null, subject, title, message)
+                var emailToSend = new EmailContract(requestDto.Correos, subject, title, message)
                 {
                     Notificar = true,
                     RemitenteId = requestDto.UsuarioId.ToString()
@@ -235,7 +235,7 @@ namespace Service.MedicalRecord.Application
                 var title = RequestTemplates.Titles.RequestCode(request.expediente);
                 var message = RequestTemplates.Messages.TestMessage;
 
-                var emailToSend = new EmailContract(requestDto.Correo, null, subject, title, message)
+                var emailToSend = new EmailContract(requestDto.Correos, subject, title, message)
                 {
                     Notificar = true,
                     RemitenteId = requestDto.UsuarioId.ToString()
@@ -258,7 +258,7 @@ namespace Service.MedicalRecord.Application
 
                 var message = RequestTemplates.Messages.TestMessage;
 
-                var phone = requestDto.Telefono.Replace("-", "");
+                var phone = "";// requestDto.Telefonos.Replace("-", "");
                 phone = phone.Length == 10 ? "52" + phone : phone;
                 var emailToSend = new WhatsappContract(phone, message)
                 {
@@ -276,7 +276,7 @@ namespace Service.MedicalRecord.Application
 
                 var message = RequestTemplates.Messages.TestMessage;
 
-                var phone = requestDto.Telefono.Replace("-", "");
+                var phone = "";// requestDto.Telefonos.Replace("-", "");
                 phone = phone.Length == 10 ? "52" + phone : phone;
                 var emailToSend = new WhatsappContract(phone, message)
                 {
