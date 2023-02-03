@@ -269,8 +269,8 @@ namespace Service.Catalog.Application
 
             template.Generate();
 
-            var range = template.Workbook.Worksheet("Precios").Range("Precios");
-            var table = template.Workbook.Worksheet("Precios").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
+            var range = template.Workbook.Worksheet("Lista de Precios").Range("Precios");
+            var table = template.Workbook.Worksheet("Lista de Precios").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
             table.Theme = XLTableTheme.TableStyleMedium2;
 
             template.Format();

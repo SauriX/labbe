@@ -166,8 +166,8 @@ namespace Service.Catalog.Application
 
             template.Generate();
 
-            var range = template.Workbook.Worksheet("Parameters").Range("Parameters");
-            var table = template.Workbook.Worksheet("Parameters").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
+            var range = template.Workbook.Worksheet("Parámetros").Range("Parameters");
+            var table = template.Workbook.Worksheet("Parámetros").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
             table.Theme = XLTableTheme.TableStyleMedium2;
 
             template.Format();

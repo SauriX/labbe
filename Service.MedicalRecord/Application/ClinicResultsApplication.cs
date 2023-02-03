@@ -130,6 +130,11 @@ namespace Service.MedicalRecord.Application
                     }
                 });
             });
+            var range = template.Workbook.Worksheet("Captura de resultados clinicos").Range("Expedientes");
+            var table = template.Workbook.Worksheet("Captura de resultados clinicos").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
+            table.Theme = XLTableTheme.TableStyleMedium2;
+
+
             template.Format();
 
             return (template.ToByteArray(), $"Informe Captura de Resultados (Clínicos).xlsx");

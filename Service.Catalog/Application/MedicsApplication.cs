@@ -139,8 +139,8 @@ namespace Service.Catalog.Application
 
             template.Generate();
 
-            var range = template.Workbook.Worksheet("Medicos").Range("Medicos");
-            var table = template.Workbook.Worksheet("Medicos").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
+            var range = template.Workbook.Worksheet("Médicos").Range("Medicos");
+            var table = template.Workbook.Worksheet("Médicos").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
             table.Theme = XLTableTheme.TableStyleMedium2;
 
             template.Format();
