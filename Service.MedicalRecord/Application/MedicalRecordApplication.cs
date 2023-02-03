@@ -53,10 +53,14 @@ namespace Service.MedicalRecord.Application
 
             var sucursales = await _catalogClient.GetBranchbycity();
 
-            if (!string.IsNullOrEmpty(search.ciudad))
+            if (search.ciudad!=null)
             {
-               var ciudad = sucursales.FirstOrDefault(x=>x.Ciudad == search.ciudad);
-                expedientesListDto = expedientesListDto.Where(x => ciudad.Sucursales.Any(y=> Guid.Parse(y.IdSucursal) == x.IdSucursal) );
+                if (search.ciudad.Length > 0) {
+                    var ciudad = sucursales.FindAll(x => search.ciudad.Contains(x.Ciudad));
+
+                    expedientesListDto = expedientesListDto.Where(x => ciudad.Any(y => y.Sucursales.Any(z=> Guid.Parse(z.IdSucursal) == x.IdSucursal)));
+                }
+
             }
 
             expedientes = expedientesListDto.ToList();

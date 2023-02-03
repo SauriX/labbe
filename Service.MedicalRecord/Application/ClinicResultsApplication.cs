@@ -1137,7 +1137,7 @@ namespace Service.MedicalRecord.Application
                 "Te recordamos que también puedes descargar tu resultados desde nuestra página web https://www.laboratorioramos.com.mx necesitaras tu número de expediente y contraseña proporcionados en tu recibo de pago."; ;
 
 
-            var emailToSend = new EmailContract(correo, null, subject, title, message, senderFiles)
+            var emailToSend = new EmailContract(correo, subject, title, message, senderFiles)
             {
                 Notificar = true,
                 RemitenteId = usuario.ToString()

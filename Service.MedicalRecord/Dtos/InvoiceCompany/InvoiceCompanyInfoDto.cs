@@ -29,6 +29,7 @@ namespace Service.MedicalRecord.Dtos.InvoiceCompany
         public string RFC { get; set; }
         public string ClavePatologica { get; set; }
         public Guid ExpedienteId { get; set; }
+        public string NombreSucursal { get; set; }
         public List<InvoiceCompanyFacturaDto> Facturas { get; set; }
         public List<InvoiceCompanyStudiesInfoDto> Estudios { get; set; }
     }

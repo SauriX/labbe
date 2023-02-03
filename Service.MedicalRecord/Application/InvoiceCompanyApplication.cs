@@ -31,8 +31,8 @@ namespace Service.MedicalRecord.Application
         private readonly string InvoiceCompanyPath;
         private readonly IPdfClient _pdfClient;
 
-        public InvoiceCompanyApplication(IRequestRepository repository, 
-            IBillingClient billingClient, 
+        public InvoiceCompanyApplication(IRequestRepository repository,
+            IBillingClient billingClient,
             ISendEndpointProvider sendEndpoint,
             IRabbitMQSettings rabbitMQSettings,
             IQueueNames queueNames,
@@ -76,8 +76,8 @@ namespace Service.MedicalRecord.Application
                     Estado = invoice.Cliente.Estado,
                     Pais = invoice.Cliente.Pais,
                 },
-                
-                
+
+
                 Productos = invoice.Estudios.Select(x => new ProductDto
                 {
                     Clave = x.Clave,
@@ -91,7 +91,7 @@ namespace Service.MedicalRecord.Application
             };
 
             //var invoiceResponse = await _billingClient.CheckInPayment(invoiceDto);
-         
+
             return await _billingClient.CheckInPayment(invoiceDto);
         }
 
@@ -152,7 +152,7 @@ namespace Service.MedicalRecord.Application
                     InvoiceCompanyId = invoiceCompany.Id,
 
                 });
-                
+
             }
 
             await _repository.CreateInvoiceCompanyData(invoiceCompany, requestsInvoiceCompany);
@@ -165,7 +165,7 @@ namespace Service.MedicalRecord.Application
             var resposeBilling = await _billingClient.CancelInvoice(invoiceDto);
 
 
-            if(resposeBilling.ToLower() == "canceled")
+            if (resposeBilling.ToLower() == "canceled")
             {
                 var invoice = await _repository.GetInvoiceCompanyByFacturapiId(invoiceDto.FacturapiId);
 
@@ -192,7 +192,7 @@ namespace Service.MedicalRecord.Application
                         {
                             new SenderFiles(new Uri(pathName), namePdf)
                         };
-            foreach(var contacto in envio.Contactos)
+            foreach (var contacto in envio.Contactos)
             {
                 if (envio.MediosEnvio.Contains("whatsapp") || envio.MediosEnvio.Contains("ambos"))
                 {
@@ -225,7 +225,7 @@ namespace Service.MedicalRecord.Application
                 "Te recordamos que también puedes descargar tu resultados desde nuestra página web https://www.laboratorioramos.com.mx necesitaras tu número de expediente y contraseña proporcionados en tu recibo de pago."; ;
 
 
-            var emailToSend = new EmailContract(esPrueba ? null : correo, esPrueba ? new List<string> { correo } : null, subject, title, message, senderFiles)
+            var emailToSend = new EmailContract(correo, subject, title, message, senderFiles)
             {
                 Notificar = true,
                 RemitenteId = usuario.ToString()

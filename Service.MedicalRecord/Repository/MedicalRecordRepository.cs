@@ -49,7 +49,7 @@ namespace Service.MedicalRecord.Repository
                 records = records.Where(x => x.FechaDeNacimiento.Date == search.fechaNacimiento.Date);
             }
 
-            if (search.fechaNacimiento.Date == DateTime.MinValue.Date  && string.IsNullOrEmpty(search.telefono)  && (search.sucursal == null || search.sucursal.Count() <= 0) && string.IsNullOrEmpty(search.ciudad) && string.IsNullOrWhiteSpace(search.expediente) &&
+            if (search.fechaNacimiento.Date == DateTime.MinValue.Date  && string.IsNullOrEmpty(search.telefono)  && (search.sucursal == null || search.sucursal.Count() <= 0) && (search.ciudad== null || search.ciudad.Count() <= 0) && string.IsNullOrWhiteSpace(search.expediente) &&
                 search.fechaAlta != null && search.fechaAlta.Length > 1 &&
                 search.fechaAlta[0].Date != DateTime.MinValue.Date && search.fechaAlta[1].Date != DateTime.MinValue.Date)
             {

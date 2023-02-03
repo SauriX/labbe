@@ -29,6 +29,7 @@ namespace Service.MedicalRecord.Domain.Request
         public string Observaciones { get; set; }
         public string EnvioCorreo { get; set; }
         public string EnvioWhatsApp { get; set; }
+        public bool EnvioMedico { get; set; }
         public string RutaOrden { get; set; }
         public string RutaINE { get; set; }
         public string RutaINEReverso { get; set; }

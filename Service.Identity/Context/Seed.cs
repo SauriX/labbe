@@ -155,7 +155,7 @@ namespace Service.Identity.Context
 
                 // Recepcion -> Orden 2000
                 new Menu(24, null, "Recepción", "reception", "reception", 2000),
-                new Menu(19, 24, "Expedientes", "expedientes", "expedientes", 2010),
+                new Menu(19, 24, "Expedientes", "MedicalRecord", "expedientes", 2010),
                 new Menu(21, 24, "Cotización", "quotation", "cotizacion", 2020),
                 new Menu(23, 24, "Citas","appointments", "appointments", 2030),
                 new Menu(27, 24, "Solicitudes", "request", "requests", 2040),

@@ -258,7 +258,7 @@ namespace Service.MedicalRecord.Application
             var title = QuotationTemplates.Titles.QuotationCode(quotation.Clave);
             var message = QuotationTemplates.Messages.TestMessage;
 
-            var emailToSend = new EmailContract(quotationDto.Correo, null, subject, title, message)
+            var emailToSend = new EmailContract(quotationDto.Correo, subject, title, message)
             {
                 Notificar = true,
                 RemitenteId = quotationDto.UsuarioId.ToString()
@@ -472,7 +472,7 @@ namespace Service.MedicalRecord.Application
 
             }
             var estudios = await _catalogClient.GetStudies(estudisid);
-            var quotepdf = quote.toPriceQuotePdf(quotation.Estudios.ToList(),quotationStudies.Total.Cargo);
+            var quotepdf = quote.toPriceQuotePdf(quotation.Estudios.ToList(), quotationStudies.Total.Cargo);
             var newestudis = new List<StudyQuoteDto>();
             foreach (var estudy in estudios)
             {
@@ -489,7 +489,7 @@ namespace Service.MedicalRecord.Application
 
 
             quotepdf.StudyQuotes = newestudis;
-           
+
             return await _pdfClient.PriceQuoteReport(quotepdf);
         }
 
