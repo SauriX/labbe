@@ -228,12 +228,21 @@ namespace Service.MedicalRecord.Application
 
         public async Task<string> Create(RequestDto requestDto)
         {
+            var record = await _recordRepository.Find(requestDto.ExpedienteId);
+
+            if (record == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, "El expediente no es válido");
+            }
+
             var code = await GetNewCode(requestDto);
 
             requestDto.Clave = code;
             var newRequest = requestDto.ToModel();
             newRequest.MedicoId = MEDICS.A_QUIEN_CORRESPONDA;
             newRequest.CompañiaId = COMPANIES.PARTICULARES;
+            newRequest.EnvioCorreo = record.Correo;
+            newRequest.EnvioWhatsApp = record.Celular;
             newRequest.UsuarioCreoId = requestDto.UsuarioId;
             newRequest.UsuarioCreo = requestDto.Usuario;
 
