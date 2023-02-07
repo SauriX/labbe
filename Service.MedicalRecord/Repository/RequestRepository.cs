@@ -65,7 +65,7 @@ namespace Service.MedicalRecord.Repository
 
             if (filter.Ciudad != null)
             {
-                requests = requests.Where(x => x.Sucursal != null && x.Sucursal.Ciudad == filter.Ciudad);
+                requests = requests.Where(x => x.Sucursal != null &&  filter.Ciudad.Contains(x.Sucursal.Ciudad));
             }
 
             if (filter.Sucursales != null && filter.Sucursales.Any())

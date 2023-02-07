@@ -45,7 +45,7 @@ namespace Service.MedicalRecord.Repository
 
             if (filter.Ciudad != null)
             {
-                quotations = quotations.Where(x => x.Sucursal != null && x.Sucursal.Ciudad == filter.Ciudad);
+                quotations = quotations.Where(x => x.Sucursal != null &&  filter.Ciudad.Contains(x.Sucursal.Ciudad));
             }
 
             if (filter.Sucursales != null && filter.Sucursales.Count > 0)
