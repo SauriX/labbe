@@ -369,18 +369,29 @@ namespace Service.MedicalRecord.Repository
 
         public Task<List<Request>> InvoiceCompanyFilter(InvoiceCompanyFilterDto filter)
         {
+
             var requests = _context.CAT_Solicitud
                 .Include(x => x.Expediente)
                 .Include(x => x.Compañia)
+                .Include(x => x.Pagos)
                 .Include(x => x.Sucursal)
                 .Include(x => x.FacturasCompañia)
                 .Include(x => x.Estudios).ThenInclude(x => x.Estatus)
                 .Include(x => x.Estudios).ThenInclude(x => x.Tapon)
                 .Include(x => x.Pagos).ThenInclude(x => x.Estatus).OrderBy(x => x.FechaCreo)
                 .OrderBy(x => x.FechaCreo)
-                .Where(x => x.Procedencia == 2)
+                //.Where(x => x.Procedencia == 2)
                 .AsQueryable();
 
+
+            if (filter.FacturaMetodo == "company")
+            {
+                requests = requests.Where(x => x.Procedencia == 1);
+            }
+            if (filter.FacturaMetodo == "request")
+            {
+                requests = requests.Where(x => x.Procedencia == 2);
+            }
             if (filter.FechaInicial != null && filter.FechaFinal != null)
             {
                 requests = requests.Where(x => ((DateTime)filter.FechaInicial).Date <= x.FechaCreo.Date && ((DateTime)filter.FechaFinal).Date >= x.FechaCreo.Date);
