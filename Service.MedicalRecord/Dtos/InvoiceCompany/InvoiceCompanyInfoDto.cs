@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Service.MedicalRecord.Domain.Request;
+using System;
 using System.Collections.Generic;
 
 namespace Service.MedicalRecord.Dtos.InvoiceCompany
@@ -30,8 +31,16 @@ namespace Service.MedicalRecord.Dtos.InvoiceCompany
         public string ClavePatologica { get; set; }
         public Guid ExpedienteId { get; set; }
         public string NombreSucursal { get; set; }
+        public List<string> FormasPagos { get; set; }
+        public List<string> NumerosCuentas { get; set; }
         public List<InvoiceCompanyFacturaDto> Facturas { get; set; }
         public List<InvoiceCompanyStudiesInfoDto> Estudios { get; set; }
+    }
+
+    public class InvoiceCompanyMetodoPago
+    {
+        public string FormaPago { get; set; }
+        public int FormaPagoId { get; set; }
     }
     
     public class InvoiceCompanyFacturaDto
