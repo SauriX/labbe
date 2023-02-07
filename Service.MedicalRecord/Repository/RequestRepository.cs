@@ -338,6 +338,7 @@ namespace Service.MedicalRecord.Repository
         {
             var config = new BulkConfig();
             config.SetSynchronizeFilter<RequestTag>(x => x.SolicitudId == requestId);
+            config.SetOutputIdentity = true;
 
             await _context.BulkInsertOrUpdateAsync(tags, config);
         }

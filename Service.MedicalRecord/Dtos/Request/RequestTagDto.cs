@@ -10,7 +10,7 @@
         public string NombreInfo { get; set; }
         public string Tipo { get; set; }
         public string EdadSexo { get; set; }
-        public int Cantidad { get; set; }
+        public decimal Cantidad { get; set; }
         public int Orden { get; set; }
         public string TaponClave { get; set; }
         public int Suero { get; set; }
