@@ -9,8 +9,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/scopes/{controller}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     }
-
   ]
 }
