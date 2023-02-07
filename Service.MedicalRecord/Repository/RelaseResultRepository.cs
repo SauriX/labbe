@@ -40,6 +40,11 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Compañia)
                 .AsQueryable();
 
+            if ((string.IsNullOrWhiteSpace(search.Search)) && (search.Sucursal == null || search.Sucursal.Count() <= 0))
+            {
+                report = report.Where(x => search.SucursalesId.Contains(x.SucursalId));
+            }
+
             if (!string.IsNullOrEmpty(search.Search))
             {
                 report = report.Where(x => x.Clave.Contains(search.Search)

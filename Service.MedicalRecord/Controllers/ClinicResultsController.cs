@@ -30,6 +30,7 @@ namespace Service.MedicalRecord.Controllers
         [Authorize(Policies.Access)]
         public async Task<List<ClinicResultsDto>> GetAll(ClinicResultSearchDto search)
         {
+            search.SucursalesId = (List<Guid>)HttpContext.Items["sucursales"];
             var clinicResults = await _service.GetAll(search);
             return clinicResults;
         }

@@ -25,6 +25,7 @@ namespace Service.MedicalRecord.Controllers
         [Authorize(Policies.Access)]
         public async Task<MassSearchInfoDto> GetByFilter(MassSearchFilterDto filter)
         {
+            filter.SucursalesId = (List<Guid>)HttpContext.Items["sucursales"];
             return await _service.GetByFilter(filter);
         }
 
@@ -32,6 +33,7 @@ namespace Service.MedicalRecord.Controllers
         [Authorize(Policies.Access)]
         public async Task<List<RequestsInfoDto>> GetAllCaptureResults(DeliverResultsFilterDto search)
         {
+            search.SucursalesId = (List<Guid>)HttpContext.Items["sucursales"];
             var clinicResults = await _service.GetAllCaptureResults(search);
             return clinicResults;
         }

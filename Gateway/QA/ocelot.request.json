@@ -67,26 +67,26 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/records/api/request/email/{recordId}/{requestId}/{email}",
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/request/email/{recordId}/{requestId}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/request/email/{recordId}/{requestId}/{email}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamPathTemplate": "/api/request/email/{recordId}/{requestId}",
+      "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/records/api/request/whatsapp/{recordId}/{requestId}/{phone}",
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/request/whatsapp/{recordId}/{requestId}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/request/whatsapp/{recordId}/{requestId}/{phone}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamPathTemplate": "/api/request/whatsapp/{recordId}/{requestId}",
+      "UpstreamHttpMethod": [ "POST" ]
     },
     {
       "DownstreamPathTemplate": "/LabRamos/services/records/api/request",

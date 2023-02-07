@@ -20,5 +20,6 @@ namespace Service.MedicalRecord.Dtos.Request
         public List<Guid> Compañias { get; set; } = new List<Guid>();
         public List<Guid> Medicos { get; set; } = new List<Guid>();
         public string? Expediente { get; set; }
+        public List<Guid> SucursalesId { get; set; }
     }
 }
