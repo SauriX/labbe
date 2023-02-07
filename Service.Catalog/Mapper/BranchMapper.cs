@@ -28,7 +28,7 @@ namespace Service.Catalog.Mapper
                 Ciudad = x.Colonia.Ciudad.Ciudad.Trim()
             });
         }
-        public static Branch ToModel(this BranchFormDto dto)
+        public static Branch ToModel(this BranchFormDto dto, IEnumerable<Serie> series = null)
         {
             if (dto == null) return null;
 
@@ -57,12 +57,26 @@ namespace Service.Catalog.Mapper
                     UsuarioCreoId = dto.UsuarioId,
                     FechaCreo = DateTime.Now
                 }).ToList(),
-                Series = dto.Series.Select(x => new Serie
+                Series = series.Select(x => new Serie
                 {
                     Id = x.Id,
+                    Activo = x.Activo,
+                    ArchivoCer = x.ArchivoCer,
+                    ArchivoKey = x.ArchivoKey,
+                    CFDI = x.CFDI,
+                    Ciudad = x.Ciudad,
+                    Clave = x.Clave,
+                    Contraseña = x.Contraseña,
+                    Descripcion = x.Descripcion,
+                    EmisorId = x.EmisorId,
+                    Nombre = x.Nombre,
+                    SucursalKey = x.SucursalKey,
+                    TipoSerie = x.TipoSerie,
+                    FechaCreo = x.FechaCreo,
+                    UsuarioCreoId = x.UsuarioCreoId,
                     SucursalId = Guid.Parse(dto.IdSucursal),
-                    UsuarioCreoId = dto.UsuarioId,
-                    FechaCreo = DateTime.Now,
+                    UsuarioModificoId = dto.UsuarioId,
+                    FechaModifico = DateTime.Now,
                 }).ToList(),
                 Matriz = dto.Matriz
             };
@@ -117,7 +131,7 @@ namespace Service.Catalog.Mapper
             throw new NotImplementedException();
         }
 
-        public static Branch ToModel(this BranchFormDto dto, Branch model)
+        public static Branch ToModel(this BranchFormDto dto, Branch model, IEnumerable<Serie> series = null)
         {
             if (dto == null) return null;
 
@@ -150,12 +164,27 @@ namespace Service.Catalog.Mapper
                     UsuarioCreoId = dto.UsuarioId,
                     FechaCreo = DateTime.Now
                 }).ToList(),
-                Series = dto.Series.Select(x => new Serie
+                Series = series.Select(x => new Serie
                 {
-                    SucursalId = model.Id,
                     Id = x.Id,
-                    UsuarioCreoId = dto.UsuarioId,
-                    FechaCreo = DateTime.Now
+                    Activo = x.Activo,
+                    ArchivoCer = x.ArchivoCer,
+                    ArchivoKey = x.ArchivoKey,
+                    CFDI = x.CFDI,
+                    Ciudad = x.Ciudad,
+                    Clave = x.Clave,
+                    Contraseña = x.Contraseña,
+                    Descripcion = x.Descripcion,
+                    EmisorId = x.EmisorId,
+                    Nombre = x.Nombre,
+                    SucursalKey = x.SucursalKey,
+                    TipoSerie = x.TipoSerie,
+                    FechaCreo = x.FechaCreo,
+                    UsuarioCreoId = x.UsuarioCreoId,
+                    Relacion = x.Relacion,
+                    SucursalId = model.Id,
+                    UsuarioModificoId = dto.UsuarioId,
+                    FechaModifico = DateTime.Now
                 }).ToList()
             };
         }

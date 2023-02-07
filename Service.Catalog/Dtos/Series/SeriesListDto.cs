@@ -11,6 +11,7 @@
         public bool Activo { get; set; }
         public bool CFDI { get; set; }
         public string Año { get; set; }
+        public bool Relacion { get; set; }
     }
 
     public class TicketListDto

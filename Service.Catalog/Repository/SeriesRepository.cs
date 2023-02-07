@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFCore.BulkExtensions;
+using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Context;
 using Service.Catalog.Domain.Branch;
 using Service.Catalog.Domain.Series;
@@ -71,9 +72,16 @@ namespace Service.Catalog.Repository
             return await series.ToListAsync();
         }
 
-        public async Task<List<Serie>> GetByBranch(Guid branchId, byte type)
+        public async Task<List<Serie>> GetByBranchType(Guid branchId, byte type)
         {
             var series = await _context.CAT_Serie.Include(x => x.Sucursal).Where(x => x.SucursalId == branchId && x.TipoSerie == type && x.Activo).ToListAsync();
+
+            return series;
+        }
+        
+        public async Task<List<Serie>> GetByBranch(Guid branchId)
+        {
+            var series = await _context.CAT_Serie.Include(x => x.Sucursal).Where(x => x.SucursalId == branchId && x.Activo).ToListAsync();
 
             return series;
         }
@@ -83,6 +91,33 @@ namespace Service.Catalog.Repository
             var serie = await _context.CAT_Serie.Include(x => x.Sucursal).FirstOrDefaultAsync(x => x.Id == id && x.TipoSerie == tipo);
 
             return serie;
+        }
+
+        public async Task<List<Serie>> GetByIds(List<int> ids)
+        {
+            var series = await _context.CAT_Serie
+                .Include(x => x.Sucursal)
+                .Where(x => ids.Contains(x.Id))
+                .ToListAsync();
+
+            return series;
+        }
+
+        public async Task<List<Serie>> GetAll(Guid branchId)
+        {
+            var series = await _context.CAT_Serie.Include(x => x.Sucursal).Where(x => x.SucursalId == branchId).ToListAsync();
+
+            return series;
+        }
+
+        public async Task<List<Serie>> IsSerieDuplicate(Guid branchId, List<int> ids)
+        {
+            var isSerieDuplicate = await _context.CAT_Serie
+                .Include(x => x.Sucursal)
+                .Where(x => x.SucursalId != branchId && ids.Contains(x.Id) && x.Relacion)
+                .ToListAsync();
+
+            return isSerieDuplicate;
         }
 
         public async Task<bool> IsDuplicate(Serie serie)
@@ -104,6 +139,21 @@ namespace Service.Catalog.Repository
             _context.Update(serie);
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task BulkUpdate(List<Serie> series)
+        {
+            var config = new BulkConfig()
+            {
+                PropertiesToInclude = new List<string>
+                {
+                    nameof(Serie.SucursalId),
+                    nameof(Serie.FechaModifico),
+                    nameof(Serie.UsuarioModificoId)
+                }
+            };
+
+            await _context.BulkUpdateAsync(series, config);
         }
     }
 }

@@ -43,7 +43,7 @@ namespace Service.Catalog.Application
 
         public async Task<IEnumerable<SeriesListDto>> GetByBranch(Guid branchId, byte type)
         {
-            var series = await _repository.GetByBranch(branchId, type);
+            var series = await _repository.GetByBranchType(branchId, type);
 
             return series.ToSeriesListDto();
         }
@@ -99,16 +99,21 @@ namespace Service.Catalog.Application
             _ = new SeriesDto();
             SeriesDto data;
 
+            ExpeditionPlaceDto expeditionData = new();
+
             var invoiceData = serie.ToInvoiceSerieDto();
 
             if (tipo == TIPO_FACTURA)
             {
                 var userBranch = await _branchRepository.GetById(serie.EmisorId.ToString());
                 var userConfiguration = await _configurationApplication.GetFiscal();
-                var defaultBranch = await _branchRepository.GetById(serie.SucursalId.ToString());
-
                 var userData = userBranch.ToOwnerInfoDto();
-                var expeditionData = defaultBranch.ToExpeditionPlaceDto();
+
+                if (serie.SucursalId != Guid.Empty)
+                {
+                    var defaultBranch = await _branchRepository.GetById(serie.SucursalId.ToString());
+                    expeditionData = defaultBranch.ToExpeditionPlaceDto();
+                }
 
                 userData.WebSite = userConfiguration.WebSite ?? "www.laboratorioramos.com.mx";
                 userData.RFC = userConfiguration.RFC ?? "";
@@ -116,8 +121,16 @@ namespace Service.Catalog.Application
                 userData.Correo = userConfiguration.Correo ?? "";
 
                 invoiceData.Id = id;
-                invoiceData.ClaveCer = Path.Combine(CatalogPath, serie.ArchivoCer.Replace("wwwroot/file/series", "")).Replace("\\", "/");
-                invoiceData.ClaveKey = Path.Combine(CatalogPath, serie.ArchivoKey.Replace("wwwroot/file/series", "")).Replace("\\", "/");
+
+                if (serie.ArchivoKey != null)
+                {
+                    invoiceData.ClaveKey = Path.Combine(CatalogPath, serie.ArchivoKey.Replace("wwwroot/file/series", "")).Replace("\\", "/");
+                }
+
+                if (serie.ArchivoCer != null)
+                {
+                    invoiceData.ClaveCer = Path.Combine(CatalogPath, serie.ArchivoCer.Replace("wwwroot/file/series", "")).Replace("\\", "/");
+                }
 
                 data = new SeriesDto
                 {
@@ -150,6 +163,13 @@ namespace Service.Catalog.Application
             return branch.ToExpeditionPlaceDto();
         }
 
+        public async Task<IEnumerable<SeriesListDto>> GetSeries(Guid branchId)
+        {
+            var series = await _repository.GetAll(branchId);
+
+            return series.ToSeriesListDto();
+        }
+
         private static async Task<string> SaveFilePath(IFormFile archivo, string nombre)
         {
             var path = Path.Combine("wwwroot/file/series", nombre);
@@ -172,9 +192,17 @@ namespace Service.Catalog.Application
             await CheckDuplicate(data);
 
             var branch = await _branchRepository.GetById(serie.Expedicion.SucursalId);
+            string branchName = string.Empty;
 
-            data.Ciudad = branch.Ciudad;
-            var branchName = branch.Nombre;
+            if (branch != null)
+            {
+                data.Ciudad = branch.Ciudad;
+                branchName = branch.Nombre;
+            }
+            else
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "Debe asignar una sucursal");
+            }
 
             var cerFile = await SaveFilePath(serie.Factura.ArchivoCer, branchName);
             var keyFile = await SaveFilePath(serie.Factura.ArchivoKey, branchName);
@@ -229,22 +257,45 @@ namespace Service.Catalog.Application
             var data = serie.ToModelUpdate(existingSerie);
 
             var branch = await _branchRepository.GetById(serie.Expedicion.SucursalId);
+            var sameBranch = data.SucursalId.ToString() == serie.Expedicion.SucursalId;
+
+            if (branch != null)
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "Debe asignar una sucursal");
+            }
 
             data.Ciudad = branch.Ciudad;
             var branchName = branch.Nombre;
 
-            if (serie.Factura.ArchivoCer != null)
+            if (sameBranch)
             {
-                File.Delete(data.ArchivoCer);
-                var cerFile = await SaveFilePath(serie.Factura.ArchivoCer, branchName);
-                data.ArchivoCer = cerFile;
-            }
+                if (serie.Factura.ArchivoCer != null)
+                {
+                    File.Delete(data.ArchivoCer);
+                    var cerFile = await SaveFilePath(serie.Factura.ArchivoCer, branchName);
+                    data.ArchivoCer = cerFile;
+                }
 
-            if (serie.Factura.ArchivoKey != null)
+                if (serie.Factura.ArchivoKey != null)
+                {
+                    File.Delete(data.ArchivoKey);
+                    var keyFile = await SaveFilePath(serie.Factura.ArchivoKey, branchName);
+                    data.ArchivoKey = keyFile;
+                }
+            }
+            else
             {
                 File.Delete(data.ArchivoKey);
+                File.Delete(data.ArchivoCer);
+
+                var cerFile = await SaveFilePath(serie.Factura.ArchivoCer, branchName);
                 var keyFile = await SaveFilePath(serie.Factura.ArchivoKey, branchName);
-                data.ArchivoKey = keyFile;
+
+                if (!string.IsNullOrEmpty(cerFile) && !string.IsNullOrEmpty(keyFile))
+                {
+                    data.ArchivoCer = cerFile;
+                    data.ArchivoKey = keyFile;
+                }
             }
 
             await _repository.Update(data);

@@ -34,6 +34,17 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/series/active",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/series/active",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/series/{id}/{tipoSerie}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
