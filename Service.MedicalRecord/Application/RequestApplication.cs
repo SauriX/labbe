@@ -1021,6 +1021,7 @@ namespace Service.MedicalRecord.Application
                     tag.Paciente = request.Expediente.NombreCompleto;
 
                     tag.Estudios = string.Join(", ", nameStudy);
+                    tag.NombreInfo = tag.Estudios;
                     tag.Cantidad = sumTag;
 
                     sumTag = 0;

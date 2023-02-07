@@ -142,7 +142,7 @@ namespace Service.MedicalRecord.Mapper
                 Fecha = DateTime.Now,
                 Orden = i,
                 SolicitudId = requestId,
-                Tapon = x.Tapon,
+                Tapon = x.TaponClave,
                 Suero = x.Suero
             }).ToList();
         }

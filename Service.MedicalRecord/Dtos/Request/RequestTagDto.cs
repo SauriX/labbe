@@ -12,7 +12,7 @@
         public string EdadSexo { get; set; }
         public int Cantidad { get; set; }
         public int Orden { get; set; }
-        public string Tapon { get; set; }
+        public string TaponClave { get; set; }
         public int Suero { get; set; }
     }
 }
