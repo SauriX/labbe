@@ -60,7 +60,7 @@ namespace Service.MedicalRecord.Mapper
                     {
                         SolicitudId = x.Id,
                         ClaveSolicitud = x.Clave,
-                        SolicitudEstudioId = x.Id,
+                        SolicitudEstudioId = y.Id,
                         Estudio = y.Nombre,
                         Clave = y.Clave,
                         Area = y.AreaId,

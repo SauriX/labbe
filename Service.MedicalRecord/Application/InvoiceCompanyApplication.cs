@@ -145,7 +145,7 @@ namespace Service.MedicalRecord.Application
 
             foreach (var solicitud in invoice.SolicitudesId)
             {
-                requestsInvoiceCompany.Add(new RequestInvoiceCompany
+                requestsInvoiceCompany.Add(new RequestInvoiceCompany    
                 {
                     Activo = true,
                     SolicitudId = solicitud,

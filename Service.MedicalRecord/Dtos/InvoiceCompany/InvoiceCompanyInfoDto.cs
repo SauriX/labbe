@@ -61,7 +61,7 @@ namespace Service.MedicalRecord.Dtos.InvoiceCompany
     {
         public Guid SolicitudId { get; set; }
         public string ClaveSolicitud { get; set; }
-        public Guid SolicitudEstudioId { get; set; }
+        public int SolicitudEstudioId { get; set; }
         public string Estudio { get; set; }
         public string Clave { get; set; }
         public int? Area { get; set; }
