@@ -244,7 +244,7 @@ namespace Service.Catalog
             services.AddScoped<IParameterApplication, ParameterApplication>();
             services.AddScoped<IMaquilaApplication, MaquilaApplication>();
             services.AddScoped<IStudyApplication, StudyApplication>();
-            services.AddScoped<ITaponApplication, TaponApplication>();
+            services.AddScoped<ITagApplication, TagApplication>();
             services.AddScoped<IPriceListApplication, PriceListApplication>();
             services.AddScoped<IPackApplication, PackApplication>();
             services.AddScoped<IPromotionApplication, PromotionApplication>();
@@ -283,7 +283,7 @@ namespace Service.Catalog
             services.AddScoped<IParameterRepository, ParameterRepository>();
             services.AddScoped<IMaquilaRepository, MaquilaRepository>();
             services.AddScoped<IStudyRepository, StudyRepository>();
-            services.AddScoped<ITaponRepository, TaponRepository>();
+            services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<IPriceListRepository, PriceListRepository>();
             services.AddScoped<IPackRepository, PackRepository>();
             services.AddScoped<IPromotionRepository, PromotionRepository>();

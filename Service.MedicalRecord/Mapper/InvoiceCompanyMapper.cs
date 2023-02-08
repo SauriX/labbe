@@ -35,6 +35,10 @@ namespace Service.MedicalRecord.Mapper
                     CompaniaId = x.Compañia?.Id,
                     ClavePatologica = x.ClavePatologica,
                     Saldo = x.Saldo,
+                    ExpedienteId = x.ExpedienteId,
+                    NombreSucursal = x.Sucursal.Nombre,
+                    FormasPagos = x.Pagos.Select(y => y.FormaPago).ToList(),
+                    NumerosCuentas = x.Pagos.Select(y => y.NumeroCuenta).ToList(),
                     Facturas = x.FacturasCompañia.Select(y => new InvoiceCompanyFacturaDto
                     {
                         FacturaId = y.FacturaId,
@@ -71,13 +75,13 @@ namespace Service.MedicalRecord.Mapper
             };
         }
 
-        public static InvoiceCompany ToInvoiceCompany(this InvoiceCompanyDto model, InvoiceDto invoiceResponse)
+        public static InvoiceCompany ToInvoiceCompany(this InvoiceCompanyDto model, InvoiceDto invoiceResponse, InvoiceCompanyDto invoice)
         {
             return new InvoiceCompany
             {
                 Id = Guid.NewGuid(),
                 Estatus = "Facturado",
-                TipoFactura = "Compañia",
+                TipoFactura = invoice.TipoFactura,
                 FacturaId = model.Id,
                 FacturapiId = invoiceResponse.FacturapiId
 

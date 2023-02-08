@@ -65,7 +65,7 @@ namespace Service.MedicalRecord.Repository
 
             if (filter.Ciudad != null)
             {
-                requests = requests.Where(x => x.Sucursal != null && x.Sucursal.Ciudad == filter.Ciudad);
+                requests = requests.Where(x => x.Sucursal != null &&  filter.Ciudad.Contains(x.Sucursal.Ciudad));
             }
 
             if (filter.Sucursales != null && filter.Sucursales.Any())
@@ -132,6 +132,16 @@ namespace Service.MedicalRecord.Repository
                 .FirstOrDefaultAsync(x => x.SucursalId == branchId && x.Clave.StartsWith(date));
 
             return lastRequest?.Clave;
+        }
+
+        public async Task<string> GetLastTagCode(string date)
+        {
+            var lastTag = await _context.Relacion_Solicitud_Etiquetas
+                .Include(x => x.Solicitud)
+                .OrderByDescending(x => x.Fecha)
+                .FirstOrDefaultAsync(x => x.Clave.Contains(date));
+
+            return lastTag?.Clave;
         }
 
         public async Task<string> GetLastPathologicalCode(Guid branchId, string date, string type)
@@ -324,6 +334,15 @@ namespace Service.MedicalRecord.Repository
             await _context.BulkInsertOrUpdateAsync(studies, config);
         }
 
+        public async Task BulkInsertUpdateTags(Guid requestId, List<RequestTag> tags)
+        {
+            var config = new BulkConfig();
+            config.SetSynchronizeFilter<RequestTag>(x => x.SolicitudId == requestId);
+            config.SetOutputIdentity = true;
+
+            await _context.BulkInsertOrUpdateAsync(tags, config);
+        }
+
         public async Task BulkUpdatePayments(Guid requestId, List<RequestPayment> payments)
         {
             var config = new BulkConfig();
@@ -369,18 +388,29 @@ namespace Service.MedicalRecord.Repository
 
         public Task<List<Request>> InvoiceCompanyFilter(InvoiceCompanyFilterDto filter)
         {
+
             var requests = _context.CAT_Solicitud
                 .Include(x => x.Expediente)
                 .Include(x => x.Compañia)
+                .Include(x => x.Pagos)
                 .Include(x => x.Sucursal)
                 .Include(x => x.FacturasCompañia)
                 .Include(x => x.Estudios).ThenInclude(x => x.Estatus)
                 .Include(x => x.Estudios).ThenInclude(x => x.Tapon)
                 .Include(x => x.Pagos).ThenInclude(x => x.Estatus).OrderBy(x => x.FechaCreo)
                 .OrderBy(x => x.FechaCreo)
-                .Where(x => x.Procedencia == 2)
+                //.Where(x => x.Procedencia == 2)
                 .AsQueryable();
 
+
+            if (filter.FacturaMetodo == "company")
+            {
+                requests = requests.Where(x => x.Procedencia == 1);
+            }
+            if (filter.FacturaMetodo == "request")
+            {
+                requests = requests.Where(x => x.Procedencia == 2);
+            }
             if (filter.FechaInicial != null && filter.FechaFinal != null)
             {
                 requests = requests.Where(x => ((DateTime)filter.FechaInicial).Date <= x.FechaCreo.Date && ((DateTime)filter.FechaFinal).Date >= x.FechaCreo.Date);

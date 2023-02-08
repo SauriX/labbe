@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230208212139_AddStudyTagsAndSeedData")]
+    partial class AddStudyTagsAndSeedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3010,7 +3012,7 @@ namespace Service.Catalog.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CAT_Etiqueta");
+                    b.ToTable("CAT_Tipo_Tapon");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Branch.Branch", b =>

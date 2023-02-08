@@ -24,6 +24,21 @@ namespace Service.MedicalRecord.Utils
             return $"{date}{branchCode}{next:D3}";
         }
 
+        public static string GetTagCode(string keyCode, string lastCode, DateTime creationDate)
+        {
+            var date = creationDate.ToString("ddMMyy");
+
+            if(lastCode == null)
+            {
+                return $"{keyCode}{date}00001";
+            }
+
+            var current = lastCode[8..];
+            var next = Convert.ToInt32(current) + 1;
+
+            return $"{keyCode}{date}{next:D5}";
+        }
+
         public static int GetCodeLegacy(string codeRange, string lastCode)
         {
             var date = DateTime.Now.ToString("ddMMyy");

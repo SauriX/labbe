@@ -64,10 +64,29 @@ namespace Service.Catalog.Mapper
                 Departamento= model.Area?.Departamento?.Nombre,
                 Activo= false,
                 Precio= 0,
-                Clave= model.Clave
-
+                Clave= model.Clave,
+                
             });
         }       
+
+        public static IEnumerable<StudyTagDto> ToStudyTagDto(this IEnumerable<StudyTag> model)
+        {
+            if (model == null) return null;
+
+            return model.Select(x => new StudyTagDto
+            {
+                Id = x.Id,
+                EtiquetaId = x.EtiquetaId,
+                EstudioId = x.EstudioId,
+                Clave = x.Etiqueta.Clave,
+                ClaveInicial = x.Etiqueta.ClaveInicial,
+                Cantidad = x.Cantidad,
+                Color = x.Etiqueta.Color,
+                Nombre = x.Nombre,
+                Orden = x.Orden
+            }).ToList();
+        }
+
         public static StudyFormDto ToStudyFormDto(this Study model)
         {
             if (model == null) return null;

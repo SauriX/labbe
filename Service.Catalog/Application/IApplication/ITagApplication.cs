@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 
 namespace Service.Catalog.Application.IApplication
 {
-    public interface ITaponApplication
+    public interface ITagApplication
     {
-        Task<IEnumerable<Tapon>> GetAll();
+        Task<IEnumerable<Tag>> GetAll();
     }
 }

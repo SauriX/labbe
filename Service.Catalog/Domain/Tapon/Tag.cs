@@ -1,22 +1,24 @@
 ﻿namespace Service.Catalog.Domain.Tapon
 {
-    public class Tapon
+    public class Tag
     {
-        public Tapon()
+        public Tag()
         {
         }
 
-        public Tapon(int id, string clave, string nombre, string color)
+        public Tag(int id, string clave, string nombre, string color, string claveInicial)
         {
             Id = id;
             Clave = clave;
             Nombre = nombre;
             Color = color;
+            ClaveInicial = claveInicial;
         }
 
         public int Id { get; set; }
         public string Clave { get; set; }
         public string Nombre { get; set; }
         public string Color { get; set; }
+        public string ClaveInicial { get; set; }
     }
 }

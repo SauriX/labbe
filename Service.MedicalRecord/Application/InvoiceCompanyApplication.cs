@@ -139,7 +139,7 @@ namespace Service.MedicalRecord.Application
 
             var invoiceResponse = await _billingClient.CheckInPaymentCompany(invoiceDto);
 
-            var invoiceCompany = invoice.ToInvoiceCompany(invoiceResponse);
+            var invoiceCompany = invoice.ToInvoiceCompany(invoiceResponse, invoice);
 
             List<RequestInvoiceCompany> requestsInvoiceCompany = new();
 
