@@ -134,6 +134,16 @@ namespace Service.MedicalRecord.Repository
             return lastRequest?.Clave;
         }
 
+        public async Task<string> GetLastTagCode(string date)
+        {
+            var lastTag = await _context.Relacion_Solicitud_Etiquetas
+                .Include(x => x.Solicitud)
+                .OrderByDescending(x => x.Fecha)
+                .FirstOrDefaultAsync(x => x.Clave.Contains(date));
+
+            return lastTag?.Clave;
+        }
+
         public async Task<string> GetLastPathologicalCode(Guid branchId, string date, string type)
         {
             var lastRequest = await _context.CAT_Solicitud
@@ -322,6 +332,15 @@ namespace Service.MedicalRecord.Repository
             config.SetSynchronizeFilter<RequestStudy>(x => x.SolicitudId == requestId);
 
             await _context.BulkInsertOrUpdateAsync(studies, config);
+        }
+
+        public async Task BulkInsertUpdateTags(Guid requestId, List<RequestTag> tags)
+        {
+            var config = new BulkConfig();
+            config.SetSynchronizeFilter<RequestTag>(x => x.SolicitudId == requestId);
+            config.SetOutputIdentity = true;
+
+            await _context.BulkInsertOrUpdateAsync(tags, config);
         }
 
         public async Task BulkUpdatePayments(Guid requestId, List<RequestPayment> payments)

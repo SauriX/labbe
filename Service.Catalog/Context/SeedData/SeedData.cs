@@ -267,16 +267,17 @@ namespace Service.Catalog.Context.SeedData
         }
 
         // ETIQUETAS
-        public static List<Tapon> GetTags()
+        public static List<Tag> GetTags()
         {
             var path = "wwwroot/seed/03_CAT_ETIQUETAS.xlsx";
             var tableData = ReadAsTable(path, "ETIQUETAS");
 
-            var tags = tableData.AsEnumerable().Select(x => new Tapon(
+            var tags = tableData.AsEnumerable().Select(x => new Tag(
                 Convert.ToInt32(x.Field<double>("Id")),
                 x.Field<string>("Clave"),
                 x.Field<string>("Nombre"),
-                x.Field<string>("Color")
+                x.Field<string>("Color"),
+                x.Field<string>("ClaveInicial")
                 )).ToList();
 
             foreach (var tag in tags)
@@ -285,6 +286,23 @@ namespace Service.Catalog.Context.SeedData
             }
 
             return tags;
+        }
+
+        public static List<StudyTag> GetStudyTags()
+        {
+            var path = "wwwroot/seed/08_REL_EST_ETQ.xlsx";
+            var tableData = ReadAsTable(path, "ESTUDIO-ETIQUETA");
+
+            var studyTags = tableData.AsEnumerable().Select(x => new StudyTag(
+                Convert.ToInt32(x.Field<double>("Id")),
+                Convert.ToInt32(x.Field<double>("EstudioId")),
+                Convert.ToInt32(x.Field<double>("EtiquetaId")),
+                Convert.ToDecimal(x.Field<double>("Cantidad")),
+                Convert.ToInt32(x.Field<double>("Orden")),
+                x.Field<string>("Nombre")
+                )).ToList();
+
+            return studyTags;
         }
 
         // INDICACIONES
