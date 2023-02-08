@@ -1020,14 +1020,14 @@ namespace Service.MedicalRecord.Application
                 sumTag += tag.Cantidad;
                 nameStudy.Add(tag.Estudios);
 
-                if (sumTag >= 0.5m && sumTag <= 1)
+                if (sumTag > 0.5m && sumTag <= 1)
                 {
                     var code = Codes.GetTagCode(request.EstatusId.ToString(), lastCode, requestDate);
 
                     tag.Clave = code;
                     tag.ClaveEtiqueta = code;
-                    tag.Ciudad = branch.ciudad;
-                    tag.Paciente = request.Expediente.NombrePaciente + request.Expediente.PrimerApellido;
+                    tag.Ciudad = branch.clave;
+                    tag.Paciente = request.Expediente.NombreCompleto;
                     tag.EdadSexo = request.Expediente.Edad + " " + request.Expediente.Genero;
 
                     tag.Estudios = string.Join("\r\n", nameStudy);
@@ -1053,7 +1053,7 @@ namespace Service.MedicalRecord.Application
 
             await _repository.BulkInsertUpdateTags(request.Id, saveTags);
 
-            return tags;
+            return printTags;
         }
 
         public async Task<string> SaveImage(RequestImageDto requestDto)
