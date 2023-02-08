@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Integration.NetPay.Services.IServices
 {
-    public interface IAuthService
+    public interface ISaleService
     {
-        Task<string> Login();
-        Task<string> Refresh();
+        Task<string> PaymentCharge(object payment);
     }
 }

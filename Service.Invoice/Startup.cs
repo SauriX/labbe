@@ -110,7 +110,41 @@ namespace Service.Billing
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
             });
 
+            services.AddHttpClient<IMedicalRecordClient, MedicalRecordClient>(client =>
+            {
+                var token = new HttpContextAccessor().HttpContext.Request.Headers["Authorization"].ToString();
+
+                client.BaseAddress = new Uri(Configuration["ClientUrls:MedicalRecord"]);
+
+                if (!string.IsNullOrWhiteSpace(token))
+                {
+                    client.DefaultRequestHeaders.Add("Authorization", token);
+                }
+
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            });
+
+            services.AddHttpClient<ISenderClient, SenderClient>(client =>
+            {
+                var token = new HttpContextAccessor().HttpContext.Request.Headers["Authorization"].ToString();
+
+                client.BaseAddress = new Uri(Configuration["ClientUrls:Sender"]);
+
+                if (!string.IsNullOrWhiteSpace(token))
+                {
+                    client.DefaultRequestHeaders.Add("Authorization", token);
+                }
+
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            });
+
             services.AddHttpClient<IAuthService, AuthService>(client =>
+            {
+                client.BaseAddress = new Uri("http://nubeqa.netpay.com.mx:3334");
+                client.SetBasicAuthentication("trusted-app", "secret");
+            });
+
+            services.AddHttpClient<ISaleService, SaleService>(client =>
             {
                 client.BaseAddress = new Uri("http://nubeqa.netpay.com.mx:3334");
                 client.SetBasicAuthentication("trusted-app", "secret");
@@ -204,12 +238,10 @@ namespace Service.Billing
             });
 
             services.AddScoped<IInvoiceApplication, InvoiceApplication>();
+            services.AddScoped<INetPayApplication, NetPayApplication>();
 
             services.AddScoped<IInvoiceRepository, InvoiceRepository>();
-
         }
-
-
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

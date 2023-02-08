@@ -4,6 +4,8 @@ using Integration.NetPay.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Service.Billing.Application.IApplication;
+using Service.Billing.Dtos.Payment;
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
@@ -102,28 +104,23 @@ namespace Service.Billing.Controllers
         [JsonPropertyName("transactionCertificate")]
         public string TransactionCertificate { get; set; }
         [JsonPropertyName("transactionId")]
-        public string TransactionId { get; set; }
+        public string TransactionId { get; set; }   
+        [JsonPropertyName("traceability")]
+        public PayPalPaymentDto Payment { get; set; }
     }
-
+    
     [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class NetPayController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly INetPayApplication _netPayService;
 
-        public NetPayController(IAuthService authService)
+        public NetPayController(IAuthService authService, INetPayApplication service)
         {
             _authService = authService;
-        }
-
-        [HttpPost("test")]
-        //public async Task<object> GetData(NetPayResponse test)
-        public async Task<object> GetData(NetPayResponse test)
-        {
-            var a = test;
-
-            return new { Code = "00", Message = "Recibido" };
+            _netPayService = service;
         }
 
         [HttpPost("login")]
@@ -133,8 +130,8 @@ namespace Service.Billing.Controllers
             var a = await _authService.Login();
 
             return a;
-        }  
-        
+        }
+
         [HttpPost("refresh")]
         //public async Task<object> GetData(NetPayResponse test)
         public async Task<string> Refresh(Dictionary<string, object> test)
@@ -144,13 +141,30 @@ namespace Service.Billing.Controllers
             return a;
         }
 
-        [HttpPost("check")]       
+        [HttpPost("check")]
         //public async Task<object> GetData(NetPayResponse test)
         public async Task<string> Check(Dictionary<string, object> test)
         {
-            var a = await _authService.Check();
+            //var a = await _authService.Check();
 
-            return a;
+            return "";
+        }
+
+        [HttpPost("payment/charge")]
+        public async Task<string> PaymentCharge(PayPalPaymentDto payment)
+        {
+            var res = await _netPayService.PaymentCharge(payment);
+
+            return res;
+        }
+
+        [HttpPost("terminal/response")]
+        //public async Task<object> GetData(NetPayResponse test)
+        public async Task<object> TerminalResponse(NetPayResponse response)
+        {
+            var res = await _netPayService.ProcessResponse(response);
+
+            return new { Code = "00", Message = "Recibido" };
         }
     }
 }
