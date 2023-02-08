@@ -2,6 +2,7 @@
 using Service.MedicalRecord.Dtos.Promotion;
 using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.Route;
+using Service.MedicalRecord.Dtos.Series;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -19,6 +20,6 @@ namespace Service.MedicalRecord.Client.IClient
         Task<RouteFormDto> GetRuta(Guid id);
         Task<List<RouteFormDto>> GetRutas(List<Guid> id);
         Task<List<BranchCityDto>> GetBranchbycity();
-
+        Task<List<SeriesDto>> GetBranchSeries(Guid branchId, byte type);
     }
 }

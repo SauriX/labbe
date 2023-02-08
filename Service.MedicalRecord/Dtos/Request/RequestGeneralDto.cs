@@ -15,6 +15,7 @@ namespace Service.MedicalRecord.Dtos.Request
         public string Observaciones { get; set; }
         public string Correo { get; set; }
         public string Whatsapp { get; set; }
+        public bool EnvioMedico { get; set; }
         public bool Activo { get; set; }
         [JsonIgnore]
         public Guid UsuarioId { get; set; }

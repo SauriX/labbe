@@ -21,5 +21,6 @@ namespace Service.MedicalRecord.Dtos.ClinicResults
         public List<byte> Estatus { get; set; }
         public List<int> Estudio { get; set; }
         public List<Guid> SolicitudId { get; set; }
+        public List<Guid> SucursalesId { get; set; }
     }
 }

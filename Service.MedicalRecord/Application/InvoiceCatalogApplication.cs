@@ -36,8 +36,11 @@ namespace Service.MedicalRecord.Application
             list.AddRange(notas.ToInvoiceList());
             var facturas = await getFacturas(search);
             list.AddRange(facturas);
-            if (!string.IsNullOrEmpty(search.Tipo)) {
-                list = list.FindAll(x=> x.Tipo == search.Tipo);
+            if (search.Tipo!= null) {
+                if (search.Tipo.Length > 0) {
+                    list = list.FindAll(x => search.Tipo.Contains(x.Tipo));
+                }
+                
             }
             return list;
         }
@@ -69,9 +72,12 @@ namespace Service.MedicalRecord.Application
                 invoicesQ = invoicesQ.Where(x => search.Sucursal.Any(y=> y==x.SucursalId.ToString() ));
             }
 
-            if (!string.IsNullOrEmpty(search.Ciudad))
+            if (search.Ciudad !=null)
             {
-                invoicesQ = invoicesQ.Where(x => x.Ciudad == search.Ciudad);
+                if (search.Ciudad?.Length > 0) {
+                    invoicesQ = invoicesQ.Where(x => search.Ciudad.Contains(x.Ciudad));
+                }
+                
             }
 
             return invoicesQ.ToList();

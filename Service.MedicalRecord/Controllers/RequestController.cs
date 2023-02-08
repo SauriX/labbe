@@ -29,6 +29,7 @@ namespace Service.MedicalRecord.Controllers
         [Authorize(Policies.Access)]
         public async Task<IEnumerable<RequestInfoDto>> GetByFilter(RequestFilterDto filter)
         {
+            filter.SucursalesId = (List<Guid>)HttpContext.Items["sucursales"];
             return await _service.GetByFilter(filter);
         }
 
@@ -70,30 +71,30 @@ namespace Service.MedicalRecord.Controllers
             return await _service.GetNextPaymentNumber(serie);
         }
 
-        [HttpGet("email/{recordId}/{requestId}/{email}")]
+        [HttpPost("email/{recordId}/{requestId}")]
         [Authorize(Policies.Mail)]
-        public async Task SendTestEmail(Guid recordId, Guid requestId, string email)
+        public async Task SendTestEmail(Guid recordId, Guid requestId, [FromBody] List<string> emails)
         {
             var requestDto = new RequestSendDto
             {
                 ExpedienteId = recordId,
                 SolicitudId = requestId,
-                Correo = email,
+                Correos = emails,
                 UsuarioId = (Guid)HttpContext.Items["userId"]
             };
 
             await _service.SendTestEmail(requestDto);
         }
 
-        [HttpGet("whatsapp/{recordId}/{requestId}/{phone}")]
+        [HttpPost("whatsapp/{recordId}/{requestId}")]
         [Authorize(Policies.Wapp)]
-        public async Task SendTestWhatsapp(Guid recordId, Guid requestId, string phone)
+        public async Task SendTestWhatsapp(Guid recordId, Guid requestId, [FromBody] List<string> phones)
         {
             var requestDto = new RequestSendDto
             {
                 ExpedienteId = recordId,
                 SolicitudId = requestId,
-                Telefono = phone,
+                Telefonos = phones,
                 UsuarioId = (Guid)HttpContext.Items["userId"]
             };
 

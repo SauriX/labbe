@@ -27,6 +27,7 @@ namespace Service.MedicalRecord.Controllers
         [Authorize(Policies.Access)]
         public async Task<List<SamplingListDto>> GetAll(RequestedStudySearchDto search)
         {
+            search.SucursalesId = (List<Guid>)HttpContext.Items["sucursales"];
             var requestedStudy = await _service.GetAll(search);
             return requestedStudy;
         }
