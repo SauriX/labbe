@@ -22,7 +22,7 @@ namespace Service.Catalog.Dtos.Company
         public string Estado { get; set; }
         public string Ciudad { get; set; }
         public string RazonSocial { get; set; }
-        public int ColoniaId { get; set; }
+        public int? ColoniaId { get; set; }
         public string Colonia { get; set; }
         public string Calle { get; set; }
         public string Numero { get; set; }
