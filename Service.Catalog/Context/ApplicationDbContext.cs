@@ -76,7 +76,8 @@ namespace Service.Catalog.Context
         //public DbSet<LoyaltyPriceList> Relacion_Loyalty_PrecioLista { get; set; }
         //hasta aqui es zona de pruebas
         public DbSet<Maquila> CAT_Maquilador { get; set; }
-        public DbSet<Tapon> CAT_Tipo_Tapon { get; set; }
+        public DbSet<Tag> CAT_Etiqueta { get; set; }
+        public DbSet<StudyTag> Relacion_Estudio_Etiqueta { get; set; }
         public DbSet<Packet> CAT_Paquete { get; set; }
         public DbSet<PacketStudy> Relacion_Estudio_Paquete { get; set; }
         public DbSet<Loyalty> CAT_Lealtad { get; set; }

@@ -8,17 +8,17 @@ namespace Service.Catalog.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TaponController
+    public class TagController
     {
-        private readonly ITaponApplication _Service;
+        private readonly ITagApplication _Service;
 
-        public TaponController(ITaponApplication Service)
+        public TagController(ITagApplication Service)
         {
             _Service = Service;
         }
 
         [HttpGet("all")]
-        public async Task<IEnumerable<Tapon>> GetAll()
+        public async Task<IEnumerable<Tag>> GetAll()
         {
             return await _Service.GetAll();
         }

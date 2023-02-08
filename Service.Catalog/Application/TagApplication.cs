@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace Service.Catalog.Application
 {
-    public class TaponApplication : ITaponApplication
+    public class TagApplication : ITagApplication
     {
-        public readonly ITaponRepository _repository;
-        public TaponApplication(ITaponRepository repository)
+        public readonly ITagRepository _repository;
+        public TagApplication(ITagRepository repository)
         {
             _repository = repository;
         }
 
-        public async Task<IEnumerable<Tapon>> GetAll()
+        public async Task<IEnumerable<Tag>> GetAll()
         {
             var tapon = await _repository.GetAll();
             return tapon;
