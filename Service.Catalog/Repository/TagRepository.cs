@@ -7,19 +7,17 @@ using System.Threading.Tasks;
 
 namespace Service.Catalog.Repository
 {
-    public class TaponRepository : ITaponRepository
+    public class TagRepository : ITagRepository
     {
         private readonly ApplicationDbContext _context;
 
-        public TaponRepository(ApplicationDbContext context)
+        public TagRepository(ApplicationDbContext context)
         {
             _context = context;
         }
-        public async Task<List<Tapon>> GetAll()
+        public async Task<List<Tag>> GetAll()
         {
-            var branchs = _context.CAT_Tipo_Tapon.AsQueryable();
-
-            return await branchs.ToListAsync();
+            return await _context.CAT_Etiqueta.ToListAsync();
         }
     }
 }
