@@ -82,7 +82,7 @@ namespace Service.Catalog.Mapper
                 ClaveInicial = x.Etiqueta.ClaveInicial,
                 Cantidad = x.Cantidad,
                 Color = x.Etiqueta.Color,
-                Nombre = x.Nombre,
+                Nombre = x.Etiqueta.Nombre,
                 Orden = x.Orden
             }).ToList();
         }

@@ -1000,61 +1000,62 @@ namespace Service.MedicalRecord.Application
                 throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
             }
 
-            var printTags = await HandleTags(request, tags);
+            //var printTags = await HandleTags(request, tags);
+            List<RequestTagDto> printTags = new();
 
             return await _pdfClient.GenerateTags(printTags);
         }
 
-        private async Task<List<RequestTagDto>> HandleTags(Request request, List<RequestTagDto> tags)
-        {
-            var requestDate = request.FechaCreo;
-            var branch = await _catalogClient.GetBranch(request.SucursalId);
-            var lastCode = await _repository.GetLastTagCode(requestDate.ToString("ddMMyy"));
+        //private async Task<List<RequestTagDto>> HandleTags(Request request, List<RequestTagDto> tags)
+        //{
+        //    var requestDate = request.FechaCreo;
+        //    var branch = await _catalogClient.GetBranch(request.SucursalId);
+        //    var lastCode = await _repository.GetLastTagCode(requestDate.ToString("ddMMyy"));
 
-            List<RequestTagDto> printTags = new();
-            List<string> nameStudy = new();
-            var sumTag = 0m;
+        //    List<RequestTagDto> printTags = new();
+        //    List<string> nameStudy = new();
+        //    var sumTag = 0m;
 
-            foreach (var tag in tags.OrderBy(x => x.Orden))
-            {
-                sumTag += tag.Cantidad;
-                nameStudy.Add(tag.Estudios);
+        //    foreach (var tag in tags.OrderBy(x => x.Orden))
+        //    {
+        //        sumTag += tag.Cantidad;
+        //        nameStudy.Add(tag.Estudios);
 
-                if (sumTag > 0.5m && sumTag <= 1)
-                {
-                    var code = Codes.GetTagCode(request.EstatusId.ToString(), lastCode, requestDate);
+        //        if (sumTag > 0.5m && sumTag <= 1)
+        //        {
+        //            var code = Codes.GetTagCode(request.EstatusId.ToString(), lastCode, requestDate);
 
-                    tag.Clave = code;
-                    tag.ClaveEtiqueta = code;
-                    tag.Ciudad = branch.clave;
-                    tag.Paciente = request.Expediente.NombreCompleto;
-                    tag.EdadSexo = request.Expediente.Edad + " " + request.Expediente.Genero;
+        //            tag.Clave = code;
+        //            tag.ClaveEtiqueta = code;
+        //            tag.Ciudad = branch.clave;
+        //            tag.Paciente = request.Expediente.NombreCompleto;
+        //            tag.EdadSexo = request.Expediente.Edad + " " + request.Expediente.Genero;
 
-                    tag.Estudios = string.Join("\r\n", nameStudy);
-                    tag.NombreInfo = tag.Estudios;
-                    tag.Cantidad = sumTag;
+        //            tag.Estudios = string.Join("\r\n", nameStudy);
+        //            tag.NombreInfo = tag.Estudios;
+        //            tag.Cantidad = sumTag;
 
-                    sumTag = 0;
-                    nameStudy = new();
+        //            sumTag = 0;
+        //            nameStudy = new();
 
-                    var current = code[8..];
-                    var next = Convert.ToInt32(current) + 1;
-                    lastCode = code;
+        //            var current = code[8..];
+        //            var next = Convert.ToInt32(current) + 1;
+        //            lastCode = code;
 
-                    printTags.Add(tag);
-                }
-                else
-                {
-                    continue;
-                }
-            }
+        //            printTags.Add(tag);
+        //        }
+        //        else
+        //        {
+        //            continue;
+        //        }
+        //    }
 
-            var saveTags = printTags.ToRequestTag(request.Id);
+        //    var saveTags = printTags.ToRequestTag(request.Id);
 
-            await _repository.BulkInsertUpdateTags(request.Id, saveTags);
+        //    await _repository.BulkInsertUpdateTags(request.Id, saveTags);
 
-            return printTags;
-        }
+        //    return printTags;
+        //}
 
         public async Task<string> SaveImage(RequestImageDto requestDto)
         {
