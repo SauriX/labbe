@@ -136,14 +136,13 @@ namespace Service.MedicalRecord.Mapper
 
             return dto.Select((x, i) => new RequestTag
             {
-                Clave = x.ClaveEtiqueta,
-                Nombre = x.NombreInfo,
+                Clave = x.Clave,
+                Nombre = x.Nombre,
                 Cantidad = x.Cantidad,
                 Fecha = DateTime.Now,
                 Orden = i,
                 SolicitudId = requestId,
-                Tapon = x.TaponClave,
-                Suero = x.Suero
+                Tapon = x.ClaveInicial,
             }).ToList();
         }
 
@@ -313,6 +312,7 @@ namespace Service.MedicalRecord.Mapper
                 NombreEstatus = x.Estatus.Nombre,
                 Asignado = x.EstudioWeeClinic?.Asignado ?? true,
                 Metodo = x.Metodo,
+                Etiquetas = new List<RequestTagDto>(),
                 FechaTomaMuestra = x.FechaTomaMuestra?.ToString("dd/MM/yyyy HH:mm"),
                 FechaSolicitado = x.FechaSolicitado?.ToString("dd/MM/yyyy HH:mm"),
                 FechaActualizacion = x.EstatusId == Status.RequestStudy.Pendiente
