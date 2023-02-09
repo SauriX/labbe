@@ -46,7 +46,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Integration.WeeClinic", "In
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.Billing", "Service.Invoice\Service.Billing.csproj", "{419B67AD-E2B1-4B99-B6DA-1870E0E6FA37}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.NetPay", "Integration.NetPay\Integration.NetPay.csproj", "{4046809F-29B0-467B-B28B-23DA99680813}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Integration.NetPay", "Integration.NetPay\Integration.NetPay.csproj", "{4046809F-29B0-467B-B28B-23DA99680813}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
