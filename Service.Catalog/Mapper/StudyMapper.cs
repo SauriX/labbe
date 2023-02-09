@@ -78,12 +78,13 @@ namespace Service.Catalog.Mapper
                 Id = x.Id,
                 EtiquetaId = x.EtiquetaId,
                 EstudioId = x.EstudioId,
-                Clave = x.Etiqueta.Clave,
+                ClaveEtiqueta = x.Etiqueta.Clave,
                 ClaveInicial = x.Etiqueta.ClaveInicial,
+                NombreEtiqueta = x.Etiqueta.Nombre,
                 Cantidad = x.Cantidad,
                 Color = x.Etiqueta.Color,
-                Nombre = x.Nombre,
-                Orden = x.Orden
+                Orden = x.Orden,
+                NombreEstudio = x.Nombre ?? x.Estudio.Clave
             }).ToList();
         }
 
