@@ -838,7 +838,7 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("Colonia")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ColoniaId")
+                    b.Property<int?>("ColoniaId")
                         .HasColumnType("int");
 
                     b.Property<string>("Contrasena")
@@ -2928,6 +2928,37 @@ namespace Service.Catalog.Migrations
                     b.ToTable("CAT_Estudio");
                 });
 
+            modelBuilder.Entity("Service.Catalog.Domain.Study.StudyTag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal>("Cantidad")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("EstudioId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EtiquetaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Orden")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EstudioId");
+
+                    b.HasIndex("EtiquetaId");
+
+                    b.ToTable("Relacion_Estudio_Etiqueta");
+                });
+
             modelBuilder.Entity("Service.Catalog.Domain.Study.WorkListStudy", b =>
                 {
                     b.Property<int>("EstudioId")
@@ -2958,7 +2989,7 @@ namespace Service.Catalog.Migrations
                     b.ToTable("Relacion_Estudio_WorkList");
                 });
 
-            modelBuilder.Entity("Service.Catalog.Domain.Tapon.Tapon", b =>
+            modelBuilder.Entity("Service.Catalog.Domain.Tapon.Tag", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -2966,6 +2997,9 @@ namespace Service.Catalog.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Clave")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaveInicial")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Color")
@@ -2976,7 +3010,7 @@ namespace Service.Catalog.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CAT_Tipo_Tapon");
+                    b.ToTable("CAT_Etiqueta");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Branch.Branch", b =>
@@ -3655,7 +3689,7 @@ namespace Service.Catalog.Migrations
                         .WithMany()
                         .HasForeignKey("SampleTypeId");
 
-                    b.HasOne("Service.Catalog.Domain.Tapon.Tapon", "Tapon")
+                    b.HasOne("Service.Catalog.Domain.Tapon.Tag", "Tapon")
                         .WithMany()
                         .HasForeignKey("TaponId");
 
@@ -3668,6 +3702,25 @@ namespace Service.Catalog.Migrations
                     b.Navigation("SampleType");
 
                     b.Navigation("Tapon");
+                });
+
+            modelBuilder.Entity("Service.Catalog.Domain.Study.StudyTag", b =>
+                {
+                    b.HasOne("Service.Catalog.Domain.Study.Study", "Estudio")
+                        .WithMany()
+                        .HasForeignKey("EstudioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Service.Catalog.Domain.Tapon.Tag", "Etiqueta")
+                        .WithMany()
+                        .HasForeignKey("EtiquetaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Estudio");
+
+                    b.Navigation("Etiqueta");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Study.WorkListStudy", b =>

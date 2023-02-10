@@ -217,7 +217,7 @@ namespace Service.Catalog.Context
             }
 
             // ETIQUETAS
-            if (!context.CAT_Tipo_Tapon.Any())
+            if (!context.CAT_Etiqueta.Any())
             {
                 using var transaction = context.Database.BeginTransaction();
 
@@ -225,11 +225,53 @@ namespace Service.Catalog.Context
                 {
                     var caps = SeedData.SeedData.GetTags();
 
-                    context.CAT_Tipo_Tapon.AddRange(caps);
+                    context.CAT_Etiqueta.AddRange(caps);
 
-                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Tipo_Tapon)} ON;");
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Etiqueta)} ON;");
                     await context.SaveChangesAsync();
-                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Tipo_Tapon)} OFF;");
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Etiqueta)} OFF;");
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+
+            if (!context.CAT_Etiqueta.Any(x => !string.IsNullOrEmpty(x.ClaveInicial)))
+            {
+                using var transaction = context.Database.BeginTransaction();
+
+                try
+                {
+                    var caps = SeedData.SeedData.GetTags();
+
+                    await context.BulkUpdateAsync(caps);
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+
+            if (!context.Relacion_Estudio_Etiqueta.Any())
+            {
+                using var transaction = context.Database.BeginTransaction();
+
+                try
+                {
+                    var caps = SeedData.SeedData.GetStudyTags();
+
+                    context.Relacion_Estudio_Etiqueta.AddRange(caps);
+
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.Relacion_Estudio_Etiqueta)} ON;");
+                    await context.SaveChangesAsync();
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.Relacion_Estudio_Etiqueta)} OFF;");
 
                     transaction.Commit();
                 }

@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 
 namespace Service.Catalog.Repository.IRepository
 {
-    public interface ITaponRepository
+    public interface ITagRepository
     {
-        Task<List<Tapon>> GetAll();
+        Task<List<Tag>> GetAll();
     }
 }
