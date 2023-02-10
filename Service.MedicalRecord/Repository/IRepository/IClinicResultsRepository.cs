@@ -33,5 +33,8 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task<Request> GetRequestById(Guid id);
         Task UpdateMedioSolicitado(RequestStudy study);
         Task<string> GetMedioSolicitado(int RequestStudyId);
+        Task CreateHistoryRecord(DeliveryHistory record);
+        Task<List<DeliveryHistory>> GetHistoryRecordsByRequestId(Guid Id);
+        
     }
 }

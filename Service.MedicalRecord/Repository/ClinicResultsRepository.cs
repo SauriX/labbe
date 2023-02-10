@@ -286,6 +286,19 @@ namespace Service.MedicalRecord.Repository
 
         }
 
+        public async Task CreateHistoryRecord(DeliveryHistory record)
+        {
+            _context.Historial_Envios.Add(record);
+            await _context.SaveChangesAsync();
+        }
+        public async Task<List<DeliveryHistory>> GetHistoryRecordsByRequestId(Guid Id)
+        {
+            return await _context.Historial_Envios
+                .Where(x => x.SolicitudId == Id)
+                .OrderByDescending(x => x.FechaCreo)
+                .ToListAsync();
+        }
+
         public async Task<Request> GetRequestById(Guid id)
         {
             var request = await _context.CAT_Solicitud
