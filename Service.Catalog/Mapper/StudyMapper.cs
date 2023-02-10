@@ -34,10 +34,10 @@ namespace Service.Catalog.Mapper
 
             List<Study> completeStudies = new();
 
-            foreach(var id in ids)
+            foreach (var id in ids)
             {
                 Study study = model.Where(x => x.Id == id).FirstOrDefault();
-                if(study != null)
+                if (study != null)
                 {
                     completeStudies.Add(study);
                 }
@@ -54,20 +54,22 @@ namespace Service.Catalog.Mapper
 
             });
         }
-        public static IEnumerable<PriceStudyList> toPriceStudyList(this List<Study> models) {
+        public static IEnumerable<PriceStudyList> toPriceStudyList(this List<Study> models)
+        {
             if (models == null) return null;
-            return models.Select(model => new PriceStudyList {
+            return models.Select(model => new PriceStudyList
+            {
                 Id = model.Id,
                 EstudioId = model.Id,
-                Nombre= model.Nombre,
-                Area= model.Area?.Nombre,
-                Departamento= model.Area?.Departamento?.Nombre,
-                Activo= false,
-                Precio= 0,
-                Clave= model.Clave,
-                
+                Nombre = model.Nombre,
+                Area = model.Area?.Nombre,
+                Departamento = model.Area?.Departamento?.Nombre,
+                Activo = false,
+                Precio = 0,
+                Clave = model.Clave,
+
             });
-        }       
+        }
 
         public static IEnumerable<StudyTagDto> ToStudyTagDto(this IEnumerable<StudyTag> model)
         {
@@ -84,7 +86,7 @@ namespace Service.Catalog.Mapper
                 Cantidad = x.Cantidad,
                 Color = x.Etiqueta.Color,
                 Orden = x.Orden,
-                NombreEstudio = x.Nombre ?? x.Estudio.Clave
+                NombreEstudio = x.Nombre ?? x.Estudio?.Clave ?? "Sin estudio"
             }).ToList();
         }
 
@@ -114,7 +116,7 @@ namespace Service.Catalog.Mapper
                 Cantidad = model.Cantidad,
                 Prioridad = model.Prioridad,
                 Urgencia = model.Urgencia,
-                WorkLists =model.WorkList,
+                WorkLists = model.WorkList,
                 Parameters = model.Parameters.OrderBy(x => x.Orden).Select(y => y.Parametro).ToList().ToParameterListDto(),
                 Indicaciones = model.Indications.Select(y => y.Indicacion).ToList().ToIndicationListDto(),
                 Reactivos = model.Reagents.Select(y => y.Reagent).ToList().ToReagentListDto(),
@@ -156,7 +158,7 @@ namespace Service.Catalog.Mapper
                 FechaCreo = DateTime.Now,
                 UsuarioModificoId = model.UsuarioId,
                 FechaModifico = DateTime.Now,
-                Parameters = model.Parameters.Select((x, i)=> new ParameterStudy
+                Parameters = model.Parameters.Select((x, i) => new ParameterStudy
                 {
                     ParametroId = Guid.Parse(x.Id),
                     EstudioId = study.Id,
@@ -164,7 +166,7 @@ namespace Service.Catalog.Mapper
                     UsuarioCreoId = Guid.Empty,
                     FechaCreo = DateTime.Now,
                     UsuarioModificoId = Guid.Empty,
-                    FechaModifico = DateTime.Now, 
+                    FechaModifico = DateTime.Now,
                     Orden = i,
                 }).ToList(),
                 WorkList = model.WorkLists,

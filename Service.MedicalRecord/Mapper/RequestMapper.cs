@@ -136,8 +136,8 @@ namespace Service.MedicalRecord.Mapper
 
             return dto.Select((x, i) => new RequestTag
             {
-                Clave = x.Clave,
-                Nombre = x.Nombre,
+                //Clave = x.Clave,
+                //Nombre = x.Nombre,
                 Cantidad = x.Cantidad,
                 Fecha = DateTime.Now,
                 Orden = i,
