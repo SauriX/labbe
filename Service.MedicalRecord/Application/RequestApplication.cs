@@ -994,20 +994,66 @@ namespace Service.MedicalRecord.Application
         public async Task<byte[]> PrintTags(Guid recordId, Guid requestId, List<RequestTagDto> tags)
         {
             var request = await _repository.GetById(requestId);
-
+            
             if (request == null || request.ExpedienteId != recordId)
             {
                 throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
             }
 
-            foreach (var tag in tags)
+            var printTags = await HandleTags(request, tags);
+
+            return await _pdfClient.GenerateTags(printTags);
+        }
+
+        private async Task<List<RequestTagDto>> HandleTags(Request request, List<RequestTagDto> tags)
+        {
+            var requestDate = request.FechaCreo;
+            var branch = await _catalogClient.GetBranch(request.SucursalId);
+            var lastCode = await _repository.GetLastTagCode(requestDate.ToString("ddMMyy"));
+
+            List<RequestTagDto> printTags = new();
+            List<string> nameStudy = new();
+            var sumTag = 0m;
+
+            foreach (var tag in tags.OrderBy(x => x.Orden))
             {
-                tag.Clave = request.Clave;
-                tag.ClaveEtiqueta = request.Clave;
-                tag.Paciente = request.Expediente.NombreCompleto;
+                sumTag += tag.Cantidad;
+                nameStudy.Add(tag.Estudios);
+
+                if (sumTag > 0.5m && sumTag <= 1)
+                {
+                    var code = Codes.GetTagCode(request.EstatusId.ToString(), lastCode, requestDate);
+
+                    tag.Clave = code;
+                    tag.ClaveEtiqueta = code;
+                    tag.Ciudad = branch.clave;
+                    tag.Paciente = request.Expediente.NombreCompleto;
+                    tag.EdadSexo = request.Expediente.Edad + " " + request.Expediente.Genero;
+
+                    tag.Estudios = string.Join("\r\n", nameStudy);
+                    tag.NombreInfo = tag.Estudios;
+                    tag.Cantidad = sumTag;
+
+                    sumTag = 0;
+                    nameStudy = new();
+
+                    var current = code[8..];
+                    var next = Convert.ToInt32(current) + 1;
+                    lastCode = code;
+
+                    printTags.Add(tag);
+                }
+                else
+                {
+                    continue;
+                }
             }
 
-            return await _pdfClient.GenerateTags(tags);
+            var saveTags = printTags.ToRequestTag(request.Id);
+
+            await _repository.BulkInsertUpdateTags(request.Id, saveTags);
+
+            return printTags;
         }
 
         public async Task<string> SaveImage(RequestImageDto requestDto)

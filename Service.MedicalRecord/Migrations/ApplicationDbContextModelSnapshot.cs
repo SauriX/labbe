@@ -376,14 +376,64 @@ namespace Service.MedicalRecord.Migrations
                     b.ToTable("Cat_Captura_ResultadosPatologicos");
                 });
 
+            modelBuilder.Entity("Service.MedicalRecord.Domain.DeliveryHistory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Correo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaModifico")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Numero")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SolicitudEstudioId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("SolicitudId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsuarioCreoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UsuarioModificoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UsuarioNombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Historial_Envios");
+                });
+
             modelBuilder.Entity("Service.MedicalRecord.Domain.Invoice.InvoiceCompany", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<decimal>("CantidadTotal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid?>("CompañiaId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Estatus")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("ExpedienteId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("FacturaId")
                         .HasColumnType("uniqueidentifier");
@@ -397,7 +447,34 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("FormaPago")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("FormaPagoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("IVA")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("NumeroCuenta")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Serie")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Subtotal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid?>("TaxDataId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("TipoDesgloce")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("TipoFactura")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UsoCFDI")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("UsuarioCreoId")
@@ -408,7 +485,42 @@ namespace Service.MedicalRecord.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CompañiaId");
+
+                    b.HasIndex("TaxDataId");
+
                     b.ToTable("Factura_Compania");
+                });
+
+            modelBuilder.Entity("Service.MedicalRecord.Domain.Invoice.InvoiceCompanyDetail", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Concepto")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EstudioClave")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("FacturaId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Importe")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("SolicitudClave")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FacturaId");
+
+                    b.ToTable("Relacion_Factura_Detalle");
                 });
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.Invoice.RequestInvoiceCompany", b =>
@@ -1315,6 +1427,44 @@ namespace Service.MedicalRecord.Migrations
                     b.ToTable("Relacion_Estudio_WeeClinic");
                 });
 
+            modelBuilder.Entity("Service.MedicalRecord.Domain.Request.RequestTag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal>("Cantidad")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Clave")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Orden")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("SolicitudId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Suero")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Tapon")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SolicitudId");
+
+                    b.ToTable("Relacion_Solicitud_Etiquetas");
+                });
+
             modelBuilder.Entity("Service.MedicalRecord.Domain.RouteTracking.RouteTracking", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1658,6 +1808,32 @@ namespace Service.MedicalRecord.Migrations
                     b.Navigation("SolicitudEstudio");
                 });
 
+            modelBuilder.Entity("Service.MedicalRecord.Domain.Invoice.InvoiceCompany", b =>
+                {
+                    b.HasOne("Service.MedicalRecord.Domain.Catalogs.Company", "Compañia")
+                        .WithMany()
+                        .HasForeignKey("CompañiaId");
+
+                    b.HasOne("Service.MedicalRecord.Domain.TaxData.TaxData", "TaxData")
+                        .WithMany()
+                        .HasForeignKey("TaxDataId");
+
+                    b.Navigation("Compañia");
+
+                    b.Navigation("TaxData");
+                });
+
+            modelBuilder.Entity("Service.MedicalRecord.Domain.Invoice.InvoiceCompanyDetail", b =>
+                {
+                    b.HasOne("Service.MedicalRecord.Domain.Invoice.InvoiceCompany", "Factura")
+                        .WithMany("DetalleFactura")
+                        .HasForeignKey("FacturaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Factura");
+                });
+
             modelBuilder.Entity("Service.MedicalRecord.Domain.Invoice.RequestInvoiceCompany", b =>
                 {
                     b.HasOne("Service.MedicalRecord.Domain.Invoice.InvoiceCompany", "InvoiceCompany")
@@ -1899,6 +2075,17 @@ namespace Service.MedicalRecord.Migrations
                     b.Navigation("SolicitudEstudio");
                 });
 
+            modelBuilder.Entity("Service.MedicalRecord.Domain.Request.RequestTag", b =>
+                {
+                    b.HasOne("Service.MedicalRecord.Domain.Request.Request", "Solicitud")
+                        .WithMany("Etiquetas")
+                        .HasForeignKey("SolicitudId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Solicitud");
+                });
+
             modelBuilder.Entity("Service.MedicalRecord.Domain.RouteTracking.RouteTracking", b =>
                 {
                     b.HasOne("Service.MedicalRecord.Domain.Request.Request", "Solicitud")
@@ -1947,6 +2134,11 @@ namespace Service.MedicalRecord.Migrations
                     b.Navigation("Estudios");
                 });
 
+            modelBuilder.Entity("Service.MedicalRecord.Domain.Invoice.InvoiceCompany", b =>
+                {
+                    b.Navigation("DetalleFactura");
+                });
+
             modelBuilder.Entity("Service.MedicalRecord.Domain.MedicalRecord.MedicalRecord", b =>
                 {
                     b.Navigation("TaxData");
@@ -1967,6 +2159,8 @@ namespace Service.MedicalRecord.Migrations
             modelBuilder.Entity("Service.MedicalRecord.Domain.Request.Request", b =>
                 {
                     b.Navigation("Estudios");
+
+                    b.Navigation("Etiquetas");
 
                     b.Navigation("Imagenes");
 

@@ -264,6 +264,7 @@ namespace Service.Catalog.Mapper
                 Precio = model.Precio,
                 Parametros = model.Estudio.Parameters.Select(x => x.Parametro).ToParameterListDto(),
                 Indicaciones = model.Estudio.Indications.Select(x => x.Indicacion).ToIndicationListDto(),
+                Etiquetas = model.Estudio.Etiquetas.ToStudyTagDto(),
                 Promociones = new List<PriceListInfoPromoDto>(),
                 Maquila = model.Estudio.Maquilador?.Nombre,
                 MaquilaId = model.Estudio.MaquiladorId,

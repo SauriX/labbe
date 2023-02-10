@@ -80,6 +80,7 @@ namespace Integration.Pdf.Service
             for (int i = 0; i < tags.Count; i++)
             {
                 RequestTagDto tag = tags[i];
+                if (tag.Cantidad < 1) tag.Cantidad = 1;
 
                 for (int j = 0; j < tag.Cantidad; j++)
                 {
@@ -111,9 +112,9 @@ namespace Integration.Pdf.Service
                     textFrame1.Height = Unit.FromCentimeter(1);
 
                     var textFrame1Par = textFrame1.AddParagraph();
-                    textFrame1Par.AddFormattedText(tag.Paciente, new Font("Arial", 5) { Bold = true });
+                    textFrame1Par.AddFormattedText(tag.Paciente, new Font("Arial", 3) { Bold = true });
                     textFrame1Par.AddLineBreak();
-                    textFrame1Par.AddFormattedText(tag.Estudios, new Font("Arial", 5) { Bold = true });
+                    textFrame1Par.AddFormattedText(tag.Estudios, new Font("Arial", 3) { Bold = true });
 
                     var textFrame = section.AddTextFrame();
                     textFrame.RelativeHorizontal = RelativeHorizontal.Page;
@@ -126,7 +127,7 @@ namespace Integration.Pdf.Service
                     textFrame.Height = Unit.FromCentimeter(1);
 
                     var textFramePar = textFrame.AddParagraph();
-                    textFramePar.AddFormattedText($"ORI90\nMONTERREY\nSBAUTISTA\n{date}\nNormal\n49 años M", new Font("Arial", 4) { Bold = true });
+                    textFramePar.AddFormattedText($"ORI90\n{tag.Ciudad}\nSBAUTISTA\n{date}\nNormal\n{tag.EdadSexo}", new Font("Arial", 3) { Bold = true });
 
                     if (i < tags.Count - 1)
                     {
