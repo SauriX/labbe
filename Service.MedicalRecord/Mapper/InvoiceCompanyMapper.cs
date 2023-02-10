@@ -60,7 +60,7 @@ namespace Service.MedicalRecord.Mapper
                     {
                         SolicitudId = x.Id,
                         ClaveSolicitud = x.Clave,
-                        SolicitudEstudioId = x.Id,
+                        SolicitudEstudioId = y.Id,
                         Estudio = y.Nombre,
                         Clave = y.Clave,
                         Area = y.AreaId,
@@ -82,9 +82,29 @@ namespace Service.MedicalRecord.Mapper
                 Id = Guid.NewGuid(),
                 Estatus = "Facturado",
                 TipoFactura = invoice.TipoFactura,
-                FacturaId = model.Id,
-                FacturapiId = invoiceResponse.FacturapiId
-
+                FacturaId = invoiceResponse.Id,
+                FacturapiId = invoiceResponse.FacturapiId,
+                TaxDataId = model.TaxDataId,
+                CompañiaId = model.CompanyId,
+                ExpedienteId = model.ExpedienteId,
+                FormaPagoId = model.FormaPagoId,
+                FormaPago = model.FormaPago,
+                NumeroCuenta = model.NumeroCuenta,
+                Serie = model.Serie,
+                UsoCFDI = model.UsoCFDI,
+                TipoDesgloce = model.TipoDesgloce,
+                CantidadTotal = model.CantidadTotal,
+                Subtotal = model.Subtotal,
+                IVA = model.IVA,
+                DetalleFactura = model.Detalles.Select(x => new InvoiceCompanyDetail
+                {
+                    Id = Guid.NewGuid(),
+                    SolicitudClave = x.SolicitudClave,
+                    EstudioClave = x.EstudioClave,
+                    Concepto = x.Concepto,
+                    Cantidad = x.Cantidad,
+                    Importe = x.Importe,
+                }).ToList(),
             };
         }
 
