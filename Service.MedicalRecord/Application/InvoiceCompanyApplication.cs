@@ -125,13 +125,13 @@ namespace Service.MedicalRecord.Application
                 },
 
 
-                Productos = invoice.Estudios.Select(x => new ProductDto
+                Productos = invoice.Detalles.Select(x => new ProductDto
                 {
-                    Clave = x.Clave,
-                    Descripcion = x.Estudio,
-                    Precio = x.Precio,
+                    Clave = x.EstudioClave,
+                    Descripcion = x.Concepto,
+                    Precio = x.Importe,
                     Descuento = x.Descuento,
-                    Cantidad = 1,
+                    Cantidad = x.Cantidad,
 
                 }).ToList(),
 

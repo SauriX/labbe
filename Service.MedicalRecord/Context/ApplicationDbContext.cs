@@ -9,6 +9,7 @@ using Service.MedicalRecord.Domain.RouteTracking;
 using Service.MedicalRecord.Domain.Status;
 using Service.MedicalRecord.Domain.TaxData;
 using Service.MedicalRecord.Domain.TrackingOrder;
+
 using System.Reflection;
 
 namespace Service.MedicalRecord.Context
@@ -24,6 +25,7 @@ namespace Service.MedicalRecord.Context
         public DbSet<RequestStudy> Relacion_Solicitud_Estudio { get; set; }
         public DbSet<RequestStudyWee> Relacion_Estudio_WeeClinic { get; set; }
         public DbSet<ClinicResults> Resultados_Clinicos { get; set; }
+        public DbSet<DeliveryHistory> Historial_Envios { get; set; }
         public DbSet<RequestPack> Relacion_Solicitud_Paquete { get; set; }
         public DbSet<RequestPayment> Relacion_Solicitud_Pago { get; set; }
         public DbSet<RequestTag> Relacion_Solicitud_Etiquetas { get; set; }

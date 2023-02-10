@@ -454,6 +454,11 @@ namespace Service.MedicalRecord.Repository
 
         public async Task CreateInvoiceCompanyData(InvoiceCompany invoiceCompnay, List<RequestInvoiceCompany> requestInvoiceCompany)
         {
+
+            var detalles = invoiceCompnay.DetalleFactura.ToList();
+
+            invoiceCompnay.DetalleFactura = null;
+
             _context.Factura_Compania.Add(invoiceCompnay);
 
             await _context.SaveChangesAsync();
@@ -462,7 +467,11 @@ namespace Service.MedicalRecord.Repository
 
             await _context.BulkInsertOrUpdateAsync(requestInvoiceCompany, config);
 
+            config.SetSynchronizeFilter<InvoiceCompanyDetail>(x => x.FacturaId == invoiceCompnay.Id);
 
+            detalles.ForEach(x => x.FacturaId = invoiceCompnay.Id);
+
+            await _context.BulkInsertOrUpdateAsync(detalles, config);
         }
 
         public async Task UpdateInvoiceCompany(InvoiceCompany invoiceCompnay)
