@@ -1,7 +1,7 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/RelaseResult/getList",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/RelaseResult/release/getList",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -12,7 +12,7 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/RelaseResult/export/list",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/RelaseResult/release/export/list",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -24,7 +24,7 @@
     },
 
     {
-      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/RelaseResult",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/RelaseResult/release",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -35,7 +35,7 @@
       "UpstreamHttpMethod": [ "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/RelaseResult/order/{recordId}/{requestId}",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/RelaseResult/release/order/{recordId}/{requestId}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -46,7 +46,7 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/RelaseResult/view/list",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/RelaseResult/release/view/list",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {

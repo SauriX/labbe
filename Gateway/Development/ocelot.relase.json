@@ -1,7 +1,7 @@
 ﻿{
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/RelaseResult/getList",
+      "DownstreamPathTemplate": "/api/RelaseResult/release/getList",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -13,7 +13,7 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/RelaseResult/export/list",
+      "DownstreamPathTemplate": "/api/RelaseResult/release/export/list",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -26,7 +26,7 @@
     },
 
     {
-      "DownstreamPathTemplate": "/api/RelaseResult",
+      "DownstreamPathTemplate": "/api/RelaseResult/release",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -38,7 +38,7 @@
       "UpstreamHttpMethod": [ "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/api/RelaseResult/order/{recordId}/{requestId}",
+      "DownstreamPathTemplate": "/api/RelaseResult/release/order/{recordId}/{requestId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -50,7 +50,7 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/RelaseResult/view/list",
+      "DownstreamPathTemplate": "/api/RelaseResult/release/view/list",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
