@@ -31,5 +31,7 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<RequestStudyUpdateDto> GetStudies(Guid recordId, Guid requestId);
         Task<byte[]> PrintSelectedStudies(ConfigurationToPrintStudies configuration);
         Task<List<ParameterValueDto>> ReferencesValues(List<int> studies);
+        Task<List<DeliveryHistoryDto>> GetDeliveryHistoryByRequestId(Guid Id);
+        Task<List<DeliveryHistoryDto>> CreateNoteHistoryRecord(HistoryRecordInfo record);
     }
 }

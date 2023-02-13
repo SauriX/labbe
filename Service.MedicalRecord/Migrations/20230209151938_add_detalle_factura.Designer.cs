@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.MedicalRecord.Context;
 
 namespace Service.MedicalRecord.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230209151938_add_detalle_factura")]
+    partial class add_detalle_factura
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -376,47 +378,6 @@ namespace Service.MedicalRecord.Migrations
                     b.ToTable("Cat_Captura_ResultadosPatologicos");
                 });
 
-            modelBuilder.Entity("Service.MedicalRecord.Domain.DeliveryHistory", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Correo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Descripcion")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaModifico")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Numero")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SolicitudEstudioId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("SolicitudId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("UsuarioModificoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UsuarioNombre")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Historial_Envios");
-                });
-
             modelBuilder.Entity("Service.MedicalRecord.Domain.Invoice.InvoiceCompany", b =>
                 {
                     b.Property<Guid>("Id")
@@ -432,7 +393,7 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("Estatus")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("ExpedienteId")
+                    b.Property<Guid>("ExpedienteId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("FacturaId")
@@ -450,7 +411,7 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("FormaPago")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("FormaPagoId")
+                    b.Property<Guid>("FormaPagoId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("IVA")

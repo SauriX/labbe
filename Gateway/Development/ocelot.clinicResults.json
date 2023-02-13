@@ -178,6 +178,30 @@
       ],
       "UpstreamPathTemplate": "/api/clinicResults/printSelectedStudies",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/clinicResults/getHisoty/request/{Id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/clinicResults/getHisoty/request/{Id}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/clinicResults/create/record",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/clinicResults/create/record",
+      "UpstreamHttpMethod": [ "POST" ]
     }
 
   ]

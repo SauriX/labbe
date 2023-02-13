@@ -21,7 +21,7 @@
       ],
       "UpstreamPathTemplate": "/api/clinicResults/export/list",
       "UpstreamHttpMethod": [ "POST" ]
-    },,
+    },
     {
       "DownstreamPathTemplate": "/LabRamos/services/records/api/clinicResults/export/glucose",
       "DownstreamScheme": "https",
@@ -163,6 +163,28 @@
         }
       ],
       "UpstreamPathTemplate": "/api/clinicResults/printSelectedStudies",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/clinicResults/getHisoty/request/{Id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/clinicResults/getHisoty/request/{Id}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/clinicResults/create/record",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/clinicResults/create/record",
       "UpstreamHttpMethod": [ "POST" ]
     }
   ]
