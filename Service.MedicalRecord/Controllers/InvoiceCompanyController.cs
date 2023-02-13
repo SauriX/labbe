@@ -5,6 +5,7 @@ using Service.MedicalRecord.Client.IClient;
 using Service.MedicalRecord.Dtos.Invoice;
 using Service.MedicalRecord.Dtos.InvoiceCompany;
 using Shared.Dictionary;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -34,6 +35,12 @@ namespace Service.MedicalRecord.Controllers
         public async Task<string> GetConsecutiveBySerie(string serie)
         {
             return await _service.GetNextPaymentNumber(serie);
+        }
+
+        [HttpGet("{invoiceId}")]
+        public async Task<InvoiceDto> GetById(string invoiceId)
+        {
+            return await _service.GetById(invoiceId);
         }
 
         [HttpPost("checkin")]

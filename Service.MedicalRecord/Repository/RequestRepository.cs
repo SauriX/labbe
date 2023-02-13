@@ -474,6 +474,14 @@ namespace Service.MedicalRecord.Repository
             await _context.BulkInsertOrUpdateAsync(detalles, config);
         }
 
+        public async Task<InvoiceCompany> GetInvoiceById(string invoiceId)
+        {
+            return await _context.Factura_Compania
+                .Include(x => x.DetalleFactura)
+                .Where(x => x.FacturapiId == invoiceId)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task UpdateInvoiceCompany(InvoiceCompany invoiceCompnay)
         {
             _context.Factura_Compania.Update(invoiceCompnay);

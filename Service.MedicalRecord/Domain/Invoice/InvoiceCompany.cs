@@ -17,7 +17,6 @@ namespace Service.MedicalRecord.Domain.Invoice
         public Guid? CompañiaId { get; set; }
         public virtual Company Compañia { get; set; }
         public Guid? ExpedienteId { get; set; }
-        public Guid? FormaPagoId { get; set; }
         public string FormaPago { get; set; }
         public string NumeroCuenta { get; set; }
         public string Serie { get; set; }
@@ -25,7 +24,9 @@ namespace Service.MedicalRecord.Domain.Invoice
         public string TipoDesgloce { get; set; }
         public decimal CantidadTotal { get; set; }
         public decimal Subtotal { get; set; }
+        public int Consecutivo { get; set; }
         public decimal IVA { get; set; }
+        public string Nombre { get; set; }
         public virtual ICollection<InvoiceCompanyDetail> DetalleFactura { get; set; }
 
     }

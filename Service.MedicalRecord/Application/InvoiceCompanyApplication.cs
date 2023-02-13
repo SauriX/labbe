@@ -159,6 +159,12 @@ namespace Service.MedicalRecord.Application
 
             return invoiceResponse;
         }
+        public async Task<InvoiceCompanyDto> GetById(string invoiceId)
+        {
+            var existing = await _repository.GetInvoiceById(invoiceId);
+            var invoiceData = existing.ToInvoiceDto();
+            return invoiceData;
+        }
 
         public async Task<string> Cancel(InvoiceCancelation invoiceDto)
         {
@@ -268,6 +274,12 @@ namespace Service.MedicalRecord.Application
 
             return request.ToInvoiceCompanyDto();
         }
+        //public async Task<InvoiceDto> GetById(Guid invoiceId)
+        //{
+        //    var invoice = await GetExistingInvoice(invoiceId);
+
+        //    return invoice.ToInvoiceDto();
+        //}
         public async Task<string> GetNextPaymentNumber(string serie)
         {
             var date = DateTime.Now.ToString("yy");

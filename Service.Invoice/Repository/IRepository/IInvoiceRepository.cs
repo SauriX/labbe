@@ -13,7 +13,7 @@ namespace Service.Billing.Repository.IRepository
         Task<List<Invoice>> GetByRequest(Guid requestId);
         Task<string> GetLastSeriesCode(string serie, string year);
         Task Create(Invoice invoice);
-        Task CreateInvoiceCompany(InvoiceCompany invoice);
+        Task CreateInvoiceCompany(Invoice invoice);
         Task Update(Invoice invoice);
         Task UpdateCompany(InvoiceCompany invoice);
         Task<InvoiceCompany> GetInvoiceCompanyByFacturapiId(string id);

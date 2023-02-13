@@ -8,13 +8,15 @@ namespace Service.MedicalRecord.Dtos.InvoiceCompany
     {
 
         public Guid? CompanyId { get; set; }
+        public string Estatus { get; set; }
         public List<Guid> SolicitudesId { get; set; }
         public string TipoFactura { get; set; }
         public List<InvoiceCompanyStudiesInfoDto> Estudios { get; set; }
         public Guid? TaxDataId { get; set; }
         public Guid? CompañiaId { get; set; }
         public Guid? ExpedienteId { get; set; }
-        public Guid FormaPagoId { get; set; }
+        public Guid FacturaId { get; set; }
+        //public Guid? FormaPagoId { get; set; }
         public string FormaPago { get; set; }
         public string NumeroCuenta { get; set; }
         public string Serie { get; set; }
@@ -23,7 +25,8 @@ namespace Service.MedicalRecord.Dtos.InvoiceCompany
         public decimal CantidadTotal { get; set; }
         public decimal Subtotal { get; set; }
         public decimal IVA { get; set; }
-        public int MyProperty { get; set; }
+        public int Consecutivo { get; set; }
+        public string Nombre { get; set; }
         public List<InvoiceDetail> Detalles { get; set; }
 
 }
