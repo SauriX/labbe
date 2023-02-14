@@ -33,6 +33,8 @@ using Service.MedicalRecord.Dtos.Invoice;
 using VT = Shared.Dictionary.Catalogs.ValueType;
 using Service.MedicalRecord.Dtos.Quotation;
 using Shared.Helpers;
+using System.Text.Json;
+using Service.MedicalRecord.Dtos.Catalogs;
 
 namespace Service.MedicalRecord.Application
 {
@@ -160,7 +162,7 @@ namespace Service.MedicalRecord.Application
                     pack.Promociones.Add(new PriceListInfoPromoDto(0, pack.PaqueteId, pack.PromocionId, pack.Promocion, pack.Descuento, pack.DescuentoPorcentaje));
                 }
             }
-
+            
             foreach (var study in studiesDto)
             {
                 if (string.IsNullOrEmpty(request.FolioWeeClinic)) study.Asignado = true;
@@ -168,10 +170,12 @@ namespace Service.MedicalRecord.Application
                 var st = studiesParams.FirstOrDefault(x => x.Id == study.EstudioId);
                 if (st == null) continue;
 
-                study.Parametros = st.Parametros.Where(x => !x.TipoValor.In(VT.Observacion, VT.Etiqueta, VT.SinValor, VT.Texto, VT.Parrafo)).ToList();
+                var studyParamsDeserialized = JsonSerializer.Deserialize<List<ParameterListDto>>(JsonSerializer.Serialize(st.Parametros));
+
+                study.Parametros = studyParamsDeserialized.Where(x => !x.TipoValor.In(VT.Observacion, VT.Etiqueta, VT.SinValor, VT.Texto, VT.Parrafo)).ToList();
                 study.Indicaciones = st.Indicaciones;
 
-                study.Tipo = study.Parametros.Count() > 0 ? "LABORATORIO" : "PATOLOGICO";
+                study.Tipo = st.Parametros.Count() > 0 ? "LABORATORIO" : "PATOLOGICO";
 
                 var promos = studiesPromos.Where(x => x.EstudioId == study.EstudioId).ToList();
                 study.Promociones = promos;
