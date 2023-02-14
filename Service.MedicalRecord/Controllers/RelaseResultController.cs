@@ -15,16 +15,18 @@ namespace Service.MedicalRecord.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RelaseResultController : ControllerBase
+    public partial class RelaseResultController : ControllerBase
     {
         private readonly IRelaseResultApplication _service;
+        IValidationApplication _validationService;
         private readonly IRequestApplication _requestService;
-        public RelaseResultController(IRelaseResultApplication service, IRequestApplication requestService)
+        public RelaseResultController(IRelaseResultApplication service, IRequestApplication requestService, IValidationApplication validationService)
         {
             _service = service;
+            _validationService = validationService;
             _requestService = requestService;
         }
-        [HttpPost("getList")]
+        [HttpPost("release/getList")]
         [Authorize(Policies.Access)]
         public async Task<List<RelaceList>> GetAll(SearchRelase search)
         {
@@ -32,7 +34,7 @@ namespace Service.MedicalRecord.Controllers
             var requestedStudy = await _service.GetAll(search);
             return requestedStudy;
         }
-        [HttpPut]
+        [HttpPut("release")]
         [Authorize(Policies.Update)]
         public async Task UpdateStatus(List<RequestedStudyUpdateDto> requestDto)
         {
@@ -40,7 +42,7 @@ namespace Service.MedicalRecord.Controllers
             await _service.UpdateStatus(requestDto);
         }
 
-        [HttpPost("order/{recordId}/{requestId}")]
+        [HttpPost("release/order/{recordId}/{requestId}")]
         //[Authorize(Policies.Print)]
         [Authorize(Policies.Access)]
         public async Task<IActionResult> PrintOrder(Guid recordId, Guid requestId)
@@ -50,7 +52,7 @@ namespace Service.MedicalRecord.Controllers
             return File(file, MimeType.PDF, "Orden.pdf");
         }
 
-        [HttpPost("export/list")]
+        [HttpPost("release/export/list")]
         //  [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportStudyExcel(SearchRelase search)
         {
@@ -58,7 +60,7 @@ namespace Service.MedicalRecord.Controllers
             return File(file, MimeType.XLSX, fileName);
         }
 
-        [HttpPost("view/list")]
+        [HttpPost("release/view/list")]
         //[Authorize(Policies.Download)]
         public async Task<IActionResult> SendResultFile(DeliverResultsStudiesDto estudios)
         {
