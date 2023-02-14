@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.MedicalRecord.Context;
 
 namespace Service.MedicalRecord.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230213102802_add_total_invoice")]
+    partial class add_total_invoice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -429,9 +431,6 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<Guid?>("CompañiaId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Consecutivo")
-                        .HasColumnType("int");
-
                     b.Property<string>("Estatus")
                         .HasColumnType("nvarchar(max)");
 
@@ -456,9 +455,6 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<decimal>("IVA")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("Nombre")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("NumeroCuenta")
                         .HasColumnType("nvarchar(max)");
 
@@ -476,6 +472,9 @@ namespace Service.MedicalRecord.Migrations
 
                     b.Property<string>("TipoFactura")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("UsoCFDI")
                         .HasColumnType("nvarchar(max)");
@@ -506,9 +505,6 @@ namespace Service.MedicalRecord.Migrations
 
                     b.Property<string>("Concepto")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Descuento")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("EstudioClave")
                         .HasColumnType("nvarchar(max)");
