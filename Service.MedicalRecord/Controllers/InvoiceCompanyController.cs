@@ -38,7 +38,7 @@ namespace Service.MedicalRecord.Controllers
         }
 
         [HttpGet("{invoiceId}")]
-        public async Task<InvoiceDto> GetById(string invoiceId)
+        public async Task<InvoiceCompanyDto> GetById(string invoiceId)
         {
             return await _service.GetById(invoiceId);
         }

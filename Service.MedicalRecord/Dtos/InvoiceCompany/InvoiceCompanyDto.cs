@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace Service.MedicalRecord.Dtos.InvoiceCompany
 {
-    public class InvoiceCompanyDto : InvoiceDto
+    public class InvoiceCompanyDto
     {
-
+        public Guid Id { get; set; }
         public Guid? CompanyId { get; set; }
         public string Estatus { get; set; }
         public List<Guid> SolicitudesId { get; set; }
@@ -27,9 +27,30 @@ namespace Service.MedicalRecord.Dtos.InvoiceCompany
         public decimal IVA { get; set; }
         public int Consecutivo { get; set; }
         public string Nombre { get; set; }
+        public string FacturapiId { get; set; }
+        public string MetodoPago { get; set; }
+        public string RegimenFiscal { get; set; }
+        public Cliente Cliente { get; set; }
+        public string RFC { get; set; }
         public List<InvoiceDetail> Detalles { get; set; }
 
-}
+    }
+    public class Cliente
+    {
+        public string RazonSocial { get; set; }
+        public string RFC { get; set; }
+        public string RegimenFiscal { get; set; }
+        public string Correo { get; set; }
+        public string Telefono { get; set; }
+        public string CodigoPostal { get; set; }
+        public string Calle { get; set; }
+        public string NumeroExterior { get; set; }
+        public string Colonia { get; set; }
+        public string Ciudad { get; set; }
+        public string Municipio { get; set; }
+        public string Estado { get; set; }
+        public string Pais { get; set; }
+    }
     public class InvoiceDetail
     {
         public string SolicitudClave { get; set; }
