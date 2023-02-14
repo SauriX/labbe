@@ -87,7 +87,7 @@ namespace Service.MedicalRecord.Mapper
                 TaxDataId = model.TaxDataId,
                 CompañiaId = model.CompanyId,
                 ExpedienteId = model.ExpedienteId,
-                FormaPagoId = model.FormaPagoId,
+                //FormaPagoId = model.FormaPagoId,
                 FormaPago = model.FormaPago,
                 NumeroCuenta = model.NumeroCuenta,
                 Serie = model.Serie,
@@ -96,6 +96,8 @@ namespace Service.MedicalRecord.Mapper
                 CantidadTotal = model.CantidadTotal,
                 Subtotal = model.Subtotal,
                 IVA = model.IVA,
+                FechaCreo = DateTime.Now,
+                Nombre = model.Nombre,
                 DetalleFactura = model.Detalles.Select(x => new InvoiceCompanyDetail
                 {
                     Id = Guid.NewGuid(),
@@ -108,7 +110,45 @@ namespace Service.MedicalRecord.Mapper
             };
         }
 
-        
+        public static InvoiceCompanyDto ToInvoiceDto(this InvoiceCompany model)
+        {
+            return new InvoiceCompanyDto
+            {
+                Id = model.Id,
+                Estatus = model.Estatus,
+                FacturapiId = model.FacturapiId,
+                CompañiaId = model.CompañiaId,
+                TipoFactura = model.TipoFactura,
+                TaxDataId = model.TaxDataId,
+                ExpedienteId = model.ExpedienteId,
+                FormaPago = model.FormaPago,
+                NumeroCuenta = model.NumeroCuenta,
+                Serie = model.Serie,
+                UsoCFDI = model.UsoCFDI,
+                TipoDesgloce = model.TipoDesgloce,
+                CantidadTotal = model.CantidadTotal,
+                Subtotal = model.Subtotal,
+                IVA = model.IVA,
+                Consecutivo = model.Consecutivo,
+                Nombre = model.Nombre,
+                FacturaId = model.FacturaId,
+                Detalles = model.DetalleFactura.Select(x => new InvoiceDetail
+                {
+                    SolicitudClave = x.SolicitudClave,
+                    EstudioClave = x.EstudioClave,
+                    Concepto = x.Concepto,
+                    Cantidad = x.Cantidad,
+                    Importe = x.Importe,
+                    Descuento = x.Descuento
+                }).ToList(),
+
+                
+
+
+            };
+        }
+
+
         public static int ToConsecutiveSerie(this RequestPayment model)
         {
             return Int32.Parse(model.Serie) + 1;
