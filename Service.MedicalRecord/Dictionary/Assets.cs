@@ -17,6 +17,7 @@
         public const string TrackingOrderForm = "wwwroot/layout/excel/trackingOrder/TrackingOrderFormulario.xlsx";
         public const string TrackingForm = "wwwroot/layout/excel/FormatoEnvioMuestras/FormatoEnvioMuestras.xlsx";
         public const string InvoiceList = "wwwroot/layout/excel/Invoice/InvoiceListado.xlsx";
+        public const string InformeDia = "wwwroot/layout/excel/ReporteDia/InformeDia.xlsx";
 
     }
 }

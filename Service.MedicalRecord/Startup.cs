@@ -282,6 +282,7 @@ namespace Service.MedicalRecord
             services.AddScoped<IRelaseResultApplication, RelaseResultApplication>();
             services.AddScoped<IInvoiceCompanyApplication, InvoiceCompanyApplication>();
             services.AddScoped<IInvoiceCatalogApplication, InvoiceCatalogApplication>();
+            services.AddScoped<IReportStudyApplication, ReportStudyApplication>();
 
             services.AddScoped<IMedicalRecordRepository, MedicalRecordRepository>();
             services.AddScoped<IRequestRepository, RequestRepository>();
