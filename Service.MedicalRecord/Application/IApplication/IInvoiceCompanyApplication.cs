@@ -1,5 +1,6 @@
 ﻿using Service.MedicalRecord.Dtos.Invoice;
 using Service.MedicalRecord.Dtos.InvoiceCompany;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -14,5 +15,6 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<bool> EnvioFactura(InvoiceCompanyDeliverDto envio);
         Task<string> Cancel(InvoiceCancelation invoiceDto);
         Task<byte[]> PrintTicket(ReceiptCompanyDto receipt);
+        Task<InvoiceCompanyDto> GetById(string invoiceId);
     }
 }

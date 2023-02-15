@@ -78,7 +78,7 @@ namespace Service.Billing.Repository
             _context.ChangeTracker.Clear();
         }
 
-        public async Task CreateInvoiceCompany(InvoiceCompany invoice)
+        public async Task CreateInvoiceCompany(Invoice invoice)
         {
             using var transaction = _context.Database.BeginTransaction();
             //using var scope = new TransactionScope();
@@ -87,14 +87,14 @@ namespace Service.Billing.Repository
                 var solicitudes = invoice.Solicitudes.ToList();
 
                 invoice.Solicitudes = null;
-                _context.CAT_Factura_Companias.Add(invoice);
+                _context.CAT_Factura.Add(invoice);
 
                 await _context.SaveChangesAsync();
 
-                solicitudes.ForEach(x => x.InvoiceCompanyId = invoice.Id);
+                solicitudes.ForEach(x => x.InvoiceId = invoice.Id);
 
                 var config = new BulkConfig();
-                config.SetSynchronizeFilter<InvoiceCompanyRequests>(x => x.InvoiceCompanyId == invoice.Id);
+                config.SetSynchronizeFilter<InvoiceCompanyRequests>(x => x.InvoiceId == invoice.Id);
 
                 await _context.BulkInsertOrUpdateOrDeleteAsync(solicitudes, config);
 
@@ -131,7 +131,7 @@ namespace Service.Billing.Repository
                 await _context.SaveChangesAsync();
 
                 var config = new BulkConfig();
-                config.SetSynchronizeFilter<InvoiceCompanyRequests>(x => x.InvoiceCompanyId == invoice.Id);
+                config.SetSynchronizeFilter<InvoiceCompanyRequests>(x => x.InvoiceId == invoice.Id);
 
                 await _context.BulkInsertOrUpdateOrDeleteAsync(solicitudes, config);
 
