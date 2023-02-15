@@ -838,7 +838,7 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("Colonia")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ColoniaId")
+                    b.Property<int?>("ColoniaId")
                         .HasColumnType("int");
 
                     b.Property<string>("Contrasena")

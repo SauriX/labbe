@@ -637,6 +637,10 @@ namespace Service.MedicalRecord.Application
                         await SendTestEmail(files, request.Solicitud.EnvioCorreo, userId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
                         await UpdateStatusStudy(request.SolicitudEstudioId, Status.RequestStudy.Enviado, user);
 
+                        string descripcion = getDescriptionRecord(request.Clave, existingRequest.EnvioWhatsApp, existingRequest.EnvioCorreo);
+
+                        await CreateHistoryRecord(existingRequest.Id, request.SolicitudEstudioId, descripcion, user, existingRequest.EnvioWhatsApp, existingRequest.EnvioCorreo);
+
                         //}
                     }
                     catch (Exception ex)
@@ -813,6 +817,10 @@ namespace Service.MedicalRecord.Application
                         await SendTestEmail(files, existing.Solicitud.EnvioCorreo, result.UsuarioId, existing.Solicitud.Expediente.NombreCompleto, existing.Solicitud.Clave);
 
                         await UpdateStatusStudy(result.EstudioId, Status.RequestStudy.Enviado, result.Usuario);
+
+                        string descripcion = getDescriptionRecord(existing.SolicitudEstudioId.ToString(), existing.Solicitud.EnvioWhatsApp, existing.Solicitud.EnvioCorreo);
+
+                        await CreateHistoryRecord(result.SolicitudId, result.EstudioId, descripcion, result.Usuario, existing.Solicitud.EnvioWhatsApp, existing.Solicitud.EnvioCorreo);
                         //}
 
                     }
@@ -986,6 +994,10 @@ namespace Service.MedicalRecord.Application
                         foreach (var estudio in studiesToUpdate)
                         {
                             await UpdateStatusStudy(estudio.Id, Status.RequestStudy.Enviado, estudios.Usuario);
+
+                            string descripcion = getDescriptionRecord(estudio.Clave, existingRequest.EnvioWhatsApp, existingRequest.EnvioCorreo);
+
+                            await CreateHistoryRecord(existingRequest.Id, estudio.Id, descripcion, estudios.Usuario, existingRequest.EnvioWhatsApp, existingRequest.EnvioCorreo);
                         }
                     }
 
@@ -1109,6 +1121,8 @@ namespace Service.MedicalRecord.Application
                 //if (files.Count > 0 && canSendResultBalance(existingRequest))
                 //{
 
+
+
                 await SendTestWhatsapp(files, existingRequest.EnvioWhatsApp, usuarioId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
 
                 await SendTestEmail(files, existingRequest.EnvioCorreo, usuarioId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
@@ -1116,6 +1130,10 @@ namespace Service.MedicalRecord.Application
                 foreach (var estudio in existingRequest.Estudios)
                 {
                     await UpdateStatusStudy(estudio.Id, Status.RequestStudy.Enviado, usuario);
+
+                    string descripcion = getDescriptionRecord(estudio.Clave, existingRequest.EnvioWhatsApp, existingRequest.EnvioCorreo);
+
+                    await CreateHistoryRecord(existingRequest.Id, estudio.Id, descripcion, usuario, existingRequest.EnvioWhatsApp, existingRequest.EnvioCorreo);
 
                 }
                 //}
@@ -1171,6 +1189,78 @@ namespace Service.MedicalRecord.Application
 
             await endpoint.Send(emailToSend);
 
+
+        }
+        private string getDescriptionRecord(string clave, string numero = "", string correo = "")
+        {
+            string descripcion = "Resultado del estudio " + clave + " ";
+            if (!string.IsNullOrEmpty(numero) || !string.IsNullOrEmpty(correo))
+            {
+                descripcion += "[";
+                if (!string.IsNullOrEmpty(numero))
+                {
+                    descripcion += "WhatsApp ";
+                }
+                descripcion += " | ";
+                if (!string.IsNullOrEmpty(correo))
+                {
+                    descripcion += "Correo";
+                }
+                descripcion += "]";
+            }
+            else
+            {
+                descripcion += "Sin medios configurados";
+            }
+            return descripcion.Trim();
+        }
+        public async Task CreateHistoryRecord(Guid solicituId, int solicitudEstudioId, string descripcion, string usuario, string numero = "", string correo = "")
+        {
+            var record = new DeliveryHistory
+            {
+                Id = Guid.NewGuid(),
+                Numero = numero,
+                Correo = correo,
+                FechaCreo = DateTime.Now,
+                UsuarioNombre = usuario,
+                Descripcion = descripcion,
+                SolicitudEstudioId = solicitudEstudioId,
+                SolicitudId = solicituId
+
+            };
+
+            await _repository.CreateHistoryRecord(record);
+
+
+        }
+        public async Task<List<DeliveryHistoryDto>> CreateNoteHistoryRecord(HistoryRecordInfo record)
+        {
+            var registro = new DeliveryHistory
+            {
+                Id = Guid.NewGuid(),
+                FechaCreo = DateTime.Now,
+                UsuarioNombre = record.Usuario,
+                Descripcion = record.Descripcion,
+                SolicitudId = record.SolicitudId
+            };
+
+            await _repository.CreateHistoryRecord(registro);
+
+            return await GetDeliveryHistoryByRequestId(record.SolicitudId);
+        }
+        public async Task<List<DeliveryHistoryDto>> GetDeliveryHistoryByRequestId(Guid Id)
+        {
+            var deliveryHistory = await _repository.GetHistoryRecordsByRequestId(Id);
+
+            return deliveryHistory.Select(x => new DeliveryHistoryDto
+            {
+                Fecha = x.FechaCreo.ToString("dd/MM/yyyy HH:mm"),
+                Numero = x.Numero,
+                Correo = x.Correo,
+                Usuario = x.UsuarioNombre,
+                Descripcion = x.Descripcion
+                
+            }).ToList();
 
         }
         public async Task<byte[]> PrintSelectedStudies(ConfigurationToPrintStudies configuration)

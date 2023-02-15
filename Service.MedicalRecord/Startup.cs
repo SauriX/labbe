@@ -285,6 +285,7 @@ namespace Service.MedicalRecord
 
             services.AddScoped<IMedicalRecordRepository, MedicalRecordRepository>();
             services.AddScoped<IRequestRepository, RequestRepository>();
+            services.AddScoped<IInvoiceRepository, InvoiceRepository>();
             services.AddScoped<IReportRepository, ReportRepository>();
             services.AddScoped<IQuotationRepository, QuotationRepository>();
             services.AddScoped<IAppointmentResposiotry, AppointmentRepository>();
