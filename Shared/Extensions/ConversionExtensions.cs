@@ -9,7 +9,7 @@ namespace Shared.Extensions
 {
     public static class ConversionExtensions
     {
-        public static Dictionary<string, object> ToDictionary<T>(this T obj)
+        public static Dictionary<string, object> ToDictionary<T>(this T obj, bool lowercaseFirstLetter = false)
         {
             Dictionary<string, object> result = new();
             if (obj == null)
@@ -20,13 +20,16 @@ namespace Shared.Extensions
             {
                 try
                 {
-                    result.Add(property.Name, property.GetValue(obj, null));
+                    string key = lowercaseFirstLetter ? char.ToLower(property.Name[0]) + property.Name[1..] : property.Name;
+                    var value = property.GetValue(obj, null);
+                    result.Add(key, value);
                 }
                 catch (Exception)
                 {
                     continue;
                 }
             }
+
             return result;
         }
     }

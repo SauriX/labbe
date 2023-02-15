@@ -38,7 +38,7 @@ namespace Service.Billing.Application
                 Mensaje = "Todo chido",
                 Usuario = response.Payment.NotificacionId,
                 Metodo = "NotifyPaymentResponse",
-                Datos = res.ToDictionary()
+                Datos = res.ToDictionary(lowercaseFirstLetter: true)
             };
 
             await _senderClient.Notify(not);
