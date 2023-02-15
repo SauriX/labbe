@@ -86,8 +86,8 @@ namespace Service.Sender
                     {
                         x.AddSignalRHub<NotificationHub>();
                         re.ConfigureConsumer<EmailErrorConsumer>(context);
-                    });           
-                    
+                    });
+
                     configurator.ReceiveEndpoint(queueNames.Whatsapp, re =>
                     {
                         x.AddSignalRHub<NotificationHub>();
@@ -141,8 +141,8 @@ namespace Service.Sender
             services.AddSingleton<IUrlSettings>(fs => fs.GetRequiredService<IOptions<UrlSettings>>().Value);
 
             services.Configure<UrlLocalSettings>(Configuration.GetSection(nameof(UrlLocalSettings)));
-            services.AddSingleton<IUrlLocalSettings>(fs => fs.GetRequiredService<IOptions<UrlLocalSettings>>().Value);    
-            
+            services.AddSingleton<IUrlLocalSettings>(fs => fs.GetRequiredService<IOptions<UrlLocalSettings>>().Value);
+
             services.Configure<EmailTemplateSettings>(Configuration.GetSection(nameof(EmailTemplateSettings)));
             services.AddSingleton<IEmailTemplateSettings>(fs => fs.GetRequiredService<IOptions<EmailTemplateSettings>>().Value);
 
