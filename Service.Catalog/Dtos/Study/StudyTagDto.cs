@@ -8,6 +8,8 @@ namespace Service.Catalog.Dtos.Study
     public class StudyTagDto
     {
         public int Id { get; set; }
+        public string Identificador { get; set; }
+        public string IdentificadorEtiqueta { get; set; }
         public int EtiquetaId { get; set; }
         public int EstudioId { get; set; }
         public string ClaveEtiqueta { get; set; }
@@ -17,5 +19,7 @@ namespace Service.Catalog.Dtos.Study
         public int Orden { get; set; }
         public string NombreEtiqueta { get; set; }
         public string NombreEstudio { get; set; }
+        public bool Manual { get; set; }
+        public bool Borrado { get; set; }
     }
 }

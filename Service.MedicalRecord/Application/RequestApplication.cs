@@ -1,38 +1,37 @@
 ﻿using EventBus.Messages.Common;
+using Integration.WeeClinic.Dtos;
 using MassTransit;
 using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Client.IClient;
 using Service.MedicalRecord.Dictionary;
+using Service.MedicalRecord.Domain.Catalogs;
+using Service.MedicalRecord.Domain.Request;
+using Service.MedicalRecord.Dtos.Invoice;
+using Service.MedicalRecord.Dtos.Promotion;
 using Service.MedicalRecord.Dtos.Request;
+using Service.MedicalRecord.Dtos.WeeClinic;
 using Service.MedicalRecord.Mapper;
 using Service.MedicalRecord.Repository.IRepository;
+using Service.MedicalRecord.Settings.ISettings;
+using Service.MedicalRecord.Transactions;
 using Service.MedicalRecord.Utils;
 using Shared.Error;
 using Shared.Extensions;
+using Shared.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using SharedResponses = Shared.Dictionary.Responses;
-using RecordResponses = Service.MedicalRecord.Dictionary.Response;
-using Service.MedicalRecord.Settings.ISettings;
-using Service.MedicalRecord.Transactions;
-using RequestTemplates = Service.MedicalRecord.Dictionary.EmailTemplates.Request;
-using Service.MedicalRecord.Domain.Request;
 using AREAS = Shared.Dictionary.Catalogs.Area;
 using COMPANIES = Shared.Dictionary.Catalogs.Company;
 using MEDICS = Shared.Dictionary.Catalogs.Medic;
 using ORIGIN = Shared.Dictionary.Catalogs.Origin;
-using Service.MedicalRecord.Dtos.Promotion;
-using Service.MedicalRecord.Domain.Catalogs;
-using Service.MedicalRecord.Dtos.WeeClinic;
-using Integration.WeeClinic.Dtos;
-using Service.MedicalRecord.Dtos.Invoice;
+using RecordResponses = Service.MedicalRecord.Dictionary.Response;
+using RequestTemplates = Service.MedicalRecord.Dictionary.EmailTemplates.Request;
+using SharedResponses = Shared.Dictionary.Responses;
 using VT = Shared.Dictionary.Catalogs.ValueType;
-using Service.MedicalRecord.Dtos.Quotation;
-using Shared.Helpers;
 
 namespace Service.MedicalRecord.Application
 {
@@ -727,6 +726,19 @@ namespace Service.MedicalRecord.Application
             }
         }
 
+        private async Task<List<RequestTagDto>> HandleTags(Guid recordId, Guid requestId, Guid userId, List<RequestTagDto> tagsDto)
+        {
+            var request = await GetExistingRequest(recordId, requestId);
+
+            var existingTags = new List<RequestTag>();
+
+            var tags = tagsDto.ToRequestTag(existingTags, requestId, userId);
+
+            await _repository.BulkInsertUpdateTags(request.Id, tags);
+
+            return new List<RequestTagDto>();
+        }
+
         public async Task CancelRequest(Guid recordId, Guid requestId, Guid userId)
         {
             var request = await GetExistingRequest(recordId, requestId);
@@ -994,7 +1006,7 @@ namespace Service.MedicalRecord.Application
         public async Task<byte[]> PrintTags(Guid recordId, Guid requestId, List<RequestTagDto> tags)
         {
             var request = await _repository.GetById(requestId);
-            
+
             if (request == null || request.ExpedienteId != recordId)
             {
                 throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
@@ -1005,57 +1017,6 @@ namespace Service.MedicalRecord.Application
 
             return await _pdfClient.GenerateTags(printTags);
         }
-
-        //private async Task<List<RequestTagDto>> HandleTags(Request request, List<RequestTagDto> tags)
-        //{
-        //    var requestDate = request.FechaCreo;
-        //    var branch = await _catalogClient.GetBranch(request.SucursalId);
-        //    var lastCode = await _repository.GetLastTagCode(requestDate.ToString("ddMMyy"));
-
-        //    List<RequestTagDto> printTags = new();
-        //    List<string> nameStudy = new();
-        //    var sumTag = 0m;
-
-        //    foreach (var tag in tags.OrderBy(x => x.Orden))
-        //    {
-        //        sumTag += tag.Cantidad;
-        //        nameStudy.Add(tag.Estudios);
-
-        //        if (sumTag > 0.5m && sumTag <= 1)
-        //        {
-        //            var code = Codes.GetTagCode(request.EstatusId.ToString(), lastCode, requestDate);
-
-        //            tag.Clave = code;
-        //            tag.ClaveEtiqueta = code;
-        //            tag.Ciudad = branch.clave;
-        //            tag.Paciente = request.Expediente.NombreCompleto;
-        //            tag.EdadSexo = request.Expediente.Edad + " " + request.Expediente.Genero;
-
-        //            tag.Estudios = string.Join("\r\n", nameStudy);
-        //            tag.NombreInfo = tag.Estudios;
-        //            tag.Cantidad = sumTag;
-
-        //            sumTag = 0;
-        //            nameStudy = new();
-
-        //            var current = code[8..];
-        //            var next = Convert.ToInt32(current) + 1;
-        //            lastCode = code;
-
-        //            printTags.Add(tag);
-        //        }
-        //        else
-        //        {
-        //            continue;
-        //        }
-        //    }
-
-        //    var saveTags = printTags.ToRequestTag(request.Id);
-
-        //    await _repository.BulkInsertUpdateTags(request.Id, saveTags);
-
-        //    return printTags;
-        //}
 
         public async Task<string> SaveImage(RequestImageDto requestDto)
         {

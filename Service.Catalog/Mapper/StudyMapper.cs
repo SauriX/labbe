@@ -2,6 +2,7 @@
 using Service.Catalog.Domain.Parameter;
 using Service.Catalog.Domain.Study;
 using Service.Catalog.Dtos.Study;
+using Shared.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,6 +79,7 @@ namespace Service.Catalog.Mapper
             return model.Select(x => new StudyTagDto
             {
                 Id = x.Id,
+                Identificador = Helpers.GenerateRandomHex(6),
                 EtiquetaId = x.EtiquetaId,
                 EstudioId = x.EstudioId,
                 ClaveEtiqueta = x.Etiqueta.Clave,
