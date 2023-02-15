@@ -24,6 +24,7 @@ namespace Service.MedicalRecord.Application
     public class InvoiceCompanyApplication : IInvoiceCompanyApplication
     {
         private readonly IRequestRepository _repository;
+        private readonly IInvoiceRepository _invoiceRepository;
         private readonly IBillingClient _billingClient;
         private readonly ISendEndpointProvider _sendEndpointProvider;
         private readonly IRabbitMQSettings _rabbitMQSettings;
@@ -31,7 +32,9 @@ namespace Service.MedicalRecord.Application
         private readonly string InvoiceCompanyPath;
         private readonly IPdfClient _pdfClient;
 
-        public InvoiceCompanyApplication(IRequestRepository repository,
+        public InvoiceCompanyApplication(
+            IRequestRepository repository,
+            IInvoiceRepository invoiceRepository,
             IBillingClient billingClient,
             ISendEndpointProvider sendEndpoint,
             IRabbitMQSettings rabbitMQSettings,
@@ -41,6 +44,7 @@ namespace Service.MedicalRecord.Application
             )
         {
             _repository = repository;
+            _invoiceRepository = invoiceRepository;
             _billingClient = billingClient;
             _sendEndpointProvider = sendEndpoint;
             _queueNames = queueNames;
@@ -125,13 +129,13 @@ namespace Service.MedicalRecord.Application
                 },
 
 
-                Productos = invoice.Estudios.Select(x => new ProductDto
+                Productos = invoice.Detalles.Select(x => new ProductDto
                 {
-                    Clave = x.Clave,
-                    Descripcion = x.Estudio,
-                    Precio = x.Precio,
+                    Clave = x.EstudioClave,
+                    Descripcion = x.Concepto,
+                    Precio = x.Importe,
                     Descuento = x.Descuento,
-                    Cantidad = 1,
+                    Cantidad = x.Cantidad,
 
                 }).ToList(),
 
@@ -139,13 +143,13 @@ namespace Service.MedicalRecord.Application
 
             var invoiceResponse = await _billingClient.CheckInPaymentCompany(invoiceDto);
 
-            var invoiceCompany = invoice.ToInvoiceCompany(invoiceResponse);
+            var invoiceCompany = invoice.ToInvoiceCompany(invoiceResponse, invoice);
 
             List<RequestInvoiceCompany> requestsInvoiceCompany = new();
 
             foreach (var solicitud in invoice.SolicitudesId)
             {
-                requestsInvoiceCompany.Add(new RequestInvoiceCompany
+                requestsInvoiceCompany.Add(new RequestInvoiceCompany    
                 {
                     Activo = true,
                     SolicitudId = solicitud,
@@ -155,9 +159,15 @@ namespace Service.MedicalRecord.Application
 
             }
 
-            await _repository.CreateInvoiceCompanyData(invoiceCompany, requestsInvoiceCompany);
+            await _invoiceRepository.CreateInvoiceCompanyData(invoiceCompany, requestsInvoiceCompany);
 
             return invoiceResponse;
+        }
+        public async Task<InvoiceCompanyDto> GetById(string invoiceId)
+        {
+            var existing = await _invoiceRepository.GetInvoiceById(invoiceId);
+            var invoiceData = existing.ToInvoiceDto();
+            return invoiceData;
         }
 
         public async Task<string> Cancel(InvoiceCancelation invoiceDto)
@@ -167,11 +177,11 @@ namespace Service.MedicalRecord.Application
 
             if (resposeBilling.ToLower() == "canceled")
             {
-                var invoice = await _repository.GetInvoiceCompanyByFacturapiId(invoiceDto.FacturapiId);
+                var invoice = await _invoiceRepository.GetInvoiceCompanyByFacturapiId(invoiceDto.FacturapiId);
 
                 invoice.Estatus = "Cancelado";
 
-                await _repository.UpdateInvoiceCompany(invoice);
+                await _invoiceRepository.UpdateInvoiceCompany(invoice);
 
             }
 
@@ -264,7 +274,7 @@ namespace Service.MedicalRecord.Application
 
         public async Task<InvoiceCompanyInfoDto> GetByFilter(InvoiceCompanyFilterDto filter)
         {
-            var request = await _repository.InvoiceCompanyFilter(filter);
+            var request = await _invoiceRepository.InvoiceCompanyFilter(filter);
 
             return request.ToInvoiceCompanyDto();
         }

@@ -170,7 +170,10 @@ namespace Service.Billing.Migrations
                     b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("InvoiceCompanyId")
+                    b.Property<Guid?>("InvoiceCompanyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("InvoiceId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("SolicitudId")
@@ -186,18 +189,27 @@ namespace Service.Billing.Migrations
 
                     b.HasIndex("InvoiceCompanyId");
 
+                    b.HasIndex("InvoiceId");
+
                     b.ToTable("Relacion_Factura_Solicitudes");
                 });
 
             modelBuilder.Entity("Service.Billing.Domain.Invoice.InvoiceCompanyRequests", b =>
                 {
-                    b.HasOne("Service.Billing.Domain.Invoice.InvoiceCompany", "InvoiceCompany")
+                    b.HasOne("Service.Billing.Domain.Invoice.InvoiceCompany", null)
                         .WithMany("Solicitudes")
-                        .HasForeignKey("InvoiceCompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("InvoiceCompanyId");
 
-                    b.Navigation("InvoiceCompany");
+                    b.HasOne("Service.Billing.Domain.Invoice.Invoice", "Invoice")
+                        .WithMany("Solicitudes")
+                        .HasForeignKey("InvoiceId");
+
+                    b.Navigation("Invoice");
+                });
+
+            modelBuilder.Entity("Service.Billing.Domain.Invoice.Invoice", b =>
+                {
+                    b.Navigation("Solicitudes");
                 });
 
             modelBuilder.Entity("Service.Billing.Domain.Invoice.InvoiceCompany", b =>

@@ -1,5 +1,6 @@
 ﻿using Service.Billing.Domain;
 using System;
+using System.Collections.Generic;
 
 namespace Service.Billing.Domain.Invoice
 {
@@ -24,5 +25,6 @@ namespace Service.Billing.Domain.Invoice
         public string Expediente { get; set; }
         public string Paciente { get; set; }
         public string Estatus { get; set; }
+        public virtual ICollection<InvoiceCompanyRequests> Solicitudes { get; set; }
     }
 }

@@ -35,6 +35,10 @@ namespace Service.MedicalRecord.Mapper
                     CompaniaId = x.Compañia?.Id,
                     ClavePatologica = x.ClavePatologica,
                     Saldo = x.Saldo,
+                    ExpedienteId = x.ExpedienteId,
+                    NombreSucursal = x.Sucursal.Nombre,
+                    FormasPagos = x.Pagos.Select(y => y.FormaPago).ToList(),
+                    NumerosCuentas = x.Pagos.Select(y => y.NumeroCuenta).ToList(),
                     Facturas = x.FacturasCompañia.Select(y => new InvoiceCompanyFacturaDto
                     {
                         FacturaId = y.FacturaId,
@@ -56,7 +60,7 @@ namespace Service.MedicalRecord.Mapper
                     {
                         SolicitudId = x.Id,
                         ClaveSolicitud = x.Clave,
-                        SolicitudEstudioId = x.Id,
+                        SolicitudEstudioId = y.Id,
                         Estudio = y.Nombre,
                         Clave = y.Clave,
                         Area = y.AreaId,
@@ -71,20 +75,80 @@ namespace Service.MedicalRecord.Mapper
             };
         }
 
-        public static InvoiceCompany ToInvoiceCompany(this InvoiceCompanyDto model, InvoiceDto invoiceResponse)
+        public static InvoiceCompany ToInvoiceCompany(this InvoiceCompanyDto model, InvoiceDto invoiceResponse, InvoiceCompanyDto invoice)
         {
             return new InvoiceCompany
             {
                 Id = Guid.NewGuid(),
                 Estatus = "Facturado",
-                TipoFactura = "Compañia",
-                FacturaId = model.Id,
-                FacturapiId = invoiceResponse.FacturapiId
+                TipoFactura = invoice.TipoFactura,
+                FacturaId = invoiceResponse.Id,
+                FacturapiId = invoiceResponse.FacturapiId,
+                TaxDataId = model.TaxDataId,
+                CompañiaId = model.CompanyId,
+                ExpedienteId = model.ExpedienteId,
+                //FormaPagoId = model.FormaPagoId,
+                FormaPago = model.FormaPago,
+                NumeroCuenta = model.NumeroCuenta,
+                Serie = model.Serie,
+                UsoCFDI = model.UsoCFDI,
+                TipoDesgloce = model.TipoDesgloce,
+                CantidadTotal = model.CantidadTotal,
+                Subtotal = model.Subtotal,
+                IVA = model.IVA,
+                FechaCreo = DateTime.Now,
+                Nombre = model.Nombre,
+                DetalleFactura = model.Detalles.Select(x => new InvoiceCompanyDetail
+                {
+                    Id = Guid.NewGuid(),
+                    SolicitudClave = x.SolicitudClave,
+                    EstudioClave = x.EstudioClave,
+                    Concepto = x.Concepto,
+                    Cantidad = x.Cantidad,
+                    Importe = x.Importe,
+                }).ToList(),
+            };
+        }
+
+        public static InvoiceCompanyDto ToInvoiceDto(this InvoiceCompany model)
+        {
+            return new InvoiceCompanyDto
+            {
+                Id = model.Id,
+                Estatus = model.Estatus,
+                FacturapiId = model.FacturapiId,
+                CompañiaId = model.CompañiaId,
+                TipoFactura = model.TipoFactura,
+                TaxDataId = model.TaxDataId,
+                ExpedienteId = model.ExpedienteId,
+                FormaPago = model.FormaPago,
+                NumeroCuenta = model.NumeroCuenta,
+                Serie = model.Serie,
+                UsoCFDI = model.UsoCFDI,
+                TipoDesgloce = model.TipoDesgloce,
+                CantidadTotal = model.CantidadTotal,
+                Subtotal = model.Subtotal,
+                IVA = model.IVA,
+                Consecutivo = model.Consecutivo,
+                Nombre = model.Nombre,
+                FacturaId = model.FacturaId,
+                Detalles = model.DetalleFactura.Select(x => new InvoiceDetail
+                {
+                    SolicitudClave = x.SolicitudClave,
+                    EstudioClave = x.EstudioClave,
+                    Concepto = x.Concepto,
+                    Cantidad = x.Cantidad,
+                    Importe = x.Importe,
+                    Descuento = x.Descuento
+                }).ToList(),
+
+                
+
 
             };
         }
 
-        
+
         public static int ToConsecutiveSerie(this RequestPayment model)
         {
             return Int32.Parse(model.Serie) + 1;

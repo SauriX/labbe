@@ -1,7 +1,7 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/ResultValidation/getList",
+      "DownstreamPathTemplate": "/api/RelaseResult/validation/getList",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -13,7 +13,7 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/ResultValidation/export/list",
+      "DownstreamPathTemplate": "/api/RelaseResult/validation/export/list",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -26,7 +26,7 @@
     },
 
     {
-      "DownstreamPathTemplate": "/api/ResultValidation",
+      "DownstreamPathTemplate": "/api/RelaseResult/validation",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -38,7 +38,7 @@
       "UpstreamHttpMethod": [ "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/api/ResultValidation/order/{recordId}/{requestId}",
+      "DownstreamPathTemplate": "/api/RelaseResult/validation/order/{recordId}/{requestId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -50,7 +50,7 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/ResultValidation/view/list",
+      "DownstreamPathTemplate": "/api/RelaseResult/validation/view/list",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {

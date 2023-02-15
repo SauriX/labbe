@@ -130,6 +130,23 @@ namespace Service.MedicalRecord.Mapper
             };
         }
 
+        public static List<RequestTag> ToRequestTag(this IEnumerable<RequestTagDto> dto, Guid requestId)
+        {
+            if (dto == null) return null;
+
+            return dto.Select((x, i) => new RequestTag
+            {
+                Clave = x.ClaveEtiqueta,
+                Nombre = x.NombreInfo,
+                Cantidad = x.Cantidad,
+                Fecha = DateTime.Now,
+                Orden = i,
+                SolicitudId = requestId,
+                Tapon = x.TaponClave,
+                Suero = x.Suero
+            }).ToList();
+        }
+
         public static IEnumerable<RequestPaymentDto> ToRequestPaymentDto(this List<RequestPayment> model)
         {
             if (model == null) return null;
@@ -279,10 +296,6 @@ namespace Service.MedicalRecord.Mapper
                 ListaPrecio = x.ListaPrecio,
                 PromocionId = x.PromocionId,
                 Promocion = x.Promocion,
-                TaponId = x.TaponId,
-                TaponColor = x.Tapon?.Color,
-                TaponClave = x.Tapon?.Clave,
-                TaponNombre = x.Tapon?.Nombre,
                 Maquila = x.Maquila?.Nombre,
                 MaquilaId = x.MaquilaId,
                 EstatusId = x.EstatusId,
@@ -425,7 +438,6 @@ namespace Service.MedicalRecord.Mapper
                     EstudioId = x.EstudioId,
                     Clave = x.Clave,
                     Nombre = x.Nombre,
-                    TaponId = x.TaponId,
                     PaqueteId = x.PaqueteId,
                     ListaPrecioId = x.ListaPrecioId,
                     ListaPrecio = x.ListaPrecio,

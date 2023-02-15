@@ -15,6 +15,6 @@ namespace Integration.Pdf.Dtos
         public string NombreInfo { get; set; }
         public string Tipo { get; set; }
         public string EdadSexo { get; set; }
-        public int Cantidad { get; set; }
+        public decimal Cantidad { get; set; }
     }
 }
