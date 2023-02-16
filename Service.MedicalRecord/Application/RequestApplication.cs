@@ -565,6 +565,7 @@ namespace Service.MedicalRecord.Application
 
             var prevOrigin = request.Procedencia;
             var prevUrgency = request.Urgencia;
+            var prevCompany = request.CompañiaId;
 
             if (!string.IsNullOrEmpty(requestDto.Whatsapp))
             {
@@ -588,6 +589,11 @@ namespace Service.MedicalRecord.Application
             if (requestDto.Procedencia != prevOrigin || requestDto.Urgencia != prevUrgency)
             {
                 await UpdateTotals(requestDto.ExpedienteId, requestDto.SolicitudId, requestDto.UsuarioId);
+            }
+
+            if (requestDto.CompañiaId != prevCompany)
+            {
+                await UpdateStudies(new RequestStudyUpdateDto(requestDto.ExpedienteId, requestDto.SolicitudId, requestDto.UsuarioId), isDeleting: true);
             }
         }
 
@@ -641,7 +647,7 @@ namespace Service.MedicalRecord.Application
             await _repository.Update(request);
         }
 
-        public async Task<RequestStudyUpdateDto> UpdateStudies(RequestStudyUpdateDto requestDto)
+        public async Task<RequestStudyUpdateDto> UpdateStudies(RequestStudyUpdateDto requestDto, bool isDeleting = false)
         {
             try
             {
@@ -650,7 +656,8 @@ namespace Service.MedicalRecord.Application
                 var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
 
                 if ((requestDto.Estudios == null || requestDto.Estudios.Count == 0)
-                    && (requestDto.Paquetes == null || requestDto.Paquetes.Count == 0))
+                    && (requestDto.Paquetes == null || requestDto.Paquetes.Count == 0)
+                    && !isDeleting)
                 {
                     throw new CustomException(HttpStatusCode.BadRequest, "Debe agregar por lo menos un estudio o paquete");
                 }
@@ -658,7 +665,7 @@ namespace Service.MedicalRecord.Application
                 var studiesDto = requestDto.Estudios ?? new List<RequestStudyDto>();
                 var packStudiesDto = new List<RequestStudyDto>();
 
-                if (requestDto.Paquetes != null)
+                if (requestDto.Paquetes != null && requestDto.Paquetes.Any())
                 {
                     if (requestDto.Paquetes.Any(x => x.Estudios == null || x.Estudios.Count == 0))
                     {
@@ -998,7 +1005,7 @@ namespace Service.MedicalRecord.Application
         public async Task<byte[]> PrintTags(Guid recordId, Guid requestId, List<RequestTagDto> tags)
         {
             var request = await _repository.GetById(requestId);
-            
+
             if (request == null || request.ExpedienteId != recordId)
             {
                 throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);

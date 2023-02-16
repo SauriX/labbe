@@ -1,0 +1,16 @@
+﻿{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/netpay/payment/charge",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 52975
+        }
+      ],
+      "UpstreamPathTemplate": "/api/netpay/payment/charge",
+      "UpstreamHttpMethod": [ "POST" ]
+    }
+  ]
+}
