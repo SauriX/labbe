@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -22,6 +23,12 @@ namespace Shared.Extensions
                 {
                     string key = lowercaseFirstLetter ? char.ToLower(property.Name[0]) + property.Name[1..] : property.Name;
                     var value = property.GetValue(obj, null);
+
+                    if (value != null && value.GetType().IsClass && value.GetType() != typeof(string))
+                    {
+                        value = ToDictionary(value, lowercaseFirstLetter);
+                    }
+
                     result.Add(key, value);
                 }
                 catch (Exception)

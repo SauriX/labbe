@@ -58,7 +58,8 @@ namespace Service.Catalog.Repository
                     .ThenInclude(x => x.Estudio)
                     .ThenInclude(x => x.Area)
                     .ThenInclude(x => x.Departamento)
-                    .Where(x => x.Activo);
+                    .Where(x => x.Activo)
+                    .OrderBy(x => x.Clave).ThenBy(x => x.Nombre);
 
             return await Packs.ToListAsync();
         }
