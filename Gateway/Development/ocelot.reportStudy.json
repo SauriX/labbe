@@ -1,0 +1,43 @@
+
+  {
+    "Routes": [
+      {
+        "DownstreamPathTemplate": "/api/ReportStudy/report",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+          {
+            "Host": "localhost",
+            "Port": 24048
+          }
+        ],
+        "UpstreamPathTemplate": "/api/ReportStudy/report",
+        "UpstreamHttpMethod": [ "POST" ]
+      },
+      {
+        "DownstreamPathTemplate": "/api/ReportStudy/filter",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+          {
+            "Host": "localhost",
+            "Port": 24048
+          }
+        ],
+        "UpstreamPathTemplate": "/api/ReportStudy/filter",
+        "UpstreamHttpMethod": [ "POST" ]
+      },
+      {
+        "DownstreamPathTemplate": "/api/ReportStudy/export/getList",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+          {
+            "Host": "localhost",
+            "Port": 24048
+          }
+        ],
+        "UpstreamPathTemplate": "/api/ReportStudy/export/getList",
+        "UpstreamHttpMethod": [ "POST" ]
+      }
+
+    ]
+  }
+

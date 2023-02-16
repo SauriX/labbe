@@ -38,10 +38,11 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Sucursal)
                 .Include(x => x.Estudios).ThenInclude(x => x.Estatus)
                 .Include(x => x.Estudios).ThenInclude(x => x.Tapon)
+                .Include(x=>x.Medico)
                 .OrderBy(x => x.FechaCreo)
                 .AsQueryable();
 
-            if((string.IsNullOrWhiteSpace(filter.Clave)) && (filter.Sucursales == null || filter.Sucursales.Count() <= 0))
+            if((!string.IsNullOrWhiteSpace(filter.Clave)) && (filter.Sucursales != null || filter.Sucursales.Count() >= 0))
             {
                 requests = requests.Where(x => filter.SucursalesId.Contains(x.SucursalId));
             }

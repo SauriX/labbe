@@ -7,6 +7,20 @@ namespace Service.MedicalRecord.Dtos.Request
 {
     public class RequestStudyUpdateDto
     {
+        public RequestStudyUpdateDto()
+        {
+        }
+
+        public RequestStudyUpdateDto(Guid expendienteId, Guid solicitudId, Guid usuarioId)
+        {
+            ExpedienteId = expendienteId;
+            SolicitudId = solicitudId;
+            UsuarioId = usuarioId;
+            Estudios = new List<RequestStudyDto>();
+            Paquetes = new List<RequestPackDto>();
+            Total = new RequestTotalDto();
+        }
+
         public Guid SolicitudId { get; set; }
         public Guid ExpedienteId { get; set; }
         public List<RequestStudyDto> Estudios { get; set; }

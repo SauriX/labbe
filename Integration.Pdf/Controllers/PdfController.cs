@@ -342,5 +342,30 @@ namespace Integration.Pdf.Controllers
 
             return result;
         }
+
+        [HttpPost]
+        [Route("ReportStudy")]
+        public HttpResponseMessage Reportstudy(List<ReportRequestListDto> request)
+        {
+
+
+            var file = ReportStudyService.Generate(request);
+
+            var result = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new ByteArrayContent(file)
+            };
+
+            result.Content.Headers.ContentDisposition =
+                new ContentDispositionHeaderValue("attachment")
+                {
+                    FileName = "Reporte de estudios del día.pdf"
+                };
+
+            result.Content.Headers.ContentType =
+                new MediaTypeHeaderValue("application/pdf");
+
+            return result;
+        }
     }
 }
