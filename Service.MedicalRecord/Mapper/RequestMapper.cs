@@ -65,6 +65,7 @@ namespace Service.MedicalRecord.Mapper
                 FolioWeeClinic = x.FolioWeeClinic,
                 Estudios = x.Estudios.Select(s => new RequestStudyInfoDto
                 {
+                    Id = s.Id,
                     Clave = s.Clave,
                     Nombre = s.Nombre,
                     EstatusId = s.EstatusId,
