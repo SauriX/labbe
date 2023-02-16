@@ -47,7 +47,8 @@ namespace Service.Catalog.Repository
                 .ThenInclude(x => x.Departamento)
                 .Include(x => x.Maquilador)
                 .Include(x => x.Metodo)
-                .Where(x => x.Activo);
+                .Where(x => x.Activo)
+                .OrderBy(x => x.Clave).ThenBy(x => x.Nombre);
 
             return await studyes.ToListAsync();
         }
@@ -188,7 +189,7 @@ namespace Service.Catalog.Repository
                 var config = new BulkConfig();
                 config.SetSynchronizeFilter<ReagentStudy>(x => x.EstudioId == study.Id);
                 await _context.BulkInsertOrUpdateOrDeleteAsync(reagents, config);
-     
+
                 config.SetSynchronizeFilter<ParameterStudy>(x => x.EstudioId == study.Id);
                 await _context.BulkInsertOrUpdateOrDeleteAsync(parameters, config);
 
