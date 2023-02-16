@@ -638,7 +638,7 @@ namespace Service.MedicalRecord.Application
                         var resultsToSend = canSendResultResultsReady(existingRequest, results.First().SolicitudEstudioId);
                         if (resultsToSend.Count() > 0)
                         {
-
+                            
                             await SendTestWhatsapp(files, request.Solicitud.EnvioWhatsApp, userId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
                             await SendTestEmail(files, request.Solicitud.EnvioCorreo, userId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
                             await UpdateStatusStudy(request.SolicitudEstudioId, Status.RequestStudy.Enviado, user);
@@ -988,25 +988,30 @@ namespace Service.MedicalRecord.Application
                     //if (files.Count > 0 && canSendResultBalance(existingRequest))
                     if (files.Count > 0)
                     {
+
+                        string correo = "";
+                        string telefono = "";
+
                         if (estudios.MediosEnvio.Contains("Whatsapp") && !string.IsNullOrEmpty(existingRequest.EnvioWhatsApp))
                         {
                             await SendTestWhatsapp(files, existingRequest.EnvioWhatsApp, estudios.UsuarioId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
-
+                            telefono = existingRequest.EnvioWhatsApp;
                         }
 
                         if (estudios.MediosEnvio.Contains("Correo") && !string.IsNullOrEmpty(existingRequest.EnvioCorreo))
                         {
 
                             await SendTestEmail(files, existingRequest.EnvioCorreo, estudios.UsuarioId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
+                            correo = existingRequest.EnvioCorreo;
                         }
 
                         foreach (var estudio in studiesToUpdate)
                         {
                             await UpdateStatusStudy(estudio.Id, Status.RequestStudy.Enviado, estudios.Usuario);
 
-                            string descripcion = getDescriptionRecord(estudio.Clave, existingRequest.EnvioWhatsApp, existingRequest.EnvioCorreo);
+                            string descripcion = getDescriptionRecord(estudio.Clave, telefono, correo);
 
-                            await CreateHistoryRecord(existingRequest.Id, estudio.Id, descripcion, estudios.Usuario, existingRequest.EnvioWhatsApp, existingRequest.EnvioCorreo);
+                            await CreateHistoryRecord(existingRequest.Id, estudio.Id, descripcion, estudios.Usuario, telefono, correo);
                         }
                     }
 
@@ -1205,17 +1210,18 @@ namespace Service.MedicalRecord.Application
             string descripcion = "Resultado del estudio " + clave + " ";
             if (!string.IsNullOrEmpty(numero) || !string.IsNullOrEmpty(correo))
             {
+                List<string> medios = new List<string>();
                 descripcion += "[";
                 if (!string.IsNullOrEmpty(numero))
                 {
-                    descripcion += "WhatsApp ";
+                    medios.Add("WhatsApp ");
                 }
-                descripcion += " | ";
+                
                 if (!string.IsNullOrEmpty(correo))
                 {
-                    descripcion += "Correo";
+                    medios.Add("Correo");
                 }
-                descripcion += "]";
+                descripcion += string.Join(" | ", medios) + "]";
             }
             else
             {
