@@ -41,7 +41,7 @@ namespace Service.MedicalRecord.Application
 
         public async Task<List<ReportRequestListDto>> GetByFilter(RequestFilterDto filter)
         {
-            var request = await _repository.GetByFilterEntrega(filter);
+            var request = await _repository.GetByFilter(filter);
 
             if (request == null)
             {

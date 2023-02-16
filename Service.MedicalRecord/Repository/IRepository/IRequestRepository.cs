@@ -12,7 +12,6 @@ namespace Service.MedicalRecord.Repository.IRepository
     {
         Task<Request> FindAsync(Guid id);
         Task<List<Request>> GetByFilter(RequestFilterDto filter);
-        Task<List<Request>> GetByFilterEntrega(RequestFilterDto filter);
         Task<Request> GetById(Guid id);
         Task<string> GetLastCode(Guid branchId, string date);
         Task<string> GetLastTagCode(string date);
