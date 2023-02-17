@@ -262,7 +262,7 @@ namespace Service.Report.Repository
 
             if (search.Fecha != null)
             {
-                samplesCosts = samplesCosts.Where(x => x.FechaAlta.Date >= search.Fecha.First().Date && x.FechaAlta.Date <= search.Fecha.Last().Date);
+                samplesCosts = samplesCosts.Where(x => x.FechaAlta.Month >= search.Fecha.First().Month && x.FechaAlta.Month <= search.Fecha.Last().Month);
             }
 
             if (search.SucursalId != null && search.SucursalId.Count > 0)

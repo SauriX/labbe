@@ -16,6 +16,7 @@ namespace Service.Catalog.Dtos.Catalog
 
     public class BudgetBranchListDto
     {
+        public Guid Id { get; set; }
         public Guid SucursalId { get; set; }
         public int CostoFijoId { get; set; }
         public string Ciudad { get; set; }

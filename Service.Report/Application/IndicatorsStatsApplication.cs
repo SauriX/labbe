@@ -109,7 +109,7 @@ namespace Service.Report.Application
 
             WeeklyData(data, servicesCost, budget, samplesCost, weekly, search.FechaInicial);
 
-            MonthlyData(data, servicesCost, budget, samplesCost, monthly, search.FechaInicial);
+            await MonthlyData(data, servicesCost, budget, samplesCost, monthly, search.FechaInicial);
 
             template.Generate();
             template.Format();
@@ -313,7 +313,7 @@ namespace Service.Report.Application
 
         public async Task<InvoiceServicesDto> GetServicesCosts(ReportModalFilterDto search)
         {
-            var servicesCost = await _catalogService.GetBudgetsByBranch(search);
+            var servicesCost = await _catalogService.GetServiceCostByBranch(search);
 
             return servicesCost.ToServiceCostGroupDto();
         }
@@ -358,7 +358,7 @@ namespace Service.Report.Application
             await _repository.UpdateSamples(updatedSample);
         }
 
-        public async Task UpdateService(ServiceUpdateDto service)
+        public async Task UpdateService(UpdateServiceDto service)
         {
             await _catalogService.UpdateService(service);
         }

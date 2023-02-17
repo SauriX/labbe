@@ -19,6 +19,7 @@ namespace Service.Catalog.Mapper
                 Clave = model.Clave,
                 Nombre = model.Nombre,
                 Activo = model.Activo,
+                FechaAlta = model.FechaCreo
             };
         }
 
@@ -26,16 +27,43 @@ namespace Service.Catalog.Mapper
         {
             if (model == null) return null;
 
-            return model.Select(x => new BudgetListDto
+            return model.Select(x =>
             {
-                Id = x.CostoFijoId,
-                Clave = x.CostoFijo.Clave,
-                Nombre = x.CostoFijo.Nombre,
-                CostoFijo = x.CostoFijo.CostoFijo,
-                Activo = x.CostoFijo.Activo,
-                Sucursal = x.Sucursal.Nombre,
-                FechaAlta = x.CostoFijo.FechaCreo
+                Budget costoFijo = x.CostoFijo;
+                return new BudgetListDto
+                {
+                    Id = x.CostoFijoId,
+                    Clave = costoFijo.Clave,
+                    Nombre = costoFijo.Nombre,
+                    Activo = costoFijo.Activo,
+                    Sucursal = x.Sucursal.Nombre,
+                    FechaAlta = costoFijo.FechaCreo,
+                    CostoFijo = x.CostoServicio
+                };
             });
+        }
+
+        public static IEnumerable<ServiceUpdateDto> ToBudgetByBranchDto(this List<BudgetBranch> model)
+        {
+            if (model == null) return null;
+
+            var budgets = model.GroupBy(x => new { x.CostoFijoId, x.CostoFijo.Nombre, x.CostoServicio, x.FechaAlta.Month }).Select(x => new ServiceUpdateDto
+            {
+                CostoFijoId = x.Key.CostoFijoId,
+                Identificador = Guid.NewGuid(),
+                Nombre = x.Key.Nombre,
+                CostoFijo = x.Key.CostoServicio,
+                TotalSucursales = x.Key.CostoServicio * x.Count(),
+                FechaAlta = x.FirstOrDefault().FechaAlta,
+                Sucursales = x.Select(x => new CityBranchServiceDto
+                {
+                    CostoId = x.Id,
+                    Ciudad = x.Ciudad,
+                    SucursalId = x.SucursalId
+                }).ToList()
+            });
+
+            return budgets;
         }
 
         public static IEnumerable<BudgetListDto> ToBudgetListDto(this List<Budget> model)
@@ -47,7 +75,6 @@ namespace Service.Catalog.Mapper
                 Id = x.Id,
                 Clave = x.Clave,
                 Nombre = x.Nombre,
-                CostoFijo = x.CostoFijo,
                 Activo = x.Activo,
                 FechaAlta = x.FechaCreo
             });
@@ -72,7 +99,6 @@ namespace Service.Catalog.Mapper
                 Id = model.Id,
                 Clave = model.Clave,
                 NombreServicio = model.Nombre,
-                CostoFijo = model.CostoFijo,
                 Activo = model.Activo,
                 Fecha = (DateTime)model.FechaCreo,
                 Sucursales = model.Sucursales.ToBudgetBranchListDto()
@@ -87,12 +113,12 @@ namespace Service.Catalog.Mapper
             {
                 Clave = dto.Clave.Trim(),
                 Nombre = dto.NombreServicio.Trim(),
-                CostoFijo = dto.CostoFijo,
                 Activo = dto.Activo,
                 UsuarioCreoId = dto.UsuarioId,
                 FechaCreo = DateTime.Now,
                 Sucursales = dto.Sucursales.Select(x => new BudgetBranch
                 {
+                    Id = Guid.NewGuid(),
                     Ciudad = x.Ciudad,
                     SucursalId = x.SucursalId,
                     Activo = dto.Activo,
@@ -102,26 +128,19 @@ namespace Service.Catalog.Mapper
             };
         }
 
-        public static List<Budget> ToModelList(this List<BudgetFormDto> dto)
+        public static List<BudgetBranch> ToModelList(this List<BudgetBranchFormDto> dto)
         {
             if (dto == null) return null;
 
-            return dto.Select(x => new Budget
+            return dto.Select(x => new BudgetBranch
             {
-                Clave = x.Clave.Trim(),
-                Nombre = x.NombreServicio.Trim(),
-                CostoFijo = x.CostoFijo,
-                Activo = x.Activo,
+                CostoFijoId = x.ServicioId,
+                CostoServicio = x.CostoFijo,
+                Activo = true,
+                Ciudad = x.Ciudad,
+                SucursalId = x.SucursalId,
                 UsuarioCreoId = x.UsuarioId,
-                FechaCreo = DateTime.Now,
-                Sucursales = x.Sucursales.Select(y => new BudgetBranch
-                {
-                    Ciudad = y.Ciudad,
-                    SucursalId = y.SucursalId,
-                    Activo = x.Activo,
-                    UsuarioCreoId = x.UsuarioId,
-                    FechaCreo = DateTime.Now
-                }).ToList()
+                FechaCreo = DateTime.Now
             }).ToList();
         }
 
@@ -134,7 +153,6 @@ namespace Service.Catalog.Mapper
                 Id = model.Id,
                 Clave = dto.Clave.Trim(),
                 Nombre = dto.NombreServicio.Trim(),
-                CostoFijo = dto.CostoFijo,
                 Activo = dto.Activo,
                 UsuarioCreoId = model.UsuarioCreoId,
                 FechaCreo = model.FechaCreo,
@@ -142,9 +160,11 @@ namespace Service.Catalog.Mapper
                 FechaModifico = DateTime.Now,
                 Sucursales = dto.Sucursales.Select(x => new BudgetBranch
                 {
+                    Id = x.Id,
                     CostoFijoId = model.Id,
                     Ciudad = x.Ciudad,
                     SucursalId = x.SucursalId,
+                    CostoServicio = 0m,
                     Activo = dto.Activo,
                     UsuarioCreoId = (Guid)model.UsuarioCreoId,
                     FechaCreo = (DateTime)model.FechaCreo,
@@ -154,10 +174,56 @@ namespace Service.Catalog.Mapper
             };
         }
 
+        public static List<BudgetBranch> ToModelBudgetBranch(this IEnumerable<ServiceUpdateDto> model, Guid userId, IEnumerable<BudgetBranch> services)
+        {
+            if (model == null) return null;
+
+            List<BudgetBranch> budgetBranches = new();
+
+            foreach (var budget in model)
+            {
+                for (int i = 0; i < budget.Sucursales.Count; i++)
+                {
+                    CityBranchServiceDto branch = budget.Sucursales[i];
+                    var service = services.FirstOrDefault(x => x.Id == branch.CostoId);
+
+                    budgetBranches.Add(new BudgetBranch
+                    {
+                        Id = branch.CostoId != Guid.Empty ? branch.CostoId : Guid.NewGuid(),
+                        CostoFijoId = budget.CostoFijoId,
+                        SucursalId = branch.SucursalId,
+                        CostoServicio = budget.CostoFijo,
+                        Ciudad = branch.Ciudad,
+                        Activo = true,
+                        FechaAlta = budget.FechaAlta,
+                        FechaCreo = service != null ? service.FechaCreo : DateTime.Now,
+                        UsuarioCreoId = service != null ? service.UsuarioCreoId : userId,
+                        FechaModifico = service == null ? null : DateTime.Now,
+                        UsuarioModificoId = service == null ? null : userId,
+                    });
+                }
+            }
+
+
+            return budgetBranches;
+        }
+
+        public static List<CityBranchServiceDto> ToCityBranchServiceDto(this IEnumerable<BudgetBranch> model)
+        {
+            if (model == null) return null;
+
+            return model.Select(x => new CityBranchServiceDto
+            {
+                Ciudad = x.Ciudad,
+                SucursalId = x.SucursalId
+            }).ToList();
+        }
+
         public static List<BudgetBranchListDto> ToBudgetBranchListDto(this IEnumerable<BudgetBranch> model)
         {
             return model.Select(x => new BudgetBranchListDto
             {
+                Id = x.Id,
                 SucursalId = x.SucursalId,
                 Ciudad = x.Ciudad,
                 CostoFijoId = x.CostoFijoId
