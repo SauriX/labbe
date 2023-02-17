@@ -170,9 +170,7 @@ namespace Service.MedicalRecord.Application
                 var st = studiesParams.FirstOrDefault(x => x.Id == study.EstudioId);
                 if (st == null) continue;
 
-                var studyParamsDeserialized = JsonSerializer.Deserialize<List<ParameterListDto>>(JsonSerializer.Serialize(st.Parametros));
-
-                study.Parametros = studyParamsDeserialized.Where(x => !x.TipoValor.In(VT.Observacion, VT.Etiqueta, VT.SinValor, VT.Texto, VT.Parrafo)).ToList();
+                study.Parametros = st.Parametros.Where(x => !x.TipoValor.In(VT.Observacion, VT.Etiqueta, VT.SinValor, VT.Texto, VT.Parrafo)).ToList();
                 study.Indicaciones = st.Indicaciones;
 
                 study.Tipo = st.Parametros.Count() > 0 ? "LABORATORIO" : "PATOLOGICO";
