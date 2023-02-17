@@ -65,7 +65,7 @@ namespace Service.Report.Controllers.Report
         
         [HttpPut("indicadores/fijo")]
         [Authorize(Policies.Update)]
-        public async Task UpdateService(ServiceUpdateDto service)
+        public async Task UpdateService(UpdateServiceDto service)
         {
             await _indicatorsStatsService.UpdateService(service);
         }

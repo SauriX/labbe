@@ -17,7 +17,6 @@ namespace Service.Catalog.Domain.Catalog
             FechaCreo = DateTime.Now;
         }
 
-        public decimal CostoFijo { get; set; } 
         public virtual ICollection<BudgetBranch> Sucursales { get; set; }
     }
 }
