@@ -158,8 +158,8 @@ namespace Service.Catalog.Application
 
             template.Generate();
 
-            var range = template.Workbook.Worksheet("Promotions").Range("Promotions");
-            var table = template.Workbook.Worksheet("Promotions").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
+            var range = template.Workbook.Worksheet("Promociones").Range("Promotions");
+            var table = template.Workbook.Worksheet("Promociones").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
             table.Theme = XLTableTheme.TableStyleMedium2;
 
             template.Format();
