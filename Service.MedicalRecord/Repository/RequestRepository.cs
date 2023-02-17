@@ -138,10 +138,11 @@ namespace Service.MedicalRecord.Repository
         {
             var lastTag = await _context.Relacion_Solicitud_Etiquetas
                 .Include(x => x.Solicitud)
-                .OrderByDescending(x => x.Fecha)
-                .FirstOrDefaultAsync(x => x.Clave.Contains(date));
+                //.OrderByDescending(x => x.Fecha)
+                //.FirstOrDefaultAsync(x => x.Clave.Contains(date));
+                .FirstOrDefaultAsync();
 
-            return lastTag?.Clave;
+            return lastTag?.ClaveEtiqueta;
         }
 
         public async Task<string> GetLastPathologicalCode(Guid branchId, string date, string type)
