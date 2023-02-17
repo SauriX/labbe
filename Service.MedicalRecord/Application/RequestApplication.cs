@@ -32,6 +32,10 @@ using RecordResponses = Service.MedicalRecord.Dictionary.Response;
 using RequestTemplates = Service.MedicalRecord.Dictionary.EmailTemplates.Request;
 using SharedResponses = Shared.Dictionary.Responses;
 using VT = Shared.Dictionary.Catalogs.ValueType;
+using Service.MedicalRecord.Dtos.Quotation;
+using Shared.Helpers;
+using System.Text.Json;
+using Service.MedicalRecord.Dtos.Catalogs;
 
 namespace Service.MedicalRecord.Application
 {
@@ -159,7 +163,7 @@ namespace Service.MedicalRecord.Application
                     pack.Promociones.Add(new PriceListInfoPromoDto(0, pack.PaqueteId, pack.PromocionId, pack.Promocion, pack.Descuento, pack.DescuentoPorcentaje));
                 }
             }
-
+            
             foreach (var study in studiesDto)
             {
                 if (string.IsNullOrEmpty(request.FolioWeeClinic)) study.Asignado = true;
@@ -170,7 +174,7 @@ namespace Service.MedicalRecord.Application
                 study.Parametros = st.Parametros.Where(x => !x.TipoValor.In(VT.Observacion, VT.Etiqueta, VT.SinValor, VT.Texto, VT.Parrafo)).ToList();
                 study.Indicaciones = st.Indicaciones;
 
-                study.Tipo = study.Parametros.Count() > 0 ? "LABORATORIO" : "PATOLOGICO";
+                study.Tipo = st.Parametros.Count() > 0 ? "LABORATORIO" : "PATOLOGICO";
 
                 var promos = studiesPromos.Where(x => x.EstudioId == study.EstudioId).ToList();
                 study.Promociones = promos;
@@ -560,6 +564,7 @@ namespace Service.MedicalRecord.Application
 
             var prevOrigin = request.Procedencia;
             var prevUrgency = request.Urgencia;
+            var prevCompany = request.CompañiaId;
 
             if (!string.IsNullOrEmpty(requestDto.Whatsapp))
             {
@@ -583,6 +588,11 @@ namespace Service.MedicalRecord.Application
             if (requestDto.Procedencia != prevOrigin || requestDto.Urgencia != prevUrgency)
             {
                 await UpdateTotals(requestDto.ExpedienteId, requestDto.SolicitudId, requestDto.UsuarioId);
+            }
+
+            if (requestDto.CompañiaId != prevCompany)
+            {
+                await UpdateStudies(new RequestStudyUpdateDto(requestDto.ExpedienteId, requestDto.SolicitudId, requestDto.UsuarioId), isDeleting: true);
             }
         }
 
@@ -636,7 +646,7 @@ namespace Service.MedicalRecord.Application
             await _repository.Update(request);
         }
 
-        public async Task<RequestStudyUpdateDto> UpdateStudies(RequestStudyUpdateDto requestDto)
+        public async Task<RequestStudyUpdateDto> UpdateStudies(RequestStudyUpdateDto requestDto, bool isDeleting = false)
         {
             try
             {
@@ -645,7 +655,8 @@ namespace Service.MedicalRecord.Application
                 var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
 
                 if ((requestDto.Estudios == null || requestDto.Estudios.Count == 0)
-                    && (requestDto.Paquetes == null || requestDto.Paquetes.Count == 0))
+                    && (requestDto.Paquetes == null || requestDto.Paquetes.Count == 0)
+                    && !isDeleting)
                 {
                     throw new CustomException(HttpStatusCode.BadRequest, "Debe agregar por lo menos un estudio o paquete");
                 }
@@ -653,7 +664,7 @@ namespace Service.MedicalRecord.Application
                 var studiesDto = requestDto.Estudios ?? new List<RequestStudyDto>();
                 var packStudiesDto = new List<RequestStudyDto>();
 
-                if (requestDto.Paquetes != null)
+                if (requestDto.Paquetes != null && requestDto.Paquetes.Any())
                 {
                     if (requestDto.Paquetes.Any(x => x.Estudios == null || x.Estudios.Count == 0))
                     {

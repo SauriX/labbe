@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Integration.Contpaqi": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:60368;http://localhost:60369"
+    }
+  }
+}

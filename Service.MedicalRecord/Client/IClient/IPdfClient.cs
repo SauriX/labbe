@@ -3,6 +3,7 @@ using Service.MedicalRecord.Dtos.DeliverOrder;
 using Service.MedicalRecord.Dtos.PendingRecive;
 using Service.MedicalRecord.Dtos.Quotation;
 using Service.MedicalRecord.Dtos.Request;
+using Service.MedicalRecord.Dtos.RportStudy;
 using Service.MedicalRecord.Dtos.WorkList;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -23,5 +24,6 @@ namespace Service.MedicalRecord.Client.IClient
         Task<byte[]> MergeResults(ClinicResultPathologicalPdfDto order, ClinicResultsPdfDto labOrder);
         Task<byte[]> DeliverForm(DeliverOrderdDto order);
         Task<byte[]> PriceQuoteReport(PriceQuoteDto priceQuote);
+        Task<byte[]> RequestDayForm(List<ReportRequestListDto> request);
     }
 }

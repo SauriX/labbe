@@ -13,36 +13,27 @@ using System.Threading.Tasks;
 
 namespace Service.MedicalRecord.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ResultValidationController : ControllerBase
+    public partial class RelaseResultController : ControllerBase
     {
-        private readonly IValidationApplication _service;
-        private readonly IRequestApplication _requestService;
-        public ResultValidationController(IValidationApplication service, IRequestApplication requestService)
-        {
-            _service = service;
-            _requestService = requestService;
-        }
-        [HttpPost("getList")]
+        [HttpPost("validation/getList")]
         [Authorize(Policies.Access)]
-        public async Task<List<ValidationListDto>> GetAll(SearchValidation search)
+        public async Task<List<ValidationListDto>> GetAllValidation(SearchValidation search)
         {
-            var requestedStudy = await _service.GetAll(search);
+            var requestedStudy = await _validationService.GetAll(search);
             return requestedStudy;
         }
-        [HttpPut]
+        [HttpPut("validation")]
         [Authorize(Policies.Update)]
-        public async Task UpdateStatus(List<RequestedStudyUpdateDto> requestDto)
+        public async Task UpdateValidationStatus(List<RequestedStudyUpdateDto> requestDto)
         {
             requestDto.First().Usuario = HttpContext.Items["userName"].ToString();
-            await _service.UpdateStatus(requestDto);
+            await _validationService.UpdateStatus(requestDto);
         }
 
-        [HttpPost("order/{recordId}/{requestId}")]
+        [HttpPost("validation/order/{recordId}/{requestId}")]
         //[Authorize(Policies.Print)]
         [Authorize(Policies.Access)]
-        public async Task<IActionResult> PrintOrder(Guid recordId, Guid requestId)
+        public async Task<IActionResult> PrintOrderValidation(Guid recordId, Guid requestId)
         {
             var userName = HttpContext.Items["userName"].ToString();
 
@@ -51,19 +42,19 @@ namespace Service.MedicalRecord.Controllers
             return File(file, MimeType.PDF, "Orden.pdf");
         }
 
-        [HttpPost("export/list")]
+        [HttpPost("validation/export/list")]
         //  [Authorize(Policies.Download)]
-        public async Task<IActionResult> ExportStudyExcel(SearchValidation search)
+        public async Task<IActionResult> ExportStudyValidationExcel(SearchValidation search)
         {
-            var (file, fileName) = await _service.ExportList(search);
+            var (file, fileName) = await _validationService.ExportList(search);
             return File(file, MimeType.XLSX, fileName);
         }
 
-        [HttpPost("view/list")]
+        [HttpPost("validation/view/list")]
         //[Authorize(Policies.Download)]
-        public async Task<IActionResult> SendResultFile(DeliverResultsStudiesDto estudios)
+        public async Task<IActionResult> SendResultFileValidation(DeliverResultsStudiesDto estudios)
         {
-            var file = await _service.SendResultFile(estudios);
+            var file = await _validationService.SendResultFile(estudios);
             return File(file, MimeType.PDF, "Orden.pdf");
 
         }

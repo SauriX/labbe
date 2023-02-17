@@ -65,6 +65,7 @@ namespace Service.MedicalRecord.Mapper
                 FolioWeeClinic = x.FolioWeeClinic,
                 Estudios = x.Estudios.Select(s => new RequestStudyInfoDto
                 {
+                    Id = s.Id,
                     Clave = s.Clave,
                     Nombre = s.Nombre,
                     EstatusId = s.EstatusId,
@@ -340,7 +341,7 @@ namespace Service.MedicalRecord.Mapper
                 Maquila = x.Maquila?.Nombre,
                 MaquilaId = x.MaquilaId,
                 EstatusId = x.EstatusId,
-                Estatus = x.Estatus.Nombre,
+                Estatus = x.Estatus?.Nombre,
                 Dias = x.Dias,
                 Horas = x.Horas,
                 FechaEntrega = x.FechaEntrega,
@@ -351,7 +352,7 @@ namespace Service.MedicalRecord.Mapper
                 DescuentoPorcentaje = x.DescuentoPorcentaje,
                 Copago = x.EstudioWeeClinic?.TotalPaciente ?? 0,
                 PrecioFinal = x.PrecioFinal,
-                NombreEstatus = x.Estatus.Nombre,
+                NombreEstatus = x.Estatus?.Nombre,
                 Asignado = x.EstudioWeeClinic?.Asignado ?? true,
                 Metodo = x.Metodo,
                 Etiquetas = new List<RequestTagDto>(),

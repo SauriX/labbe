@@ -429,6 +429,9 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<Guid?>("CompañiaId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("Consecutivo")
+                        .HasColumnType("int");
+
                     b.Property<string>("Estatus")
                         .HasColumnType("nvarchar(max)");
 
@@ -450,11 +453,11 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("FormaPago")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("FormaPagoId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<decimal>("IVA")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NumeroCuenta")
                         .HasColumnType("nvarchar(max)");
@@ -503,6 +506,9 @@ namespace Service.MedicalRecord.Migrations
 
                     b.Property<string>("Concepto")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Descuento")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("EstudioClave")
                         .HasColumnType("nvarchar(max)");

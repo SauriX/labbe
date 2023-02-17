@@ -1,7 +1,7 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/LabRamos/services/records/api/ResultValidation/getList",
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/RelaseResult/validation/getList",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -12,7 +12,7 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/records/api/ResultValidation/export/list",
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/RelaseResult/validation/export/list",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -24,7 +24,7 @@
     },
 
     {
-      "DownstreamPathTemplate": "/LabRamos/services/records/api/ResultValidation",
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/RelaseResult/validation",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -35,7 +35,7 @@
       "UpstreamHttpMethod": [ "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/records/api/ResultValidation/order/{recordId}/{requestId}",
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/RelaseResult/validation/order/{recordId}/{requestId}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -46,7 +46,7 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/records/api/ResultValidation/view/list",
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/RelaseResult/validation/view/list",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {

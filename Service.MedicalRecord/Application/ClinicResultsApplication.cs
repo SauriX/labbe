@@ -130,6 +130,11 @@ namespace Service.MedicalRecord.Application
                     }
                 });
             });
+            var range = template.Workbook.Worksheet("Captura de resultados clinicos").Range("Expedientes");
+            var table = template.Workbook.Worksheet("Captura de resultados clinicos").Range("$A$3:" + range.RangeAddress.LastAddress).CreateTable();
+            table.Theme = XLTableTheme.TableStyleMedium2;
+
+
             template.Format();
 
             return (template.ToByteArray(), $"Informe Captura de Resultados (Clínicos).xlsx");
@@ -507,6 +512,8 @@ namespace Service.MedicalRecord.Application
         }
         private List<RequestStudy> canSendResultResultsReady(Request request, int requestStudyId)
         {
+            //devuelve los estudios que pueden enviar siempre y cuando todos los estudios de ese día se encuentren en status liberado
+
             var resultsPerDay = request.Estudios
                 .ToList()
                 .GroupBy(x => x.FechaEntrega.Date);
@@ -633,13 +640,18 @@ namespace Service.MedicalRecord.Application
                     {
                         //if (canSendResultBalance(request.Solicitud) || EnvioManual)
                         //{
-                        await SendTestWhatsapp(files, request.Solicitud.EnvioWhatsApp, userId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
-                        await SendTestEmail(files, request.Solicitud.EnvioCorreo, userId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
-                        await UpdateStatusStudy(request.SolicitudEstudioId, Status.RequestStudy.Enviado, user);
+                        var resultsToSend = canSendResultResultsReady(existingRequest, results.First().SolicitudEstudioId);
+                        if (resultsToSend.Count() > 0)
+                        {
+                            
+                            await SendTestWhatsapp(files, request.Solicitud.EnvioWhatsApp, userId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
+                            await SendTestEmail(files, request.Solicitud.EnvioCorreo, userId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
+                            await UpdateStatusStudy(request.SolicitudEstudioId, Status.RequestStudy.Enviado, user);
 
-                        string descripcion = getDescriptionRecord(request.Clave, existingRequest.EnvioWhatsApp, existingRequest.EnvioCorreo);
+                            string descripcion = getDescriptionRecord(request.Clave, existingRequest.EnvioWhatsApp, existingRequest.EnvioCorreo);
 
-                        await CreateHistoryRecord(existingRequest.Id, request.SolicitudEstudioId, descripcion, user, existingRequest.EnvioWhatsApp, existingRequest.EnvioCorreo);
+                            await CreateHistoryRecord(existingRequest.Id, request.SolicitudEstudioId, descripcion, user, existingRequest.EnvioWhatsApp, existingRequest.EnvioCorreo);
+                        }
 
                         //}
                     }
@@ -656,9 +668,9 @@ namespace Service.MedicalRecord.Application
                     {
                         //if (canSendResultBalance(request.Solicitud) || EnvioManual)
                         //{
-                        var resultsToSend = canSendResultResultsReady(existingRequest, results.First().SolicitudEstudioId);
+                        
 
-                        await SendResultsFiles(request.SolicitudId, userId, user, resultsToSend);
+                        await SendResultsFiles(request.SolicitudId, userId, user, existingRequest.Estudios.ToList());
                         //}
                     }
                 }
@@ -809,19 +821,23 @@ namespace Service.MedicalRecord.Application
                     };
                     try
                     {
-                        //if (canSendResultBalance(existing.Solicitud) || EnvioManual)
-                        //{
 
-                        await SendTestWhatsapp(files, existing.Solicitud.EnvioWhatsApp, result.UsuarioId, existing.Solicitud.Expediente.NombreCompleto, existing.Solicitud.Clave);
+                        var existingRequest = await _repository.GetRequestById(existing.SolicitudId);
 
-                        await SendTestEmail(files, existing.Solicitud.EnvioCorreo, result.UsuarioId, existing.Solicitud.Expediente.NombreCompleto, existing.Solicitud.Clave);
+                        var resultsToSend = canSendResultResultsReady(existingRequest, existing.RequestStudyId);
+                        if (resultsToSend.Count() > 0)
+                        {
 
-                        await UpdateStatusStudy(result.EstudioId, Status.RequestStudy.Enviado, result.Usuario);
+                            await SendTestWhatsapp(files, existing.Solicitud.EnvioWhatsApp, result.UsuarioId, existing.Solicitud.Expediente.NombreCompleto, existing.Solicitud.Clave);
 
-                        string descripcion = getDescriptionRecord(existing.SolicitudEstudioId.ToString(), existing.Solicitud.EnvioWhatsApp, existing.Solicitud.EnvioCorreo);
+                            await SendTestEmail(files, existing.Solicitud.EnvioCorreo, result.UsuarioId, existing.Solicitud.Expediente.NombreCompleto, existing.Solicitud.Clave);
 
-                        await CreateHistoryRecord(result.SolicitudId, result.EstudioId, descripcion, result.Usuario, existing.Solicitud.EnvioWhatsApp, existing.Solicitud.EnvioCorreo);
-                        //}
+                            await UpdateStatusStudy(result.EstudioId, Status.RequestStudy.Enviado, result.Usuario);
+
+                            string descripcion = getDescriptionRecord(existing.SolicitudEstudioId.ToString(), existing.Solicitud.EnvioWhatsApp, existing.Solicitud.EnvioCorreo);
+
+                            await CreateHistoryRecord(result.SolicitudId, result.EstudioId, descripcion, result.Usuario, existing.Solicitud.EnvioWhatsApp, existing.Solicitud.EnvioCorreo);
+                        }
 
                     }
                     catch (Exception ex)
@@ -839,12 +855,10 @@ namespace Service.MedicalRecord.Application
 
                     var existingRequest = await _repository.GetRequestById(existing.SolicitudId);
 
-                    //if (existingRequest.Estudios.All(estudio => estudio.EstatusId == Status.RequestStudy.Liberado))
-                    //{
-                    var resultsToSend = canSendResultResultsReady(existingRequest, existing.RequestStudyId);
-
-                    await SendResultsFiles(existing.SolicitudId, result.UsuarioId, result.Usuario, resultsToSend);
-                    //}
+                    if (existingRequest.Estudios.All(estudio => estudio.EstatusId == Status.RequestStudy.Liberado))
+                    {
+                        await SendResultsFiles(existing.SolicitudId, result.UsuarioId, result.Usuario, existingRequest.Estudios.ToList());
+                    }
                     //}
 
 
@@ -979,25 +993,30 @@ namespace Service.MedicalRecord.Application
                     //if (files.Count > 0 && canSendResultBalance(existingRequest))
                     if (files.Count > 0)
                     {
+
+                        string correo = "";
+                        string telefono = "";
+
                         if (estudios.MediosEnvio.Contains("Whatsapp") && !string.IsNullOrEmpty(existingRequest.EnvioWhatsApp))
                         {
                             await SendTestWhatsapp(files, existingRequest.EnvioWhatsApp, estudios.UsuarioId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
-
+                            telefono = existingRequest.EnvioWhatsApp;
                         }
 
                         if (estudios.MediosEnvio.Contains("Correo") && !string.IsNullOrEmpty(existingRequest.EnvioCorreo))
                         {
 
                             await SendTestEmail(files, existingRequest.EnvioCorreo, estudios.UsuarioId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
+                            correo = existingRequest.EnvioCorreo;
                         }
 
                         foreach (var estudio in studiesToUpdate)
                         {
                             await UpdateStatusStudy(estudio.Id, Status.RequestStudy.Enviado, estudios.Usuario);
 
-                            string descripcion = getDescriptionRecord(estudio.Clave, existingRequest.EnvioWhatsApp, existingRequest.EnvioCorreo);
+                            string descripcion = getDescriptionRecord(estudio.Clave, telefono, correo);
 
-                            await CreateHistoryRecord(existingRequest.Id, estudio.Id, descripcion, estudios.Usuario, existingRequest.EnvioWhatsApp, existingRequest.EnvioCorreo);
+                            await CreateHistoryRecord(existingRequest.Id, estudio.Id, descripcion, estudios.Usuario, telefono, correo);
                         }
                     }
 
@@ -1196,17 +1215,18 @@ namespace Service.MedicalRecord.Application
             string descripcion = "Resultado del estudio " + clave + " ";
             if (!string.IsNullOrEmpty(numero) || !string.IsNullOrEmpty(correo))
             {
+                List<string> medios = new List<string>();
                 descripcion += "[";
                 if (!string.IsNullOrEmpty(numero))
                 {
-                    descripcion += "WhatsApp ";
+                    medios.Add("WhatsApp ");
                 }
-                descripcion += " | ";
+                
                 if (!string.IsNullOrEmpty(correo))
                 {
-                    descripcion += "Correo";
+                    medios.Add("Correo");
                 }
-                descripcion += "]";
+                descripcion += string.Join(" | ", medios) + "]";
             }
             else
             {
