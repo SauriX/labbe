@@ -71,7 +71,7 @@ namespace Service.Billing.Controllers
         }
 
         [HttpPost("print/pdf/{invoiceId}")]
-        public async Task<IActionResult> PrintInvoicePDF(string invoiceId)
+        public async Task<IActionResult> PrintInvoicePDF(Guid invoiceId)
         {
             var (file, fileName) = await _service.PrintInvoicePDF(invoiceId);
 
