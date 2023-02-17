@@ -190,18 +190,23 @@ namespace Service.MedicalRecord.Application
 
         public async Task<bool> EnvioFactura(InvoiceCompanyDeliverDto envio)
         {
-            var factura = await _billingClient.DownloadPDF(envio.FacturapiId);
+            List<SenderFiles> files = new List<SenderFiles>();
+            
 
-            string namePdf = string.Concat(envio.FacturapiId, ".pdf");
+                var factura = await _billingClient.DownloadPDF(envio.FacturapiId);
 
-            var pathInvoice = await SaveInvoicePdfPath(factura, namePdf);
+                string namePdf = string.Concat(envio.FacturapiId, ".pdf");
 
-            var pathName = Path.Combine(InvoiceCompanyPath, pathInvoice.Replace("wwwroot/", "")).Replace("\\", "/");
+                var pathInvoice = await SaveInvoicePdfPath(factura, namePdf);
 
-            var files = new List<SenderFiles>()
-                        {
-                            new SenderFiles(new Uri(pathName), namePdf)
-                        };
+                var pathName = Path.Combine(InvoiceCompanyPath, pathInvoice.Replace("wwwroot/", "")).Replace("\\", "/");
+
+                files = new List<SenderFiles>()
+                            {
+                                new SenderFiles(new Uri(pathName), namePdf)
+                            };
+           
+            
             foreach (var contacto in envio.Contactos)
             {
                 if (envio.MediosEnvio.Contains("whatsapp") || envio.MediosEnvio.Contains("ambos"))
@@ -225,7 +230,7 @@ namespace Service.MedicalRecord.Application
 
             return Path.Combine(path, name);
         }
-        public async Task SendInvoiceEmail(List<SenderFiles> senderFiles, string correo, Guid usuario, string nombrePaciente, string claveSolicitud, bool esPrueba)
+        public async Task SendInvoiceEmail(List<SenderFiles> senderFiles, string correo, Guid usuario, string nombrePaciente, Guid claveSolicitud, bool esPrueba)
         {
 
             var subject = RequestTemplates.Subjects.PathologicalSubject;
@@ -248,7 +253,7 @@ namespace Service.MedicalRecord.Application
 
         }
 
-        public async Task SendInvoiceWhatsapp(List<SenderFiles> senderFiles, string telefono, Guid usuario, string nombrePaciente, string claveSolicitud, bool esPrueba)
+        public async Task SendInvoiceWhatsapp(List<SenderFiles> senderFiles, string telefono, Guid usuario, string nombrePaciente, Guid claveSolicitud, bool esPrueba)
         {
 
             var message = esPrueba ? RequestTemplates.Messages.TestMessage : $"{nombrePaciente}, para LABPRATORIOS RAMOS ha sido un placer atenderte, a continuación se brindan los resultados de la solicitud {claveSolicitud}\n" +
