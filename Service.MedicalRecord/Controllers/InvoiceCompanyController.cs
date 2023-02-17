@@ -57,7 +57,7 @@ namespace Service.MedicalRecord.Controllers
         }
         [HttpPost("download/pdf/{facturapiId}")]
         [Authorize(Policies.Access)]
-        public async Task<IActionResult> DownloadPDF(string facturapiId)
+        public async Task<IActionResult> DownloadPDF(Guid facturapiId)
         {
             var file = await _billingClient.DownloadPDF(facturapiId);
 
@@ -66,7 +66,7 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("print/pdf/{facturapiId}")]
         [Authorize(Policies.Access)]
-        public async Task<IActionResult>  PrintPDF(string facturapiId)
+        public async Task<IActionResult>  PrintPDF(Guid facturapiId)
         {
             var file = await _billingClient.DownloadPDF(facturapiId);
 

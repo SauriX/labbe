@@ -7,7 +7,7 @@ namespace Service.MedicalRecord.Dtos.InvoiceCompany
     {
         public List<Contact> Contactos { get; set; }
         public List<string> MediosEnvio { get; set; }
-        public string FacturapiId { get; set; }
+        public Guid FacturapiId { get; set; }
         public Guid UsuarioId { get; set; }
         public bool EsPrueba { get; set; }
     }

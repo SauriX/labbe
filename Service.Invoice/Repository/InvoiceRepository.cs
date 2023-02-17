@@ -44,6 +44,7 @@ namespace Service.Billing.Repository
 
             return invoice;
         }
+        
 
         public async Task<List<Invoice>> GetByRecord(Guid recordId)
         {
@@ -143,17 +144,17 @@ namespace Service.Billing.Repository
                 throw;
             }
         }
-        public async Task UpdateInvoiceCompany(InvoiceCompany invoiceCompnay)
+        public async Task UpdateInvoiceCompany(Invoice invoiceCompnay)
         {
-            _context.CAT_Factura_Companias.Update(invoiceCompnay);
+            _context.CAT_Factura.Update(invoiceCompnay);
 
             await _context.SaveChangesAsync();
 
             _context.ChangeTracker.Clear();
         }
-        public async Task<InvoiceCompany> GetInvoiceCompanyByFacturapiId(string id)
+        public async Task<Invoice> GetInvoiceCompanyByFacturapiId(string id)
         {
-            var request = await _context.CAT_Factura_Companias
+            var request = await _context.CAT_Factura
                 .FirstOrDefaultAsync(x => x.FacturapiId == id);
 
             return request;
