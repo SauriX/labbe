@@ -38,6 +38,7 @@ namespace Service.MedicalRecord.Repository
                 //.Where(x => x.Procedencia == 2)
                 .AsQueryable();
 
+            requests = requests.Where(x => x.Pagos.Count() > 0);
 
             if (filter.FacturaMetodo == "company")
             {

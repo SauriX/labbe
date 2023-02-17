@@ -16,8 +16,8 @@ namespace Service.Billing.Repository.IRepository
         Task CreateInvoiceCompany(Invoice invoice);
         Task Update(Invoice invoice);
         Task UpdateCompany(InvoiceCompany invoice);
-        Task<InvoiceCompany> GetInvoiceCompanyByFacturapiId(string id);
-        Task UpdateInvoiceCompany(InvoiceCompany invoiceCompnay);
+        Task<Invoice> GetInvoiceCompanyByFacturapiId(string id);
+        Task UpdateInvoiceCompany(Invoice invoiceCompnay);
         Task<List<Invoice>> GetAllInvoice(InvoiceSearch search);
   
     }

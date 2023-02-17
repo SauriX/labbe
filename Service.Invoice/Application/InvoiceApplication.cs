@@ -154,11 +154,13 @@ namespace Service.Billing.Application
             return new(xml, invoiceId + ".xml");
         }
 
-        public async Task<(byte[], string)> PrintInvoicePDF(Guid invoiceId)
+        public async Task<(byte[], string)> PrintInvoicePDF(string invoiceId)
         {
-            var invoice = await GetExistingInvoice(invoiceId);
+            //var invoice = await GetExistingInvoice(invoiceId);
 
-            var pdf = await _invoiceClient.GetInvoicePDF(invoice.FacturapiId);
+            var factura = await _repository.GetInvoiceCompanyByFacturapiId(invoiceId);
+
+            var pdf = await _invoiceClient.GetInvoicePDF(factura.FacturapiId);
 
             return new(pdf, invoiceId + ".pdf");
         }

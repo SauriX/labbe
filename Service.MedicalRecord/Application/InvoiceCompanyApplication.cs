@@ -190,18 +190,23 @@ namespace Service.MedicalRecord.Application
 
         public async Task<bool> EnvioFactura(InvoiceCompanyDeliverDto envio)
         {
-            var factura = await _billingClient.DownloadPDF(envio.FacturapiId);
+            List<SenderFiles> files = new List<SenderFiles>();
+            
 
-            string namePdf = string.Concat(envio.FacturapiId, ".pdf");
+                var factura = await _billingClient.DownloadPDF(envio.FacturapiId);
 
-            var pathInvoice = await SaveInvoicePdfPath(factura, namePdf);
+                string namePdf = string.Concat(envio.FacturapiId, ".pdf");
 
-            var pathName = Path.Combine(InvoiceCompanyPath, pathInvoice.Replace("wwwroot/", "")).Replace("\\", "/");
+                var pathInvoice = await SaveInvoicePdfPath(factura, namePdf);
 
-            var files = new List<SenderFiles>()
-                        {
-                            new SenderFiles(new Uri(pathName), namePdf)
-                        };
+                var pathName = Path.Combine(InvoiceCompanyPath, pathInvoice.Replace("wwwroot/", "")).Replace("\\", "/");
+
+                files = new List<SenderFiles>()
+                            {
+                                new SenderFiles(new Uri(pathName), namePdf)
+                            };
+           
+            
             foreach (var contacto in envio.Contactos)
             {
                 if (envio.MediosEnvio.Contains("whatsapp") || envio.MediosEnvio.Contains("ambos"))
