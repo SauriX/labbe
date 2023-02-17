@@ -15,7 +15,7 @@ namespace Service.Report.Application.IApplication
         Task Create(IndicatorsStatsDto indicators);
         Task Update(IndicatorsStatsDto indicators);
         Task UpdateSample(SamplesCostsDto sample);
-        Task UpdateService(ServiceUpdateDto service);
+        Task UpdateService(UpdateServiceDto service);
         Task GetIndicatorForm(IndicatorsStatsDto indicators);
         Task SaveServiceFile(IFormFile archivo, Guid userId);
         Task<(byte[] file, string fileName)> ExportSamplingsCost(ReportModalFilterDto search);

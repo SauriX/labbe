@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Service.Catalog.Application
 {
@@ -52,7 +53,7 @@ namespace Service.Catalog.Application
         {
             var budgets = await _repository.GetActive();
 
-            return budgets.ToBudgetSelectInputDto();
+            return budgets.ToBudgetListDto();
         }
 
         public async Task<IEnumerable<BudgetListDto>> GetBudgetByBranch(Guid branchId)
@@ -64,9 +65,16 @@ namespace Service.Catalog.Application
 
         public async Task<IEnumerable<BudgetListDto>> GetBudgetsByBranch(BudgetFilterDto search)
         {
-            var budgets = await _repository.GetBudgetsByBranch(search);
+            var budgets = await _repository.GetServiceCostByFilter(search);
 
             return budgets.ToBranchBudgetListDto();
+        }
+
+        public async Task<IEnumerable<ServiceUpdateDto>> GetServiceCostByBranch(BudgetFilterDto search)
+        {
+            var budgets = await _repository.GetServiceCostByFilter(search);
+
+            return budgets.ToBudgetByBranchDto();
         }
 
         public async Task<BudgetListDto> Create(BudgetFormDto budget)
@@ -87,11 +95,11 @@ namespace Service.Catalog.Application
             return newBudget.ToBudgetListDto();
         }
 
-        public async Task CreateList(List<BudgetFormDto> budgets)
+        public async Task CreateList(List<BudgetBranchFormDto> budgets)
         {
-            var newBudget = budgets.ToModelList();
+            var newBudgets = budgets.ToModelList();
 
-            await _repository.CreateList(newBudget);
+            await _repository.CreateList(newBudgets);
         }
 
         public async Task<BudgetListDto> Update(BudgetFormDto budget)
@@ -114,19 +122,15 @@ namespace Service.Catalog.Application
             return updateBudget.ToBudgetListDto();
         }
 
-        public async Task UpdateService(ServiceUpdateDto service, Guid userId)
+        public async Task UpdateService(UpdateServiceDto services, Guid userId)
         {
-            var existing = await _repository.GetById(service.Id);
+            var service = services.Servicios;
+            var serviceIds = service.Select(x => x.Id).ToList();
+            var currentServices = await _repository.GetBudgetsById(serviceIds);
 
-            if (existing == null)
-            {
-                throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
-            }
+            var newBudget = service.ToModelBudgetBranch(userId, currentServices);
 
-            existing.CostoFijo = service.CostoFijo;
-            existing.UsuarioModificoId = userId;
-
-            await _repository.Update(existing);
+            await _repository.UpdateService(newBudget, services.Filtros);
         }
 
         public async Task<byte[]> ExportList(string search)
@@ -181,7 +185,7 @@ namespace Service.Catalog.Application
 
             if (isDuplicate)
             {
-                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave"));
+                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o el nombre"));
             }
         }
     }
