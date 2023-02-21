@@ -173,7 +173,11 @@ namespace Service.MedicalRecord.Application
                 study.Parametros = st.Parametros.Where(x => !x.TipoValor.In(VT.Observacion, VT.Etiqueta, VT.SinValor, VT.Texto, VT.Parrafo)).ToList();
                 study.Indicaciones = st.Indicaciones;
 
-                study.Tipo = st.Parametros.Count() > 0 ? "LABORATORIO" : "PATOLOGICO";
+                if (st.Parametros.Count() > 0) study.Tipo = "LABORATORIO";
+                else if (st.Parametros.Count() == 0 && study.DepartamentoId == 2) study.Tipo = "IMAGENOLOGIA";
+                else study.Tipo = "PATOLOGICO";
+
+                //study.Tipo = st.Parametros.Count() > 0 ? "LABORATORIO" : "PATOLOGICO";
 
                 var promos = studiesPromos.Where(x => x.EstudioId == study.EstudioId).ToList();
                 study.Promociones = promos;

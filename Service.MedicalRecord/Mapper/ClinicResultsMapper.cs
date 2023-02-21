@@ -167,7 +167,7 @@ namespace Service.MedicalRecord.Mapper
             string fullNamesImages = null;
 
             if (newNameFiles.Length > 0)
-            {
+            { 
                 fullNamesImages = string.Join(",", newNameFiles);
             }
             else
