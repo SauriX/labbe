@@ -87,7 +87,7 @@ namespace Service.Catalog.Repository
         public async Task<PriceList> GetById(Guid Id)
         {
             var indication = await _context.CAT_ListaPrecio
-                //.Include(x => x.Estudios).ThenInclude(x => x.Estudio).ThenInclude(x => x.Area).ThenInclude(x => x.Departamento)
+                .Include(x => x.Estudios).ThenInclude(x => x.Estudio).ThenInclude(x => x.Area).ThenInclude(x => x.Departamento)
                 //.Include(x => x.Estudios).ThenInclude(x => x.Estudio).ThenInclude(x => x.Tapon)
                 .Include(x => x.Sucursales).ThenInclude(x => x.Sucursal)
                 .Include(x => x.Compañia).ThenInclude(x => x.Compañia)
