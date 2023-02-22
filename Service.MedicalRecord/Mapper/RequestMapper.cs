@@ -13,6 +13,8 @@ namespace Service.MedicalRecord.Mapper
         private const byte VIGENTE = 1;
         private const byte PARTICULAR = 2;
         private const byte URGENCIA_NORMAL = 1;
+        private const byte URGENCIA = 2;
+        private const byte URGENCIA_CARGO = 3;
 
         public static RequestDto ToRequestDto(this Request model)
         {
@@ -138,61 +140,56 @@ namespace Service.MedicalRecord.Mapper
             return model.Select(x => x.ToRequestPaymentDto());
         }
 
-        public static List<RequestTag> ToRequestTag(this IEnumerable<RequestTagDto> dto, List<RequestTag> tags, Guid requestId, Guid userId)
+        public static List<RequestTagDto> ToRequestTagDto(this IEnumerable<RequestTag> model)
         {
-            if (dto == null) return new List<RequestTag>();
+            if (model == null) return new List<RequestTagDto>();
 
-            return dto.Select((x) =>
+            return model.Select((x) => new RequestTagDto
             {
-                var tag = tags.Find(t => t.Id == x.Id);
-
-                return new RequestTag
-                {
-                    Id = x.Id,
-                    EtiquetaId = x.EtiquetaId,
-                    Identificador = x.Identificador,
-                    SolicitudId = requestId,
-                    ClaveEtiqueta = x.ClaveEtiqueta,
-                    NombreEtiqueta = x.NombreEtiqueta,
-                    ClaveInicial = x.ClaveInicial,
-                    Cantidad = x.Cantidad,
-                    Color = x.Color,
-                    Borrado = x.Borrado,
-                    Estudios = x.Estudios.ToRequestStudyTag(tag.Estudios, x.Id, userId),
-                    UsuarioCreoId = tag == null ? userId : tag.UsuarioCreoId,
-                    FechaCreo = tag == null ? DateTime.Now : tag.FechaCreo,
-                    UsuarioModificoId = tag == null ? null : userId,
-                    FechaModifico = tag == null ? null : DateTime.Now,
-                };
+                Id = x.Id,
+                Clave = x.Clave,
+                DestinoId = x.DestinoId,
+                Destino = x.Destino,
+                DestinoTipo = x.DestinoTipo,
+                EtiquetaId = x.EtiquetaId,
+                ClaveEtiqueta = x.ClaveEtiqueta,
+                NombreEtiqueta = x.NombreEtiqueta,
+                ClaveInicial = x.ClaveInicial,
+                Cantidad = x.Cantidad,
+                Color = x.Color,
+                Estudios = x.Estudios.ToRequestStudyTagDto(),
             }).ToList();
         }
 
-        public static List<RequestTagStudy> ToRequestStudyTag(this IEnumerable<RequestTagStudyDto> dto, List<RequestTagStudy> tags, int tagId, Guid userId)
+        public static List<RequestTagStudyDto> ToRequestStudyTagDto(this IEnumerable<RequestTagStudy> model)
         {
-            if (dto == null) return new List<RequestTagStudy>();
+            if (model == null) return new List<RequestTagStudyDto>();
 
-            return dto.Select((x) =>
+            return model.Select((x) => new RequestTagStudyDto
             {
-                var tag = tags?.Find(t => t.Id == x.Id);
+                Id = x.Id,
+                Cantidad = x.Cantidad,
+                EstudioId = x.EstudioId,
+                Orden = x.Orden,
+                NombreEstudio = x.NombreEstudio,
+            }).ToList();
+        }
 
-                return new RequestTagStudy
-                {
-                    Id = x.Id,
-                    SolicitudEtiquetaId = tagId,
-                    EtiquetaId = x.EtiquetaId,
-                    Identificador = x.Identificador,
-                    Cantidad = x.Cantidad,
-                    Borrado = x.Borrado,
-                    EstudioId = x.EstudioId,
-                    IdentificadorEtiqueta = x.IdentificadorEtiqueta,
-                    Manual = x.Manual,
-                    Nombre = x.Nombre,
-                    Orden = x.Orden,
-                    UsuarioCreoId = tag == null ? userId : tag.UsuarioCreoId,
-                    FechaCreo = tag == null ? DateTime.Now : tag.FechaCreo,
-                    UsuarioModificoId = tag == null ? null : userId,
-                    FechaModifico = tag == null ? null : DateTime.Now,
-                };
+        public static List<RequestPrintTagDto> ToRequestPrintTagDto(this IEnumerable<RequestTagDto> model, Request request)
+        {
+            if (model == null) return new List<RequestPrintTagDto>();
+
+            return model.Select((x) => new RequestPrintTagDto
+            {
+                Clave = x.Clave,
+                ClaveEtiqueta = x.ClaveEtiqueta,
+                Cantidad = x.Cantidad,
+                Ciudad = request.Sucursal.Ciudad,
+                EdadSexo = request.Expediente.Edad + " años " + request.Expediente.Genero,
+                Tipo = request.Urgencia == URGENCIA_NORMAL ? "NORMAL" : request.Urgencia == URGENCIA ? "URGENCIA" : request.Urgencia == URGENCIA_CARGO ? "URGENCIA CON CARGO" : "",
+                Medico = request.Medico.Clave,
+                Paciente = request.Expediente.NombreCompleto,
+                Estudios = string.Join(", ", x.Estudios.Select(x => x.NombreEstudio))
             }).ToList();
         }
 
@@ -355,7 +352,6 @@ namespace Service.MedicalRecord.Mapper
                 NombreEstatus = x.Estatus?.Nombre,
                 Asignado = x.EstudioWeeClinic?.Asignado ?? true,
                 Metodo = x.Metodo,
-                Etiquetas = new List<RequestTagDto>(),
                 FechaTomaMuestra = x.FechaTomaMuestra?.ToString("dd/MM/yyyy HH:mm"),
                 FechaSolicitado = x.FechaSolicitado?.ToString("dd/MM/yyyy HH:mm"),
                 FechaActualizacion = x.EstatusId == Status.RequestStudy.Pendiente
@@ -386,6 +382,61 @@ namespace Service.MedicalRecord.Mapper
                     : x.EstatusId == Status.RequestStudy.Enviado
                     ? x.UsuarioEnviado
                     : "",
+            }).ToList();
+        }
+
+        public static List<RequestTag> ToModel(this IEnumerable<RequestTagDto> dto, List<RequestTag> tags, Guid requestId)
+        {
+            if (dto == null) return new List<RequestTag>();
+
+            return dto.Select((x) =>
+            {
+                var tag = tags.Find(t => t.Id == x.Id);
+
+                return new RequestTag
+                {
+                    Id = x.Id,
+                    Clave = x.Clave,
+                    EtiquetaId = x.EtiquetaId,
+                    SolicitudId = requestId,
+                    DestinoId = x.DestinoId,
+                    Destino = x.Destino,
+                    DestinoTipo = x.DestinoTipo,
+                    ClaveEtiqueta = x.ClaveEtiqueta,
+                    NombreEtiqueta = x.NombreEtiqueta,
+                    ClaveInicial = x.ClaveInicial,
+                    Cantidad = x.Cantidad,
+                    Color = x.Color,
+                    Estudios = x.Estudios.ToModel(tag?.Estudios, x.Id, x.UsuarioId),
+                    UsuarioCreoId = tag == null ? x.UsuarioId : tag.UsuarioCreoId,
+                    FechaCreo = tag == null ? DateTime.Now : tag.FechaCreo,
+                    UsuarioModificoId = tag == null ? null : x.UsuarioId,
+                    FechaModifico = tag == null ? null : DateTime.Now,
+                };
+            }).ToList();
+        }
+
+        public static List<RequestTagStudy> ToModel(this IEnumerable<RequestTagStudyDto> dto, IEnumerable<RequestTagStudy> tags, int tagId, Guid userId)
+        {
+            if (dto == null) return new List<RequestTagStudy>();
+
+            return dto.Select((x) =>
+            {
+                var tag = tags?.FirstOrDefault(t => t.Id == x.Id);
+
+                return new RequestTagStudy
+                {
+                    Id = x.Id,
+                    SolicitudEtiquetaId = tagId,
+                    Cantidad = x.Cantidad,
+                    EstudioId = x.EstudioId,
+                    Orden = x.Orden,
+                    NombreEstudio = x.NombreEstudio,
+                    UsuarioCreoId = tag == null ? userId : tag.UsuarioCreoId,
+                    FechaCreo = tag == null ? DateTime.Now : tag.FechaCreo,
+                    UsuarioModificoId = tag == null ? null : userId,
+                    FechaModifico = tag == null ? null : DateTime.Now,
+                };
             }).ToList();
         }
 

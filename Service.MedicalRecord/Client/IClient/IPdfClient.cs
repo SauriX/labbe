@@ -16,7 +16,7 @@ namespace Service.MedicalRecord.Client.IClient
         Task<byte[]> GenerateInvoiceCompanyTicket(RequestTicketDto ticket);
         Task<byte[]> GenerateQuotation();
         Task<byte[]> GenerateOrder(RequestOrderDto order);
-        Task<byte[]> GenerateTags(List<RequestTagDto> tags);
+        Task<byte[]> GenerateTags(List<RequestPrintTagDto> tags);
         Task<byte[]> GenerateLabResults(ClinicResultsPdfDto order);
         Task<byte[]> GeneratePathologicalResults(ClinicResultPathologicalPdfDto order);
         Task<byte[]> PendigForm(List<PendingReciveDto> order);

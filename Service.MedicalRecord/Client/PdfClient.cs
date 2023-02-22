@@ -11,6 +11,7 @@ using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.RportStudy;
 using Service.MedicalRecord.Dtos.WorkList;
 using Shared.Error;
+using Shared.Extensions;
 using Shared.Helpers;
 using System;
 using System.Collections.Generic;
@@ -136,31 +137,12 @@ namespace Service.MedicalRecord.Client
             }
         }
 
-        public async Task<byte[]> GenerateTags(List<RequestTagDto> tags)
+        public async Task<byte[]> GenerateTags(List<RequestPrintTagDto> tags)
         {
-            try
-            {
-                var json = JsonConvert.SerializeObject(tags);
+            var url = $"{_configuration.GetValue<string>("ClientRoutes:Pdf")}/api/pdf/tags";
+            var response = await _client.PostAsJson<byte[]>(url, tags);
 
-                var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
-
-                var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Pdf")}/api/pdf/tags", stringContent);
-
-                if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
-                {
-                    return await response.Content.ReadAsByteArrayAsync();
-                }
-
-                var error = await response.Content.ReadFromJsonAsync<ClientException>();
-
-                var ex = Exceptions.GetException(error);
-
-                throw ex;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            return response;
         }
 
         public async Task<byte[]> GenerateLabResults(ClinicResultsPdfDto order)
@@ -241,7 +223,7 @@ namespace Service.MedicalRecord.Client
                 throw;
             }
         }
-        public async Task<byte[]>RequestDayForm(List<ReportRequestListDto> request)
+        public async Task<byte[]> RequestDayForm(List<ReportRequestListDto> request)
         {
             try
             {

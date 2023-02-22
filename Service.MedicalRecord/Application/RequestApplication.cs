@@ -153,6 +153,7 @@ namespace Service.MedicalRecord.Application
 
                     study.Parametros = st.Parametros.Where(x => !x.TipoValor.In(VT.Observacion, VT.Etiqueta, VT.SinValor, VT.Texto, VT.Parrafo)).ToList();
                     study.Indicaciones = st.Indicaciones;
+                    study.Etiquetas = st.Etiquetas;
                 }
 
                 var promos = packsPromos.Where(x => x.PaqueteId == pack.PaqueteId).ToList();
@@ -163,7 +164,7 @@ namespace Service.MedicalRecord.Application
                     pack.Promociones.Add(new PriceListInfoPromoDto(0, pack.PaqueteId, pack.PromocionId, pack.Promocion, pack.Descuento, pack.DescuentoPorcentaje));
                 }
             }
-            
+
             foreach (var study in studiesDto)
             {
                 if (string.IsNullOrEmpty(request.FolioWeeClinic)) study.Asignado = true;
@@ -173,6 +174,7 @@ namespace Service.MedicalRecord.Application
 
                 study.Parametros = st.Parametros.Where(x => !x.TipoValor.In(VT.Observacion, VT.Etiqueta, VT.SinValor, VT.Texto, VT.Parrafo)).ToList();
                 study.Indicaciones = st.Indicaciones;
+                study.Etiquetas = st.Etiquetas;
 
                 study.Tipo = st.Parametros.Count() > 0 ? "LABORATORIO" : "PATOLOGICO";
 
@@ -206,6 +208,17 @@ namespace Service.MedicalRecord.Application
             var paymentsDto = payments.ToRequestPaymentDto();
 
             return paymentsDto;
+        }
+
+        public async Task<IEnumerable<RequestTagDto>> GetTags(Guid recordId, Guid requestId)
+        {
+            await GetExistingRequest(recordId, requestId);
+
+            var tags = await _repository.GetTags(requestId);
+
+            var tagsDto = tags.ToRequestTagDto();
+
+            return tagsDto;
         }
 
         public async Task<IEnumerable<string>> GetImages(Guid recordId, Guid requestId)
@@ -737,17 +750,29 @@ namespace Service.MedicalRecord.Application
             }
         }
 
-        private async Task<List<RequestTagDto>> HandleTags(Guid recordId, Guid requestId, Guid userId, List<RequestTagDto> tagsDto)
+        public async Task<List<RequestTagDto>> UpdateTags(Guid recordId, Guid requestId, List<RequestTagDto> tagsDto)
         {
             var request = await GetExistingRequest(recordId, requestId);
 
-            var existingTags = new List<RequestTag>();
+            var existingTags = await _repository.GetTags(requestId);
 
-            var tags = tagsDto.ToRequestTag(existingTags, requestId, userId);
+            var tags = tagsDto.ToModel(existingTags, requestId);
 
-            await _repository.BulkInsertUpdateTags(request.Id, tags);
+            await _repository.BulkInsertUpdateDeleteTags(request.Id, tags);
 
-            return new List<RequestTagDto>();
+            foreach (var item in tagsDto)
+            {
+                var tag = tags.First(x => x.EtiquetaId == item.EtiquetaId && x.DestinoId == item.DestinoId);
+                item.Id = tag.Id;
+
+                foreach (var itemStudy in item.Estudios)
+                {
+                    var study = tag.Estudios.First(x => x.NombreEstudio == itemStudy.NombreEstudio);
+                    itemStudy.Id = study.Id;
+                }
+            }
+
+            return tagsDto;
         }
 
         public async Task CancelRequest(Guid recordId, Guid requestId, Guid userId)
@@ -1014,7 +1039,7 @@ namespace Service.MedicalRecord.Application
             return await _pdfClient.GenerateOrder(order);
         }
 
-        public async Task<byte[]> PrintTags(Guid recordId, Guid requestId, List<RequestTagDto> tags)
+        public async Task<byte[]> PrintTags(Guid recordId, Guid requestId, List<RequestTagDto> tagsDto)
         {
             var request = await _repository.GetById(requestId);
 
@@ -1023,8 +1048,7 @@ namespace Service.MedicalRecord.Application
                 throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
             }
 
-            //var printTags = await HandleTags(request, tags);
-            List<RequestTagDto> printTags = new();
+            var printTags = tagsDto.ToRequestPrintTagDto(request);
 
             return await _pdfClient.GenerateTags(printTags);
         }

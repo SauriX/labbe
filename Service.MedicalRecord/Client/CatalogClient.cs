@@ -8,6 +8,7 @@ using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.Route;
 using Service.MedicalRecord.Dtos.Series;
 using Shared.Error;
+using Shared.Extensions;
 using Shared.Helpers;
 using System;
 using System.Collections.Generic;
@@ -98,7 +99,7 @@ namespace Service.MedicalRecord.Client
         {
             var json = JsonConvert.SerializeObject(id);
             var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/route/multiple",stringContent);
+            var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/route/multiple", stringContent);
 
             if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
             {
@@ -122,29 +123,10 @@ namespace Service.MedicalRecord.Client
 
         public async Task<List<RequestStudyParamsDto>> GetStudies(List<int> studies)
         {
-            try
-            {
-                var json = JsonConvert.SerializeObject(studies);
+            var url = $"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/study/multiple";
+            var response = await _client.PostAsJson<List<RequestStudyParamsDto>>(url, studies);
 
-                var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
-
-                var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/study/multiple", stringContent);
-
-                if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
-                {
-                    return await response.Content.ReadFromJsonAsync<List<RequestStudyParamsDto>>();
-                }
-
-                var error = await response.Content.ReadFromJsonAsync<ClientException>();
-
-                var ex = Exceptions.GetException(error);
-
-                throw ex;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            return response;
         }
 
         public async Task<List<PriceListInfoPromoDto>> GetStudiesPromos(List<PriceListInfoFilterDto> studies)

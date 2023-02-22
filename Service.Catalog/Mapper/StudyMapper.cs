@@ -49,10 +49,10 @@ namespace Service.Catalog.Mapper
                 Id = x.Id,
                 Parametros = x.Parameters.OrderBy(x => x.Orden).Select(y => y.Parametro).ToParameterValueStudyDto(),
                 Indicaciones = x.Indications.Select(y => y.Indicacion).ToIndicationListDto(),
+                Etiquetas = x.Etiquetas.ToStudyTagDto(),
                 Metodo = x.Metodo?.Nombre,
                 Clave = x.Clave,
                 Tipo = x.SampleType?.Nombre
-
             });
         }
         public static IEnumerable<PriceStudyList> toPriceStudyList(this List<Study> models)
@@ -78,8 +78,7 @@ namespace Service.Catalog.Mapper
 
             return model.Select(x => new StudyTagDto
             {
-                Id = x.Id,
-                Identificador = Helpers.GenerateRandomHex(6),
+                DestinoId = "",
                 EtiquetaId = x.EtiquetaId,
                 EstudioId = x.EstudioId,
                 ClaveEtiqueta = x.Etiqueta.Clave,

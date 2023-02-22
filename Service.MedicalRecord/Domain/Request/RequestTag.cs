@@ -11,14 +11,16 @@ namespace Service.MedicalRecord.Domain.Request
         public int Id { get; set; }
         public Guid SolicitudId { get; set; }
         public virtual Request Solicitud { get; set; }
-        public string Identificador { get; set; }
+        public string Clave { get; set; }
+        public string DestinoId { get; set; }
+        public string Destino { get; set; }
+        public byte DestinoTipo { get; set; }
         public int EtiquetaId { get; set; }
         public string ClaveEtiqueta { get; set; }
         public string ClaveInicial { get; set; }
         public string NombreEtiqueta { get; set; }
         public string Color { get; set; }
         public decimal Cantidad { get; set; }
-        public bool Borrado { get; set; }
-        public List<RequestTagStudy> Estudios { get; set; }
+        public virtual ICollection<RequestTagStudy> Estudios { get; set; }
     }
 }

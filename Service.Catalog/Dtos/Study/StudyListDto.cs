@@ -20,5 +20,6 @@ namespace Service.Catalog.Dtos.Study
         public string? Tipo { get; set; }
         public IEnumerable<ParameterValueStudyDto> Parametros { get; set; }
         public IEnumerable<IndicationListDto> Indicaciones { get; set; }
+        public IEnumerable<StudyTagDto> Etiquetas { get; set; }
     }
 }
