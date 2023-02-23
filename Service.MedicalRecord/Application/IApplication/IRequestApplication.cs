@@ -14,6 +14,7 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<RequestGeneralDto> GetGeneral(Guid recordId, Guid requestId);
         Task<RequestStudyUpdateDto> GetStudies(Guid recordId, Guid requestId);
         Task<IEnumerable<RequestPaymentDto>> GetPayments(Guid recordId, Guid requestId);
+        Task<IEnumerable<RequestTagDto>> GetTags(Guid recordId, Guid requestId);
         Task<IEnumerable<string>> GetImages(Guid recordId, Guid requestId);
         Task<string> GetNextPaymentNumber(string serie);
         Task SendTestEmail(RequestSendDto requestDto);
@@ -27,6 +28,7 @@ namespace Service.MedicalRecord.Application.IApplication
         Task UpdateGeneral(RequestGeneralDto requestDto);
         Task UpdateTotals(RequestTotalDto requestDto);
         Task<RequestStudyUpdateDto> UpdateStudies(RequestStudyUpdateDto requestDto, bool isDeleting = false);
+        Task<List<RequestTagDto>> UpdateTags(Guid recordId, Guid requestId, List<RequestTagDto> tags);
         Task CancelRequest(Guid recordId, Guid requestId, Guid userId);
         Task DeleteRequest(Guid recordId, Guid requestId);
         Task CancelStudies(RequestStudyUpdateDto requestDto);

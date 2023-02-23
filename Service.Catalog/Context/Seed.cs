@@ -29,6 +29,7 @@ using Shared.Extensions;
 using Service.Catalog.Domain.Price;
 using Shared.Dictionary;
 using Service.Catalog.Domain.Company;
+using Service.Catalog.Domain.Route;
 
 namespace Service.Catalog.Context
 {
@@ -496,6 +497,32 @@ namespace Service.Catalog.Context
                 var studyPrices = SeedData.SeedData.GetStudyPrices();
 
                 context.Relacion_ListaP_Estudio.AddRange(studyPrices);
+
+                await context.SaveChangesAsync();
+            }
+
+            // RUTAS
+            if (!context.CAT_Rutas.Any())
+            {
+                var studies = await context.CAT_Estudio.Include(x => x.Maquilador).Where(x => x.MaquiladorId != null).ToListAsync();
+                var branches = await context.CAT_Sucursal.ToListAsync();
+
+                var routes = new List<Route>();
+
+                foreach (var branch in branches)
+                {
+                    foreach (var group in studies.GroupBy(x => new { x.MaquiladorId, x.Maquilador.Clave, x.Maquilador.Nombre }))
+                    {
+                        routes.Add(new Route(
+                            $"R-{branch.Clave}-{group.Key.Clave}",
+                            $"Ruta {branch.Nombre} - {group.Key.Nombre}",
+                            branch.Id,
+                            (int)group.Key.MaquiladorId,
+                            group.Select(x => x.Id)));
+                    }
+                }
+
+                context.CAT_Rutas.AddRange(routes);
 
                 await context.SaveChangesAsync();
             }

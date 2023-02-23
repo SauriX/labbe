@@ -2,6 +2,7 @@
 using Service.Catalog.Domain.Parameter;
 using Service.Catalog.Domain.Study;
 using Service.Catalog.Dtos.Study;
+using Shared.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,16 +29,17 @@ namespace Service.Catalog.Mapper
                 Activo = x.Activo,
             });
         }
+
         public static IEnumerable<StudyListDto> ToStudyListDtos(this List<Study> model, List<int> ids)
         {
             if (model == null) return null;
 
             List<Study> completeStudies = new();
 
-            foreach(var id in ids)
+            foreach (var id in ids)
             {
                 Study study = model.Where(x => x.Id == id).FirstOrDefault();
-                if(study != null)
+                if (study != null)
                 {
                     completeStudies.Add(study);
                 }
@@ -48,26 +50,29 @@ namespace Service.Catalog.Mapper
                 Id = x.Id,
                 Parametros = x.Parameters.OrderBy(x => x.Orden).Select(y => y.Parametro).ToParameterValueStudyDto(),
                 Indicaciones = x.Indications.Select(y => y.Indicacion).ToIndicationListDto(),
+                Etiquetas = x.Etiquetas.ToStudyTagDto(),
                 Metodo = x.Metodo?.Nombre,
                 Clave = x.Clave,
                 Tipo = x.SampleType?.Nombre
+            });
+        }
+
+        public static IEnumerable<PriceStudyList> toPriceStudyList(this List<Study> models)
+        {
+            if (models == null) return null;
+            return models.Select(model => new PriceStudyList
+            {
+                Id = model.Id,
+                EstudioId = model.Id,
+                Nombre = model.Nombre,
+                Area = model.Area?.Nombre,
+                Departamento = model.Area?.Departamento?.Nombre,
+                Activo = false,
+                Precio = 0,
+                Clave = model.Clave,
 
             });
         }
-        public static IEnumerable<PriceStudyList> toPriceStudyList(this List<Study> models) {
-            if (models == null) return null;
-            return models.Select(model => new PriceStudyList {
-                Id = model.Id,
-                EstudioId = model.Id,
-                Nombre= model.Nombre,
-                Area= model.Area?.Nombre,
-                Departamento= model.Area?.Departamento?.Nombre,
-                Activo= false,
-                Precio= 0,
-                Clave= model.Clave,
-                
-            });
-        }       
 
         public static IEnumerable<StudyTagDto> ToStudyTagDto(this IEnumerable<StudyTag> model)
         {
@@ -75,15 +80,16 @@ namespace Service.Catalog.Mapper
 
             return model.Select(x => new StudyTagDto
             {
-                Id = x.Id,
+                DestinoId = "",
                 EtiquetaId = x.EtiquetaId,
                 EstudioId = x.EstudioId,
-                Clave = x.Etiqueta.Clave,
+                ClaveEtiqueta = x.Etiqueta.Clave,
                 ClaveInicial = x.Etiqueta.ClaveInicial,
+                NombreEtiqueta = x.Etiqueta.Nombre,
                 Cantidad = x.Cantidad,
                 Color = x.Etiqueta.Color,
-                Nombre = x.Nombre,
-                Orden = x.Orden
+                Orden = x.Orden,
+                NombreEstudio = x.Nombre ?? x.Estudio?.Clave ?? "Sin estudio"
             }).ToList();
         }
 
@@ -113,7 +119,7 @@ namespace Service.Catalog.Mapper
                 Cantidad = model.Cantidad,
                 Prioridad = model.Prioridad,
                 Urgencia = model.Urgencia,
-                WorkLists =model.WorkList,
+                WorkLists = model.WorkList,
                 Parameters = model.Parameters.OrderBy(x => x.Orden).Select(y => y.Parametro).ToList().ToParameterListDto(),
                 Indicaciones = model.Indications.Select(y => y.Indicacion).ToList().ToIndicationListDto(),
                 Reactivos = model.Reagents.Select(y => y.Reagent).ToList().ToReagentListDto(),
@@ -155,7 +161,7 @@ namespace Service.Catalog.Mapper
                 FechaCreo = DateTime.Now,
                 UsuarioModificoId = model.UsuarioId,
                 FechaModifico = DateTime.Now,
-                Parameters = model.Parameters.Select((x, i)=> new ParameterStudy
+                Parameters = model.Parameters.Select((x, i) => new ParameterStudy
                 {
                     ParametroId = Guid.Parse(x.Id),
                     EstudioId = study.Id,
@@ -163,7 +169,7 @@ namespace Service.Catalog.Mapper
                     UsuarioCreoId = Guid.Empty,
                     FechaCreo = DateTime.Now,
                     UsuarioModificoId = Guid.Empty,
-                    FechaModifico = DateTime.Now, 
+                    FechaModifico = DateTime.Now,
                     Orden = i,
                 }).ToList(),
                 WorkList = model.WorkLists,

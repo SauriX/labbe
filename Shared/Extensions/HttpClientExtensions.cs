@@ -40,6 +40,13 @@ namespace Shared.Extensions
                 return default;
             }
 
+            if (typeof(TResponse).FullName == "System.Byte[]")
+            {
+                var data = await response.Content.ReadAsByteArrayAsync();
+
+                return (TResponse)Convert.ChangeType(data, typeof(TResponse));
+            }
+
             var dataAsString = await response.Content.ReadAsStringAsync();
 
             try

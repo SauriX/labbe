@@ -38,7 +38,7 @@ namespace Service.Catalog.Repository
             var prices = _context.Relacion_ListaP_Estudio
                 .Include(x => x.Estudio.Parameters).ThenInclude(x => x.Parametro.Area.Departamento)
                 .Include(x => x.Estudio.Indications).ThenInclude(x => x.Indicacion)
-                .Include(x => x.Estudio).ThenInclude(x => x.Tapon)
+                .Include(x => x.Estudio).ThenInclude(x => x.Etiquetas).ThenInclude(x => x.Etiqueta)
                 .Include(x => x.Estudio).ThenInclude(x => x.Maquilador)
                 .Include(x => x.PrecioLista)
                 .Where(x => x.EstudioId == studyId);
@@ -58,7 +58,7 @@ namespace Service.Catalog.Repository
             var prices = await _context.Relacion_ListaP_Estudio
                 .Include(x => x.Estudio.Parameters).ThenInclude(x => x.Parametro.Area.Departamento)
                 .Include(x => x.Estudio.Indications).ThenInclude(x => x.Indicacion)
-                .Include(x => x.Estudio.Tapon)
+                .Include(x => x.Estudio.Etiquetas).ThenInclude(x => x.Etiqueta)
                 .Where(x => x.PrecioListaId == priceList && studyId.Contains(x.EstudioId))
                 .ToListAsync();
 
@@ -68,7 +68,7 @@ namespace Service.Catalog.Repository
         public async Task<PriceList_Packet> GetPricePackById(int packId, Guid branchId, Guid companyId)
         {
             var prices = _context.Relacion_ListaP_Paquete
-                .Include(x => x.Paquete.Estudios).ThenInclude(x => x.Estudio.Tapon)
+                .Include(x => x.Paquete.Estudios).ThenInclude(x => x.Estudio.Etiquetas).ThenInclude(x => x.Etiqueta)
                 .Include(x => x.Paquete.Estudios).ThenInclude(x => x.Estudio.Parameters).ThenInclude(x => x.Parametro.Area.Departamento)
                 .Include(x => x.Paquete.Estudios).ThenInclude(x => x.Estudio.Indications).ThenInclude(x => x.Indicacion)
                 .Include(x => x.PrecioLista)
@@ -103,7 +103,7 @@ namespace Service.Catalog.Repository
 
             return await _context.Relacion_ListaP_Estudio
                 .Include(x => x.Estudio).ThenInclude(x => x.Area).ThenInclude(x => x.Departamento)
-                .Include(x => x.Estudio).ThenInclude(x => x.Tapon)
+                .Include(x => x.Estudio).ThenInclude(x => x.Etiquetas).ThenInclude(x => x.Etiqueta)
                 .Where(x => x.PrecioListaId == Id)
                 .OrderBy(x => x.PrecioListaId)
                 .ToListAsync();
@@ -112,7 +112,7 @@ namespace Service.Catalog.Repository
         public async Task<List<PriceList>> GetActive()
         {
             var prices = await _context.CAT_ListaPrecio.Include(x => x.Estudios).ThenInclude(x => x.Estudio).ThenInclude(x => x.Area).ThenInclude(x => x.Departamento)
-                    .Include(x => x.Estudios).ThenInclude(x => x.Estudio).ThenInclude(x => x.Tapon)
+                    .Include(x => x.Estudios).ThenInclude(x => x.Estudio).ThenInclude(x => x.Etiquetas).ThenInclude(x => x.Etiqueta)
                     .Include(x => x.Sucursales).ThenInclude(x => x.Sucursal)
                     .Include(x => x.Compañia).ThenInclude(x => x.Compañia)
                     .Include(x => x.Medicos).ThenInclude(x => x.Medico).Where(x => x.Activo).ToListAsync();
