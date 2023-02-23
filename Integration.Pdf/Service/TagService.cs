@@ -84,7 +84,7 @@ namespace Integration.Pdf.Service
 
                 for (int j = 0; j < tag.Cantidad; j++)
                 {
-                    byte[] barcodeImage = BarCode.Generate(tag.Clave.Substring(0, 4), 320, 60);
+                    byte[] barcodeImage = BarCode.Generate(tag.Clave, 320, 60);
                     string imageFilename = barcodeImage.MigraDocFilenameFromByteArray();
 
                     var imgPar = section.AddParagraph();
@@ -94,12 +94,6 @@ namespace Integration.Pdf.Service
 
                     var orderNo = new Col(tag.Clave, new Font("Arial", 10) { Bold = true });
                     section.AddText(orderNo, spaceAfter: 0);
-
-                    //var patient = new Col(tag.Paciente, new Font("Arial", 5) { Bold = true }, ParagraphAlignment.Left);
-                    //section.AddText(patient, spaceAfter: 0);
-
-                    //var studies = new Col(tag.Estudios, new Font("Arial", 5) { Bold = true }, ParagraphAlignment.Left);
-                    //section.AddText(studies, spaceAfter: 0);
 
                     var textFrame1 = section.AddTextFrame();
                     textFrame1.RelativeHorizontal = RelativeHorizontal.Page;
@@ -127,7 +121,7 @@ namespace Integration.Pdf.Service
                     textFrame.Height = Unit.FromCentimeter(1);
 
                     var textFramePar = textFrame.AddParagraph();
-                    textFramePar.AddFormattedText($"ORI90\n{tag.Ciudad}\nSBAUTISTA\n{date}\nNormal\n{tag.EdadSexo}", new Font("Arial", 3) { Bold = true });
+                    textFramePar.AddFormattedText($"{tag.ClaveEtiqueta}\n{tag.Ciudad}\n{tag.Medico}\n{date}\n{tag.Tipo}\n{tag.EdadSexo}", new Font("Arial", 3) { Bold = true });
 
                     if (i < tags.Count - 1)
                     {

@@ -36,7 +36,7 @@ namespace Service.Catalog.Application
         public async Task<IEnumerable<PriceListListDto>> GetAll(string search)
         {
             var prices = await _repository.GetAll(search);
-            
+
             return prices.ToPriceListListDto();
         }
 
@@ -90,7 +90,7 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.NotFound, "Lista de precios no configurada");
             }
 
-            if ((price.Estudio.Parameters == null || price.Estudio.Parameters.Count == 0) && (price.Estudio.DepartamentoId != PATOLOGIA && price.Estudio.DepartamentoId != IMAGENOLOGIA ))
+            if ((price.Estudio.Parameters == null || price.Estudio.Parameters.Count == 0) && !price.Estudio.DepartamentoId.In(PATOLOGIA, IMAGENOLOGIA))
             {
                 throw new CustomException(HttpStatusCode.NotFound, "El estudio no contiene parámetros");
             }
@@ -369,6 +369,6 @@ namespace Service.Catalog.Application
 
         }
 
-        
+
     }
 }
