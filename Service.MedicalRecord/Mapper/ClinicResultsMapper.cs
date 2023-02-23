@@ -167,7 +167,7 @@ namespace Service.MedicalRecord.Mapper
             string fullNamesImages = null;
 
             if (newNameFiles.Length > 0)
-            {
+            { 
                 fullNamesImages = string.Join(",", newNameFiles);
             }
             else
@@ -313,26 +313,6 @@ namespace Service.MedicalRecord.Mapper
                     NombreFirma = res.Medico.Nombre,
                 }).ToList(),
                 ImprimrLogos = ImprimirLogos
-
-            };
-        }
-
-        public static ClinicResultPathologicalPdfDto toInformationPdf(this ClinicalResultsPathological result, Request request, string Departamento, bool ImprimirLogos)
-        {
-            return new ClinicResultPathologicalPdfDto
-            {
-                //Medico = request.Medico.Nombre,
-                //FechaEntrega = DateTime.Now.ToString("MM/dd/yyyy"),
-                //Paciente = request.Expediente.NombrePaciente,
-                //Edad = request.Expediente.Edad,
-                //Estudio = request.Clave,
-                //Departamento = Departamento,
-                //MuestraRecibida = result.MuestraRecibida,
-                //DescripcionMacroscopica = result.DescripcionMacroscopica,
-                //DescripcionMicroscopica = result.DescripcionMicroscopica,
-                //Diagnostico = result.Diagnostico,
-                //NombreFirma = result.Medico.Nombre,
-                //ImprimrLogos = ImprimirLogos
 
             };
         }

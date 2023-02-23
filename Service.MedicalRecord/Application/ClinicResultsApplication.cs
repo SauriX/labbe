@@ -786,17 +786,17 @@ namespace Service.MedicalRecord.Application
                         await SaveImageGetPath(result.ImagenPatologica[i], newResult.SolicitudEstudioId);
                     }
                 }
-                await this.UpdateStatusStudy(result.EstudioId, result.Estatus, result.Usuario);
+                await this.UpdateStatusStudy(existing.SolicitudEstudioId, existing.SolicitudEstudio.EstatusId, result.Usuario);
             }
             if (existing.SolicitudEstudio.EstatusId == Status.RequestStudy.Capturado)
             {
-                await this.UpdateStatusStudy(result.EstudioId, result.Estatus, result.Usuario);
+                await this.UpdateStatusStudy(existing.SolicitudEstudioId, existing.SolicitudEstudio.EstatusId, result.Usuario);
             }
             if (result.Estatus == Status.RequestStudy.Liberado || EnvioManual)
             {
                 if (existing.Solicitud.Parcialidad || EnvioManual) // envio manual o parcial de resultados 👻
                 {
-                    await UpdateStatusStudy(result.EstudioId, result.Estatus, result.Usuario);
+                    await UpdateStatusStudy(existing.SolicitudEstudioId, existing.SolicitudEstudio.EstatusId, result.Usuario);
                     List<ClinicalResultsPathological> toSendInfoPathological = new List<ClinicalResultsPathological> { existing };
 
                     var existingResultPathologyPdf = toSendInfoPathological.toInformationPdfResult(true);
@@ -832,7 +832,7 @@ namespace Service.MedicalRecord.Application
 
                             await SendTestEmail(files, existing.Solicitud.EnvioCorreo, result.UsuarioId, existing.Solicitud.Expediente.NombreCompleto, existing.Solicitud.Clave);
 
-                            await UpdateStatusStudy(result.EstudioId, Status.RequestStudy.Enviado, result.Usuario);
+                            await UpdateStatusStudy(existing.SolicitudEstudioId, Status.RequestStudy.Enviado, result.Usuario);
 
                             string descripcion = getDescriptionRecord(existing.SolicitudEstudioId.ToString(), existing.Solicitud.EnvioWhatsApp, existing.Solicitud.EnvioCorreo);
 
@@ -851,7 +851,7 @@ namespace Service.MedicalRecord.Application
                     //if (canSendResultBalance(existing.Solicitud) || EnvioManual)
                     //{
 
-                    await UpdateStatusStudy(result.EstudioId, result.Estatus, result.Usuario);
+                    await UpdateStatusStudy(existing.SolicitudEstudioId, existing.SolicitudEstudio.EstatusId, result.Usuario);
 
                     var existingRequest = await _repository.GetRequestById(existing.SolicitudId);
 
