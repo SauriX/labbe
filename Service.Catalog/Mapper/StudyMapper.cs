@@ -29,6 +29,7 @@ namespace Service.Catalog.Mapper
                 Activo = x.Activo,
             });
         }
+
         public static IEnumerable<StudyListDto> ToStudyListDtos(this List<Study> model, List<int> ids)
         {
             if (model == null) return null;
@@ -55,6 +56,7 @@ namespace Service.Catalog.Mapper
                 Tipo = x.SampleType?.Nombre
             });
         }
+
         public static IEnumerable<PriceStudyList> toPriceStudyList(this List<Study> models)
         {
             if (models == null) return null;
