@@ -30,9 +30,12 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Estudios).ThenInclude(x => x.Estatus)
                 .AsQueryable();
 
-            if ((string.IsNullOrWhiteSpace(filter.Clave)) && (filter.Sucursales == null || filter.Sucursales.Count() <= 0))
+            if ((string.IsNullOrWhiteSpace(filter.Clave)) && (filter.Sucursales != null ))
             {
-                requests = requests.Where(x => filter.SucursalesId.Contains(x.SucursalId));
+                if (filter.Sucursales.Count > 0) {
+                    requests = requests.Where(x => filter.SucursalesId.Contains(x.SucursalId));
+                }
+                
             }
 
 
