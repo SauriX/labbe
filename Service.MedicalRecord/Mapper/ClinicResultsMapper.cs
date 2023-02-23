@@ -316,25 +316,5 @@ namespace Service.MedicalRecord.Mapper
 
             };
         }
-
-        public static ClinicResultPathologicalPdfDto toInformationPdf(this ClinicalResultsPathological result, Request request, string Departamento, bool ImprimirLogos)
-        {
-            return new ClinicResultPathologicalPdfDto
-            {
-                //Medico = request.Medico.Nombre,
-                //FechaEntrega = DateTime.Now.ToString("MM/dd/yyyy"),
-                //Paciente = request.Expediente.NombrePaciente,
-                //Edad = request.Expediente.Edad,
-                //Estudio = request.Clave,
-                //Departamento = Departamento,
-                //MuestraRecibida = result.MuestraRecibida,
-                //DescripcionMacroscopica = result.DescripcionMacroscopica,
-                //DescripcionMicroscopica = result.DescripcionMicroscopica,
-                //Diagnostico = result.Diagnostico,
-                //NombreFirma = result.Medico.Nombre,
-                //ImprimrLogos = ImprimirLogos
-
-            };
-        }
     }
 }
