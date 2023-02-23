@@ -33,7 +33,6 @@ using RequestTemplates = Service.MedicalRecord.Dictionary.EmailTemplates.Request
 using SharedResponses = Shared.Dictionary.Responses;
 using VT = Shared.Dictionary.Catalogs.ValueType;
 using Service.MedicalRecord.Dtos.Quotation;
-using Shared.Helpers;
 using System.Text.Json;
 using Service.MedicalRecord.Dtos.Catalogs;
 using static Shared.Dictionary.Catalogs;
