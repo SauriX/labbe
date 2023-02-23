@@ -36,6 +36,7 @@ using Service.MedicalRecord.Dtos.Quotation;
 using Shared.Helpers;
 using System.Text.Json;
 using Service.MedicalRecord.Dtos.Catalogs;
+using static Shared.Dictionary.Catalogs;
 
 namespace Service.MedicalRecord.Application
 {
@@ -49,7 +50,7 @@ namespace Service.MedicalRecord.Application
         private readonly IRabbitMQSettings _rabbitMQSettings;
         private readonly IQueueNames _queueNames;
         private readonly IWeeClinicApplication _weeService;
-        private readonly IRepository<Branch> _branchRepository;
+        private readonly IRepository<Domain.Catalogs.Branch> _branchRepository;
         private readonly IMedicalRecordRepository _recordRepository;
         private readonly IBillingClient _billingClient;
 
@@ -64,7 +65,7 @@ namespace Service.MedicalRecord.Application
             IRabbitMQSettings rabbitMQSettings,
             IQueueNames queueNames,
             IWeeClinicApplication weeService,
-            IRepository<Branch> branchRepository,
+            IRepository<Domain.Catalogs.Branch> branchRepository,
             IMedicalRecordRepository recordRepository,
             IBillingClient billingClient)
         {
@@ -176,7 +177,11 @@ namespace Service.MedicalRecord.Application
                 study.Indicaciones = st.Indicaciones;
                 study.Etiquetas = st.Etiquetas;
 
-                study.Tipo = st.Parametros.Count() > 0 ? "LABORATORIO" : "PATOLOGICO";
+                if (st.Parametros.Count() > 0) study.Tipo = "LABORATORIO";
+                else if (st.Parametros.Count() == 0 && study.DepartamentoId == Department.IMAGENOLOGIA) study.Tipo = "IMAGENOLOGIA";
+                else study.Tipo = "PATOLOGICO";
+
+                //study.Tipo = st.Parametros.Count() > 0 ? "LABORATORIO" : "PATOLOGICO";
 
                 var promos = studiesPromos.Where(x => x.EstudioId == study.EstudioId).ToList();
                 study.Promociones = promos;
