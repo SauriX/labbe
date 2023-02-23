@@ -50,6 +50,8 @@ namespace Service.MedicalRecord.Dtos.InvoiceCompany
         public string FechaCreo { get; set; }
         public List<Guid> SolicitudesId { get; set; }
         public string Tipo { get; set; }
+        public string Serie { get; set; }
+        public string Consecutivo { get; set; }
         public InvoiceCompanyStatusInvoice Estatus { get; set; }
     }
     public class InvoiceCompanyStatusInvoice

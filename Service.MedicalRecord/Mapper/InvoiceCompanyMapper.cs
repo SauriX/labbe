@@ -45,6 +45,8 @@ namespace Service.MedicalRecord.Mapper
                         FechaCreo = y.FechaCreo.ToString("R"),
                         Tipo = y.TipoFactura?.ToString(),
                         FacturapiId = y.FacturapiId,
+                        Serie = y.Serie,
+                        Consecutivo = y.Consecutivo.ToString(),
                         SolicitudesId = model
                         .Where(z => z.FacturasCompañia.Select(p => p.FacturapiId).Contains(y.FacturapiId))
                         .Select(z => z.Id)
@@ -98,6 +100,7 @@ namespace Service.MedicalRecord.Mapper
                 IVA = model.IVA,
                 FechaCreo = DateTime.Now,
                 Nombre = model.Nombre,
+                Consecutivo = model.Consecutivo,
                 DetalleFactura = model.Detalles.Select(x => new InvoiceCompanyDetail
                 {
                     Id = Guid.NewGuid(),

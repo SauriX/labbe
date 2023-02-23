@@ -37,6 +37,13 @@ namespace Service.Catalog.Controllers.Catalog
         {
             return await _budgetService.GetBudgetsByBranch(search);
         }
+        
+        [HttpPost("costofijo/getServiceCost")]
+        [Authorize(Policies.Access)]
+        public async Task<IEnumerable<ServiceUpdateDto>> GetServiceCostByBranch(BudgetFilterDto search)
+        {
+            return await _budgetService.GetServiceCostByBranch(search);
+        }
 
         [HttpGet("costofijo/{id}")]
         [Authorize(Policies.Access)]
@@ -55,7 +62,7 @@ namespace Service.Catalog.Controllers.Catalog
         
         [HttpPost("costofijo/list")]
         [Authorize(Policies.Create)]
-        public async Task CreateListOfBudget(List<BudgetFormDto> catalogs)
+        public async Task CreateListOfBudget(List<BudgetBranchFormDto> catalogs)
         {
             //catalogs.UsuarioId = (Guid)HttpContext.Items["userId"];
             await _budgetService.CreateList(catalogs);
@@ -71,7 +78,7 @@ namespace Service.Catalog.Controllers.Catalog
         
         [HttpPut("costofijo/update")]  
         [Authorize(Policies.Update)]
-        public async Task UpdateService(ServiceUpdateDto catalog)
+        public async Task UpdateService(UpdateServiceDto catalog)
         {
             var userId = (Guid)HttpContext.Items["userId"];
             await _budgetService.UpdateService(catalog, userId);

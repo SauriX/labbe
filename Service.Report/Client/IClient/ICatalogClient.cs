@@ -11,8 +11,9 @@ namespace Service.Report.Client.IClient
     public interface ICatalogClient
     {
         Task<List<ServicesCost>> GetBudgetsByBranch(ReportModalFilterDto search);
+        Task<List<ServiceUpdateDto>> GetServiceCostByBranch(ReportModalFilterDto search);
         Task<BranchInfo> GetBranchByName(string name);
         Task CreateList(List<BudgetFormDto> bugets);
-        Task UpdateService(ServiceUpdateDto buget);
+        Task UpdateService(UpdateServiceDto bugets);
     }
 }

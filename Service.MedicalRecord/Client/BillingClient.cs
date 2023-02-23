@@ -83,7 +83,7 @@ namespace Service.MedicalRecord.Client
             throw new CustomException(HttpStatusCode.BadRequest, error.Errors);
         }
 
-        public async Task<byte[]> DownloadPDF(string invoiceId)
+        public async Task<byte[]> DownloadPDF(Guid invoiceId)
         {
             var json = JsonConvert.SerializeObject(invoiceId);
 
