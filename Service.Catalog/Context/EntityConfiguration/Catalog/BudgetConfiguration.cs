@@ -12,10 +12,6 @@ namespace Service.Catalog.Context.EntityConfiguration.Catalog
             builder.HasKey(x => x.Id);
             
             builder
-                .Property(x => x.CostoFijo)
-                .HasColumnType("decimal(18,2)");
-            
-            builder
                 .HasMany(x => x.Sucursales)
                 .WithOne(x => x.CostoFijo)
                 .HasForeignKey(x => x.CostoFijoId)

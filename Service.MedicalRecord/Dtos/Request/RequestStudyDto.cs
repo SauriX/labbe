@@ -49,5 +49,6 @@ namespace Service.MedicalRecord.Dtos.Request
         public List<PriceListInfoPromoDto> Promociones { get; set; }
         public List<ParameterListDto> Parametros { get; set; }
         public List<IndicationListDto> Indicaciones { get; set; }
+        public List<StudyTagDto> Etiquetas { get; set; }
     }
 }

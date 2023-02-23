@@ -57,6 +57,12 @@ namespace Service.MedicalRecord.Controllers
         public async Task<IEnumerable<RequestPaymentDto>> GetPayments(Guid recordId, Guid requestId)
         {
             return await _service.GetPayments(recordId, requestId);
+        }      
+        
+        [HttpGet("tags/{recordId}/{requestId}")]
+        public async Task<IEnumerable<RequestTagDto>> GetTags(Guid recordId, Guid requestId)
+        {
+            return await _service.GetTags(recordId, requestId);
         }
 
         [HttpGet("images/{recordId}/{requestId}")]
@@ -122,11 +128,12 @@ namespace Service.MedicalRecord.Controllers
         }
 
         [HttpPost("payment")]
-        [Authorize(Policies.Create)]
+        [AllowAnonymous]
+        //[Authorize(Policies.Create)]
         public async Task<RequestPaymentDto> CreatePayment(RequestPaymentDto requestDto)
         {
-            requestDto.UsuarioId = (Guid)HttpContext.Items["userId"];
-            requestDto.UsuarioRegistra = HttpContext.Items["userName"].ToString();
+            //requestDto.UsuarioId = (Guid)HttpContext.Items["userId"];
+            //requestDto.UsuarioRegistra = HttpContext.Items["userName"].ToString();
 
             return await _service.CreatePayment(requestDto);
         }
@@ -175,6 +182,20 @@ namespace Service.MedicalRecord.Controllers
             requestDto.UsuarioId = (Guid)HttpContext.Items["userId"];
 
             return await _service.UpdateStudies(requestDto);
+        }
+
+        [HttpPost("tags/{recordId}/{requestId}")]
+        [Authorize(Policies.Create)]
+        public async Task<List<RequestTagDto>> UpdateTags(Guid recordId, Guid requestId, [FromBody] List<RequestTagDto> tagsDto)
+        {
+            var userId = (Guid)HttpContext.Items["userId"];
+
+            foreach (var tagDto in tagsDto)
+            {
+                tagDto.UsuarioId = userId;
+            }
+
+            return await _service.UpdateTags(recordId, requestId, tagsDto);
         }
 
         [HttpPut("cancel/{recordId}/{requestId}")]
@@ -269,7 +290,7 @@ namespace Service.MedicalRecord.Controllers
             return File(file, MimeType.PDF, "order.pdf");
         }
 
-        [HttpPost("tags/{recordId}/{requestId}")]
+        [HttpPost("print/tags/{recordId}/{requestId}")]
         [Authorize(Policies.Download)]
         public async Task<IActionResult> PrintTags(Guid recordId, Guid requestId, List<RequestTagDto> tags)
         {

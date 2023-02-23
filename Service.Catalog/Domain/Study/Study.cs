@@ -54,7 +54,7 @@ namespace Service.Catalog.Domain.Study
         public int? SampleTypeId { get; set; }
         public virtual SampleType SampleType { get; set; }
         public int? TaponId { get; set; }
-        public virtual Domain.Tapon.Tapon Tapon { get; set; }
+        public virtual Domain.Tapon.Tag Tapon { get; set; }
         public int Cantidad { get; set; }
         public bool Prioridad { get; set; }
         public bool Urgencia { get; set; }
@@ -68,5 +68,6 @@ namespace Service.Catalog.Domain.Study
         public virtual ICollection<IndicationStudy> Indications { get; set; }
         public virtual ICollection<Domain.Study.ReagentStudy> Reagents { get; set; }
         public virtual ICollection<PacketStudy> Packets { get; set; }
+        public virtual ICollection<StudyTag> Etiquetas { get; set; }
     }
 }

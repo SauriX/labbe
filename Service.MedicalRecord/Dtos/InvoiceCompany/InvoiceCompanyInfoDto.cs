@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Service.MedicalRecord.Domain.Request;
+using System;
 using System.Collections.Generic;
 
 namespace Service.MedicalRecord.Dtos.InvoiceCompany
@@ -28,8 +29,18 @@ namespace Service.MedicalRecord.Dtos.InvoiceCompany
         public Guid? CompaniaId { get; set; }
         public string RFC { get; set; }
         public string ClavePatologica { get; set; }
+        public Guid ExpedienteId { get; set; }
+        public string NombreSucursal { get; set; }
+        public List<string> FormasPagos { get; set; }
+        public List<string> NumerosCuentas { get; set; }
         public List<InvoiceCompanyFacturaDto> Facturas { get; set; }
         public List<InvoiceCompanyStudiesInfoDto> Estudios { get; set; }
+    }
+
+    public class InvoiceCompanyMetodoPago
+    {
+        public string FormaPago { get; set; }
+        public int FormaPagoId { get; set; }
     }
     
     public class InvoiceCompanyFacturaDto
@@ -39,6 +50,8 @@ namespace Service.MedicalRecord.Dtos.InvoiceCompany
         public string FechaCreo { get; set; }
         public List<Guid> SolicitudesId { get; set; }
         public string Tipo { get; set; }
+        public string Serie { get; set; }
+        public string Consecutivo { get; set; }
         public InvoiceCompanyStatusInvoice Estatus { get; set; }
     }
     public class InvoiceCompanyStatusInvoice
@@ -50,7 +63,7 @@ namespace Service.MedicalRecord.Dtos.InvoiceCompany
     {
         public Guid SolicitudId { get; set; }
         public string ClaveSolicitud { get; set; }
-        public Guid SolicitudEstudioId { get; set; }
+        public int SolicitudEstudioId { get; set; }
         public string Estudio { get; set; }
         public string Clave { get; set; }
         public int? Area { get; set; }

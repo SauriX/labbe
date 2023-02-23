@@ -53,7 +53,16 @@ namespace Service.Catalog.Repository
             return budgets;
         }
 
-        public async Task<List<BudgetBranch>> GetBudgetsByBranch(BudgetFilterDto search)
+        public async Task<List<BudgetBranch>> GetBudgetsById(List<Guid> ids)
+        {
+            var budgets = await _context.Relacion_Presupuesto_Sucursal
+                .Where(x => ids.Contains(x.Id))
+                .ToListAsync();
+
+            return budgets;
+        }
+
+        public async Task<List<BudgetBranch>> GetServiceCostByFilter(BudgetFilterDto search)
         {
             var budgets = _context.Relacion_Presupuesto_Sucursal
                 .Include(x => x.Sucursal)
@@ -77,7 +86,7 @@ namespace Service.Catalog.Repository
 
             if (search.Fecha != null)
             {
-                budgets = budgets.Where(x => x.FechaCreo.Date >= search.Fecha.First().Date && x.FechaCreo.Date <= search.Fecha.Last().Date);
+                budgets = budgets.Where(x => x.FechaAlta.Month >= search.Fecha.First().Month && x.FechaAlta.Month <= search.Fecha.Last().Month);
             }
 
             return await budgets.ToListAsync();
@@ -133,11 +142,19 @@ namespace Service.Catalog.Repository
             }
         }
 
-        public async Task CreateList(List<Budget> budgets)
+        public async Task CreateList(List<BudgetBranch> budgets)
         {
-            _context.CAT_Presupuestos.AddRange(budgets);
+            _context.Relacion_Presupuesto_Sucursal.AddRange(budgets);
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateService(List<BudgetBranch> budgets, BudgetFilterDto filter)
+        {
+            var config = new BulkConfig();
+            config.SetSynchronizeFilter<BudgetBranch>(x => x.FechaAlta.Month >= filter.Fecha.First().Month && x.FechaAlta.Month <= filter.Fecha.Last().Month);
+
+            await _context.BulkInsertOrUpdateOrDeleteAsync(budgets, config);
         }
 
         public async Task Update(Budget budget)

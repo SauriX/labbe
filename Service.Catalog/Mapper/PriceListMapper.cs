@@ -182,16 +182,16 @@ namespace Service.Catalog.Mapper
                 Activo = model.Activo,
                 UsuarioCreoId = model.UsuarioCreoId,
                 FechaCreo = DateTime.Now,
-                //Estudios = model.Estudios?.Select(x => new PriceListStudyDto
-                //{
-                //    Id = x.EstudioId,
-                //    Clave = x.Estudio.Clave.Trim(),
-                //    Nombre = x.Estudio.Nombre.Trim(),
-                //    Area = x.Estudio.Area?.Nombre??"",
-                //    Departamento = x.Estudio.Area?.Departamento?.Nombre,
-                //    Precio = x.Precio,
-                //    Activo = x.Activo,
-                //})?.ToList(),
+                Estudios = model.Estudios?.Select(x => new PriceListStudyDto
+                {
+                    Id = x.EstudioId,
+                    Clave = x.Estudio.Clave.Trim(),
+                    Nombre = x.Estudio.Nombre.Trim(),
+                    Area = x.Estudio.Area?.Nombre??"",
+                    Departamento = x.Estudio.Area?.Departamento?.Nombre,
+                    Precio = x.Precio,
+                    Activo = x.Activo,
+                })?.ToList(),
                 Paquete = model.Paquete?.Select(x => new PriceListStudyDto
                 {
                     Id = x.PaqueteId,
@@ -264,6 +264,7 @@ namespace Service.Catalog.Mapper
                 Precio = model.Precio,
                 Parametros = model.Estudio.Parameters.Select(x => x.Parametro).ToParameterListDto(),
                 Indicaciones = model.Estudio.Indications.Select(x => x.Indicacion).ToIndicationListDto(),
+                Etiquetas = model.Estudio.Etiquetas.ToStudyTagDto(),
                 Promociones = new List<PriceListInfoPromoDto>(),
                 Maquila = model.Estudio.Maquilador?.Nombre,
                 MaquilaId = model.Estudio.MaquiladorId,

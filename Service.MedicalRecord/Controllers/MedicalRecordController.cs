@@ -94,6 +94,8 @@ namespace Service.MedicalRecord.Controllers
             expediente.UsuarioId = (Guid)HttpContext.Items["userId"];
             return await _service.Update(expediente);
         }
+        
+
 
         [HttpPut("taxData")]
         [Authorize(Policies.Update)]

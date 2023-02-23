@@ -29,6 +29,7 @@ using Shared.Extensions;
 using Service.Catalog.Domain.Price;
 using Shared.Dictionary;
 using Service.Catalog.Domain.Company;
+using Service.Catalog.Domain.Route;
 
 namespace Service.Catalog.Context
 {
@@ -217,7 +218,7 @@ namespace Service.Catalog.Context
             }
 
             // ETIQUETAS
-            if (!context.CAT_Tipo_Tapon.Any())
+            if (!context.CAT_Etiqueta.Any())
             {
                 using var transaction = context.Database.BeginTransaction();
 
@@ -225,11 +226,53 @@ namespace Service.Catalog.Context
                 {
                     var caps = SeedData.SeedData.GetTags();
 
-                    context.CAT_Tipo_Tapon.AddRange(caps);
+                    context.CAT_Etiqueta.AddRange(caps);
 
-                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Tipo_Tapon)} ON;");
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Etiqueta)} ON;");
                     await context.SaveChangesAsync();
-                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Tipo_Tapon)} OFF;");
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.CAT_Etiqueta)} OFF;");
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+
+            if (!context.CAT_Etiqueta.Any(x => !string.IsNullOrEmpty(x.ClaveInicial)))
+            {
+                using var transaction = context.Database.BeginTransaction();
+
+                try
+                {
+                    var caps = SeedData.SeedData.GetTags();
+
+                    await context.BulkUpdateAsync(caps);
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+
+            if (!context.Relacion_Estudio_Etiqueta.Any())
+            {
+                using var transaction = context.Database.BeginTransaction();
+
+                try
+                {
+                    var caps = SeedData.SeedData.GetStudyTags();
+
+                    context.Relacion_Estudio_Etiqueta.AddRange(caps);
+
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.Relacion_Estudio_Etiqueta)} ON;");
+                    await context.SaveChangesAsync();
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.Relacion_Estudio_Etiqueta)} OFF;");
 
                     transaction.Commit();
                 }
@@ -454,6 +497,32 @@ namespace Service.Catalog.Context
                 var studyPrices = SeedData.SeedData.GetStudyPrices();
 
                 context.Relacion_ListaP_Estudio.AddRange(studyPrices);
+
+                await context.SaveChangesAsync();
+            }
+
+            // RUTAS
+            if (!context.CAT_Rutas.Any())
+            {
+                var studies = await context.CAT_Estudio.Include(x => x.Maquilador).Where(x => x.MaquiladorId != null).ToListAsync();
+                var branches = await context.CAT_Sucursal.ToListAsync();
+
+                var routes = new List<Route>();
+
+                foreach (var branch in branches)
+                {
+                    foreach (var group in studies.GroupBy(x => new { x.MaquiladorId, x.Maquilador.Clave, x.Maquilador.Nombre }))
+                    {
+                        routes.Add(new Route(
+                            $"R-{branch.Clave}-{group.Key.Clave}",
+                            $"Ruta {branch.Nombre} - {group.Key.Nombre}",
+                            branch.Id,
+                            (int)group.Key.MaquiladorId,
+                            group.Select(x => x.Id)));
+                    }
+                }
+
+                context.CAT_Rutas.AddRange(routes);
 
                 await context.SaveChangesAsync();
             }

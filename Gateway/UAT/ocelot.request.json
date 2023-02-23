@@ -56,6 +56,17 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/request/tags/{recordId}/{requestId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/request/tags/{recordId}/{requestId}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/request/images/{recordId}/{requestId}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -120,7 +131,7 @@
       ],
       "UpstreamPathTemplate": "/api/request/payment",
       "UpstreamHttpMethod": [ "POST" ]
-    },  
+    },
     {
       "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/request/payment/checkin",
       "DownstreamScheme": "https",
@@ -174,6 +185,17 @@
         }
       ],
       "UpstreamPathTemplate": "/api/request/studies",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/request/tags/{recordId}/{requestId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/request/tags/{recordId}/{requestId}",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
@@ -265,7 +287,7 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/request/order/{recordId}",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/request/order/{recordId}/{requestId}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -276,14 +298,14 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/request/tags/{recordId}/{requestId}",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/request/print/tags/{recordId}/{requestId}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/request/tags/{recordId}/{requestId}",
+      "UpstreamPathTemplate": "/api/request/print/tags/{recordId}/{requestId}",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {

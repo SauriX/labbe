@@ -96,9 +96,9 @@ namespace Service.Billing.Mapper
                     {
                         CodigoPostal = dto.Cliente.CodigoPostal,
                         Calle = dto.Cliente.Calle,
-                        NumeroExterior = dto.Cliente.NumeroInterior,
-                        NumeroInterior = dto.Cliente.NumeroExterior,
-                        Colonia = dto.Cliente.Colonia,
+                        //NumeroExterior = dto.Cliente?.NumeroInterior,
+                        //NumeroInterior = dto.Cliente?.NumeroExterior,
+                        Colonia = dto.Cliente?.Colonia == null ? "": dto.Cliente?.Colonia,
                         Ciudad = dto.Cliente.Ciudad,
                         Municipio = dto.Cliente.Ciudad,
                         Estado = dto.Cliente.Estado,
@@ -138,14 +138,15 @@ namespace Service.Billing.Mapper
                 ExpedienteId = dto.ExpedienteId,
                 Expediente = dto.Expediente,
                 Paciente = dto.Paciente,
+                Estatus = "Facturado"
             };
         }
         
-        public static InvoiceCompany ToModelCompany(this InvoiceDto dto)
+        public static Invoice ToModelCompany(this InvoiceDto dto)
         {
             if (dto == null) return null;
 
-            return new InvoiceCompany
+            return new Invoice
             {
                 Id = Guid.NewGuid(),
                 FormaPago = dto.FormaPago,

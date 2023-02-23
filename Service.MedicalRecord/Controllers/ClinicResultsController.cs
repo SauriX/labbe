@@ -116,6 +116,22 @@ namespace Service.MedicalRecord.Controllers
             return clinicResults;
         }
 
+        [HttpGet("getHisoty/request/{Id}")]
+        [Authorize(Policies.Access)]
+        public async Task<List<DeliveryHistoryDto>> GetDeliveryHistoryByRequestId(Guid Id)
+        {
+
+            return await _service.GetDeliveryHistoryByRequestId(Id);
+        }
+        [HttpPost("create/record")]
+        [Authorize(Policies.Access)]
+        public async Task<List<DeliveryHistoryDto>> GetDeliveryHistoryByRequestId(HistoryRecordInfo record)
+        {
+            record.Usuario = HttpContext.Items["userName"].ToString();
+
+            return await _service.CreateNoteHistoryRecord(record);
+        }
+
         /*[HttpPost("getLaboratoryResults")]
         [Authorize(Policies.Access)]
         public async Task<ClinicResults> GetLaboratoryResults([FromBody] int RequestStudyId)

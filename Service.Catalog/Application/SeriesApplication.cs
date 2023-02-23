@@ -65,7 +65,12 @@ namespace Service.Catalog.Application
                 var userBranch = await _branchRepository.GetById(newSerie.EmisorId.ToString());
                 var userConfiguration = await _configurationApplication.GetFiscal();
 
-                var userData = userBranch.ToOwnerInfoDto();
+                var userData = new OwnerInfoDto();
+
+                if (userConfiguration != null)
+                {
+                    userData = userBranch.ToOwnerInfoDto();
+                }
 
                 userData.WebSite = userConfiguration.WebSite ?? "www.laboratorioramos.com.mx";
                 userData.RFC = userConfiguration.RFC ?? "";
