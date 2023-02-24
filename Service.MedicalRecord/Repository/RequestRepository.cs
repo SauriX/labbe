@@ -42,7 +42,7 @@ namespace Service.MedicalRecord.Repository
                 .OrderBy(x => x.FechaCreo)
                 .AsQueryable();
 
-            if ((string.IsNullOrWhiteSpace(filter.Clave)) && (filter.Sucursales == null || filter.Sucursales.Count() <= 0))
+            if ((string.IsNullOrWhiteSpace(filter.Clave)) && (filter.Sucursales == null || !filter.Sucursales.Any()))
             {
                 requests = requests.Where(x => filter.SucursalesId.Contains(x.SucursalId));
             }

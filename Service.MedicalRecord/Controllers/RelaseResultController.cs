@@ -53,7 +53,7 @@ namespace Service.MedicalRecord.Controllers
         }
 
         [HttpPost("release/export/list")]
-        //  [Authorize(Policies.Download)]
+        [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportStudyExcel(SearchRelase search)
         {
             search.SucursalesId = (List<Guid>)HttpContext.Items["sucursales"];
