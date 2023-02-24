@@ -181,7 +181,7 @@ namespace Service.Catalog.Mapper
                     TipoSerie = x.TipoSerie,
                     FechaCreo = x.FechaCreo,
                     UsuarioCreoId = x.UsuarioCreoId,
-                    Relacion = x.Relacion,
+                    Relacion = dto.Series.Any(y => y.Relacion != true) ? false : x.Relacion,
                     SucursalId = model.Id,
                     UsuarioModificoId = dto.UsuarioId,
                     FechaModifico = DateTime.Now

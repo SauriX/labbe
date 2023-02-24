@@ -74,7 +74,7 @@ namespace Service.Catalog.Repository
 
         public async Task<List<Serie>> GetByBranchType(Guid branchId, byte type)
         {
-            var series = await _context.CAT_Serie.Include(x => x.Sucursal).Where(x => x.SucursalId == branchId && x.TipoSerie == type && x.Activo).ToListAsync();
+            var series = await _context.CAT_Serie.Include(x => x.Sucursal).Where(x => x.SucursalId == branchId && x.TipoSerie == type && x.Activo && x.Relacion).ToListAsync();
 
             return series;
         }

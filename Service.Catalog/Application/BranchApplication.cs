@@ -160,16 +160,7 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
 
-            //var series = await _seriesRepository.GetByIds(branch.Series.ToList());
             var series = await _seriesRepository.GetByBranch(Guid.Parse(branch.IdSucursal));
-
-            foreach(var serie in series)
-            {
-                if (!branch.Series.Select(x => x.Id).Contains(serie.Id))
-                {
-                    serie.Relacion = false;
-                }
-            }
 
             var updatedBranch = branch.ToModel(existing, series);
 
