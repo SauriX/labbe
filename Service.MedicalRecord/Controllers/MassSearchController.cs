@@ -41,6 +41,7 @@ namespace Service.MedicalRecord.Controllers
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportResultsExcel(DeliverResultsFilterDto search)
         {
+            search.SucursalesId = (List<Guid>)HttpContext.Items["sucursales"];
             var (file, fileName) = await _service.ExportList(search);
             return File(file, MimeType.XLSX, fileName);
         }
