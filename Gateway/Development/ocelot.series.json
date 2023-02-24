@@ -37,6 +37,18 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
+      "DownstreamPathTemplate": "/api/series/active",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/series/active",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/series/{id}/{tipoSerie}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

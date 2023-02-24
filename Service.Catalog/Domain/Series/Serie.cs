@@ -21,5 +21,6 @@ namespace Service.Catalog.Domain.Series
         public string ArchivoKey { get; set; }
         public string ArchivoCer { get; set; }
         public string SucursalKey { get; set; }
+        public bool Relacion { get; set; }
     }
 }
