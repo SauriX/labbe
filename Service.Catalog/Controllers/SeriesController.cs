@@ -59,6 +59,15 @@ namespace Service.Catalog.Controllers
 
             return serie;
         }
+
+        [HttpGet("active")]
+        [Authorize(Policies.Access)]
+        public async Task<IEnumerable<SeriesListDto>> GetSeries(Guid branchId)
+        {
+            var serie = await _seriesApplication.GetSeries(branchId);
+
+            return serie;
+        }
         
         [HttpGet("{branchId}")]
         [Authorize(Policies.Access)]

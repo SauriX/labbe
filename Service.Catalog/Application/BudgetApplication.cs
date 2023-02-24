@@ -125,7 +125,7 @@ namespace Service.Catalog.Application
         public async Task UpdateService(UpdateServiceDto services, Guid userId)
         {
             var service = services.Servicios;
-            var serviceIds = service.Select(x => x.Id).ToList();
+            var serviceIds = service.SelectMany(x => x.Sucursales).Select(x => x.CostoId).ToList();
             var currentServices = await _repository.GetBudgetsById(serviceIds);
 
             var newBudget = service.ToModelBudgetBranch(userId, currentServices);

@@ -26,7 +26,8 @@ namespace Service.Catalog.Mapper
                 CFDI = x.CFDI,
                 Activo = x.Activo,
                 TipoSerie = x.TipoSerie == TIPO_FACTURA ? "FAC" : "REC",
-                Tipo = x.TipoSerie
+                Tipo = x.TipoSerie,
+                Relacion = x.Relacion
             });
         }
 
@@ -48,6 +49,7 @@ namespace Service.Catalog.Mapper
                 UsuarioCreoId = dto.UsuarioId,
                 SucursalId = Guid.Parse(dto.Expedicion.SucursalId),
                 FechaCreo = dto.Factura.Año,
+                Relacion = true,
             };
         }
 
@@ -100,6 +102,7 @@ namespace Service.Catalog.Mapper
                 SucursalId = Guid.Parse(dto.Expedicion.SucursalId),
                 UsuarioModificoId = dto.UsuarioId,
                 FechaModifico = DateTime.Now,
+                Relacion = true,
             };
         }
 

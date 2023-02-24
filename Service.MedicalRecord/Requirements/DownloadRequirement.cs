@@ -30,11 +30,12 @@ namespace Service.MedicalRecord.Requirements
 
             var id = claims?.SingleOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
             var name = claims?.SingleOrDefault(x => x.Type == CustomClaims.FullName)?.Value;
-
+            var controller = _httpContextAccessor.HttpContext.Request.RouteValues["controller"].ToString();
             if (id == null || name == null) return;
 
             var userId = Guid.Parse(id);
             var userName = name.ToString();
+            var scopes = await _identityClient.GetScopes(controller);
 
             //var controller = _httpContextAccessor.HttpContext.Request.RouteValues["controller"].ToString();
 
@@ -46,6 +47,7 @@ namespace Service.MedicalRecord.Requirements
             {
                 _httpContextAccessor.HttpContext.Items["userId"] = userId;
                 _httpContextAccessor.HttpContext.Items["userName"] = userName;
+                _httpContextAccessor.HttpContext.Items["sucursales"] = scopes.SucursalesId;
                 context.Succeed(requirement);
             }
 

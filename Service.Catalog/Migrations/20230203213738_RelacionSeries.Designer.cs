@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230203213738_RelacionSeries")]
+    partial class RelacionSeries
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -266,6 +268,9 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("Clave")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("CostoFijo")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTime?>("FechaCreo")
                         .HasColumnType("datetime2");
 
@@ -288,9 +293,11 @@ namespace Service.Catalog.Migrations
 
             modelBuilder.Entity("Service.Catalog.Domain.Catalog.BudgetBranch", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid>("SucursalId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("CostoFijoId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
@@ -298,23 +305,11 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("Ciudad")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CostoFijoId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("CostoServicio")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("FechaAlta")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid>("SucursalId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");
@@ -322,11 +317,9 @@ namespace Service.Catalog.Migrations
                     b.Property<Guid?>("UsuarioModificoId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("Id");
+                    b.HasKey("SucursalId", "CostoFijoId");
 
                     b.HasIndex("CostoFijoId");
-
-                    b.HasIndex("SucursalId");
 
                     b.ToTable("Relacion_Presupuesto_Sucursal");
                 });
@@ -847,7 +840,7 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("Colonia")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ColoniaId")
+                    b.Property<int>("ColoniaId")
                         .HasColumnType("int");
 
                     b.Property<string>("Contrasena")
@@ -2940,37 +2933,6 @@ namespace Service.Catalog.Migrations
                     b.ToTable("CAT_Estudio");
                 });
 
-            modelBuilder.Entity("Service.Catalog.Domain.Study.StudyTag", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<decimal>("Cantidad")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("EstudioId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EtiquetaId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Orden")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EstudioId");
-
-                    b.HasIndex("EtiquetaId");
-
-                    b.ToTable("Relacion_Estudio_Etiqueta");
-                });
-
             modelBuilder.Entity("Service.Catalog.Domain.Study.WorkListStudy", b =>
                 {
                     b.Property<int>("EstudioId")
@@ -3001,7 +2963,7 @@ namespace Service.Catalog.Migrations
                     b.ToTable("Relacion_Estudio_WorkList");
                 });
 
-            modelBuilder.Entity("Service.Catalog.Domain.Tapon.Tag", b =>
+            modelBuilder.Entity("Service.Catalog.Domain.Tapon.Tapon", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -3009,9 +2971,6 @@ namespace Service.Catalog.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Clave")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ClaveInicial")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Color")
@@ -3022,7 +2981,7 @@ namespace Service.Catalog.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CAT_Etiqueta");
+                    b.ToTable("CAT_Tipo_Tapon");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Branch.Branch", b =>
@@ -3701,7 +3660,7 @@ namespace Service.Catalog.Migrations
                         .WithMany()
                         .HasForeignKey("SampleTypeId");
 
-                    b.HasOne("Service.Catalog.Domain.Tapon.Tag", "Tapon")
+                    b.HasOne("Service.Catalog.Domain.Tapon.Tapon", "Tapon")
                         .WithMany()
                         .HasForeignKey("TaponId");
 
@@ -3714,25 +3673,6 @@ namespace Service.Catalog.Migrations
                     b.Navigation("SampleType");
 
                     b.Navigation("Tapon");
-                });
-
-            modelBuilder.Entity("Service.Catalog.Domain.Study.StudyTag", b =>
-                {
-                    b.HasOne("Service.Catalog.Domain.Study.Study", "Estudio")
-                        .WithMany("Etiquetas")
-                        .HasForeignKey("EstudioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Service.Catalog.Domain.Tapon.Tag", "Etiqueta")
-                        .WithMany()
-                        .HasForeignKey("EtiquetaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Estudio");
-
-                    b.Navigation("Etiqueta");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Study.WorkListStudy", b =>
@@ -3849,8 +3789,6 @@ namespace Service.Catalog.Migrations
 
             modelBuilder.Entity("Service.Catalog.Domain.Study.Study", b =>
                 {
-                    b.Navigation("Etiquetas");
-
                     b.Navigation("Indications");
 
                     b.Navigation("Packets");
