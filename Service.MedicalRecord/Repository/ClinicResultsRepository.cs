@@ -67,7 +67,7 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Compañia)
                 .AsQueryable();
 
-            if ((string.IsNullOrWhiteSpace(search.Buscar)) && (search.SucursalId == null && !search.SucursalId.Any()))
+            if ((string.IsNullOrWhiteSpace(search.Buscar)) && (search.SucursalId == null || !search.SucursalId.Any()))
             {
                 
                     report = report.Where(x => search.SucursalesId.Contains(x.SucursalId));

@@ -30,7 +30,7 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Estudios).ThenInclude(x => x.Estatus)
                 .AsQueryable();
 
-            if ((string.IsNullOrWhiteSpace(filter.Clave)) && (filter.Sucursales == null && !filter.Sucursales.Any()))
+            if ((string.IsNullOrWhiteSpace(filter.Clave)) && (filter.Sucursales == null || !filter.Sucursales.Any()))
             {
                
                     requests = requests.Where(x => filter.SucursalesId.Contains(x.SucursalId));
