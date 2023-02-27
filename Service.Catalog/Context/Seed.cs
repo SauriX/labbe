@@ -260,29 +260,6 @@ namespace Service.Catalog.Context
                 }
             }
 
-            if (!context.Relacion_Estudio_Etiqueta.Any())
-            {
-                using var transaction = context.Database.BeginTransaction();
-
-                try
-                {
-                    var caps = SeedData.SeedData.GetStudyTags();
-
-                    context.Relacion_Estudio_Etiqueta.AddRange(caps);
-
-                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.Relacion_Estudio_Etiqueta)} ON;");
-                    await context.SaveChangesAsync();
-                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.Relacion_Estudio_Etiqueta)} OFF;");
-
-                    transaction.Commit();
-                }
-                catch (Exception)
-                {
-                    transaction.Rollback();
-                    throw;
-                }
-            }
-
             // INDICACIONES
             if (!context.CAT_Indicacion.Any())
             {
@@ -389,7 +366,7 @@ namespace Service.Catalog.Context
                 await context.SaveChangesAsync();
             }
 
-            // Studies
+            // ESTUDIOS
             if (!context.CAT_Estudio.Any())
             {
                 using var transaction = context.Database.BeginTransaction();
@@ -445,6 +422,30 @@ namespace Service.Catalog.Context
                 context.CAT_Tipo_Valor.AddRange(parameterValues);
 
                 await context.SaveChangesAsync();
+            }
+
+            // ESTUDIOS ETIQUETAS
+            if (!context.Relacion_Estudio_Etiqueta.Any())
+            {
+                using var transaction = context.Database.BeginTransaction();
+
+                try
+                {
+                    var caps = SeedData.SeedData.GetStudyTags();
+
+                    context.Relacion_Estudio_Etiqueta.AddRange(caps);
+
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.Relacion_Estudio_Etiqueta)} ON;");
+                    await context.SaveChangesAsync();
+                    context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {nameof(context.Relacion_Estudio_Etiqueta)} OFF;");
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
             }
 
             // ESTUDIOS INDICACIONES
