@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.MedicalRecord.Context;
 
 namespace Service.MedicalRecord.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230228160828_Cascade_Soliciutdes_Revert")]
+    partial class Cascade_Soliciutdes_Revert
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1479,9 +1481,6 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<Guid>("SolicitudId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("TrackingOrderId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");
 
@@ -1491,8 +1490,6 @@ namespace Service.MedicalRecord.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("SolicitudId");
-
-                    b.HasIndex("TrackingOrderId");
 
                     b.ToTable("Relacion_Solicitud_Etiquetas");
                 });
@@ -1726,9 +1723,6 @@ namespace Service.MedicalRecord.Migrations
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaEntrega")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("FechaMod")
@@ -2159,10 +2153,6 @@ namespace Service.MedicalRecord.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Service.MedicalRecord.Domain.TrackingOrder.TrackingOrder", null)
-                        .WithMany("Etiquetas")
-                        .HasForeignKey("TrackingOrderId");
-
                     b.Navigation("Solicitud");
                 });
 
@@ -2282,8 +2272,6 @@ namespace Service.MedicalRecord.Migrations
             modelBuilder.Entity("Service.MedicalRecord.Domain.TrackingOrder.TrackingOrder", b =>
                 {
                     b.Navigation("Estudios");
-
-                    b.Navigation("Etiquetas");
                 });
 #pragma warning restore 612, 618
         }
