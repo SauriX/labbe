@@ -49,6 +49,10 @@ namespace Service.MedicalRecord.Repository
                 report = report.Where(x => x.Clave.Contains(search.Buscar)
                 || (x.Expediente.NombrePaciente + " " + x.Expediente.PrimerApellido + " " + x.Expediente.SegundoApellido).ToLower().Contains(search.Buscar.ToLower()));
             }
+            if (search.Ciudad != null && search.Ciudad.Count > 0)
+            {
+                report = report.Where(x => search.Ciudad.Contains(x.Sucursal.Ciudad));
+            }
             if (search.SucursalId != null && search.SucursalId.Count > 0)
             {
                 report = report.Where(x => search.SucursalId.Contains(x.SucursalId));
