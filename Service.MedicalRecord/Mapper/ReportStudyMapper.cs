@@ -19,7 +19,8 @@ namespace Service.MedicalRecord.Mapper
                 Nombre = x.Nombre,
                 Estatus = x.Estatus.Nombre,
                 Fecha = x.FechaEntrega.ToShortDateString(),
-                Regitro = x.FechaCreo.ToShortDateString()
+                Regitro = x.FechaCreo.ToShortDateString(),
+                Color = x.Estatus.Color,        
             
             }).ToList();
         }
