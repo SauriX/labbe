@@ -67,9 +67,12 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Compañia)
                 .AsQueryable();
 
-            if ((string.IsNullOrWhiteSpace(search.Buscar)) && (search.SucursalId == null || search.SucursalId.Count() <= 0))
+            if ((string.IsNullOrWhiteSpace(search.Buscar)) && (search.SucursalId == null || !search.SucursalId.Any()))
             {
-                report = report.Where(x => search.SucursalesId.Contains(x.SucursalId));
+                
+                    report = report.Where(x => search.SucursalesId.Contains(x.SucursalId));
+                
+                
             }
 
             if (!string.IsNullOrWhiteSpace(search.Buscar))
@@ -284,6 +287,19 @@ namespace Service.MedicalRecord.Repository
                 .FirstOrDefaultAsync();
             return resuqestStudy;
 
+        }
+
+        public async Task CreateHistoryRecord(DeliveryHistory record)
+        {
+            _context.Historial_Envios.Add(record);
+            await _context.SaveChangesAsync();
+        }
+        public async Task<List<DeliveryHistory>> GetHistoryRecordsByRequestId(Guid Id)
+        {
+            return await _context.Historial_Envios
+                .Where(x => x.SolicitudId == Id)
+                .OrderByDescending(x => x.FechaCreo)
+                .ToListAsync();
         }
 
         public async Task<Request> GetRequestById(Guid id)

@@ -164,6 +164,28 @@
       ],
       "UpstreamPathTemplate": "/api/clinicResults/printSelectedStudies",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/clinicResults/getHisoty/request/{Id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/clinicResults/getHisoty/request/{Id}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/clinicResults/create/record",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/clinicResults/create/record",
+      "UpstreamHttpMethod": [ "POST" ]
     }
   ]
 }

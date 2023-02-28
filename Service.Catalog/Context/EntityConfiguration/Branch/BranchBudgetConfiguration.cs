@@ -10,11 +10,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Branch
         public void Configure(EntityTypeBuilder<BudgetBranch> builder)
         {
             builder.ToTable("Relacion_Presupuesto_Sucursal");
-            builder.HasKey(x => new
-            {
-                x.SucursalId, 
-                x.CostoFijoId
-            });
+            builder.HasKey(x => x.Id);
 
             builder
               .Property(x => x.Activo)

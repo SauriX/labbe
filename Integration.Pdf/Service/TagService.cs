@@ -80,10 +80,11 @@ namespace Integration.Pdf.Service
             for (int i = 0; i < tags.Count; i++)
             {
                 RequestTagDto tag = tags[i];
+                if (tag.Cantidad < 1) tag.Cantidad = 1;
 
                 for (int j = 0; j < tag.Cantidad; j++)
                 {
-                    byte[] barcodeImage = BarCode.Generate(tag.Clave.Substring(0, 4), 320, 60);
+                    byte[] barcodeImage = BarCode.Generate(tag.Clave, 320, 60);
                     string imageFilename = barcodeImage.MigraDocFilenameFromByteArray();
 
                     var imgPar = section.AddParagraph();
@@ -93,12 +94,6 @@ namespace Integration.Pdf.Service
 
                     var orderNo = new Col(tag.Clave, new Font("Arial", 10) { Bold = true });
                     section.AddText(orderNo, spaceAfter: 0);
-
-                    //var patient = new Col(tag.Paciente, new Font("Arial", 5) { Bold = true }, ParagraphAlignment.Left);
-                    //section.AddText(patient, spaceAfter: 0);
-
-                    //var studies = new Col(tag.Estudios, new Font("Arial", 5) { Bold = true }, ParagraphAlignment.Left);
-                    //section.AddText(studies, spaceAfter: 0);
 
                     var textFrame1 = section.AddTextFrame();
                     textFrame1.RelativeHorizontal = RelativeHorizontal.Page;
@@ -111,9 +106,9 @@ namespace Integration.Pdf.Service
                     textFrame1.Height = Unit.FromCentimeter(1);
 
                     var textFrame1Par = textFrame1.AddParagraph();
-                    textFrame1Par.AddFormattedText(tag.Paciente, new Font("Arial", 5) { Bold = true });
+                    textFrame1Par.AddFormattedText(tag.Paciente, new Font("Arial", 3) { Bold = true });
                     textFrame1Par.AddLineBreak();
-                    textFrame1Par.AddFormattedText(tag.Estudios, new Font("Arial", 5) { Bold = true });
+                    textFrame1Par.AddFormattedText(tag.Estudios, new Font("Arial", 3) { Bold = true });
 
                     var textFrame = section.AddTextFrame();
                     textFrame.RelativeHorizontal = RelativeHorizontal.Page;
@@ -126,7 +121,7 @@ namespace Integration.Pdf.Service
                     textFrame.Height = Unit.FromCentimeter(1);
 
                     var textFramePar = textFrame.AddParagraph();
-                    textFramePar.AddFormattedText($"ORI90\nMONTERREY\nSBAUTISTA\n{date}\nNormal\n49 años M", new Font("Arial", 4) { Bold = true });
+                    textFramePar.AddFormattedText($"{tag.ClaveEtiqueta}\n{tag.Ciudad}\n{tag.Medico}\n{date}\n{tag.Tipo}\n{tag.EdadSexo}", new Font("Arial", 3) { Bold = true });
 
                     if (i < tags.Count - 1)
                     {

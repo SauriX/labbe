@@ -32,7 +32,7 @@ namespace Service.MedicalRecord.Context.EntityConfiguration.Request
                 .HasMany(x => x.Pagos)
                 .WithOne(x => x.Solicitud)
                 .HasForeignKey(x => x.SolicitudId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder
                 .HasMany(x => x.Estudios)
@@ -59,6 +59,12 @@ namespace Service.MedicalRecord.Context.EntityConfiguration.Request
                     rc => rc.HasOne(prop => prop.InvoiceCompany).WithMany().HasForeignKey(prop => prop.InvoiceCompanyId),
                     rc => rc.HasOne(prop => prop.Solicitud).WithMany().HasForeignKey(prop => prop.SolicitudId)
                 );
+
+            builder
+                .HasMany(x => x.Etiquetas)
+                .WithOne(x => x.Solicitud)
+                .HasForeignKey(x => x.SolicitudId)
+                .OnDelete(DeleteBehavior.Restrict);
                 
         }
     }

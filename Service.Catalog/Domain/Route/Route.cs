@@ -1,11 +1,43 @@
 ﻿using Service.Catalog.Domain.Catalog;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Service.Catalog.Domain.Route
 {
     public class Route
     {
+        public Route()
+        {
+        }
+
+        public Route(string clave, string nombre, Guid sucursalId, int maquiladorId, IEnumerable<int> estudioIds)
+        {
+            var id = Guid.NewGuid();
+            var date = DateTime.Now;
+
+            Id = id;
+            Clave = clave;
+            Nombre = nombre;
+            SucursalOrigenId = sucursalId;
+            MaquiladorId = maquiladorId;
+            Activo = true;
+            Lunes = true;
+            Martes = true;
+            Miercoles = true;
+            Jueves = true;
+            Viernes = true;
+            Sabado = true;
+            Domingo = true;
+            FechaCreo = date;
+            Estudios = estudioIds.Select(x => new Route_Study
+            {
+                RouteId = id,
+                EstudioId = x,
+                FechaCreo = date
+            }).ToList();
+        }
+
         public Guid Id { get; set; }
         public string Clave { get; set; }
         public string Nombre { get; set; }

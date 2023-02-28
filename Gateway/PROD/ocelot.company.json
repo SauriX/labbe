@@ -1,0 +1,88 @@
+﻿{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/services/catalogo/api/company/all/{search}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+
+        }
+      ],
+      "UpstreamPathTemplate": "/api/company/all/{search}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/services/catalogo/api/company/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+
+        }
+      ],
+      "UpstreamPathTemplate": "/api/company/{id}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/services/catalogo/api/company/contacts/{Id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+
+        }
+      ],
+      "UpstreamPathTemplate": "/api/company/contacts/{Id}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/services/catalogo/api/company",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+
+        }
+      ],
+      "UpstreamPathTemplate": "/api/company",
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/services/catalogo/api/company/export/list/{search}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+
+        }
+      ],
+      "UpstreamPathTemplate": "/api/company/export/list/{search}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/services/catalogo/api/company/export/form/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+
+        }
+      ],
+      "UpstreamPathTemplate": "/api/company/export/form/{id}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/services/catalogo/api/company/paswwordgenerator",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+
+        }
+      ],
+      "UpstreamPathTemplate": "/api/company/paswwordgenerator",
+      "UpstreamHttpMethod": [ "POST" ]
+    }
+  ]
+}

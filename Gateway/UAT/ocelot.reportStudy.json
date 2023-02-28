@@ -1,0 +1,40 @@
+
+  {
+    "Routes": [
+      {
+        "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/ReportStudy/report",
+        "DownstreamScheme": "https",
+        "DownstreamHostAndPorts": [
+          {
+            "Host": "axsishost.online"
+          }
+        ],
+        "UpstreamPathTemplate": "/api/ReportStudy/report",
+        "UpstreamHttpMethod": [ "POST" ]
+      },
+      {
+        "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/ReportStudy/filter",
+        "DownstreamScheme": "https",
+        "DownstreamHostAndPorts": [
+          {
+            "Host": "axsishost.online"
+          }
+        ],
+        "UpstreamPathTemplate": "/api/ReportStudy/filter",
+        "UpstreamHttpMethod": [ "POST" ]
+      },
+      {
+        "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/ReportStudy/export/getList",
+        "DownstreamScheme": "https",
+        "DownstreamHostAndPorts": [
+          {
+            "Host": "axsishost.online"
+          }
+        ],
+        "UpstreamPathTemplate": "/api/ReportStudy/export/getList",
+        "UpstreamHttpMethod": [ "POST" ]
+      }
+
+    ]
+  }
+

@@ -131,7 +131,7 @@ namespace Service.Catalog.Mapper
                     Departamento = x.Estudio.Area?.Departamento?.Nombre,
                     Precio = x.Precio,
                     Activo = x.Activo,
-                })?.ToList(),
+                }),
                 Compañia = x.Compañia?.Select(y => new PriceListCompanyDto
                 {
                     Id = y.CompañiaId,
@@ -169,6 +169,7 @@ namespace Service.Catalog.Mapper
                 Activo = x.Activo,
             }).ToList();
         }
+
         public static PriceListFormDto ToPriceListFormDto(this PriceList model)
         {
             if (model == null) return null;
@@ -264,6 +265,7 @@ namespace Service.Catalog.Mapper
                 Precio = model.Precio,
                 Parametros = model.Estudio.Parameters.Select(x => x.Parametro).ToParameterListDto(),
                 Indicaciones = model.Estudio.Indications.Select(x => x.Indicacion).ToIndicationListDto(),
+                Etiquetas = model.Estudio.Etiquetas.ToStudyTagDto(),
                 Promociones = new List<PriceListInfoPromoDto>(),
                 Maquila = model.Estudio.Maquilador?.Nombre,
                 MaquilaId = model.Estudio.MaquiladorId,

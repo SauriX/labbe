@@ -1,5 +1,6 @@
 ﻿using Service.Catalog.Dtos.Indication;
 using Service.Catalog.Dtos.Parameter;
+using Service.Catalog.Dtos.Study;
 using System;
 using System.Collections.Generic;
 
@@ -50,6 +51,7 @@ namespace Service.Catalog.Dtos.PriceList
         public List<PriceListInfoPromoDto> Promociones { get; set; }
         public IEnumerable<ParameterListDto> Parametros { get; set; }
         public IEnumerable<IndicationListDto> Indicaciones { get; set; }
+        public IEnumerable<StudyTagDto> Etiquetas { get; set; }
     }
 
     public class PriceListInfoPromoDto

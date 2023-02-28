@@ -1,38 +1,41 @@
 ﻿using EventBus.Messages.Common;
+using Integration.WeeClinic.Dtos;
 using MassTransit;
 using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Client.IClient;
 using Service.MedicalRecord.Dictionary;
+using Service.MedicalRecord.Domain.Catalogs;
+using Service.MedicalRecord.Domain.Request;
+using Service.MedicalRecord.Dtos.Invoice;
+using Service.MedicalRecord.Dtos.Promotion;
 using Service.MedicalRecord.Dtos.Request;
+using Service.MedicalRecord.Dtos.WeeClinic;
 using Service.MedicalRecord.Mapper;
 using Service.MedicalRecord.Repository.IRepository;
+using Service.MedicalRecord.Settings.ISettings;
+using Service.MedicalRecord.Transactions;
 using Service.MedicalRecord.Utils;
 using Shared.Error;
 using Shared.Extensions;
+using Shared.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using SharedResponses = Shared.Dictionary.Responses;
-using RecordResponses = Service.MedicalRecord.Dictionary.Response;
-using Service.MedicalRecord.Settings.ISettings;
-using Service.MedicalRecord.Transactions;
-using RequestTemplates = Service.MedicalRecord.Dictionary.EmailTemplates.Request;
-using Service.MedicalRecord.Domain.Request;
 using AREAS = Shared.Dictionary.Catalogs.Area;
 using COMPANIES = Shared.Dictionary.Catalogs.Company;
 using MEDICS = Shared.Dictionary.Catalogs.Medic;
 using ORIGIN = Shared.Dictionary.Catalogs.Origin;
-using Service.MedicalRecord.Dtos.Promotion;
-using Service.MedicalRecord.Domain.Catalogs;
-using Service.MedicalRecord.Dtos.WeeClinic;
-using Integration.WeeClinic.Dtos;
-using Service.MedicalRecord.Dtos.Invoice;
+using RecordResponses = Service.MedicalRecord.Dictionary.Response;
+using RequestTemplates = Service.MedicalRecord.Dictionary.EmailTemplates.Request;
+using SharedResponses = Shared.Dictionary.Responses;
 using VT = Shared.Dictionary.Catalogs.ValueType;
 using Service.MedicalRecord.Dtos.Quotation;
-using Shared.Helpers;
+using System.Text.Json;
+using Service.MedicalRecord.Dtos.Catalogs;
+using static Shared.Dictionary.Catalogs;
 
 namespace Service.MedicalRecord.Application
 {
@@ -46,7 +49,7 @@ namespace Service.MedicalRecord.Application
         private readonly IRabbitMQSettings _rabbitMQSettings;
         private readonly IQueueNames _queueNames;
         private readonly IWeeClinicApplication _weeService;
-        private readonly IRepository<Branch> _branchRepository;
+        private readonly IRepository<Domain.Catalogs.Branch> _branchRepository;
         private readonly IMedicalRecordRepository _recordRepository;
         private readonly IBillingClient _billingClient;
 
@@ -61,7 +64,7 @@ namespace Service.MedicalRecord.Application
             IRabbitMQSettings rabbitMQSettings,
             IQueueNames queueNames,
             IWeeClinicApplication weeService,
-            IRepository<Branch> branchRepository,
+            IRepository<Domain.Catalogs.Branch> branchRepository,
             IMedicalRecordRepository recordRepository,
             IBillingClient billingClient)
         {
@@ -150,6 +153,7 @@ namespace Service.MedicalRecord.Application
 
                     study.Parametros = st.Parametros.Where(x => !x.TipoValor.In(VT.Observacion, VT.Etiqueta, VT.SinValor, VT.Texto, VT.Parrafo)).ToList();
                     study.Indicaciones = st.Indicaciones;
+                    study.Etiquetas = st.Etiquetas;
                 }
 
                 var promos = packsPromos.Where(x => x.PaqueteId == pack.PaqueteId).ToList();
@@ -170,8 +174,13 @@ namespace Service.MedicalRecord.Application
 
                 study.Parametros = st.Parametros.Where(x => !x.TipoValor.In(VT.Observacion, VT.Etiqueta, VT.SinValor, VT.Texto, VT.Parrafo)).ToList();
                 study.Indicaciones = st.Indicaciones;
+                study.Etiquetas = st.Etiquetas;
 
-                study.Tipo = study.Parametros.Count() > 0 ? "LABORATORIO" : "PATOLOGICO";
+                if (st.Parametros.Count() > 0) study.Tipo = "LABORATORIO";
+                else if (st.Parametros.Count() == 0 && study.DepartamentoId == Department.IMAGENOLOGIA) study.Tipo = "IMAGENOLOGIA";
+                else study.Tipo = "PATOLOGICO";
+
+                //study.Tipo = st.Parametros.Count() > 0 ? "LABORATORIO" : "PATOLOGICO";
 
                 var promos = studiesPromos.Where(x => x.EstudioId == study.EstudioId).ToList();
                 study.Promociones = promos;
@@ -203,6 +212,17 @@ namespace Service.MedicalRecord.Application
             var paymentsDto = payments.ToRequestPaymentDto();
 
             return paymentsDto;
+        }
+
+        public async Task<IEnumerable<RequestTagDto>> GetTags(Guid recordId, Guid requestId)
+        {
+            await GetExistingRequest(recordId, requestId);
+
+            var tags = await _repository.GetTags(requestId);
+
+            var tagsDto = tags.ToRequestTagDto();
+
+            return tagsDto;
         }
 
         public async Task<IEnumerable<string>> GetImages(Guid recordId, Guid requestId)
@@ -561,6 +581,7 @@ namespace Service.MedicalRecord.Application
 
             var prevOrigin = request.Procedencia;
             var prevUrgency = request.Urgencia;
+            var prevCompany = request.CompañiaId;
 
             if (!string.IsNullOrEmpty(requestDto.Whatsapp))
             {
@@ -584,6 +605,11 @@ namespace Service.MedicalRecord.Application
             if (requestDto.Procedencia != prevOrigin || requestDto.Urgencia != prevUrgency)
             {
                 await UpdateTotals(requestDto.ExpedienteId, requestDto.SolicitudId, requestDto.UsuarioId);
+            }
+
+            if (requestDto.CompañiaId != prevCompany)
+            {
+                await UpdateStudies(new RequestStudyUpdateDto(requestDto.ExpedienteId, requestDto.SolicitudId, requestDto.UsuarioId), isDeleting: true);
             }
         }
 
@@ -637,7 +663,7 @@ namespace Service.MedicalRecord.Application
             await _repository.Update(request);
         }
 
-        public async Task<RequestStudyUpdateDto> UpdateStudies(RequestStudyUpdateDto requestDto)
+        public async Task<RequestStudyUpdateDto> UpdateStudies(RequestStudyUpdateDto requestDto, bool isDeleting = false)
         {
             try
             {
@@ -646,7 +672,8 @@ namespace Service.MedicalRecord.Application
                 var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
 
                 if ((requestDto.Estudios == null || requestDto.Estudios.Count == 0)
-                    && (requestDto.Paquetes == null || requestDto.Paquetes.Count == 0))
+                    && (requestDto.Paquetes == null || requestDto.Paquetes.Count == 0)
+                    && !isDeleting)
                 {
                     throw new CustomException(HttpStatusCode.BadRequest, "Debe agregar por lo menos un estudio o paquete");
                 }
@@ -654,7 +681,7 @@ namespace Service.MedicalRecord.Application
                 var studiesDto = requestDto.Estudios ?? new List<RequestStudyDto>();
                 var packStudiesDto = new List<RequestStudyDto>();
 
-                if (requestDto.Paquetes != null)
+                if (requestDto.Paquetes != null && requestDto.Paquetes.Any())
                 {
                     if (requestDto.Paquetes.Any(x => x.Estudios == null || x.Estudios.Count == 0))
                     {
@@ -727,6 +754,31 @@ namespace Service.MedicalRecord.Application
             }
         }
 
+        public async Task<List<RequestTagDto>> UpdateTags(Guid recordId, Guid requestId, List<RequestTagDto> tagsDto)
+        {
+            var request = await GetExistingRequest(recordId, requestId);
+
+            var existingTags = await _repository.GetTags(requestId);
+
+            var tags = tagsDto.ToModel(existingTags, requestId);
+
+            await _repository.BulkInsertUpdateDeleteTags(request.Id, tags);
+
+            foreach (var item in tagsDto)
+            {
+                var tag = tags.First(x => x.EtiquetaId == item.EtiquetaId && x.DestinoId == item.DestinoId);
+                item.Id = tag.Id;
+
+                foreach (var itemStudy in item.Estudios)
+                {
+                    var study = tag.Estudios.First(x => x.NombreEstudio == itemStudy.NombreEstudio);
+                    itemStudy.Id = study.Id;
+                }
+            }
+
+            return tagsDto;
+        }
+
         public async Task CancelRequest(Guid recordId, Guid requestId, Guid userId)
         {
             var request = await GetExistingRequest(recordId, requestId);
@@ -767,6 +819,13 @@ namespace Service.MedicalRecord.Application
             if (request.Estudios.Any() || request.Paquetes.Any())
             {
                 throw new CustomException(HttpStatusCode.BadRequest, "No es posible eliminar solicitudes con estudios");
+            }
+
+            var payments = await _repository.GetPayments(requestId);
+
+            if (payments.Any(x => !x.EstatusId.In(Status.RequestPayment.Cancelado, Status.RequestPayment.FacturaCancelada)))
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "Para eliminar la solicitud se deben cancelar todos los pagos ");
             }
 
             await _repository.Delete(request);
@@ -991,7 +1050,7 @@ namespace Service.MedicalRecord.Application
             return await _pdfClient.GenerateOrder(order);
         }
 
-        public async Task<byte[]> PrintTags(Guid recordId, Guid requestId, List<RequestTagDto> tags)
+        public async Task<byte[]> PrintTags(Guid recordId, Guid requestId, List<RequestTagDto> tagsDto)
         {
             var request = await _repository.GetById(requestId);
 
@@ -1000,14 +1059,9 @@ namespace Service.MedicalRecord.Application
                 throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
             }
 
-            foreach (var tag in tags)
-            {
-                tag.Clave = request.Clave;
-                tag.ClaveEtiqueta = request.Clave;
-                tag.Paciente = request.Expediente.NombreCompleto;
-            }
+            var printTags = tagsDto.ToRequestPrintTagDto(request);
 
-            return await _pdfClient.GenerateTags(tags);
+            return await _pdfClient.GenerateTags(printTags);
         }
 
         public async Task<string> SaveImage(RequestImageDto requestDto)

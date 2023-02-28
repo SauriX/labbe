@@ -6,7 +6,9 @@ using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dictionary;
 using Service.Catalog.Domain.Branch;
 using Service.Catalog.Domain.Constant;
+using Service.Catalog.Domain.Series;
 using Service.Catalog.Dtos.Branch;
+using Service.Catalog.Dtos.Series;
 using Service.Catalog.Mapper;
 using Service.Catalog.Repository.IRepository;
 using Shared.Dictionary;
@@ -25,12 +27,14 @@ namespace Service.Catalog.Application
         private readonly IPublishEndpoint _publishEndpoint;
         private readonly IBranchRepository _repository;
         private readonly ILocationRepository _locationRepository;
+        private readonly ISeriesRepository _seriesRepository;
 
-        public BranchApplication(IPublishEndpoint publishEndpoint, IBranchRepository repository, ILocationRepository locationRepository)
+        public BranchApplication(IPublishEndpoint publishEndpoint, IBranchRepository repository, ILocationRepository locationRepository, ISeriesRepository seriesRepository)
         {
             _publishEndpoint = publishEndpoint;
             _repository = repository;
             _locationRepository = locationRepository;
+            _seriesRepository = seriesRepository;
         }
 
         public async Task<bool> Create(BranchFormDto branch)
@@ -40,7 +44,11 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
             }
 
-            var newBranch = branch.ToModel();
+            var seriesIds = branch.Series.Select(x => x.Id).ToList();
+
+            var series = await _seriesRepository.GetByIds(seriesIds);
+
+            var newBranch = branch.ToModel(series);
 
             var (isDuplicate, code) = await _repository.IsDuplicate(newBranch);
 
@@ -75,10 +83,20 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.BadRequest, "Ya existe una matriz para la ciudad");
             }
 
+            var duplicateSeries = await CheckSerieDuplicate(newBranch);
+
+            if(duplicateSeries.Count() > 0)
+            {
+                var seriesName = string.Join(", ", duplicateSeries.Select(x => x.Clave));
+
+                throw new CustomException(HttpStatusCode.BadRequest, $"La(s) serie(s) {seriesName} ya pertenecen a una sucursal");
+            }
+
             string finalCode = await GetBranchFolio(newBranch, city);
 
             string lastConsecutive = await _repository.GetLastConsecutive();
             string nextConsecutive = (Convert.ToInt32(lastConsecutive) + 1).ToString("D2");
+
 
             newBranch.Clinicos = finalCode;
             newBranch.Codigo = nextConsecutive;
@@ -91,6 +109,15 @@ namespace Service.Catalog.Application
             return true;
         }
 
+        private async Task<IEnumerable<SeriesListDto>> CheckSerieDuplicate(Branch branch)
+        {
+            var listSeries = branch.Series.Select(x => x.Id).ToList();
+
+            var duplicateSeries = await _seriesRepository.IsSerieDuplicate(branch.Id, listSeries);
+
+            return duplicateSeries.ToSeriesListDto();
+        }
+
         public async Task<BranchFormDto> GetById(string Id)
         {
             var branch = await _repository.GetById(Id);
@@ -100,7 +127,9 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
 
-            return branch.ToBranchFormDto();
+            var branchForm = branch.ToBranchFormDto();
+
+            return branchForm;
         }
 
         public async Task<BranchFormDto> GetByName(string name)
@@ -131,7 +160,9 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
 
-            var updatedBranch = branch.ToModel(existing);
+            var series = await _seriesRepository.GetByBranch(Guid.Parse(branch.IdSucursal));
+
+            var updatedBranch = branch.ToModel(existing, series);
 
             var (isDuplicate, code) = await _repository.IsDuplicate(updatedBranch);
 
@@ -159,6 +190,15 @@ namespace Service.Catalog.Application
             if (isMAtrisActive && updatedBranch.Matriz)
             {
                 throw new CustomException(HttpStatusCode.Conflict, "Ya exsite una matriz activa");
+            }
+
+            var duplicateSeries = await CheckSerieDuplicate(updatedBranch);
+
+            if (duplicateSeries.Count() > 0)
+            {
+                var seriesName = string.Join(", ", duplicateSeries.Select(x => x.Clave));
+
+                throw new CustomException(HttpStatusCode.BadRequest, $"La(s) serie(s) {seriesName} ya pertenecen a una sucursal");
             }
 
             if (existing.Matriz != updatedBranch.Matriz)

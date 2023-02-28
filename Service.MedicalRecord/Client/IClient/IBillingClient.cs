@@ -12,7 +12,7 @@ namespace Service.MedicalRecord.Client.IClient
     {
         Task<InvoiceDto> CheckInPayment(InvoiceDto invoiceDto);
         Task<InvoiceDto> CheckInPaymentCompany(InvoiceDto invoiceDto);
-        Task<byte[]> DownloadPDF(string invoiceId);
+        Task<byte[]> DownloadPDF(Guid invoiceId);
         Task<string> CancelInvoice(InvoiceCancelation invoiceDto);
         Task<List<InvoiceDto>> getAllInvoice(InvoiceCatalogSearch search);
     }

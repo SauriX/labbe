@@ -51,7 +51,7 @@ namespace Service.Catalog.Controllers.Catalog
         public async Task<IActionResult> ExportListSampleType(string search)
         {
             var file = await _sampleTypeService.ExportList(search, "Tipos de muestra");
-            return File(file, MimeType.XLSX, "Catálogo de Tipo de muestra.xlsx");
+            return File(file, MimeType.XLSX, "Catálogo de Tipos de muestra.xlsx");
         }
 
         [HttpPost("sampleType/export/form/{id}")]

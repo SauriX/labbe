@@ -39,6 +39,7 @@ namespace Service.MedicalRecord.Controllers
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportClinicsExcel(ClinicResultSearchDto search)
         {
+            search.SucursalesId = (List<Guid>)HttpContext.Items["sucursales"];
             var (file, fileName) = await _service.ExportList(search);
             return File(file, MimeType.XLSX, fileName);
         }
@@ -114,6 +115,22 @@ namespace Service.MedicalRecord.Controllers
         {
             var clinicResults = await _service.GetResultPathological(RequestStudyId);
             return clinicResults;
+        }
+
+        [HttpGet("getHisoty/request/{Id}")]
+        [Authorize(Policies.Access)]
+        public async Task<List<DeliveryHistoryDto>> GetDeliveryHistoryByRequestId(Guid Id)
+        {
+
+            return await _service.GetDeliveryHistoryByRequestId(Id);
+        }
+        [HttpPost("create/record")]
+        [Authorize(Policies.Access)]
+        public async Task<List<DeliveryHistoryDto>> GetDeliveryHistoryByRequestId(HistoryRecordInfo record)
+        {
+            record.Usuario = HttpContext.Items["userName"].ToString();
+
+            return await _service.CreateNoteHistoryRecord(record);
         }
 
         /*[HttpPost("getLaboratoryResults")]

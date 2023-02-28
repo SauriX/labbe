@@ -51,7 +51,7 @@ namespace Service.Catalog.Controllers.Catalog
         public async Task<IActionResult> ExportListField(string search)
         {
             var file = await _fieldService.ExportList(search, "Especialidades");
-            return File(file, MimeType.XLSX, "Catálogo de Especialidad.xlsx");
+            return File(file, MimeType.XLSX, "Catálogo de Especialidades.xlsx");
         }
 
         [HttpPost("field/export/form/{id}")]

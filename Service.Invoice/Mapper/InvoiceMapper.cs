@@ -138,14 +138,15 @@ namespace Service.Billing.Mapper
                 ExpedienteId = dto.ExpedienteId,
                 Expediente = dto.Expediente,
                 Paciente = dto.Paciente,
+                Estatus = "Facturado"
             };
         }
         
-        public static InvoiceCompany ToModelCompany(this InvoiceDto dto)
+        public static Invoice ToModelCompany(this InvoiceDto dto)
         {
             if (dto == null) return null;
 
-            return new InvoiceCompany
+            return new Invoice
             {
                 Id = Guid.NewGuid(),
                 FormaPago = dto.FormaPago,

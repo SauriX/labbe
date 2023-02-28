@@ -5,6 +5,7 @@ using Service.MedicalRecord.Client.IClient;
 using Service.MedicalRecord.Dtos.Invoice;
 using Service.MedicalRecord.Dtos.InvoiceCompany;
 using Shared.Dictionary;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -36,6 +37,12 @@ namespace Service.MedicalRecord.Controllers
             return await _service.GetNextPaymentNumber(serie);
         }
 
+        [HttpGet("{invoiceId}")]
+        public async Task<InvoiceCompanyDto> GetById(string invoiceId)
+        {
+            return await _service.GetById(invoiceId);
+        }
+
         [HttpPost("checkin")]
         [Authorize(Policies.Access)]
         public async Task<InvoiceDto> CheckInPayment(InvoiceCompanyDto invoice)
@@ -50,7 +57,7 @@ namespace Service.MedicalRecord.Controllers
         }
         [HttpPost("download/pdf/{facturapiId}")]
         [Authorize(Policies.Access)]
-        public async Task<IActionResult> DownloadPDF(string facturapiId)
+        public async Task<IActionResult> DownloadPDF(Guid facturapiId)
         {
             var file = await _billingClient.DownloadPDF(facturapiId);
 
@@ -59,7 +66,7 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("print/pdf/{facturapiId}")]
         [Authorize(Policies.Access)]
-        public async Task<IActionResult>  PrintPDF(string facturapiId)
+        public async Task<IActionResult>  PrintPDF(Guid facturapiId)
         {
             var file = await _billingClient.DownloadPDF(facturapiId);
 
