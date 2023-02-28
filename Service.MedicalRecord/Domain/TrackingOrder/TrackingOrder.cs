@@ -1,4 +1,5 @@
 ﻿using Service.MedicalRecord.Domain.Catalogs;
+using Service.MedicalRecord.Domain.Request;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,13 +10,12 @@ namespace Service.MedicalRecord.Domain.TrackingOrder
     {
         public Guid Id { get; set; }
         public string SucursalDestinoId { get; set; }
-
         public string SucursalOrigenId { get; set; }
-      
         public string Clave { get; set; }
         public int MaquiladorId { get; set; }
         public string RutaId { get; set; }
         public DateTime DiaRecoleccion { get; set; }
+        public DateTime FechaEntrega { get; set; }
         public string MuestraId { get; set; }
         public bool EscaneoCodigoBarras { get; set; }
         public double Temperatura { get; set; }
@@ -25,6 +25,6 @@ namespace Service.MedicalRecord.Domain.TrackingOrder
         public Guid UsuarioModId { get; set; }
         public DateTime FechaMod { get; set; }
         public virtual ICollection<TrackingOrderDetail> Estudios { get; set; }
-        
+        public virtual ICollection<RequestTag> Etiquetas { get; set; }   
     }
 }

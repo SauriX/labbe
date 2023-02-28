@@ -1,10 +1,9 @@
 ﻿using Service.MedicalRecord.Dictionary;
 using Service.MedicalRecord.Domain.Request;
-using Service.MedicalRecord.Domain.RouteTracking;
 using Service.MedicalRecord.Domain.TrackingOrder;
 using Service.MedicalRecord.Dtos.DeliverOrder;
+using Service.MedicalRecord.Dtos.Route;
 using Service.MedicalRecord.Dtos.RouteTracking;
-using Service.MedicalRecord.Dtos.Sampling;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,28 +13,52 @@ namespace Service.MedicalRecord.Mapper
 {
     public static class RouteTrackingMapper
     {
-        public static List<RouteTrackingListDto> ToRouteTrackingDto(this ICollection<TrackingOrder> model)
+        public static List<RouteTrackingListDto> ToRouteTrackingDto(this ICollection<TrackingOrder> model, List<RequestTag> tags, List<RouteFormDto> tagRoutes = null)
         {
             if (model == null) return null;
              List< RouteTrackingListDto > routes = new List<RouteTrackingListDto>();
-            foreach (TrackingOrder item in model) {
-                foreach (var estudio in item.Estudios) {
+
+            if(model.Count <= 0)
+            {
+                foreach (var tag in tags)
+                {
                     routes.Add(new RouteTrackingListDto
                     {
-                        Id = item.Id,
-                        Seguimiento = estudio.SolicitudEstudio.EstatusId==Status.RequestStudy.TomaDeMuestra || estudio.SolicitudEstudio.EstatusId == Status.RequestStudy.EnRuta ? estudio.IsExtra? $"{item.Clave}-incluido":item.Clave:"",
-                        Clave = item.Clave,
-                        Sucursal = estudio.Solicitud.Sucursal.Nombre,
-                        Fecha = item.FechaCreo.ToString(),
-                        Status = estudio.Solicitud.Estudios.FirstOrDefault(x => x.EstudioId == estudio.EstudioId).Estatus.Nombre,
-                        Estudio = $"{estudio.Solicitud.Estudios.FirstOrDefault(x=>x.EstudioId== estudio.EstudioId).Clave}-{estudio.Estudio}",
-                        rutaId = Guid.Parse(item.RutaId),
-                        Solicitud=estudio.Solicitud.Clave
-
-
-                    });;
+                        Id = Guid.Empty,
+                        Seguimiento = "",
+                        ClaveEtiqueta = tag.Clave,
+                        Recipiente = tag.ClaveEtiqueta,
+                        Cantidad = tag.Cantidad,
+                        Estudios = string.Join(", ", tag.Estudios.Select(x => x.NombreEstudio)),
+                        Solicitud = tag.Solicitud.Clave,
+                        Estatus = tag.Solicitud.Estudios.FirstOrDefault().EstatusId,
+                        Entrega = "",
+                        Ruta = tagRoutes != null ? string.Join(", ", tagRoutes.Where(x => x.SucursalDestinoId.ToString().Contains(tag.DestinoId)).Select(y => y.Nombre)) : ""
+                    });
+                }
+            } else
+            {
+                foreach (var item in model)
+                {
+                    foreach (var tag in tags)
+                    {
+                        routes.Add(new RouteTrackingListDto
+                        {
+                            Id = item.Etiquetas.Select(x => x.Id).Contains(tag.Id) ? item.Id : Guid.Empty,
+                            Seguimiento = !string.IsNullOrEmpty(item.Clave) ? item.Clave : "",
+                            ClaveEtiqueta = tag.Clave,
+                            Recipiente = tag.ClaveEtiqueta,
+                            Cantidad = tag.Cantidad,
+                            Estudios = string.Join(", ", tag.Estudios.Select(x => x.NombreEstudio)),
+                            Solicitud = tag.Solicitud.Clave,
+                            Estatus = tag.Solicitud.Estudios.FirstOrDefault().EstatusId,
+                            Entrega = !string.IsNullOrEmpty(item.FechaEntrega.ToString()) ? item.FechaEntrega.ToString("dd/MM/YYYY") : "",
+                            Ruta = tagRoutes != null ? string.Join(", ", tagRoutes.Select(x => x.Nombre)) : ""
+                        });
+                    }
                 }
             }
+
             return routes;
         }
 

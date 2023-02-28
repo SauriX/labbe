@@ -15,6 +15,7 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task<List<RequestStudy>> GetStudyById(Guid requestId, IEnumerable<int> studiesIds);
         Task<Request> FindAsync(Guid id);
         Task<List<TrackingOrder>> GetAll(RouteTrackingSearchDto search);
+        Task<List<RequestTag>> GetTagsByOrigin();
         Task<TrackingOrder> getById(Guid Id);
         Task Update(RouteTracking route);
         Task Create(RouteTracking route);

@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using Service.MedicalRecord.Domain;
 using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.PdfModels;
+using Service.MedicalRecord.Dtos.Route;
 
 namespace Service.MedicalRecord.Application
 {
@@ -30,6 +31,7 @@ namespace Service.MedicalRecord.Application
         private readonly IPdfClient _pdfClient;
         private readonly IIdentityClient _identityClient;
         public object SharedResponses { get; private set; }
+
         public RouteTrackingApplication(IRouteTrackingRepository repository, ICatalogClient catalog, IPdfClient pdfClient, IIdentityClient identityClient)
         {
             _repository = repository;
@@ -37,32 +39,31 @@ namespace Service.MedicalRecord.Application
             _pdfClient = pdfClient;
             _identityClient = identityClient;
         }
+
         public async Task<List<RouteTrackingListDto>> GetAll(RouteTrackingSearchDto search)
         {
             var routeTrackingList = await _repository.GetAll(search);
-            var list = routeTrackingList.ToList().ToRouteTrackingDto();
-            List<RouteTrackingListDto> routefinal = new List<RouteTrackingListDto>();
-            List<Guid> IdRoutes = new List<Guid>();
-            foreach (var item in list)
+            var studyTags = await _repository.GetTagsByOrigin();
+
+            var tagDestination = studyTags.Where(x => x.DestinoId != null).Select(y => Guid.Parse(y.DestinoId)).ToList();
+            var tagRoutes = await _catalogClient.GetRutas(tagDestination);
+
+            if (!string.IsNullOrEmpty(search.Destino))
             {
-                IdRoutes.Add(item.rutaId);
+                _ = studyTags.Where(x => x.DestinoId == search.Destino);
             }
-            var routes = await _catalogClient.GetRutas(IdRoutes);
-            foreach (var item in list)
-            {
-                var route = routes.FirstOrDefault(x => Guid.Parse(x.Id) == item.rutaId);
-                DateTime oDate = Convert.ToDateTime(item.Fecha);
-                item.Fecha = oDate.AddDays(route.TiempoDeEntrega).ToShortDateString();
-                item.Clave = route.Nombre;
-                routefinal.Add(item);
-            }
-            return routefinal;
+
+            var trackingTags = routeTrackingList.ToRouteTrackingDto(studyTags, tagRoutes);
+
+            return trackingTags;
         }
+
         public async Task<RouteTrackingFormDto> GetByid(Guid id)
         {
             var routeTrackingList = await _repository.getById(id);
             return routeTrackingList.ToRouteTrackingDto();
         }
+
         public async Task<int> UpdateStatus(List<RequestedStudyUpdateDto> requestDto)
         {
             try
@@ -170,7 +171,7 @@ namespace Service.MedicalRecord.Application
             List<PendingReciveDto> revefinal = new List<PendingReciveDto>();
             var tracking = await _repository.GetAllRecive(search);
             var recive = tracking.ToPendingReciveDto();
-        
+
             foreach (var item in recive)
             {
                 var register = item;
@@ -222,16 +223,16 @@ namespace Service.MedicalRecord.Application
 
             List<RouteTrackingListDto> routefinal = new List<RouteTrackingListDto>();
             List<Guid> IdRoutes = new List<Guid>();
-     
-                IdRoutes.Add(order.rutaId);
-            
+
+            IdRoutes.Add(order.rutaId);
+
             var routes = await _catalogClient.GetRutas(IdRoutes);
 
-                var route = routes.FirstOrDefault(x => Guid.Parse(x.Id) == order.rutaId);
-                DateTime oDate = Convert.ToDateTime(order.Fecha);
-                order.Fecha = oDate.AddDays(route.TiempoDeEntrega).ToString();
-               
-            
+            var route = routes.FirstOrDefault(x => Guid.Parse(x.Id) == order.rutaId);
+            DateTime oDate = Convert.ToDateTime(order.Fecha);
+            order.Fecha = oDate.AddDays(route.TiempoDeEntrega).ToString();
+
+
             var user = await _identityClient.GetByid(trakingorder.Estudios.FirstOrDefault().Solicitud.UsuarioModificoId.ToString());
 
             var orderForm = order.toDeliverOrder($"{user.Nombre} {user.PrimerApellido} {user.SegundoApellido}");
