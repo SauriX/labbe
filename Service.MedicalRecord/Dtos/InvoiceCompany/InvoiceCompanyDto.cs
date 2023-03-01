@@ -15,8 +15,7 @@ namespace Service.MedicalRecord.Dtos.InvoiceCompany
         public Guid? TaxDataId { get; set; }
         public Guid? CompañiaId { get; set; }
         public Guid? ExpedienteId { get; set; }
-        public Guid FacturaId { get; set; }
-        //public Guid? FormaPagoId { get; set; }
+        public Guid? FacturaId { get; set; }
         public string FormaPago { get; set; }
         public string NumeroCuenta { get; set; }
         public string Serie { get; set; }
@@ -32,6 +31,11 @@ namespace Service.MedicalRecord.Dtos.InvoiceCompany
         public string RegimenFiscal { get; set; }
         public Cliente Cliente { get; set; }
         public string RFC { get; set; }
+        public string TipoPago { get; set; }
+        public int FormaPagoId { get; set; }
+        public int BancoId { get; set; }
+        public string ClaveExterna { get; set; }
+        public int DiasCredito { get; set; }
         public List<InvoiceDetail> Detalles { get; set; }
 
     }

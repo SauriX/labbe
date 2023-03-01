@@ -28,6 +28,12 @@ namespace Service.MedicalRecord.Controllers
         public async Task<InvoiceCompanyInfoDto> GetByFilter(InvoiceCompanyFilterDto filter)
         {
             return await _service.GetByFilter(filter);
+        } 
+        [HttpPost("filter/free")]
+        [Authorize(Policies.Access)]
+        public async Task<List<InvoiceFreeDataDto>> GetByFilterFree(InvoiceFreeFilterDto filter)
+        {
+            return await _service.GetByFilterFree(filter);
         }
 
         [HttpGet("getConsecutiveBySerie/{serie}")]

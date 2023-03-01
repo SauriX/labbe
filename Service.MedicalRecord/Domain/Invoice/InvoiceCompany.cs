@@ -27,6 +27,11 @@ namespace Service.MedicalRecord.Domain.Invoice
         public int Consecutivo { get; set; }
         public decimal IVA { get; set; }
         public string Nombre { get; set; }
+        public string TipoPago { get; set; }
+        public int FormaPagoId { get; set; }
+        public int BancoId { get; set; }
+        public string ClaveExterna { get; set; }
+        public int DiasCredito { get; set; }
         public virtual ICollection<InvoiceCompanyDetail> DetalleFactura { get; set; }
 
     }

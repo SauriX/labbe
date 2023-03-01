@@ -76,6 +76,16 @@ namespace Service.MedicalRecord.Mapper
                 }).ToList(),
             };
         }
+        public static List<InvoiceFreeDataDto> ToInvoicesFreeDataDto(this List<InvoiceCompany> model)
+        {
+            return model.Select(x => new InvoiceFreeDataDto
+            {
+               FechaCreacion = x.FechaCreo.ToString("dd/MM/yyyy"),
+               Documento = $"{x.Serie}-{x.Consecutivo}",
+               Monto = x.CantidadTotal,
+               Cliente = ""
+            }).ToList();
+        }
 
         public static InvoiceCompany ToInvoiceCompany(this InvoiceCompanyDto model, InvoiceDto invoiceResponse, InvoiceCompanyDto invoice)
         {
@@ -101,6 +111,11 @@ namespace Service.MedicalRecord.Mapper
                 FechaCreo = DateTime.Now,
                 Nombre = model.Nombre,
                 Consecutivo = model.Consecutivo,
+                BancoId = model.BancoId,
+                ClaveExterna = model.ClaveExterna,
+                DiasCredito = model.DiasCredito,
+                FormaPagoId = model.FormaPagoId,
+                TipoPago = model.TipoPago,
                 DetalleFactura = model.Detalles.Select(x => new InvoiceCompanyDetail
                 {
                     Id = Guid.NewGuid(),
@@ -135,6 +150,11 @@ namespace Service.MedicalRecord.Mapper
                 Consecutivo = model.Consecutivo,
                 Nombre = model.Nombre,
                 FacturaId = model.FacturaId,
+                BancoId = model.BancoId,
+                ClaveExterna = model.ClaveExterna,
+                DiasCredito = model.DiasCredito,
+                FormaPagoId = model.FormaPagoId,
+                TipoPago = model.TipoPago,
                 Detalles = model.DetalleFactura.Select(x => new InvoiceDetail
                 {
                     SolicitudClave = x.SolicitudClave,

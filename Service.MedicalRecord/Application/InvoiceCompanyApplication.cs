@@ -283,6 +283,12 @@ namespace Service.MedicalRecord.Application
 
             return request.ToInvoiceCompanyDto();
         }
+        public async Task<List<InvoiceFreeDataDto>> GetByFilterFree(InvoiceFreeFilterDto filter)
+        {
+            var invoices = await _invoiceRepository.InvoiceFreeFilter(filter);
+
+            return invoices.ToInvoicesFreeDataDto();
+        }
         public async Task<string> GetNextPaymentNumber(string serie)
         {
             var date = DateTime.Now.ToString("yy");
@@ -309,6 +315,6 @@ namespace Service.MedicalRecord.Application
             return await _pdfClient.GenerateInvoiceCompanyTicket(order);
         }
 
-
+        
     }
 }
