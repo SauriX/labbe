@@ -1,0 +1,26 @@
+﻿{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/services/catalogo/api/location/getByZipCode/{zipCode}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/location/getByZipCode/{zipCode}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/services/catalogo/api/location/getcity",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/location/getcity",
+      "UpstreamHttpMethod": [ "GET" ]
+    }
+  ]
+}

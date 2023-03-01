@@ -2086,7 +2086,7 @@ namespace Service.MedicalRecord.Migrations
                     b.HasOne("Service.MedicalRecord.Domain.Request.Request", "Solicitud")
                         .WithMany("Pagos")
                         .HasForeignKey("SolicitudId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Estatus");

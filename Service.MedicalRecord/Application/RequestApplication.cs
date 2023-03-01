@@ -821,6 +821,13 @@ namespace Service.MedicalRecord.Application
                 throw new CustomException(HttpStatusCode.BadRequest, "No es posible eliminar solicitudes con estudios");
             }
 
+            var payments = await _repository.GetPayments(requestId);
+
+            if (payments.Any(x => !x.EstatusId.In(Status.RequestPayment.Cancelado, Status.RequestPayment.FacturaCancelada)))
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "Para eliminar la solicitud se deben cancelar todos los pagos ");
+            }
+
             await _repository.Delete(request);
         }
 
