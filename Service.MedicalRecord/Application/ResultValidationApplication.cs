@@ -31,13 +31,15 @@ namespace Service.MedicalRecord.Application
         private readonly IClinicResultsRepository _clinicresultrepository;
         private readonly IPdfClient _pdfClient;
         private readonly IClinicResultsApplication _clinicresultApplication;
-        public ResultValidationApplication(IResultaValidationRepository repository, IClinicResultsRepository clinicresultrepository, IPdfClient pdfClient, IClinicResultsApplication clinicresultApplication)
+        public readonly IInvoiceCatalogRepository _InvoiceRepository;
+        public ResultValidationApplication(IResultaValidationRepository repository, IClinicResultsRepository clinicresultrepository, IPdfClient pdfClient, IClinicResultsApplication clinicresultApplication, IInvoiceCatalogRepository invoiceRepository)
         {
 
             _repository = repository;
             _clinicresultrepository = clinicresultrepository;
             _pdfClient = pdfClient;
             _clinicresultApplication = clinicresultApplication;
+            _InvoiceRepository = invoiceRepository;
         }
 
         public async Task<(byte[] file, string fileName)> ExportList(SearchValidation search)
@@ -109,7 +111,33 @@ namespace Service.MedicalRecord.Application
             var requestedStudy = await _repository.GetAll(search);
             if (requestedStudy != null)
             {
-                return requestedStudy.ToValidationListDto();
+
+                var requests = requestedStudy.ToValidationListDto();
+                List<string> nSolicitudes = new List<string>();
+                foreach (var request in requests)
+                {
+
+                    nSolicitudes.Add(request.Solicitud);
+                }
+                var solicitudes = await _InvoiceRepository.GetSolicitudbyclave(nSolicitudes);
+                List<ValidationListDto> List = new List<ValidationListDto>();
+                foreach (var solicitud in solicitudes)
+                {
+                    var solicitu = requests.Find(x => x.Solicitud == solicitud.Clave);
+                    solicitu.Ciudad = solicitud.Sucursal.Ciudad;
+                    List.Add(solicitu);
+                }
+                var requestQ = List.AsQueryable();
+
+
+                if (search.Ciudad != null || search.Ciudad.Any())
+                {
+
+                    requestQ = requestQ.Where(x => search.Ciudad.Contains(x.Ciudad));
+
+
+                }
+                return requestQ.ToList();
             }
             else
             {

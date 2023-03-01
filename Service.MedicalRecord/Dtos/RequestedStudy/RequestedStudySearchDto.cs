@@ -25,5 +25,6 @@ namespace Service.MedicalRecord.Dtos.RequestedStudy
         public List<int> Estudio { get; set; }
         public List<Guid> SolicitudId { get; set; }
         public List<Guid> SucursalesId { get; set; }
+        public List<string> Ciudad { get; set; }
     }
 }

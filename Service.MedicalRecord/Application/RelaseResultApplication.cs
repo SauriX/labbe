@@ -30,7 +30,8 @@ namespace Service.MedicalRecord.Application
         private readonly ICatalogClient _catalogClient;
         private readonly IClinicResultsApplication _clinicresultapplication;
         private readonly IPdfClient _pdfClient;
-        public RelaseResultApplication(IRelaseResultRepository repository, IClinicResultsRepository clinicresultrepository, ICatalogClient catalogClient, IPdfClient pdfClient, IClinicResultsApplication clinicresultapplication)
+        public readonly IInvoiceCatalogRepository _InvoiceRepository;
+        public RelaseResultApplication(IRelaseResultRepository repository, IClinicResultsRepository clinicresultrepository, ICatalogClient catalogClient, IPdfClient pdfClient, IClinicResultsApplication clinicresultapplication, IInvoiceCatalogRepository invoiceRepository)
         {
 
             _repository = repository;
@@ -38,6 +39,7 @@ namespace Service.MedicalRecord.Application
             _catalogClient = catalogClient;
             _pdfClient = pdfClient;
             _clinicresultapplication = clinicresultapplication;
+            _InvoiceRepository = invoiceRepository;
         }
 
         public async Task<(byte[] file, string fileName)> ExportList(SearchRelase search)
@@ -106,7 +108,33 @@ namespace Service.MedicalRecord.Application
             var requestedStudy = await _repository.GetAll(search);
             if (requestedStudy != null)
             {
-                return requestedStudy.ToRelaseListDto();
+        
+                var requests = requestedStudy.ToRelaseListDto();
+                List<string> nSolicitudes = new List<string>();
+                foreach (var request in requests)
+                {
+
+                    nSolicitudes.Add(request.Solicitud);
+                }
+                var solicitudes = await _InvoiceRepository.GetSolicitudbyclave(nSolicitudes);
+                List<RelaceList> List = new List<RelaceList>();
+                foreach (var solicitud in solicitudes)
+                {
+                    var solicitu = requests.Find(x => x.Solicitud == solicitud.Clave);
+                    solicitu.Ciudad = solicitud.Sucursal.Ciudad;
+                    List.Add(solicitu);
+                }
+                var requestQ = List.AsQueryable();
+
+
+                if (search.Ciudad != null || search.Ciudad.Any())
+                {
+
+                    requestQ = requestQ.Where(x => search.Ciudad.Contains(x.Ciudad));
+
+
+                }
+                return requestQ.ToList();
             }
             else
             {
