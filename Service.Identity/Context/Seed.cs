@@ -162,8 +162,9 @@ namespace Service.Identity.Context
                 new Menu(25, 24, "Toma de muestra", "sampling", "samplings", 2050),
                 new Menu(26, 24, "Solicitar Estudio", "requestedstudy", "requestedstudy", 2060),
                 new Menu(32, 24, "Envío de resultados", "deliveryResults","deliveryResults", 2070),
-                new Menu(33, 24, "Seguimiento de rutas", "RouteTracking","segRutas", 2080),
-                new Menu(34, 24, "Detalle de seguimiento de envio", "shipmentTracking", "shipmentTracking", 2090),
+                new Menu(43, 24, "Reporte estudios del dia" , "reportstudy", "reportstudy", 2080),
+                new Menu(33, 24, "Seguimiento de rutas", "RouteTracking","segRutas", 2090),
+                new Menu(34, 24, "Detalle de seguimiento de envio", "shipmentTracking", "shipmentTracking", 2100),
 
                 // Resultados -> Orden 3000
                 new Menu(37, null, "Resultados", "results", "results", 3000), // Ultimo
@@ -174,7 +175,7 @@ namespace Service.Identity.Context
 
                 // Reportes -> Orden 4000
                 new Menu(22, null, "Reportes" , "report", "reports", 4000),
-                 new Menu(43, null, "Reporte estudios del dia" , "reportstudy", "reportstudy", 7000),
+                 
 
                 // Facturacion -> Orden 6000
                 new Menu(38, null, "Facturación", "invoice", "invoice", 6000),

@@ -23,11 +23,11 @@ namespace Service.MedicalRecord.Application
     public class RequestedStudyApplication : IRequestedStudyApplication
     {
         public readonly IRequestedStudyRepository _repository;
-        public readonly IInvoiceCatalogRepository _InvoiceRepository;
+
         public RequestedStudyApplication(IRequestedStudyRepository repository, IInvoiceCatalogRepository invoiceRepository)
         {
             _repository = repository;
-            _InvoiceRepository = invoiceRepository;
+
         }
 
         public async Task<(byte[] file, string fileName)> ExportList(RequestedStudySearchDto search)
@@ -94,32 +94,8 @@ namespace Service.MedicalRecord.Application
 
             if (requestedStudy != null)
             {
-                var requests = requestedStudy.ToSamplingListDto(search);
-                List<string> nSolicitudes = new List<string>();
-                foreach (var request in requests)
-                {
-
-                    nSolicitudes.Add(request.Solicitud);
-                }
-                var solicitudes = await _InvoiceRepository.GetSolicitudbyclave(nSolicitudes);
-                List<SamplingListDto> List = new List<SamplingListDto>();
-                foreach (var solicitud in solicitudes)
-                {
-                    var solicitu = requests.Find(x => x.Solicitud == solicitud.Clave);
-                    solicitu.Ciudad = solicitud.Sucursal.Ciudad;
-                    List.Add(solicitu);
-                }
-                var requestQ = List.AsQueryable();
-
-
-                if (search.Ciudad != null || search.Ciudad.Any())
-                {
-
-                    requestQ = requestQ.Where(x => search.Ciudad.Contains(x.Ciudad));
-
-
-                }
-                return requestQ.ToList();
+                return requestedStudy.ToSamplingListDto(search);
+                
             }
             else
             {
