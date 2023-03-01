@@ -112,7 +112,7 @@ namespace Service.MedicalRecord.Application
             if (requestedStudy != null)
             {
 
-                return = requestedStudy.ToValidationListDto();
+                return  requestedStudy.ToValidationListDto();
 
             }
             else
