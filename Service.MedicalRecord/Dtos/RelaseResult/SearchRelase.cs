@@ -13,6 +13,7 @@ namespace Service.MedicalRecord.Dtos.RelaseResult
         public List<int> TipoSoli { get; set; }
         public List<string> Compañia { get; set; }
         public List<string> Sucursal { get; set; }
+        public List<string> Ciudad { get; set; }
         public List<int> Estatus { get; set; }
         public List<Guid> SucursalesId { get; set; }
     }

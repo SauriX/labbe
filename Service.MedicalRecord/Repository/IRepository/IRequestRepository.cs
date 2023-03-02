@@ -15,6 +15,7 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task<Request> GetById(Guid id);
         Task<string> GetLastCode(Guid branchId, string date);
         Task<string> GetLastTagCode(string date);
+        Task<List<RequestTag>> GetTags(Guid requestId);
         Task<string> GetLastPathologicalCode(Guid branchId, string date, string type);
         Task<RequestStudy> GetStudyById(Guid requestId, int studyId);
         Task<List<RequestStudy>> GetStudyById(Guid requestId, IEnumerable<int> studiesIds);
@@ -35,7 +36,7 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task BulkInsertUpdatePacks(Guid requestId, List<RequestPack> packs);
         Task BulkUpdateDeletePacks(Guid requestId, List<RequestPack> packs);
         Task BulkInsertUpdateStudies(Guid requestId, List<RequestStudy> studies);
-        Task BulkInsertUpdateTags(Guid requestId, List<RequestTag> tags);
+        Task BulkInsertUpdateDeleteTags(Guid requestId, List<RequestTag> tags);
         Task BulkUpdatePayments(Guid requestId, List<RequestPayment> payments);
         Task BulkUpdateDeleteStudies(Guid requestId, List<RequestStudy> studies);
         Task BulkUpdateWeeStudies(Guid requestId, List<RequestStudyWee> studies);

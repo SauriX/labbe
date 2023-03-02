@@ -51,7 +51,7 @@ namespace Service.Catalog.Controllers.Catalog
         public async Task<IActionResult> ExportListMethod(string search)
         {
             var file = await _methodService.ExportList(search, "Métodos");
-            return File(file, MimeType.XLSX, "Catálogo de Método.xlsx");
+            return File(file, MimeType.XLSX, "Catálogo de Métodos.xlsx");
         }
 
         [HttpPost("method/export/form/{id}")]

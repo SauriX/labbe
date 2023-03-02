@@ -39,7 +39,7 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Compañia)
                 .AsQueryable();
 
-            if ((!string.IsNullOrWhiteSpace(search.Buscar)) && (search.SucursalId != null || search.SucursalId.Count() <= 0))
+            if ((string.IsNullOrWhiteSpace(search.Buscar)) && (search.SucursalId == null || !search.SucursalId.Any()))
             {
                 report = report.Where(x => search.SucursalesId.Contains(x.SucursalId));
             }
@@ -48,6 +48,10 @@ namespace Service.MedicalRecord.Repository
             {
                 report = report.Where(x => x.Clave.Contains(search.Buscar)
                 || (x.Expediente.NombrePaciente + " " + x.Expediente.PrimerApellido + " " + x.Expediente.SegundoApellido).ToLower().Contains(search.Buscar.ToLower()));
+            }
+            if (search.Ciudad != null && search.Ciudad.Count > 0)
+            {
+                report = report.Where(x => search.Ciudad.Contains(x.Sucursal.Ciudad));
             }
             if (search.SucursalId != null && search.SucursalId.Count > 0)
             {

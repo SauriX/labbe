@@ -15,5 +15,6 @@ namespace Service.MedicalRecord.Dtos.ResultValidation
         public string Compañia { get; set; }
         public List<ValidationStudyDto> Estudios { get; set; }
         public string Order { get; set; }
+        public string Ciudad { get; set; }
     }
 }

@@ -12,6 +12,7 @@ namespace Service.Catalog.Application.IApplication
         Task<IEnumerable<SeriesListDto>> GetByFilter(SeriesFilterDto filter);
         Task<SeriesDto> GetByNewForm(SeriesNewDto newSerie);
         Task<SeriesDto> GetById(int id, byte tipo);
+        Task<IEnumerable<SeriesListDto>> GetSeries(Guid branchId);
         Task<ExpeditionPlaceDto> GetBranch(string branchId);
         Task CreateInvoice(SeriesDto serie);
         Task UpdateTicket(TicketDto ticket);

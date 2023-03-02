@@ -23,10 +23,11 @@ namespace Service.MedicalRecord.Application
     {
         public readonly ISamplingRepository _repository;
 
-        public SamplingAplication(ISamplingRepository repository)
+        public SamplingAplication(ISamplingRepository repository, IInvoiceCatalogRepository invoiceRepository)
         {
 
             _repository = repository;
+
         }
 
         public async Task<(byte[] file, string fileName)> ExportList(RequestedStudySearchDto search)
@@ -91,9 +92,16 @@ namespace Service.MedicalRecord.Application
         {
           
             var requestedStudy = await _repository.GetAll(search);
+
+
+
+
+
             if (requestedStudy != null)
             {
+
                 return requestedStudy.ToSamplingListDto(search);
+
             }
             else
             {

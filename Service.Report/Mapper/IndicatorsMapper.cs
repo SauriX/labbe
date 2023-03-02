@@ -228,26 +228,16 @@ namespace Service.Report.Mapper
             return results;
         }
         
-        public static InvoiceServicesDto ToServiceCostGroupDto(this IEnumerable<ServicesCost> model)
+        public static InvoiceServicesDto ToServiceCostGroupDto(this IEnumerable<ServiceUpdateDto> model)
         {
             if (model == null) return null;
 
-            var grupos = model.GroupBy(x => new {x.Id, x.CostoFijo} ).Select(y => y.ToList()).ToList();
-
-            var services = grupos.Select(x => new ServicesCostDto
-            {
-                Id = x.First().Id,
-                Sucursal = string.Join(", ", x.Select(x => x.Sucursal)),
-                Nombre = x.First().Nombre,
-                CostoFijo = x.First().CostoFijo,
-                CostosFijos = x.Sum(x => x.CostoFijo),
-                FechaAlta = x.First().FechaAlta
-            }).ToList();
+            var services = model.ToList();
 
             var totals = new InvoiceServicesDto
             {
                 Servicios = services,
-                TotalMensual = services.Sum(x => x.CostosFijos),
+                TotalMensual = services.Sum(x => x.TotalSucursales),
             };
 
             return totals;

@@ -38,11 +38,11 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Sucursal)
                 .Include(x => x.Estudios).ThenInclude(x => x.Estatus)
                 .Include(x => x.Estudios).ThenInclude(x => x.Tapon)
-                .Include(x=>x.Medico)
+                .Include(x => x.Medico)
                 .OrderBy(x => x.FechaCreo)
                 .AsQueryable();
 
-            if((!string.IsNullOrWhiteSpace(filter.Clave)) && (filter.Sucursales != null || filter.Sucursales.Count() >= 0))
+            if ((string.IsNullOrWhiteSpace(filter.Clave)) && (filter.Sucursales == null || !filter.Sucursales.Any()))
             {
                 requests = requests.Where(x => filter.SucursalesId.Contains(x.SucursalId));
             }
@@ -66,7 +66,7 @@ namespace Service.MedicalRecord.Repository
 
             if (filter.Ciudad != null)
             {
-                requests = requests.Where(x => x.Sucursal != null &&  filter.Ciudad.Contains(x.Sucursal.Ciudad));
+                requests = requests.Where(x => x.Sucursal != null && filter.Ciudad.Contains(x.Sucursal.Ciudad));
             }
 
             if (filter.Sucursales != null && filter.Sucursales.Any())
@@ -139,10 +139,21 @@ namespace Service.MedicalRecord.Repository
         {
             var lastTag = await _context.Relacion_Solicitud_Etiquetas
                 .Include(x => x.Solicitud)
-                .OrderByDescending(x => x.Fecha)
-                .FirstOrDefaultAsync(x => x.Clave.Contains(date));
+                //.OrderByDescending(x => x.Fecha)
+                //.FirstOrDefaultAsync(x => x.Clave.Contains(date));
+                .FirstOrDefaultAsync();
 
-            return lastTag?.Clave;
+            return lastTag?.ClaveEtiqueta;
+        }
+
+        public async Task<List<RequestTag>> GetTags(Guid requestId)
+        {
+            var tags = await _context.Relacion_Solicitud_Etiquetas
+                .Include(x => x.Estudios)
+                .Where(x => x.SolicitudId == requestId)
+                .ToListAsync();
+
+            return tags;
         }
 
         public async Task<string> GetLastPathologicalCode(Guid branchId, string date, string type)
@@ -335,13 +346,44 @@ namespace Service.MedicalRecord.Repository
             await _context.BulkInsertOrUpdateAsync(studies, config);
         }
 
-        public async Task BulkInsertUpdateTags(Guid requestId, List<RequestTag> tags)
+        public async Task BulkInsertUpdateDeleteTags(Guid requestId, List<RequestTag> tags)
         {
-            var config = new BulkConfig();
-            config.SetSynchronizeFilter<RequestTag>(x => x.SolicitudId == requestId);
-            config.SetOutputIdentity = true;
+            using var transaction = _context.Database.BeginTransaction();
+            try
+            {
+                var config = new BulkConfig();
+                config.SetSynchronizeFilter<RequestTag>(x => x.SolicitudId == requestId);
+                config.SetOutputIdentity = true;
 
-            await _context.BulkInsertOrUpdateAsync(tags, config);
+                var tagsToCreate = tags.Where(x => x.Id == 0).ToList();
+                await _context.BulkInsertAsync(tagsToCreate, config);
+
+                config.SetOutputIdentity = false;
+                await _context.BulkInsertOrUpdateOrDeleteAsync(tags, config);
+
+                var configStudies = new BulkConfig();
+                configStudies.SetSynchronizeFilter<RequestTagStudy>(x => tags.Select(t => t.Id).Contains(x.SolicitudEtiquetaId));
+                configStudies.SetOutputIdentity = true;
+
+                var studies = tags.SelectMany(t => t.Estudios.Select(x => { x.SolicitudEtiquetaId = t.Id; return x; })).ToList();
+                var studiesToCreate = studies.Where(x => x.Id == 0).ToList();
+                await _context.BulkInsertAsync(studiesToCreate, configStudies);
+
+                configStudies.SetOutputIdentity = false;
+                await _context.BulkInsertOrUpdateOrDeleteAsync(studies, configStudies);
+
+                //foreach (var tag in tags)
+                //{
+                //    tag.Estudios = studies.Where(x => x.SolicitudEtiquetaId == tag.Id).ToList();
+                //}
+
+                transaction.Commit();
+            }
+            catch (System.Exception)
+            {
+                transaction.Rollback();
+                throw;
+            }
         }
 
         public async Task BulkUpdatePayments(Guid requestId, List<RequestPayment> payments)
@@ -387,14 +429,12 @@ namespace Service.MedicalRecord.Repository
             }
         }
 
-        
-
         public async Task<List<Domain.Request.RequestStudy>> GetRequestsStudyByListId(List<Guid> solicitudesId)
         {
-            
+
             return await _context.Relacion_Solicitud_Estudio
                 .Where(x => solicitudesId.Contains(x.SolicitudId))
-                .ToListAsync(); 
+                .ToListAsync();
 
         }
         public async Task<List<Domain.Request.Request>> GetRequestsByListId(List<Guid> solicitudesId)

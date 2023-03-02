@@ -50,7 +50,7 @@ namespace Service.Catalog.Controllers.Catalog
         public async Task<IActionResult> ExportListPayment(string search)
         {
             var file = await _paymentService.ExportList(search, "Formas de pago");
-            return File(file, MimeType.XLSX, "Catálogo de Forma de pago.xlsx");
+            return File(file, MimeType.XLSX, "Catálogo de Formas de pago.xlsx");
         }
 
         [HttpPost("payment/export/form/{id}")]

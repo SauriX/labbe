@@ -16,6 +16,7 @@ namespace Service.MedicalRecord.Dtos.RelaseResult
         public List<RelaceStudyDto> Estudios { get; set; }
         public string Order { get; set; }
         public bool Parcialidad { get; set; }
+        public string Ciudad { get; set; }
        
     }
 }
