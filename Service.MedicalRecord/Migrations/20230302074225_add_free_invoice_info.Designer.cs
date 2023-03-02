@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.MedicalRecord.Context;
 
 namespace Service.MedicalRecord.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230302074225_add_free_invoice_info")]
+    partial class add_free_invoice_info
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -441,9 +443,6 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<int>("DiasCredito")
                         .HasColumnType("int");
 
-                    b.Property<string>("DireccionFiscal")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Estatus")
                         .HasColumnType("nvarchar(max)");
 
@@ -478,15 +477,6 @@ namespace Service.MedicalRecord.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OrigenFactura")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RFC")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RazonSocial")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RegimenFiscal")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Serie")
@@ -1479,91 +1469,29 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("Clave")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ClaveEtiqueta")
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Nombre")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ClaveInicial")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Color")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Destino")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DestinoId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte>("DestinoTipo")
-                        .HasColumnType("tinyint");
-
-                    b.Property<int>("EtiquetaId")
+                    b.Property<int>("Orden")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaModifico")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("NombreEtiqueta")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("SolicitudId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("Suero")
+                        .HasColumnType("int");
 
-                    b.Property<Guid?>("UsuarioModificoId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Tapon")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("SolicitudId");
 
                     b.ToTable("Relacion_Solicitud_Etiquetas");
-                });
-
-            modelBuilder.Entity("Service.MedicalRecord.Domain.Request.RequestTagStudy", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<decimal>("Cantidad")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("EstudioId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaModifico")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("NombreEstudio")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Orden")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SolicitudEtiquetaId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("UsuarioModificoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SolicitudEtiquetaId");
-
-                    b.ToTable("RequestTagStudy");
                 });
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.RouteTracking.RouteTracking", b =>
@@ -2119,7 +2047,7 @@ namespace Service.MedicalRecord.Migrations
                     b.HasOne("Service.MedicalRecord.Domain.Request.Request", "Solicitud")
                         .WithMany("Pagos")
                         .HasForeignKey("SolicitudId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Estatus");
@@ -2185,17 +2113,6 @@ namespace Service.MedicalRecord.Migrations
                         .IsRequired();
 
                     b.Navigation("Solicitud");
-                });
-
-            modelBuilder.Entity("Service.MedicalRecord.Domain.Request.RequestTagStudy", b =>
-                {
-                    b.HasOne("Service.MedicalRecord.Domain.Request.RequestTag", "SolicitudEtiqueta")
-                        .WithMany("Estudios")
-                        .HasForeignKey("SolicitudEtiquetaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("SolicitudEtiqueta");
                 });
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.RouteTracking.RouteTracking", b =>
@@ -2293,11 +2210,6 @@ namespace Service.MedicalRecord.Migrations
                     b.Navigation("Resultados");
 
                     b.Navigation("ResultadosPatologicos");
-                });
-
-            modelBuilder.Entity("Service.MedicalRecord.Domain.Request.RequestTag", b =>
-                {
-                    b.Navigation("Estudios");
                 });
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.TrackingOrder.TrackingOrder", b =>
