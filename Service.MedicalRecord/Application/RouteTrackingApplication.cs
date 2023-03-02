@@ -45,12 +45,13 @@ namespace Service.MedicalRecord.Application
             var routeTrackingList = await _repository.GetAll(search);
             var studyTags = await _repository.GetTagsByOrigin();
 
-            var tagDestination = studyTags.Where(x => x.DestinoId != null).Select(y => Guid.Parse(y.DestinoId)).ToList();
-            var tagRoutes = await _catalogClient.GetRutas(tagDestination);
+            List<RouteFormDto> tagRoutes = new();
 
             if (!string.IsNullOrEmpty(search.Destino))
             {
                 _ = studyTags.Where(x => x.DestinoId == search.Destino);
+                var tagDestination = studyTags.Where(x => x.DestinoId != null).Select(y => y.DestinoId).ToList();
+                tagRoutes = await _catalogClient.GetRutas(tagDestination);
             }
 
             var trackingTags = routeTrackingList.ToRouteTrackingDto(studyTags, tagRoutes);
@@ -73,8 +74,8 @@ namespace Service.MedicalRecord.Application
                 {
                     var ruteOrder = await _repository.getById(item.RuteOrder);
                     var list = ruteOrder.ToRouteTrackingDtoList();
-                    List<Guid> IdRoutes = new List<Guid>();
-                    IdRoutes.Add(list.rutaId);
+                    List<string> IdRoutes = new();
+                    IdRoutes.Add(list.rutaId.ToString());
                     var routes = await _catalogClient.GetRutas(IdRoutes);
                     var route = routes.FirstOrDefault(x => Guid.Parse(x.Id) == list.rutaId);
                     DateTime oDate = Convert.ToDateTime(list.Fecha);
@@ -222,9 +223,9 @@ namespace Service.MedicalRecord.Application
             var order = trakingorder.ToRouteTrackingDtoList();
 
             List<RouteTrackingListDto> routefinal = new List<RouteTrackingListDto>();
-            List<Guid> IdRoutes = new List<Guid>();
+            List<string> IdRoutes = new ();
 
-            IdRoutes.Add(order.rutaId);
+            IdRoutes.Add(order.rutaId.ToString());
 
             var routes = await _catalogClient.GetRutas(IdRoutes);
 

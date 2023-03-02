@@ -69,8 +69,8 @@ namespace Service.MedicalRecord.Application.IApplication
             {
                 var ruteOrder = await _routeTrackingRepository.getById(seguimientoId);
                 var list = ruteOrder.ToRouteTrackingDtoList();
-                List<Guid> IdRoutes = new List<Guid>();
-                IdRoutes.Add(list.rutaId);
+                List<string> IdRoutes = new ();
+                IdRoutes.Add(list.rutaId.ToString());
                 var routes = await _catalogClient.GetRutas(IdRoutes);
                 var route = routes.FirstOrDefault(x => Guid.Parse(x.Id) == list.rutaId);
                 DateTime oDate = Convert.ToDateTime(list.Fecha);

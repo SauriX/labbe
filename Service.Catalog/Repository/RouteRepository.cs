@@ -56,7 +56,7 @@ namespace Service.Catalog.Repository
                 .Include(x => x.SucursalDestino)
                 .Include(x => x.Paqueteria)
                 .Include(x => x.Maquilador)
-                .FirstOrDefaultAsync(x => x.Id == id);
+                .FirstOrDefaultAsync(x => x.Id == id || x.SucursalDestinoId == id);
 
             return routes;
         }
