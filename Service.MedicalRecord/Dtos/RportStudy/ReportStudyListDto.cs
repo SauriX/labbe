@@ -7,7 +7,7 @@
         public string Nombre { get; set; }
         public string Estatus { get; set; }
         public string Fecha { get; set; }
-
+        public string Color { get; set; }
         public string Regitro { get; set; }
     }
 }

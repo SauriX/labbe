@@ -17,5 +17,7 @@
         public string TipoValor { get; set; }
         public string ValorInicial { get; set; }
         public string ValorFinal { get; set; }
+
+        public string Tipo { get; set; }
     }
 }
