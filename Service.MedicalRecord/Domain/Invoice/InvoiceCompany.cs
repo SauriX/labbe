@@ -10,6 +10,11 @@ namespace Service.MedicalRecord.Domain.Invoice
         public virtual ICollection<Domain.Request.Request> Solicitudes { get; set; }
         public virtual string Estatus { get; set; }
         public string TipoFactura { get; set; }
+        public string OrigenFactura { get; set; }
+        public string RFC { get; set; }
+        public string DireccionFiscal { get; set; }
+        public string RazonSocial { get; set; }
+        public string RegimenFiscal { get; set; }
         public Guid FacturaId { get; set; }
         public string FacturapiId { get; set; }
         public Guid? TaxDataId { get; set; }

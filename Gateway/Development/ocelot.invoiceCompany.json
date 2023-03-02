@@ -97,6 +97,18 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
+      "DownstreamPathTemplate": "/api/invoiceCompany/print/xml/{facturapiId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/invoiceCompany/print/xml/{facturapiId}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/invoiceCompany/send",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

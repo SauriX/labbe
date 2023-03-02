@@ -12,6 +12,7 @@ namespace Service.Billing.Application.IApplication
         Task<List<InvoiceDto>> GetByRecord(Guid recordId);
         Task<List<InvoiceDto>> GetByRequest(Guid requestId);
         Task<InvoiceDto> Create(InvoiceDto invoiceDto);
+        Task<string> GetNextInvoiceSeriesNumber(string serie);
         Task<InvoiceDto> CreateInvoiceCompany(InvoiceDto invoiceDto);
         Task<string> Cancel(InvoiceCancelation invoiceDto);
         Task<(byte[], string)> PrintInvoiceXML(Guid invoiceId);

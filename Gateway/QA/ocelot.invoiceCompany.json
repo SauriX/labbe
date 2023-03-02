@@ -89,6 +89,17 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/invoiceCompany/print/xml/{facturapiId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/invoiceCompany/print/xml/{facturapiId}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
       "DownstreamPathTemplate": "/LabRamos/services/records/api/invoiceCompany/send",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [

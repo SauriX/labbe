@@ -7,7 +7,9 @@ namespace Service.Billing.Dtos.Invoice
 {
     public class ProductDto
     {
+
         public string Clave { get; set; }
+        public string ClaveProdServ { get; set; }
         public string Descripcion { get; set; }
         public decimal Precio { get; set; }
         public decimal Descuento { get; set; }

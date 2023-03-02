@@ -78,6 +78,15 @@ namespace Service.MedicalRecord.Controllers
 
             return File(file, MimeType.PDF, "Facturacion compañias.pdf");
         }
+
+        [HttpPost("print/xml/{facturapiId}")]
+        [Authorize(Policies.Access)]
+        public async Task<IActionResult>  PrintXML(Guid facturapiId)
+        {
+            var file = await _billingClient.DownloadXML(facturapiId);
+
+            return File(file, MimeType.XML, "Facturacion compañias.xml");
+        }
         [HttpPost("send")]
         [Authorize(Policies.Access)]
         public async Task<bool> EnvioFactura(InvoiceCompanyDeliverDto envio)

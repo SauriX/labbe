@@ -107,6 +107,7 @@ namespace Service.MedicalRecord.Application
                 FormaPago = invoice.FormaPago,
                 MetodoPago = invoice.MetodoPago,
                 UsoCFDI = invoice.UsoCFDI,
+                Serie = invoice.Serie,
                 RegimenFiscal = invoice.RegimenFiscal,
                 RFC = invoice.RFC,
                 SolicitudesId = invoice.SolicitudesId,
@@ -131,7 +132,8 @@ namespace Service.MedicalRecord.Application
 
                 Productos = invoice.Detalles.Select(x => new ProductDto
                 {
-                    Clave = x.EstudioClave,
+                    ClaveProdServ = x.ClaveProdServ,
+                    Clave = string.IsNullOrEmpty(x.EstudioClave) ? x.Id.ToString() : x.EstudioClave,
                     Descripcion = x.Concepto,
                     Precio = x.Importe,
                     Descuento = x.Descuento,

@@ -94,6 +94,7 @@ namespace Service.MedicalRecord.Mapper
                 Id = Guid.NewGuid(),
                 Estatus = "Facturado",
                 TipoFactura = invoice.TipoFactura,
+                OrigenFactura = invoice.OrigenFactura,
                 FacturaId = invoiceResponse.Id,
                 FacturapiId = invoiceResponse.FacturapiId,
                 TaxDataId = model.TaxDataId,
@@ -116,6 +117,10 @@ namespace Service.MedicalRecord.Mapper
                 DiasCredito = model.DiasCredito,
                 FormaPagoId = model.FormaPagoId,
                 TipoPago = model.TipoPago,
+                RFC = model.Cliente?.RFC,
+                DireccionFiscal = model.Cliente?.DireccionFiscal,
+                RazonSocial = model.Cliente?.RazonSocial,
+                RegimenFiscal = model.Cliente?.RegimenFiscal,
                 DetalleFactura = model.Detalles.Select(x => new InvoiceCompanyDetail
                 {
                     Id = Guid.NewGuid(),
@@ -124,6 +129,7 @@ namespace Service.MedicalRecord.Mapper
                     Concepto = x.Concepto,
                     Cantidad = x.Cantidad,
                     Importe = x.Importe,
+                    ClaveProdServ = x.ClaveProdServ,
                 }).ToList(),
             };
         }
@@ -155,8 +161,14 @@ namespace Service.MedicalRecord.Mapper
                 DiasCredito = model.DiasCredito,
                 FormaPagoId = model.FormaPagoId,
                 TipoPago = model.TipoPago,
+                OrigenFactura = model.OrigenFactura,
+                RFC = model.RFC,
+                DireccionFiscal = model.DireccionFiscal,
+                RazonSocial = model.RazonSocial,
+                RegimenFiscal = model.RegimenFiscal,
                 Detalles = model.DetalleFactura.Select(x => new InvoiceDetail
                 {
+                    ClaveProdServ = x.ClaveProdServ,
                     SolicitudClave = x.SolicitudClave,
                     EstudioClave = x.EstudioClave,
                     Concepto = x.Concepto,
