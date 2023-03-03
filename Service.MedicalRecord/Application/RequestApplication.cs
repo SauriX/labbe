@@ -99,18 +99,7 @@ namespace Service.MedicalRecord.Application
             {
                 throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
             }
-            var requestdto = request.ToRequestDto();
-
-           var order =await  _trackingOrderRepository.FindorderRequest(requestdto.SolicitudId.ToString());
-           
-            if (order != null ) {
-                var destino = await _catalogClient.GetBranch(Guid.Parse(order.SucursalDestinoId));
-                if (destino != null) {
-                    requestdto.Destino = destino.nombre;
-                }
-            }
-
-            return requestdto;
+            return  request.ToRequestDto();
         }
 
         public async Task<RequestGeneralDto> GetGeneral(Guid recordId, Guid requestId)

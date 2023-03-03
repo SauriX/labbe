@@ -28,7 +28,7 @@ namespace Service.Catalog.Controllers
             return await _Service.GetById(id);
         }
         [HttpGet("tecinfo/{id}")]
-        public async Task<InfoTecStudy> GetTecInfo(int id)
+        public async Task<InfoTecStudyDto> GetTecInfo(int id)
         {
             return await _Service.GetTecInfo(id);
         }

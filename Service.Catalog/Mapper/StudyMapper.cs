@@ -93,7 +93,7 @@ namespace Service.Catalog.Mapper
                 NombreEstudio = x.Nombre ?? x.Estudio?.Clave ?? "Sin estudio"
             }).ToList();
         }
-        public static InfoTecStudy totecStudy(this Study model) {
+        public static InfoTecStudy ToTecStudyDto(this Study model) {
 
             return new InfoTecStudy
             {
@@ -105,7 +105,7 @@ namespace Service.Catalog.Mapper
                 DiaEstabilidad = model.DiasEstabilidad,
                 DiasRefrigeracion = model.DiasRefrigeracion,
                 DiasEntrega = model.Dias,
-                Tapon = model.Tapon?.Clave,
+                Tapon = $"{model.Etiquetas.FirstOrDefault().Etiqueta.Clave}-{model.Etiquetas.FirstOrDefault().Etiqueta.Nombre}",
             };
         
         }

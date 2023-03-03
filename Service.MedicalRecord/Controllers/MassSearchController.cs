@@ -38,7 +38,7 @@ namespace Service.MedicalRecord.Controllers
             return clinicResults;
         }
         [HttpPost("list")]
-        [Authorize(Policies.Access)]
+        [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportResultsExcel(DeliverResultsFilterDto search)
         {
             search.SucursalesId = (List<Guid>)HttpContext.Items["sucursales"];

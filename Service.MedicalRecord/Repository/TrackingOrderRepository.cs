@@ -106,11 +106,11 @@ namespace Service.MedicalRecord.Repository
             
         }
 
-        public async Task<TrackingOrder>FindorderRequest(string Solicitud)
+        public async Task<TrackingOrder>FindorderRequest(Guid Solicitud)
         {
             var listaEstudio = _context.CAT_Seguimiento_Ruta.Include(x=>x.Estudios).AsQueryable();
 
-            var orden = listaEstudio.FirstOrDefault(x => x.Estudios.Any(y=> y.SolicitudId == Guid.Parse(Solicitud)));
+            var orden = listaEstudio.FirstOrDefaultAsync(x => x.Estudios.Any(y=> y.SolicitudId == Solicitud));
             return orden;
 
         }
