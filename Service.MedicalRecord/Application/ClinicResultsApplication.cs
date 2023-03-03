@@ -270,10 +270,10 @@ namespace Service.MedicalRecord.Application
             {
                 var method = studiesParams.FirstOrDefault(x => x.Id == studyMethod.EstudioId).Metodo;
                 var studyOrder = studiesParams.FirstOrDefault(x => x.Id == studyMethod.EstudioId).Orden;
+                studyMethod.OrdenEstudio = studyOrder;
                 if (method != null)
                 {
                     studyMethod.Metodo = method;
-                    studyMethod.OrdenEstudio = studyOrder;
                     methodStudies.Add(studyMethod);
                 }
 
@@ -310,7 +310,7 @@ namespace Service.MedicalRecord.Application
                         }
                         resultsIds.Add(study.Id);
                         study.Metodo = currentStudy.Metodo;
-                        study.Orden = currentStudy.Orden;
+                        study.OrdenEstudio = currentStudy.Orden;
                     }
                 }
 
@@ -354,7 +354,7 @@ namespace Service.MedicalRecord.Application
                 study.Parametros = JsonSerializer.Deserialize<List<ParameterListDto>>(JsonSerializer.Serialize(st.Parametros));
                 study.Indicaciones = st.Indicaciones;
                 study.Metodo = st.Metodo;
-                study.Orden = st.Orden;
+                study.OrdenEstudio = st.Orden;
             }
 
             foreach (var result in results)
@@ -476,7 +476,7 @@ namespace Service.MedicalRecord.Application
 
             var data = new RequestStudyUpdateDto()
             {
-                Estudios = studiesDto.OrderBy(x => x.Orden).ToList(),
+                Estudios = studiesDto.OrderBy(x => x.OrdenEstudio).ToList(),
             };
 
             return data;
