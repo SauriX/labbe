@@ -111,7 +111,7 @@ namespace Service.MedicalRecord.Repository
             var listaEstudio = _context.CAT_Seguimiento_Ruta.Include(x=>x.Estudios).AsQueryable();
 
             var orden = listaEstudio.FirstOrDefaultAsync(x => x.Estudios.Any(y=> y.SolicitudId == Solicitud));
-            return orden;
+            return await orden;
 
         }
         public async Task<List<Domain.Request.RequestStudy>> FindEstudios(List<int> estudios)
