@@ -106,7 +106,7 @@ namespace Service.MedicalRecord.Repository
             
         }
 
-        public async Task<TrackingOrder>FindorderRequest(Guid Solicitud)
+        public async Task<TrackingOrder>FindOrderByRequestId(Guid Solicitud)
         {
             var listaEstudio = _context.CAT_Seguimiento_Ruta.Include(x=>x.Estudios).AsQueryable();
 

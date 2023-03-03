@@ -1,6 +1,6 @@
 ﻿namespace Service.Catalog.Dtos.Study
 {
-    public class InfoTecStudyDto
+    public class StudyTecDto
     {
         public string? Instrucciones { get; set; }
         public string? TipoMuestra { get; set; }
