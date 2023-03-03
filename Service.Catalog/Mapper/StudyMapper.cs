@@ -102,10 +102,10 @@ namespace Service.Catalog.Mapper
 
                 Instrucciones = model.Instrucciones,
                 TipoMuestra = model.SampleType?.Nombre,
-                DiaEstabilidad = model.DiasEstabilidad,
+                DiasEstabilidad = model.DiasEstabilidad,
                 DiasRefrigeracion = model.DiasRefrigeracion,
                 DiasEntrega = model.Dias,
-                Tapon = $"{model.Etiquetas.FirstOrDefault().Etiqueta.Clave}-{model.Etiquetas.FirstOrDefault().Etiqueta.Nombre}",
+                Tapon = string.Join(",", model.Etiquetas.Select(y=>y.Etiqueta.Clave)) ,
             };
         
         }
