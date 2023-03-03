@@ -15,5 +15,6 @@ namespace Service.Catalog.Application.IApplication
         Task<(byte[] file, string fileName)> ExportList(string search = null);
         Task<(byte[] file, string fileName)> ExportForm(int id);
         Task<IEnumerable<PriceStudyList>> GetAllPriceStudy(string search = null);
+        Task<InfoTecStudy> GetTecInfo(int Id);
     }
 }

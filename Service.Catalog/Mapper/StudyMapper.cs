@@ -1,4 +1,5 @@
-﻿using Service.Catalog.Domain.Indication;
+﻿using Service.Catalog.Domain.Catalog;
+using Service.Catalog.Domain.Indication;
 using Service.Catalog.Domain.Parameter;
 using Service.Catalog.Domain.Study;
 using Service.Catalog.Dtos.Study;
@@ -92,7 +93,22 @@ namespace Service.Catalog.Mapper
                 NombreEstudio = x.Nombre ?? x.Estudio?.Clave ?? "Sin estudio"
             }).ToList();
         }
+        public static InfoTecStudy totecStudy(this Study model) {
 
+            return new InfoTecStudy
+            {
+
+
+
+                Instrucciones = model.Instrucciones,
+                TipoMuestra = model.SampleType?.Nombre,
+                DiaEstabilidad = model.DiasEstabilidad,
+                DiasRefrigeracion = model.DiasRefrigeracion,
+                DiasEntrega = model.Dias,
+                Tapon = model.Tapon?.Clave,
+            };
+        
+        }
         public static StudyFormDto ToStudyFormDto(this Study model)
         {
             if (model == null) return null;
@@ -128,7 +144,10 @@ namespace Service.Catalog.Mapper
                 Maquila = model.Maquilador,
                 Method = model.Metodo,
                 SampleType = model.SampleType,
-                Tapa = model.Tapon
+                Tapa = model.Tapon,
+                Instrucciones = model.Instrucciones,
+                DiasEstabilidad = model.DiasEstabilidad ,
+                DiasRefrigeracion = model.DiasRefrigeracion
             };
         }
         public static Study ToModel(this StudyFormDto model, Study study)
@@ -161,6 +180,9 @@ namespace Service.Catalog.Mapper
                 FechaCreo = DateTime.Now,
                 UsuarioModificoId = model.UsuarioId,
                 FechaModifico = DateTime.Now,
+                Instrucciones = model.Instrucciones,
+                DiasEstabilidad = model.DiasEstabilidad,
+                DiasRefrigeracion = model.DiasRefrigeracion,
                 Parameters = model.Parameters.Select((x, i) => new ParameterStudy
                 {
                     ParametroId = Guid.Parse(x.Id),
@@ -224,6 +246,9 @@ namespace Service.Catalog.Mapper
                 FechaCreo = DateTime.Now,
                 UsuarioModificoId = model.UsuarioId,
                 FechaModifico = DateTime.Now,
+                Instrucciones = model.Instrucciones,
+                DiasEstabilidad = model.DiasEstabilidad,
+                DiasRefrigeracion = model.DiasRefrigeracion,
                 Parameters = model.Parameters.Select((x, i) => new ParameterStudy
                 {
                     ParametroId = Guid.Parse(x.Id),

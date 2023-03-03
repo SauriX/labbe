@@ -30,8 +30,16 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
             return estudio.ToStudyFormDto();
-        }      
-        
+        }
+        public async Task<InfoTecStudy> GetTecInfo(int Id)
+        {
+            var estudio = await _repository.GetById(Id);
+            if (estudio == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
+            }
+            return estudio.totecStudy();
+        }
         public async Task<IEnumerable<StudyListDto>> GetByIds(List<int> ids)
         {
             var studies = await _repository.GetByIds(ids);

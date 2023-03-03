@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dtos.Study;
@@ -25,8 +26,12 @@ namespace Service.Catalog.Controllers
         public async Task<StudyFormDto> GetById(int id)
         {
             return await _Service.GetById(id);
-        }      
-        
+        }
+        [HttpGet("tecinfo/{id}")]
+        public async Task<InfoTecStudy> GetTecInfo(int id)
+        {
+            return await _Service.GetTecInfo(id);
+        }
         [HttpPost("multiple")]
         public async Task<IEnumerable<StudyListDto>> GetByIds(List<int> ids)
         {
