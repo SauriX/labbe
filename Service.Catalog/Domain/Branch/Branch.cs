@@ -56,6 +56,7 @@ namespace Service.Catalog.Domain.Branch
         public Guid? UsuarioModificoId { get; set; }
         public DateTime? FechaModifico { get; set; }
         public bool Matriz { get; set; }
+        public string SucursalKey { get; set; }
         public virtual IEnumerable<BranchDepartment> Departamentos { get; set; }
         public virtual ICollection<Serie> Series { get; set; }
     }
