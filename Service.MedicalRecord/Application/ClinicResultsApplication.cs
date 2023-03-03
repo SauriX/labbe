@@ -269,9 +269,11 @@ namespace Service.MedicalRecord.Application
             foreach (var studyMethod in studies.Where(x => x.Metodo == null))
             {
                 var method = studiesParams.FirstOrDefault(x => x.Id == studyMethod.EstudioId).Metodo;
+                var studyOrder = studiesParams.FirstOrDefault(x => x.Id == studyMethod.EstudioId).Orden;
                 if (method != null)
                 {
                     studyMethod.Metodo = method;
+                    studyMethod.OrdenEstudio = studyOrder;
                     methodStudies.Add(studyMethod);
                 }
 
@@ -474,7 +476,7 @@ namespace Service.MedicalRecord.Application
 
             var data = new RequestStudyUpdateDto()
             {
-                Estudios = studiesDto,
+                Estudios = studiesDto.OrderBy(x => x.Orden).ToList(),
             };
 
             return data;
