@@ -31,7 +31,7 @@ namespace Service.Catalog.Application
             }
             return estudio.ToStudyFormDto();
         }
-        public async Task<InfoTecStudyDto> GetTecInfo(int Id)
+        public async Task<StudyTecDto> GetTecInfo(int Id)
         {
             var estudio = await _repository.FindAsync(Id);
             if (estudio == null)

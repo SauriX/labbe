@@ -93,9 +93,9 @@ namespace Service.Catalog.Mapper
                 NombreEstudio = x.Nombre ?? x.Estudio?.Clave ?? "Sin estudio"
             }).ToList();
         }
-        public static InfoTecStudyDto ToTecStudyDto(this Study model) {
+        public static StudyTecDto ToTecStudyDto(this Study model) {
 
-            return new InfoTecStudyDto
+            return new StudyTecDto
             {
 
 
