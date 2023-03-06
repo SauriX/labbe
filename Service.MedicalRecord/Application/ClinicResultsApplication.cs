@@ -308,6 +308,7 @@ namespace Service.MedicalRecord.Application
                         }
                         resultsIds.Add(study.Id);
                         study.Metodo = currentStudy.Metodo;
+                        study.Orden = currentStudy.Orden;
                     }
                 }
 
@@ -351,6 +352,7 @@ namespace Service.MedicalRecord.Application
                 study.Parametros = JsonSerializer.Deserialize<List<ParameterListDto>>(JsonSerializer.Serialize(st.Parametros));
                 study.Indicaciones = st.Indicaciones;
                 study.Metodo = st.Metodo;
+                study.Orden = st.Orden;
             }
 
             foreach (var result in results)
