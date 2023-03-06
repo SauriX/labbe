@@ -34,7 +34,7 @@ namespace Service.Catalog.Application
 
         public SeriesApplication(ISeriesRepository repository, IIdentityClient identityClient, IBranchRepository branchRepository, IConfigurationApplication configurationApplication, IConfiguration configuration)
         {
-            key = configuration.GetValue<string>("PasswordKey");
+            key = configuration.GetValue<string>("KeySettings:AvailableKey");
             _repository = repository;
             _identityClient = identityClient;
             _branchRepository = branchRepository;

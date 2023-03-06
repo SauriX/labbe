@@ -33,7 +33,7 @@ namespace Service.Catalog.Application
 
         public BranchApplication(IPublishEndpoint publishEndpoint, IBranchRepository repository, ILocationRepository locationRepository, ISeriesRepository seriesRepository, IConfiguration configuration)
         {
-            key = configuration.GetValue<string>("PasswordKey");
+            key = configuration.GetValue<string>("KeySettings:AvailableKey");
             _publishEndpoint = publishEndpoint;
             _repository = repository;
             _locationRepository = locationRepository;
