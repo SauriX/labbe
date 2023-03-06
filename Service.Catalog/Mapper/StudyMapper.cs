@@ -45,13 +45,14 @@ namespace Service.Catalog.Mapper
                 }
             }
 
-            return completeStudies.Select(x => new StudyListDto
+            return completeStudies.OrderBy(x => x.Orden).Select(x => new StudyListDto
             {
                 Id = x.Id,
                 Parametros = x.Parameters.OrderBy(x => x.Orden).Select(y => y.Parametro).ToParameterValueStudyDto(),
                 Indicaciones = x.Indications.Select(y => y.Indicacion).ToIndicationListDto(),
                 Etiquetas = x.Etiquetas.ToStudyTagDto(),
                 Metodo = x.Metodo?.Nombre,
+                Orden = x.Orden,
                 Clave = x.Clave,
                 Tipo = x.SampleType?.Nombre
             });

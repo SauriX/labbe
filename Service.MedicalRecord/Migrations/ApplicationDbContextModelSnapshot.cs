@@ -423,14 +423,26 @@ namespace Service.MedicalRecord.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("BancoId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("CantidadTotal")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ClaveExterna")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("CompañiaId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Consecutivo")
                         .HasColumnType("int");
+
+                    b.Property<int>("DiasCredito")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DireccionFiscal")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Estatus")
                         .HasColumnType("nvarchar(max)");
@@ -453,6 +465,9 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("FormaPago")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("FormaPagoId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("IVA")
                         .HasColumnType("decimal(18,2)");
 
@@ -460,6 +475,18 @@ namespace Service.MedicalRecord.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NumeroCuenta")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OrigenFactura")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RFC")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RazonSocial")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RegimenFiscal")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Serie")
@@ -475,6 +502,9 @@ namespace Service.MedicalRecord.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TipoFactura")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TipoPago")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UsoCFDI")
@@ -503,6 +533,9 @@ namespace Service.MedicalRecord.Migrations
 
                     b.Property<int>("Cantidad")
                         .HasColumnType("int");
+
+                    b.Property<string>("ClaveProdServ")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Concepto")
                         .HasColumnType("nvarchar(max)");
@@ -2086,7 +2119,7 @@ namespace Service.MedicalRecord.Migrations
                     b.HasOne("Service.MedicalRecord.Domain.Request.Request", "Solicitud")
                         .WithMany("Pagos")
                         .HasForeignKey("SolicitudId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Estatus");

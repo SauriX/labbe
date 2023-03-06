@@ -76,6 +76,16 @@ namespace Service.MedicalRecord.Mapper
                 }).ToList(),
             };
         }
+        public static List<InvoiceFreeDataDto> ToInvoicesFreeDataDto(this List<InvoiceCompany> model)
+        {
+            return model.Select(x => new InvoiceFreeDataDto
+            {
+               FechaCreacion = x.FechaCreo.ToString("dd/MM/yyyy"),
+               Documento = $"{x.Serie}-{x.Consecutivo}",
+               Monto = x.CantidadTotal,
+               Cliente = ""
+            }).ToList();
+        }
 
         public static InvoiceCompany ToInvoiceCompany(this InvoiceCompanyDto model, InvoiceDto invoiceResponse, InvoiceCompanyDto invoice)
         {
@@ -84,6 +94,7 @@ namespace Service.MedicalRecord.Mapper
                 Id = Guid.NewGuid(),
                 Estatus = "Facturado",
                 TipoFactura = invoice.TipoFactura,
+                OrigenFactura = invoice.OrigenFactura,
                 FacturaId = invoiceResponse.Id,
                 FacturapiId = invoiceResponse.FacturapiId,
                 TaxDataId = model.TaxDataId,
@@ -101,6 +112,15 @@ namespace Service.MedicalRecord.Mapper
                 FechaCreo = DateTime.Now,
                 Nombre = model.Nombre,
                 Consecutivo = model.Consecutivo,
+                BancoId = model.BancoId,
+                ClaveExterna = model.ClaveExterna,
+                DiasCredito = model.DiasCredito,
+                FormaPagoId = model.FormaPagoId,
+                TipoPago = model.TipoPago,
+                RFC = model.Cliente?.RFC,
+                DireccionFiscal = model.Cliente?.DireccionFiscal,
+                RazonSocial = model.Cliente?.RazonSocial,
+                RegimenFiscal = model.Cliente?.RegimenFiscal,
                 DetalleFactura = model.Detalles.Select(x => new InvoiceCompanyDetail
                 {
                     Id = Guid.NewGuid(),
@@ -109,6 +129,7 @@ namespace Service.MedicalRecord.Mapper
                     Concepto = x.Concepto,
                     Cantidad = x.Cantidad,
                     Importe = x.Importe,
+                    ClaveProdServ = x.ClaveProdServ,
                 }).ToList(),
             };
         }
@@ -135,8 +156,19 @@ namespace Service.MedicalRecord.Mapper
                 Consecutivo = model.Consecutivo,
                 Nombre = model.Nombre,
                 FacturaId = model.FacturaId,
+                BancoId = model.BancoId,
+                ClaveExterna = model.ClaveExterna,
+                DiasCredito = model.DiasCredito,
+                FormaPagoId = model.FormaPagoId,
+                TipoPago = model.TipoPago,
+                OrigenFactura = model.OrigenFactura,
+                RFC = model.RFC,
+                DireccionFiscal = model.DireccionFiscal,
+                RazonSocial = model.RazonSocial,
+                RegimenFiscal = model.RegimenFiscal,
                 Detalles = model.DetalleFactura.Select(x => new InvoiceDetail
                 {
+                    ClaveProdServ = x.ClaveProdServ,
                     SolicitudClave = x.SolicitudClave,
                     EstudioClave = x.EstudioClave,
                     Concepto = x.Concepto,

@@ -13,6 +13,7 @@ namespace Service.MedicalRecord.Domain.Invoice
         public int Cantidad { get; set; }
         public decimal Importe { get; set; }
         public decimal Descuento { get; set; }
+        public string ClaveProdServ { get; set; }
 
     }
 }

@@ -1,0 +1,136 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/services/records/api/MedicalRecord/all",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/MedicalRecord/all",
+      "UpstreamhttpsMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/services/records/api/MedicalRecord/now",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/MedicalRecord/now",
+      "UpstreamhttpsMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/services/records/api/MedicalRecord/report/expedientes",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/MedicalRecord/report/expedientes",
+      "UpstreamhttpsMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/services/records/api/MedicalRecord/coincidencias",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/MedicalRecord/coincidencias",
+      "UpstreamhttpsMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/services/records/api/MedicalRecord/active",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/MedicalRecord/active",
+      "UpstreamhttpsMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/services/records/api/MedicalRecord/taxData/{recordId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/MedicalRecord/taxData/{recordId}",
+      "UpstreamhttpsMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/services/records/api/MedicalRecord/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/MedicalRecord/{id}",
+      "UpstreamhttpsMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/services/records/api/MedicalRecord",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/MedicalRecord",
+      "UpstreamhttpsMethod": [ "POST", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/services/records/api/MedicalRecord/taxData",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/MedicalRecord/taxData",
+      "UpstreamhttpsMethod": [ "POST", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/services/records/api/MedicalRecord/updateWallet",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/MedicalRecord/updateWallet",
+      "UpstreamhttpsMethod": [ "POST", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/services/records/api/MedicalRecord/export/list",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/MedicalRecord/export/list",
+      "UpstreamhttpsMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/services/records/api/MedicalRecord/export/form/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/MedicalRecord/export/form/{id}",
+      "UpstreamhttpsMethod": [ "POST" ]
+    }
+  ]
+}

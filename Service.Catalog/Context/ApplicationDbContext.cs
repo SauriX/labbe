@@ -31,6 +31,7 @@ namespace Service.Catalog.Context
         public DbSet<Configuration> CAT_Configuracion { get; set; }
         public DbSet<TaxConfiguration> CAT_Configuracion_Fiscal { get; set; }
         public DbSet<Area> CAT_Area { get; set; }
+        public DbSet<InvoiceConcepts> CAT_Conceptos_Factura { get; set; }
         public DbSet<Budget> CAT_Presupuestos { get; set; }
         public DbSet<BudgetBranch> Relacion_Presupuesto_Sucursal { get; set; }
         public DbSet<Bank> CAT_Banco { get; set; }

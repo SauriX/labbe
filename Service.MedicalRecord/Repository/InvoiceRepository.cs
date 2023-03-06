@@ -88,7 +88,37 @@ namespace Service.MedicalRecord.Repository
             }
             return requests.ToListAsync();
         }
+        public Task<List<InvoiceCompany>> InvoiceFreeFilter(InvoiceFreeFilterDto filter)
+        {
+            var invoices = _context.Factura_Compania.AsQueryable();
 
+            if (filter.Compania != Guid.Empty)
+            {
+                invoices = invoices.Where(x => x.CompañiaId == filter.Compania);
+            }
+
+            if (filter.FechaInicial.Date != DateTime.MinValue.Date)
+            {
+                invoices = invoices.Where(x => x.FechaCreo.Date >= filter.FechaInicial.Date);
+            } 
+            
+            if (filter.FechaFinal.Date != DateTime.MinValue.Date)
+            {
+                invoices = invoices.Where(x => x.FechaCreo.Date <= filter.FechaFinal.Date);
+            }
+
+            if (filter.Estatus != null && filter.Estatus.Count() > 0)
+            {
+                invoices = invoices.Where(x => filter.Estatus.Contains(x.Estatus));
+            }
+            
+            if (filter.Tipo != null && filter.Tipo.Count() > 0)
+            {
+                invoices = invoices.Where(x => filter.Tipo.Contains(x.TipoFactura));
+            }
+
+            return invoices.ToListAsync();
+        }
         public async Task CreateInvoiceCompanyData(InvoiceCompany invoiceCompnay, List<RequestInvoiceCompany> requestInvoiceCompany)
         {
 
@@ -134,5 +164,7 @@ namespace Service.MedicalRecord.Repository
 
             return request;
         }
+
+        
     }
 }

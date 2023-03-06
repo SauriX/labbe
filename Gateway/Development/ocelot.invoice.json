@@ -35,6 +35,18 @@
       ],
       "UpstreamPathTemplate": "/api/invoice/print/pdf/{invoiceId}",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/invoice/consecutive/{serie}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 52975
+        }
+      ],
+      "UpstreamPathTemplate": "/api/invoice/consecutive/{serie}",
+      "UpstreamHttpMethod": [ "GET" ]
     }
   ]
 }

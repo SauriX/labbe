@@ -30,7 +30,8 @@ namespace Service.MedicalRecord.Application
         private readonly ICatalogClient _catalogClient;
         private readonly IClinicResultsApplication _clinicresultapplication;
         private readonly IPdfClient _pdfClient;
-        public RelaseResultApplication(IRelaseResultRepository repository, IClinicResultsRepository clinicresultrepository, ICatalogClient catalogClient, IPdfClient pdfClient, IClinicResultsApplication clinicresultapplication)
+
+        public RelaseResultApplication(IRelaseResultRepository repository, IClinicResultsRepository clinicresultrepository, ICatalogClient catalogClient, IPdfClient pdfClient, IClinicResultsApplication clinicresultapplication, IInvoiceCatalogRepository invoiceRepository)
         {
 
             _repository = repository;
@@ -38,6 +39,7 @@ namespace Service.MedicalRecord.Application
             _catalogClient = catalogClient;
             _pdfClient = pdfClient;
             _clinicresultapplication = clinicresultapplication;
+ 
         }
 
         public async Task<(byte[] file, string fileName)> ExportList(SearchRelase search)
@@ -106,7 +108,9 @@ namespace Service.MedicalRecord.Application
             var requestedStudy = await _repository.GetAll(search);
             if (requestedStudy != null)
             {
-                return requestedStudy.ToRelaseListDto();
+        
+               return requestedStudy.ToRelaseListDto();
+
             }
             else
             {

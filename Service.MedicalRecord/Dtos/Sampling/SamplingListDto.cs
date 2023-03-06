@@ -20,5 +20,6 @@ namespace Service.MedicalRecord.Dtos.Sampling
         public string ClavePatologica { get; set; }
         public string Observacion { get; set; }
         public List<StudyDto> Estudios { get; set; }
+        public string Ciudad { get; set; }
     }
 }

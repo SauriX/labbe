@@ -114,9 +114,10 @@ namespace Integration.Pdf.Service
 
                     var orderParams = studyParam.OrderBy(x => x.Orden);
 
-                    foreach (var param in orderParams.Where(x => !string.IsNullOrWhiteSpace(x.Resultado)))
+                    foreach (var param in orderParams)
                     {
                         var checkResult = false;
+                        var isLabel = param.TipoValorId == TypeValue.Etiqueta;
                         var typeValueText = param.TipoValorId == TypeValue.Etiqueta || param.TipoValorId == TypeValue.Observacion;
                         var typeValueNumeric = param.TipoValorId == TypeValue.Numerico || param.TipoValorId == TypeValue.NumericoSexo || param.TipoValorId == TypeValue.NumericoEdad || param.TipoValorId == TypeValue.NumericoEdadSexo;
                         var fcsiExists = !string.IsNullOrEmpty(param.FCSI);
@@ -131,12 +132,12 @@ namespace Integration.Pdf.Service
 
                         List<Col> col = new List<Col>()
                         {
-                            new Col(param.Nombre, 14, param.TipoValorId == TypeValue.Etiqueta ? fontCritic : fontParam, ParagraphAlignment.Left){
+                            new Col(param.Nombre, 14, isLabel ? fontCritic : fontParam, ParagraphAlignment.Left){
                                 Fill = typeValueText ? TabLeader.Spaces : TabLeader.Dots
                             },
-                            new Col(checkResult ? $"*{param.Resultado}" : param.Resultado, 7, checkResult ? fontCritic : fontParam, ParagraphAlignment.Center),
-                            new Col(param.UnidadNombre, 6, fontParam, ParagraphAlignment.Center),
-                            new Col(typeValueText ? "" : $"{param.ValorInicial} - {param.ValorFinal}", 6, fontParam, ParagraphAlignment.Center),
+                            new Col(isLabel ? "" : checkResult ? $"*{param.Resultado}" : param.Resultado, 7, checkResult ? fontCritic : fontParam, ParagraphAlignment.Center),
+                            new Col(isLabel ? "" : param.UnidadNombre, 6, fontParam, ParagraphAlignment.Center),
+                            new Col(isLabel ? "" : typeValueText ? "" : $"{param.ValorInicial} - {param.ValorFinal}", 6, fontParam, ParagraphAlignment.Center),
                         };
 
                         if (param.TipoValorId == TypeValue.Texto || param.TipoValorId == TypeValue.Parrafo || param.TipoValorId == TypeValue.Observacion)

@@ -9,6 +9,7 @@ namespace Service.MedicalRecord.Application.IApplication
     public interface IInvoiceCompanyApplication
     {
         Task<InvoiceCompanyInfoDto> GetByFilter(InvoiceCompanyFilterDto filter);
+        Task<List<InvoiceFreeDataDto>> GetByFilterFree(InvoiceFreeFilterDto filter);
         Task<string> GetNextPaymentNumber(string serie);
         Task<InvoiceDto> CheckInPayment(InvoiceCompanyDto invoice);
         Task<InvoiceDto> CheckInPaymentCompany(InvoiceCompanyDto invoice);

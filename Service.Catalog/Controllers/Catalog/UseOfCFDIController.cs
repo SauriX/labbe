@@ -50,7 +50,7 @@ namespace Service.Catalog.Controllers.Catalog
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportListUseOfCFDI(string search)
         {
-            var file = await _useOfCFDIService.ExportList(search, "Usos de CFDI");
+            var file = await _useOfCFDIService.ExportList(search, "Uso de CFDI");
             return File(file, MimeType.XLSX, "Catálogo de Uso de CFDI.xlsx");
         }
 
