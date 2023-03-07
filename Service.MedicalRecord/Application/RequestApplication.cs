@@ -198,7 +198,7 @@ namespace Service.MedicalRecord.Application
             var data = new RequestStudyUpdateDto()
             {
                 Paquetes = packsDto,
-                Estudios = studiesDto,
+                Estudios = studiesDto.OrderBy(x => x.OrdenEstudio).ToList(),
                 Total = totals,
             };
 
