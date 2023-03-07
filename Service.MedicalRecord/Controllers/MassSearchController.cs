@@ -50,6 +50,7 @@ namespace Service.MedicalRecord.Controllers
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportResultsPdf(MassSearchFilterDto filter)
         {
+            filter.SucursalesId = (List<Guid>)HttpContext.Items["sucursales"];
             var file = await _service.DownloadResultsPdf(filter);
             return File(file, MimeType.PDF, "Resultados Busq. Masiva.pdf");
         }
