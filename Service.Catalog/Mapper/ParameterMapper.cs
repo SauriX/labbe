@@ -7,6 +7,12 @@ using System.Linq;
 
 namespace Service.Catalog.Mapper
 {
+    public class TipoValor
+    {
+        public int Value { get; set; }
+        public string Tipo { get; set; }
+
+    }
     public static class ParameterMapper
     {
         public static ParameterListDto ToParameterListDto(this Parameter model)
@@ -37,6 +43,32 @@ namespace Service.Catalog.Mapper
         {
             if (model == null) return null;
 
+
+
+            List<TipoValor> tipodeValorLista = new List<TipoValor>
+            {
+                new TipoValor { Value = 0, Tipo = "Sin valor" },
+                new TipoValor { Value = 1, Tipo = "Numérico" },
+                new TipoValor { Value = 2, Tipo = "Numérico por sexo" },
+                new TipoValor { Value = 3, Tipo = "Numérico por edad" },
+                new TipoValor { Value = 4, Tipo = "Numérico por edad y sexo" },
+                new TipoValor { Value = 5, Tipo = "Opción múltiple" },
+                new TipoValor { Value = 6, Tipo = "Numérico con una columna" },
+                new TipoValor { Value = 7, Tipo = "Texto" },
+                new TipoValor { Value = 8, Tipo = "Párrafo" },
+                new TipoValor { Value = 9, Tipo = "Etiqueta" },
+                new TipoValor { Value = 10, Tipo = "Observación" },
+                new TipoValor { Value = 11, Tipo = "Numérico con dos columnas" },
+                new TipoValor { Value = 12, Tipo = "Numérico con tres columnas" },
+                new TipoValor { Value = 13, Tipo = "Numérico con cuatro columnas" },
+                new TipoValor { Value = 14, Tipo = "Numérico con cinco columnas" }
+            };
+
+
+
+
+
+
             return model.Select(x => new ParameterListDto
             {
                 Id = x.Id.ToString(),
@@ -54,6 +86,7 @@ namespace Service.Catalog.Mapper
                 MostrarFormato = x.MostrarFormato,
                 ValorInicial = x.ValorInicial,
                 ValorFinal = x.ValorFinal,
+                Tipo = tipodeValorLista.FirstOrDefault( y => y.Value.ToString() == x.TipoValor).Tipo
             });
         }
 

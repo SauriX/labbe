@@ -19,7 +19,8 @@ namespace Service.MedicalRecord.Mapper
                 Nombre = x.Nombre,
                 Estatus = x.Estatus.Nombre,
                 Fecha = x.FechaEntrega.ToShortDateString(),
-                Regitro = x.FechaCreo.ToShortDateString()
+                Regitro = x.FechaCreo.ToShortDateString(),
+                Color = x.Estatus.Color,        
             
             }).ToList();
         }
@@ -39,7 +40,7 @@ namespace Service.MedicalRecord.Mapper
             Compañia = x.Compañia.Nombre,
             Entrega = x.Estudios.Count() >1 ? $"{x.Estudios.Select(y=>y.FechaEntrega).Min().ToShortDateString()}-{x.Estudios.Select(y => y.FechaEntrega).Max().ToShortDateString()}" : x.Estudios.First().FechaEntrega.ToShortDateString(),
             Estudios= x.Estudios.ToList().toStudyList(),
-            Estatus = x.Urgencia == 1 ? x.Estudios.Any(y => y.EstatusId == Status.RequestStudy.EnRuta) ? "Ruta": x.Estudios.Any(y => y.DepartamentoId == Catalogs.Department.PATOLOGIA) ? x.ClavePatologica:  "Normal" : "Urgente", 
+            Estatus = x.Estudios.Any(y => y.DepartamentoId == Catalogs.Department.PATOLOGIA) ? x.ClavePatologica: x.Urgencia== 1?  x.Estudios.Any(y => y.EstatusId == Status.RequestStudy.EnRuta) ? "Ruta": x.Estudios.Any(y => y.DepartamentoId == Catalogs.Department.PATOLOGIA) ? x.ClavePatologica:  "Normal" : "Urgente", 
             isPatologia = x.Estudios.Any(y=>y.DepartamentoId == Catalogs.Department.PATOLOGIA )
             }).ToList();
         

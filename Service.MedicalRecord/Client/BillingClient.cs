@@ -100,6 +100,23 @@ namespace Service.MedicalRecord.Client
 
             throw new CustomException(HttpStatusCode.BadRequest, error.Errors);
         }
+        public async Task<byte[]> DownloadXML(Guid invoiceId)
+        {
+            var json = JsonConvert.SerializeObject(invoiceId);
+
+            var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Billing")}/api/invoice/print/xml/{invoiceId}", stringContent);
+
+            if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+            {
+                return await response.Content.ReadAsByteArrayAsync();
+            }
+
+            var error = await response.Content.ReadFromJsonAsync<ClientException>();
+
+            throw new CustomException(HttpStatusCode.BadRequest, error.Errors);
+        }
 
         public async Task<string> CancelInvoice(InvoiceCancelation invoiceDto)
         {

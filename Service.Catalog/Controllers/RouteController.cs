@@ -46,7 +46,7 @@ namespace Service.Catalog.Controllers
         {
             List<RouteFormDto> routes = new List<RouteFormDto>();
             foreach (var item in id) { 
-                var route = await _service.GetById(item);
+                var route = await _service.GetById  (item);
                 routes.Add(route);
             }
             return routes;

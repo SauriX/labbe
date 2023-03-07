@@ -17,7 +17,6 @@ namespace Service.Catalog.Domain.Series
         public bool Activo { get; set; }
         public bool CFDI { get; set; }
         public DateTime FechaCreo { get; set; }
-        public Guid EmisorId { get; set; }
         public string ArchivoKey { get; set; }
         public string ArchivoCer { get; set; }
         public string SucursalKey { get; set; }

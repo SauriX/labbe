@@ -31,13 +31,15 @@ namespace Service.MedicalRecord.Application
         private readonly IClinicResultsRepository _clinicresultrepository;
         private readonly IPdfClient _pdfClient;
         private readonly IClinicResultsApplication _clinicresultApplication;
-        public ResultValidationApplication(IResultaValidationRepository repository, IClinicResultsRepository clinicresultrepository, IPdfClient pdfClient, IClinicResultsApplication clinicresultApplication)
+
+        public ResultValidationApplication(IResultaValidationRepository repository, IClinicResultsRepository clinicresultrepository, IPdfClient pdfClient, IClinicResultsApplication clinicresultApplication, IInvoiceCatalogRepository invoiceRepository)
         {
 
             _repository = repository;
             _clinicresultrepository = clinicresultrepository;
             _pdfClient = pdfClient;
             _clinicresultApplication = clinicresultApplication;
+
         }
 
         public async Task<(byte[] file, string fileName)> ExportList(SearchValidation search)
@@ -109,7 +111,9 @@ namespace Service.MedicalRecord.Application
             var requestedStudy = await _repository.GetAll(search);
             if (requestedStudy != null)
             {
-                return requestedStudy.ToValidationListDto();
+
+                return  requestedStudy.ToValidationListDto();
+
             }
             else
             {

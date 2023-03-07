@@ -52,7 +52,7 @@ namespace Service.MedicalRecord.Application
         private readonly IRepository<Domain.Catalogs.Branch> _branchRepository;
         private readonly IMedicalRecordRepository _recordRepository;
         private readonly IBillingClient _billingClient;
-
+        private readonly ITrackingOrderRepository _trackingOrderRepository;
         private const byte URGENCIA_CARGO = 3;
 
         public RequestApplication(
@@ -66,7 +66,9 @@ namespace Service.MedicalRecord.Application
             IWeeClinicApplication weeService,
             IRepository<Domain.Catalogs.Branch> branchRepository,
             IMedicalRecordRepository recordRepository,
-            IBillingClient billingClient)
+            IBillingClient billingClient,
+            ITrackingOrderRepository trackingOrder
+            )
         {
             _transaction = transaction;
             _repository = repository;
@@ -79,6 +81,7 @@ namespace Service.MedicalRecord.Application
             _branchRepository = branchRepository;
             _recordRepository = recordRepository;
             _billingClient = billingClient;
+            _trackingOrderRepository = trackingOrder;
         }
 
         public async Task<IEnumerable<RequestInfoDto>> GetByFilter(RequestFilterDto filter)
@@ -96,8 +99,7 @@ namespace Service.MedicalRecord.Application
             {
                 throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
             }
-
-            return request.ToRequestDto();
+            return  request.ToRequestDto();
         }
 
         public async Task<RequestGeneralDto> GetGeneral(Guid recordId, Guid requestId)
@@ -196,7 +198,7 @@ namespace Service.MedicalRecord.Application
             var data = new RequestStudyUpdateDto()
             {
                 Paquetes = packsDto,
-                Estudios = studiesDto,
+                Estudios = studiesDto.OrderBy(x => x.OrdenEstudio).ToList(),
                 Total = totals,
             };
 
