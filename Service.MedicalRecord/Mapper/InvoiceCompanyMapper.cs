@@ -71,7 +71,6 @@ namespace Service.MedicalRecord.Mapper
                         Descuento = y.Descuento,
                         DescuentoPorcentaje = y.DescuentoPorcentaje,
 
-
                     }).ToList(),
                 }).ToList(),
             };
