@@ -48,14 +48,14 @@ namespace Service.MedicalRecord.Repository
             {
                 requests = requests.Where(x => x.Procedencia == 2);
             }
-            if (filter.FechaInicial != null && filter.FechaFinal != null)
+            if (string.IsNullOrWhiteSpace(filter.Buscar) && filter.FechaInicial != null && filter.FechaFinal != null)
             {
                 requests = requests.Where(x => ((DateTime)filter.FechaInicial).Date <= x.FechaCreo.Date && ((DateTime)filter.FechaFinal).Date >= x.FechaCreo.Date);
             }
 
-            if (filter.Sucursales != null && filter.Sucursales.Any())
+            if (filter.SucursalId != null && filter.SucursalId.Any())
             {
-                requests = requests.Where(x => filter.Sucursales.Contains(x.SucursalId));
+                requests = requests.Where(x => filter.SucursalId.Contains(x.SucursalId));
             }
 
             if (filter.Companias != null && filter.Companias.Any())
@@ -72,17 +72,17 @@ namespace Service.MedicalRecord.Repository
             {
                 if (filter.TipoFactura.Contains("facturadas"))
                 {
-                    requests = requests.Where(x => x.Pagos.FirstOrDefault().EstatusId != 3 && x.Pagos.Count() > 0);
+                    requests = requests.Where(x => x.FacturasCompañia.Any(y => y.Estatus == "Facturado"));
 
                 }
                 if (filter.TipoFactura.Contains("noFacturadas"))
                 {
-                    requests = requests.Where(x => x.Pagos.Count() == 0);
+                    requests = requests.Where(x => x.FacturasCompañia.Count() == 0);
 
                 }
                 if (filter.TipoFactura.Contains("canceladas"))
                 {
-                    requests = requests.Where(x => x.Pagos.FirstOrDefault().EstatusId == 3);
+                    requests = requests.Where(x => x.FacturasCompañia.Any(y => y.Estatus == "Cancelado"));
 
                 }
             }

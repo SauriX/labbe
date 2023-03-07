@@ -63,6 +63,10 @@ namespace Service.Catalog.Domain.Study
         public DateTime? FechaCreo { get; set; }
         public Guid? UsuarioModificoId { get; set; }
         public DateTime? FechaModifico { get; set; }
+        public string Instrucciones { get; set; }
+
+        public int DiasEstabilidad { get; set; }
+        public int DiasRefrigeracion { get; set; }
         public virtual ICollection<ParameterStudy> Parameters { get; set; }
         public virtual ICollection<Domain.Study.WorkListStudy> WorkLists { get; set; }
         public virtual ICollection<IndicationStudy> Indications { get; set; }

@@ -269,6 +269,8 @@ namespace Service.MedicalRecord.Application
             foreach (var studyMethod in studies.Where(x => x.Metodo == null))
             {
                 var method = studiesParams.FirstOrDefault(x => x.Id == studyMethod.EstudioId).Metodo;
+                var studyOrder = studiesParams.FirstOrDefault(x => x.Id == studyMethod.EstudioId).Orden;
+                studyMethod.OrdenEstudio = studyOrder;
                 if (method != null)
                 {
                     studyMethod.Metodo = method;
@@ -308,7 +310,7 @@ namespace Service.MedicalRecord.Application
                         }
                         resultsIds.Add(study.Id);
                         study.Metodo = currentStudy.Metodo;
-                        study.Orden = currentStudy.Orden;
+                        study.OrdenEstudio = currentStudy.Orden;
                     }
                 }
 
@@ -352,7 +354,7 @@ namespace Service.MedicalRecord.Application
                 study.Parametros = JsonSerializer.Deserialize<List<ParameterListDto>>(JsonSerializer.Serialize(st.Parametros));
                 study.Indicaciones = st.Indicaciones;
                 study.Metodo = st.Metodo;
-                study.Orden = st.Orden;
+                study.OrdenEstudio = st.Orden;
             }
 
             foreach (var result in results)
@@ -474,7 +476,7 @@ namespace Service.MedicalRecord.Application
 
             var data = new RequestStudyUpdateDto()
             {
-                Estudios = studiesDto,
+                Estudios = studiesDto.OrderBy(x => x.OrdenEstudio).ToList(),
             };
 
             return data;
@@ -645,9 +647,17 @@ namespace Service.MedicalRecord.Application
                         var resultsToSend = canSendResultResultsReady(existingRequest, results.First().SolicitudEstudioId);
                         if (resultsToSend.Count() > 0)
                         {
-                            
-                            await SendTestWhatsapp(files, request.Solicitud.EnvioWhatsApp, userId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
-                            await SendTestEmail(files, request.Solicitud.EnvioCorreo, userId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
+
+                            if (!string.IsNullOrEmpty(request.Solicitud.EnvioWhatsApp))
+                            {
+                                await SendTestWhatsapp(files, request.Solicitud.EnvioWhatsApp, userId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
+
+                            }
+                            if (!string.IsNullOrEmpty(request.Solicitud.EnvioCorreo))
+                            {
+                                await SendTestEmail(files, request.Solicitud.EnvioCorreo, userId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
+
+                            }
                             await UpdateStatusStudy(request.SolicitudEstudioId, Status.RequestStudy.Enviado, user);
 
                             string descripcion = getDescriptionRecord(request.Clave, existingRequest.EnvioWhatsApp, existingRequest.EnvioCorreo);
@@ -829,10 +839,16 @@ namespace Service.MedicalRecord.Application
                         var resultsToSend = canSendResultResultsReady(existingRequest, existing.RequestStudyId);
                         if (resultsToSend.Count() > 0)
                         {
+                            if (!string.IsNullOrEmpty(existing.Solicitud.EnvioWhatsApp))
+                            {
 
-                            await SendTestWhatsapp(files, existing.Solicitud.EnvioWhatsApp, result.UsuarioId, existing.Solicitud.Expediente.NombreCompleto, existing.Solicitud.Clave);
+                                await SendTestWhatsapp(files, existing.Solicitud.EnvioWhatsApp, result.UsuarioId, existing.Solicitud.Expediente.NombreCompleto, existing.Solicitud.Clave);
+                            }
+                            if (!string.IsNullOrEmpty(existing.Solicitud.EnvioCorreo))
+                            {
 
-                            await SendTestEmail(files, existing.Solicitud.EnvioCorreo, result.UsuarioId, existing.Solicitud.Expediente.NombreCompleto, existing.Solicitud.Clave);
+                                await SendTestEmail(files, existing.Solicitud.EnvioCorreo, result.UsuarioId, existing.Solicitud.Expediente.NombreCompleto, existing.Solicitud.Clave);
+                            }
 
                             await UpdateStatusStudy(existing.SolicitudEstudioId, Status.RequestStudy.Enviado, result.Usuario);
 
@@ -1143,10 +1159,15 @@ namespace Service.MedicalRecord.Application
                 //{
 
 
+                if (!string.IsNullOrEmpty(existingRequest.EnvioWhatsApp))
+                {
+                    await SendTestWhatsapp(files, existingRequest.EnvioWhatsApp, usuarioId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
+                }
 
-                await SendTestWhatsapp(files, existingRequest.EnvioWhatsApp, usuarioId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
-
-                await SendTestEmail(files, existingRequest.EnvioCorreo, usuarioId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
+                if (!string.IsNullOrEmpty(existingRequest.EnvioCorreo))
+                {
+                    await SendTestEmail(files, existingRequest.EnvioCorreo, usuarioId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
+                }
 
                 foreach (var estudio in existingRequest.Estudios)
                 {
@@ -1238,20 +1259,24 @@ namespace Service.MedicalRecord.Application
         }
         public async Task CreateHistoryRecord(Guid solicituId, int solicitudEstudioId, string descripcion, string usuario, string numero = "", string correo = "")
         {
-            var record = new DeliveryHistory
+            if (!string.IsNullOrEmpty(numero) || !string.IsNullOrEmpty(correo))
             {
-                Id = Guid.NewGuid(),
-                Numero = numero,
-                Correo = correo,
-                FechaCreo = DateTime.Now,
-                UsuarioNombre = usuario,
-                Descripcion = descripcion,
-                SolicitudEstudioId = solicitudEstudioId,
-                SolicitudId = solicituId
 
-            };
+                var record = new DeliveryHistory
+                {
+                    Id = Guid.NewGuid(),
+                    Numero = numero,
+                    Correo = correo,
+                    FechaCreo = DateTime.Now,
+                    UsuarioNombre = usuario,
+                    Descripcion = descripcion,
+                    SolicitudEstudioId = solicitudEstudioId,
+                    SolicitudId = solicituId
 
-            await _repository.CreateHistoryRecord(record);
+                };
+
+                await _repository.CreateHistoryRecord(record);
+            }
 
 
         }

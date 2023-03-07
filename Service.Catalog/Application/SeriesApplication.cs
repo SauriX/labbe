@@ -24,6 +24,7 @@ namespace Service.Catalog.Application
 {
     public class SeriesApplication : ISeriesApplication
     {
+        private readonly string key;
         private readonly ISeriesRepository _repository;
         private readonly IIdentityClient _identityClient;
         private readonly IBranchRepository _branchRepository;
@@ -33,6 +34,7 @@ namespace Service.Catalog.Application
 
         public SeriesApplication(ISeriesRepository repository, IIdentityClient identityClient, IBranchRepository branchRepository, IConfigurationApplication configurationApplication, IConfiguration configuration)
         {
+            key = configuration.GetValue<string>("KeySettings:AvailableKey");
             _repository = repository;
             _identityClient = identityClient;
             _branchRepository = branchRepository;
@@ -62,25 +64,11 @@ namespace Service.Catalog.Application
 
             if (newSerie.TipoSerie == TIPO_FACTURA)
             {
-                var userBranch = await _branchRepository.GetById(newSerie.EmisorId.ToString());
                 var userConfiguration = await _configurationApplication.GetFiscal();
-
-                var userData = new OwnerInfoDto();
-
-                if (userConfiguration != null)
-                {
-                    userData = userBranch.ToOwnerInfoDto();
-                }
-
-                userData.WebSite = userConfiguration.WebSite ?? "www.laboratorioramos.com.mx";
-                userData.RFC = userConfiguration.RFC ?? "";
-                userData.RazonSocial = userConfiguration.RazonSocial ?? "";
-                userData.Correo = userConfiguration.Correo ?? "";
 
                 data = new SeriesDto
                 {
                     Factura = new InvoiceSerieDto(),
-                    Emisor = userData,
                     Expedicion = new ExpeditionPlaceDto()
                 };
             }
@@ -89,7 +77,6 @@ namespace Service.Catalog.Application
                 data = new SeriesDto
                 {
                     Factura = new InvoiceSerieDto(),
-                    Emisor = new OwnerInfoDto(),
                     Expedicion = new ExpeditionPlaceDto()
                 };
             }
@@ -110,20 +97,13 @@ namespace Service.Catalog.Application
 
             if (tipo == TIPO_FACTURA)
             {
-                var userBranch = await _branchRepository.GetById(serie.EmisorId.ToString());
                 var userConfiguration = await _configurationApplication.GetFiscal();
-                var userData = userBranch.ToOwnerInfoDto();
 
                 if (serie.SucursalId != Guid.Empty)
                 {
                     var defaultBranch = await _branchRepository.GetById(serie.SucursalId.ToString());
-                    expeditionData = defaultBranch.ToExpeditionPlaceDto();
+                    expeditionData = defaultBranch.ToExpeditionPlaceDto(key);
                 }
-
-                userData.WebSite = userConfiguration.WebSite ?? "www.laboratorioramos.com.mx";
-                userData.RFC = userConfiguration.RFC ?? "";
-                userData.RazonSocial = userConfiguration.RazonSocial ?? "";
-                userData.Correo = userConfiguration.Correo ?? "";
 
                 invoiceData.Id = id;
 
@@ -141,7 +121,6 @@ namespace Service.Catalog.Application
                 {
                     Id = id,
                     Factura = invoiceData,
-                    Emisor = userData,
                     Expedicion = expeditionData,
                     UsuarioId = serie.UsuarioCreoId
                 };
@@ -152,7 +131,6 @@ namespace Service.Catalog.Application
                 {
                     Id = id,
                     Factura = invoiceData,
-                    Emisor = new OwnerInfoDto(),
                     Expedicion = new ExpeditionPlaceDto(),
                     UsuarioId = serie.UsuarioCreoId
                 };
@@ -165,7 +143,7 @@ namespace Service.Catalog.Application
         {
             var branch = await _branchRepository.GetById(branchId);
 
-            return branch.ToExpeditionPlaceDto();
+            return branch.ToExpeditionPlaceDto(key);
         }
 
         public async Task<IEnumerable<SeriesListDto>> GetSeries(Guid branchId)

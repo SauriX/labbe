@@ -7,7 +7,6 @@ namespace Service.Catalog.Dto.Series
     {
         public int? Id { get; set; }
         public InvoiceSerieDto Factura { get; set; }
-        public OwnerInfoDto Emisor { get; set; }
         public ExpeditionPlaceDto Expedicion { get; set; }
         public Guid UsuarioId { get; set; }
     }
@@ -44,25 +43,6 @@ namespace Service.Catalog.Dto.Series
         public string SucursalKey { get; set; }
     }
 
-    public class OwnerInfoDto
-    {
-        public string RFC { get; set; }
-        public string RazonSocial { get; set; }
-        public string Nombre { get; set; }
-        public string CodigoPostal { get; set; }
-        public string Pais => "México";
-        public string Estado { get; set; }
-        public string Municipio { get; set; }
-        public string Ciudad { get; set; }
-        public string Calle { get; set; }
-        public string Colonia { get; set; }
-        public string NoExterior { get; set; }
-        public string NoInterior { get; set; }
-        public string Telefono { get; set; }
-        public string Correo { get; set; }
-        public string WebSite { get; set; }
-    }
-
     public class ExpeditionPlaceDto
     {
         public string CodigoPostal { get; set; }
@@ -75,5 +55,7 @@ namespace Service.Catalog.Dto.Series
         public string NoInterior { get; set; }
         public string Telefono { get; set; }
         public string SucursalId { get; set; }
+        public string SucursalKey { get; set; }
+        public string Correo { get; set; }
     }
 }

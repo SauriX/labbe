@@ -1,6 +1,7 @@
 ﻿using Service.Catalog.Domain.Branch;
 using Service.Catalog.Domain.Series;
 using Service.Catalog.Dtos.Branch;
+using Shared.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace Service.Catalog.Mapper
                 Ciudad = x.Colonia.Ciudad.Ciudad.Trim()
             });
         }
-        public static Branch ToModel(this BranchFormDto dto, IEnumerable<Serie> series = null)
+        public static Branch ToModel(this BranchFormDto dto, string key, IEnumerable<Serie> series = null)
         {
             if (dto == null) return null;
 
@@ -51,6 +52,7 @@ namespace Service.Catalog.Mapper
                 Ciudad = dto.Ciudad,
                 Estado = dto.Estado,
                 Codigopostal = dto.CodigoPostal,
+                SucursalKey = Crypto.EncryptString(dto.SucursalKey ?? "", key),
                 Departamentos = dto.Departamentos.Select(x => new BranchDepartment
                 {
                     DepartamentoId = x.DepartamentoId,
@@ -68,7 +70,6 @@ namespace Service.Catalog.Mapper
                     Clave = x.Clave,
                     Contraseña = x.Contraseña,
                     Descripcion = x.Descripcion,
-                    EmisorId = x.EmisorId,
                     Nombre = x.Nombre,
                     SucursalKey = x.SucursalKey,
                     TipoSerie = x.TipoSerie,
@@ -82,7 +83,7 @@ namespace Service.Catalog.Mapper
             };
         }
 
-        public static BranchFormDto ToBranchFormDto(this Branch model)
+        public static BranchFormDto ToBranchFormDto(this Branch model, string key)
         {
             if (model == null) return null;
             //List<CatalogListDto> permissions = new List<CatalogListDto>();
@@ -109,8 +110,8 @@ namespace Service.Catalog.Mapper
                 Departamentos = model.Departamentos.ToBranchDepartmentDto(),
                 Series = model.Series.ToList().ToSeriesListDto(),
                 Matriz = model.Matriz,
-                Colonia = model.Colonia.Colonia
-
+                Colonia = model.Colonia.Colonia,
+                SucursalKey = Crypto.DecryptString(model.SucursalKey ?? "", key),
             };
         }
 
@@ -131,7 +132,7 @@ namespace Service.Catalog.Mapper
             throw new NotImplementedException();
         }
 
-        public static Branch ToModel(this BranchFormDto dto, Branch model, IEnumerable<Serie> series = null)
+        public static Branch ToModel(this BranchFormDto dto, Branch model, string key, IEnumerable<Serie> series = null)
         {
             if (dto == null) return null;
 
@@ -157,6 +158,7 @@ namespace Service.Catalog.Mapper
                 Codigopostal = dto.CodigoPostal,
                 Matriz = dto.Matriz,
                 Clinicos = model.Clinicos,
+                SucursalKey = Crypto.EncryptString(dto.SucursalKey ?? "", key),
                 Departamentos = dto.Departamentos.Select(x => new BranchDepartment
                 {
                     SucursalId = model.Id,
@@ -175,7 +177,6 @@ namespace Service.Catalog.Mapper
                     Clave = x.Clave,
                     Contraseña = x.Contraseña,
                     Descripcion = x.Descripcion,
-                    EmisorId = x.EmisorId,
                     Nombre = x.Nombre,
                     SucursalKey = x.SucursalKey,
                     TipoSerie = x.TipoSerie,
