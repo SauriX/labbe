@@ -105,6 +105,15 @@ namespace Service.MedicalRecord.Repository
             return listaEstudio.ToList()    ;
             
         }
+
+        public async Task<TrackingOrder>FindOrderByRequestId(Guid Solicitud)
+        {
+            var listaEstudio = _context.CAT_Seguimiento_Ruta.Include(x=>x.Estudios).AsQueryable();
+
+            var orden = await  listaEstudio.FirstOrDefaultAsync(x => x.Estudios.Any(y=> y.SolicitudId == Solicitud));
+            return  orden;
+
+        }
         public async Task<List<Domain.Request.RequestStudy>> FindEstudios(List<int> estudios)
         {
             var listaEstudio = _context.Relacion_Solicitud_Estudio
@@ -235,7 +244,6 @@ namespace Service.MedicalRecord.Repository
                 .ThenInclude(x=>x.Solicitud.Expediente)
                 .FirstOrDefaultAsync();
         }
-
 
     }
 }
