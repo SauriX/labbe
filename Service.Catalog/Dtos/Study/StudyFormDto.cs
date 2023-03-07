@@ -33,6 +33,9 @@ namespace Service.Catalog.Dtos.Study
         public int Cantidad { get; set; }
         public bool Prioridad { get; set; }
         public bool Urgencia { get; set; }
+        public string Instrucciones { get; set; }
+        public int DiasEstabilidad { get; set; }
+        public int DiasRefrigeracion { get; set; }
         public IEnumerable<CatalogListDto> WorkList { get; set; }
         public IEnumerable<ParameterListDto> Parameters { get; set; }
         public IEnumerable<IndicationListDto> Indicaciones { get; set; }

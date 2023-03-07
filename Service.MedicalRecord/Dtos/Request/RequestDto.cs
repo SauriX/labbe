@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text.Json.Serialization;
 
 namespace Service.MedicalRecord.Dtos.Request
@@ -28,6 +29,7 @@ namespace Service.MedicalRecord.Dtos.Request
         public Guid ExpedienteId { get; set; }
         public Guid SucursalId { get; set; }
         public string Sucursal { get; set; }
+        public string? Destino { get; set; }
         public string Clave { get; set; }
         public string ClavePatologica { get; set; }
         public string Registro { get; set; }

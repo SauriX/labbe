@@ -17,5 +17,6 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task<string> GetLastCode(Guid branchId, string date);
         Task<List<Domain.Request.RequestStudy>> FindAllEstudios(List<int> estudios, string request);
         Task<List<Domain.Request.RequestStudy>> FindStudiesRequest(string Solicitud);
+        Task<TrackingOrder> FindOrderByRequestId(Guid Solicitud);
     }
 }
