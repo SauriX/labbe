@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Context;
 using Service.Catalog.Domain.Price;
+using Service.Catalog.Domain.Route;
 using Service.Catalog.Repository.IRepository;
 using System;
 using System.Collections.Generic;
@@ -201,6 +202,16 @@ namespace Service.Catalog.Repository
                 .ToListAsync();
 
             return asignado;
+        }
+
+        public async Task<Route_Study> GetStudyRoute(int id)
+        {
+            var studyRoute = await _context.Relacion_Ruta_Estudio
+                .Include(x => x.Ruta)
+                .Include(x => x.Estudio)
+                .FirstOrDefaultAsync(x => id == x.EstudioId);
+
+            return studyRoute;
         }
 
         public async Task<List<Price_Medics>> GetAllMedics(Guid medicsId)

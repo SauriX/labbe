@@ -1,4 +1,5 @@
 ﻿using Service.Catalog.Domain.Price;
+using Service.Catalog.Domain.Route;
 using Service.Catalog.Dtos.Pack;
 using Service.Catalog.Dtos.PriceList;
 using System;
@@ -244,12 +245,15 @@ namespace Service.Catalog.Mapper
             };
         }
 
-        public static PriceListInfoStudyDto ToPriceListInfoStudyDto(this PriceList_Study model)
+        public static PriceListInfoStudyDto ToPriceListInfoStudyDto(this PriceList_Study model, Route_Study studyRoute = null)
         {
             if (model == null) return null;
 
             return new PriceListInfoStudyDto
             {
+                Destino = studyRoute?.Ruta.Nombre,
+                DestinoId = studyRoute?.RouteId,
+                DestinoTipo = 1,
                 ListaPrecioId = model.PrecioListaId,
                 ListaPrecio = model.PrecioLista.Nombre,
                 EstudioId = model.EstudioId,

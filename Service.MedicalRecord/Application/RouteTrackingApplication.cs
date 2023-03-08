@@ -47,12 +47,8 @@ namespace Service.MedicalRecord.Application
 
             List<RouteFormDto> tagRoutes = new();
 
-            if (!string.IsNullOrEmpty(search.Destino))
-            {
-                _ = studyTags.Where(x => x.DestinoId == search.Destino);
-                var tagDestination = studyTags.Where(x => x.DestinoId != null).Select(y => y.DestinoId).ToList();
-                tagRoutes = await _catalogClient.GetRutas(tagDestination);
-            }
+            var tagDestination = studyTags.Where(x => x.DestinoId != null).Select(y => y.DestinoId).ToList();
+            tagRoutes = await _catalogClient.GetRutas(tagDestination);
 
             var trackingTags = routeTrackingList.ToRouteTrackingDto(studyTags, tagRoutes);
 
@@ -223,7 +219,7 @@ namespace Service.MedicalRecord.Application
             var order = trakingorder.ToRouteTrackingDtoList();
 
             List<RouteTrackingListDto> routefinal = new List<RouteTrackingListDto>();
-            List<string> IdRoutes = new ();
+            List<string> IdRoutes = new();
 
             IdRoutes.Add(order.rutaId.ToString());
 
