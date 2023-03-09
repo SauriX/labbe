@@ -171,7 +171,7 @@ namespace Service.Catalog.Mapper
                 MaquiladorId = dto?.MaquiladorId,
                 PaqueteriaId = dto.PaqueteriaId,
                 Activo = dto.Activo,
-                Comentarios = dto.Comentarios.ToString(),
+                Comentarios = dto?.Comentarios,
                 HoraDeRecoleccion = model.HoraDeRecoleccion,
                 TiempoDeEntrega = dto.TiempoDeEntrega,
                 FormatoDeTiempoId = dto.FormatoDeTiempoId,
