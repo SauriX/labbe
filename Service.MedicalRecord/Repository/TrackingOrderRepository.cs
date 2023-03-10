@@ -126,7 +126,7 @@ namespace Service.MedicalRecord.Repository
 
             foreach (var estudio in listaEstudio)
             {
-                if (!ordenes.Any(x => x.Estudios.Any(y => y.EstudioId == estudio.EstudioId && y.SolicitudId == estudio.SolicitudId)))
+                if (!ordenes.Any(x => x.Estudios.Any(y => y.EtiquetaId == estudio.EstudioId && y.SolicitudId == estudio.SolicitudId)))
                 {
 
                     newlistestudios.Add(estudio);
@@ -152,7 +152,7 @@ namespace Service.MedicalRecord.Repository
 
             foreach (var estudio in listaEstudio)
             {
-                if (!ordenes.Any(x => x.Estudios.Any(y => y.EstudioId == estudio.EstudioId && y.SolicitudId == estudio.SolicitudId)))
+                if (!ordenes.Any(x => x.Estudios.Any(y => y.EtiquetaId == estudio.EstudioId && y.SolicitudId == estudio.SolicitudId)))
                 {
 
                     newlistestudios.Add(estudio);
@@ -174,7 +174,7 @@ namespace Service.MedicalRecord.Repository
 
                 var listaEstudio = requesty.Solicitud.Estudios.AsQueryable();
 
-                listaEstudio = listaEstudio.Where(x => lstSolicitudes.Any(y => y.EstudioId == x.EstudioId && y.SolicitudId== requesty.SolicitudId));
+                listaEstudio = listaEstudio.Where(x => lstSolicitudes.Any(y => y.EtiquetaId == x.EstudioId && y.SolicitudId== requesty.SolicitudId));
 
                 var estudiosEncontrados = listaEstudio.ToList();
 
@@ -213,7 +213,7 @@ namespace Service.MedicalRecord.Repository
 
                 var listaEstudio = requesty.Solicitud.Estudios.AsQueryable();
 
-                listaEstudio = listaEstudio.Where(x => lstSolicitudes.Any(y => y.EstudioId == x.EstudioId && y.SolicitudId == requesty.SolicitudId));
+                listaEstudio = listaEstudio.Where(x => lstSolicitudes.Any(y => y.EtiquetaId == x.EstudioId && y.SolicitudId == requesty.SolicitudId));
 
                 var estudiosEncontrados = listaEstudio.ToList();
 

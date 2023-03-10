@@ -4,6 +4,7 @@ using Service.MedicalRecord.Domain.TrackingOrder;
 using Service.MedicalRecord.Dtos.DeliverOrder;
 using Service.MedicalRecord.Dtos.Route;
 using Service.MedicalRecord.Dtos.RouteTracking;
+using Service.MedicalRecord.Dtos.TrackingOrder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -74,63 +75,53 @@ namespace Service.MedicalRecord.Mapper
                 Sucursal = x.Estudios.Count > 0 ? x.Estudios.FirstOrDefault().Solicitud.Sucursal.Nombre : "",
                 Fecha = x.FechaCreo.ToString(),
                 Status = x.Activo.ToString(),
-                Estudios = x.Estudios.ToList().ToStudyRouteTrackingDto(x.Id),
-                rutaId = Guid.Parse(x.RutaId)
 
             };
         }
-        public static RouteTrackingFormDto ToRouteTrackingDto(this TrackingOrder x)
+
+        public static RouteTrackingFormDto ToRouteTrackingDto(this TrackingOrder model)
         {
-            if (x == null) return null;
+            if (model == null) return null;
+
+            var studyTags = model.Estudios;
 
             return new RouteTrackingFormDto
             {
-                Origen = x.Estudios.FirstOrDefault(y => y.Solicitud.Sucursal.Id.ToString() == x.SucursalOrigenId).Solicitud.Sucursal.Nombre,
-                CLave = x.Clave,
-                Responsable = "",
-                Estudio = "",
-                Tramsportista = "",
-                Temperatura = x.Temperatura.ToString(),
-                Entrega = x.FechaCreo.Date.AddDays(4).ToString(),
-                Solicitud = x.Estudios.FirstOrDefault().Solicitud.Clave,
-                FechaEnvio = x.FechaCreo.ToString(),
-                Paciente = x.Estudios.FirstOrDefault().Solicitud.Expediente.NombreCompleto,
-                Destino = x.Estudios.FirstOrDefault(y => y.Solicitud.Sucursal.Id.ToString() == x.SucursalDestinoId).Solicitud.Sucursal.Nombre,
-                FechaEstimada = x.FechaCreo.Date.AddDays(5).ToString(),
-                FechaReal = x.FechaCreo.Date.AddDays(6).ToString(),
-
-
+                Origen = model.OrigenId,
+                Destino = model.DestinoId,
+                Clave = model.Clave,
+                Temperatura = model.Temperatura,
+                Recolección = model.DiaRecoleccion,
+                Solicitud = model.Estudios.FirstOrDefault().Solicitud?.Clave,
+                Activo = model.Activo,
+                Escaneo = model.Escaneo,
+                Muestra = model.Muestra,
+                RutaId = model.RutaId,
+                Etiquetas = studyTags.ToTagRouteDto()
             };
         }
-        public static List<RouteTrackingStudyListDto> ToStudyRouteTrackingDto(this ICollection<TrackingOrderDetail> model, Guid ruteid)
+
+        public static List<TagRouteDto> ToTagRouteDto(this IEnumerable<TrackingOrderDetail> tags)
         {
-            var modeling = model;
-            return model.Select(x => new RouteTrackingStudyListDto
+            return tags.Select(x => new TagRouteDto
             {
-                Id = x.EstudioId,
-                Nombre = x.Estudio,
-                Area = "",
-                Status = x.Solicitud.Estudios.Where(y => y.EstudioId == x.EstudioId).FirstOrDefault()?.EstatusId,
-                Registro = x.FechaCreo.ToString(),
-                Seleccion = false,
-                Clave = x.Solicitud.Clave,
-                Expedienteid = x.ExpedienteId.ToString(),
-                Solicitudid = x.SolicitudId.ToString(),
-                Entrega = x.FechaMod == System.DateTime.MinValue ? "" : x.FechaMod.ToString(),
-                NombreEstatus = x.Solicitud.Estudios.Where(y => y.EstudioId == x.EstudioId).FirstOrDefault()?.Estatus.Nombre,
-                RouteId = ruteid.ToString(),
-                
+                Id = x.Id,
+                ClaveEtiqueta = x.Etiqueta.ClaveEtiqueta,
+                Recipiente = x.Etiqueta.Clave,
+                Cantidad = x.Etiqueta.Cantidad,
+                ClaveRuta = x.Etiqueta.Destino,
+                Escaneo = x.Escaneado,
+                Solicitud = x.Solicitud.Clave
             }).ToList();
         }
-
 
         public static List<DeliverOrderStudyDto> toDeliverOrderStudyDto(this ICollection<RouteTrackingStudyListDto> model , TrackingOrder order) {
             return model.Select(x => new DeliverOrderStudyDto {
             Clave= x.Clave,
             Estudio =x.Nombre,
                 Temperatura = Convert.ToDecimal(order.Temperatura),
-                Paciente =order.Estudios.FirstOrDefault(y=>y.SolicitudId == Guid.Parse(x.Solicitudid) && y.EstudioId == x.Id).Solicitud.Expediente.NombreCompleto,
-                ConfirmacionOrigen = order.Estudios.FirstOrDefault(y => y.SolicitudId == Guid.Parse(x.Solicitudid) && y.EstudioId == x.Id).Solicitud.Estudios.FirstOrDefault(w=>w.EstudioId==x.Id).EstatusId== Status.RequestStudy.TomaDeMuestra,
+                Paciente =order.Estudios.FirstOrDefault(y=>y.SolicitudId == Guid.Parse(x.Solicitudid) && y.EtiquetaId == x.Id).Solicitud.Expediente.NombreCompleto,
+                ConfirmacionOrigen = order.Estudios.FirstOrDefault(y => y.SolicitudId == Guid.Parse(x.Solicitudid) && y.EtiquetaId == x.Id).Solicitud.Estudios.FirstOrDefault(w=>w.EstudioId==x.Id).EstatusId== Status.RequestStudy.TomaDeMuestra,
                 ConfirmacionDestino =false,
 
             }).ToList();

@@ -45,9 +45,9 @@ namespace Service.MedicalRecord.Application.IApplication
             var newOrder = order.ToModel();
 
             var date = DateTime.Now.ToString("yyMMdd");
-            var branchid = Guid.Parse(newOrder.SucursalOrigenId);
+            var branchid = Guid.Parse(newOrder.OrigenId);
             var branch = await _branchRepository.GetOne(x => x.Id == branchid);
-            var lastCode = await _repository.GetLastCode(Guid.Parse(newOrder.SucursalOrigenId), date);
+            var lastCode = await _repository.GetLastCode(Guid.Parse(newOrder.OrigenId), date);
 
             var code = Codes.GetCode(branch.Codigo, lastCode);
             newOrder.Clave = code;
@@ -56,7 +56,7 @@ namespace Service.MedicalRecord.Application.IApplication
 
             foreach (var item in newOrder.Estudios) {
                 var request = await _requestRepository.GetById(item.SolicitudId);
-                var requestStudie = request.Estudios.FirstOrDefault(x=>x.EstudioId == item.EstudioId);
+                var requestStudie = request.Estudios.FirstOrDefault(x=>x.EstudioId == item.EtiquetaId);
                 item.SolicitudEstudioId = requestStudie.Id;
                 trackingOrderDetails.Add(item);
             }
@@ -67,7 +67,7 @@ namespace Service.MedicalRecord.Application.IApplication
             var shipment = await _Shipmentrepository.GetRouteTracking(seguimientoId);
             if (shipment == null)
             {
-                var ruteOrder = await _routeTrackingRepository.getById(seguimientoId);
+                var ruteOrder = await _routeTrackingRepository.GetById(seguimientoId);
                 var list = ruteOrder.ToRouteTrackingDtoList();
                 List<string> IdRoutes = new ();
                 IdRoutes.Add(list.rutaId.ToString());
@@ -80,7 +80,7 @@ namespace Service.MedicalRecord.Application.IApplication
                     Id = Guid.NewGuid(),
                     SegumientoId = Guid.Parse(ruteOrder.Estudios.FirstOrDefault().SeguimientoId.ToString()),
                     RutaId = Guid.Parse(ruteOrder.RutaId),
-                    SucursalId = Guid.Parse(ruteOrder.SucursalDestinoId),
+                    SucursalId = Guid.Parse(ruteOrder.DestinoId),
                     FechaDeEntregaEstimada = DateTime.Parse(list.Fecha),
                     SolicitudId = ruteOrder.Estudios.FirstOrDefault().SolicitudId,
                     HoraDeRecoleccion = DateTime.Now,
@@ -103,6 +103,7 @@ namespace Service.MedicalRecord.Application.IApplication
 
             return order;
         }
+
         public async Task<TrackingOrderCurrentDto> GetOrderById(Guid orderId)
         {
             var existingOrder = await GetExistingOrder(orderId);
@@ -120,7 +121,7 @@ namespace Service.MedicalRecord.Application.IApplication
             foreach (var item in updatedOrder.Estudios)
             {
                 var request = await _requestRepository.GetById(item.SolicitudId);
-                var requestStudie = request.Estudios.FirstOrDefault(x => x.EstudioId == item.EstudioId);
+                var requestStudie = request.Estudios.FirstOrDefault(x => x.EstudioId == item.EtiquetaId);
                 item.SolicitudEstudioId = requestStudie.Id;
                 trackingOrderDetails.Add(item);
             }
@@ -136,27 +137,25 @@ namespace Service.MedicalRecord.Application.IApplication
             var estudis = estudiosEncontrados.ToStudiesRequestRouteDto();
             return estudis;
         }
+
         public async Task<IEnumerable<EstudiosListDto>> FindAllEstudios(List<int> estudios, string request)
         {
             var estudiosEncontrados = await _repository.FindAllEstudios(estudios,request);
             var estudis = estudiosEncontrados.ToStudiesRequestRouteDto(true);
             return estudis;
         }
+
         public async Task<IEnumerable<RquestStudiesDto>> FindRequestEstudios(string request)
         {
             var estudiosEncontrados = await _repository.FindStudiesRequest(request);
             var estudis = estudiosEncontrados.torequestedStudi();
             return estudis;
         }
+
         public async Task<(byte[] file, string fileName)> ExportForm(TrackingOrderFormDto order)
         {
-            
             try
             {
-
-                //var orden = await GetAll(search);
-                //var newOrder = order.ToModel();
-
                 var path = Assets.TrackingOrderForm;
 
                 var template = new XLTemplate(path);

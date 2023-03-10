@@ -22,28 +22,6 @@ namespace Service.Catalog.Context.EntityConfiguration.Route
                 .HasMaxLength(100);
 
             builder
-                .Property(x => x.EstudioId)
-                .IsRequired(false);
-            builder
-                .Property(x => x.HoraDeRecoleccion)
-                .IsRequired(false);
-            builder
-                .Property(x => x.HoraDeEntrega)
-                .IsRequired(false);
-            builder
-                .Property(x => x.HoraDeEntregaEstimada)
-                .IsRequired(false);
-            builder
-                .Property(x => x.IdResponsableEnvio)
-                .IsRequired(false);
-            builder
-                .Property(x => x.IdResponsableRecepcion)
-                .IsRequired(false);
-            //builder
-            //    .Property(x => x.Maquilador)
-            //    .IsRequired(false);
-
-            builder
                 .Property(x => x.FechaCreo)
                 .IsRequired(false)
                 .HasColumnType("smalldatetime");

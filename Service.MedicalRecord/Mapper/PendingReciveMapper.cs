@@ -24,8 +24,8 @@ namespace Service.MedicalRecord.Mapper
                             Nseguimiento = estudio.SolicitudEstudio.EstatusId == Status.RequestStudy.TomaDeMuestra || estudio.SolicitudEstudio.EstatusId == Status.RequestStudy.EnRuta ? estudio.IsExtra ? $"{item.Clave}-incluido" : item.Clave : "",
                             Claveroute =item.RutaId,
                             Solicitud = estudio.Solicitud.Clave,
-                            Estudio = $"{estudio.SolicitudEstudio.Clave}-{estudio.Estudio}",
-                            Sucursal = item.SucursalOrigenId,
+                            Estudio = $"{estudio.SolicitudEstudio.Clave}-{estudio.Recipiente}",
+                            Sucursal = item.OrigenId,
                             Fechareal = item.FechaMod,
                             Status = new StatusDto
                             {

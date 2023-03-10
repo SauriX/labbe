@@ -63,12 +63,12 @@ namespace Service.MedicalRecord.Repository
 
             if (!string.IsNullOrEmpty(search.Origen))
             {
-                routeTrackingList = routeTrackingList.Where(x => search.Destino.Contains(x.SucursalOrigenId));
+                routeTrackingList = routeTrackingList.Where(x => search.Destino.Contains(x.OrigenId));
             }
             
             if (!string.IsNullOrEmpty(search.Destino))
             {
-                routeTrackingList = routeTrackingList.Where(x => search.Destino.Contains(x.SucursalDestinoId));
+                routeTrackingList = routeTrackingList.Where(x => search.Destino.Contains(x.DestinoId));
             }
 
             if (!string.IsNullOrEmpty(search.Buscar))
@@ -90,7 +90,7 @@ namespace Service.MedicalRecord.Repository
             return tags;
         }
 
-        public async Task<TrackingOrder> getById(Guid Id)
+        public async Task<TrackingOrder> GetById(Guid Id)
         {
             var route = await _context.CAT_Seguimiento_Ruta.Include(x => x.Estudios)
                 .ThenInclude(x => x.Solicitud.Sucursal)
@@ -130,13 +130,13 @@ namespace Service.MedicalRecord.Repository
                 .AsQueryable();
             if (search.Sucursal != null && search.Sucursal.Count > 0)
             {
-                routeTrackingList = routeTrackingList.Where(x => search.Sucursal.Contains(x.SucursalOrigenId));
+                routeTrackingList = routeTrackingList.Where(x => search.Sucursal.Contains(x.OrigenId));
             }
             if (!string.IsNullOrEmpty(search.Busqueda))
             {
                 routeTrackingList = routeTrackingList.Where(x => search.Busqueda.Contains(x.Clave));
             }
-            routeTrackingList = routeTrackingList.Where(x => x.SucursalDestinoId == search.Sucursaldest);
+            routeTrackingList = routeTrackingList.Where(x => x.DestinoId == search.Sucursaldest);
             return await routeTrackingList.ToListAsync();
         }
         public async Task<RouteTracking> GetTracking(Guid Id)

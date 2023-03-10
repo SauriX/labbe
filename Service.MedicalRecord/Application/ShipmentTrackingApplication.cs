@@ -30,15 +30,15 @@ namespace Service.MedicalRecord.Application
             var TrackingOrder = await _repository.getTrackingOrder(id);
             var RuteTracking = await _repository.GetRouteTracking(id);
             var shipment = TrackingOrder.toShipmentTrackingDto(RuteTracking);
-            if (!string.IsNullOrEmpty(TrackingOrder.SucursalDestinoId) && RuteTracking != null)
+            if (!string.IsNullOrEmpty(TrackingOrder.DestinoId) && RuteTracking != null)
             {
                 
             var usuarioorigen = await _identityClient.GetByid(RuteTracking.UsuarioCreoId.ToString());
             var ruta = await _catalogClient.GetRuta(Guid.Parse(TrackingOrder.RutaId));
 
-               var sucursalDestino = await _catalogClient.GetBranch(Guid.Parse(TrackingOrder.SucursalDestinoId));
+               var sucursalDestino = await _catalogClient.GetBranch(Guid.Parse(TrackingOrder.DestinoId));
                 sucursalDestinos = sucursalDestino.nombre;
-                var sucursalOrigen = await _catalogClient.GetBranch(Guid.Parse(TrackingOrder.SucursalOrigenId));
+                var sucursalOrigen = await _catalogClient.GetBranch(Guid.Parse(TrackingOrder.OrigenId));
                 
                 shipment.ResponsableOrigen = $"{usuarioorigen.Nombre} {usuarioorigen.PrimerApellido} {usuarioorigen.SegundoApellido}";
                 shipment.Medioentrega = ruta.PaqueteriaId != null ? "laboratorio ramos" : ruta.PaqueteriaId.ToString();
@@ -63,15 +63,15 @@ namespace Service.MedicalRecord.Application
             var TrackingOrder = await _repository.getTrackingOrder(id);
             var RuteTracking = await _repository.GetRouteTracking(id);  
             var shipment = TrackingOrder.toReciveShipmentTrackingDto(RuteTracking);
-            if (!string.IsNullOrEmpty(TrackingOrder.SucursalDestinoId) && RuteTracking != null)
+            if (!string.IsNullOrEmpty(TrackingOrder.DestinoId) && RuteTracking != null)
             {
 
                 var usuarioorigen = await _identityClient.GetByid(RuteTracking.UsuarioCreoId.ToString());
                 var ruta = await _catalogClient.GetRuta(Guid.Parse(TrackingOrder.RutaId));
 
-                var sucursalDestino = await _catalogClient.GetBranch(Guid.Parse(TrackingOrder.SucursalDestinoId));
+                var sucursalDestino = await _catalogClient.GetBranch(Guid.Parse(TrackingOrder.DestinoId));
                 sucursalDestinos = sucursalDestino.nombre;
-                var sucursalOrigen = await _catalogClient.GetBranch(Guid.Parse(TrackingOrder.SucursalOrigenId));
+                var sucursalOrigen = await _catalogClient.GetBranch(Guid.Parse(TrackingOrder.OrigenId));
 
                 shipment.ResponsableOrigen = $"{usuarioorigen.Nombre} {usuarioorigen.PrimerApellido} {usuarioorigen.SegundoApellido}";
                 shipment.Medioentrega = ruta.PaqueteriaId != null ? "laboratorio ramos" : ruta.PaqueteriaId.ToString();
@@ -113,12 +113,12 @@ namespace Service.MedicalRecord.Application
         public async Task<TrackingOrderFormDto> getorder(Guid id) { 
         
             var order  = await _repository.getTrackingOrder(id);
-            List<StudiesRequestRouteDto> Estudios = new List<StudiesRequestRouteDto>();
+            List<StudyRouteDto> Estudios = new List<StudyRouteDto>();
             List<int> EstudioIds = new List<int>();
             foreach (var estudio in order.Estudios)
             {
 
-                EstudioIds.Add(estudio.EstudioId);
+                EstudioIds.Add(estudio.EtiquetaId);
 
             }
             var order2 = order.toTrackingOrderFormDtos();

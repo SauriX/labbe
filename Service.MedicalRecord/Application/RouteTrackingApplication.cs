@@ -55,10 +55,11 @@ namespace Service.MedicalRecord.Application
             return trackingTags;
         }
 
-        public async Task<RouteTrackingFormDto> GetByid(Guid id)
+        public async Task<RouteTrackingFormDto> GetById(Guid id)
         {
-            var routeTrackingList = await _repository.getById(id);
-            return routeTrackingList.ToRouteTrackingDto();
+            var routeTracking = await _repository.GetById(id);
+
+            return routeTracking.ToRouteTrackingDto();
         }
 
         public async Task<int> UpdateStatus(List<RequestedStudyUpdateDto> requestDto)
@@ -68,7 +69,7 @@ namespace Service.MedicalRecord.Application
 
                 foreach (var item in requestDto)
                 {
-                    var ruteOrder = await _repository.getById(item.RuteOrder);
+                    var ruteOrder = await _repository.GetById(item.RuteOrder);
                     var list = ruteOrder.ToRouteTrackingDtoList();
                     List<string> IdRoutes = new();
                     IdRoutes.Add(list.rutaId.ToString());
@@ -81,7 +82,7 @@ namespace Service.MedicalRecord.Application
                         Id = Guid.NewGuid(),
                         SegumientoId = Guid.Parse(ruteOrder.Estudios.FirstOrDefault().SeguimientoId.ToString()),
                         RutaId = Guid.Parse(ruteOrder.RutaId),
-                        SucursalId = Guid.Parse(ruteOrder.SucursalDestinoId),
+                        SucursalId = Guid.Parse(ruteOrder.DestinoId),
                         FechaDeEntregaEstimada = DateTime.Parse(list.Fecha),
                         SolicitudId = ruteOrder.Estudios.FirstOrDefault().SolicitudId,
                         HoraDeRecoleccion = ruteOrder.FechaCreo,
@@ -94,7 +95,7 @@ namespace Service.MedicalRecord.Application
                 int studyCount = 0;
                 foreach (var item in requestDto)
                 {
-                    var ruteOrder = await _repository.getById(item.RuteOrder);
+                    var ruteOrder = await _repository.GetById(item.RuteOrder);
                     var solicitudId = ruteOrder.Estudios.FirstOrDefault().SolicitudId;
 
                     var request = await GetExistingRequest(solicitudId);
@@ -145,7 +146,7 @@ namespace Service.MedicalRecord.Application
 
             try
             {
-                var order = await GetByid(id);
+                var order = await GetById(id);
                 var path = Assets.TrackingForm;
                 var template = new XLTemplate(path);
                 template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
@@ -209,7 +210,7 @@ namespace Service.MedicalRecord.Application
         }
         public async Task<byte[]> ExportDeliver(Guid id)
         {
-            var trakingorder = await _repository.getById(id);
+            var trakingorder = await _repository.GetById(id);
             if (trakingorder == null)
             {
                 throw new CustomException(HttpStatusCode.NotFound);
@@ -248,9 +249,9 @@ namespace Service.MedicalRecord.Application
                 { "Clave de estudio", x.Clave },
                 { "Estudio", x.Nombre },
                 { "Temperatura", Convert.ToDecimal(trakingorder.Temperatura) },
-                { "Solicitud", trakingorder.Estudios.FirstOrDefault(y=>y.SolicitudId == Guid.Parse(x.Solicitudid) && y.EstudioId == x.Id).Solicitud.Clave },
-                { "Paciente", trakingorder.Estudios.FirstOrDefault(y=>y.SolicitudId == Guid.Parse(x.Solicitudid) && y.EstudioId == x.Id).Solicitud.Expediente.NombreCompleto},
-                { "Confirmación muestra origen",  trakingorder.Estudios.FirstOrDefault(y => y.SolicitudId == Guid.Parse(x.Solicitudid) && y.EstudioId == x.Id).Solicitud.Estudios.FirstOrDefault(w=>w.EstudioId==x.Id).EstatusId== Status.RequestStudy.TomaDeMuestra?"si":"no"},
+                { "Solicitud", trakingorder.Estudios.FirstOrDefault(y=>y.SolicitudId == Guid.Parse(x.Solicitudid) && y.EtiquetaId == x.Id).Solicitud.Clave },
+                { "Paciente", trakingorder.Estudios.FirstOrDefault(y=>y.SolicitudId == Guid.Parse(x.Solicitudid) && y.EtiquetaId == x.Id).Solicitud.Expediente.NombreCompleto},
+                { "Confirmación muestra origen",  trakingorder.Estudios.FirstOrDefault(y => y.SolicitudId == Guid.Parse(x.Solicitudid) && y.EtiquetaId == x.Id).Solicitud.Estudios.FirstOrDefault(w=>w.EstudioId==x.Id).EstatusId== Status.RequestStudy.TomaDeMuestra?"si":"no"},
                 { "Confirmación muestra destino", ""}
             }).ToList();
             orderForm.Columnas = columns;

@@ -15,28 +15,26 @@ namespace Service.MedicalRecord.Mapper
             return new TrackingOrderFormDto
             {
                 DiaRecoleccion = model.DiaRecoleccion,
-                MuestraId = model.MuestraId,
+                MuestraId = model.Muestra,
                 Temperatura = model.Temperatura,
-                SucursalDestinoId = model.SucursalDestinoId,
-                SucursalOrigenId = model.SucursalOrigenId,
+                SucursalDestinoId = model.DestinoId,
+                SucursalOrigenId = model.OrigenId,
                 Activo = model.Activo,
-                EscaneoCodigoBarras = model.EscaneoCodigoBarras,
+                EscaneoCodigoBarras = model.Escaneo,
                 MaquiladorId = model.MaquiladorId,
                 RutaId = model.RutaId,
                 Clave = model.Clave,
-                Fecha=model.FechaCreo,
-                Estudios = model.Estudios.Select(x => new StudiesRequestRouteDto
+                Fecha = model.FechaCreo,
+                Estudios = model.Estudios.Select(x => new StudyRouteDto
                 {
                     SolicitudId = x.SolicitudId,
-                    EstudioId = x.EstudioId,
-                    Estudio = x.Estudio,
-                    Solicitud=x.Solicitud.Clave,
+                    EstudioId = x.EtiquetaId,
+                    Estudio = x.Recipiente,
+                    Solicitud = x.Solicitud.Clave,
                     ExpedienteId = x.ExpedienteId,
                     NombrePaciente = x.NombrePaciente,
                     Temperatura = x.Temperatura,
                     Escaneado = x.Escaneado,
-
-
                 }).ToArray(),
 
 
@@ -49,12 +47,12 @@ namespace Service.MedicalRecord.Mapper
             {
                 Id = model.Id,
                 DiaRecoleccion = model.DiaRecoleccion,
-                MuestraId = model.MuestraId,
+                MuestraId = model.Muestra,
                 Temperatura = model.Temperatura,
-                SucursalDestinoId = model.SucursalDestinoId,
-                SucursalOrigenId = model.SucursalOrigenId,
+                SucursalDestinoId = model.DestinoId,
+                SucursalOrigenId = model.OrigenId,
                 Activo = model.Activo,
-                EscaneoCodigoBarras = model.EscaneoCodigoBarras,
+                EscaneoCodigoBarras = model.Escaneo,
                 MaquiladorId = model.MaquiladorId,
                 RutaId = model.RutaId,
                 Clave = model.Clave,
@@ -68,14 +66,14 @@ namespace Service.MedicalRecord.Mapper
             return new TrackingOrder
             {
                 Id = model.Id,
-                MuestraId = dto.MuestraId,
+                Muestra = dto.MuestraId,
                 Temperatura = dto.Temperatura,
-                SucursalDestinoId = dto.SucursalDestinoId,
-                SucursalOrigenId = dto.SucursalOrigenId,
+                DestinoId = dto.SucursalDestinoId,
+                OrigenId = dto.SucursalOrigenId,
                 UsuarioCreoId = model.UsuarioCreoId,
                 FechaMod = DateTime.Now,
                 Activo = dto.Activo,
-                EscaneoCodigoBarras = dto.EscaneoCodigoBarras,
+                Escaneo = dto.EscaneoCodigoBarras,
                 MaquiladorId = dto.MaquiladorId,
                 RutaId = model.RutaId,
                 DiaRecoleccion = dto.DiaRecoleccion,
@@ -83,8 +81,8 @@ namespace Service.MedicalRecord.Mapper
                 Estudios = dto.Estudios.Select(x => new TrackingOrderDetail
                 {
                     SolicitudId = x.SolicitudId,
-                    EstudioId = x.EstudioId,
-                    Estudio = x.Clave + " - " + x.Estudio,
+                    EtiquetaId = x.EstudioId,
+                    Recipiente = x.Clave + " - " + x.Estudio,
                     ExpedienteId = x.ExpedienteId,
                     NombrePaciente = x.NombrePaciente,
                     Temperatura = x.Temperatura,
@@ -97,24 +95,24 @@ namespace Service.MedicalRecord.Mapper
         {
             if (dto == null) return null;
 
-            
+
             DateTime dt = DateTime.Now;
             TimeSpan ts = new TimeSpan(dto.HoraDeRecoleccion, 0, 0);
             dt = dt.Date + ts;
 
-            
+
 
             var orderModel = new TrackingOrder
             {
                 Id = new Guid(),
-                MuestraId = dto.MuestraId,
+                Muestra = dto.MuestraId,
                 Temperatura = dto.Temperatura,
-                SucursalDestinoId = dto.SucursalDestinoId,
-                SucursalOrigenId = dto.SucursalOrigenId,
+                DestinoId = dto.SucursalDestinoId,
+                OrigenId = dto.SucursalOrigenId,
                 UsuarioCreoId = dto.UsuarioId,
                 FechaCreo = DateTime.Now,
                 Activo = dto.Activo,
-                EscaneoCodigoBarras = dto.EscaneoCodigoBarras,
+                Escaneo = dto.EscaneoCodigoBarras,
                 MaquiladorId = dto.MaquiladorId,
                 RutaId = dto.RutaId,
                 DiaRecoleccion = dt,
@@ -123,15 +121,15 @@ namespace Service.MedicalRecord.Mapper
                 {
                     Id = new Guid(),
                     SolicitudId = x.SolicitudId,
-                    EstudioId = x.EstudioId,
-                    Estudio = x.Clave + " - " + x.Estudio,
+                    EtiquetaId = x.EstudioId,
+                    Recipiente = x.Clave + " - " + x.Estudio,
                     ExpedienteId = x.ExpedienteId,
                     NombrePaciente = x.NombrePaciente,
                     Temperatura = x.Temperatura,
-                    Escaneado =false,
+                    Escaneado = false,
                     FechaCreo = DateTime.Now,
                     IsExtra = x.IsExtra
-                    
+
 
                 }).ToList()
 
@@ -155,27 +153,27 @@ namespace Service.MedicalRecord.Mapper
                 //PacienteId = model.PacienteId,
                 //SolicitudId = model.SolicitudId,
                 RutaId = model.RutaId,
-                MuestraId = model.MuestraId,
+                MuestraId = model.Muestra,
                 MaquiladorId = model.MaquiladorId,
-                EscaneoCodigoBarras = model.EscaneoCodigoBarras,
+                EscaneoCodigoBarras = model.Escaneo,
                 DiaRecoleccion = model.DiaRecoleccion,
-                SucursalDestinoId = model.SucursalDestinoId,
-                SucursalOrigenId = model.SucursalOrigenId,
+                SucursalDestinoId = model.DestinoId,
+                SucursalOrigenId = model.OrigenId,
                 Temperatura = model.Temperatura,
                 Clave = model.Clave
             };
         }
-        public static IEnumerable<EstudiosListDto> ToStudiesRequestRouteDto(this IEnumerable<Domain.Request.RequestStudy> model,bool isExtra = false )
+        public static IEnumerable<EstudiosListDto> ToStudiesRequestRouteDto(this IEnumerable<Domain.Request.RequestStudy> model, bool isExtra = false)
         {
             if (model == null) return null;
 
 
             return model.Select(x => new EstudiosListDto
             {
-                
+
                 solicitudId = x.SolicitudId,
                 IsInRute = x.Solicitud.Estudios.Any(y => y.EstatusId == Status.RequestStudy.EnRuta && x.EstudioId == y.EstudioId),
-                Estudio =   new StudiesRequestRouteDto
+                Estudio = new StudyRouteDto
                 {
                     Estudio = x.Nombre,
                     EstudioId = x.EstudioId,
@@ -185,7 +183,7 @@ namespace Service.MedicalRecord.Mapper
                     TaponNombre = x.Tapon?.Clave,
                     SolicitudId = x.Solicitud.Id,
                     ExpedienteId = x.Solicitud.ExpedienteId,
-                    Escaneado=true,
+                    Escaneado = true,
                     IsExtra = isExtra
                 },
                 IsExtra = isExtra
@@ -200,13 +198,13 @@ namespace Service.MedicalRecord.Mapper
             return model.Select(x => new EstudiosListDto
             {
 
-                solicitudId = x.SolicitudId,    
-                IsInRute = x.SolicitudEstudio.EstatusId == Status.RequestStudy.EnRuta ,
+                solicitudId = x.SolicitudId,
+                IsInRute = x.SolicitudEstudio.EstatusId == Status.RequestStudy.EnRuta,
                 orderId = orderId,
-                Estudio = new StudiesRequestRouteDto
+                Estudio = new StudyRouteDto
                 {
-                    Estudio = x.Estudio,
-                    EstudioId = x.EstudioId,
+                    Estudio = x.Recipiente,
+                    EstudioId = x.EtiquetaId,
                     Clave = x.SolicitudEstudio.Clave,
                     NombrePaciente = x.Solicitud.Expediente.NombreCompleto,
                     Solicitud = x.Solicitud.Clave,
@@ -219,10 +217,12 @@ namespace Service.MedicalRecord.Mapper
             });
         }
 
-        public static IEnumerable<RquestStudiesDto> torequestedStudi(this IEnumerable<Domain.Request.RequestStudy> model) {
+        public static IEnumerable<RquestStudiesDto> torequestedStudi(this IEnumerable<Domain.Request.RequestStudy> model)
+        {
 
-                if (model == null) return null;
-            return model.Select(x=> new RquestStudiesDto { 
+            if (model == null) return null;
+            return model.Select(x => new RquestStudiesDto
+            {
                 Id = x.EstudioId,
                 Clave = x.Clave,
                 Estudio = x.Nombre,
