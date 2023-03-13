@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Service.MedicalRecord.Context;
 using Service.MedicalRecord.Dictionary;
+using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Domain.TrackingOrder;
 using Service.MedicalRecord.Dtos.TrackingOrder;
 using Service.MedicalRecord.Repository.IRepository;
@@ -114,6 +115,7 @@ namespace Service.MedicalRecord.Repository
             return  orden;
 
         }
+
         public async Task<List<Domain.Request.RequestStudy>> FindEstudios(List<int> estudios)
         {
             var listaEstudio = _context.Relacion_Solicitud_Estudio
@@ -188,10 +190,6 @@ namespace Service.MedicalRecord.Repository
 
 
             }
-            
-
-
-
             return true;
         }
         public async Task<string> GetLastCode(Guid branchId, string date)
@@ -227,10 +225,6 @@ namespace Service.MedicalRecord.Repository
 
 
             }
-
-
-
-
             return true;
         }
 
@@ -238,8 +232,8 @@ namespace Service.MedicalRecord.Repository
         {
             return await _context.CAT_Seguimiento_Ruta
                 .Where(x => x.Id == orderId)
-                .Include(x => x.Estudios)
-                .ThenInclude(x => x.SolicitudEstudio.Tapon)
+                .Include(x => x.Etiquetas)
+                .ThenInclude(x => x.Estudios)
                 .Include(x => x.Estudios)
                 .ThenInclude(x=>x.Solicitud.Expediente)
                 .FirstOrDefaultAsync();

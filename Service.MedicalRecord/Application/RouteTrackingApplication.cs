@@ -62,6 +62,20 @@ namespace Service.MedicalRecord.Application
             return routeTracking.ToRouteTrackingDto();
         }
 
+        public async Task<List<TagTrackingOrderDto>> GetAllTags(string search)
+        {
+            var tags = await _repository.GetAllTags(search);
+
+            return tags.ToTagTrackingOrderDto();
+        }
+
+        public async Task<List<TagTrackingOrderDto>> FindTags(string routeId)
+        {
+            var trackingTags = await _repository.FindTags(routeId);
+
+            return trackingTags.ToTagTrackingOrderDto();
+        }
+
         public async Task<int> UpdateStatus(List<RequestedStudyUpdateDto> requestDto)
         {
             try
@@ -81,7 +95,7 @@ namespace Service.MedicalRecord.Application
                     {
                         Id = Guid.NewGuid(),
                         SegumientoId = Guid.Parse(ruteOrder.Estudios.FirstOrDefault().SeguimientoId.ToString()),
-                        RutaId = Guid.Parse(ruteOrder.RutaId),
+                        //RutaId = Guid.Parse(ruteOrder.RutaId),
                         SucursalId = Guid.Parse(ruteOrder.DestinoId),
                         FechaDeEntregaEstimada = DateTime.Parse(list.Fecha),
                         SolicitudId = ruteOrder.Estudios.FirstOrDefault().SolicitudId,

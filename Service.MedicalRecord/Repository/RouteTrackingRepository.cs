@@ -49,8 +49,6 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Estudios)
                 .ThenInclude(x => x.Solicitud.Estudios)
                 .ThenInclude(x => x.Estatus)
-                .Include(x => x.Estudios)
-                .ThenInclude(x => x.SolicitudEstudio)
                 .Include(x => x.Etiquetas)
                 .ThenInclude(x => x.Estudios)
             .AsQueryable();
@@ -125,8 +123,8 @@ namespace Service.MedicalRecord.Repository
                 .ThenInclude(x => x.Estatus)
                 .Include(x => x.Estudios)
                 .ThenInclude(x => x.Solicitud.Expediente)
-                .Include(x => x.Estudios)
-                .ThenInclude(x => x.SolicitudEstudio)
+                .Include(x => x.Etiquetas)
+                .ThenInclude(x => x.Estudios)
                 .AsQueryable();
             if (search.Sucursal != null && search.Sucursal.Count > 0)
             {
@@ -143,6 +141,33 @@ namespace Service.MedicalRecord.Repository
         {
             var routeTracking = _context.Cat_PendientesDeEnviar.Include(x => x.Solicitud.Sucursal).FirstOrDefault(x => x.SegumientoId == Id);
             return routeTracking;
+        }
+
+        public async Task<IEnumerable<RequestTag>> GetAllTags(string search)
+        {
+            var tags = _context.Relacion_Solicitud_Etiquetas
+                .Include(x => x.Estudios)
+                .AsQueryable();
+
+            search = search.Trim().ToLower();
+
+            if (!string.IsNullOrWhiteSpace(search) && search != "all")
+            {
+                tags = tags.Where(x => x.ClaveEtiqueta.ToLower().Contains(search));
+            }
+
+            return await tags.ToListAsync();
+
+        }
+
+        public async Task<IEnumerable<RequestTag>> FindTags(string routeId)
+        {
+            var tags = await _context.Relacion_Solicitud_Etiquetas
+                .Where(x => x.Destino == routeId)
+                .Include(x => x.Estudios)
+                .ToListAsync();
+
+            return tags;
         }
     }
 }

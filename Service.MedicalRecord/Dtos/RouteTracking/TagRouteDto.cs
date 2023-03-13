@@ -17,4 +17,17 @@ namespace Service.MedicalRecord.Dtos.RouteTracking
         public byte Estatus { get; set; }
         public bool Escaneo { get; set; }
     }
+
+    public class TagTrackingOrderDto
+    {
+        public int Id { get; set; }
+        public string ClaveEtiqueta { get; set; }
+        public string Recipiente { get; set; }
+        public decimal Cantidad { get; set; }
+        public string Estudios { get; set; }
+        public string Solicitud { get; set; }
+        public string ClaveRuta { get; set; }
+        public byte Estatus { get; set; }
+        public bool Escaneo { get; set; }
+    }
 }

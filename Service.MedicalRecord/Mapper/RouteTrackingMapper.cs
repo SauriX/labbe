@@ -108,6 +108,7 @@ namespace Service.MedicalRecord.Mapper
                 Id = x.Id,
                 ClaveEtiqueta = x.Etiqueta.ClaveEtiqueta,
                 Recipiente = x.Etiqueta.Clave,
+                Estudios = string.Join(", ", x.Etiqueta.Estudios.Select(x => x.NombreEstudio)),
                 Cantidad = x.Etiqueta.Cantidad,
                 ClaveRuta = x.Etiqueta.Destino,
                 Escaneo = x.Escaneado,
@@ -115,15 +116,18 @@ namespace Service.MedicalRecord.Mapper
             }).ToList();
         }
 
-        public static List<DeliverOrderStudyDto> toDeliverOrderStudyDto(this ICollection<RouteTrackingStudyListDto> model , TrackingOrder order) {
-            return model.Select(x => new DeliverOrderStudyDto {
-            Clave= x.Clave,
-            Estudio =x.Nombre,
-                Temperatura = Convert.ToDecimal(order.Temperatura),
-                Paciente =order.Estudios.FirstOrDefault(y=>y.SolicitudId == Guid.Parse(x.Solicitudid) && y.EtiquetaId == x.Id).Solicitud.Expediente.NombreCompleto,
-                ConfirmacionOrigen = order.Estudios.FirstOrDefault(y => y.SolicitudId == Guid.Parse(x.Solicitudid) && y.EtiquetaId == x.Id).Solicitud.Estudios.FirstOrDefault(w=>w.EstudioId==x.Id).EstatusId== Status.RequestStudy.TomaDeMuestra,
-                ConfirmacionDestino =false,
-
+        public static List<TagTrackingOrderDto> ToTagTrackingOrderDto(this IEnumerable<RequestTag> tags)
+        {
+            return tags.Select(x => new TagTrackingOrderDto
+            {
+                Id = x.Id,
+                ClaveEtiqueta = x.ClaveEtiqueta,
+                Recipiente = x.Clave,
+                Estudios = string.Join(", ", x.Estudios.Select(x => x.NombreEstudio)),
+                Cantidad = x.Cantidad,
+                ClaveRuta = x.Destino,
+                Escaneo = false,
+                Solicitud = x.Solicitud.Clave
             }).ToList();
         }
 

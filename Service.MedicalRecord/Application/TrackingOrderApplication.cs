@@ -57,7 +57,7 @@ namespace Service.MedicalRecord.Application.IApplication
             foreach (var item in newOrder.Estudios) {
                 var request = await _requestRepository.GetById(item.SolicitudId);
                 var requestStudie = request.Estudios.FirstOrDefault(x=>x.EstudioId == item.EtiquetaId);
-                item.SolicitudEstudioId = requestStudie.Id;
+                //item.SolicitudEstudioId = requestStudie.Id;
                 trackingOrderDetails.Add(item);
             }
             newOrder.Id = Guid.NewGuid();
@@ -79,7 +79,7 @@ namespace Service.MedicalRecord.Application.IApplication
                 {
                     Id = Guid.NewGuid(),
                     SegumientoId = Guid.Parse(ruteOrder.Estudios.FirstOrDefault().SeguimientoId.ToString()),
-                    RutaId = Guid.Parse(ruteOrder.RutaId),
+                    //RutaId = Guid.Parse(ruteOrder.RutaId),
                     SucursalId = Guid.Parse(ruteOrder.DestinoId),
                     FechaDeEntregaEstimada = DateTime.Parse(list.Fecha),
                     SolicitudId = ruteOrder.Estudios.FirstOrDefault().SolicitudId,
@@ -122,7 +122,7 @@ namespace Service.MedicalRecord.Application.IApplication
             {
                 var request = await _requestRepository.GetById(item.SolicitudId);
                 var requestStudie = request.Estudios.FirstOrDefault(x => x.EstudioId == item.EtiquetaId);
-                item.SolicitudEstudioId = requestStudie.Id;
+                //item.SolicitudEstudioId = requestStudie.Id;
                 trackingOrderDetails.Add(item);
             }
 
