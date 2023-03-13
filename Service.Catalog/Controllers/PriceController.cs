@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Catalog.Application.IApplication;
+using Service.Catalog.Dtos.Common;
 using Service.Catalog.Dtos.PriceList;
 using Shared.Dictionary;
 using System;
@@ -24,6 +25,18 @@ namespace Service.Catalog.Controllers
         public async Task<IEnumerable<PriceListListDto>> GetActive()
         {
             return await _service.GetActive();
+        }
+
+        [HttpGet("options")]
+        public async Task<IEnumerable<OptionsDto>> GetOptions()
+        {
+            return await _service.GetOptions();
+        }
+
+        [HttpGet("branches/options/{priceListId}")]
+        public async Task<IEnumerable<OptionsDto>> GetBranchesOptionsByPriceListId(Guid priceListId)
+        {
+            return await _service.GetBranchesOptionsByPriceListId(priceListId);
         }
 
         [HttpGet("all/{search}")]

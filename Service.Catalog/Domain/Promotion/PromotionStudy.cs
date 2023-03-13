@@ -1,18 +1,18 @@
-﻿using System;
+﻿using Service.MedicalRecord.Domain;
+using System;
 
 namespace Service.Catalog.Domain.Promotion
 {
-    public class PromotionStudy
+    public class PromotionStudy : BaseModel
     {
-        public int PromotionId { get; set; }
-        public virtual Promotion Promotion { get; set; }
-        public int StudyId { get; set; }
-        public virtual Study.Study Study { get; set; }
-        public decimal Discountporcent { get; set; }
-        public decimal DiscountNumeric { get; set; }
-        public decimal Price { get; set; }
-        public decimal FinalPrice { get; set; }
-        public bool Loyality { get; set; }
+        public int PromocionId { get; set; }
+        public virtual Promotion Promocion { get; set; }
+        public int EstudioId { get; set; }
+        public virtual Study.Study Estudio { get; set; }
+        public decimal DescuentoPorcentaje { get; set; }
+        public decimal DescuentoCantidad { get; set; }
+        public decimal Precio { get; set; }
+        public decimal PrecioFinal { get; set; }
         public bool Lunes { get; set; }
         public bool Martes { get; set; }
         public bool Miercoles { get; set; }
@@ -20,12 +20,8 @@ namespace Service.Catalog.Domain.Promotion
         public bool Viernes { get; set; }
         public bool Sabado { get; set; }
         public bool Domingo { get; set; }
-        public DateTime FechaInicio { get; set; }
+        public DateTime FechaInicial { get; set; }
         public DateTime FechaFinal { get; set; }
         public bool Activo { get; set; }
-        public Guid UsuarioCreoId { get; set; }
-        public DateTime FechaCreo { get; set; }
-        public Guid UsuarioModId { get; set; }
-        public DateTime? FechaMod { get; set; }
     }
 }

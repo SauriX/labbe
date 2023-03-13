@@ -1,4 +1,5 @@
 ﻿using Service.Catalog.Domain.Route;
+using Service.Catalog.Dtos.Common;
 using Service.Catalog.Dtos.Promotion;
 using Service.Catalog.Dtos.Route;
 using System;
@@ -81,34 +82,34 @@ namespace Service.Catalog.Mapper
         public static RouteFormDto ToRouteFormDto(this Route model)
         {
             if (model == null) return null;
-            var dias = new List<DiasDto>();
+            var dias = new List<DayDto>();
             if (model.Lunes)
             {
-                dias.Add(new DiasDto { Id = 1, Dia = "L" });
+                dias.Add(new DayDto { Id = 1, Dia = "L" });
             }
             if (model.Martes)
             {
-                dias.Add(new DiasDto { Id = 2, Dia = "M" });
+                dias.Add(new DayDto { Id = 2, Dia = "M" });
             }
             if (model.Miercoles)
             {
-                dias.Add(new DiasDto { Id = 3, Dia = "M" });
+                dias.Add(new DayDto { Id = 3, Dia = "M" });
             }
             if (model.Jueves)
             {
-                dias.Add(new DiasDto { Id = 4, Dia = "J" });
+                dias.Add(new DayDto { Id = 4, Dia = "J" });
             }
             if (model.Viernes)
             {
-                dias.Add(new DiasDto { Id = 5, Dia = "V" });
+                dias.Add(new DayDto { Id = 5, Dia = "V" });
             }
             if (model.Sabado)
             {
-                dias.Add(new DiasDto { Id = 6, Dia = "S" });
+                dias.Add(new DayDto { Id = 6, Dia = "S" });
             }
             if (model.Domingo)
             {
-                dias.Add(new DiasDto { Id = 7, Dia = "D" });
+                dias.Add(new DayDto { Id = 7, Dia = "D" });
             }
 
             return new RouteFormDto

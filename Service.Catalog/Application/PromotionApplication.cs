@@ -4,6 +4,7 @@ using DocumentFormat.OpenXml.Vml.Office;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dictionary;
 using Service.Catalog.Domain.Promotion;
+using Service.Catalog.Domain.Reagent;
 using Service.Catalog.Domain.Study;
 using Service.Catalog.Dtos.PriceList;
 using Service.Catalog.Dtos.Promotion;
@@ -23,11 +24,14 @@ namespace Service.Catalog.Application
     public class PromotionApplication : IPromotionApplication
     {
         private readonly IPromotionRepository _repository;
+        private readonly IPriceListRepository _priceListRepository;
 
-        public PromotionApplication(IPromotionRepository repository)
+        public PromotionApplication(IPromotionRepository repository, IPriceListRepository priceListRepository)
         {
             _repository = repository;
+            _priceListRepository = priceListRepository;
         }
+
         public async Task<IEnumerable<PromotionListDto>> GetAll(string search)
         {
             var promotions = await _repository.GetAll(search);
@@ -35,25 +39,24 @@ namespace Service.Catalog.Application
             return promotions.ToPromotionListDto();
         }
 
-
-        public async Task<PromotionFormDto> GetById(int id)
-        {
-            // Helpers.ValidateGuid(id, out Guid guid);
-
-            var parameter = await _repository.GetById(id);
-
-            if (parameter == null)
-            {
-                throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
-            }
-            return parameter.ToPromotionFormDto();
-        }
-
         public async Task<IEnumerable<PromotionListDto>> GetActive()
         {
             var promotions = await _repository.GetActive();
 
             return promotions.ToPromotionListDto();
+        }
+
+
+        public async Task<PromotionFormDto> GetById(int id)
+        {
+            var promotion = await _repository.GetById(id);
+
+            if (promotion == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
+            }
+
+            return promotion.ToPromotionFormDto();
         }
 
         public async Task<List<PriceListInfoPromoDto>> GetStudyPromos(List<PriceListInfoFilterDto> filters)
@@ -66,11 +69,11 @@ namespace Service.Catalog.Application
 
                 var promoDto = promo.Select(x => new PriceListInfoPromoDto
                 {
-                    EstudioId = x.StudyId,
-                    PromocionId = x.PromotionId,
-                    Promocion = x.Promotion.Nombre,
-                    Descuento = x.DiscountNumeric,
-                    DescuentoPorcentaje = x.Discountporcent
+                    EstudioId = x.EstudioId,
+                    PromocionId = x.PromocionId,
+                    Promocion = x.Promocion.Nombre,
+                    Descuento = x.DescuentoCantidad,
+                    DescuentoPorcentaje = x.DescuentoPorcentaje
                 }).ToList();
 
                 promosDto.AddRange(promoDto);
@@ -89,11 +92,11 @@ namespace Service.Catalog.Application
 
                 var promoDto = promos.Select(x => new PriceListInfoPromoDto
                 {
-                    PaqueteId = x.PackId,
-                    PromocionId = x.PromotionId,
-                    Promocion = x.Promotion.Nombre,
-                    Descuento = x.DiscountNumeric,
-                    DescuentoPorcentaje = x.Discountporcent
+                    PaqueteId = x.PaqueteId,
+                    PromocionId = x.PromocionId,
+                    Promocion = x.Promocion.Nombre,
+                    Descuento = x.DescuentoCantidad,
+                    DescuentoPorcentaje = x.DescuentoPorcentaje
                 }).ToList();
 
                 promosDto.AddRange(promoDto);
@@ -102,45 +105,54 @@ namespace Service.Catalog.Application
             return promosDto;
         }
 
-        public async Task<PromotionListDto> Create(PromotionFormDto parameter)
+        public async Task<IEnumerable<PromotionStudyPackDto>> GetStudies(PromotionFormDto promoDto, bool initial)
         {
+            var priceStudyPack = await _priceListRepository.GetStudiesAndPacks(promoDto.ListaPrecioId);
+            var promoStudyPack = await _repository.GetStudiesAndPacks(promoDto.Id) ?? new Promotion();
 
+            var promos = priceStudyPack.ToPromotionStudyPackDto(promoDto, promoStudyPack, initial);
 
-            var newParameter = parameter.ToModel();
+            return promos;
+        }
 
-            await CheckDuplicate(newParameter);
-            // await CheckPromotionPackActive(newParameter);
-            await _repository.Create(newParameter);
+        public async Task<PromotionListDto> Create(PromotionFormDto promoDto)
+        {
+            if (promoDto.Id != 0)
+            {
+                throw new CustomException(HttpStatusCode.Conflict, Responses.NotPossible);
+            }
 
-            newParameter = await _repository.GetById(newParameter.Id);
+            var newPromo = promoDto.ToModel();
 
-            return newParameter.ToPromotionListDto();
+            await CheckDuplicate(newPromo);
+
+            await _repository.Create(newPromo);
+
+            newPromo = await _repository.GetById(newPromo.Id);
+
+            return newPromo.ToPromotionListDto();
         }
 
 
-        public async Task<PromotionListDto> Update(PromotionFormDto parameter)
+        public async Task<PromotionListDto> Update(PromotionFormDto promoDto)
         {
-            //  Helpers.ValidateGuid(parameter.Id, out Guid guid);
-
-            var existing = await _repository.GetById(parameter.Id);
+            var existing = await _repository.GetById(promoDto.Id);
 
             if (existing == null)
             {
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
 
-            var updatedParameter = parameter.ToModel(existing);
+            var updatedPromo = promoDto.ToModel(existing);
 
-            await CheckDuplicate(updatedParameter);
-            //await CheckPromotionPackActive(updatedParameter);
-            await _repository.Update(updatedParameter);
+            await CheckDuplicate(updatedPromo);
 
-            updatedParameter = await _repository.GetById(updatedParameter.Id);
+            await _repository.Update(updatedPromo);
 
-            return updatedParameter.ToPromotionListDto();
+            updatedPromo = await _repository.GetById(updatedPromo.Id);
+
+            return updatedPromo.ToPromotionListDto();
         }
-
-
 
         public async Task<(byte[] file, string fileName)> ExportList(string search)
         {
@@ -171,9 +183,6 @@ namespace Service.Catalog.Application
         {
             var promotion = await GetById(id);
             var dias = promotion.Dias;
-            var sucursales = promotion.Branchs;
-            var estudios = promotion.Estudio;
-
 
             var path = Assets.PromotionForm;
 
@@ -185,8 +194,6 @@ namespace Service.Catalog.Application
             template.AddVariable("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
             template.AddVariable("Promotion", promotion);
             template.AddVariable("Dias", dias);
-            template.AddVariable("Estudios", estudios);
-            template.AddVariable("Sucursales", sucursales);
             template.Generate();
 
             template.Format();
@@ -194,36 +201,14 @@ namespace Service.Catalog.Application
             return (template.ToByteArray(), $"Catálogo de Promociones ({promotion.Clave}).xlsx");
         }
 
-        private async Task CheckDuplicate(Promotion parameter)
+        private async Task CheckDuplicate(Promotion promotion)
         {
-            var isDuplicate = await _repository.IsDuplicate(parameter);
+            var isDuplicate = await _repository.IsDuplicate(promotion);
 
             if (isDuplicate)
             {
                 throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("La clave o nombre"));
             }
         }
-
-        private async Task CheckPromotionPackActive(Promotion promotion)
-        {
-
-            var packs = await _repository.packsIsPriceList(promotion.PrecioListaId);
-            var packassigned = promotion.packs.ToList();
-            foreach (var pack in packs)
-            {
-
-                var (isInPromotion, nombre) = await _repository.PackIsOnPromotrtion(pack.PaqueteId);
-
-                var (isOnvalidPromotion, nombre2) = await _repository.PackIsOnInvalidPromotion(pack.PaqueteId);
-                var isAssigned = packassigned.Any(x => x.PackId == pack.PaqueteId);
-                if ((!isInPromotion || isOnvalidPromotion) && !isAssigned)
-                {
-                    throw new CustomException(HttpStatusCode.Conflict, $"El paquete {nombre} No tiene una promoción asignada");
-                }
-
-            }
-        }
-
-
     }
 }
