@@ -160,6 +160,15 @@ namespace Service.MedicalRecord.Application
 
             return updatedPack.ToMedicalRecordsListDto();
         }
+        public async Task UpdateObservation(MedicalRecordObservationsDto observation)
+        {
+            var existing = await _repository.GetById(observation.Id);
+
+            existing.Observaciones = observation.Observations;
+
+            await _repository.UpdateObservation(existing);
+
+        }
         public async Task<bool> UpdateWallet(ExpedienteMonederoDto monedero)
         {
             var existing = await _repository.GetById(monedero.Id);

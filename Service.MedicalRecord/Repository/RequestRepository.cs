@@ -441,6 +441,8 @@ namespace Service.MedicalRecord.Repository
         {
 
             return await _context.CAT_Solicitud
+                .Include(x => x.Pagos)
+                .Include(x => x.Expediente).ThenInclude(x => x.TaxData).ThenInclude(x => x.Factura)
                 .Where(x => solicitudesId.Contains(x.Id))
                 .ToListAsync();
 

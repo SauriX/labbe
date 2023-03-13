@@ -52,6 +52,9 @@ namespace Service.MedicalRecord.Dtos.InvoiceCompany
         public string Tipo { get; set; }
         public string Serie { get; set; }
         public string Consecutivo { get; set; }
+        public string FormaPago { get; set; }
+        public string Nombre { get; set; }
+        public decimal CantidadTotal { get; set; }
         public InvoiceCompanyStatusInvoice Estatus { get; set; }
     }
     public class InvoiceCompanyStatusInvoice

@@ -49,6 +49,7 @@ namespace Service.MedicalRecord.Controllers
         {
             return await _service.Coincidencias(expediente);
         }
+        
 
         [HttpGet("active")]
         [Authorize(Policies.Access)]
@@ -94,7 +95,15 @@ namespace Service.MedicalRecord.Controllers
             expediente.UsuarioId = (Guid)HttpContext.Items["userId"];
             return await _service.Update(expediente);
         }
-        
+
+        [HttpPut("observations")]
+        [Authorize(Policies.Update)]
+        public async Task UpdateObservations(MedicalRecordObservationsDto observation)
+        {
+            var usuarioId = (Guid)HttpContext.Items["userId"];
+            await _service.UpdateObservation(observation);
+        }
+
 
 
         [HttpPut("taxData")]

@@ -180,6 +180,12 @@ namespace Service.MedicalRecord.Repository
             _context.CAT_Expedientes.Update(expediente);
             await _context.SaveChangesAsync();
 
+        } 
+        public async Task UpdateObservation(Domain.MedicalRecord.MedicalRecord expediente)
+        {
+            _context.CAT_Expedientes.Update(expediente);
+            await _context.SaveChangesAsync();
+
         }
 
         public async Task UpdateTaxData(TaxData taxData)

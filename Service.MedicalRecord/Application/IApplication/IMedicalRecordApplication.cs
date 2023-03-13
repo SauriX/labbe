@@ -18,6 +18,7 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<MedicalRecordsListDto> Create(MedicalRecordsFormDto expediente);
         Task<string> CreateTaxData(TaxDataDto taxData);
         Task<MedicalRecordsListDto> Update(MedicalRecordsFormDto expediente);
+        Task UpdateObservation(MedicalRecordObservationsDto expediente);
         Task UpdateTaxData(TaxDataDto taxData);
         Task<List<MedicalRecordsListDto>> Coincidencias(MedicalRecordsFormDto expediente);
         Task<(byte[] file, string fileName)> ExportList(MedicalRecordSearch search = null);

@@ -42,11 +42,14 @@ namespace Service.MedicalRecord.Mapper
                     Facturas = x.FacturasCompañia.Select(y => new InvoiceCompanyFacturaDto
                     {
                         FacturaId = y.FacturaId,
-                        FechaCreo = y.FechaCreo.ToString("R"),
+                        FechaCreo = y.FechaCreo.ToString("HH:mm"),
                         Tipo = y.TipoFactura?.ToString(),
                         FacturapiId = y.FacturapiId,
                         Serie = y.Serie,
                         Consecutivo = y.Consecutivo.ToString(),
+                        FormaPago = y.FormaPago,
+                        Nombre = y.Nombre,
+                        CantidadTotal = y.CantidadTotal,
                         SolicitudesId = model
                         .Where(z => z.FacturasCompañia.Select(p => p.FacturapiId).Contains(y.FacturapiId))
                         .Select(z => z.Id)
