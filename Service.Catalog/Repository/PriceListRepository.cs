@@ -1,6 +1,7 @@
 ﻿using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Context;
+using Service.Catalog.Domain.Branch;
 using Service.Catalog.Domain.Price;
 using Service.Catalog.Repository.IRepository;
 using System;
@@ -27,7 +28,7 @@ namespace Service.Catalog.Repository
 
             if (!string.IsNullOrWhiteSpace(search) && search != "all")
             {
-                prices= prices.Where(x => x.Clave.ToLower().Contains(search) || x.Nombre.ToLower().Contains(search));
+                prices = prices.Where(x => x.Clave.ToLower().Contains(search) || x.Nombre.ToLower().Contains(search));
             }
 
             return await prices.ToListAsync();
@@ -119,6 +120,36 @@ namespace Service.Catalog.Repository
 
             return prices;
         }
+
+        public async Task<List<PriceList>> GetOptions()
+        {
+            var prices = await _context.CAT_ListaPrecio.Where(x => x.Activo).OrderBy(x => x.Nombre).ToListAsync();
+
+            return prices;
+        }
+
+        public async Task<List<Branch>> GetBranchesByPriceListId(Guid id)
+        {
+            var branches = await _context.CAT_ListaP_Sucursal
+                .Include(x => x.Sucursal)
+                .Where(x => x.PrecioListaId == id && x.Activo)
+                .Select(x => x.Sucursal)
+                .OrderBy(x => x.Nombre)
+                .ToListAsync();
+
+            return branches;
+        }
+
+        public async Task<PriceList> GetStudiesAndPacks(Guid priceListId)
+        {
+            var priceList = await _context.CAT_ListaPrecio
+                .Include(x => x.Estudios.Where(x => x.Precio > 0)).ThenInclude(x => x.Estudio.Area)
+                .Include(x => x.Paquete.Where(x => x.Precio > 0)).ThenInclude(x => x.Paquete)
+                .FirstOrDefaultAsync(x => x.Id == priceListId);
+
+            return priceList;
+        }
+
         public async Task<bool> IsDuplicate(PriceList price)
         {
             var isDuplicate = await _context.CAT_ListaPrecio.AnyAsync(x => x.Id != price.Id && (x.Clave == price.Clave || x.Nombre == price.Nombre));
