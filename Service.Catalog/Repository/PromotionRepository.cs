@@ -68,13 +68,13 @@ namespace Service.Catalog.Repository
             var today = DateTime.Today.Date;
 
             var promo = await
-                (from p in _context.CAT_ListaP_Promocion.Include(x => x.Promocion).Where(x => x.PrecioListaId == priceListId)
-                 join ps in _context.Relacion_Promocion_Estudio.Include(x => x.Promocion).Include(x => x.Estudio).Where(x => x.EstudioId == studyId && x.Activo) on p.PromocionId equals ps.PromocionId
-                 join pb in _context.Relacion_Promocion_Sucursal.Where(x => x.SucursalId == branchId) on p.PromocionId equals pb.PromocionId into lfpb
+                (from p in _context.CAT_Promocion.Where(x => x.ListaPrecioId == priceListId)
+                 join ps in _context.Relacion_Promocion_Estudio.Include(x => x.Promocion).Where(x => x.EstudioId == studyId && x.Activo) on p.Id equals ps.PromocionId
+                 join pb in _context.Relacion_Promocion_Sucursal.Where(x => x.SucursalId == branchId) on p.Id equals pb.PromocionId into lfpb
                  from subpb in lfpb.DefaultIfEmpty()
-                 join pm in _context.Relacion_Promocion_medicos.Where(x => x.MedicoId == doctorId) on p.PromocionId equals pm.PromocionId into lfpm
+                 join pm in _context.Relacion_Promocion_medicos.Where(x => x.MedicoId == doctorId) on p.Id equals pm.PromocionId into lfpm
                  from subpm in lfpm.DefaultIfEmpty()
-                 where p.Activo && p.Promocion.FechaInicial.Date <= today && p.Promocion.FechaFinal.Date >= today
+                 where p.Activo && p.FechaInicial.Date <= today && p.FechaFinal.Date >= today
                  && ((today.DayOfWeek == DayOfWeek.Monday && ps.Lunes)
                  || (today.DayOfWeek == DayOfWeek.Tuesday && ps.Martes)
                  || (today.DayOfWeek == DayOfWeek.Wednesday && ps.Miercoles)
@@ -93,13 +93,13 @@ namespace Service.Catalog.Repository
             var today = DateTime.Today.Date;
 
             var promo = await
-                (from p in _context.CAT_ListaP_Promocion.Include(x => x.Promocion).Where(x => x.PrecioListaId == priceListId)
-                 join pp in _context.Relacion_Promocion_Paquete.Include(x => x.Promocion).Include(x => x.Paquete).Where(x => x.PaqueteId == packId && x.Activo) on p.PromocionId equals pp.PromocionId
-                 join pb in _context.Relacion_Promocion_Sucursal.Where(x => x.SucursalId == branchId) on p.PromocionId equals pb.PromocionId into lfpb
+                (from p in _context.CAT_Promocion.Where(x => x.ListaPrecioId == priceListId)
+                 join pp in _context.Relacion_Promocion_Paquete.Include(x => x.Promocion).Where(x => x.PaqueteId == packId && x.Activo) on p.Id equals pp.PromocionId
+                 join pb in _context.Relacion_Promocion_Sucursal.Where(x => x.SucursalId == branchId) on p.Id equals pb.PromocionId into lfpb
                  from subpb in lfpb.DefaultIfEmpty()
-                 join pm in _context.Relacion_Promocion_medicos.Where(x => x.MedicoId == doctorId) on p.PromocionId equals pm.PromocionId into lfpm
+                 join pm in _context.Relacion_Promocion_medicos.Where(x => x.MedicoId == doctorId) on p.Id equals pm.PromocionId into lfpm
                  from subpm in lfpm.DefaultIfEmpty()
-                 where p.Activo && p.Promocion.FechaInicial.Date <= today && p.Promocion.FechaFinal.Date >= today
+                 where p.Activo && p.FechaInicial.Date <= today && p.FechaFinal.Date >= today
                  && ((today.DayOfWeek == DayOfWeek.Monday && pp.Lunes)
                  || (today.DayOfWeek == DayOfWeek.Tuesday && pp.Martes)
                  || (today.DayOfWeek == DayOfWeek.Wednesday && pp.Miercoles)
