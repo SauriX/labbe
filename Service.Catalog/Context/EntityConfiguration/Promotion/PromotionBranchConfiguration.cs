@@ -12,10 +12,9 @@ namespace Service.Catalog.Context.EntityConfiguration.Promotion
 
             builder.HasKey(x => new
             {
-                x.PromotionId,
-                x.BranchId
+                x.PromocionId,
+                x.SucursalId
             });
         }
-
     }
 }

@@ -64,7 +64,7 @@ namespace Service.MedicalRecord.Repository
                 || (x.Expediente.NombrePaciente + " " + x.Expediente.PrimerApellido + " " + x.Expediente.SegundoApellido).ToLower().Contains(filter.Clave));
             }
 
-            if (filter.Ciudad != null)
+            if (filter.Ciudad != null && filter.Ciudad.Any())
             {
                 requests = requests.Where(x => x.Sucursal != null && filter.Ciudad.Contains(x.Sucursal.Ciudad));
             }

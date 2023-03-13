@@ -15,18 +15,24 @@ namespace Service.Catalog.Controllers
     [ApiController]
     public class PromoController : ControllerBase
     {
-
         private readonly IPromotionApplication _service;
 
         public PromoController(IPromotionApplication indicationService)
         {
             _service = indicationService;
         }
-        [HttpGet("all/{search?}")]
+
+        [HttpGet("all/{search}")]
         [Authorize(Policies.Access)]
-        public async Task<IEnumerable<PromotionListDto>> GetAll(string search = null)
+        public async Task<IEnumerable<PromotionListDto>> GetAll(string search)
         {
             return await _service.GetAll(search);
+        }
+
+        [HttpGet("active")]
+        public async Task<IEnumerable<PromotionListDto>> GetActive()
+        {
+            return await _service.GetActive();
         }
 
         [HttpGet("{id}")]
@@ -46,6 +52,13 @@ namespace Service.Catalog.Controllers
         public async Task<List<PriceListInfoPromoDto>> GetPackPromos(List<PriceListInfoFilterDto> filter)
         {
             return await _service.GetPackPromos(filter);
+        }
+
+        [HttpPost("studies/{initial}")]
+        [Authorize(Policies.Access)]
+        public async Task<IEnumerable<PromotionStudyPackDto>> GetStudies(PromotionFormDto promoDto, bool initial)
+        {
+            return await _service.GetStudies(promoDto, initial);
         }
 
         [HttpPost]
@@ -78,12 +91,6 @@ namespace Service.Catalog.Controllers
         {
             var (file, fileName) = await _service.ExportForm(id);
             return File(file, MimeType.XLSX, fileName);
-        }
-
-        [HttpGet("active")]
-        public async Task<IEnumerable<PromotionListDto>> GetActive()
-        {
-            return await _service.GetActive();
         }
     }
 }

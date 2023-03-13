@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Service.Catalog.Dtos.Common;
 using Service.Catalog.Dtos.Promotion;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace Service.Catalog.Dtos.Route
         public string EstudioId { get; set; }
         public bool Activo { get; set; }
         public Guid UsuarioId { get; set; }
-        public IEnumerable<DiasDto> Dias { get; set; }
+        public IEnumerable<DayDto> Dias { get; set; }
         public IEnumerable<Route_StudyListDto> Estudio { get; set; }
     }
     public class RouteFormDtoValidator : AbstractValidator<RouteFormDto>
