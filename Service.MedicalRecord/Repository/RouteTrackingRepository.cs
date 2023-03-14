@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 using Service.MedicalRecord.Domain.Request;
 namespace Service.MedicalRecord.Repository
 {
-    public class RouteTrackingRepository:IRouteTrackingRepository
+    public class RouteTrackingRepository : IRouteTrackingRepository
     {
         private readonly ApplicationDbContext _context;
         public RouteTrackingRepository(ApplicationDbContext context)
@@ -41,31 +41,55 @@ namespace Service.MedicalRecord.Repository
             config.SetSynchronizeFilter<RequestStudy>(x => x.SolicitudId == requestId);
             await _context.BulkUpdateAsync(studies, config);
         }
-        public async Task<List<TrackingOrder>> GetAll(RouteTrackingSearchDto search) {
-            var routeTrackingList = _context.CAT_Seguimiento_Ruta.Where(x => x.Estudios.Any(y => y.Solicitud.Estudios.Any(m=>m.EstatusId==Status.RequestStudy.TomaDeMuestra|| m.EstatusId == Status.RequestStudy.EnRuta)))
+        public async Task<List<TrackingOrder>> GetAll(RouteTrackingSearchDto search)
+        {
+            var routeTrackingList = _context.CAT_Seguimiento_Ruta.Where(x => x.Estudios.Any(y => y.Solicitud.Estudios.Any(m => m.EstatusId == Status.RequestStudy.TomaDeMuestra || m.EstatusId == Status.RequestStudy.EnRuta)))
                 .Include(x => x.Estudios)
-                .ThenInclude(x=>x.Solicitud.Sucursal)
+                .ThenInclude(x => x.Solicitud.Sucursal)
                 .Include(x => x.Estudios)
-                .ThenInclude(x=>x.Solicitud.Estudios)
-                .ThenInclude(x=>x.Estatus)
-                .Include(x=>x.Estudios)
-            .ThenInclude(x=>x.SolicitudEstudio).AsQueryable();
+                .ThenInclude(x => x.Solicitud.Estudios)
+                .ThenInclude(x => x.Estatus)
+                .Include(x => x.Etiquetas)
+                .ThenInclude(x => x.Estudios)
+            .AsQueryable();
+
             if (search.Fechas != null && search.Fechas.Length != 0)
             {
                 routeTrackingList = routeTrackingList.
                     Where(x => x.FechaCreo.Date >= search.Fechas.First().Date && x.FechaCreo.Date <= search.Fechas.Last().Date);
             }
-            if (!string.IsNullOrEmpty(search.Sucursal))
+
+            if (!string.IsNullOrEmpty(search.Origen))
             {
-                routeTrackingList = routeTrackingList.Where(x => search.Sucursal.Contains(x.SucursalDestinoId));
+                routeTrackingList = routeTrackingList.Where(x => search.Destino.Contains(x.OrigenId));
             }
+            
+            if (!string.IsNullOrEmpty(search.Destino))
+            {
+                routeTrackingList = routeTrackingList.Where(x => search.Destino.Contains(x.DestinoId));
+            }
+
             if (!string.IsNullOrEmpty(search.Buscar))
             {
                 routeTrackingList = routeTrackingList.Where(x => search.Buscar.Contains(x.Clave));
             }
+
             return await routeTrackingList.ToListAsync();
         }
-        public async Task<TrackingOrder> getById(Guid Id) {
+
+        public async Task<List<RequestTag>> GetTagsByOrigin()
+        {
+            var tags = await _context.Relacion_Solicitud_Etiquetas
+                .Include(x => x.Estudios)
+                .Include(x => x.Solicitud)
+                .ThenInclude(x => x.Estudios)
+                .ToListAsync();
+
+            return tags;
+        }
+
+        public async Task<TrackingOrder> GetById(Guid Id)
+        {
             var route = await _context.CAT_Seguimiento_Ruta.Include(x => x.Estudios)
                 .ThenInclude(x => x.Solicitud.Sucursal)
                 .Include(x => x.Estudios)
@@ -73,18 +97,22 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Estudios).ThenInclude(x => x.Solicitud.Estudios)
                 .ThenInclude(x => x.Estatus)
                 .Include(x => x.Estudios)
-                .ThenInclude(x => x.Solicitud.Expediente).AsQueryable().FirstOrDefaultAsync(x=>x.Id==Id);
+                .ThenInclude(x => x.Solicitud.Expediente).AsQueryable().FirstOrDefaultAsync(x => x.Id == Id);
             return route;
         }
-        public async Task Update(RouteTracking route) {
-             _context.Update(route);
+
+        public async Task Update(RouteTracking route)
+        {
+            _context.Update(route);
             await _context.SaveChangesAsync();
         }
-        public async Task Create(RouteTracking route) {
+        public async Task Create(RouteTracking route)
+        {
             await _context.AddAsync(route);
             await _context.SaveChangesAsync();
         }
-        public async Task<List<TrackingOrder>> GetAllRecive(PendingSearchDto search) {
+        public async Task<List<TrackingOrder>> GetAllRecive(PendingSearchDto search)
+        {
 
             var routeTrackingList = _context.CAT_Seguimiento_Ruta.Include(x => x.Estudios)
                 .ThenInclude(x => x.Solicitud.Sucursal)
@@ -95,23 +123,51 @@ namespace Service.MedicalRecord.Repository
                 .ThenInclude(x => x.Estatus)
                 .Include(x => x.Estudios)
                 .ThenInclude(x => x.Solicitud.Expediente)
-                .Include(x => x.Estudios)
-                .ThenInclude(x=>x.SolicitudEstudio)
+                .Include(x => x.Etiquetas)
+                .ThenInclude(x => x.Estudios)
                 .AsQueryable();
-            if (search.Sucursal!=null && search.Sucursal.Count >0)
+            if (search.Sucursal != null && search.Sucursal.Count > 0)
             {
-                routeTrackingList = routeTrackingList.Where(x => search.Sucursal.Contains(x.SucursalOrigenId));
+                routeTrackingList = routeTrackingList.Where(x => search.Sucursal.Contains(x.OrigenId));
             }
             if (!string.IsNullOrEmpty(search.Busqueda))
             {
                 routeTrackingList = routeTrackingList.Where(x => search.Busqueda.Contains(x.Clave));
             }
-            routeTrackingList = routeTrackingList.Where(x =>  x.SucursalDestinoId == search.Sucursaldest);
+            routeTrackingList = routeTrackingList.Where(x => x.DestinoId == search.Sucursaldest);
             return await routeTrackingList.ToListAsync();
         }
-        public async Task<RouteTracking> GetTracking(Guid Id) {
-            var routeTracking =   _context.Cat_PendientesDeEnviar.Include(x => x.Solicitud.Sucursal).FirstOrDefault(x=>x.SegumientoId==Id);
+        public async Task<RouteTracking> GetTracking(Guid Id)
+        {
+            var routeTracking = _context.Cat_PendientesDeEnviar.Include(x => x.Solicitud.Sucursal).FirstOrDefault(x => x.SegumientoId == Id);
             return routeTracking;
+        }
+
+        public async Task<IEnumerable<RequestTag>> GetAllTags(string search)
+        {
+            var tags = _context.Relacion_Solicitud_Etiquetas
+                .Include(x => x.Estudios)
+                .AsQueryable();
+
+            search = search.Trim().ToLower();
+
+            if (!string.IsNullOrWhiteSpace(search) && search != "all")
+            {
+                tags = tags.Where(x => x.ClaveEtiqueta.ToLower().Contains(search));
+            }
+
+            return await tags.ToListAsync();
+
+        }
+
+        public async Task<IEnumerable<RequestTag>> FindTags(string routeId)
+        {
+            var tags = await _context.Relacion_Solicitud_Etiquetas
+                .Where(x => x.Destino == routeId)
+                .Include(x => x.Estudios)
+                .ToListAsync();
+
+            return tags;
         }
     }
 }

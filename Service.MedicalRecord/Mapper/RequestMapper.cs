@@ -353,6 +353,7 @@ namespace Service.MedicalRecord.Mapper
                 Asignado = x.EstudioWeeClinic?.Asignado ?? true,
                 Metodo = x.Metodo,
                 OrdenEstudio = x.OrdenEstudio,
+                DestinoId = x.DestinoId,
                 FechaTomaMuestra = x.FechaTomaMuestra?.ToString("dd/MM/yyyy HH:mm"),
                 FechaSolicitado = x.FechaSolicitado?.ToString("dd/MM/yyyy HH:mm"),
                 FechaActualizacion = x.EstatusId == Status.RequestStudy.Pendiente
@@ -540,6 +541,7 @@ namespace Service.MedicalRecord.Mapper
                     Promocion = x.Promocion,
                     DepartamentoId = x.DepartamentoId,
                     AreaId = x.AreaId,
+                    DestinoId = x.DestinoId,
                     EstatusId = study?.EstatusId ?? Status.RequestStudy.Pendiente,
                     Dias = x.Dias,
                     Horas = x.Horas,

@@ -1,4 +1,5 @@
-﻿using Service.MedicalRecord.Domain.TrackingOrder;
+﻿using Service.MedicalRecord.Domain.Request;
+using Service.MedicalRecord.Domain.TrackingOrder;
 using Service.MedicalRecord.Dtos.TrackingOrder;
 using System;
 using System.Collections.Generic;
