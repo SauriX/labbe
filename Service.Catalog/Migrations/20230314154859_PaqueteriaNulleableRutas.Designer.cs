@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230314154859_PaqueteriaNulleableRutas")]
+    partial class PaqueteriaNulleableRutas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2624,6 +2626,12 @@ namespace Service.Catalog.Migrations
                     b.Property<bool>("Sabado")
                         .HasColumnType("bit");
 
+                    b.Property<Guid?>("SucursalDestinoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("SucursalOrigenId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("TiempoDeEntrega")
                         .HasColumnType("int");
 
@@ -2641,13 +2649,13 @@ namespace Service.Catalog.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DestinoId");
-
                     b.HasIndex("MaquiladorId");
 
-                    b.HasIndex("OrigenId");
-
                     b.HasIndex("PaqueteriaId");
+
+                    b.HasIndex("SucursalDestinoId");
+
+                    b.HasIndex("SucursalOrigenId");
 
                     b.ToTable("CAT_Rutas");
                 });
@@ -3553,19 +3561,9 @@ namespace Service.Catalog.Migrations
 
             modelBuilder.Entity("Service.Catalog.Domain.Route.Route", b =>
                 {
-                    b.HasOne("Service.Catalog.Domain.Branch.Branch", "Destino")
-                        .WithMany()
-                        .HasForeignKey("DestinoId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("Service.Catalog.Domain.Maquila.Maquila", "Maquilador")
                         .WithMany()
                         .HasForeignKey("MaquiladorId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Service.Catalog.Domain.Branch.Branch", "Origen")
-                        .WithMany()
-                        .HasForeignKey("OrigenId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Service.Catalog.Domain.Catalog.Delivery", "Paqueteria")
@@ -3573,13 +3571,23 @@ namespace Service.Catalog.Migrations
                         .HasForeignKey("PaqueteriaId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("Destino");
+                    b.HasOne("Service.Catalog.Domain.Branch.Branch", "SucursalDestino")
+                        .WithMany()
+                        .HasForeignKey("SucursalDestinoId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Service.Catalog.Domain.Branch.Branch", "SucursalOrigen")
+                        .WithMany()
+                        .HasForeignKey("SucursalOrigenId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Maquilador");
 
-                    b.Navigation("Origen");
-
                     b.Navigation("Paqueteria");
+
+                    b.Navigation("SucursalDestino");
+
+                    b.Navigation("SucursalOrigen");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Route.Route_Study", b =>

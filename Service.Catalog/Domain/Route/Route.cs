@@ -42,12 +42,12 @@ namespace Service.Catalog.Domain.Route
         public string Clave { get; set; }
         public string Nombre { get; set; }
         public Guid? OrigenId { get; set; }
-        public virtual Branch.Branch SucursalOrigen { get; set; }
+        public virtual Branch.Branch Origen { get; set; }
         public Guid? DestinoId { get; set; }
-        public virtual Branch.Branch SucursalDestino { get; set; }
+        public virtual Branch.Branch Destino { get; set; }
         public int? MaquiladorId { get; set; }
         public virtual Maquila.Maquila Maquilador { get; set; }
-        public int PaqueteriaId { get; set; }
+        public int? PaqueteriaId { get; set; }
         public virtual Delivery Paqueteria { get; set; }
         public string Comentarios { get; set; }
         public DateTime HoraDeRecoleccion { get; set; }

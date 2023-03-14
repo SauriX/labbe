@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230314160612_EliminarPaqueteriaRutas")]
+    partial class EliminarPaqueteriaRutas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2618,9 +2620,6 @@ namespace Service.Catalog.Migrations
                     b.Property<Guid?>("OrigenId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("PaqueteriaId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("Sabado")
                         .HasColumnType("bit");
 
@@ -2646,8 +2645,6 @@ namespace Service.Catalog.Migrations
                     b.HasIndex("MaquiladorId");
 
                     b.HasIndex("OrigenId");
-
-                    b.HasIndex("PaqueteriaId");
 
                     b.ToTable("CAT_Rutas");
                 });
@@ -3568,18 +3565,11 @@ namespace Service.Catalog.Migrations
                         .HasForeignKey("OrigenId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Service.Catalog.Domain.Catalog.Delivery", "Paqueteria")
-                        .WithMany()
-                        .HasForeignKey("PaqueteriaId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.Navigation("Destino");
 
                     b.Navigation("Maquilador");
 
                     b.Navigation("Origen");
-
-                    b.Navigation("Paqueteria");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Route.Route_Study", b =>

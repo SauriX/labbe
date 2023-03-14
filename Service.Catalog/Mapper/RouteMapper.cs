@@ -20,9 +20,9 @@ namespace Service.Catalog.Mapper
                 Clave = model.Clave,
                 Nombre = model.Nombre,
                 OrigenId = model.OrigenId,
-                Origen = model?.SucursalOrigen?.Nombre,
+                Origen = model?.Origen?.Nombre,
                 DestinoId = model?.DestinoId,
-                Destino = model?.SucursalDestino?.Nombre + " " + model?.Maquilador?.Nombre,
+                Destino = model?.Destino?.Nombre + " " + model?.Maquilador?.Nombre,
                 Activo = model.Activo,
             };
         }
@@ -36,9 +36,9 @@ namespace Service.Catalog.Mapper
                 Clave = x.Clave,
                 Nombre = x.Nombre,
                 OrigenId = x?.OrigenId,
-                Origen = x?.SucursalOrigen.Nombre,
+                Origen = x?.Origen.Nombre,
                 DestinoId = x?.DestinoId,
-                Destino = x?.SucursalDestino?.Nombre + " " + x?.Maquilador?.Nombre,
+                Destino = x?.Destino?.Nombre + " " + x?.Maquilador?.Nombre,
                 MaquiladorId = x?.MaquiladorId,
                 Activo = x.Activo,
             });
@@ -56,8 +56,8 @@ namespace Service.Catalog.Mapper
                 OrigenId = x?.OrigenId,
                 DestinoId = x?.DestinoId,
                 MaquiladorId = x?.MaquiladorId,
-                Origen = x?.SucursalOrigen?.Nombre,
-                Destino = x?.SucursalDestino?.Nombre + " " + x?.Maquilador?.Nombre,
+                Origen = x?.Origen?.Nombre,
+                Destino = x?.Destino?.Nombre + " " + x?.Maquilador?.Nombre,
                 PaqueteriaId = x.PaqueteriaId,
                 Activo = x.Activo,
                 Comentarios = x.Comentarios,
@@ -77,20 +77,20 @@ namespace Service.Catalog.Mapper
         public static RouteFormDto ToRouteFormDto(this Route model)
         {
             if (model == null) return null;
-            var dias = new List<DiasDto>();
-            if (model.Lunes) dias.Add(new DiasDto { Id = 1, Dia = "L" });
+            var dias = new List<DayDto>();
+            if (model.Lunes) dias.Add(new DayDto { Id = 1, Dia = "L" });
 
-            if (model.Martes) dias.Add(new DiasDto { Id = 2, Dia = "M" });
+            if (model.Martes) dias.Add(new DayDto { Id = 2, Dia = "M" });
 
-            if (model.Miercoles) dias.Add(new DiasDto { Id = 3, Dia = "M" });
+            if (model.Miercoles) dias.Add(new DayDto { Id = 3, Dia = "M" });
 
-            if (model.Jueves) dias.Add(new DiasDto { Id = 4, Dia = "J" });
+            if (model.Jueves) dias.Add(new DayDto { Id = 4, Dia = "J" });
 
-            if (model.Viernes) dias.Add(new DiasDto { Id = 5, Dia = "V" });
+            if (model.Viernes) dias.Add(new DayDto { Id = 5, Dia = "V" });
 
-            if (model.Sabado) dias.Add(new DiasDto { Id = 6, Dia = "S" });
+            if (model.Sabado) dias.Add(new DayDto { Id = 6, Dia = "S" });
 
-            if (model.Domingo) dias.Add(new DiasDto { Id = 7, Dia = "D" });
+            if (model.Domingo) dias.Add(new DayDto { Id = 7, Dia = "D" });
 
             return new RouteFormDto
             {
@@ -100,8 +100,8 @@ namespace Service.Catalog.Mapper
                 OrigenId = model?.OrigenId,
                 DestinoId = model?.DestinoId,
                 MaquiladorId = model?.MaquiladorId,
-                Origen = model?.SucursalOrigen?.Nombre,
-                Destino = model?.SucursalDestino?.Nombre + " " + model?.Maquilador?.Nombre,
+                Origen = model?.Origen?.Nombre,
+                Destino = model?.Destino?.Nombre + " " + model?.Maquilador?.Nombre,
                 PaqueteriaId = model.PaqueteriaId,
                 Activo = model.Activo,
                 Comentarios = model?.Comentarios,

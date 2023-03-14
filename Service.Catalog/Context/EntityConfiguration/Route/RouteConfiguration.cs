@@ -35,12 +35,12 @@ namespace Service.Catalog.Context.EntityConfiguration.Route
                 .WithOne(x => x.Ruta);
 
             builder
-               .HasOne(x => x.SucursalOrigen)
+               .HasOne(x => x.Origen)
                .WithMany()
                .OnDelete(DeleteBehavior.Restrict);
 
             builder
-               .HasOne(x => x.SucursalDestino)
+               .HasOne(x => x.Destino)
                .WithMany()
                .OnDelete(DeleteBehavior.Restrict);
 

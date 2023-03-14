@@ -25,8 +25,8 @@ namespace Service.Catalog.Repository
             var routes = _context.CAT_Rutas
                 .Include(x => x.Estudios)
                 .ThenInclude(x => x.Estudio).ThenInclude(x => x.Area).ThenInclude(x => x.Departamento)
-                .Include(x => x.SucursalOrigen)
-                .Include(x => x.SucursalDestino)
+                .Include(x => x.Origen)
+                .Include(x => x.Destino)
                 .Include(x => x.Paqueteria)
                 .Include(x => x.Maquilador)
                 .AsQueryable();
@@ -52,8 +52,8 @@ namespace Service.Catalog.Repository
         {
             var routes = await _context.CAT_Rutas
                 .Include(x => x.Estudios).ThenInclude(x => x.Estudio).ThenInclude(x => x.Area).ThenInclude(x => x.Departamento)
-                .Include(x => x.SucursalOrigen)
-                .Include(x => x.SucursalDestino)
+                .Include(x => x.Origen)
+                .Include(x => x.Destino)
                 .Include(x => x.Paqueteria)
                 .Include(x => x.Maquilador)
                 .FirstOrDefaultAsync(x => x.Id == id || x.DestinoId == id);
@@ -127,8 +127,8 @@ namespace Service.Catalog.Repository
                  .ThenInclude(x => x.Estudio)
                  .ThenInclude(x => x.Area)
                  .ThenInclude(x => x.Departamento)
-                .Include(x => x.SucursalOrigen)
-                .Include(x => x.SucursalDestino)
+                .Include(x => x.Origen)
+                .Include(x => x.Destino)
                 .Include(x => x.Paqueteria)
                 .Include(x => x.Maquilador)
                 .AsQueryable();

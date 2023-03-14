@@ -16,7 +16,7 @@ namespace Service.Catalog.Dtos.Route
         public string Origen { get; set; }
         public string Destino { get; set; }
         public int? MaquiladorId { get; set; }
-        public int PaqueteriaId { get; set; }
+        public int? PaqueteriaId { get; set; }
         public string Comentarios { get; set; }
         public DateTime HoraDeRecoleccion { get; set; }
         public int TiempoDeEntrega { get; set; }
