@@ -144,7 +144,8 @@ namespace Service.Catalog.Repository
         {
             var priceList = await _context.CAT_ListaPrecio
                 .Include(x => x.Estudios.Where(x => x.Precio > 0)).ThenInclude(x => x.Estudio.Area)
-                .Include(x => x.Paquete.Where(x => x.Precio > 0)).ThenInclude(x => x.Paquete)
+                .Include(x => x.Paquetes.Where(x => x.Precio > 0)).ThenInclude(x => x.Paquete)
+                .AsSplitQuery()
                 .FirstOrDefaultAsync(x => x.Id == priceListId);
 
             return priceList;
