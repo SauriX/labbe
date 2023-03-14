@@ -4,16 +4,16 @@ using Service.Catalog.Domain.Promotion;
 
 namespace Service.Catalog.Context.EntityConfiguration.Promotion
 {
-    public class PromotionLoyalityConfiguration : IEntityTypeConfiguration<PromotionLoyality>
+    public class PromotionMedicConfiguration : IEntityTypeConfiguration<PromotionMedic>
     {
-        public void Configure(EntityTypeBuilder<PromotionLoyality> builder)
+        public void Configure(EntityTypeBuilder<PromotionMedic> builder)
         {
-            builder.ToTable("Relacion_Promocion_Lealtad");
+            builder.ToTable("Relacion_Promocion_Medicos");
 
             builder.HasKey(x => new
             {
-                x.PromotionId,
-                x.LoyaltyId
+                x.PromocionId,
+                x.MedicoId
             });
         }
     }

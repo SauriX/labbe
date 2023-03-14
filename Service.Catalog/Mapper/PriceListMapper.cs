@@ -1,5 +1,6 @@
 ﻿using Service.Catalog.Domain.Price;
 using Service.Catalog.Domain.Route;
+using Service.Catalog.Dtos.Common;
 using Service.Catalog.Dtos.Pack;
 using Service.Catalog.Dtos.PriceList;
 using System;
@@ -157,6 +158,19 @@ namespace Service.Catalog.Mapper
                 })?.ToList(),
             });
         }
+
+        public static IEnumerable<OptionsDto> ToOptionsDto(this List<PriceList> model)
+        {
+            if (model == null) return new List<OptionsDto>();
+
+            return model.Select(x => new OptionsDto
+            {
+                Key = x.Id,
+                Value = x.Id,
+                Label = x.Nombre
+            });
+        }
+
         public static List<PriceListStudyDto> ToPriceListStudyDto(this List<PriceList_Study> model, PriceListStudiesPaginateDto filter)
         {
             return model.Skip(filter.skip).Take(filter.take).Select(x => new PriceListStudyDto
@@ -189,7 +203,7 @@ namespace Service.Catalog.Mapper
                     Id = x.EstudioId,
                     Clave = x.Estudio.Clave.Trim(),
                     Nombre = x.Estudio.Nombre.Trim(),
-                    Area = x.Estudio.Area?.Nombre??"",
+                    Area = x.Estudio.Area?.Nombre ?? "",
                     Departamento = x.Estudio.Area?.Departamento?.Nombre,
                     Precio = x.Precio,
                     Activo = x.Activo,

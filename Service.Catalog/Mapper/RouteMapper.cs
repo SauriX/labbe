@@ -1,4 +1,5 @@
 ﻿using Service.Catalog.Domain.Route;
+using Service.Catalog.Dtos.Common;
 using Service.Catalog.Dtos.Promotion;
 using Service.Catalog.Dtos.Route;
 using System;

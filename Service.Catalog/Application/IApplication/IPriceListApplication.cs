@@ -1,4 +1,5 @@
-﻿using Service.Catalog.Dtos.PriceList;
+﻿using Service.Catalog.Dtos.Common;
+using Service.Catalog.Dtos.PriceList;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,6 +17,8 @@ namespace Service.Catalog.Application.IApplication
         Task<PriceListListDto> Create(PriceListFormDto indicacion);
         Task<PriceListListDto> Update(PriceListFormDto indication);
         Task<IEnumerable<PriceListListDto>> GetActive();
+        Task<IEnumerable<OptionsDto>> GetOptions();
+        Task<IEnumerable<OptionsDto>> GetBranchesOptionsByPriceListId(Guid id);
         Task<(byte[] file, string fileName)> ExportList(string search);
         Task<(byte[] file, string fileName)> ExportForm(string id);
         Task<IEnumerable<PriceListCompanyDto>> GetAllCompany(Guid companyId);

@@ -1,4 +1,5 @@
-﻿using Service.Catalog.Domain.Price;
+﻿using Service.Catalog.Domain.Branch;
+using Service.Catalog.Domain.Price;
 using Service.Catalog.Domain.Route;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,9 @@ namespace Service.Catalog.Repository.IRepository
         Task<List<PriceList_Study>> GetPriceStudyById(Guid priceListId, IEnumerable<int> studyId);
         Task<PriceList_Packet> GetPricePackById(int packId, Guid branchId, Guid companyId);
         Task<List<PriceList>> GetActive();
+        Task<List<PriceList>> GetOptions();
+        Task<List<Branch>> GetBranchesByPriceListId(Guid id);
+        Task<PriceList> GetStudiesAndPacks(Guid priceListId);
         Task<bool> IsDuplicate(PriceList price);
         Task Create(PriceList price);
         Task Update(PriceList price);

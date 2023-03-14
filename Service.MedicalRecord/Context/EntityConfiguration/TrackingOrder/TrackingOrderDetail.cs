@@ -8,7 +8,9 @@ namespace Service.MedicalRecord.Context.EntityConfiguration.TrackingOrder
         public void Configure(EntityTypeBuilder<Domain.TrackingOrder.TrackingOrderDetail> builder)
         {
             builder.HasOne(x => x.Etiqueta)
-            .WithMany();
+            .WithMany()
+            .HasForeignKey(x => x.EtiquetaId)
+            .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

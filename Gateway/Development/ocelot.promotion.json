@@ -36,7 +36,18 @@
       "UpstreamPathTemplate": "/api/promotion/{id}",
       "UpstreamHttpMethod": [ "GET" ]
     },
-
+    {
+      "DownstreamPathTemplate": "/api/promo/studies/{initial}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/promotion/studies/{initial}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
     {
       "DownstreamPathTemplate": "/api/promo",
       "DownstreamScheme": "http",

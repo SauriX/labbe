@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230311001518_PROMOCIONES")]
+    partial class PROMOCIONES
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2580,20 +2582,44 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("Comentarios")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("DestinoId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("DiasDeEntrega")
+                        .HasColumnType("int");
 
                     b.Property<bool>("Domingo")
                         .HasColumnType("bit");
 
+                    b.Property<string>("EstudioId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("FechaCreo")
                         .HasColumnType("smalldatetime");
+
+                    b.Property<DateTime?>("FechaFinal")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaInicial")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("smalldatetime");
 
-                    b.Property<DateTime>("HoraDeRecoleccion")
+                    b.Property<decimal>("FormatoDeTiempoId")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("HoraDeEntrega")
                         .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("HoraDeEntregaEstimada")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("HoraDeRecoleccion")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("IdResponsableEnvio")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("IdResponsableRecepcion")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Jueves")
                         .HasColumnType("bit");
@@ -2615,14 +2641,17 @@ namespace Service.Catalog.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<Guid?>("OrigenId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("PaqueteriaId")
+                    b.Property<int?>("PaqueteriaId")
                         .HasColumnType("int");
+
+                    b.Property<bool?>("RequierePaqueteria")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("Sabado")
                         .HasColumnType("bit");
+
+                    b.Property<int?>("SeguimientoPaqueteria")
+                        .HasColumnType("int");
 
                     b.Property<Guid?>("SucursalDestinoId")
                         .HasColumnType("uniqueidentifier");
@@ -2632,9 +2661,6 @@ namespace Service.Catalog.Migrations
 
                     b.Property<int>("TiempoDeEntrega")
                         .HasColumnType("int");
-
-                    b.Property<byte>("TipoTiempo")
-                        .HasColumnType("tinyint");
 
                     b.Property<string>("UsuarioCreoId")
                         .HasColumnType("nvarchar(max)");
@@ -3567,8 +3593,7 @@ namespace Service.Catalog.Migrations
                     b.HasOne("Service.Catalog.Domain.Catalog.Delivery", "Paqueteria")
                         .WithMany()
                         .HasForeignKey("PaqueteriaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Service.Catalog.Domain.Branch.Branch", "SucursalDestino")
                         .WithMany()

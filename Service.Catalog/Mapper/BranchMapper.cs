@@ -1,6 +1,7 @@
 ﻿using Service.Catalog.Domain.Branch;
 using Service.Catalog.Domain.Series;
 using Service.Catalog.Dtos.Branch;
+using Service.Catalog.Dtos.Common;
 using Shared.Utils;
 using System;
 using System.Collections.Generic;
@@ -188,6 +189,18 @@ namespace Service.Catalog.Mapper
                     FechaModifico = DateTime.Now
                 }).ToList()
             };
+        }
+
+        public static IEnumerable<OptionsDto> ToOptionsDto(this List<Branch> model)
+        {
+            if (model == null) return new List<OptionsDto>();
+
+            return model.Select(x => new OptionsDto
+            {
+                Key = x.Id,
+                Value = x.Id,
+                Label = x.Nombre
+            });
         }
     }
 }

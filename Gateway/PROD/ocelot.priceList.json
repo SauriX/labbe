@@ -23,27 +23,26 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/services/catalogo/api/price/info/study",
+      "DownstreamPathTemplate": "/services/catalogo/api/price/options",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "labramos.axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/price/info/study",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamPathTemplate": "/api/price/options",
+      "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/services/catalogo/api/price/info/pack",
+      "DownstreamPathTemplate": "/services/catalogo/api/price/branches/options/{priceListId}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "labramos.axsishost.online"
         }
       ],
-
-      "UpstreamPathTemplate": "/api/price/info/pack",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamPathTemplate": "/api/price/branches/options/{priceListId}",
+      "UpstreamHttpMethod": [ "GET" ]
     },
     {
       "DownstreamPathTemplate": "/services/catalogo/api/price/{id}",
@@ -65,6 +64,29 @@
         }
       ],
       "UpstreamPathTemplate": "/api/price/studies",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/services/catalogo/api/price/info/study",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/price/info/study",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/services/catalogo/api/price/info/pack",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+        }
+      ],
+
+      "UpstreamPathTemplate": "/api/price/info/pack",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
