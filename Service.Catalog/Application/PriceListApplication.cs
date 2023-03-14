@@ -2,6 +2,7 @@
 using ClosedXML.Report;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dictionary;
+using Service.Catalog.Dtos.Common;
 using Service.Catalog.Dtos.PriceList;
 using Service.Catalog.Mapper;
 using Service.Catalog.Repository.IRepository;
@@ -45,6 +46,20 @@ namespace Service.Catalog.Application
             var prices = await _repository.GetActive();
 
             return prices.ToPriceListListActiveDto();
+        }
+
+        public async Task<IEnumerable<OptionsDto>> GetOptions()
+        {
+            var prices = await _repository.GetOptions();
+
+            return prices.ToOptionsDto();
+        }     
+        
+        public async Task<IEnumerable<OptionsDto>> GetBranchesOptionsByPriceListId(Guid id)
+        {
+            var branches = await _repository.GetBranchesByPriceListId(id);
+
+            return branches.ToOptionsDto();
         }
 
         public async Task<PriceListFormDto> GetById(string id)
@@ -106,19 +121,19 @@ namespace Service.Catalog.Application
 
             if (promos != null && promos.Count > 0)
             {
-                priceDto.PromocionId = promos[0].PromotionId;
-                priceDto.Promocion = promos[0].Promotion.Nombre;
-                priceDto.Descuento = promos[0].DiscountNumeric;
-                priceDto.DescuentoPorcentaje = promos[0].Discountporcent;
+                priceDto.PromocionId = promos[0].PromocionId;
+                priceDto.Promocion = promos[0].Promocion.Nombre;
+                priceDto.Descuento = promos[0].DescuentoCantidad;
+                priceDto.DescuentoPorcentaje = promos[0].DescuentoPorcentaje;
 
                 foreach (var promo in promos)
                 {
                     priceDto.Promociones.Add(new PriceListInfoPromoDto
                     {
-                        PromocionId = promo.PromotionId,
-                        Promocion = promo.Promotion.Nombre,
-                        Descuento = promo.DiscountNumeric,
-                        DescuentoPorcentaje = promo.Discountporcent
+                        PromocionId = promo.PromocionId,
+                        Promocion = promo.Promocion.Nombre,
+                        Descuento = promo.DescuentoCantidad,
+                        DescuentoPorcentaje = promo.DescuentoPorcentaje
                     });
                 }
             }
@@ -200,10 +215,10 @@ namespace Service.Catalog.Application
                 {
                     priceDto.Promociones.Add(new PriceListInfoPromoDto
                     {
-                        PromocionId = promo.PromotionId,
-                        Promocion = promo.Promotion.Nombre,
-                        Descuento = promo.DiscountNumeric,
-                        DescuentoPorcentaje = promo.Discountporcent
+                        PromocionId = promo.PromocionId,
+                        Promocion = promo.Promocion.Nombre,
+                        Descuento = promo.DescuentoCantidad,
+                        DescuentoPorcentaje = promo.DescuentoPorcentaje
                     });
                 }
             }

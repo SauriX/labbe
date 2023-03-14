@@ -44,6 +44,11 @@ namespace Service.Billing.Controllers
         {
             return await _service.GetByRequest(requestId);
         }
+        [HttpGet("consecutive/{serie}")]
+        public async Task<string> GetNextInvoiceSeriesNumber(string serie)
+        {
+            return await _service.GetNextInvoiceSeriesNumber(serie);
+        }
 
         [HttpPost]
         public async Task<InvoiceDto> Create(InvoiceDto invoiceDto)

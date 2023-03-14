@@ -23,9 +23,11 @@ namespace Service.MedicalRecord.Application
     public class RequestedStudyApplication : IRequestedStudyApplication
     {
         public readonly IRequestedStudyRepository _repository;
-        public RequestedStudyApplication(IRequestedStudyRepository repository)
+
+        public RequestedStudyApplication(IRequestedStudyRepository repository, IInvoiceCatalogRepository invoiceRepository)
         {
             _repository = repository;
+
         }
 
         public async Task<(byte[] file, string fileName)> ExportList(RequestedStudySearchDto search)
@@ -92,7 +94,8 @@ namespace Service.MedicalRecord.Application
 
             if (requestedStudy != null)
             {
-                return requestedStudy.ToRequestedStudyDto(search);
+                return requestedStudy.ToSamplingListDto(search);
+                
             }
             else
             {

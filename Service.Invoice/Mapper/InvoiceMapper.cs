@@ -107,6 +107,7 @@ namespace Service.Billing.Mapper
                 },
                 Productos = dto.Productos.Select(x => new FacturapiProductDto
                 {
+                    ClaveProductoSAT = x.ClaveProdServ,
                     Clave = x.Clave,
                     Descripcion = x.Descripcion,
                     Precio = x.Precio,
@@ -149,6 +150,7 @@ namespace Service.Billing.Mapper
             return new Invoice
             {
                 Id = Guid.NewGuid(),
+                Serie = dto.Serie,
                 FormaPago = dto.FormaPago,
                 MetodoPago = dto.MetodoPago,
                 UsoCFDI = dto.UsoCFDI,

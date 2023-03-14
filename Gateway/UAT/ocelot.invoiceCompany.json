@@ -12,6 +12,17 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/invoiceCompany/filter/free",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/invoiceCompany/filter/free",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
       "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/invoiceCompany/getConsecutiveBySerie/{serie}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -75,6 +86,17 @@
         }
       ],
       "UpstreamPathTemplate": "/api/invoiceCompany/print/pdf/{facturapiId}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/records/api/invoiceCompany/print/xml/{facturapiId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/invoiceCompany/print/xml/{facturapiId}",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {

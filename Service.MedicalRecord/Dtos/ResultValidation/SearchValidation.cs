@@ -8,7 +8,7 @@ namespace Service.MedicalRecord.Dtos.ResultValidation
         public DateTime[]? Fecha  { get; set; }
         public string Search { get; set; }
         public int Area { get; set; }
-       // public int? Ciudad { get; set; }
+        public List<string> Ciudad { get; set; }
       //  public int? Departament { get; set; }
         public List<int> Estudio { get; set; }
         public List<string> Medico { get; set; }

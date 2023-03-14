@@ -11,6 +11,7 @@ namespace Service.MedicalRecord.Repository.IRepository
     public interface IInvoiceRepository
     {
         Task<List<Request>> InvoiceCompanyFilter(InvoiceCompanyFilterDto filter);
+        Task<List<InvoiceCompany>> InvoiceFreeFilter(InvoiceFreeFilterDto filter);
         Task CreateInvoiceCompanyData(InvoiceCompany invoiceCompnay, List<RequestInvoiceCompany> requestInvoiceCompany);
         Task UpdateInvoiceCompany(InvoiceCompany invoiceCompnay);
         Task<InvoiceCompany> GetInvoiceCompanyByFacturapiId(string id);

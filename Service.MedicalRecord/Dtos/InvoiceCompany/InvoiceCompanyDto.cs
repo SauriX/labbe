@@ -11,12 +11,16 @@ namespace Service.MedicalRecord.Dtos.InvoiceCompany
         public string Estatus { get; set; }
         public List<Guid> SolicitudesId { get; set; }
         public string TipoFactura { get; set; }
+        public string OrigenFactura { get; set; }
+        public string RFC { get; set; }
+        public string DireccionFiscal { get; set; }
+        public string RazonSocial { get; set; }
+        public string RegimenFiscal { get; set; }
         public List<InvoiceCompanyStudiesInfoDto> Estudios { get; set; }
         public Guid? TaxDataId { get; set; }
         public Guid? CompañiaId { get; set; }
         public Guid? ExpedienteId { get; set; }
-        public Guid FacturaId { get; set; }
-        //public Guid? FormaPagoId { get; set; }
+        public Guid? FacturaId { get; set; }
         public string FormaPago { get; set; }
         public string NumeroCuenta { get; set; }
         public string Serie { get; set; }
@@ -29,9 +33,12 @@ namespace Service.MedicalRecord.Dtos.InvoiceCompany
         public string Nombre { get; set; }
         public string FacturapiId { get; set; }
         public string MetodoPago { get; set; }
-        public string RegimenFiscal { get; set; }
         public Cliente Cliente { get; set; }
-        public string RFC { get; set; }
+        public string TipoPago { get; set; }
+        public int FormaPagoId { get; set; }
+        public int BancoId { get; set; }
+        public string ClaveExterna { get; set; }
+        public int DiasCredito { get; set; }
         public List<InvoiceDetail> Detalles { get; set; }
 
     }
@@ -40,6 +47,7 @@ namespace Service.MedicalRecord.Dtos.InvoiceCompany
         public string RazonSocial { get; set; }
         public string RFC { get; set; }
         public string RegimenFiscal { get; set; }
+        public string DireccionFiscal { get; set; }
         public string Correo { get; set; }
         public string Telefono { get; set; }
         public string CodigoPostal { get; set; }
@@ -53,6 +61,8 @@ namespace Service.MedicalRecord.Dtos.InvoiceCompany
     }
     public class InvoiceDetail
     {
+        public Guid Id { get; set; }
+        public string ClaveProdServ { get; set; }
         public string SolicitudClave { get; set; }
         public string EstudioClave { get; set; }
         public string Concepto { get; set; }

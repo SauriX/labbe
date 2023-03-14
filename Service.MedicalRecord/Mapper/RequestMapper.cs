@@ -352,6 +352,7 @@ namespace Service.MedicalRecord.Mapper
                 NombreEstatus = x.Estatus?.Nombre,
                 Asignado = x.EstudioWeeClinic?.Asignado ?? true,
                 Metodo = x.Metodo,
+                OrdenEstudio = x.OrdenEstudio,
                 FechaTomaMuestra = x.FechaTomaMuestra?.ToString("dd/MM/yyyy HH:mm"),
                 FechaSolicitado = x.FechaSolicitado?.ToString("dd/MM/yyyy HH:mm"),
                 FechaActualizacion = x.EstatusId == Status.RequestStudy.Pendiente

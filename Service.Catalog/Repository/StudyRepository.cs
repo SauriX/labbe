@@ -73,6 +73,16 @@ namespace Service.Catalog.Repository
             return reagent;
         }
 
+        public async Task<Study> FindAsync(int id)
+        {
+            var reagent = await _context.CAT_Estudio
+                .Include(x => x.Etiquetas).ThenInclude(x=>x.Etiqueta)
+                .Include(x => x.SampleType)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            return reagent;
+        }
+
         public async Task<int> GetIdByCode(string code)
         {
             var study = await _context.CAT_Estudio.FirstOrDefaultAsync(x => x.Clave == code);
