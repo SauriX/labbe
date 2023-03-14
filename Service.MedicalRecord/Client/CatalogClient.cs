@@ -94,19 +94,12 @@ namespace Service.MedicalRecord.Client
             throw new CustomException(response.StatusCode, response.ReasonPhrase);
         }
 
-        public async Task<List<RouteFormDto>> GetRutas(List<Guid> id)
-
+        public async Task<List<RouteFormDto>> GetRutas(List<string> ids)
         {
-            var json = JsonConvert.SerializeObject(id);
-            var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/route/multiple", stringContent);
+            var url = $"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/route/multiple";
+            var response = await _client.PostAsJson<List<RouteFormDto>>(url, ids);
 
-            if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
-            {
-                return await response.Content.ReadFromJsonAsync<List<RouteFormDto>>();
-            }
-
-            throw new CustomException(response.StatusCode, response.ReasonPhrase);
+            return response;
         }
 
         public async Task<AreaListDto> GetArea(int id)

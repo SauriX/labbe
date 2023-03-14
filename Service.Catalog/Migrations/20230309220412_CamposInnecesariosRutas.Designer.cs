@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230309220412_CamposInnecesariosRutas")]
+    partial class CamposInnecesariosRutas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2221,10 +2223,7 @@ namespace Service.Catalog.Migrations
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("AplicaMedicos")
-                        .HasColumnType("bit");
-
-                    b.Property<decimal>("Cantidad")
+                    b.Property<decimal>("CantidadDescuento")
                         .HasMaxLength(100)
                         .HasColumnType("decimal(18,2)");
 
@@ -2241,7 +2240,7 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaFinal")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FechaInicial")
+                    b.Property<DateTime>("FechaInicio")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("FechaModifico")
@@ -2249,9 +2248,6 @@ namespace Service.Catalog.Migrations
 
                     b.Property<bool>("Jueves")
                         .HasColumnType("bit");
-
-                    b.Property<Guid>("ListaPrecioId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Lunes")
                         .HasColumnType("bit");
@@ -2267,6 +2263,9 @@ namespace Service.Catalog.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<Guid>("PrecioListaId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("Sabado")
                         .HasColumnType("bit");
 
@@ -2274,91 +2273,128 @@ namespace Service.Catalog.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UsuarioCreoId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UsuarioCreoId")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("UsuarioModificoId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UsuarioModificoId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Viernes")
                         .HasColumnType("bit");
 
-                    b.HasKey("Id");
+                    b.Property<bool>("Visibilidad")
+                        .HasColumnType("bit");
 
-                    b.HasIndex("ListaPrecioId");
+                    b.HasKey("Id");
 
                     b.ToTable("CAT_Promocion");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Promotion.PromotionBranch", b =>
                 {
-                    b.Property<int>("PromocionId")
+                    b.Property<int>("PromotionId")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("SucursalId")
+                    b.Property<Guid>("BranchId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("FechaModifico")
+                    b.Property<DateTime?>("FechaMod")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("UsuarioModificoId")
+                    b.Property<Guid>("UsuarioModId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("PromocionId", "SucursalId");
+                    b.HasKey("PromotionId", "BranchId");
 
-                    b.HasIndex("SucursalId");
+                    b.HasIndex("BranchId");
 
                     b.ToTable("Relacion_Promocion_Sucursal");
                 });
 
-            modelBuilder.Entity("Service.Catalog.Domain.Promotion.PromotionMedic", b =>
+            modelBuilder.Entity("Service.Catalog.Domain.Promotion.PromotionLoyality", b =>
                 {
-                    b.Property<int>("PromocionId")
+                    b.Property<int>("PromotionId")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("MedicoId")
+                    b.Property<Guid>("LoyaltyId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("FechaModifico")
+                    b.Property<DateTime?>("FechaMod")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("UsuarioModificoId")
+                    b.Property<Guid>("UsuarioModId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("PromocionId", "MedicoId");
+                    b.HasKey("PromotionId", "LoyaltyId");
 
-                    b.HasIndex("MedicoId");
+                    b.HasIndex("LoyaltyId");
+
+                    b.ToTable("Relacion_Promocion_Lealtad");
+                });
+
+            modelBuilder.Entity("Service.Catalog.Domain.Promotion.PromotionMedics", b =>
+                {
+                    b.Property<int>("PromotionId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("MedicId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaMod")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UsuarioCreoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsuarioModId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("PromotionId", "MedicId");
+
+                    b.HasIndex("MedicId");
 
                     b.ToTable("Relacion_Promocion_Medicos");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Promotion.PromotionPack", b =>
                 {
-                    b.Property<int>("PromocionId")
+                    b.Property<int>("PromotionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PaqueteId")
+                    b.Property<int>("PackId")
                         .HasColumnType("int");
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
 
-                    b.Property<decimal>("DescuentoCantidad")
+                    b.Property<decimal>("DiscountNumeric")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("DescuentoPorcentaje")
+                    b.Property<decimal>("Discountporcent")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("Domingo")
@@ -2370,13 +2406,19 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaFinal")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FechaInicial")
+                    b.Property<DateTime>("FechaInicio")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("FechaModifico")
+                    b.Property<DateTime?>("FechaMod")
                         .HasColumnType("datetime2");
+
+                    b.Property<decimal>("FinalPrice")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("Jueves")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Loyality")
                         .HasColumnType("bit");
 
                     b.Property<bool>("Lunes")
@@ -2388,10 +2430,7 @@ namespace Service.Catalog.Migrations
                     b.Property<bool>("Miercoles")
                         .HasColumnType("bit");
 
-                    b.Property<decimal>("Precio")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("PrecioFinal")
+                    b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("Sabado")
@@ -2400,34 +2439,34 @@ namespace Service.Catalog.Migrations
                     b.Property<Guid>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("UsuarioModificoId")
+                    b.Property<Guid>("UsuarioModId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Viernes")
                         .HasColumnType("bit");
 
-                    b.HasKey("PromocionId", "PaqueteId");
+                    b.HasKey("PromotionId", "PackId");
 
-                    b.HasIndex("PaqueteId");
+                    b.HasIndex("PackId");
 
                     b.ToTable("Relacion_Promocion_Paquete");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Promotion.PromotionStudy", b =>
                 {
-                    b.Property<int>("PromocionId")
+                    b.Property<int>("PromotionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("EstudioId")
+                    b.Property<int>("StudyId")
                         .HasColumnType("int");
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
 
-                    b.Property<decimal>("DescuentoCantidad")
+                    b.Property<decimal>("DiscountNumeric")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("DescuentoPorcentaje")
+                    b.Property<decimal>("Discountporcent")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("Domingo")
@@ -2439,13 +2478,19 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime>("FechaFinal")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FechaInicial")
+                    b.Property<DateTime>("FechaInicio")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("FechaModifico")
+                    b.Property<DateTime?>("FechaMod")
                         .HasColumnType("datetime2");
+
+                    b.Property<decimal>("FinalPrice")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("Jueves")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Loyality")
                         .HasColumnType("bit");
 
                     b.Property<bool>("Lunes")
@@ -2457,10 +2502,7 @@ namespace Service.Catalog.Migrations
                     b.Property<bool>("Miercoles")
                         .HasColumnType("bit");
 
-                    b.Property<decimal>("Precio")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("PrecioFinal")
+                    b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("Sabado")
@@ -2469,15 +2511,15 @@ namespace Service.Catalog.Migrations
                     b.Property<Guid>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("UsuarioModificoId")
+                    b.Property<Guid>("UsuarioModId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Viernes")
                         .HasColumnType("bit");
 
-                    b.HasKey("PromocionId", "EstudioId");
+                    b.HasKey("PromotionId", "StudyId");
 
-                    b.HasIndex("EstudioId");
+                    b.HasIndex("StudyId");
 
                     b.ToTable("Relacion_Promocion_Estudio");
                 });
@@ -2618,11 +2660,17 @@ namespace Service.Catalog.Migrations
                     b.Property<Guid?>("OrigenId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("PaqueteriaId")
+                    b.Property<int>("PaqueteriaId")
                         .HasColumnType("int");
 
                     b.Property<bool>("Sabado")
                         .HasColumnType("bit");
+
+                    b.Property<Guid?>("SucursalDestinoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("SucursalOrigenId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("TiempoDeEntrega")
                         .HasColumnType("int");
@@ -2641,13 +2689,13 @@ namespace Service.Catalog.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DestinoId");
-
                     b.HasIndex("MaquiladorId");
 
-                    b.HasIndex("OrigenId");
-
                     b.HasIndex("PaqueteriaId");
+
+                    b.HasIndex("SucursalDestinoId");
+
+                    b.HasIndex("SucursalOrigenId");
 
                     b.ToTable("CAT_Rutas");
                 });
@@ -3454,7 +3502,7 @@ namespace Service.Catalog.Migrations
                         .IsRequired();
 
                     b.HasOne("Service.Catalog.Domain.Promotion.Promotion", "Promocion")
-                        .WithMany()
+                        .WithMany("prices")
                         .HasForeignKey("PromocionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -3464,122 +3512,131 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Promocion");
                 });
 
-            modelBuilder.Entity("Service.Catalog.Domain.Promotion.Promotion", b =>
-                {
-                    b.HasOne("Service.Catalog.Domain.Price.PriceList", "ListaPrecio")
-                        .WithMany()
-                        .HasForeignKey("ListaPrecioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ListaPrecio");
-                });
-
             modelBuilder.Entity("Service.Catalog.Domain.Promotion.PromotionBranch", b =>
                 {
-                    b.HasOne("Service.Catalog.Domain.Promotion.Promotion", "Promocion")
-                        .WithMany("Sucursales")
-                        .HasForeignKey("PromocionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Service.Catalog.Domain.Branch.Branch", "Sucursal")
+                    b.HasOne("Service.Catalog.Domain.Branch.Branch", "Branch")
                         .WithMany()
-                        .HasForeignKey("SucursalId")
+                        .HasForeignKey("BranchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Promocion");
+                    b.HasOne("Service.Catalog.Domain.Promotion.Promotion", "Promotion")
+                        .WithMany("branches")
+                        .HasForeignKey("PromotionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Sucursal");
+                    b.Navigation("Branch");
+
+                    b.Navigation("Promotion");
                 });
 
-            modelBuilder.Entity("Service.Catalog.Domain.Promotion.PromotionMedic", b =>
+            modelBuilder.Entity("Service.Catalog.Domain.Promotion.PromotionLoyality", b =>
                 {
-                    b.HasOne("Service.Catalog.Domain.Medics.Medics", "Medico")
+                    b.HasOne("Service.Catalog.Domain.Loyalty.Loyalty", "loyalities")
                         .WithMany()
-                        .HasForeignKey("MedicoId")
+                        .HasForeignKey("LoyaltyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Service.Catalog.Domain.Promotion.Promotion", "Promocion")
-                        .WithMany("Medicos")
-                        .HasForeignKey("PromocionId")
+                    b.HasOne("Service.Catalog.Domain.Promotion.Promotion", "Promotion")
+                        .WithMany("loyalities")
+                        .HasForeignKey("PromotionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Medico");
+                    b.Navigation("loyalities");
 
-                    b.Navigation("Promocion");
+                    b.Navigation("Promotion");
+                });
+
+            modelBuilder.Entity("Service.Catalog.Domain.Promotion.PromotionMedics", b =>
+                {
+                    b.HasOne("Service.Catalog.Domain.Medics.Medics", "Medic")
+                        .WithMany()
+                        .HasForeignKey("MedicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Service.Catalog.Domain.Promotion.Promotion", "Promotion")
+                        .WithMany("medics")
+                        .HasForeignKey("PromotionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Medic");
+
+                    b.Navigation("Promotion");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Promotion.PromotionPack", b =>
                 {
-                    b.HasOne("Service.Catalog.Domain.Packet.Packet", "Paquete")
+                    b.HasOne("Service.Catalog.Domain.Packet.Packet", "Pack")
                         .WithMany()
-                        .HasForeignKey("PaqueteId")
+                        .HasForeignKey("PackId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Service.Catalog.Domain.Promotion.Promotion", "Promocion")
-                        .WithMany("Paquetes")
-                        .HasForeignKey("PromocionId")
+                    b.HasOne("Service.Catalog.Domain.Promotion.Promotion", "Promotion")
+                        .WithMany("packs")
+                        .HasForeignKey("PromotionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Paquete");
+                    b.Navigation("Pack");
 
-                    b.Navigation("Promocion");
+                    b.Navigation("Promotion");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Promotion.PromotionStudy", b =>
                 {
-                    b.HasOne("Service.Catalog.Domain.Study.Study", "Estudio")
+                    b.HasOne("Service.Catalog.Domain.Promotion.Promotion", "Promotion")
+                        .WithMany("studies")
+                        .HasForeignKey("PromotionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Service.Catalog.Domain.Study.Study", "Study")
                         .WithMany()
-                        .HasForeignKey("EstudioId")
+                        .HasForeignKey("StudyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Service.Catalog.Domain.Promotion.Promotion", "Promocion")
-                        .WithMany("Estudios")
-                        .HasForeignKey("PromocionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Promotion");
 
-                    b.Navigation("Estudio");
-
-                    b.Navigation("Promocion");
+                    b.Navigation("Study");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Route.Route", b =>
                 {
-                    b.HasOne("Service.Catalog.Domain.Branch.Branch", "Destino")
-                        .WithMany()
-                        .HasForeignKey("DestinoId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("Service.Catalog.Domain.Maquila.Maquila", "Maquilador")
                         .WithMany()
                         .HasForeignKey("MaquiladorId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Service.Catalog.Domain.Branch.Branch", "Origen")
-                        .WithMany()
-                        .HasForeignKey("OrigenId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("Service.Catalog.Domain.Catalog.Delivery", "Paqueteria")
                         .WithMany()
                         .HasForeignKey("PaqueteriaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Service.Catalog.Domain.Branch.Branch", "SucursalDestino")
+                        .WithMany()
+                        .HasForeignKey("SucursalDestinoId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("Destino");
+                    b.HasOne("Service.Catalog.Domain.Branch.Branch", "SucursalOrigen")
+                        .WithMany()
+                        .HasForeignKey("SucursalOrigenId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Maquilador");
 
-                    b.Navigation("Origen");
-
                     b.Navigation("Paqueteria");
+
+                    b.Navigation("SucursalDestino");
+
+                    b.Navigation("SucursalOrigen");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Route.Route_Study", b =>
@@ -3796,13 +3853,17 @@ namespace Service.Catalog.Migrations
 
             modelBuilder.Entity("Service.Catalog.Domain.Promotion.Promotion", b =>
                 {
-                    b.Navigation("Estudios");
+                    b.Navigation("branches");
 
-                    b.Navigation("Medicos");
+                    b.Navigation("loyalities");
 
-                    b.Navigation("Paquetes");
+                    b.Navigation("medics");
 
-                    b.Navigation("Sucursales");
+                    b.Navigation("packs");
+
+                    b.Navigation("prices");
+
+                    b.Navigation("studies");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Route.Route", b =>

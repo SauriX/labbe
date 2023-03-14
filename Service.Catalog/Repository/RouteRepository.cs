@@ -25,8 +25,8 @@ namespace Service.Catalog.Repository
             var routes = _context.CAT_Rutas
                 .Include(x => x.Estudios)
                 .ThenInclude(x => x.Estudio).ThenInclude(x => x.Area).ThenInclude(x => x.Departamento)
-                .Include(x => x.SucursalOrigen)
-                .Include(x => x.SucursalDestino)
+                .Include(x => x.Origen)
+                .Include(x => x.Destino)
                 .Include(x => x.Paqueteria)
                 .Include(x => x.Maquilador)
                 .AsQueryable();
@@ -52,11 +52,11 @@ namespace Service.Catalog.Repository
         {
             var routes = await _context.CAT_Rutas
                 .Include(x => x.Estudios).ThenInclude(x => x.Estudio).ThenInclude(x => x.Area).ThenInclude(x => x.Departamento)
-                .Include(x => x.SucursalOrigen)
-                .Include(x => x.SucursalDestino)
+                .Include(x => x.Origen)
+                .Include(x => x.Destino)
                 .Include(x => x.Paqueteria)
                 .Include(x => x.Maquilador)
-                .FirstOrDefaultAsync(x => x.Id == id);
+                .FirstOrDefaultAsync(x => x.Id == id || x.DestinoId == id);
 
             return routes;
         }
@@ -69,14 +69,14 @@ namespace Service.Catalog.Repository
         }
         public async Task<bool> IsDestinoIgualAlOrigen(Route routes)
         {
-            var isDuplicate = await _context.CAT_Rutas.AnyAsync(x => x.Id != routes.Id && (routes.SucursalDestinoId == routes.SucursalOrigenId));
+            var isDuplicate = await _context.CAT_Rutas.AnyAsync(x => x.Id != routes.Id && (routes.DestinoId == routes.OrigenId));
 
             return isDuplicate;
         }
 
         public async Task<bool> IsDestinoVacio(Route routes)
         {
-            var isDuplicate = await _context.CAT_Rutas.AnyAsync(x => x.Id != routes.Id && (routes.SucursalDestinoId == null && routes.MaquiladorId == null));
+            var isDuplicate = await _context.CAT_Rutas.AnyAsync(x => x.Id != routes.Id && (routes.DestinoId == null && routes.MaquiladorId == null));
 
             return isDuplicate;
         }
@@ -127,14 +127,14 @@ namespace Service.Catalog.Repository
                  .ThenInclude(x => x.Estudio)
                  .ThenInclude(x => x.Area)
                  .ThenInclude(x => x.Departamento)
-                .Include(x => x.SucursalOrigen)
-                .Include(x => x.SucursalDestino)
+                .Include(x => x.Origen)
+                .Include(x => x.Destino)
                 .Include(x => x.Paqueteria)
                 .Include(x => x.Maquilador)
                 .AsQueryable();
-            if (route.SucursalDestinoId != null && route.SucursalDestinoId != Guid.Empty)
+            if (route.DestinoId != null && route.DestinoId != Guid.Empty)
             {
-                routes = routes.Where(x => x.SucursalDestinoId == route.SucursalDestinoId);
+                routes = routes.Where(x => x.DestinoId == route.DestinoId);
             }
             if (route.MaquiladorId != null && route.MaquiladorId > 0)
             {
@@ -142,7 +142,7 @@ namespace Service.Catalog.Repository
             }
 
             routes = routes.Where(x => x.HoraDeRecoleccion >= route.HoraDeRecoleccion
-                                    && (x.SucursalOrigenId == route.SucursalOrigenId)
+                                    && (x.OrigenId == route.OrigenId)
                                     && (x.Lunes && route.Lunes ? true :
                                     x.Martes && route.Martes ? true :
                                     x.Miercoles && route.Miercoles ? true :

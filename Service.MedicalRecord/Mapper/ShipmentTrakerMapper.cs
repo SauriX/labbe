@@ -10,7 +10,7 @@ namespace Service.MedicalRecord.Mapper
     {
         public static List<ShipmentStudydto> toShipmentStudyDto(this List<TrackingOrderDetail> model) {
            return model.Select(x=>  new ShipmentStudydto {
-               Estudio = x.Estudio,
+               //Estudio = x.Recipiente,
                Paciente = x.NombrePaciente,
                Solicitud = x.Solicitud.Clave,
                ConfirmacionOrigen = true,
@@ -23,12 +23,12 @@ namespace Service.MedicalRecord.Mapper
             return model.Select(x => new ReciveShipmentStudyDto
             {
                 Id = x.Id,
-                Estudio = x.Estudio,
+                //Estudio = x.Recipiente,
                 Paciente = x.NombrePaciente,
                 Solicitud = x.Solicitud.Clave,
                 ConfirmacionOrigen = true,
                 ConfirmacionDestino = x.Escaneado,
-                Temperatura = x.Temperatura,
+                //Temperatura = x.Temperatura,
 
             }).ToList();
         }
@@ -93,7 +93,7 @@ namespace Service.MedicalRecord.Mapper
                     Seguimiento = model.Clave,
                     Ruta = "",
                     Nombre = "",
-                    Temperatura = model.Temperatura
+                    //Temperatura = model.Temperatura
                 };
             }
             return new ReciveShipmentTracking
@@ -110,7 +110,7 @@ namespace Service.MedicalRecord.Mapper
                 Seguimiento = model.Clave,
                 Ruta = "",
                 Nombre = "",
-                Temperatura = model.Temperatura
+                //Temperatura = model.Temperatura
             };
         }
     }
