@@ -68,7 +68,7 @@ namespace Service.Catalog.Mapper
                 Domingo = x.Domingo,
             }).ToList();
 
-            var paquetes = model.prices.AsQueryable().Where(y => y.PromocionId == model.Id && y.Activo == true).FirstOrDefault().PrecioLista.Paquete;
+            var paquetes = model.prices.AsQueryable().Where(y => y.PromocionId == model.Id && y.Activo == true).FirstOrDefault().PrecioLista.Paquetes;
             var listaPaquetes = model.packs.Select(x => new PromotionEstudioListDto
             {
 

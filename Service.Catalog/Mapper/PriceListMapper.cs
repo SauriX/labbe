@@ -193,7 +193,7 @@ namespace Service.Catalog.Mapper
                     Precio = x.Precio,
                     Activo = x.Activo,
                 })?.ToList(),
-                Paquete = model.Paquete?.Select(x => new PriceListStudyDto
+                Paquete = model.Paquetes?.Select(x => new PriceListStudyDto
                 {
                     Id = x.PaqueteId,
                     Clave = x.Paquete.Clave.Trim(),
@@ -331,7 +331,7 @@ namespace Service.Catalog.Mapper
                     Precio = x.Precio,
                     Activo = true,
                 })?.ToList(),
-                Paquete = dto.Paquete?.Select(x => new PriceList_Packet
+                Paquetes = dto.Paquete?.Select(x => new PriceList_Packet
                 {
                     PaqueteId = x.Id,
                     Precio = x.Precio,
@@ -385,7 +385,7 @@ namespace Service.Catalog.Mapper
                     Precio = x.Precio,
                     Activo = x.Activo,
                 })?.ToList(),
-                Paquete = dto.Paquete?.Select(x => new PriceList_Packet
+                Paquetes = dto.Paquete?.Select(x => new PriceList_Packet
                 {
                     PrecioListaId = model.Id,
                     PaqueteId = x.Id,

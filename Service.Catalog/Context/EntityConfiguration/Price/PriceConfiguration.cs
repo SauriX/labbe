@@ -53,7 +53,7 @@ namespace Service.Catalog.Context.EntityConfiguration.Price
              .OnDelete(DeleteBehavior.Restrict);
 
             builder
-             .HasMany(x => x.Paquete)
+             .HasMany(x => x.Paquetes)
              .WithOne(x => x.PrecioLista)
              .HasForeignKey(x => x.PrecioListaId)
              .OnDelete(DeleteBehavior.Restrict);

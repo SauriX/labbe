@@ -92,8 +92,8 @@ namespace Service.Catalog.Repository
                 .Include(x => x.Sucursales).ThenInclude(x => x.Sucursal)
                 .Include(x => x.Compañia).ThenInclude(x => x.Compañia)
                 .Include(x => x.Medicos).ThenInclude(x => x.Medico)
-                .Include(x => x.Paquete).ThenInclude(x => x.Paquete.Estudios).ThenInclude(x => x.Estudio.Area.Departamento)
-                .Include(x => x.Paquete).ThenInclude(x => x.Paquete.Area.Departamento)
+                .Include(x => x.Paquetes).ThenInclude(x => x.Paquete.Estudios).ThenInclude(x => x.Estudio.Area.Departamento)
+                .Include(x => x.Paquetes).ThenInclude(x => x.Paquete.Area.Departamento)
                 .FirstOrDefaultAsync(x => x.Id == Id);
 
             return indication;
@@ -136,12 +136,12 @@ namespace Service.Catalog.Repository
         public async Task Update(PriceList price)
         {
             var branches = price.Sucursales.ToList();
-            var packs = price.Paquete.ToList();
+            var packs = price.Paquetes.ToList();
             var studies = price.Estudios.ToList();
             var medic = price.Medicos.ToList();
             var company = price.Compañia.ToList();
             price.Sucursales = null;
-            price.Paquete = null;
+            price.Paquetes = null;
             price.Estudios = null;
             price.Medicos = null;
             price.Compañia = null;
