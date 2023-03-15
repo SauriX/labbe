@@ -131,7 +131,7 @@ namespace Service.MedicalRecord.Mapper
                     //Temperatura = x.Temperatura,
                     Escaneado = false,
                     FechaCreo = DateTime.Now,
-                    IsExtra = x.IsExtra
+                    Extra = x.IsExtra
 
 
                 }).ToList()

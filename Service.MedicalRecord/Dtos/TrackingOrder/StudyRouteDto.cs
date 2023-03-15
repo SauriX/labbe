@@ -4,9 +4,9 @@ namespace Service.MedicalRecord.Dtos.TrackingOrder
 {
     public class StudyRouteDto
     {
+        public Guid SeguimientoId { get; set; }
         public string Clave { get; set; }
         public Guid SolicitudId { get; set; }
-
         public string Solicitud { get; set; }
         public int EstudioId { get; set; }
         public string Estudio { get; set; }

@@ -91,7 +91,7 @@ namespace Service.MedicalRecord.Mapper
                 Destino = model.DestinoId,
                 Clave = model.Clave,
                 Temperatura = model.Temperatura,
-                Recolección = model.DiaRecoleccion,
+                Recoleccion = model.DiaRecoleccion,
                 Solicitud = model.Estudios.FirstOrDefault().Solicitud?.Clave,
                 Activo = model.Activo,
                 Escaneo = model.Escaneo,
@@ -129,6 +129,28 @@ namespace Service.MedicalRecord.Mapper
                 Escaneo = false,
                 Solicitud = x.Solicitud.Clave
             }).ToList();
+        }
+
+        public static TrackingOrder ToModelCreate(this RouteTrackingFormDto dto)
+        {
+            if (dto == null) return null;
+
+            return new TrackingOrder
+            {
+                Id = Guid.NewGuid(),
+                Muestra = dto.Muestra,
+                DestinoId = dto.Destino,
+                OrigenId = dto.Origen,
+                Temperatura = dto.Temperatura,
+                Escaneo = dto.Escaneo,
+                FechaCreo = DateTime.Now,
+                Estudios = dto.Estudios.Select(x => new TrackingOrderDetail
+                {
+                    Id = Guid.NewGuid(),
+
+                }).ToList(),
+                Activo = dto.Activo,
+            };
         }
 
         public static DeliverOrderdDto toDeliverOrder(this RouteTrackingDeliverListDto order,string responsableEnvio) {

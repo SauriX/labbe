@@ -76,6 +76,11 @@ namespace Service.MedicalRecord.Application
             return trackingTags.ToTagTrackingOrderDto();
         }
 
+        public async Task<RouteTrackingDto> CreateTrackingOrder(RouteTrackingFormDto order)
+        {
+
+        }
+
         public async Task<int> UpdateStatus(List<RequestedStudyUpdateDto> requestDto)
         {
             try

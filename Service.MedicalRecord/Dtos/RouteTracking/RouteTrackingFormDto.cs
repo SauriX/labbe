@@ -9,7 +9,7 @@ namespace Service.MedicalRecord.Dtos.RouteTracking
 		public string Origen { get; set; }
 		public string Clave { get; set; }
 		public decimal Temperatura { get; set; }
-		public DateTime Recolección { get; set; }
+		public DateTime Recoleccion { get; set; }
 		public string Solicitud { get; set; }
 		public string Destino { get; set; }
         public bool Activo { get; set; }
@@ -17,6 +17,6 @@ namespace Service.MedicalRecord.Dtos.RouteTracking
         public bool Escaneo { get; set; }
         public Guid RutaId { get; set; }
         public List<StudyRouteDto> Estudios { get; set; }
-        public List<TagRouteDto> Etiquetas { get; set; }
+        public IEnumerable<TagRouteDto> Etiquetas { get; set; }
     }
 }
