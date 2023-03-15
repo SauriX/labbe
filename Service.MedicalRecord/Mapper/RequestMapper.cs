@@ -65,6 +65,7 @@ namespace Service.MedicalRecord.Mapper
                 Total = x.Total,
                 Saldo = x.Saldo,
                 FolioWeeClinic = x.FolioWeeClinic,
+                Sucursal = x.Sucursal.Nombre,
                 Estudios = x.Estudios.Select(s => new RequestStudyInfoDto
                 {
                     Id = s.Id,

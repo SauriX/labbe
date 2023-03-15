@@ -34,6 +34,7 @@ namespace Service.MedicalRecord.Mapper
                 NombreMedico = x.Medico.Nombre,
                 UsuarioCreo = x.UsuarioCreo,
                 ClavePatologica = x.ClavePatologica,
+                Observacion = x.Observaciones
             }).ToList();
         }
 
