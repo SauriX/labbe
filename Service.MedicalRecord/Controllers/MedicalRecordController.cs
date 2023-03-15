@@ -114,6 +114,13 @@ namespace Service.MedicalRecord.Controllers
             await _service.UpdateTaxData(taxData);
         }
 
+        [HttpPut("taxData/default")]
+        [Authorize(Policies.Update)]
+        public async Task UpdateDefaultTaxData([FromBody] Guid taxDataid)
+        {
+            await _service.UpdateDefaultTaxData(taxDataid);
+        }
+
         [HttpPost("export/list")]
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportListPriceList(MedicalRecordSearch search = null)

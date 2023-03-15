@@ -96,6 +96,7 @@ namespace Service.MedicalRecord.Mapper
                 Calle = x.Calle,
                 Colonia = x.ColoniaId,
                 Correo = x.Correo,
+                IsDefaultTaxData = x.isDefaultTaxData,
             }).ToList();
         }
 

@@ -18,6 +18,7 @@ using Microsoft.Extensions.Configuration;
 using Shared.Error;
 using System.Net;
 using SharedResponses = Shared.Dictionary.Responses;
+using Service.MedicalRecord.Domain.MedicalRecord;
 
 namespace Service.MedicalRecord.Application
 {
@@ -185,34 +186,35 @@ namespace Service.MedicalRecord.Application
             foreach (var solicitud in solicitudes)
             {
                 var pago = solicitud.Pagos.OrderBy(x => x.Cantidad).FirstOrDefault();
-
-                //Domain.MedicalRecord.MedicalRecord cliente = await _medicalRecordRepository.GetById(solicitud.ExpedienteId);
+                
                 Domain.MedicalRecord.MedicalRecord cliente = solicitud.Expediente;
+
+                MedicalRecordTaxData DefaultTaxData = cliente.TaxData.Where(x => x.Factura.isDefaultTaxData == true).FirstOrDefault();
 
                 List<Guid> solicitudesId = new List<Guid>{ solicitud.Id };
 
-                invoices.Add(new InvoiceDto
+                var invoiceDTO = new InvoiceDto
                 {
                     FormaPago = pago.FormaPago,
                     MetodoPago = "PUE",
                     UsoCFDI = "G03",
                     Serie = "",
-                    RegimenFiscal = cliente.TaxData.ToList().FirstOrDefault().Factura.RegimenFiscal,
-                    RFC = cliente.TaxData.ToList().FirstOrDefault().Factura.RFC,
+                    RegimenFiscal = DefaultTaxData.Factura.RegimenFiscal,
+                    RFC = DefaultTaxData.Factura.RFC,
                     SolicitudesId = solicitudesId,
                     Cliente = new ClientDto
                     {
-                        RazonSocial = cliente.TaxData.ToList().FirstOrDefault().Factura.RazonSocial,
-                        RFC = cliente.TaxData.ToList().FirstOrDefault().Factura.RFC,
-                        RegimenFiscal = cliente.TaxData.ToList().FirstOrDefault().Factura.RegimenFiscal,
+                        RazonSocial = DefaultTaxData.Factura.RazonSocial,
+                        RFC = DefaultTaxData.Factura.RFC,
+                        RegimenFiscal = DefaultTaxData.Factura.RegimenFiscal,
                         Correo = "",
                         Telefono = "",
-                        CodigoPostal = cliente.TaxData.ToList().FirstOrDefault().Factura.CodigoPostal,
-                        Calle = cliente.TaxData.ToList().FirstOrDefault().Factura.Calle,
+                        CodigoPostal = DefaultTaxData.Factura.CodigoPostal,
+                        Calle = DefaultTaxData.Factura.Calle,
                         NumeroExterior = "",
                         NumeroInterior = "",
                         Colonia = "",
-                        Ciudad = cliente.TaxData.ToList().FirstOrDefault().Factura.Ciudad,
+                        Ciudad = DefaultTaxData.Factura.Ciudad,
                         Municipio = "",
                         Estado = "",
                         Pais = "",
@@ -228,13 +230,35 @@ namespace Service.MedicalRecord.Application
                         Cantidad = 1,
 
                     }).ToList(),
+                };
+
+                var invoiceResponse = await _billingClient.CheckInPaymentCompany(invoiceDTO);
+
+                var invoiceCompany = invoiceResponse.ToInvoiceCompanyGlobal(solicitud, DefaultTaxData);
+
+                List<RequestInvoiceCompany> requestsInvoiceCompany = new();
+
+                requestsInvoiceCompany.Add(new RequestInvoiceCompany
+                {
+                    Activo = true,
+                    SolicitudId = solicitud.Id,
+                    InvoiceCompanyId = invoiceCompany.Id,
+
                 });
-            
+                
+                await _invoiceRepository.CreateInvoiceCompanyData(invoiceCompany, requestsInvoiceCompany);
+
+            }
+            List<InvoiceDto> invoicesResponses = new List<InvoiceDto>();
+            foreach(var invoice in invoices)
+            {
+                var invoiceResponse = await _billingClient.CheckInPaymentCompany(invoice);
+
+                invoicesResponses.Add(invoiceResponse);
+
             }
 
-
             
-            throw new NotImplementedException();
         }
         public async Task<InvoiceCompanyDto> GetById(string invoiceId)
         {

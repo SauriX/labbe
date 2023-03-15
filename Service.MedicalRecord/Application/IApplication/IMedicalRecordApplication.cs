@@ -14,6 +14,7 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<List<MedicalRecordDto>> GetMedicalRecord(List<Guid> records);
         Task<List<MedicalRecordsListDto>> GetActive();
         Task<List<TaxDataDto>> GetTaxData(Guid recordId);
+        Task UpdateDefaultTaxData(Guid id);
         Task<MedicalRecordsFormDto> GetById(Guid id);
         Task<MedicalRecordsListDto> Create(MedicalRecordsFormDto expediente);
         Task<string> CreateTaxData(TaxDataDto taxData);

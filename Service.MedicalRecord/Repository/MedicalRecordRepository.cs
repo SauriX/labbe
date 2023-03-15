@@ -90,6 +90,8 @@ namespace Service.MedicalRecord.Repository
 
             return taxData;
         }
+        
+
 
         public async Task<Domain.MedicalRecord.MedicalRecord> Find(Guid id)
         {
@@ -112,6 +114,16 @@ namespace Service.MedicalRecord.Repository
         {
             var taxData = await _context.Relacion_Expediente_Factura
                 .Where(x => x.FacturaID == id && x.ExpedienteID == recordId)
+                .Include(x => x.Factura)
+                .Select(x => x.Factura)
+                .FirstOrDefaultAsync();
+
+            return taxData;
+        }
+        public async Task<TaxData> GetTaxDataoOnlyById(Guid id)
+        {
+            var taxData = await _context.Relacion_Expediente_Factura
+                .Where(x => x.FacturaID == id)
                 .Include(x => x.Factura)
                 .Select(x => x.Factura)
                 .FirstOrDefaultAsync();

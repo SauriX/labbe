@@ -87,6 +87,15 @@ namespace Service.MedicalRecord.Application
 
             return taxData.ToTaxDataDto();
         }
+        public async Task UpdateDefaultTaxData(Guid id)
+        {
+            var taxData = await _repository.GetTaxDataoOnlyById(id);
+
+            taxData.isDefaultTaxData = true;
+
+            await _repository.UpdateTaxData(taxData);
+        }
+
 
         public async Task<MedicalRecordsFormDto> GetById(Guid id)
         {

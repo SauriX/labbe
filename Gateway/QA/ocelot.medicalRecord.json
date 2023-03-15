@@ -100,6 +100,17 @@
       "UpstreamhttpsMethod": [ "POST", "PUT" ]
     },
     {
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/MedicalRecord/taxData/default",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/MedicalRecord/taxData/default",
+      "UpstreamhttpsMethod": [ "POST", "PUT" ]
+    },
+    {
       "DownstreamPathTemplate": "/LabRamos/services/records/api/MedicalRecord/observations",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
