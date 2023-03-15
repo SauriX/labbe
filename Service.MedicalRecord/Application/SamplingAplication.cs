@@ -19,7 +19,7 @@ using MoreLinq;
 
 namespace Service.MedicalRecord.Application
 {
-    public class SamplingAplication:ISamplingApplication
+    public class SamplingAplication : ISamplingApplication
     {
         public readonly ISamplingRepository _repository;
 
@@ -90,23 +90,11 @@ namespace Service.MedicalRecord.Application
 
         public async Task<List<SamplingListDto>> GetAll(RequestedStudySearchDto search)
         {
-          
             var requestedStudy = await _repository.GetAll(search);
 
+            if (requestedStudy == null) return null;
 
-
-
-
-            if (requestedStudy != null)
-            {
-
-                return requestedStudy.ToSamplingListDto(search);
-
-            }
-            else
-            {
-                return null;
-            }
+            return requestedStudy.ToSamplingListDto(search);
         }
 
         public async Task<int> UpdateStatus(List<RequestedStudyUpdateDto> requestDto)
