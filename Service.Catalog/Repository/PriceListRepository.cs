@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Service.Catalog.Context;
 using Service.Catalog.Domain.Branch;
 using Service.Catalog.Domain.Price;
+using Service.Catalog.Domain.Route;
 using Service.Catalog.Repository.IRepository;
 using System;
 using System.Collections.Generic;
@@ -93,8 +94,8 @@ namespace Service.Catalog.Repository
                 .Include(x => x.Sucursales).ThenInclude(x => x.Sucursal)
                 .Include(x => x.Compañia).ThenInclude(x => x.Compañia)
                 .Include(x => x.Medicos).ThenInclude(x => x.Medico)
-                .Include(x => x.Paquete).ThenInclude(x => x.Paquete.Estudios).ThenInclude(x => x.Estudio.Area.Departamento)
-                .Include(x => x.Paquete).ThenInclude(x => x.Paquete.Area.Departamento)
+                .Include(x => x.Paquetes).ThenInclude(x => x.Paquete.Estudios).ThenInclude(x => x.Estudio.Area.Departamento)
+                .Include(x => x.Paquetes).ThenInclude(x => x.Paquete.Area.Departamento)
                 .FirstOrDefaultAsync(x => x.Id == Id);
 
             return indication;
@@ -144,7 +145,8 @@ namespace Service.Catalog.Repository
         {
             var priceList = await _context.CAT_ListaPrecio
                 .Include(x => x.Estudios.Where(x => x.Precio > 0)).ThenInclude(x => x.Estudio.Area)
-                .Include(x => x.Paquete.Where(x => x.Precio > 0)).ThenInclude(x => x.Paquete)
+                .Include(x => x.Paquetes.Where(x => x.Precio > 0)).ThenInclude(x => x.Paquete)
+                .AsSplitQuery()
                 .FirstOrDefaultAsync(x => x.Id == priceListId);
 
             return priceList;
@@ -167,12 +169,12 @@ namespace Service.Catalog.Repository
         public async Task Update(PriceList price)
         {
             var branches = price.Sucursales.ToList();
-            var packs = price.Paquete.ToList();
+            var packs = price.Paquetes.ToList();
             var studies = price.Estudios.ToList();
             var medic = price.Medicos.ToList();
             var company = price.Compañia.ToList();
             price.Sucursales = null;
-            price.Paquete = null;
+            price.Paquetes = null;
             price.Estudios = null;
             price.Medicos = null;
             price.Compañia = null;
@@ -232,6 +234,16 @@ namespace Service.Catalog.Repository
                 .ToListAsync();
 
             return asignado;
+        }
+
+        public async Task<Route_Study> GetStudyRoute(int id)
+        {
+            var studyRoute = await _context.Relacion_Ruta_Estudio
+                .Include(x => x.Ruta)
+                .Include(x => x.Estudio)
+                .FirstOrDefaultAsync(x => id == x.EstudioId);
+
+            return studyRoute;
         }
 
         public async Task<List<Price_Medics>> GetAllMedics(Guid medicsId)

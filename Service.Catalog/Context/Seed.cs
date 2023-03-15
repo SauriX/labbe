@@ -1,34 +1,11 @@
 ﻿using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
-using Service.Catalog.Domain.Branch;
-using Service.Catalog.Domain.Catalog;
-using Service.Catalog.Domain.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using PL = Shared.Dictionary.Catalogs.PriceList;
-using DEP = Shared.Dictionary.Catalogs.Department;
-using AREAS = Shared.Dictionary.Catalogs.Area;
-using BR = Shared.Dictionary.Catalogs.Branch;
-using ValueTypes = Shared.Dictionary.Catalogs.ValueType;
-using Shared.Utils;
-using ClosedXML.Excel;
 using System.Data;
-using Service.Catalog.Domain.Maquila;
-using Service.Catalog.Domain.Indication;
-using Service.Catalog.Domain.Tapon;
-using Service.Catalog.Domain.Study;
 using RabbitMQ.Client;
-using Service.Catalog.Domain.Parameter;
-using Service.Catalog.Domain.Packet;
-using System.Net;
-using Shared.Error;
-using Shared.Extensions;
-using Service.Catalog.Domain.Price;
-using Shared.Dictionary;
-using Service.Catalog.Domain.Company;
 using Service.Catalog.Domain.Route;
 
 namespace Service.Catalog.Context
@@ -145,16 +122,6 @@ namespace Service.Catalog.Context
                 var branches = SeedData.SeedData.GetBranches();
 
                 context.CAT_Sucursal.AddRange(branches);
-
-                await context.SaveChangesAsync();
-            }
-
-            // LISTA DE PRECIOS DEFAULT
-            if (!context.CAT_ListaPrecio.Any())
-            {
-                var priceList = SeedData.SeedData.GetDefaultPriceList();
-
-                context.CAT_ListaPrecio.Add(priceList);
 
                 await context.SaveChangesAsync();
             }
@@ -414,6 +381,16 @@ namespace Service.Catalog.Context
                 }
             }
 
+            // LISTA DE PRECIOS PARTICULARES
+            if (!context.CAT_ListaPrecio.Any())
+            {
+                var priceList = SeedData.SeedData.GetDefaultPriceList();
+
+                context.CAT_ListaPrecio.AddRange(priceList);
+
+                await context.SaveChangesAsync();
+            }
+
             // PARAMETROS VALORES
             if (!context.CAT_Tipo_Valor.Any())
             {
@@ -488,16 +465,6 @@ namespace Service.Catalog.Context
                 var packStudies = SeedData.SeedData.GetPackStudies();
 
                 context.Relacion_Estudio_Paquete.AddRange(packStudies);
-
-                await context.SaveChangesAsync();
-            }
-
-            // PRECIOS ESTUDIOS
-            if (!context.Relacion_ListaP_Estudio.Any())
-            {
-                var studyPrices = SeedData.SeedData.GetStudyPrices();
-
-                context.Relacion_ListaP_Estudio.AddRange(studyPrices);
 
                 await context.SaveChangesAsync();
             }

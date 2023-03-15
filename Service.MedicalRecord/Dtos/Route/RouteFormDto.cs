@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Service.MedicalRecord.Dtos.Route
 {
-    public class RouteFormDto { 
-
-                public string Id { get; set; }
+    public class RouteFormDto
+    { 
+    public string Id { get; set; }
     public string Clave { get; set; }
     public string Nombre { get; set; }
     public Guid? SucursalOrigenId { get; set; }

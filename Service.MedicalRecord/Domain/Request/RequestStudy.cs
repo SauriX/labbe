@@ -22,6 +22,7 @@ namespace Service.MedicalRecord.Domain.Request
         public string Promocion { get; set; }
         public int? DepartamentoId { get; set; }
         public int? AreaId { get; set; }
+        public Guid? DestinoId { get; set; }
         public byte EstatusId { get; set; }
         public virtual StatusRequestStudy Estatus { get; set; }
         public decimal Dias { get; set; }

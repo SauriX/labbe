@@ -19,6 +19,7 @@ namespace Service.MedicalRecord.Dtos.Request
         public decimal Total { get; set; }
         public decimal Saldo { get; set; }
         public string FolioWeeClinic { get; set; }
+        public string Sucursal { get; set; }
         public bool EsWeeClinic => !string.IsNullOrEmpty(FolioWeeClinic);
         public IEnumerable<RequestStudyInfoDto> Estudios { get; set; }
     }

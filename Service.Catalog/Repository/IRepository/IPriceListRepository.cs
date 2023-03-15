@@ -1,5 +1,6 @@
 ﻿using Service.Catalog.Domain.Branch;
 using Service.Catalog.Domain.Price;
+using Service.Catalog.Domain.Route;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -24,6 +25,7 @@ namespace Service.Catalog.Repository.IRepository
         Task<List<Price_Branch>> GetAllBranch(Guid branchId);
         Task<List<Price_Company>> GetAllCompany(Guid companyId);
         Task<List<Price_Medics>> GetAllMedics(Guid medicsId);
+        Task<Route_Study> GetStudyRoute(int id);
         Task<bool> DuplicateSMC(PriceList price);
     }
 }

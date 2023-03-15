@@ -53,18 +53,30 @@ namespace Service.MedicalRecord.Application
 
             var sucursales = await _catalogClient.GetBranchbycity();
 
-            if (search.ciudad!=null)
+            if (search.ciudad != null)
             {
-                if (search.ciudad.Length > 0) {
+                if (search.ciudad.Length > 0)
+                {
                     var ciudad = sucursales.FindAll(x => search.ciudad.Contains(x.Ciudad));
 
-                    expedientesListDto = expedientesListDto.Where(x => ciudad.Any(y => y.Sucursales.Any(z=> Guid.Parse(z.IdSucursal) == x.IdSucursal)));
+                    expedientesListDto = expedientesListDto.Where(x => ciudad.Any(y => y.Sucursales.Any(z => Guid.Parse(z.IdSucursal) == x.IdSucursal)));
                 }
-
             }
 
             expedientes = expedientesListDto.ToList();
-            return expedientes.ToMedicalRecordsListDto();
+
+            var data = expedientes.ToMedicalRecordsListDto();
+
+            foreach (var expediente in data)
+            {
+                var branch = await _branchRepository.GetOne(x => x.Id == expediente.SucursalId);
+                if (branch != null)
+                {
+                    expediente.Sucursal = branch.Nombre;
+                }
+            }
+
+            return data;
         }
 
         public async Task<List<MedicalRecordDto>> GetMedicalRecord(List<Guid> records)
@@ -119,7 +131,7 @@ namespace Service.MedicalRecord.Application
 
             var code = Codes.GetCode(branch.Codigo, lastCode);
 
-            newprice.Expediente = code;   
+            newprice.Expediente = code;
             await _repository.Create(newprice, expediente.TaxData);
 
             newprice = await _repository.GetById(newprice.Id);
@@ -228,7 +240,8 @@ namespace Service.MedicalRecord.Application
                 template.AddVariable("FechaInicial", search.fechaAlta[0].ToString("dd/MM/yyyy"));
                 template.AddVariable("FechaFinal", search.fechaAlta[1].ToString("dd/MM/yyyy"));
             }
-            else {
+            else
+            {
                 template.AddVariable("FechaInicial", DateTime.MinValue.ToShortDateString());
                 template.AddVariable("FechaFinal", DateTime.Now.ToShortDateString());
             }
@@ -265,6 +278,6 @@ namespace Service.MedicalRecord.Application
             return (template.ToByteArray(), $"Catálogo de Expedientes ({study.Expediente}).xlsx");
         }
 
-        
+
     }
 }

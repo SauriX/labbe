@@ -104,7 +104,7 @@ namespace Service.Catalog.Mapper
                 });
             }
 
-            foreach (var price in priceStudyPack.Paquete)
+            foreach (var price in priceStudyPack.Paquetes)
             {
                 var promo = model.Paquetes.FirstOrDefault(x => x.PaqueteId == price.PaqueteId);
 

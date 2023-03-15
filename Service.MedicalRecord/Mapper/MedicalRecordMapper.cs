@@ -40,6 +40,7 @@ namespace Service.MedicalRecord.Mapper
                 Edad = x.Edad,
                 FechaNacimiento = x.FechaDeNacimiento.Date.ToString("dd/MM/yyyy"),
                 MonederoElectronico = x.Monedero,
+                SucursalId = x.IdSucursal,
                 Telefono = x.Telefono,
             }).ToList();
         }
