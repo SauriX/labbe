@@ -36,6 +36,7 @@ using Service.MedicalRecord.Dtos.Quotation;
 using System.Text.Json;
 using Service.MedicalRecord.Dtos.Catalogs;
 using static Shared.Dictionary.Catalogs;
+using MassTransit.Transports;
 
 namespace Service.MedicalRecord.Application
 {
@@ -53,6 +54,7 @@ namespace Service.MedicalRecord.Application
         private readonly IMedicalRecordRepository _recordRepository;
         private readonly IBillingClient _billingClient;
         private readonly ITrackingOrderRepository _trackingOrderRepository;
+        private readonly IPublishEndpoint _publishEndpoint;
         private const byte URGENCIA_CARGO = 3;
 
         public RequestApplication(
@@ -67,7 +69,8 @@ namespace Service.MedicalRecord.Application
             IRepository<Domain.Catalogs.Branch> branchRepository,
             IMedicalRecordRepository recordRepository,
             IBillingClient billingClient,
-            ITrackingOrderRepository trackingOrder
+            ITrackingOrderRepository trackingOrder,
+            IPublishEndpoint publishEndpoint
             )
         {
             _transaction = transaction;
@@ -82,6 +85,7 @@ namespace Service.MedicalRecord.Application
             _recordRepository = recordRepository;
             _billingClient = billingClient;
             _trackingOrderRepository = trackingOrder;
+            _publishEndpoint = publishEndpoint;
         }
 
         public async Task<IEnumerable<RequestInfoDto>> GetByFilter(RequestFilterDto filter)
@@ -99,7 +103,7 @@ namespace Service.MedicalRecord.Application
             {
                 throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
             }
-            return  request.ToRequestDto();
+            return request.ToRequestDto();
         }
 
         public async Task<RequestGeneralDto> GetGeneral(Guid recordId, Guid requestId)
@@ -280,7 +284,19 @@ namespace Service.MedicalRecord.Application
             }
 
             await _repository.Create(newRequest);
+            if (newRequest.Urgencia != 1)
+            {
+                var notifications = await _catalogClient.GetNotifications("Toma de muestra");
+                var createnotification = notifications.FirstOrDefault(x => x.Tipo == "Urgent");
+                if (createnotification.Activo)
+                {
 
+                    var mensaje = createnotification.Contenido.Replace("Solicitar estudios", newRequest.Clave);
+                    var contract = new NotificationContract(mensaje, false);
+                    await _publishEndpoint.Publish(contract);
+
+                }
+            }
             return newRequest.Id.ToString();
         }
 
@@ -612,6 +628,19 @@ namespace Service.MedicalRecord.Application
             if (requestDto.CompañiaId != prevCompany)
             {
                 await UpdateStudies(new RequestStudyUpdateDto(requestDto.ExpedienteId, requestDto.SolicitudId, requestDto.UsuarioId), isDeleting: true);
+            }
+            if (request.Urgencia != 1)
+            {
+                var notifications = await _catalogClient.GetNotifications("Toma de muestra");
+                var createnotification = notifications.FirstOrDefault(x => x.Tipo == "Urgent");
+                if (createnotification.Activo)
+                {
+
+                    var mensaje = createnotification.Contenido.Replace("Solicitar estudios", request.Clave);
+                    var contract = new NotificationContract(mensaje, false);
+                    await _publishEndpoint.Publish(contract);
+
+                }
             }
         }
 

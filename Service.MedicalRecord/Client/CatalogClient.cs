@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Service.MedicalRecord.Client.IClient;
+using Service.MedicalRecord.Dtos;
 using Service.MedicalRecord.Dtos.Branch;
 using Service.MedicalRecord.Dtos.Catalogs;
 using Service.MedicalRecord.Dtos.Promotion;
@@ -108,7 +109,18 @@ namespace Service.MedicalRecord.Client
 
             throw new CustomException(response.StatusCode, response.ReasonPhrase);
         }
+        public async Task<List<NotificationListDto>> GetNotifications(string search)
 
+        {
+            var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/notifications/all/notification/{search}");
+
+            if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+            {
+                return await response.Content.ReadFromJsonAsync<List<NotificationListDto>>();
+            }
+
+            throw new CustomException(response.StatusCode, response.ReasonPhrase);
+        }
         public async Task<AreaListDto> GetArea(int id)
         {
             var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/area/{id}");

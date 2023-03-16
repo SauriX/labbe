@@ -1,4 +1,5 @@
-﻿using Service.MedicalRecord.Dtos.Branch;
+﻿using Service.MedicalRecord.Dtos;
+using Service.MedicalRecord.Dtos.Branch;
 using Service.MedicalRecord.Dtos.Promotion;
 using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.Route;
@@ -21,5 +22,6 @@ namespace Service.MedicalRecord.Client.IClient
         Task<List<RouteFormDto>> GetRutas(List<Guid> id);
         Task<List<BranchCityDto>> GetBranchbycity();
         Task<List<SeriesDto>> GetBranchSeries(Guid branchId, byte type);
+        Task<List<NotificationListDto>> GetNotifications(string search);
     }
 }

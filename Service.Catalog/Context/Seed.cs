@@ -168,7 +168,15 @@ namespace Service.Catalog.Context
 
                 await context.SaveChangesAsync();
             }
+            // Notifications
+            if (!context.Cat_notificaciones.Any())
+            {
+                var notifications = SeedData.SeedData.GetNotifications();
 
+                context.Cat_notificaciones.AddRange(notifications);
+
+                await context.SaveChangesAsync();
+            }
             // DEPARTAMENTOS
             if (!context.CAT_Departamento.Any())
             {

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.Catalog.Context;
 
 namespace Service.Catalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230309152044_notifications")]
+    partial class notifications
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1627,33 +1629,6 @@ namespace Service.Catalog.Migrations
                     b.ToTable("Relacion_Notificacion_Sucursal");
                 });
 
-            modelBuilder.Entity("Service.Catalog.Domain.Notifications.Notification_Role", b =>
-                {
-                    b.Property<Guid>("RolId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("NotificacionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaMod")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("UsuarioCreoId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("UsuarioModId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("RolId", "NotificacionId");
-
-                    b.HasIndex("NotificacionId");
-
-                    b.ToTable("Relacion_Notificacion_Rol");
-                });
-
             modelBuilder.Entity("Service.Catalog.Domain.Notifications.Notifications", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1698,9 +1673,6 @@ namespace Service.Catalog.Migrations
 
                     b.Property<bool>("Sabado")
                         .HasColumnType("bit");
-
-                    b.Property<string>("Tipo")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Titulo")
                         .HasColumnType("nvarchar(max)");
@@ -3469,17 +3441,6 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Notificacion");
                 });
 
-            modelBuilder.Entity("Service.Catalog.Domain.Notifications.Notification_Role", b =>
-                {
-                    b.HasOne("Service.Catalog.Domain.Notifications.Notifications", "Notificacion")
-                        .WithMany("Roles")
-                        .HasForeignKey("NotificacionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Notificacion");
-                });
-
             modelBuilder.Entity("Service.Catalog.Domain.Packet.Packet", b =>
                 {
                     b.HasOne("Service.Catalog.Domain.Catalog.Area", "Area")
@@ -3994,8 +3955,6 @@ namespace Service.Catalog.Migrations
 
             modelBuilder.Entity("Service.Catalog.Domain.Notifications.Notifications", b =>
                 {
-                    b.Navigation("Roles");
-
                     b.Navigation("Sucursales");
                 });
 

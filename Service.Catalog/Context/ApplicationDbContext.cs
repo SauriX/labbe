@@ -21,6 +21,7 @@ using Service.Catalog.Domain.Equipment;
 using System.Reflection;
 using Service.Catalog.Domain.EquipmentMantain;
 using Service.Catalog.Domain.Series;
+using Service.Catalog.Domain.Notifications;
 
 namespace Service.Catalog.Context
 {
@@ -95,7 +96,7 @@ namespace Service.Catalog.Context
         public DbSet<Mantain> CAT_Mantenimiento_Equipo { get; set; }
         public DbSet<MantainImages> CAT_Mantenimiento_Equipo_Images { get; set; }
         public DbSet<Serie> CAT_Serie { get; internal set; }
-
+        public DbSet<Notifications> Cat_notificaciones { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
