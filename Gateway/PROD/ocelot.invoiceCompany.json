@@ -56,6 +56,17 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
+      "DownstreamPathTemplate": "/services/records/api/invoiceCompany/checkin/global",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/invoiceCompany/checkin/global",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
       "DownstreamPathTemplate": "/services/records/api/invoiceCompany/download/pdf/{facturapiId}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
