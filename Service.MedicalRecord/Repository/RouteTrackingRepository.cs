@@ -101,6 +101,36 @@ namespace Service.MedicalRecord.Repository
             return route;
         }
 
+        public async Task CreateOrder(TrackingOrder order)
+        {
+            using var transaction = _context.Database.BeginTransaction();
+
+            try
+            {
+                var tags = order.Estudios.ToList();
+
+                order.Estudios = null;
+
+                _context.CAT_Seguimiento_Ruta.Add(order);
+
+                await _context.SaveChangesAsync();
+
+                tags.ForEach(x => x.SeguimientoId = order.Id);
+
+                var config = new BulkConfig();
+                config.SetSynchronizeFilter<TrackingOrderDetail>(x => x.SeguimientoId == order.Id);
+
+                await _context.BulkInsertOrUpdateAsync(tags, config);
+
+                transaction.Commit();
+            } 
+            catch (Exception)
+            {
+                transaction.Rollback();
+                throw;
+            }
+        }
+
         public async Task Update(RouteTracking route)
         {
             _context.Update(route);
@@ -168,6 +198,31 @@ namespace Service.MedicalRecord.Repository
                 .ToListAsync();
 
             return tags;
+        }
+
+        public async Task<IEnumerable<RequestStudy>> FindStudies(int tagId, Guid requestId)
+        {
+            var studyTags = await _context.Relacion_Etiqueta_Estudio
+                .Where(x => x.SolicitudEtiquetaId == tagId)
+                .Include(x => x.SolicitudEtiqueta)
+                .Select(x => x.EstudioId)
+                .ToListAsync();
+
+            var studies = await _context.Relacion_Solicitud_Estudio
+                .Where(x => studyTags.Contains(x.EstudioId) && x.SolicitudId == requestId)
+                .ToListAsync();
+
+            return studies;
+        }
+
+        public async Task<string> GetLastCode(string date)
+        {
+            var lastOrder = await _context.Relacion_Seguimiento_Solicitud
+                .Include(x => x.Solicitud)
+                .Include(x => x.Etiqueta)
+                .FirstOrDefaultAsync();
+
+            return lastOrder?.Clave;
         }
     }
 }

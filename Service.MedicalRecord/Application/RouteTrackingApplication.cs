@@ -21,6 +21,8 @@ using Service.MedicalRecord.Domain;
 using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.PdfModels;
 using Service.MedicalRecord.Dtos.Route;
+using Service.MedicalRecord.Utils;
+using Shared.Dictionary;
 
 namespace Service.MedicalRecord.Application
 {
@@ -76,9 +78,24 @@ namespace Service.MedicalRecord.Application
             return trackingTags.ToTagTrackingOrderDto();
         }
 
-        public async Task<RouteTrackingDto> CreateTrackingOrder(RouteTrackingFormDto order)
+        public async Task CreateTrackingOrder(RouteTrackingFormDto order)
         {
+            var newOrder = order.ToModelCreate();
+            var code = await GetNewCode();
+            newOrder.Clave = code;
 
+            await _repository.CreateOrder(newOrder);
+
+
+        }
+
+        private async Task<string> GetNewCode()
+        {
+            var date = DateTime.Now.ToString("yyMMdd");
+
+            var lastCode = await _repository.GetLastCode(date);
+
+            return Codes.GetTrackingOrderCode(lastCode, date);
         }
 
         public async Task<int> UpdateStatus(List<RequestedStudyUpdateDto> requestDto)

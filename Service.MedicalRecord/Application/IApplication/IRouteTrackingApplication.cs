@@ -12,6 +12,7 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<List<RouteTrackingListDto>> GetAll(RouteTrackingSearchDto search);
         Task<(byte[] file, string fileName)> ExportForm(Guid id);
         Task<List<PendingReciveDto>> GetAllRecive(PendingSearchDto search);
+        Task CreateTrackingOrder(RouteTrackingFormDto order);
         Task<List<TagTrackingOrderDto>> GetAllTags(string search);
         Task<List<TagTrackingOrderDto>> FindTags(string routeId);
         Task<byte[]> Print(PendingSearchDto search);

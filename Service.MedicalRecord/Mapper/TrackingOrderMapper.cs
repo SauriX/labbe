@@ -27,18 +27,15 @@ namespace Service.MedicalRecord.Mapper
                 Fecha = model.FechaCreo,
                 Estudios = model.Estudios.Select(x => new StudyRouteDto
                 {
-                    SolicitudId = x.SolicitudId,
-                    EstudioId = x.EtiquetaId,
-                    //Estudio = x.Recipiente,
-                    Solicitud = x.Solicitud.Clave,
-                    ExpedienteId = x.ExpedienteId,
-                    NombrePaciente = x.NombrePaciente,
-                    //Temperatura = x.Temperatura,
-                    Escaneado = x.Escaneado,
+                    //SolicitudId = x.SolicitudId,
+                    //EstudioId = x.EtiquetaId,
+                    ////Estudio = x.Recipiente,
+                    //Solicitud = x.Solicitud.Clave,
+                    //ExpedienteId = x.ExpedienteId,
+                    //NombrePaciente = x.NombrePaciente,
+                    ////Temperatura = x.Temperatura,
+                    //Escaneado = x.Escaneado,
                 }).ToArray(),
-
-
-
             };
         }
 
@@ -83,14 +80,14 @@ namespace Service.MedicalRecord.Mapper
                 Clave = model.Clave,
                 Estudios = dto.Estudios.Select(x => new TrackingOrderDetail
                 {
-                    SolicitudId = x.SolicitudId,
-                    EtiquetaId = x.EstudioId,
-                    //Recipiente = x.Clave + " - " + x.Estudio,
-                    ExpedienteId = x.ExpedienteId,
-                    NombrePaciente = x.NombrePaciente,
-                    //Temperatura = x.Temperatura,
-                    Escaneado = x.Escaneado,
-                    FechaCreo = DateTime.Now
+                    //SolicitudId = x.SolicitudId,
+                    //EtiquetaId = x.EstudioId,
+                    ////Recipiente = x.Clave + " - " + x.Estudio,
+                    //ExpedienteId = x.ExpedienteId,
+                    //NombrePaciente = x.NombrePaciente,
+                    ////Temperatura = x.Temperatura,
+                    //Escaneado = x.Escaneado,
+                    //FechaCreo = DateTime.Now
                 }).ToList()
             };
         }
@@ -122,16 +119,16 @@ namespace Service.MedicalRecord.Mapper
                 Clave = dto.Clave,
                 Estudios = dto.Estudios.Select(x => new TrackingOrderDetail
                 {
-                    Id = new Guid(),
-                    SolicitudId = x.SolicitudId,
-                    EtiquetaId = x.EstudioId,
-                    //Recipiente = x.Clave + " - " + x.Estudio,
-                    ExpedienteId = x.ExpedienteId,
-                    NombrePaciente = x.NombrePaciente,
-                    //Temperatura = x.Temperatura,
-                    Escaneado = false,
-                    FechaCreo = DateTime.Now,
-                    Extra = x.IsExtra
+                    //Id = new Guid(),
+                    //SolicitudId = x.SolicitudId,
+                    //EtiquetaId = x.EstudioId,
+                    ////Recipiente = x.Clave + " - " + x.Estudio,
+                    //ExpedienteId = x.ExpedienteId,
+                    //NombrePaciente = x.NombrePaciente,
+                    ////Temperatura = x.Temperatura,
+                    //Escaneado = false,
+                    //FechaCreo = DateTime.Now,
+                    //Extra = x.IsExtra
 
 
                 }).ToList()
@@ -178,16 +175,16 @@ namespace Service.MedicalRecord.Mapper
                 IsInRute = x.Solicitud.Estudios.Any(y => y.EstatusId == Status.RequestStudy.EnRuta && x.EstudioId == y.EstudioId),
                 Estudio = new StudyRouteDto
                 {
-                    Estudio = x.Nombre,
-                    EstudioId = x.EstudioId,
-                    Clave = x.Clave,
-                    NombrePaciente = x.Solicitud.Expediente.NombreCompleto,
-                    Solicitud = x.Solicitud.Clave,
-                    TaponNombre = x.Tapon?.Clave,
-                    SolicitudId = x.Solicitud.Id,
-                    ExpedienteId = x.Solicitud.ExpedienteId,
-                    Escaneado = true,
-                    IsExtra = isExtra
+                    //Estudio = x.Nombre,
+                    //EstudioId = x.EstudioId,
+                    //Clave = x.Clave,
+                    //NombrePaciente = x.Solicitud.Expediente.NombreCompleto,
+                    //Solicitud = x.Solicitud.Clave,
+                    //TaponNombre = x.Tapon?.Clave,
+                    //SolicitudId = x.Solicitud.Id,
+                    //ExpedienteId = x.Solicitud.ExpedienteId,
+                    //Escaneado = true,
+                    //IsExtra = isExtra
                 },
                 IsExtra = isExtra
             });
@@ -206,15 +203,15 @@ namespace Service.MedicalRecord.Mapper
                 orderId = orderId,
                 Estudio = new StudyRouteDto
                 {
-                    //Estudio = x.Recipiente,
-                    EstudioId = x.EtiquetaId,
-                    //Clave = x.SolicitudEstudio.Clave,
-                    NombrePaciente = x.Solicitud.Expediente.NombreCompleto,
-                    Solicitud = x.Solicitud.Clave,
-                    SolicitudId = x.Solicitud.Id,
-                    ExpedienteId = x.Solicitud.ExpedienteId,
-                    Escaneado = true,
-                    //Temperatura = x.Temperatura
+                    ////Estudio = x.Recipiente,
+                    //EstudioId = x.EtiquetaId,
+                    ////Clave = x.SolicitudEstudio.Clave,
+                    //NombrePaciente = x.Solicitud.Expediente.NombreCompleto,
+                    //Solicitud = x.Solicitud.Clave,
+                    //SolicitudId = x.Solicitud.Id,
+                    //ExpedienteId = x.Solicitud.ExpedienteId,
+                    //Escaneado = true,
+                    ////Temperatura = x.Temperatura
 
                 },
             });

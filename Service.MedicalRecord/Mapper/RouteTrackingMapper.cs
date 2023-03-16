@@ -17,9 +17,9 @@ namespace Service.MedicalRecord.Mapper
         public static List<RouteTrackingListDto> ToRouteTrackingDto(this ICollection<TrackingOrder> model, List<RequestTag> tags, List<RouteFormDto> tagRoutes = null)
         {
             if (model == null) return null;
-             List< RouteTrackingListDto > routes = new List<RouteTrackingListDto>();
+            List<RouteTrackingListDto> routes = new List<RouteTrackingListDto>();
 
-            if(model.Count <= 0)
+            if (model.Count <= 0)
             {
                 foreach (var tag in tags)
                 {
@@ -37,7 +37,8 @@ namespace Service.MedicalRecord.Mapper
                         Ruta = tagRoutes != null ? string.Join(", ", tagRoutes.Where(x => x.SucursalDestinoId.ToString().Contains(tag.DestinoId)).Select(y => y.Nombre)) : ""
                     });
                 }
-            } else
+            }
+            else
             {
                 foreach (var item in model)
                 {
@@ -67,7 +68,7 @@ namespace Service.MedicalRecord.Mapper
         {
             if (x == null) return null;
 
-            return  new RouteTrackingDeliverListDto
+            return new RouteTrackingDeliverListDto
             {
                 Id = x.Id,
                 Seguimiento = x.Clave,
@@ -147,17 +148,23 @@ namespace Service.MedicalRecord.Mapper
                 Estudios = dto.Estudios.Select(x => new TrackingOrderDetail
                 {
                     Id = Guid.NewGuid(),
-
+                    SeguimientoId = x.SeguimientoId,
+                    EtiquetaId = x.EtiquetaId,
+                    SolicitudId = x.SolicitudId,
+                    Cantidad = x.Cantidad,
+                    Escaneado = x.Escaneo,
+                    Extra = x.Extra,
                 }).ToList(),
                 Activo = dto.Activo,
             };
         }
 
-        public static DeliverOrderdDto toDeliverOrder(this RouteTrackingDeliverListDto order,string responsableEnvio) {
+        public static DeliverOrderdDto toDeliverOrder(this RouteTrackingDeliverListDto order, string responsableEnvio)
+        {
 
             return new DeliverOrderdDto
             {
-                Destino=order.Sucursal,
+                Destino = order.Sucursal,
                 ResponsableRecive = "",
                 FechaEntestimada = order.Fecha,
                 Origen = order.Sucursal,
@@ -168,8 +175,8 @@ namespace Service.MedicalRecord.Mapper
 
 
             };
-        
-            
+
+
         }
     }
 

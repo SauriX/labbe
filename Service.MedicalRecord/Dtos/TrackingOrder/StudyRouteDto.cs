@@ -4,18 +4,18 @@ namespace Service.MedicalRecord.Dtos.TrackingOrder
 {
     public class StudyRouteDto
     {
+        public int EtiquetaId { get; set; }
         public Guid SeguimientoId { get; set; }
-        public string Clave { get; set; }
         public Guid SolicitudId { get; set; }
         public string Solicitud { get; set; }
-        public int EstudioId { get; set; }
-        public string Estudio { get; set; }
-        public Guid ExpedienteId { get; set; }
-        public string NombrePaciente { get; set; }
-        public decimal Temperatura { get; set; }
-        public bool Escaneado { get; set; }
-        public bool IsExtra { get; set; }
-        public string TaponNombre { get; set; }
+        public string ClaveEtiqueta { get; set; }
+        public string Recipiente { get; set; }
+        public decimal Cantidad { get; set; }
+        public string Estudios { get; set; }
+        public string ClaveRuta { get; set; }
+        public byte Estatus { get; set; }
+        public bool Escaneo { get; set; }
+        public bool Extra { get; set; }
         public Guid UsuarioCreoId { get; set; }
         public DateTime FechoCreo { get; set; }
         public Guid UsuarioModId { get; set; }

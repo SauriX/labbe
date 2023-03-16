@@ -11,7 +11,7 @@ namespace Service.MedicalRecord.Mapper
         public static List<ShipmentStudydto> toShipmentStudyDto(this List<TrackingOrderDetail> model) {
            return model.Select(x=>  new ShipmentStudydto {
                //Estudio = x.Recipiente,
-               Paciente = x.NombrePaciente,
+               //Paciente = x.NombrePaciente,
                Solicitud = x.Solicitud.Clave,
                ConfirmacionOrigen = true,
                ConfirmacionDestino = x.Escaneado,
@@ -24,7 +24,7 @@ namespace Service.MedicalRecord.Mapper
             {
                 Id = x.Id,
                 //Estudio = x.Recipiente,
-                Paciente = x.NombrePaciente,
+                //Paciente = x.NombrePaciente,
                 Solicitud = x.Solicitud.Clave,
                 ConfirmacionOrigen = true,
                 ConfirmacionDestino = x.Escaneado,

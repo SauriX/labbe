@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Service.MedicalRecord.Dtos.RouteTracking
 {
-    public class RouteTrackingCreateDto
+    public class RouteTrackingDto
     {
         public Guid Id { get; set; }
         public string DestinoId { get; set; }
