@@ -64,7 +64,7 @@ namespace Service.Catalog.Application
 
             if (newSerie.TipoSerie == TIPO_FACTURA)
             {
-                var userConfiguration = await _configurationApplication.GetFiscal();
+                
 
                 data = new SeriesDto
                 {
@@ -97,7 +97,7 @@ namespace Service.Catalog.Application
 
             if (tipo == TIPO_FACTURA)
             {
-                var userConfiguration = await _configurationApplication.GetFiscal();
+                
 
                 if (serie.SucursalId != Guid.Empty)
                 {

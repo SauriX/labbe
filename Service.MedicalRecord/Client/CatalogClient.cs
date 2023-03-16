@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Service.MedicalRecord.Client.IClient;
 using Service.MedicalRecord.Dtos.Branch;
+using Service.MedicalRecord.Dtos.Company;
 using Service.MedicalRecord.Dtos.Catalogs;
 using Service.MedicalRecord.Dtos.Promotion;
 using Service.MedicalRecord.Dtos.Request;
@@ -66,6 +67,17 @@ namespace Service.MedicalRecord.Client
             if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
             {
                 return await response.Content.ReadFromJsonAsync<BranchFormDto>();
+            }
+
+            throw new CustomException(response.StatusCode, response.ReasonPhrase);
+        }
+        public async Task<CompanyFormDto> GetCompany(Guid id)
+        {
+            var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/company/{id}");
+
+            if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+            {
+                return await response.Content.ReadFromJsonAsync<CompanyFormDto>();
             }
 
             throw new CustomException(response.StatusCode, response.ReasonPhrase);
