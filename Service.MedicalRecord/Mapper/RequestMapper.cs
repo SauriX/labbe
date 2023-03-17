@@ -113,7 +113,7 @@ namespace Service.MedicalRecord.Mapper
             };
         }
 
-        public static RequestPaymentDto ToRequestPaymentDto(this RequestPayment model)
+        public static RequestPaymentDto ToRequestPaymentDto(this RequestPayment model, bool loyalty = false)
         {
             if (model == null) return null;
 
@@ -130,7 +130,8 @@ namespace Service.MedicalRecord.Mapper
                 SerieFactura = model.SerieFactura,
                 FacturapiId = model.FacturapiId,
                 UsuarioRegistra = model.UsuarioRegistra,
-                EstatusId = model.EstatusId
+                EstatusId = model.EstatusId,
+                Lealtad = loyalty
             };
         }
 
@@ -156,6 +157,7 @@ namespace Service.MedicalRecord.Mapper
                 ClaveEtiqueta = x.ClaveEtiqueta,
                 NombreEtiqueta = x.NombreEtiqueta,
                 ClaveInicial = x.ClaveInicial,
+                Observaciones = x.Observaciones,
                 Cantidad = x.Cantidad,
                 Color = x.Color,
                 Estudios = x.Estudios.ToRequestStudyTagDto(),
@@ -407,6 +409,7 @@ namespace Service.MedicalRecord.Mapper
                     DestinoTipo = x.DestinoTipo,
                     ClaveEtiqueta = x.ClaveEtiqueta,
                     NombreEtiqueta = x.NombreEtiqueta,
+                    Observaciones = x.Observaciones,
                     ClaveInicial = x.ClaveInicial,
                     Cantidad = x.Cantidad,
                     Color = x.Color,

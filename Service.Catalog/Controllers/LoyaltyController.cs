@@ -38,6 +38,13 @@ namespace Service.Catalog.Controllers
             return await _service.GetByDate(fecha);
         }
 
+        [HttpPost("getByPriceList")]
+        [Authorize(Policies.Access)]
+        public async Task<LoyaltyListDto> GetByPriceListDate(LoyaltyClientDto loyalty)
+        {
+            return await _service.GetByPriceListDate(loyalty);
+        }
+
         [HttpGet("{id}")]
         [Authorize(Policies.Access)]
         public async Task<LoyaltyFormDto> GetById(Guid id)

@@ -1,4 +1,5 @@
 ﻿using Service.MedicalRecord.Dtos.Branch;
+using Service.MedicalRecord.Dtos.Catalogs;
 using Service.MedicalRecord.Dtos.Company;
 using Service.MedicalRecord.Dtos.Promotion;
 using Service.MedicalRecord.Dtos.Request;
@@ -23,5 +24,6 @@ namespace Service.MedicalRecord.Client.IClient
         Task<List<RouteFormDto>> GetRutas(List<string> ids);
         Task<List<BranchCityDto>> GetBranchbycity();
         Task<List<SeriesDto>> GetBranchSeries(Guid branchId, byte type);
+        Task<LoyaltyListDto> GetLoyalty(LoyaltyDto loyalty);
     }
 }
