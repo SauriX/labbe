@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Service.Catalog.Dtos.Loyalty
+namespace Service.MedicalRecord.Dtos.Catalogs
 {
     public class LoyaltyListDto
     {
@@ -17,7 +19,7 @@ namespace Service.Catalog.Dtos.Loyalty
         public bool Activo { get; set; }
     }
 
-    public class LoyaltyClientDto
+    public class LoyaltyDto
     {
         public DateTime Fecha { get; set; }
         public Guid ListaPrecioId { get; set; }
