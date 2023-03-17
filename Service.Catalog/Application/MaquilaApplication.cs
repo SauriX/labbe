@@ -96,8 +96,6 @@ namespace Service.Catalog.Application
 
             await _publishEndpoint.Publish(contract);
 
-            updatedMaquila = await _repository.GetById(updatedMaquila.Id);
-
             return updatedMaquila.ToMaquilaListDto();
         }
 
