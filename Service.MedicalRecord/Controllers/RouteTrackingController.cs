@@ -31,12 +31,6 @@ namespace Service.MedicalRecord.Controllers
             return requestedStudy;
         }
 
-        [HttpPut]
-        [Authorize(Policies.Update)]
-        public async Task UpdateStatus(List<RequestedStudyUpdateDto> requestDto)
-        {
-            await _service.UpdateStatus(requestDto);
-        }
         [HttpPost("export/form/{order}")]
         //[Authorize(Policies.Download)]
         public async Task<IActionResult> ExportFormTrackingOrder(Guid order)

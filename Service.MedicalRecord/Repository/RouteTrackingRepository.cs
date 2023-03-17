@@ -63,7 +63,7 @@ namespace Service.MedicalRecord.Repository
             {
                 routeTrackingList = routeTrackingList.Where(x => search.Destino.Contains(x.OrigenId));
             }
-            
+
             if (!string.IsNullOrEmpty(search.Destino))
             {
                 routeTrackingList = routeTrackingList.Where(x => search.Destino.Contains(x.DestinoId));
@@ -90,14 +90,11 @@ namespace Service.MedicalRecord.Repository
 
         public async Task<TrackingOrder> GetById(Guid Id)
         {
-            var route = await _context.CAT_Seguimiento_Ruta.Include(x => x.Estudios)
-                .ThenInclude(x => x.Solicitud.Sucursal)
+            var route = await _context.CAT_Seguimiento_Ruta
                 .Include(x => x.Estudios)
-                .ThenInclude(x => x.Solicitud.Estatus)
-                .Include(x => x.Estudios).ThenInclude(x => x.Solicitud.Estudios)
-                .ThenInclude(x => x.Estatus)
-                .Include(x => x.Estudios)
-                .ThenInclude(x => x.Solicitud.Expediente).AsQueryable().FirstOrDefaultAsync(x => x.Id == Id);
+                .ThenInclude(x => x.Solicitud)
+                .Include(x => x.Etiquetas)
+                .AsQueryable().FirstOrDefaultAsync(x => x.Id == Id);
             return route;
         }
 
@@ -123,7 +120,7 @@ namespace Service.MedicalRecord.Repository
                 await _context.BulkInsertOrUpdateAsync(tags, config);
 
                 transaction.Commit();
-            } 
+            }
             catch (Exception)
             {
                 transaction.Rollback();
@@ -200,16 +197,17 @@ namespace Service.MedicalRecord.Repository
             return tags;
         }
 
-        public async Task<IEnumerable<RequestStudy>> FindStudies(int tagId, Guid requestId)
+        public async Task<IEnumerable<RequestStudy>> FindStudies(List<int> tagsId, Guid requestId)
         {
             var studyTags = await _context.Relacion_Etiqueta_Estudio
-                .Where(x => x.SolicitudEtiquetaId == tagId)
+                .Where(x => tagsId.Contains(x.SolicitudEtiquetaId))
                 .Include(x => x.SolicitudEtiqueta)
                 .Select(x => x.EstudioId)
                 .ToListAsync();
 
             var studies = await _context.Relacion_Solicitud_Estudio
                 .Where(x => studyTags.Contains(x.EstudioId) && x.SolicitudId == requestId)
+                .Where(x => x.EstatusId == Status.RequestStudy.TomaDeMuestra || x.EstatusId == Status.RequestStudy.EnRuta)
                 .ToListAsync();
 
             return studies;

@@ -6,7 +6,8 @@ namespace Service.MedicalRecord.Dtos.RouteTracking
 {
     public class RouteTrackingFormDto
     {
-		public string Origen { get; set; }
+        public Guid Id { get; set; }
+        public string Origen { get; set; }
 		public string Clave { get; set; }
 		public decimal Temperatura { get; set; }
 		public DateTime Recoleccion { get; set; }

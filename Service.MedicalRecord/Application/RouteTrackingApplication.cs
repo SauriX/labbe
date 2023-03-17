@@ -1,12 +1,8 @@
-﻿using ClosedXML.Excel;
-using ClosedXML.Report;
+﻿using ClosedXML.Report;
 using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Client.IClient;
 using Service.MedicalRecord.Dictionary;
-using Service.MedicalRecord.Domain.RouteTracking;
-using Service.MedicalRecord.Domain.TrackingOrder;
 using Service.MedicalRecord.Dtos.PendingRecive;
-using Service.MedicalRecord.Dtos.RequestedStudy;
 using Service.MedicalRecord.Dtos.RouteTracking;
 using Service.MedicalRecord.Mapper;
 using Service.MedicalRecord.Repository.IRepository;
@@ -17,12 +13,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Service.MedicalRecord.Domain;
 using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.PdfModels;
 using Service.MedicalRecord.Dtos.Route;
 using Service.MedicalRecord.Utils;
-using Shared.Dictionary;
+using SharedResponses = Shared.Dictionary.Responses;
 
 namespace Service.MedicalRecord.Application
 {
@@ -32,7 +27,6 @@ namespace Service.MedicalRecord.Application
         private readonly ICatalogClient _catalogClient;
         private readonly IPdfClient _pdfClient;
         private readonly IIdentityClient _identityClient;
-        public object SharedResponses { get; private set; }
 
         public RouteTrackingApplication(IRouteTrackingRepository repository, ICatalogClient catalog, IPdfClient pdfClient, IIdentityClient identityClient)
         {
@@ -84,8 +78,18 @@ namespace Service.MedicalRecord.Application
             var code = await GetNewCode();
             newOrder.Clave = code;
 
-            await _repository.CreateOrder(newOrder);
+            var route = await _catalogClient.GetRuta(order.RutaId);
 
+            if (route != null)
+            {
+                newOrder.DiaRecoleccion = newOrder.DiaRecoleccion.AddDays(route.TiempoDeEntrega);
+                await _repository.CreateOrder(newOrder);
+                await UpdateStudyStatus(order);
+            }
+            else
+            {
+                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
+            }
 
         }
 
@@ -98,76 +102,41 @@ namespace Service.MedicalRecord.Application
             return Codes.GetTrackingOrderCode(lastCode, date);
         }
 
-        public async Task<int> UpdateStatus(List<RequestedStudyUpdateDto> requestDto)
+        private async Task UpdateStudyStatus(RouteTrackingFormDto order)
         {
             try
             {
+                var request = await GetExistingRequest(order.Estudios.FirstOrDefault().SolicitudId);
+                var tags = order.Estudios.Select(x => x.EtiquetaId).ToList();
+                var studies = await _repository.FindStudies(tags, request.Id);
 
-                foreach (var item in requestDto)
+                if (studies == null)
                 {
-                    var ruteOrder = await _repository.GetById(item.RuteOrder);
-                    var list = ruteOrder.ToRouteTrackingDtoList();
-                    List<string> IdRoutes = new();
-                    IdRoutes.Add(list.rutaId.ToString());
-                    var routes = await _catalogClient.GetRutas(IdRoutes);
-                    var route = routes.FirstOrDefault(x => Guid.Parse(x.Id) == list.rutaId);
-                    DateTime oDate = Convert.ToDateTime(list.Fecha);
-                    list.Fecha = oDate.AddDays(route.TiempoDeEntrega).ToString();
-                    var routeT = new RouteTracking
-                    {
-                        Id = Guid.NewGuid(),
-                        SegumientoId = Guid.Parse(ruteOrder.Estudios.FirstOrDefault().SeguimientoId.ToString()),
-                        //RutaId = Guid.Parse(ruteOrder.RutaId),
-                        SucursalId = Guid.Parse(ruteOrder.DestinoId),
-                        FechaDeEntregaEstimada = DateTime.Parse(list.Fecha),
-                        SolicitudId = ruteOrder.Estudios.FirstOrDefault().SolicitudId,
-                        HoraDeRecoleccion = ruteOrder.FechaCreo,
-                        UsuarioCreoId = ruteOrder.UsuarioCreoId,
-                        FechaCreo = DateTime.Now,
-
-                    };
-                    await _repository.Create(routeT);
+                    throw new CustomException(HttpStatusCode.BadRequest);
                 }
-                int studyCount = 0;
-                foreach (var item in requestDto)
+
+                foreach (var study in studies)
                 {
-                    var ruteOrder = await _repository.GetById(item.RuteOrder);
-                    var solicitudId = ruteOrder.Estudios.FirstOrDefault().SolicitudId;
-
-                    var request = await GetExistingRequest(solicitudId);
-
-                    var studiesIds = item.EstudioId;
-                    var studies = await _repository.GetStudyById(solicitudId, studiesIds);
-
-                    studies = studies.Where(x => x.EstatusId == Status.RequestStudy.TomaDeMuestra || x.EstatusId == Status.RequestStudy.EnRuta).ToList();
-
-                    if (studies == null || studies.Count == 0)
+                    if (study.EstatusId == Status.RequestStudy.TomaDeMuestra)
                     {
-                        throw new CustomException(HttpStatusCode.BadRequest);
+                        study.EstatusId = Status.RequestStudy.EnRuta;
                     }
-
-                    foreach (var study in studies)
-                    {
-                        if (study.EstatusId == Status.RequestStudy.TomaDeMuestra)
-                        {
-                            study.EstatusId = Status.RequestStudy.EnRuta;
-                        }
-                        else
-                        {
-                            study.EstatusId = Status.RequestStudy.TomaDeMuestra;
-                        }
-                    }
-                    studyCount += studies.Count;
-                    await _repository.BulkUpdateStudies(solicitudId, studies);
-
                 }
-                return studyCount;
+                await _repository.BulkUpdateStudies(request.Id, studies.ToList());
+
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
+
+        public async Task UpdateTrackingOrder(RouteTrackingFormDto order, string userId)
+        {
+            var existingOrder = await _repository.GetById(order.Id);
+            var updatedOrder = order.ToModelUpdate(existingOrder);
+        }
+
         private async Task<Request> GetExistingRequest(Guid requestId)
         {
             var request = await _repository.FindAsync(requestId);
@@ -177,9 +146,9 @@ namespace Service.MedicalRecord.Application
             }
             return request;
         }
+
         public async Task<(byte[] file, string fileName)> ExportForm(Guid id)
         {
-
             try
             {
                 var order = await GetById(id);
@@ -200,6 +169,7 @@ namespace Service.MedicalRecord.Application
                 throw ex;
             }
         }
+
         public async Task<List<PendingReciveDto>> GetAllRecive(PendingSearchDto search)
         {
             List<PendingReciveDto> revefinal = new List<PendingReciveDto>();
@@ -234,6 +204,7 @@ namespace Service.MedicalRecord.Application
             }
             return revefinal;
         }
+
         public async Task<byte[]> Print(PendingSearchDto search)
         {
             var request = await GetAllRecive(search);
@@ -244,6 +215,7 @@ namespace Service.MedicalRecord.Application
             }
             return await _pdfClient.PendigForm(request);
         }
+
         public async Task<byte[]> ExportDeliver(Guid id)
         {
             var trakingorder = await _repository.GetById(id);

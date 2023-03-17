@@ -132,7 +132,7 @@ namespace Service.MedicalRecord.Mapper
             }).ToList();
         }
 
-        public static TrackingOrder ToModelCreate(this RouteTrackingFormDto dto)
+        public static TrackingOrder ToModelCreate(this RouteTrackingFormDto dto, string userId = null)
         {
             if (dto == null) return null;
 
@@ -145,6 +145,7 @@ namespace Service.MedicalRecord.Mapper
                 Temperatura = dto.Temperatura,
                 Escaneo = dto.Escaneo,
                 FechaCreo = DateTime.Now,
+                UsuarioCreoId = Guid.Parse(userId),
                 Estudios = dto.Estudios.Select(x => new TrackingOrderDetail
                 {
                     Id = Guid.NewGuid(),
@@ -154,8 +155,44 @@ namespace Service.MedicalRecord.Mapper
                     Cantidad = x.Cantidad,
                     Escaneado = x.Escaneo,
                     Extra = x.Extra,
+                    FechaCreo = DateTime.Now,
+                    UsuarioCreoId = Guid.Parse(userId)
                 }).ToList(),
                 Activo = dto.Activo,
+            };
+        }
+
+        public static TrackingOrder ToModelUpdate(this RouteTrackingFormDto dto, TrackingOrder model, string userId = null)
+        {
+            if (dto == null || model == null) return null;
+
+            return new TrackingOrder
+            {
+                Id = model.Id,
+                Muestra = model.Muestra,
+                Clave = model.Clave,
+                DestinoId = dto.Destino,
+                OrigenId = dto.Origen,
+                Activo = dto.Activo,
+                FechaCreo = model.FechaCreo,
+                UsuarioCreoId = model.UsuarioCreoId,
+                FechaMod = DateTime.Now,
+                UsuarioModId = Guid.Parse(userId),
+                Escaneo = dto.Escaneo,
+                Estudios = dto.Estudios.Select(x => new TrackingOrderDetail
+                {
+                    Id = x.Id,
+                    SeguimientoId = x.SeguimientoId,
+                    EtiquetaId = x.EtiquetaId,
+                    SolicitudId = x.SolicitudId,
+                    Cantidad = x.Cantidad,
+                    Escaneado = x.Escaneo,
+                    Extra = x.Extra,
+                    FechaCreo = x.FechoCreo,
+                    UsuarioCreoId = x.UsuarioCreoId,
+                    FechaMod = DateTime.Now,
+                    UsuarioModId = Guid.Parse(userId)
+                }).ToList()
             };
         }
 

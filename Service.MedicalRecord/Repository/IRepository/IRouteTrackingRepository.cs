@@ -24,7 +24,7 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task<RouteTracking> GetTracking(Guid Id);
         Task<IEnumerable<RequestTag>> GetAllTags(string search);
         Task<IEnumerable<RequestTag>> FindTags(string routeId);
-        Task<IEnumerable<RequestStudy>> FindStudies(int tagId, Guid requestId);
+        Task<IEnumerable<RequestStudy>> FindStudies(List<int> tagsId, Guid requestId);
         Task<string> GetLastCode(string date);
     }
 }
