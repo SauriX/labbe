@@ -4,6 +4,19 @@ namespace Service.Catalog.Domain.Price
 {
     public class PriceList_Packet
     {
+        public PriceList_Packet()
+        {
+        }
+
+        public PriceList_Packet(Guid preciosListaId, int paqueteId, decimal precio)
+        {
+            PrecioListaId = preciosListaId;
+            PaqueteId = paqueteId;
+            Precio = precio;
+            Activo = true;
+            FechaCreo = DateTime.Now;
+        }
+
         public Guid PrecioListaId { get; set; }
         public virtual Price.PriceList PrecioLista { get; set; }
         public int PaqueteId { get; set; }

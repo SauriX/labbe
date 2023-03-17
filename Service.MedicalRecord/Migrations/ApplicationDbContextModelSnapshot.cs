@@ -657,6 +657,9 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("NombrePaciente")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Observaciones")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PrimerApellido")
                         .HasColumnType("nvarchar(max)");
 
@@ -699,6 +702,9 @@ namespace Service.MedicalRecord.Migrations
 
                     b.Property<Guid?>("UsuarioModId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("isDefaultTaxData")
+                        .HasColumnType("bit");
 
                     b.HasKey("FacturaID", "ExpedienteID");
 
@@ -1515,6 +1521,9 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("NombreEtiqueta")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Observaciones")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("SolicitudId")
                         .HasColumnType("uniqueidentifier");
 
@@ -1740,6 +1749,9 @@ namespace Service.MedicalRecord.Migrations
 
                     b.Property<Guid?>("UsuarioModId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("isDefaultTaxData")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 

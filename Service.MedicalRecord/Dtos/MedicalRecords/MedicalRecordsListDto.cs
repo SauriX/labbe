@@ -12,6 +12,8 @@ namespace Service.MedicalRecord.Dtos.MedicalRecords
         public string FechaNacimiento { get; set; }
         public decimal MonederoElectronico { get; set; }
         public bool MonederoActivo { get; set; }
+        public Guid SucursalId { get; set; }
+        public string Sucursal { get; set; }
         public string Telefono { get; set; }
     }
 }

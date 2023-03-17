@@ -19,6 +19,7 @@ namespace Service.MedicalRecord.Domain.Request
         public string ClaveEtiqueta { get; set; }
         public string ClaveInicial { get; set; }
         public string NombreEtiqueta { get; set; }
+        public string Observaciones { get; set; }
         public string Color { get; set; }
         public decimal Cantidad { get; set; }
         public virtual ICollection<RequestTagStudy> Estudios { get; set; }

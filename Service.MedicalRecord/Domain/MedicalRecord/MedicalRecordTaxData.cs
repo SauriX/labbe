@@ -14,7 +14,7 @@ namespace Service.MedicalRecord.Domain.MedicalRecord
             UsuarioCreoId = userId;
             FechaCreo = DateTime.Now;
         }
-
+        public bool isDefaultTaxData { get; set; }
         public Guid ExpedienteID { get; set; }
         public virtual MedicalRecord Expediente { get; set; }
         public Guid FacturaID { get; set; }

@@ -16,4 +16,10 @@ namespace Service.Catalog.Dtos.Loyalty
         public string ListaPrecio => string.Join(", ", PrecioLista);
         public bool Activo { get; set; }
     }
+
+    public class LoyaltyClientDto
+    {
+        public DateTime Fecha { get; set; }
+        public Guid ListaPrecioId { get; set; }
+    }
 }

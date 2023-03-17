@@ -62,6 +62,18 @@ namespace Service.MedicalRecord.Repository
             {
                 requests = requests.Where(x => x.CompañiaId != null && filter.Companias.Contains((Guid)x.CompañiaId));
             }
+            if (filter.Departamentos != null && filter.Departamentos.Any())
+            {
+                requests = requests.Where(x => x.Estudios.Any(y => filter.Departamentos.Contains(y.DepartamentoId)));
+            }
+            if (filter.Medicos != null && filter.Medicos.Any())
+            {
+                requests = requests.Where(x => x.MedicoId != null && filter.Medicos.Contains((Guid)x.MedicoId));
+            }
+            if (filter.Urgencias != null && filter.Urgencias.Any())
+            {
+                requests = requests.Where(x => filter.Urgencias.Contains(x.Urgencia));
+            }
             if (!string.IsNullOrWhiteSpace(filter.Buscar))
             {
                 requests = requests.Where(x => x.Clave.ToLower().Contains(filter.Buscar)

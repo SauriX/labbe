@@ -59,27 +59,11 @@ namespace Service.Catalog.Application
 
         public async Task<SeriesDto> GetByNewForm(SeriesNewDto newSerie)
         {
-            _ = new SeriesDto();
-            SeriesDto data;
-
-            if (newSerie.TipoSerie == TIPO_FACTURA)
+            var data = new SeriesDto
             {
-                var userConfiguration = await _configurationApplication.GetFiscal();
-
-                data = new SeriesDto
-                {
-                    Factura = new InvoiceSerieDto(),
-                    Expedicion = new ExpeditionPlaceDto()
-                };
-            }
-            else
-            {
-                data = new SeriesDto
-                {
-                    Factura = new InvoiceSerieDto(),
-                    Expedicion = new ExpeditionPlaceDto()
-                };
-            }
+                Factura = new InvoiceSerieDto(),
+                Expedicion = new ExpeditionPlaceDto()
+            };
 
             return data;
         }
@@ -97,8 +81,6 @@ namespace Service.Catalog.Application
 
             if (tipo == TIPO_FACTURA)
             {
-                var userConfiguration = await _configurationApplication.GetFiscal();
-
                 if (serie.SucursalId != Guid.Empty)
                 {
                     var defaultBranch = await _branchRepository.GetById(serie.SucursalId.ToString());
@@ -175,7 +157,7 @@ namespace Service.Catalog.Application
             await CheckDuplicate(data);
 
             var branch = await _branchRepository.GetById(serie.Expedicion.SucursalId);
-            string branchName = string.Empty;
+            string branchName;
 
             if (branch != null)
             {

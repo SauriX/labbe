@@ -109,6 +109,30 @@
       "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
     {
+      "DownstreamPathTemplate": "/api/MedicalRecord/taxData/default",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/MedicalRecord/taxData/default",
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/MedicalRecord/observations",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 24048
+        }
+      ],
+      "UpstreamPathTemplate": "/api/MedicalRecord/observations",
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/MedicalRecord/updateWallet",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

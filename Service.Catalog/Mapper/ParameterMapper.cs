@@ -155,7 +155,8 @@ namespace Service.Catalog.Mapper
             return model.Select(x => x.Estudio).Select(x => new ParameterStudyDto
             {
                 Id = x.Clave,
-                Nombre = x.Nombre
+                Nombre = x.Nombre,
+                Clave = x.Id
             });
         }
 

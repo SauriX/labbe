@@ -59,7 +59,6 @@ namespace Service.MedicalRecord.Repository
         {
             var report = _context.CAT_Solicitud.Where(x => x.Medico != null)
                 .Where(x => x.Estudios != null)
-                .Where(x => x.Estudios.Any(y => y.EstatusId >= Status.RequestStudy.Solicitado && y.EstatusId < Status.RequestStudy.Cancelado))
                 .Include(x => x.Expediente)
                 .Include(x => x.Medico)
                 .Include(x => x.Estudios).ThenInclude(x => x.Estatus)
@@ -69,10 +68,7 @@ namespace Service.MedicalRecord.Repository
 
             if ((string.IsNullOrWhiteSpace(search.Buscar)) && (search.SucursalId == null || !search.SucursalId.Any()))
             {
-                
-                    report = report.Where(x => search.SucursalesId.Contains(x.SucursalId));
-                
-                
+                report = report.Where(x => search.SucursalesId.Contains(x.SucursalId));
             }
 
             if (!string.IsNullOrWhiteSpace(search.Buscar))
@@ -334,8 +330,8 @@ namespace Service.MedicalRecord.Repository
                 .FirstOrDefaultAsync();
 
         }
-        
 
-       
+
+
     }
 }

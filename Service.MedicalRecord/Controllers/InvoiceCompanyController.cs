@@ -55,12 +55,21 @@ namespace Service.MedicalRecord.Controllers
         {
             return await _service.CheckInPayment(invoice);
         }
+
         [HttpPost("checkin/company")]
         [Authorize(Policies.Access)]
         public async Task<InvoiceDto> CheckInPaymentCompany(InvoiceCompanyDto invoice)
         {
             return await _service.CheckInPaymentCompany(invoice);
         }
+
+        [HttpPost("chekin/global")]
+        [Authorize(Policies.Access)]
+        public async Task CheckInPaymentGlobal(List<Guid> requests)
+        {
+            await _service.CheckInInvoiceGlobal(requests);
+        }
+
         [HttpPost("download/pdf/{facturapiId}")]
         [Authorize(Policies.Access)]
         public async Task<IActionResult> DownloadPDF(Guid facturapiId)
