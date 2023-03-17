@@ -99,6 +99,15 @@ namespace Service.MedicalRecord.Application
 
             return taxData.ToTaxDataDto();
         }
+        public async Task UpdateDefaultTaxData(Guid id)
+        {
+            var taxData = await _repository.GetTaxDataoOnlyById(id);
+
+            taxData.isDefaultTaxData = true;
+
+            await _repository.UpdateTaxData(taxData);
+        }
+
 
         public async Task<MedicalRecordsFormDto> GetById(Guid id)
         {
@@ -171,6 +180,15 @@ namespace Service.MedicalRecord.Application
             updatedPack = await _repository.GetById(updatedPack.Id);
 
             return updatedPack.ToMedicalRecordsListDto();
+        }
+        public async Task UpdateObservation(MedicalRecordObservationsDto observation)
+        {
+            var existing = await _repository.GetById(observation.Id);
+
+            existing.Observaciones = observation.Observations;
+
+            await _repository.UpdateObservation(existing);
+
         }
         public async Task<bool> UpdateWallet(ExpedienteMonederoDto monedero)
         {

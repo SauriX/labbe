@@ -18,14 +18,18 @@ using Microsoft.Extensions.Configuration;
 using Shared.Error;
 using System.Net;
 using SharedResponses = Shared.Dictionary.Responses;
+using Service.MedicalRecord.Domain.MedicalRecord;
 
 namespace Service.MedicalRecord.Application
 {
     public class InvoiceCompanyApplication : IInvoiceCompanyApplication
     {
         private readonly IRequestRepository _repository;
+        private readonly IMedicalRecordRepository _medicalRecordRepository;
         private readonly IInvoiceRepository _invoiceRepository;
+        private readonly IRequestRepository _requestRepository;
         private readonly IBillingClient _billingClient;
+        private readonly ICatalogClient _catalogClient;
         private readonly ISendEndpointProvider _sendEndpointProvider;
         private readonly IRabbitMQSettings _rabbitMQSettings;
         private readonly IQueueNames _queueNames;
@@ -33,17 +37,22 @@ namespace Service.MedicalRecord.Application
         private readonly IPdfClient _pdfClient;
 
         public InvoiceCompanyApplication(
+            IMedicalRecordRepository medicalRecordRepository,
             IRequestRepository repository,
             IInvoiceRepository invoiceRepository,
             IBillingClient billingClient,
+            ICatalogClient catalogClient,
             ISendEndpointProvider sendEndpoint,
             IRabbitMQSettings rabbitMQSettings,
             IQueueNames queueNames,
             IConfiguration configuration,
-            IPdfClient pdfClient
+            IPdfClient pdfClient,
+            IRequestRepository requestRepository
             )
         {
+            _medicalRecordRepository = medicalRecordRepository;
             _repository = repository;
+            _catalogClient = catalogClient;
             _invoiceRepository = invoiceRepository;
             _billingClient = billingClient;
             _sendEndpointProvider = sendEndpoint;
@@ -51,6 +60,9 @@ namespace Service.MedicalRecord.Application
             _rabbitMQSettings = rabbitMQSettings;
             InvoiceCompanyPath = configuration.GetValue<string>("ClientUrls:MedicalRecord") + configuration.GetValue<string>("ClientRoutes:MedicalRecord");
             _pdfClient = pdfClient;
+            _requestRepository = requestRepository;
+
+
         }
 
         public async Task<InvoiceDto> CheckInPayment(InvoiceCompanyDto invoice)
@@ -164,6 +176,89 @@ namespace Service.MedicalRecord.Application
             await _invoiceRepository.CreateInvoiceCompanyData(invoiceCompany, requestsInvoiceCompany);
 
             return invoiceResponse;
+        }
+        public async Task CheckInInvoiceGlobal(List<Guid> requests)
+        {
+            List<InvoiceDto> invoices = new List<InvoiceDto>();
+
+            List<Domain.Request.Request> solicitudes = await _requestRepository.GetRequestsByListId(requests);
+
+            foreach (var solicitud in solicitudes)
+            {
+                var pago = solicitud.Pagos.OrderBy(x => x.Cantidad).FirstOrDefault();
+                
+                Domain.MedicalRecord.MedicalRecord cliente = solicitud.Expediente;
+
+                MedicalRecordTaxData DefaultTaxData = cliente.TaxData.Where(x => x.Factura.isDefaultTaxData == true).FirstOrDefault();
+
+                List<Guid> solicitudesId = new List<Guid>{ solicitud.Id };
+
+                var invoiceDTO = new InvoiceDto
+                {
+                    FormaPago = pago.FormaPago,
+                    MetodoPago = "PUE",
+                    UsoCFDI = "G03",
+                    Serie = "",
+                    RegimenFiscal = DefaultTaxData.Factura.RegimenFiscal,
+                    RFC = DefaultTaxData.Factura.RFC,
+                    SolicitudesId = solicitudesId,
+                    Cliente = new ClientDto
+                    {
+                        RazonSocial = DefaultTaxData.Factura.RazonSocial,
+                        RFC = DefaultTaxData.Factura.RFC,
+                        RegimenFiscal = DefaultTaxData.Factura.RegimenFiscal,
+                        Correo = "",
+                        Telefono = "",
+                        CodigoPostal = DefaultTaxData.Factura.CodigoPostal,
+                        Calle = DefaultTaxData.Factura.Calle,
+                        NumeroExterior = "",
+                        NumeroInterior = "",
+                        Colonia = "",
+                        Ciudad = DefaultTaxData.Factura.Ciudad,
+                        Municipio = "",
+                        Estado = "",
+                        Pais = "",
+                    },
+
+                    Productos = solicitud.Estudios.Select(x => new ProductDto
+                    {
+                        ClaveProdServ = "85121800",
+                        Clave = x.Clave,
+                        Descripcion = x.Nombre,
+                        Precio = x.PrecioFinal,
+                        Descuento = x.Descuento,
+                        Cantidad = 1,
+
+                    }).ToList(),
+                };
+
+                var invoiceResponse = await _billingClient.CheckInPaymentCompany(invoiceDTO);
+
+                var invoiceCompany = invoiceResponse.ToInvoiceCompanyGlobal(solicitud, DefaultTaxData);
+
+                List<RequestInvoiceCompany> requestsInvoiceCompany = new();
+
+                requestsInvoiceCompany.Add(new RequestInvoiceCompany
+                {
+                    Activo = true,
+                    SolicitudId = solicitud.Id,
+                    InvoiceCompanyId = invoiceCompany.Id,
+
+                });
+                
+                await _invoiceRepository.CreateInvoiceCompanyData(invoiceCompany, requestsInvoiceCompany);
+
+            }
+            List<InvoiceDto> invoicesResponses = new List<InvoiceDto>();
+            foreach(var invoice in invoices)
+            {
+                var invoiceResponse = await _billingClient.CheckInPaymentCompany(invoice);
+
+                invoicesResponses.Add(invoiceResponse);
+
+            }
+
+            
         }
         public async Task<InvoiceCompanyDto> GetById(string invoiceId)
         {

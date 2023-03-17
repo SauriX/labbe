@@ -22,7 +22,7 @@ namespace Service.Catalog.Mapper
                 Clave = model.Clave,
                 Nombre = model.Nombre,
                 Periodo = $"{model.FechaInicial:dd/MM/yyyy}-{model.FechaFinal:dd/MM/yyyy}",
-                ListaPrecio = model.ListaPrecio.Nombre,
+                ListaPrecio = model.ListaPrecio?.Nombre,
                 Activo = model.Activo,
             };
         }
@@ -104,7 +104,7 @@ namespace Service.Catalog.Mapper
                 });
             }
 
-            foreach (var price in priceStudyPack.Paquete)
+            foreach (var price in priceStudyPack.Paquetes)
             {
                 var promo = model.Paquetes.FirstOrDefault(x => x.PaqueteId == price.PaqueteId);
 

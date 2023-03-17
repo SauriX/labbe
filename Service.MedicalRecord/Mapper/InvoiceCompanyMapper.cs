@@ -42,11 +42,14 @@ namespace Service.MedicalRecord.Mapper
                     Facturas = x.FacturasCompañia.Select(y => new InvoiceCompanyFacturaDto
                     {
                         FacturaId = y.FacturaId,
-                        FechaCreo = y.FechaCreo.ToString("R"),
+                        FechaCreo = y.FechaCreo.ToString("HH:mm"),
                         Tipo = y.TipoFactura?.ToString(),
                         FacturapiId = y.FacturapiId,
                         Serie = y.Serie,
                         Consecutivo = y.Consecutivo.ToString(),
+                        FormaPago = y.FormaPago,
+                        Nombre = y.Nombre,
+                        CantidadTotal = y.CantidadTotal,
                         SolicitudesId = model
                         .Where(z => z.FacturasCompañia.Select(p => p.FacturapiId).Contains(y.FacturapiId))
                         .Select(z => z.Id)
@@ -129,6 +132,56 @@ namespace Service.MedicalRecord.Mapper
                     Cantidad = x.Cantidad,
                     Importe = x.Importe,
                     ClaveProdServ = x.ClaveProdServ,
+                }).ToList(),
+            };
+        }
+        public static InvoiceCompany ToInvoiceCompanyGlobal(this InvoiceDto model, Domain.Request.Request request, Domain.MedicalRecord.MedicalRecordTaxData taxData)
+        {
+            decimal cantidadTotal = request.Estudios.Sum(x => x.PrecioFinal);
+            decimal IVA = (cantidadTotal * 16) / 100;
+            decimal subtotal = cantidadTotal - IVA;
+
+            return new InvoiceCompany
+            {
+                Id = Guid.NewGuid(),
+                Estatus = "Facturado",
+                TipoFactura = "request",
+                OrigenFactura = "global",
+                FacturaId = model.Id,
+                FacturapiId = model.FacturapiId,
+                TaxDataId = taxData.Factura.Id,
+                //CompañiaId = model.CompanyId,
+                ExpedienteId = request.ExpedienteId,
+                //FormaPagoId = model.FormaPagoId,
+                FormaPago = "PUE",
+                //NumeroCuenta = model.NumeroCuenta,
+                Serie = model.Serie,
+                UsoCFDI = model.UsoCFDI,
+                TipoDesgloce = "desglozado",
+                CantidadTotal = cantidadTotal,
+                Subtotal = subtotal,
+                IVA = IVA,
+                FechaCreo = DateTime.Now,
+                Nombre = request.Expediente.NombreCompleto,
+                Consecutivo = 0,
+                //BancoId = model.BancoId,
+                ClaveExterna = "PARTICULARES",
+                //DiasCredito = model.DiasCredito,
+                FormaPagoId = 1,
+                TipoPago = "01 Efectivo",
+                RFC = taxData.Factura.RFC,
+                //DireccionFiscal = model.Cliente?.DireccionFiscal,
+                RazonSocial = taxData.Factura.RazonSocial,
+                RegimenFiscal = taxData.Factura.RegimenFiscal,
+                DetalleFactura = request.Estudios.Select(x => new InvoiceCompanyDetail
+                {
+                    Id = Guid.NewGuid(),
+                    SolicitudClave = request.Clave,
+                    EstudioClave = x.Clave,
+                    Concepto = x.Nombre,
+                    Cantidad = 1,
+                    Importe = x.PrecioFinal,
+                    ClaveProdServ = "85121800",
                 }).ToList(),
             };
         }

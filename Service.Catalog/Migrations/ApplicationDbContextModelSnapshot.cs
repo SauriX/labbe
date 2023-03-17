@@ -2580,44 +2580,20 @@ namespace Service.Catalog.Migrations
                     b.Property<string>("Comentarios")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DiasDeEntrega")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("DestinoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Domingo")
                         .HasColumnType("bit");
 
-                    b.Property<string>("EstudioId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("FechaCreo")
                         .HasColumnType("smalldatetime");
-
-                    b.Property<DateTime?>("FechaFinal")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaInicial")
-                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("FechaModifico")
                         .HasColumnType("smalldatetime");
 
-                    b.Property<decimal>("FormatoDeTiempoId")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime?>("HoraDeEntrega")
+                    b.Property<DateTime>("HoraDeRecoleccion")
                         .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("HoraDeEntregaEstimada")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("HoraDeRecoleccion")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("IdResponsableEnvio")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("IdResponsableRecepcion")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Jueves")
                         .HasColumnType("bit");
@@ -2639,26 +2615,20 @@ namespace Service.Catalog.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<Guid?>("OrigenId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int?>("PaqueteriaId")
                         .HasColumnType("int");
-
-                    b.Property<bool?>("RequierePaqueteria")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("Sabado")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("SeguimientoPaqueteria")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("SucursalDestinoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("SucursalOrigenId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("TiempoDeEntrega")
                         .HasColumnType("int");
+
+                    b.Property<byte>("TipoTiempo")
+                        .HasColumnType("tinyint");
 
                     b.Property<string>("UsuarioCreoId")
                         .HasColumnType("nvarchar(max)");
@@ -2671,13 +2641,13 @@ namespace Service.Catalog.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DestinoId");
+
                     b.HasIndex("MaquiladorId");
 
+                    b.HasIndex("OrigenId");
+
                     b.HasIndex("PaqueteriaId");
-
-                    b.HasIndex("SucursalDestinoId");
-
-                    b.HasIndex("SucursalOrigenId");
 
                     b.ToTable("CAT_Rutas");
                 });
@@ -3583,9 +3553,19 @@ namespace Service.Catalog.Migrations
 
             modelBuilder.Entity("Service.Catalog.Domain.Route.Route", b =>
                 {
+                    b.HasOne("Service.Catalog.Domain.Branch.Branch", "Destino")
+                        .WithMany()
+                        .HasForeignKey("DestinoId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("Service.Catalog.Domain.Maquila.Maquila", "Maquilador")
                         .WithMany()
                         .HasForeignKey("MaquiladorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Service.Catalog.Domain.Branch.Branch", "Origen")
+                        .WithMany()
+                        .HasForeignKey("OrigenId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Service.Catalog.Domain.Catalog.Delivery", "Paqueteria")
@@ -3593,23 +3573,13 @@ namespace Service.Catalog.Migrations
                         .HasForeignKey("PaqueteriaId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Service.Catalog.Domain.Branch.Branch", "SucursalDestino")
-                        .WithMany()
-                        .HasForeignKey("SucursalDestinoId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Service.Catalog.Domain.Branch.Branch", "SucursalOrigen")
-                        .WithMany()
-                        .HasForeignKey("SucursalOrigenId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                    b.Navigation("Destino");
 
                     b.Navigation("Maquilador");
 
+                    b.Navigation("Origen");
+
                     b.Navigation("Paqueteria");
-
-                    b.Navigation("SucursalDestino");
-
-                    b.Navigation("SucursalOrigen");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Route.Route_Study", b =>

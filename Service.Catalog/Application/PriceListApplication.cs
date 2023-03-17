@@ -114,7 +114,9 @@ namespace Service.Catalog.Application
                 .Where(x => !x.Parametro.TipoValor.In(VT.Observacion, VT.Etiqueta, VT.SinValor, VT.Texto, VT.Parrafo))
                 .ToList();
 
-            var priceDto = price.ToPriceListInfoStudyDto();
+            var studyRoute = await _repository.GetStudyRoute(price.EstudioId);
+
+            var priceDto = price.ToPriceListInfoStudyDto(studyRoute);
             priceDto.Identificador = Helpers.GenerateRandomHex(6);
 
             var promos = await _promotionRepository.GetStudyPromos(price.PrecioListaId, filterDto.SucursalId, filterDto.MedicoId, (int)filterDto.EstudioId);

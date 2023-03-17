@@ -1,4 +1,5 @@
 ﻿using Service.Catalog.Domain.Price;
+using Service.Catalog.Domain.Route;
 using Service.Catalog.Dtos.Common;
 using Service.Catalog.Dtos.Pack;
 using Service.Catalog.Dtos.PriceList;
@@ -207,7 +208,7 @@ namespace Service.Catalog.Mapper
                     Precio = x.Precio,
                     Activo = x.Activo,
                 })?.ToList(),
-                Paquete = model.Paquete?.Select(x => new PriceListStudyDto
+                Paquete = model.Paquetes?.Select(x => new PriceListStudyDto
                 {
                     Id = x.PaqueteId,
                     Clave = x.Paquete.Clave.Trim(),
@@ -258,12 +259,15 @@ namespace Service.Catalog.Mapper
             };
         }
 
-        public static PriceListInfoStudyDto ToPriceListInfoStudyDto(this PriceList_Study model)
+        public static PriceListInfoStudyDto ToPriceListInfoStudyDto(this PriceList_Study model, Route_Study studyRoute = null)
         {
             if (model == null) return null;
 
             return new PriceListInfoStudyDto
             {
+                Destino = studyRoute?.Ruta.Nombre,
+                DestinoId = studyRoute?.RouteId,
+                DestinoTipo = 1,
                 ListaPrecioId = model.PrecioListaId,
                 ListaPrecio = model.PrecioLista.Nombre,
                 EstudioId = model.EstudioId,
@@ -345,7 +349,7 @@ namespace Service.Catalog.Mapper
                     Precio = x.Precio,
                     Activo = true,
                 })?.ToList(),
-                Paquete = dto.Paquete?.Select(x => new PriceList_Packet
+                Paquetes = dto.Paquete?.Select(x => new PriceList_Packet
                 {
                     PaqueteId = x.Id,
                     Precio = x.Precio,
@@ -399,7 +403,7 @@ namespace Service.Catalog.Mapper
                     Precio = x.Precio,
                     Activo = x.Activo,
                 })?.ToList(),
-                Paquete = dto.Paquete?.Select(x => new PriceList_Packet
+                Paquetes = dto.Paquete?.Select(x => new PriceList_Packet
                 {
                     PrecioListaId = model.Id,
                     PaqueteId = x.Id,

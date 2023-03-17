@@ -100,6 +100,28 @@
       "UpstreamhttpsMethod": [ "POST", "PUT" ]
     },
     {
+      "DownstreamPathTemplate": "/services/records/api/MedicalRecord/taxData/default",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/MedicalRecord/taxData/default",
+      "UpstreamhttpsMethod": [ "POST", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/services/records/api/MedicalRecord/observations",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/MedicalRecord/observations",
+      "UpstreamhttpsMethod": [ "POST", "PUT" ]
+    },
+    {
       "DownstreamPathTemplate": "/services/records/api/MedicalRecord/updateWallet",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [

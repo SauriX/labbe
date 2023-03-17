@@ -1308,7 +1308,7 @@ namespace Service.MedicalRecord.Application
             var studyAndPack = studies.Select(x => new { x.Descuento, x.Precio, x.PrecioFinal, Copago = x.EstudioWeeClinic?.TotalPaciente ?? 0 })
                 .Concat(packs.Select(x => new { x.Descuento, x.Precio, x.PrecioFinal, Copago = 0m }));
 
-            var totalStudies = studyAndPack.Sum(x => x.PrecioFinal);
+            var totalStudies = studyAndPack.Sum(x => x.Precio);
 
             var discount = totalStudies == 0 ? 0 : studyAndPack.Sum(x => x.Descuento);
             var charge = totalStudies == 0 ? 0 : request.Urgencia == URGENCIA_CARGO ? totalStudies * .10m : 0;

@@ -2,7 +2,7 @@
 
 namespace Service.MedicalRecord.Dtos.TrackingOrder
 {
-    public class StudiesRequestRouteDto
+    public class StudyRouteDto
     {
         public string Clave { get; set; }
         public Guid SolicitudId { get; set; }
