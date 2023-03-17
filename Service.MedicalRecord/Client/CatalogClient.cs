@@ -230,5 +230,13 @@ namespace Service.MedicalRecord.Client
 
             throw new CustomException(HttpStatusCode.BadRequest, error.Errors);
         }
+
+        public async Task<LoyaltyListDto> GetLoyalty(LoyaltyDto loyalty)
+        {
+            var url = $"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/loyalty/getByPriceList";
+            var response = await _client.PostAsJson<LoyaltyListDto>(url, loyalty);
+
+            return response;
+        }
     }
 }

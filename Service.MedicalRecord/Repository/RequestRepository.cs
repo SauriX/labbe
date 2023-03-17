@@ -25,7 +25,9 @@ namespace Service.MedicalRecord.Repository
 
         public async Task<Request> FindAsync(Guid id)
         {
-            var request = await _context.CAT_Solicitud.FindAsync(id);
+            var request = await _context.CAT_Solicitud
+                .Include(x => x.Estudios)
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             return request;
         }

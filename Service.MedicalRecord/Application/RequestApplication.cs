@@ -53,6 +53,7 @@ namespace Service.MedicalRecord.Application
         private readonly IMedicalRecordRepository _recordRepository;
         private readonly IBillingClient _billingClient;
         private readonly ITrackingOrderRepository _trackingOrderRepository;
+        private readonly IMedicalRecordRepository _medicalRecordRepository;
         private const byte URGENCIA_CARGO = 3;
 
         public RequestApplication(
@@ -67,7 +68,8 @@ namespace Service.MedicalRecord.Application
             IRepository<Domain.Catalogs.Branch> branchRepository,
             IMedicalRecordRepository recordRepository,
             IBillingClient billingClient,
-            ITrackingOrderRepository trackingOrder
+            ITrackingOrderRepository trackingOrder,
+            IMedicalRecordRepository medicalRecord
             )
         {
             _transaction = transaction;
@@ -82,6 +84,7 @@ namespace Service.MedicalRecord.Application
             _recordRepository = recordRepository;
             _billingClient = billingClient;
             _trackingOrderRepository = trackingOrder;
+            _medicalRecordRepository = medicalRecord;
         }
 
         public async Task<IEnumerable<RequestInfoDto>> GetByFilter(RequestFilterDto filter)
@@ -99,7 +102,7 @@ namespace Service.MedicalRecord.Application
             {
                 throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
             }
-            return  request.ToRequestDto();
+            return request.ToRequestDto();
         }
 
         public async Task<RequestGeneralDto> GetGeneral(Guid recordId, Guid requestId)
@@ -410,9 +413,44 @@ namespace Service.MedicalRecord.Application
 
             await _repository.CreatePayment(newPayment);
 
+            var loyalty = await UpdateRecordWallet(requestDto, request);
+
             await UpdateTotals(request.ExpedienteId, request.Id, requestDto.UsuarioId);
 
-            return newPayment.ToRequestPaymentDto();
+            return newPayment.ToRequestPaymentDto(loyalty);
+        }
+
+        private async Task<bool> UpdateRecordWallet(RequestPaymentDto requestDto, Request request)
+        {
+            var record = await _medicalRecordRepository.GetById(requestDto.ExpedienteId);
+            var sucess = false;
+
+            if (record != null && record.MonederoActivo && request.Procedencia == ORIGIN.PARTICULAR)
+            {
+                var priceListId = request.Estudios.FirstOrDefault().ListaPrecioId;
+                var newLoyalty = new LoyaltyDto
+                {
+                    Fecha = DateTime.Now,
+                    ListaPrecioId = priceListId
+                };
+
+                var loyalty = await _catalogClient.GetLoyalty(newLoyalty);
+
+                if (loyalty != null)
+                {
+                    var percentDescount = (requestDto.Cantidad * loyalty.CantidadDescuento) / 100;
+                    record.Monedero += loyalty.TipoDescuento == "Porcentaje" ? percentDescount : loyalty.CantidadDescuento;
+
+                    await _medicalRecordRepository.UpdateWallet(record);
+                    sucess = true;
+                }
+                else
+                {
+                    throw new CustomException(HttpStatusCode.NotFound, "No existe una lealtad que coincida con la lista de precio o fecha actual");
+                }
+
+            }
+            return sucess;
         }
 
         public async Task<IEnumerable<RequestPaymentDto>> CheckInPayment(RequestCheckInDto checkInDto)

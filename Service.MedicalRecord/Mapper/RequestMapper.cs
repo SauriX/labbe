@@ -113,7 +113,7 @@ namespace Service.MedicalRecord.Mapper
             };
         }
 
-        public static RequestPaymentDto ToRequestPaymentDto(this RequestPayment model)
+        public static RequestPaymentDto ToRequestPaymentDto(this RequestPayment model, bool loyalty = false)
         {
             if (model == null) return null;
 
@@ -130,7 +130,8 @@ namespace Service.MedicalRecord.Mapper
                 SerieFactura = model.SerieFactura,
                 FacturapiId = model.FacturapiId,
                 UsuarioRegistra = model.UsuarioRegistra,
-                EstatusId = model.EstatusId
+                EstatusId = model.EstatusId,
+                Lealtad = loyalty
             };
         }
 
