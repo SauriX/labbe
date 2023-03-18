@@ -57,12 +57,12 @@ namespace Service.Catalog
                 // base Quartz scheduler, job and trigger configuration
                 q.UseMicrosoftDependencyInjectionScopedJobFactory();
                 // Just use the name of your job that you created in the Jobs folder.
-                var jobKey = new JobKey("Noptification");
+                var jobKey = new JobKey("Notification");
                 q.AddJob<NotificationJob>(opts => opts.WithIdentity(jobKey));
 
                 q.AddTrigger(opts => opts
                     .ForJob(jobKey)
-                    .WithIdentity("Noptification")
+                    .WithIdentity("Notification")
                      //This Cron interval can be described as "run every day at 7:00" (when second is zero)
                      .WithCronSchedule("0 * * ? * *")
                      //.WithCronSchedule("0 30 7 1/1 * ? *")

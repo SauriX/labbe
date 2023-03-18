@@ -112,7 +112,7 @@ namespace Service.MedicalRecord.Client
         public async Task<List<NotificationListDto>> GetNotifications(string search)
 
         {
-            var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/notifications/all/notification/{search}");
+            var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/notifications/all/notificationJob/{search}");
 
             if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
             {

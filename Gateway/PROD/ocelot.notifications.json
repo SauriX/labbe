@@ -13,7 +13,7 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/services/catalogo/api/notifications/notification/{search}",
+      "DownstreamPathTemplate": "/services/catalogo/api/all/notifications/notification/{search}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -21,7 +21,19 @@
 
         }
       ],
-      "UpstreamPathTemplate": "/api/notifications/notification/{search}",
+      "UpstreamPathTemplate": "/api/notifications/all/notification/{search}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/services/catalogo/api/notifications/all/notificationJob/{search}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+
+        }
+      ],
+      "UpstreamPathTemplate": "/api/notifications/all/notificationJob/{search}",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {

@@ -21,6 +21,7 @@ using Service.MedicalRecord.Client;
 using Service.MedicalRecord.Client.IClient;
 using Service.MedicalRecord.Consumers;
 using Service.MedicalRecord.Context;
+using Service.MedicalRecord.Jobs;
 using Service.MedicalRecord.Middleware;
 using Service.MedicalRecord.Repository;
 using Service.MedicalRecord.Repository.IRepository;
@@ -48,29 +49,7 @@ namespace Service.MedicalRecord
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddQuartz(q =>
-            {
-                // base Quartz scheduler, job and trigger configuration
-                q.UseMicrosoftDependencyInjectionScopedJobFactory();
-                // Just use the name of your job that you created in the Jobs folder.
-                var jobKey = new JobKey("Noptification");
-                q.AddJob<NotificationJob>(opts => opts.WithIdentity(jobKey));
 
-                q.AddTrigger(opts => opts
-                    .ForJob(jobKey)
-                    .WithIdentity("Noptification")
-                     //This Cron interval can be described as "run every day at 7:00" (when second is zero)
-                     .WithCronSchedule("0 * * ? * *")
-                //.WithCronSchedule("0 30 7 1/1 * ? *")
-                );
-            });
-
-            // ASP.NET Core hosting
-            services.AddQuartzServer(options =>
-            {
-                // when shutting down we want jobs to complete gracefully
-                options.WaitForJobsToComplete = true;
-            });
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
@@ -115,7 +94,7 @@ namespace Service.MedicalRecord
 
             services.AddHttpClient<ICatalogClient, CatalogClient>(client =>
             {
-                var token = new HttpContextAccessor().HttpContext.Request.Headers["Authorization"].ToString();
+                var token = new HttpContextAccessor().HttpContext?.Request?.Headers?["Authorization"].ToString();
 
                 client.BaseAddress = new Uri(Configuration["ClientUrls:Catalog"]);
 
@@ -326,6 +305,44 @@ namespace Service.MedicalRecord
             services.AddScoped<IResultaValidationRepository, ResultValidationRepository>();
             services.AddScoped<IRelaseResultRepository, RelaseResultRepository>();
             services.AddScoped<IInvoiceCatalogRepository, InvoiceCatalogRepository>();
+            services.AddQuartz(q =>
+            {
+              
+                // Just use the name of your job that you created in the Jobs folder.
+                var jobKey = new JobKey("NotificationCita");
+                q.AddJob<NotificationCitaJob>(opts => opts.WithIdentity(jobKey));
+
+                q.AddTrigger(opts => opts
+                    .ForJob(jobKey)
+                    .WithIdentity("NotificationCita")
+                     //This Cron interval can be described as "run every day at 7:00" (when second is zero)
+                     .WithCronSchedule("0 * * ? * *")
+                //.WithCronSchedule("0 30 7 1/1 * ? *")
+                );
+
+                   var jobKey1 = new JobKey("NotificationSampling");
+                   q.AddJob<NotificationSamplingJob>(opts => opts.WithIdentity(jobKey1));
+
+                   q.AddTrigger(opts => opts
+                       .ForJob(jobKey1)
+                       .WithIdentity("NotificationSampling")
+                        //This Cron interval can be described as "run every day at 6:00pm" (when second is zero)
+                        .WithCronSchedule("0 * * ? * *")
+                   //.WithCronSchedule("0 0 18 1/1 * ? *")
+                   );
+                // base Quartz scheduler, job and trigger configuration
+                q.UseMicrosoftDependencyInjectionScopedJobFactory();
+            });
+
+            // ASP.NET Core hosting
+            services.AddQuartzServer(options =>
+            {
+                //options.AwaitApplicationStarted = true;
+
+                // when shutting down we want jobs to complete gracefully
+                options.WaitForJobsToComplete = true;
+            });
+
         }
 
 

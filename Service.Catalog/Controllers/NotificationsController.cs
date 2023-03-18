@@ -32,6 +32,12 @@ namespace Service.Catalog.Controllers
         {
             return await _Service.GetAllNotifications(search);
         }
+        [HttpGet("all/notificationJob/{search}")]
+        [AllowAnonymous]
+        public async Task<IEnumerable<NotificationListDto>> GetAllNotificationsPublic(string search = null)
+        {
+            return await _Service.GetAllNotifications(search);
+        }
 
         [HttpGet("all/avisos/{search}")]
         [Authorize(Policies.Access)]

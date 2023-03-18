@@ -13,7 +13,7 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/notifications/notification/{search}",
+      "DownstreamPathTemplate": "/api/notifications/all/notification/{search}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -21,7 +21,19 @@
           "Port": 20347
         }
       ],
-      "UpstreamPathTemplate": "/api/notifications/notification/{search}",
+      "UpstreamPathTemplate": "/api/notifications/all/notification/{search}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/notifications/all/notificationJob/{search}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/notifications/all/notificationJob/{search}",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
@@ -58,7 +70,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/notifications/status/{id}",
-      "UpstreamHttpMethod": [   "PUT" ]
+      "UpstreamHttpMethod": [ "PUT" ]
     }
 
   ]

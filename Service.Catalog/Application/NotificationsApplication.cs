@@ -71,7 +71,6 @@ namespace Service.Catalog.Application
 
 
             existing.Activo = !existing.Activo;
-            await CheckDuplicate(existing);
             await _repository.Update(existing);
             
            
