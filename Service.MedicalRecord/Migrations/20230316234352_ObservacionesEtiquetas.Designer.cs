@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service.MedicalRecord.Context;
 
 namespace Service.MedicalRecord.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230316234352_ObservacionesEtiquetas")]
+    partial class ObservacionesEtiquetas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -657,9 +659,6 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("NombrePaciente")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Observaciones")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("PrimerApellido")
                         .HasColumnType("nvarchar(max)");
 
@@ -702,9 +701,6 @@ namespace Service.MedicalRecord.Migrations
 
                     b.Property<Guid?>("UsuarioModId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("isDefaultTaxData")
-                        .HasColumnType("bit");
 
                     b.HasKey("FacturaID", "ExpedienteID");
 
@@ -1293,9 +1289,6 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<decimal>("DescuentoPorcentaje")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid?>("DestinoId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<decimal>("Dias")
                         .HasColumnType("decimal(18,2)");
 
@@ -1527,9 +1520,6 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<Guid>("SolicitudId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("TrackingOrderId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");
 
@@ -1539,8 +1529,6 @@ namespace Service.MedicalRecord.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("SolicitudId");
-
-                    b.HasIndex("TrackingOrderId");
 
                     b.ToTable("Relacion_Solicitud_Etiquetas");
                 });
@@ -1750,9 +1738,6 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<Guid?>("UsuarioModId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("isDefaultTaxData")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
 
                     b.ToTable("CAT_Datos_Fiscales");
@@ -1770,19 +1755,13 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<string>("Clave")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("DestinoId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("DiaRecoleccion")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("Escaneo")
+                    b.Property<bool>("EscaneoCodigoBarras")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("FechaCreo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaEntrega")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("FechaMod")
@@ -1791,17 +1770,20 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<int>("MaquiladorId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Muestra")
+                    b.Property<string>("MuestraId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("OrigenId")
+                    b.Property<string>("RutaId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("RutaId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("SucursalDestinoId")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Temperatura")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("SucursalOrigenId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Temperatura")
+                        .HasColumnType("float");
 
                     b.Property<Guid>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");
@@ -1820,13 +1802,13 @@ namespace Service.MedicalRecord.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("Cantidad")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<bool>("Escaneado")
                         .HasColumnType("bit");
 
-                    b.Property<int>("EtiquetaId")
+                    b.Property<string>("Estudio")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EstudioId")
                         .HasColumnType("int");
 
                     b.Property<Guid>("ExpedienteId")
@@ -1847,8 +1829,14 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<Guid>("SeguimientoId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("SolicitudEstudioId")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("SolicitudId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Temperatura")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");
@@ -1858,9 +1846,9 @@ namespace Service.MedicalRecord.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EtiquetaId");
-
                     b.HasIndex("SeguimientoId");
+
+                    b.HasIndex("SolicitudEstudioId");
 
                     b.HasIndex("SolicitudId");
 
@@ -2204,10 +2192,6 @@ namespace Service.MedicalRecord.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Service.MedicalRecord.Domain.TrackingOrder.TrackingOrder", null)
-                        .WithMany("Etiquetas")
-                        .HasForeignKey("TrackingOrderId");
-
                     b.Navigation("Solicitud");
                 });
 
@@ -2235,15 +2219,15 @@ namespace Service.MedicalRecord.Migrations
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.TrackingOrder.TrackingOrderDetail", b =>
                 {
-                    b.HasOne("Service.MedicalRecord.Domain.Request.RequestTag", "Etiqueta")
-                        .WithMany()
-                        .HasForeignKey("EtiquetaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Service.MedicalRecord.Domain.TrackingOrder.TrackingOrder", "Seguimiento")
                         .WithMany("Estudios")
                         .HasForeignKey("SeguimientoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Service.MedicalRecord.Domain.Request.RequestStudy", "SolicitudEstudio")
+                        .WithMany()
+                        .HasForeignKey("SolicitudEstudioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2253,11 +2237,11 @@ namespace Service.MedicalRecord.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Etiqueta");
-
                     b.Navigation("Seguimiento");
 
                     b.Navigation("Solicitud");
+
+                    b.Navigation("SolicitudEstudio");
                 });
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.Appointments.AppointmentDom", b =>
@@ -2327,8 +2311,6 @@ namespace Service.MedicalRecord.Migrations
             modelBuilder.Entity("Service.MedicalRecord.Domain.TrackingOrder.TrackingOrder", b =>
                 {
                     b.Navigation("Estudios");
-
-                    b.Navigation("Etiquetas");
                 });
 #pragma warning restore 612, 618
         }

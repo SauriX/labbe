@@ -66,6 +66,16 @@ namespace Service.Catalog.Repository
 
             return loyalList;
         }
+
+        public async Task<Loyalty> GetByPriceListDate(DateTime date, Guid priceList)
+        {
+            var loyalty = _context.CAT_Lealtad
+                .Include(x => x.PrecioLista).ThenInclude(x => x.PrecioLista)
+                .FirstOrDefaultAsync(x => date >= x.FechaInicial && x.FechaFinal >= date && x.PrecioLista.Any(x => x.PrecioListaId == priceList) && x.Activo);
+
+            return await loyalty;
+        }
+
         public async Task<bool> IsDuplicateDate(DateTime fechainicial, DateTime fechafinal, Guid id)
         {
             return await _context.CAT_Lealtad.AnyAsync

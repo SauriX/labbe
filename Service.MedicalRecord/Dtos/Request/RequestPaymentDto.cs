@@ -19,6 +19,7 @@ namespace Service.MedicalRecord.Dtos.Request
         public string SerieFactura { get; set; }
         public string FacturapiId { get; set; }
         public string UsuarioRegistra { get; set; }
+        public bool Lealtad { get; set; }
         public byte EstatusId { get; set; }
         [JsonIgnore]
         public Guid UsuarioId { get; set; }
