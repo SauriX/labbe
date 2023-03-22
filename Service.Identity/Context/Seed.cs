@@ -127,6 +127,7 @@ namespace Service.Identity.Context
         {
             var menus = new List<Menu>
             {
+                //last id 45 next id 46
                 // Configuracion de Catalogos -> Orden 1000
                 new Menu(1, null, "Configuración", "cat", "", 1000),
                 new Menu(2, 1, "Roles", "role", "roles", 1010),
@@ -149,6 +150,7 @@ namespace Service.Identity.Context
                 new Menu(28, 1, "Admin. Equipos", "equipment", "equipment", 1180),
                 new Menu(29, 1, "Mantenimiento", "mantain","equipmentMantain", 1190),
                 new Menu(41, 1, "Series de facturas y recibos", "series", "series", 1200),
+                new Menu(45, 1, "Catalogos de Notificaciones y Avisos", "notifications", "notifications", 1210),
 
                 // Parametros de sistema -> Orden 5000
                 new Menu(20, null, "Parámetros de sistema", "configuration", "configuration", 5000),

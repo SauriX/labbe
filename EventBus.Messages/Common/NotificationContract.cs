@@ -6,8 +6,9 @@
         {
         }
 
-        public NotificationContract(string mensaje, bool esAlerta)
+        public NotificationContract(string mensaje, bool esAlerta,string para = "all")
         {
+            Para = para;
             Mensaje = mensaje;
             EsAlerta = esAlerta;
         }

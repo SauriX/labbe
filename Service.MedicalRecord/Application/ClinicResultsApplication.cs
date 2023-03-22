@@ -36,6 +36,7 @@ using ClosedXML.Report.Utils;
 using Service.MedicalRecord.Dtos.WeeClinic;
 using Service.MedicalRecord.Dtos.Appointment;
 using System.Text.Json;
+using MassTransit.Transports;
 
 namespace Service.MedicalRecord.Application
 {
@@ -49,6 +50,7 @@ namespace Service.MedicalRecord.Application
         private readonly IRabbitMQSettings _rabbitMQSettings;
         private readonly IQueueNames _queueNames;
         private readonly IWeeClinicApplication _weeService;
+        private readonly IPublishEndpoint _publishEndpoint;
         private readonly string MedicalRecordPath;
         private const byte PARTICULAR = 2;
         private const byte CARGA_RESULTADOS = 0;
@@ -64,7 +66,8 @@ namespace Service.MedicalRecord.Application
             IRabbitMQSettings rabbitMQSettings,
             IQueueNames queueNames,
             IConfiguration configuration,
-            IWeeClinicApplication weeService)
+            IWeeClinicApplication weeService,
+            IPublishEndpoint publishEndpoint)
         {
             _repository = repository;
             _request = request;
@@ -75,6 +78,7 @@ namespace Service.MedicalRecord.Application
             _rabbitMQSettings = rabbitMQSettings;
             MedicalRecordPath = configuration.GetValue<string>("ClientUrls:MedicalRecord") + configuration.GetValue<string>("ClientRoutes:MedicalRecord");
             _weeService = weeService;
+            _publishEndpoint = publishEndpoint;
         }
 
         public async Task<(byte[] file, string fileName)> ExportList(ClinicResultSearchDto search)
@@ -692,6 +696,39 @@ namespace Service.MedicalRecord.Application
                         //}
                     }
                 }
+
+                var notifications = await _catalogClient.GetNotifications("Captura de resultados");
+                var createnotification = notifications.FirstOrDefault(x => x.Tipo == "Procesing");
+                
+                if (createnotification.Activo)
+                {
+                    foreach (var estudio in results) {
+
+                        var mensaje = createnotification.Contenido.Replace("[Nestudio]", estudio.Estudio);
+                        mensaje = mensaje.Replace("[Nsolicitud]", existingRequest.Clave);
+                        mensaje = mensaje.Replace("[Nsucursal]", existingRequest.Sucursal.Nombre);
+                        var contract = new NotificationContract(mensaje, false);
+                        await _publishEndpoint.Publish(contract);
+
+
+                    }
+  
+
+                }
+                createnotification = notifications.FirstOrDefault(x => x.Tipo == "Critic");
+                if (createnotification.Activo)
+                {
+                    var critico = results.Any(x=> x.CriticoMinimo< Decimal.Parse(x.ValorInicial) || x.CriticoMaximo > Decimal.Parse(x.ValorFinal));
+
+                        var mensaje = createnotification.Contenido.Replace("[Nsolicitud]", existingRequest.Clave);
+                        var contract = new NotificationContract(mensaje, false);
+                        await _publishEndpoint.Publish(contract);
+
+
+                    
+
+
+                }
             }
         }
 
@@ -1011,7 +1048,17 @@ namespace Service.MedicalRecord.Application
 
                     files.Add(new SenderFiles(new Uri(pathName), namePdf));
                 }
+                var notifications = await _catalogClient.GetNotifications("Envio de resultados"); 
+                var createnotification = notifications.FirstOrDefault(x => x.Tipo == "Send");
+                var mensaje = createnotification.Contenido.Replace("[Nsolicitud]", existingRequest.Clave);
+                
+                if (createnotification.Activo)
+                {
 
+                    var contract = new NotificationContract(mensaje, false);
+                    await _publishEndpoint.Publish(contract);
+
+                }
                 try
                 {
                     //if (files.Count > 0 && canSendResultBalance(existingRequest))
@@ -1045,8 +1092,19 @@ namespace Service.MedicalRecord.Application
                     }
 
                 }
-                catch (Exception ex)
-                {
+                catch (Exception ex) { 
+               
+                     createnotification = notifications.FirstOrDefault(x => x.Tipo == "Fail");
+                    mensaje = createnotification.Contenido.Replace("[Nsolicitud]", existingRequest.Clave);
+                    
+                    if (createnotification.Activo)
+                    {
+
+                        var contract = new NotificationContract(mensaje, false);
+                        await _publishEndpoint.Publish(contract);
+
+                    }
+
                     throw ex;
                 }
 
