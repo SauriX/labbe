@@ -71,8 +71,7 @@ namespace Service.MedicalRecord.Application
             IMedicalRecordRepository recordRepository,
             IBillingClient billingClient,
             ITrackingOrderRepository trackingOrder,
-            IMedicalRecordRepository medicalRecord
-
+            IMedicalRecordRepository medicalRecord,
             IPublishEndpoint publishEndpoint
             )
         {
