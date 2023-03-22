@@ -291,7 +291,7 @@ namespace Service.MedicalRecord.Application
                 if (createnotification.Activo)
                 {
 
-                    var mensaje = createnotification.Contenido.Replace("Solicitar estudios", newRequest.Clave);
+                    var mensaje = createnotification.Contenido.Replace("Nlista", newRequest.Clave);
                     var contract = new NotificationContract(mensaje, false);
                     await _publishEndpoint.Publish(contract);
 

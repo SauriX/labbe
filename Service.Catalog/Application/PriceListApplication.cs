@@ -236,8 +236,8 @@ namespace Service.Catalog.Application
             var notifications = await _notificationsRepository.GetAll("Lista de precios",true);
             var createnotification = notifications.FirstOrDefault(x=>x.Tipo == "Create");
             if (createnotification.Activo) { 
-                var mensaje = createnotification.Contenido.Replace("Nlista",newprice.Clave);
-                mensaje = mensaje.Replace("Lsucursal", string.Join(",", newprice.Sucursales.Select(y => y.Sucursal.Nombre)));
+                var mensaje = createnotification.Contenido.Replace("[Nlista]",newprice.Clave);
+                mensaje = mensaje.Replace("[Lsucursal]", string.Join(",", newprice.Sucursales.Select(y => y.Sucursal.Nombre)));
                 var contract = new NotificationContract(mensaje, false);
                 await _publishEndpoint.Publish(contract);
                 
@@ -267,7 +267,7 @@ namespace Service.Catalog.Application
 
             var notifications = await _notificationsRepository.GetAll("Lista de precios", true);
             var createnotification = notifications.FirstOrDefault(x => x.Tipo == "Update");
-            var mensaje = createnotification.Contenido.Replace("Nlista", existing.Clave);
+            var mensaje = createnotification.Contenido.Replace("[Nlista]", existing.Clave);
             mensaje = mensaje.Replace("fecha", DateTime.Now.ToShortDateString());
             if (createnotification.Activo)
             {
@@ -280,7 +280,7 @@ namespace Service.Catalog.Application
             if (existing.Activo != price.Activo && price.Activo)
             {
                 createnotification = notifications.FirstOrDefault(x => x.Tipo == "Active");
-                var mensajeActive = createnotification.Contenido.Replace("Nlista", existing.Clave);
+                var mensajeActive = createnotification.Contenido.Replace("[Nlista]", existing.Clave);
                 mensaje = mensaje.Replace("fecha", DateTime.Now.ToShortDateString());
                 if (createnotification.Activo)
                 {
@@ -291,7 +291,7 @@ namespace Service.Catalog.Application
             if (existing.Activo != price.Activo && !price.Activo)
             {
                 createnotification = notifications.FirstOrDefault(x => x.Tipo == "Disabled");
-                var mensajeActive = createnotification.Contenido.Replace("Nlista", existing.Clave);
+                var mensajeActive = createnotification.Contenido.Replace("[Nlista]", existing.Clave);
                 mensaje = mensaje.Replace("fecha", DateTime.Now.ToShortDateString());
                 if (createnotification.Activo)
                 {

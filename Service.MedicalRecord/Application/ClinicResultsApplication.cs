@@ -698,9 +698,9 @@ namespace Service.MedicalRecord.Application
                 {
                     foreach (var estudio in results) {
 
-                        var mensaje = createnotification.Contenido.Replace("Nestudio", estudio.Estudio);
-                        mensaje = mensaje.Replace("Nsolicitud", existingRequest.Clave);
-                        mensaje = mensaje.Replace("Nsucursal", existingRequest.Sucursal.Nombre);
+                        var mensaje = createnotification.Contenido.Replace("[Nestudio]", estudio.Estudio);
+                        mensaje = mensaje.Replace("[Nsolicitud]", existingRequest.Clave);
+                        mensaje = mensaje.Replace("[Nsucursal]", existingRequest.Sucursal.Nombre);
                         var contract = new NotificationContract(mensaje, false);
                         await _publishEndpoint.Publish(contract);
 
@@ -714,7 +714,7 @@ namespace Service.MedicalRecord.Application
                 {
                     var critico = results.Any(x=> x.CriticoMinimo< Decimal.Parse(x.ValorInicial) || x.CriticoMaximo > Decimal.Parse(x.ValorFinal));
 
-                        var mensaje = createnotification.Contenido.Replace("Nsolicitud", existingRequest.Clave);
+                        var mensaje = createnotification.Contenido.Replace("[Nsolicitud]", existingRequest.Clave);
                         var contract = new NotificationContract(mensaje, false);
                         await _publishEndpoint.Publish(contract);
 
@@ -1044,7 +1044,7 @@ namespace Service.MedicalRecord.Application
                 }
                 var notifications = await _catalogClient.GetNotifications("Envio de resultados"); 
                 var createnotification = notifications.FirstOrDefault(x => x.Tipo == "Send");
-                var mensaje = createnotification.Contenido.Replace("Nsolicitud", existingRequest.Clave);
+                var mensaje = createnotification.Contenido.Replace("[Nsolicitud]", existingRequest.Clave);
                 
                 if (createnotification.Activo)
                 {
@@ -1089,7 +1089,7 @@ namespace Service.MedicalRecord.Application
                 catch (Exception ex) { 
                
                      createnotification = notifications.FirstOrDefault(x => x.Tipo == "Fail");
-                    mensaje = createnotification.Contenido.Replace("Nsolicitud", existingRequest.Clave);
+                    mensaje = createnotification.Contenido.Replace("[Nsolicitud]", existingRequest.Clave);
                     
                     if (createnotification.Activo)
                     {

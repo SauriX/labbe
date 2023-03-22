@@ -166,21 +166,21 @@ namespace Service.Catalog.Context.SeedData
         public static List<Notifications> GetNotifications()
         {
             var notifications = new List<Notifications> {
-                new Notifications{Titulo ="Lista de precios", Contenido ="Se ah actualizado la lista de precios Nlista el día fecha",IsNotifi =true,Activo =true,Tipo ="Update" },
-                new Notifications{Titulo ="Lista de precios", Contenido ="Se ah inactivado la lista de precios Nlista el día fecha",IsNotifi = true,Activo =true,Tipo = "Disabled"},
-                new Notifications{Titulo ="Lista de precios", Contenido = "Se ah activado la lista de precios Nlista el día fecha", IsNotifi = true, Activo =true, Tipo = "Active" },
-                new Notifications{Titulo ="Lista de precios", Contenido = "Se ah creado la lista de precios Nlista y se ah asigado a las sucursales Lsucursal", IsNotifi = true, Activo =true, Tipo = "Create" },
-                new Notifications{Titulo ="Ruta", Contenido = "No se ah recibido la muestra Nmuestra, correspondiente a la solicitud Nsolicitud", IsNotifi = true, Activo =true, Tipo = "Reject" },
-                new Notifications{Titulo ="Ruta", Contenido = "Se ah recibido la muestra Nmuestra, no contemplada para una orden de seguimiento, correspondiente a la solicitud Nsolicitud", IsNotifi = true, Activo =true, Tipo = "Acept" },
-                new Notifications{Titulo ="Captura de resultados", Contenido = "Se detecta un valor anormal crítico en la solicitud Nsolicitud, estudio Nestudio", IsNotifi = true, Activo =true,   Tipo = "Critic" },
-                new Notifications{Titulo ="Toma de muestra", Contenido = "Se detectan estudios con toma de muestras pendiente sin motivo aparente, favor de consultar, solicitudes: Lsolicitud", IsNotifi = true, Activo =true, Tipo = "Pending" },
-                new Notifications{Titulo ="Toma de muestra", Contenido = "Solicitud Nsolicitud con categoría URGENTE favor de atender con prioridad.", IsNotifi = true, Activo =true, Tipo = "Urgent" },
-                new Notifications{Titulo ="Solicitar estudios", Contenido = "Solicitud Nsolicitud con categoría URGENTE favor de atender con prioridad.", IsNotifi = true, Activo =true, Tipo = "Urgent" },
-                new Notifications{Titulo ="Envio de resultados", Contenido = "Se envió de manera automática los resultados de la solicitud Nsolicitud de manera exitosa", IsNotifi = true, Activo =true, Tipo = "Send" },
-                new Notifications{Titulo ="Envio de resultados", Contenido = "Error en envió automático en  resultados de la solicitud Nsolicitud ", IsNotifi = true, Activo =true, Tipo = "Fail" },
-                new Notifications{Titulo ="Captura de resultados", Contenido = "Se procesa la captura de resultados de estudio Nestudio, solicitud Nsolicitud, procesada en la sucursal Nsucursal", IsNotifi = true, Activo =true, Tipo = "Procesing" },
-                new Notifications{Titulo ="Citas", Contenido = "Cita programada dentro de 15 minutos, a cargo del dispositivo Ndispositivo, cita Ncita", IsNotifi = true, Activo =true, Tipo = "Cita" },
-        };
+                    new Notifications{Titulo ="Lista de precios", Contenido ="Se ha actualizado la lista de precios [Nlista] el día fecha",IsNotifi =true,Activo =true,Tipo ="Update" },
+                    new Notifications{Titulo ="Lista de precios", Contenido ="Se ha inactivado la lista de precios [Nlista] el día fecha",IsNotifi = true,Activo =true,Tipo = "Disabled"},
+                    new Notifications{Titulo ="Lista de precios", Contenido = "Se ha activado la lista de precios [Nlista] el día fecha", IsNotifi = true, Activo =true, Tipo = "Active" },
+                    new Notifications{Titulo ="Lista de precios", Contenido = "Se ha creado la lista de precios [Nlista] y se ha asigado a las sucursales [Lsucursal]", IsNotifi = true, Activo =true, Tipo = "Create" },
+                    new Notifications{Titulo ="Ruta", Contenido = "No se ha recibido la muestra [Nmuestra], correspondiente a la solicitud [Nsolicitud]", IsNotifi = true, Activo =true, Tipo = "Reject" },
+                    new Notifications{Titulo ="Ruta", Contenido = "Se ha recibido la muestra [Nmuestra] no contemplada para una orden de seguimiento, correspondiente a la solicitud [Nsolicitud]", IsNotifi = true, Activo =true, Tipo = "Acept" },
+                    new Notifications{Titulo ="Captura de resultados", Contenido = "Se detecta un valor anormal crítico en la solicitud [Nsolicitud], estudio [Nestudio]", IsNotifi = true, Activo =true,   Tipo = "Critic" },
+                    new Notifications{Titulo ="Toma de muestra", Contenido = "Se detectan estudios con toma de muestras pendiente sin motivo aparente, favor de consultar solicitudes: [Lsolicitud]", IsNotifi = true, Activo =true, Tipo = "Pending" },
+                    new Notifications{Titulo ="Toma de muestra", Contenido = "Solicitud [Nsolicitud] con categoría URGENTE favor de atender con prioridad.", IsNotifi = true, Activo =true, Tipo = "Urgent" },
+                    new Notifications{Titulo ="Solicitar estudios", Contenido = "Solicitud [Nsolicitud] con categoría URGENTE favor de atender con prioridad.", IsNotifi = true, Activo =true, Tipo = "Urgent" },
+                    new Notifications{Titulo ="Envio de resultados", Contenido = "Se envió de manera automática los resultados de la solicitud [Nsolicitud] de manera exitosa", IsNotifi = true, Activo =true, Tipo = "Send" },
+                    new Notifications{Titulo ="Envio de resultados", Contenido = "Error en envió automático en  resultados de la solicitud [Nsolicitud]", IsNotifi = true, Activo =true, Tipo = "Fail" },
+                    new Notifications{Titulo ="Captura de resultados", Contenido = "Se procesa la captura de resultados de estudio [Nestudio], solicitud [Nsolicitud], procesada en la sucursal [Nsucursal]", IsNotifi = true, Activo =true, Tipo = "Procesing" },
+                    new Notifications{Titulo ="Citas", Contenido = "Cita programada dentro de 15 minutos, a cargo del dispositivo [Ndispositivo], cita [Ncita]", IsNotifi = true, Activo =true, Tipo = "Cita" },
+            };
 
             return notifications;
         }

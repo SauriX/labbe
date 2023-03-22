@@ -64,8 +64,7 @@ namespace Service.Catalog
                     .ForJob(jobKey)
                     .WithIdentity("Notification")
                      //This Cron interval can be described as "run every day at 7:00" (when second is zero)
-                     .WithCronSchedule("0 * * ? * *")
-                     //.WithCronSchedule("0 30 7 1/1 * ? *")
+                     .WithCronSchedule("0 30 7 1/1 * ? *")
                 );
             });
 

@@ -145,6 +145,7 @@ namespace Service.MedicalRecord.Application
                     {
                         study.EstatusId = Status.RequestStudy.Pendiente;
                     }
+
                 }
                 studyCount += studies.Count;
 
@@ -157,7 +158,7 @@ namespace Service.MedicalRecord.Application
                     if (createnotification.Activo)
                     {
 
-                            var mensaje = createnotification.Contenido.Replace("Nsolicitud", request.Clave);
+                            var mensaje = createnotification.Contenido.Replace("[Nsolicitud]", request.Clave);
                             var contract = new NotificationContract(mensaje, false);
                             await _publishEndpoint.Publish(contract);
                         
