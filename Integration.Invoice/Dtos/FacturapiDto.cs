@@ -13,6 +13,7 @@ namespace Integration.Invoice.Dtos
         public string MetodoPago => "PUE";
         public string UsoCDFI { get; set; }
         public string ClaveExterna { get; set; }
+        public string FacturaApiKey { get; set; }
         public FacturapiClientDto Cliente { get; set; }
         public List<FacturapiProductDto> Productos { get; set; }
     }
