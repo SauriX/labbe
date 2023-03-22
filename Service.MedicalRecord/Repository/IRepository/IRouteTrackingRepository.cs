@@ -15,10 +15,13 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task<List<RequestStudy>> GetStudyById(Guid requestId, IEnumerable<int> studiesIds);
         Task<Request> FindAsync(Guid id);
         Task<List<TrackingOrder>> GetAll(RouteTrackingSearchDto search);
-        Task<TrackingOrder> getById(Guid Id);
+        Task<List<RequestTag>> GetTagsByOrigin();
+        Task<TrackingOrder> GetById(Guid Id);
         Task Update(RouteTracking route);
         Task Create(RouteTracking route);
         Task<List<TrackingOrder>> GetAllRecive(PendingSearchDto search);
         Task<RouteTracking> GetTracking(Guid Id);
+        Task<IEnumerable<RequestTag>> GetAllTags(string search);
+        Task<IEnumerable<RequestTag>> FindTags(string routeId);
     }
 }

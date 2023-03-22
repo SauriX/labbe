@@ -128,12 +128,11 @@ namespace Service.MedicalRecord.Controllers
         }
 
         [HttpPost("payment")]
-        [AllowAnonymous]
-        //[Authorize(Policies.Create)]
+        [Authorize(Policies.Create)]
         public async Task<RequestPaymentDto> CreatePayment(RequestPaymentDto requestDto)
         {
-            //requestDto.UsuarioId = (Guid)HttpContext.Items["userId"];
-            //requestDto.UsuarioRegistra = HttpContext.Items["userName"].ToString();
+            requestDto.UsuarioId = (Guid)HttpContext.Items["userId"];
+            requestDto.UsuarioRegistra = HttpContext.Items["userName"].ToString();
 
             return await _service.CreatePayment(requestDto);
         }

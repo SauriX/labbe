@@ -21,6 +21,7 @@ namespace Service.MedicalRecord.Domain.MedicalRecord
         public string Ciudad { get; set; }
         public string Celular { get; set; }
         public string Calle { get; set; }
+        public string Observaciones { get; set; }
         public int? ColoniaId { get; set; }
         public decimal Monedero { get; set; }
         public bool MonederoActivo { get; set; }

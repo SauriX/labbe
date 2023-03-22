@@ -49,7 +49,7 @@ namespace Service.MedicalRecord.Repository
                 records = records.Where(x => x.FechaDeNacimiento.Date == search.fechaNacimiento.Date);
             }
 
-            if (search.fechaNacimiento.Date == DateTime.MinValue.Date && string.IsNullOrEmpty(search.telefono) && (search.sucursal == null || search.sucursal.Count() <= 0) && (search.ciudad == null || search.ciudad.Count() <= 0) && string.IsNullOrWhiteSpace(search.expediente) &&
+            if (search.fechaNacimiento.Date == DateTime.MinValue.Date && string.IsNullOrEmpty(search.telefono) && string.IsNullOrWhiteSpace(search.expediente) &&
                 search.fechaAlta != null && search.fechaAlta.Length > 1 &&
                 search.fechaAlta[0].Date != DateTime.MinValue.Date && search.fechaAlta[1].Date != DateTime.MinValue.Date)
             {
@@ -90,6 +90,8 @@ namespace Service.MedicalRecord.Repository
 
             return taxData;
         }
+        
+
 
         public async Task<Domain.MedicalRecord.MedicalRecord> Find(Guid id)
         {
@@ -112,6 +114,16 @@ namespace Service.MedicalRecord.Repository
         {
             var taxData = await _context.Relacion_Expediente_Factura
                 .Where(x => x.FacturaID == id && x.ExpedienteID == recordId)
+                .Include(x => x.Factura)
+                .Select(x => x.Factura)
+                .FirstOrDefaultAsync();
+
+            return taxData;
+        }
+        public async Task<TaxData> GetTaxDataoOnlyById(Guid id)
+        {
+            var taxData = await _context.Relacion_Expediente_Factura
+                .Where(x => x.FacturaID == id)
                 .Include(x => x.Factura)
                 .Select(x => x.Factura)
                 .FirstOrDefaultAsync();
@@ -176,6 +188,12 @@ namespace Service.MedicalRecord.Repository
 
         }
         public async Task UpdateWallet(Domain.MedicalRecord.MedicalRecord expediente)
+        {
+            _context.CAT_Expedientes.Update(expediente);
+            await _context.SaveChangesAsync();
+
+        } 
+        public async Task UpdateObservation(Domain.MedicalRecord.MedicalRecord expediente)
         {
             _context.CAT_Expedientes.Update(expediente);
             await _context.SaveChangesAsync();

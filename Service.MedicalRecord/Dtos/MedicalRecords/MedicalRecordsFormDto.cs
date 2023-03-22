@@ -20,6 +20,7 @@ namespace Service.MedicalRecord.Dtos.MedicalRecords
         public string Municipio { get; set; }
         public string Celular { get; set; }
         public string Calle { get; set; }
+        public string Observaciones { get; set; }
         public int? Colonia { get; set; }
         public string sucursal { get; set; }
         public Guid UsuarioId { get; set; }

@@ -212,26 +212,6 @@ namespace Service.Catalog.Context.SeedData
             return branches;
         }
 
-        // LISTA DE PRECIOS DEFAULT
-        public static PriceList GetDefaultPriceList()
-        {
-            var priceList = new PriceList(
-                PL.PARTICULARES,
-                "PARTICULARES",
-                "PARTICULARES",
-                true);
-
-            priceList.Compañia = new List<Price_Company>
-            {
-                new Price_Company(PL.PARTICULARES, COMP.PARTICULARES)
-            };
-
-            var branches = GetBranches();
-            priceList.Sucursales = branches.Select(x => new Price_Branch(PL.PARTICULARES, x.Id)).ToList();
-
-            return priceList;
-        }
-
         // SUCURSALES CONFIGURACION FOLIO
         public static List<BranchFolioConfig> GetClinicosConfig()
         {
@@ -745,20 +725,85 @@ namespace Service.Catalog.Context.SeedData
             return packStudies;
         }
 
-        // PRECIOS ESTUDIOS
-        public static List<PriceList_Study> GetStudyPrices()
+        // LISTA DE PRECIOS PARTICULARES
+        public static List<PriceList> GetDefaultPriceList()
         {
             var path = "wwwroot/seed/12_CAT_PRECIOS.xlsx";
-            var tableData = ReadAsTable(path, "PRECIO-ESTUDIO");
+            var studyData = ReadAsTable(path, "PRECIO-ESTUDIO");
+            var packData = ReadAsTable(path, "PRECIO-PAQUETE");
 
-            var studyPrices = tableData.AsEnumerable()
-                .Select(x => new PriceList_Study(
-                    PL.PARTICULARES,
-                    Convert.ToInt32(x.Field<double>("EstudioId")),
-                    Convert.ToDecimal(x.Field<double>("Total"))
-                    )).ToList();
+            var studyPrices = studyData.AsEnumerable()
+                .Select(x => new
+                {
+                    EstudioId = Convert.ToInt32(x.Field<double>("EstudioId")),
+                    GYM = Convert.ToDecimal(x.Field<double>("GYM")),
+                    HMO = Convert.ToDecimal(x.Field<double>("HMO")),
+                    MTY = Convert.ToDecimal(x.Field<double>("MTY")),
+                    NOG = Convert.ToDecimal(x.Field<double>("NOG")),
+                    OBR = Convert.ToDecimal(x.Field<double>("OBR")),
+                    GRL = Convert.ToDecimal(x.Field<double>("GENERAL"))
+                }).ToList();
 
-            return studyPrices;
+            var packPrices = packData.AsEnumerable()
+                .Select(x => new
+                {
+                    PaqueteId = Convert.ToInt32(x.Field<double>("PaqueteId")),
+                    GYM = Convert.ToDecimal(x.Field<double>("GYM")),
+                    HMO = Convert.ToDecimal(x.Field<double>("HMO")),
+                    MTY = Convert.ToDecimal(x.Field<double>("MTY")),
+                    NOG = Convert.ToDecimal(x.Field<double>("NOG")),
+                    OBR = Convert.ToDecimal(x.Field<double>("OBR")),
+                    GRL = Convert.ToDecimal(x.Field<double>("GENERAL"))
+                }).ToList();
+
+            var branches = GetBranches();
+
+            var priceList = new List<PriceList> {
+                new PriceList(PL.PARTICULARES_GYM, "PARTICULARES_GYM", "PARTICULARES_GYM", true)
+                {
+                    Compañia = new List<Price_Company> { new Price_Company(PL.PARTICULARES_GYM, COMP.PARTICULARES) },
+                    Sucursales = branches.Where(x => x.Id == BR.UNIDAD).Select(x => new Price_Branch(PL.PARTICULARES_GYM, x.Id)).ToList(),
+                    Estudios = studyPrices.Select(x => new PriceList_Study(PL.PARTICULARES_GYM, x.EstudioId, x.GYM)).ToList(),
+                    Paquetes = packPrices.Select(x => new PriceList_Packet(PL.PARTICULARES_GYM, x.PaqueteId, x.GYM)).ToList()
+                },
+                new PriceList(PL.PARTICULARES_HMO, "PARTICULARES_HMO", "PARTICULARES_HMO", true)
+                {
+                    Compañia = new List<Price_Company> { new Price_Company(PL.PARTICULARES_HMO, COMP.PARTICULARES) },
+                    Sucursales = branches.Where(x => x.Id.In(BR.REFORMA, BR.MORELOS, BR.SOLIDARIDAD, BR.MNORTE, BR.CANTABRIA)).Select(x => new Price_Branch(PL.PARTICULARES_HMO, x.Id)).ToList(),
+                    Estudios = studyPrices.Select(x => new PriceList_Study(PL.PARTICULARES_HMO, x.EstudioId, x.HMO)).ToList(),
+                    Paquetes = packPrices.Select(x => new PriceList_Packet(PL.PARTICULARES_HMO, x.PaqueteId, x.HMO)).ToList()
+                },
+                new PriceList(PL.PARTICULARES_MTY, "PARTICULARES_MTY", "PARTICULARES_MTY", true)
+                {
+                    Compañia = new List<Price_Company> { new Price_Company(PL.PARTICULARES_MTY, COMP.PARTICULARES) },
+                    Sucursales = branches.Where(x => x.Id.In(BR.CUMBRES, BR.SPGG)).Select(x => new Price_Branch(PL.PARTICULARES_MTY, x.Id)).ToList(),
+                    Estudios = studyPrices.Select(x => new PriceList_Study(PL.PARTICULARES_MTY, x.EstudioId, x.MTY)).ToList(),
+                    Paquetes = packPrices.Select(x => new PriceList_Packet(PL.PARTICULARES_MTY, x.PaqueteId, x.MTY)).ToList()
+                },
+                new PriceList(PL.PARTICULARES_OBR, "PARTICULARES_OBR", "PARTICULARES_OBR", true)
+                {
+                    Compañia = new List<Price_Company> { new Price_Company(PL.PARTICULARES_OBR, COMP.PARTICULARES) },
+                    Sucursales = branches.Where(x => x.Id == BR.NOGALES1).Select(x => new Price_Branch(PL.PARTICULARES_OBR, x.Id)).ToList(),
+                    Estudios = studyPrices.Select(x => new PriceList_Study(PL.PARTICULARES_OBR, x.EstudioId, x.OBR)).ToList(),
+                    Paquetes = packPrices.Select(x => new PriceList_Packet(PL.PARTICULARES_OBR, x.PaqueteId, x.OBR)).ToList()
+                },
+                new PriceList(PL.PARTICULARES_NOG, "PARTICULARES_NOG", "PARTICULARES_NOG", true)
+                {
+                    Compañia = new List<Price_Company> { new Price_Company(PL.PARTICULARES_NOG, COMP.PARTICULARES) },
+                    Sucursales = branches.Where(x => x.Id == BR.KENNEDY).Select(x => new Price_Branch(PL.PARTICULARES_NOG, x.Id)).ToList(),
+                    Estudios = studyPrices.Select(x => new PriceList_Study(PL.PARTICULARES_NOG, x.EstudioId, x.NOG)).ToList(),
+                    Paquetes = packPrices.Select(x => new PriceList_Packet(PL.PARTICULARES_NOG, x.PaqueteId, x.NOG)).ToList()
+                },
+                new PriceList(PL.PARTICULARES_GRL, "PARTICULARES_GRL", "PARTICULARES_GRL", true)
+                {
+                    Compañia = new List<Price_Company> { new Price_Company(PL.PARTICULARES_GRL, COMP.PARTICULARES) },
+                    Sucursales = branches.Where(x => x.Id.In(BR.MT, BR.U200, BR.U300, BR.ALAMEDA, BR.HACIENDAS, BR.NAVOJOA, BR.NAVOJOA2, BR.CMSS)).Select(x => new Price_Branch(PL.PARTICULARES_GRL, x.Id)).ToList(),
+                    Estudios = studyPrices.Select(x => new PriceList_Study(PL.PARTICULARES_GRL, x.EstudioId, x.GRL)).ToList(),
+                    Paquetes = packPrices.Select(x => new PriceList_Packet(PL.PARTICULARES_GRL, x.PaqueteId, x.GRL)).ToList()
+                },
+            };
+
+            return priceList;
         }
 
         public static DataTable ReadAsTable(string filePath, string worksheet)

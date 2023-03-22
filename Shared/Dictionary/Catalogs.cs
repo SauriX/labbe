@@ -16,7 +16,12 @@ namespace Shared.Dictionary
 
         public class PriceList
         {
-            public static readonly Guid PARTICULARES = new("f67febd9-f94b-4e65-bf0a-27db5deac249");
+            public static readonly Guid PARTICULARES_GYM = new("f67febd9-f94b-4e65-bf0a-27db5deac249");
+            public static readonly Guid PARTICULARES_HMO = new("83772264-9919-48ff-8fa6-ca7f06fef535");
+            public static readonly Guid PARTICULARES_MTY = new("5d255d53-5275-434f-bcc7-deef729a4b81");
+            public static readonly Guid PARTICULARES_NOG = new("cd14a89d-b942-4d7c-9b9c-a176bdbe5865");
+            public static readonly Guid PARTICULARES_OBR = new("4ce39d62-54ec-4353-9e33-7b01d0484e9a");
+            public static readonly Guid PARTICULARES_GRL = new("b7cfdcfb-55f0-4d42-94f9-f6dc84abe08f");
         }
 
         public class Company

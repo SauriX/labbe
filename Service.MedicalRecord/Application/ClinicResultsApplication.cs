@@ -414,7 +414,7 @@ namespace Service.MedicalRecord.Application
 
                 if (param.TipoValores != null && param.TipoValores.Count != 0)
                 {
-                    var ageRange = request.Expediente.Edad >= param.TipoValores.FirstOrDefault().RangoEdadInicial && request.Expediente.Edad <= param.TipoValores.FirstOrDefault().RangoEdadFinal;
+                    var ageRange = param.TipoValores.Where(x => request.Expediente.Edad >= x.RangoEdadInicial && request.Expediente.Edad <= x.RangoEdadFinal);
 
                     switch (param.TipoValor)
                     {
@@ -441,26 +441,32 @@ namespace Service.MedicalRecord.Application
                             }
                             break;
                         case "3":
-                            if (ageRange)
+                            foreach(var tipoValor in param.TipoValores)
                             {
-                                param.ValorInicial = param.TipoValores.FirstOrDefault().ValorInicialNumerico.ToString();
-                                param.ValorFinal = param.TipoValores.FirstOrDefault().ValorFinalNumerico.ToString();
+
+                            }
+                            if (ageRange.Count() > 0)
+                            {
+                                param.ValorInicial = ageRange.FirstOrDefault().ValorInicialNumerico.ToString();
+                                param.ValorFinal = ageRange.FirstOrDefault().ValorFinalNumerico.ToString();
+                                param.CriticoMinimo = ageRange.FirstOrDefault().CriticoMinimo;
+                                param.CriticoMaximo = ageRange.FirstOrDefault().CriticoMaximo;
                             }
                             break;
                         case "4":
-                            if (ageRange && request.Expediente.Genero == "F")
+                            if (ageRange.Count() > 0 && request.Expediente.Genero == "F")
                             {
-                                param.ValorInicial = param.TipoValores.FirstOrDefault().MujerValorInicial.ToString();
-                                param.ValorFinal = param.TipoValores.FirstOrDefault().MujerValorFinal.ToString();
-                                param.CriticoMinimo = param.TipoValores.FirstOrDefault().MujerCriticoMinimo;
-                                param.CriticoMaximo = param.TipoValores.FirstOrDefault().MujerCriticoMaximo;
+                                param.ValorInicial = ageRange.FirstOrDefault().ValorInicialNumerico.ToString();
+                                param.ValorFinal = ageRange.FirstOrDefault().ValorFinalNumerico.ToString();
+                                param.CriticoMinimo = ageRange.FirstOrDefault().MujerCriticoMinimo;
+                                param.CriticoMaximo = ageRange.FirstOrDefault().MujerCriticoMinimo;
                             }
-                            else if (ageRange && request.Expediente.Genero == "M")
+                            else if (ageRange.Count() > 0 && request.Expediente.Genero == "M")
                             {
-                                param.ValorInicial = param.TipoValores.FirstOrDefault().HombreValorInicial.ToString();
-                                param.ValorFinal = param.TipoValores.FirstOrDefault().HombreValorFinal.ToString();
-                                param.CriticoMinimo = param.TipoValores.FirstOrDefault().HombreCriticoMinimo;
-                                param.CriticoMaximo = param.TipoValores.FirstOrDefault().HombreCriticoMaximo;
+                                param.ValorInicial = ageRange.FirstOrDefault().ValorInicialNumerico.ToString();
+                                param.ValorFinal = ageRange.FirstOrDefault().ValorFinalNumerico.ToString();
+                                param.CriticoMinimo = ageRange.FirstOrDefault().HombreCriticoMinimo;
+                                param.CriticoMaximo = ageRange.FirstOrDefault().HombreCriticoMaximo;
                             }
                             break;
                         case "5":

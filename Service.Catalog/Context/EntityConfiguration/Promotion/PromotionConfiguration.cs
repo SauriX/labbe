@@ -26,44 +26,28 @@ namespace Service.Catalog.Context.EntityConfiguration.Promotion
                 .IsRequired(true);
 
             builder
-                .Property(x => x.CantidadDescuento)
-                .IsRequired(true)
+                .Property(x => x.Cantidad)
                 .HasMaxLength(100);
 
-            builder
-                .Property(x => x.FechaInicio)
-                .IsRequired(true);
-
-            builder
-                .Property(x => x.FechaFinal)
-                .IsRequired(true);
-
-            builder
-                .Property(x => x.Visibilidad)
-                .IsRequired(true);
             builder
               .Property(x => x.Activo)
               .IsRequired(true);
 
             builder
-                .HasMany(x => x.packs)
-                .WithOne(x => x.Promotion);
+                .HasMany(x => x.Paquetes)
+                .WithOne(x => x.Promocion);
 
             builder
-                .HasMany(x => x.studies)
-                .WithOne(x => x.Promotion);
+                .HasMany(x => x.Estudios)
+                .WithOne(x => x.Promocion);
 
             builder
-                .HasMany(x => x.branches)
-                .WithOne(x => x.Promotion);
+                .HasMany(x => x.Sucursales)
+                .WithOne(x => x.Promocion);
 
             builder
-                .HasMany(x => x.loyalities)
-                .WithOne(x => x.Promotion);
-
-            builder
-                .HasMany(x => x.medics)
-                .WithOne(x => x.Promotion);
+                .HasMany(x => x.Medicos)
+                .WithOne(x => x.Promocion);
 
         }
     }

@@ -54,6 +54,7 @@ namespace Service.MedicalRecord.Application
         private readonly IMedicalRecordRepository _recordRepository;
         private readonly IBillingClient _billingClient;
         private readonly ITrackingOrderRepository _trackingOrderRepository;
+        private readonly IMedicalRecordRepository _medicalRecordRepository;
         private readonly IPublishEndpoint _publishEndpoint;
         private const byte URGENCIA_CARGO = 3;
 
@@ -70,6 +71,8 @@ namespace Service.MedicalRecord.Application
             IMedicalRecordRepository recordRepository,
             IBillingClient billingClient,
             ITrackingOrderRepository trackingOrder,
+            IMedicalRecordRepository medicalRecord
+
             IPublishEndpoint publishEndpoint
             )
         {
@@ -85,6 +88,7 @@ namespace Service.MedicalRecord.Application
             _recordRepository = recordRepository;
             _billingClient = billingClient;
             _trackingOrderRepository = trackingOrder;
+            _medicalRecordRepository = medicalRecord;
             _publishEndpoint = publishEndpoint;
         }
 
@@ -426,9 +430,44 @@ namespace Service.MedicalRecord.Application
 
             await _repository.CreatePayment(newPayment);
 
+            var loyalty = await UpdateRecordWallet(requestDto, request);
+
             await UpdateTotals(request.ExpedienteId, request.Id, requestDto.UsuarioId);
 
-            return newPayment.ToRequestPaymentDto();
+            return newPayment.ToRequestPaymentDto(loyalty);
+        }
+
+        private async Task<bool> UpdateRecordWallet(RequestPaymentDto requestDto, Request request)
+        {
+            var record = await _medicalRecordRepository.GetById(requestDto.ExpedienteId);
+            var sucess = false;
+
+            if (record != null && record.MonederoActivo && request.Procedencia == ORIGIN.PARTICULAR)
+            {
+                var priceListId = request.Estudios.FirstOrDefault().ListaPrecioId;
+                var newLoyalty = new LoyaltyDto
+                {
+                    Fecha = DateTime.Now,
+                    ListaPrecioId = priceListId
+                };
+
+                var loyalty = await _catalogClient.GetLoyalty(newLoyalty);
+
+                if (loyalty != null)
+                {
+                    var percentDescount = (requestDto.Cantidad * loyalty.CantidadDescuento) / 100;
+                    record.Monedero += loyalty.TipoDescuento == "Porcentaje" ? percentDescount : loyalty.CantidadDescuento;
+
+                    await _medicalRecordRepository.UpdateWallet(record);
+                    sucess = true;
+                }
+                else
+                {
+                    throw new CustomException(HttpStatusCode.NotFound, "No existe una lealtad que coincida con la lista de precio o fecha actual");
+                }
+
+            }
+            return sucess;
         }
 
         public async Task<IEnumerable<RequestPaymentDto>> CheckInPayment(RequestCheckInDto checkInDto)
@@ -1299,7 +1338,7 @@ namespace Service.MedicalRecord.Application
             var studyAndPack = studies.Select(x => new { x.Descuento, x.Precio, x.PrecioFinal, Copago = x.EstudioWeeClinic?.TotalPaciente ?? 0 })
                 .Concat(packs.Select(x => new { x.Descuento, x.Precio, x.PrecioFinal, Copago = 0m }));
 
-            var totalStudies = studyAndPack.Sum(x => x.PrecioFinal);
+            var totalStudies = studyAndPack.Sum(x => x.Precio);
 
             var discount = totalStudies == 0 ? 0 : studyAndPack.Sum(x => x.Descuento);
             var charge = totalStudies == 0 ? 0 : request.Urgencia == URGENCIA_CARGO ? totalStudies * .10m : 0;
