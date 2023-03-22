@@ -83,6 +83,7 @@ namespace Service.Billing.Mapper
             return new FacturapiDto
             {
                 ClaveExterna = dto.Id.ToString(),
+                FacturaApiKey = dto.FacturaApiKey,
                 FormaPago = dto.FormaPago.Split(" ")[0],
                 UsoCDFI = dto.UsoCFDI.Split(" ")[0],
                 Cliente = new FacturapiClientDto

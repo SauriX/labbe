@@ -177,11 +177,16 @@ namespace Service.MedicalRecord.Application
 
             return invoiceResponse;
         }
-        public async Task CheckInInvoiceGlobal(List<Guid> requests)
+        public async Task<InvoiceGlobalResponseDto> CheckInInvoiceGlobal(InvoiceGlobalInfoDto global)
         {
+            List<string> SolicitudesCorrectas = new List<string>();
+            List<string> SolicitudesFallidas = new List<string>();
+
             List<InvoiceDto> invoices = new List<InvoiceDto>();
 
-            List<Domain.Request.Request> solicitudes = await _requestRepository.GetRequestsByListId(requests);
+            List<Domain.Request.Request> solicitudes = await _requestRepository.GetRequestsByListId(global.SolicitudesId);
+
+            var sucursal = await _catalogClient.GetBranch(global.SucursalId);
 
             foreach (var solicitud in solicitudes)
             {
@@ -192,29 +197,35 @@ namespace Service.MedicalRecord.Application
                 MedicalRecordTaxData DefaultTaxData = cliente.TaxData.Where(x => x.Factura.isDefaultTaxData == true).FirstOrDefault();
 
                 List<Guid> solicitudesId = new List<Guid>{ solicitud.Id };
+                if (pago == null || cliente == null || DefaultTaxData == null)
+                {
+                    SolicitudesFallidas.Add(solicitud.Clave);
+                    continue;
+                }
 
                 var invoiceDTO = new InvoiceDto
                 {
+                    FacturaApiKey = sucursal.SucursalKey,
                     FormaPago = pago.FormaPago,
                     MetodoPago = "PUE",
                     UsoCFDI = "G03",
-                    Serie = "",
+                    Serie = sucursal.Series.Where(x => x.Activo == true).FirstOrDefault().Clave,
                     RegimenFiscal = DefaultTaxData.Factura.RegimenFiscal,
                     RFC = DefaultTaxData.Factura.RFC,
                     SolicitudesId = solicitudesId,
                     Cliente = new ClientDto
                     {
-                        RazonSocial = DefaultTaxData.Factura.RazonSocial,
-                        RFC = DefaultTaxData.Factura.RFC,
+                        RazonSocial = DefaultTaxData?.Factura.RazonSocial,
+                        RFC = DefaultTaxData?.Factura.RFC,
                         RegimenFiscal = DefaultTaxData.Factura.RegimenFiscal,
                         Correo = "",
                         Telefono = "",
-                        CodigoPostal = DefaultTaxData.Factura.CodigoPostal,
-                        Calle = DefaultTaxData.Factura.Calle,
+                        CodigoPostal = DefaultTaxData?.Factura.CodigoPostal,
+                        Calle = DefaultTaxData?.Factura.Calle,
                         NumeroExterior = "",
                         NumeroInterior = "",
                         Colonia = "",
-                        Ciudad = DefaultTaxData.Factura.Ciudad,
+                        Ciudad = DefaultTaxData?.Factura.Ciudad,
                         Municipio = "",
                         Estado = "",
                         Pais = "",
@@ -234,6 +245,12 @@ namespace Service.MedicalRecord.Application
 
                 var invoiceResponse = await _billingClient.CheckInPaymentCompany(invoiceDTO);
 
+                if (string.IsNullOrEmpty(invoiceResponse.FacturapiId))
+                {
+                    SolicitudesFallidas.Add(solicitud.Clave);
+                    continue;
+                }
+
                 var invoiceCompany = invoiceResponse.ToInvoiceCompanyGlobal(solicitud, DefaultTaxData);
 
                 List<RequestInvoiceCompany> requestsInvoiceCompany = new();
@@ -248,17 +265,20 @@ namespace Service.MedicalRecord.Application
                 
                 await _invoiceRepository.CreateInvoiceCompanyData(invoiceCompany, requestsInvoiceCompany);
 
-            }
-            List<InvoiceDto> invoicesResponses = new List<InvoiceDto>();
-            foreach(var invoice in invoices)
-            {
-                var invoiceResponse = await _billingClient.CheckInPaymentCompany(invoice);
-
-                invoicesResponses.Add(invoiceResponse);
+                SolicitudesCorrectas.Add(solicitud.Clave);
+                
 
             }
+            //List<InvoiceDto> invoicesResponses = new List<InvoiceDto>();
+            //foreach(var invoice in invoices)
+            //{
+            //    var invoiceResponse = await _billingClient.CheckInPaymentCompany(invoice);
 
-            
+            //    invoicesResponses.Add(invoiceResponse);
+
+            //}
+
+            return new InvoiceGlobalResponseDto { SolicitudesFallidas = SolicitudesFallidas, SolicitudesGeneradas = SolicitudesCorrectas };
         }
         public async Task<InvoiceCompanyDto> GetById(string invoiceId)
         {
