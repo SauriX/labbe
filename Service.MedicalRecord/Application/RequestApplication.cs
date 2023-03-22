@@ -433,7 +433,7 @@ namespace Service.MedicalRecord.Application
 
             await UpdateTotals(request.ExpedienteId, request.Id, requestDto.UsuarioId);
 
-            return newPayment.ToRequestPaymentDto(loyalty,false);
+            return newPayment.ToRequestPaymentDto(loyalty);
         }
 
         private async Task<bool> UpdateRecordWallet(RequestPaymentDto requestDto, Request request)
