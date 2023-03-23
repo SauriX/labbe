@@ -462,7 +462,7 @@ namespace Service.MedicalRecord.Application
                 }
                 else
                 {
-                    throw new CustomException(HttpStatusCode.NotFound, "No existe una lealtad que coincida con la lista de precio o fecha actual");
+                    sucess = false;
                 }
 
             }
