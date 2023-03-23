@@ -25,7 +25,9 @@ namespace Service.MedicalRecord.Repository
 
         public async Task<Request> FindAsync(Guid id)
         {
-            var request = await _context.CAT_Solicitud.FindAsync(id);
+            var request = await _context.CAT_Solicitud
+                .Include(x => x.Estudios)
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             return request;
         }
@@ -64,7 +66,7 @@ namespace Service.MedicalRecord.Repository
                 || (x.Expediente.NombrePaciente + " " + x.Expediente.PrimerApellido + " " + x.Expediente.SegundoApellido).ToLower().Contains(filter.Clave));
             }
 
-            if (filter.Ciudad != null)
+            if (filter.Ciudad != null && filter.Ciudad.Any())
             {
                 requests = requests.Where(x => x.Sucursal != null && filter.Ciudad.Contains(x.Sucursal.Ciudad));
             }
@@ -441,6 +443,9 @@ namespace Service.MedicalRecord.Repository
         {
 
             return await _context.CAT_Solicitud
+                .Include(x => x.Pagos)
+                .Include(x => x.Estudios)
+                .Include(x => x.Expediente).ThenInclude(x => x.TaxData).ThenInclude(x => x.Factura)
                 .Where(x => solicitudesId.Contains(x.Id))
                 .ToListAsync();
 

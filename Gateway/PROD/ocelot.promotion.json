@@ -12,6 +12,17 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
+      "DownstreamPathTemplate": "/services/catalogo/api/promotion/active",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/promotion/active",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/services/catalogo/api/promo/{id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -23,15 +34,15 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/services/catalogo/api/promotion/active",
+      "DownstreamPathTemplate": "/services/catalogo/api/promo/studies/{initial}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "labramos.axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/promotion/active",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamPathTemplate": "/api/promotion/studies/{initial}",
+      "UpstreamHttpMethod": [ "POST" ]
     },
     {
       "DownstreamPathTemplate": "/services/catalogo/api/promo",

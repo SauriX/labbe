@@ -6,7 +6,7 @@
         public string Clave { get; set; }
         public string Nombre { get; set; }
         public string Periodo { get; set; }
-        public string NombreListaPrecio { get; set; }
+        public string ListaPrecio { get; set; }
         public bool Activo { get; set; }
     }
 }

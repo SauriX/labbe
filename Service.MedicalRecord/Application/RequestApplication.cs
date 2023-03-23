@@ -36,6 +36,7 @@ using Service.MedicalRecord.Dtos.Quotation;
 using System.Text.Json;
 using Service.MedicalRecord.Dtos.Catalogs;
 using static Shared.Dictionary.Catalogs;
+using MassTransit.Transports;
 
 namespace Service.MedicalRecord.Application
 {
@@ -52,7 +53,9 @@ namespace Service.MedicalRecord.Application
         private readonly IRepository<Domain.Catalogs.Branch> _branchRepository;
         private readonly IMedicalRecordRepository _recordRepository;
         private readonly IBillingClient _billingClient;
-
+        private readonly ITrackingOrderRepository _trackingOrderRepository;
+        private readonly IMedicalRecordRepository _medicalRecordRepository;
+        private readonly IPublishEndpoint _publishEndpoint;
         private const byte URGENCIA_CARGO = 3;
 
         public RequestApplication(
@@ -66,7 +69,11 @@ namespace Service.MedicalRecord.Application
             IWeeClinicApplication weeService,
             IRepository<Domain.Catalogs.Branch> branchRepository,
             IMedicalRecordRepository recordRepository,
-            IBillingClient billingClient)
+            IBillingClient billingClient,
+            ITrackingOrderRepository trackingOrder,
+            IMedicalRecordRepository medicalRecord,
+            IPublishEndpoint publishEndpoint
+            )
         {
             _transaction = transaction;
             _repository = repository;
@@ -79,6 +86,9 @@ namespace Service.MedicalRecord.Application
             _branchRepository = branchRepository;
             _recordRepository = recordRepository;
             _billingClient = billingClient;
+            _trackingOrderRepository = trackingOrder;
+            _medicalRecordRepository = medicalRecord;
+            _publishEndpoint = publishEndpoint;
         }
 
         public async Task<IEnumerable<RequestInfoDto>> GetByFilter(RequestFilterDto filter)
@@ -96,7 +106,6 @@ namespace Service.MedicalRecord.Application
             {
                 throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
             }
-
             return request.ToRequestDto();
         }
 
@@ -196,7 +205,7 @@ namespace Service.MedicalRecord.Application
             var data = new RequestStudyUpdateDto()
             {
                 Paquetes = packsDto,
-                Estudios = studiesDto,
+                Estudios = studiesDto.OrderBy(x => x.OrdenEstudio).ToList(),
                 Total = totals,
             };
 
@@ -278,7 +287,19 @@ namespace Service.MedicalRecord.Application
             }
 
             await _repository.Create(newRequest);
+            if (newRequest.Urgencia != 1)
+            {
+                var notifications = await _catalogClient.GetNotifications("Toma de muestra");
+                var createnotification = notifications.FirstOrDefault(x => x.Tipo == "Urgent");
+                if (createnotification.Activo)
+                {
 
+                    var mensaje = createnotification.Contenido.Replace("Nlista", newRequest.Clave);
+                    var contract = new NotificationContract(mensaje, false);
+                    await _publishEndpoint.Publish(contract);
+
+                }
+            }
             return newRequest.Id.ToString();
         }
 
@@ -408,9 +429,44 @@ namespace Service.MedicalRecord.Application
 
             await _repository.CreatePayment(newPayment);
 
+            var loyalty = await UpdateRecordWallet(requestDto, request);
+
             await UpdateTotals(request.ExpedienteId, request.Id, requestDto.UsuarioId);
 
-            return newPayment.ToRequestPaymentDto();
+            return newPayment.ToRequestPaymentDto(loyalty);
+        }
+
+        private async Task<bool> UpdateRecordWallet(RequestPaymentDto requestDto, Request request)
+        {
+            var record = await _medicalRecordRepository.GetById(requestDto.ExpedienteId);
+            var sucess = false;
+
+            if (record != null && record.MonederoActivo && request.Procedencia == ORIGIN.PARTICULAR)
+            {
+                var priceListId = request.Estudios.FirstOrDefault().ListaPrecioId;
+                var newLoyalty = new LoyaltyDto
+                {
+                    Fecha = DateTime.Now,
+                    ListaPrecioId = priceListId
+                };
+
+                var loyalty = await _catalogClient.GetLoyalty(newLoyalty);
+
+                if (loyalty != null)
+                {
+                    var percentDescount = (requestDto.Cantidad * loyalty.CantidadDescuento) / 100;
+                    record.Monedero += loyalty.TipoDescuento == "Porcentaje" ? percentDescount : loyalty.CantidadDescuento;
+
+                    await _medicalRecordRepository.UpdateWallet(record);
+                    sucess = true;
+                }
+                else
+                {
+                    throw new CustomException(HttpStatusCode.NotFound, "No existe una lealtad que coincida con la lista de precio o fecha actual");
+                }
+
+            }
+            return sucess;
         }
 
         public async Task<IEnumerable<RequestPaymentDto>> CheckInPayment(RequestCheckInDto checkInDto)
@@ -610,6 +666,19 @@ namespace Service.MedicalRecord.Application
             if (requestDto.CompañiaId != prevCompany)
             {
                 await UpdateStudies(new RequestStudyUpdateDto(requestDto.ExpedienteId, requestDto.SolicitudId, requestDto.UsuarioId), isDeleting: true);
+            }
+            if (request.Urgencia != 1)
+            {
+                var notifications = await _catalogClient.GetNotifications("Toma de muestra");
+                var createnotification = notifications.FirstOrDefault(x => x.Tipo == "Urgent");
+                if (createnotification.Activo)
+                {
+
+                    var mensaje = createnotification.Contenido.Replace("Solicitar estudios", request.Clave);
+                    var contract = new NotificationContract(mensaje, false);
+                    await _publishEndpoint.Publish(contract);
+
+                }
             }
         }
 
@@ -1268,7 +1337,7 @@ namespace Service.MedicalRecord.Application
             var studyAndPack = studies.Select(x => new { x.Descuento, x.Precio, x.PrecioFinal, Copago = x.EstudioWeeClinic?.TotalPaciente ?? 0 })
                 .Concat(packs.Select(x => new { x.Descuento, x.Precio, x.PrecioFinal, Copago = 0m }));
 
-            var totalStudies = studyAndPack.Sum(x => x.PrecioFinal);
+            var totalStudies = studyAndPack.Sum(x => x.Precio);
 
             var discount = totalStudies == 0 ? 0 : studyAndPack.Sum(x => x.Descuento);
             var charge = totalStudies == 0 ? 0 : request.Urgencia == URGENCIA_CARGO ? totalStudies * .10m : 0;

@@ -32,6 +32,17 @@
       ],
       "UpstreamPathTemplate": "/api/invoice/print/pdf/{invoiceId}",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/billing/api/invoice/consecutive/{serie}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/invoice/consecutive/{serie}",
+      "UpstreamHttpMethod": [ "GET" ]
     }
   ]
 }

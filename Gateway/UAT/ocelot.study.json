@@ -23,6 +23,17 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/study/tecinfo/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/study/tecinfo/{id}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/study",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [

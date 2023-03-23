@@ -1,4 +1,5 @@
-﻿using Service.MedicalRecord.Domain.TrackingOrder;
+﻿using Service.MedicalRecord.Domain.Request;
+using Service.MedicalRecord.Domain.TrackingOrder;
 using Service.MedicalRecord.Dtos.TrackingOrder;
 using System;
 using System.Collections.Generic;
@@ -17,5 +18,6 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task<string> GetLastCode(Guid branchId, string date);
         Task<List<Domain.Request.RequestStudy>> FindAllEstudios(List<int> estudios, string request);
         Task<List<Domain.Request.RequestStudy>> FindStudiesRequest(string Solicitud);
+        Task<TrackingOrder> FindOrderByRequestId(Guid Solicitud);
     }
 }

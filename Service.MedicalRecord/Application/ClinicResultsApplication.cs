@@ -36,6 +36,7 @@ using ClosedXML.Report.Utils;
 using Service.MedicalRecord.Dtos.WeeClinic;
 using Service.MedicalRecord.Dtos.Appointment;
 using System.Text.Json;
+using MassTransit.Transports;
 
 namespace Service.MedicalRecord.Application
 {
@@ -49,6 +50,7 @@ namespace Service.MedicalRecord.Application
         private readonly IRabbitMQSettings _rabbitMQSettings;
         private readonly IQueueNames _queueNames;
         private readonly IWeeClinicApplication _weeService;
+        private readonly IPublishEndpoint _publishEndpoint;
         private readonly string MedicalRecordPath;
         private const byte PARTICULAR = 2;
         private const byte CARGA_RESULTADOS = 0;
@@ -64,7 +66,8 @@ namespace Service.MedicalRecord.Application
             IRabbitMQSettings rabbitMQSettings,
             IQueueNames queueNames,
             IConfiguration configuration,
-            IWeeClinicApplication weeService)
+            IWeeClinicApplication weeService,
+            IPublishEndpoint publishEndpoint)
         {
             _repository = repository;
             _request = request;
@@ -75,6 +78,7 @@ namespace Service.MedicalRecord.Application
             _rabbitMQSettings = rabbitMQSettings;
             MedicalRecordPath = configuration.GetValue<string>("ClientUrls:MedicalRecord") + configuration.GetValue<string>("ClientRoutes:MedicalRecord");
             _weeService = weeService;
+            _publishEndpoint = publishEndpoint;
         }
 
         public async Task<(byte[] file, string fileName)> ExportList(ClinicResultSearchDto search)
@@ -269,6 +273,8 @@ namespace Service.MedicalRecord.Application
             foreach (var studyMethod in studies.Where(x => x.Metodo == null))
             {
                 var method = studiesParams.FirstOrDefault(x => x.Id == studyMethod.EstudioId).Metodo;
+                var studyOrder = studiesParams.FirstOrDefault(x => x.Id == studyMethod.EstudioId).Orden;
+                studyMethod.OrdenEstudio = studyOrder;
                 if (method != null)
                 {
                     studyMethod.Metodo = method;
@@ -308,6 +314,7 @@ namespace Service.MedicalRecord.Application
                         }
                         resultsIds.Add(study.Id);
                         study.Metodo = currentStudy.Metodo;
+                        study.OrdenEstudio = currentStudy.Orden;
                     }
                 }
 
@@ -351,6 +358,7 @@ namespace Service.MedicalRecord.Application
                 study.Parametros = JsonSerializer.Deserialize<List<ParameterListDto>>(JsonSerializer.Serialize(st.Parametros));
                 study.Indicaciones = st.Indicaciones;
                 study.Metodo = st.Metodo;
+                study.OrdenEstudio = st.Orden;
             }
 
             foreach (var result in results)
@@ -406,7 +414,7 @@ namespace Service.MedicalRecord.Application
 
                 if (param.TipoValores != null && param.TipoValores.Count != 0)
                 {
-                    var ageRange = request.Expediente.Edad >= param.TipoValores.FirstOrDefault().RangoEdadInicial && request.Expediente.Edad <= param.TipoValores.FirstOrDefault().RangoEdadFinal;
+                    var ageRange = param.TipoValores.Where(x => request.Expediente.Edad >= x.RangoEdadInicial && request.Expediente.Edad <= x.RangoEdadFinal);
 
                     switch (param.TipoValor)
                     {
@@ -433,26 +441,32 @@ namespace Service.MedicalRecord.Application
                             }
                             break;
                         case "3":
-                            if (ageRange)
+                            foreach(var tipoValor in param.TipoValores)
                             {
-                                param.ValorInicial = param.TipoValores.FirstOrDefault().ValorInicialNumerico.ToString();
-                                param.ValorFinal = param.TipoValores.FirstOrDefault().ValorFinalNumerico.ToString();
+
+                            }
+                            if (ageRange.Count() > 0)
+                            {
+                                param.ValorInicial = ageRange.FirstOrDefault().ValorInicialNumerico.ToString();
+                                param.ValorFinal = ageRange.FirstOrDefault().ValorFinalNumerico.ToString();
+                                param.CriticoMinimo = ageRange.FirstOrDefault().CriticoMinimo;
+                                param.CriticoMaximo = ageRange.FirstOrDefault().CriticoMaximo;
                             }
                             break;
                         case "4":
-                            if (ageRange && request.Expediente.Genero == "F")
+                            if (ageRange.Count() > 0 && request.Expediente.Genero == "F")
                             {
-                                param.ValorInicial = param.TipoValores.FirstOrDefault().MujerValorInicial.ToString();
-                                param.ValorFinal = param.TipoValores.FirstOrDefault().MujerValorFinal.ToString();
-                                param.CriticoMinimo = param.TipoValores.FirstOrDefault().MujerCriticoMinimo;
-                                param.CriticoMaximo = param.TipoValores.FirstOrDefault().MujerCriticoMaximo;
+                                param.ValorInicial = ageRange.FirstOrDefault().ValorInicialNumerico.ToString();
+                                param.ValorFinal = ageRange.FirstOrDefault().ValorFinalNumerico.ToString();
+                                param.CriticoMinimo = ageRange.FirstOrDefault().MujerCriticoMinimo;
+                                param.CriticoMaximo = ageRange.FirstOrDefault().MujerCriticoMinimo;
                             }
-                            else if (ageRange && request.Expediente.Genero == "M")
+                            else if (ageRange.Count() > 0 && request.Expediente.Genero == "M")
                             {
-                                param.ValorInicial = param.TipoValores.FirstOrDefault().HombreValorInicial.ToString();
-                                param.ValorFinal = param.TipoValores.FirstOrDefault().HombreValorFinal.ToString();
-                                param.CriticoMinimo = param.TipoValores.FirstOrDefault().HombreCriticoMinimo;
-                                param.CriticoMaximo = param.TipoValores.FirstOrDefault().HombreCriticoMaximo;
+                                param.ValorInicial = ageRange.FirstOrDefault().ValorInicialNumerico.ToString();
+                                param.ValorFinal = ageRange.FirstOrDefault().ValorFinalNumerico.ToString();
+                                param.CriticoMinimo = ageRange.FirstOrDefault().HombreCriticoMinimo;
+                                param.CriticoMaximo = ageRange.FirstOrDefault().HombreCriticoMaximo;
                             }
                             break;
                         case "5":
@@ -472,7 +486,7 @@ namespace Service.MedicalRecord.Application
 
             var data = new RequestStudyUpdateDto()
             {
-                Estudios = studiesDto,
+                Estudios = studiesDto.OrderBy(x => x.OrdenEstudio).ToList(),
             };
 
             return data;
@@ -643,9 +657,17 @@ namespace Service.MedicalRecord.Application
                         var resultsToSend = canSendResultResultsReady(existingRequest, results.First().SolicitudEstudioId);
                         if (resultsToSend.Count() > 0)
                         {
-                            
-                            await SendTestWhatsapp(files, request.Solicitud.EnvioWhatsApp, userId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
-                            await SendTestEmail(files, request.Solicitud.EnvioCorreo, userId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
+
+                            if (!string.IsNullOrEmpty(request.Solicitud.EnvioWhatsApp))
+                            {
+                                await SendTestWhatsapp(files, request.Solicitud.EnvioWhatsApp, userId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
+
+                            }
+                            if (!string.IsNullOrEmpty(request.Solicitud.EnvioCorreo))
+                            {
+                                await SendTestEmail(files, request.Solicitud.EnvioCorreo, userId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
+
+                            }
                             await UpdateStatusStudy(request.SolicitudEstudioId, Status.RequestStudy.Enviado, user);
 
                             string descripcion = getDescriptionRecord(request.Clave, existingRequest.EnvioWhatsApp, existingRequest.EnvioCorreo);
@@ -673,6 +695,39 @@ namespace Service.MedicalRecord.Application
                         await SendResultsFiles(request.SolicitudId, userId, user, existingRequest.Estudios.ToList());
                         //}
                     }
+                }
+
+                var notifications = await _catalogClient.GetNotifications("Captura de resultados");
+                var createnotification = notifications.FirstOrDefault(x => x.Tipo == "Procesing");
+                
+                if (createnotification.Activo)
+                {
+                    foreach (var estudio in results) {
+
+                        var mensaje = createnotification.Contenido.Replace("[Nestudio]", estudio.Estudio);
+                        mensaje = mensaje.Replace("[Nsolicitud]", existingRequest.Clave);
+                        mensaje = mensaje.Replace("[Nsucursal]", existingRequest.Sucursal.Nombre);
+                        var contract = new NotificationContract(mensaje, false);
+                        await _publishEndpoint.Publish(contract);
+
+
+                    }
+  
+
+                }
+                createnotification = notifications.FirstOrDefault(x => x.Tipo == "Critic");
+                if (createnotification.Activo)
+                {
+                    var critico = results.Any(x=> x.CriticoMinimo< Decimal.Parse(x.ValorInicial) || x.CriticoMaximo > Decimal.Parse(x.ValorFinal));
+
+                        var mensaje = createnotification.Contenido.Replace("[Nsolicitud]", existingRequest.Clave);
+                        var contract = new NotificationContract(mensaje, false);
+                        await _publishEndpoint.Publish(contract);
+
+
+                    
+
+
                 }
             }
         }
@@ -827,10 +882,16 @@ namespace Service.MedicalRecord.Application
                         var resultsToSend = canSendResultResultsReady(existingRequest, existing.RequestStudyId);
                         if (resultsToSend.Count() > 0)
                         {
+                            if (!string.IsNullOrEmpty(existing.Solicitud.EnvioWhatsApp))
+                            {
 
-                            await SendTestWhatsapp(files, existing.Solicitud.EnvioWhatsApp, result.UsuarioId, existing.Solicitud.Expediente.NombreCompleto, existing.Solicitud.Clave);
+                                await SendTestWhatsapp(files, existing.Solicitud.EnvioWhatsApp, result.UsuarioId, existing.Solicitud.Expediente.NombreCompleto, existing.Solicitud.Clave);
+                            }
+                            if (!string.IsNullOrEmpty(existing.Solicitud.EnvioCorreo))
+                            {
 
-                            await SendTestEmail(files, existing.Solicitud.EnvioCorreo, result.UsuarioId, existing.Solicitud.Expediente.NombreCompleto, existing.Solicitud.Clave);
+                                await SendTestEmail(files, existing.Solicitud.EnvioCorreo, result.UsuarioId, existing.Solicitud.Expediente.NombreCompleto, existing.Solicitud.Clave);
+                            }
 
                             await UpdateStatusStudy(existing.SolicitudEstudioId, Status.RequestStudy.Enviado, result.Usuario);
 
@@ -987,7 +1048,17 @@ namespace Service.MedicalRecord.Application
 
                     files.Add(new SenderFiles(new Uri(pathName), namePdf));
                 }
+                var notifications = await _catalogClient.GetNotifications("Envio de resultados"); 
+                var createnotification = notifications.FirstOrDefault(x => x.Tipo == "Send");
+                var mensaje = createnotification.Contenido.Replace("[Nsolicitud]", existingRequest.Clave);
+                
+                if (createnotification.Activo)
+                {
 
+                    var contract = new NotificationContract(mensaje, false);
+                    await _publishEndpoint.Publish(contract);
+
+                }
                 try
                 {
                     //if (files.Count > 0 && canSendResultBalance(existingRequest))
@@ -1021,8 +1092,19 @@ namespace Service.MedicalRecord.Application
                     }
 
                 }
-                catch (Exception ex)
-                {
+                catch (Exception ex) { 
+               
+                     createnotification = notifications.FirstOrDefault(x => x.Tipo == "Fail");
+                    mensaje = createnotification.Contenido.Replace("[Nsolicitud]", existingRequest.Clave);
+                    
+                    if (createnotification.Activo)
+                    {
+
+                        var contract = new NotificationContract(mensaje, false);
+                        await _publishEndpoint.Publish(contract);
+
+                    }
+
                     throw ex;
                 }
 
@@ -1141,10 +1223,15 @@ namespace Service.MedicalRecord.Application
                 //{
 
 
+                if (!string.IsNullOrEmpty(existingRequest.EnvioWhatsApp))
+                {
+                    await SendTestWhatsapp(files, existingRequest.EnvioWhatsApp, usuarioId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
+                }
 
-                await SendTestWhatsapp(files, existingRequest.EnvioWhatsApp, usuarioId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
-
-                await SendTestEmail(files, existingRequest.EnvioCorreo, usuarioId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
+                if (!string.IsNullOrEmpty(existingRequest.EnvioCorreo))
+                {
+                    await SendTestEmail(files, existingRequest.EnvioCorreo, usuarioId, existingRequest.Expediente.NombreCompleto, existingRequest.Clave);
+                }
 
                 foreach (var estudio in existingRequest.Estudios)
                 {
@@ -1236,20 +1323,24 @@ namespace Service.MedicalRecord.Application
         }
         public async Task CreateHistoryRecord(Guid solicituId, int solicitudEstudioId, string descripcion, string usuario, string numero = "", string correo = "")
         {
-            var record = new DeliveryHistory
+            if (!string.IsNullOrEmpty(numero) || !string.IsNullOrEmpty(correo))
             {
-                Id = Guid.NewGuid(),
-                Numero = numero,
-                Correo = correo,
-                FechaCreo = DateTime.Now,
-                UsuarioNombre = usuario,
-                Descripcion = descripcion,
-                SolicitudEstudioId = solicitudEstudioId,
-                SolicitudId = solicituId
 
-            };
+                var record = new DeliveryHistory
+                {
+                    Id = Guid.NewGuid(),
+                    Numero = numero,
+                    Correo = correo,
+                    FechaCreo = DateTime.Now,
+                    UsuarioNombre = usuario,
+                    Descripcion = descripcion,
+                    SolicitudEstudioId = solicitudEstudioId,
+                    SolicitudId = solicituId
 
-            await _repository.CreateHistoryRecord(record);
+                };
+
+                await _repository.CreateHistoryRecord(record);
+            }
 
 
         }

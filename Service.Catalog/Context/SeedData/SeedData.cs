@@ -26,6 +26,7 @@ using Service.Catalog.Domain.Company;
 using Service.Catalog.Domain.Medics;
 using Service.Catalog.Domain.Price;
 using Service.Catalog.Domain.Provenance;
+using Service.Catalog.Domain.Notifications;
 
 namespace Service.Catalog.Context.SeedData
 {
@@ -161,7 +162,28 @@ namespace Service.Catalog.Context.SeedData
 
             return cfdis;
         }
+        //Notificaciones Fijas
+        public static List<Notifications> GetNotifications()
+        {
+            var notifications = new List<Notifications> {
+                    new Notifications{Titulo ="Lista de precios", Contenido ="Se ha actualizado la lista de precios [Nlista] el día fecha",IsNotifi =true,Activo =true,Tipo ="Update" },
+                    new Notifications{Titulo ="Lista de precios", Contenido ="Se ha inactivado la lista de precios [Nlista] el día fecha",IsNotifi = true,Activo =true,Tipo = "Disabled"},
+                    new Notifications{Titulo ="Lista de precios", Contenido = "Se ha activado la lista de precios [Nlista] el día fecha", IsNotifi = true, Activo =true, Tipo = "Active" },
+                    new Notifications{Titulo ="Lista de precios", Contenido = "Se ha creado la lista de precios [Nlista] y se ha asigado a las sucursales [Lsucursal]", IsNotifi = true, Activo =true, Tipo = "Create" },
+                    new Notifications{Titulo ="Ruta", Contenido = "No se ha recibido la muestra [Nmuestra], correspondiente a la solicitud [Nsolicitud]", IsNotifi = true, Activo =true, Tipo = "Reject" },
+                    new Notifications{Titulo ="Ruta", Contenido = "Se ha recibido la muestra [Nmuestra] no contemplada para una orden de seguimiento, correspondiente a la solicitud [Nsolicitud]", IsNotifi = true, Activo =true, Tipo = "Acept" },
+                    new Notifications{Titulo ="Captura de resultados", Contenido = "Se detecta un valor anormal crítico en la solicitud [Nsolicitud], estudio [Nestudio]", IsNotifi = true, Activo =true,   Tipo = "Critic" },
+                    new Notifications{Titulo ="Toma de muestra", Contenido = "Se detectan estudios con toma de muestras pendiente sin motivo aparente, favor de consultar solicitudes: [Lsolicitud]", IsNotifi = true, Activo =true, Tipo = "Pending" },
+                    new Notifications{Titulo ="Toma de muestra", Contenido = "Solicitud [Nsolicitud] con categoría URGENTE favor de atender con prioridad.", IsNotifi = true, Activo =true, Tipo = "Urgent" },
+                    new Notifications{Titulo ="Solicitar estudios", Contenido = "Solicitud [Nsolicitud] con categoría URGENTE favor de atender con prioridad.", IsNotifi = true, Activo =true, Tipo = "Urgent" },
+                    new Notifications{Titulo ="Envio de resultados", Contenido = "Se envió de manera automática los resultados de la solicitud [Nsolicitud] de manera exitosa", IsNotifi = true, Activo =true, Tipo = "Send" },
+                    new Notifications{Titulo ="Envio de resultados", Contenido = "Error en envió automático en  resultados de la solicitud [Nsolicitud]", IsNotifi = true, Activo =true, Tipo = "Fail" },
+                    new Notifications{Titulo ="Captura de resultados", Contenido = "Se procesa la captura de resultados de estudio [Nestudio], solicitud [Nsolicitud], procesada en la sucursal [Nsucursal]", IsNotifi = true, Activo =true, Tipo = "Procesing" },
+                    new Notifications{Titulo ="Citas", Contenido = "Cita programada dentro de 15 minutos, a cargo del dispositivo [Ndispositivo], cita [Ncita]", IsNotifi = true, Activo =true, Tipo = "Cita" },
+            };
 
+            return notifications;
+        }
         // SUCURSALES
         public static List<Branch> GetBranches()
         {
@@ -188,26 +210,6 @@ namespace Service.Catalog.Context.SeedData
             };
 
             return branches;
-        }
-
-        // LISTA DE PRECIOS DEFAULT
-        public static PriceList GetDefaultPriceList()
-        {
-            var priceList = new PriceList(
-                PL.PARTICULARES,
-                "PARTICULARES",
-                "PARTICULARES",
-                true);
-
-            priceList.Compañia = new List<Price_Company>
-            {
-                new Price_Company(PL.PARTICULARES, COMP.PARTICULARES)
-            };
-
-            var branches = GetBranches();
-            priceList.Sucursales = branches.Select(x => new Price_Branch(PL.PARTICULARES, x.Id)).ToList();
-
-            return priceList;
         }
 
         // SUCURSALES CONFIGURACION FOLIO
@@ -723,20 +725,85 @@ namespace Service.Catalog.Context.SeedData
             return packStudies;
         }
 
-        // PRECIOS ESTUDIOS
-        public static List<PriceList_Study> GetStudyPrices()
+        // LISTA DE PRECIOS PARTICULARES
+        public static List<PriceList> GetDefaultPriceList()
         {
             var path = "wwwroot/seed/12_CAT_PRECIOS.xlsx";
-            var tableData = ReadAsTable(path, "PRECIO-ESTUDIO");
+            var studyData = ReadAsTable(path, "PRECIO-ESTUDIO");
+            var packData = ReadAsTable(path, "PRECIO-PAQUETE");
 
-            var studyPrices = tableData.AsEnumerable()
-                .Select(x => new PriceList_Study(
-                    PL.PARTICULARES,
-                    Convert.ToInt32(x.Field<double>("EstudioId")),
-                    Convert.ToDecimal(x.Field<double>("Total"))
-                    )).ToList();
+            var studyPrices = studyData.AsEnumerable()
+                .Select(x => new
+                {
+                    EstudioId = Convert.ToInt32(x.Field<double>("EstudioId")),
+                    GYM = Convert.ToDecimal(x.Field<double>("GYM")),
+                    HMO = Convert.ToDecimal(x.Field<double>("HMO")),
+                    MTY = Convert.ToDecimal(x.Field<double>("MTY")),
+                    NOG = Convert.ToDecimal(x.Field<double>("NOG")),
+                    OBR = Convert.ToDecimal(x.Field<double>("OBR")),
+                    GRL = Convert.ToDecimal(x.Field<double>("GENERAL"))
+                }).ToList();
 
-            return studyPrices;
+            var packPrices = packData.AsEnumerable()
+                .Select(x => new
+                {
+                    PaqueteId = Convert.ToInt32(x.Field<double>("PaqueteId")),
+                    GYM = Convert.ToDecimal(x.Field<double>("GYM")),
+                    HMO = Convert.ToDecimal(x.Field<double>("HMO")),
+                    MTY = Convert.ToDecimal(x.Field<double>("MTY")),
+                    NOG = Convert.ToDecimal(x.Field<double>("NOG")),
+                    OBR = Convert.ToDecimal(x.Field<double>("OBR")),
+                    GRL = Convert.ToDecimal(x.Field<double>("GENERAL"))
+                }).ToList();
+
+            var branches = GetBranches();
+
+            var priceList = new List<PriceList> {
+                new PriceList(PL.PARTICULARES_GYM, "PARTICULARES_GYM", "PARTICULARES_GYM", true)
+                {
+                    Compañia = new List<Price_Company> { new Price_Company(PL.PARTICULARES_GYM, COMP.PARTICULARES) },
+                    Sucursales = branches.Where(x => x.Id == BR.UNIDAD).Select(x => new Price_Branch(PL.PARTICULARES_GYM, x.Id)).ToList(),
+                    Estudios = studyPrices.Select(x => new PriceList_Study(PL.PARTICULARES_GYM, x.EstudioId, x.GYM)).ToList(),
+                    Paquetes = packPrices.Select(x => new PriceList_Packet(PL.PARTICULARES_GYM, x.PaqueteId, x.GYM)).ToList()
+                },
+                new PriceList(PL.PARTICULARES_HMO, "PARTICULARES_HMO", "PARTICULARES_HMO", true)
+                {
+                    Compañia = new List<Price_Company> { new Price_Company(PL.PARTICULARES_HMO, COMP.PARTICULARES) },
+                    Sucursales = branches.Where(x => x.Id.In(BR.REFORMA, BR.MORELOS, BR.SOLIDARIDAD, BR.MNORTE, BR.CANTABRIA)).Select(x => new Price_Branch(PL.PARTICULARES_HMO, x.Id)).ToList(),
+                    Estudios = studyPrices.Select(x => new PriceList_Study(PL.PARTICULARES_HMO, x.EstudioId, x.HMO)).ToList(),
+                    Paquetes = packPrices.Select(x => new PriceList_Packet(PL.PARTICULARES_HMO, x.PaqueteId, x.HMO)).ToList()
+                },
+                new PriceList(PL.PARTICULARES_MTY, "PARTICULARES_MTY", "PARTICULARES_MTY", true)
+                {
+                    Compañia = new List<Price_Company> { new Price_Company(PL.PARTICULARES_MTY, COMP.PARTICULARES) },
+                    Sucursales = branches.Where(x => x.Id.In(BR.CUMBRES, BR.SPGG)).Select(x => new Price_Branch(PL.PARTICULARES_MTY, x.Id)).ToList(),
+                    Estudios = studyPrices.Select(x => new PriceList_Study(PL.PARTICULARES_MTY, x.EstudioId, x.MTY)).ToList(),
+                    Paquetes = packPrices.Select(x => new PriceList_Packet(PL.PARTICULARES_MTY, x.PaqueteId, x.MTY)).ToList()
+                },
+                new PriceList(PL.PARTICULARES_OBR, "PARTICULARES_OBR", "PARTICULARES_OBR", true)
+                {
+                    Compañia = new List<Price_Company> { new Price_Company(PL.PARTICULARES_OBR, COMP.PARTICULARES) },
+                    Sucursales = branches.Where(x => x.Id == BR.NOGALES1).Select(x => new Price_Branch(PL.PARTICULARES_OBR, x.Id)).ToList(),
+                    Estudios = studyPrices.Select(x => new PriceList_Study(PL.PARTICULARES_OBR, x.EstudioId, x.OBR)).ToList(),
+                    Paquetes = packPrices.Select(x => new PriceList_Packet(PL.PARTICULARES_OBR, x.PaqueteId, x.OBR)).ToList()
+                },
+                new PriceList(PL.PARTICULARES_NOG, "PARTICULARES_NOG", "PARTICULARES_NOG", true)
+                {
+                    Compañia = new List<Price_Company> { new Price_Company(PL.PARTICULARES_NOG, COMP.PARTICULARES) },
+                    Sucursales = branches.Where(x => x.Id == BR.KENNEDY).Select(x => new Price_Branch(PL.PARTICULARES_NOG, x.Id)).ToList(),
+                    Estudios = studyPrices.Select(x => new PriceList_Study(PL.PARTICULARES_NOG, x.EstudioId, x.NOG)).ToList(),
+                    Paquetes = packPrices.Select(x => new PriceList_Packet(PL.PARTICULARES_NOG, x.PaqueteId, x.NOG)).ToList()
+                },
+                new PriceList(PL.PARTICULARES_GRL, "PARTICULARES_GRL", "PARTICULARES_GRL", true)
+                {
+                    Compañia = new List<Price_Company> { new Price_Company(PL.PARTICULARES_GRL, COMP.PARTICULARES) },
+                    Sucursales = branches.Where(x => x.Id.In(BR.MT, BR.U200, BR.U300, BR.ALAMEDA, BR.HACIENDAS, BR.NAVOJOA, BR.NAVOJOA2, BR.CMSS)).Select(x => new Price_Branch(PL.PARTICULARES_GRL, x.Id)).ToList(),
+                    Estudios = studyPrices.Select(x => new PriceList_Study(PL.PARTICULARES_GRL, x.EstudioId, x.GRL)).ToList(),
+                    Paquetes = packPrices.Select(x => new PriceList_Packet(PL.PARTICULARES_GRL, x.PaqueteId, x.GRL)).ToList()
+                },
+            };
+
+            return priceList;
         }
 
         public static DataTable ReadAsTable(string filePath, string worksheet)

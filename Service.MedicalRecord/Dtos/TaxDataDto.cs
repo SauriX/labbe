@@ -15,6 +15,7 @@ namespace Service.MedicalRecord.Dtos
         public string Correo { get; set; }
         public string Calle { get; set; }
         public int Colonia { get; set; }
+        public bool IsDefaultTaxData { get; set; }
         public Guid UsuarioId { get; set; }
     }
 }

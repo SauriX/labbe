@@ -11,7 +11,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/area/all/{search}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/area/department/{departmentId}/active",
@@ -23,7 +23,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/area/department/{departmentId}/active",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/area/active",
@@ -35,7 +35,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/area/active",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/area/getAreaByDeparment",
@@ -47,7 +47,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/area/getAreaByDeparment",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/area/{id}",
@@ -59,7 +59,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/area/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/area",
@@ -71,7 +71,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/area",
-      "UpstreamHttpMethod": [ "POST", "PUT" ]
+      "UpstreamHttpMethod": ["POST", "PUT"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/area/export/list/{search}",
@@ -83,7 +83,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/area/export/list/{search}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/area/export/form/{id}",
@@ -95,7 +95,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/area/export/form/{id}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     //Budget
     {
@@ -108,7 +108,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/costofijo/all/{search}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/costofijo/branch/{branchId}/active",
@@ -120,7 +120,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/costofijo/branch/{branchId}/active",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/costofijo/getBranches",
@@ -132,7 +132,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/costofijo/getBranches",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/costofijo/active",
@@ -144,7 +144,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/costofijo/active",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/costofijo/{id}",
@@ -156,7 +156,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/costofijo/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/costofijo",
@@ -168,7 +168,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/costofijo",
-      "UpstreamHttpMethod": [ "POST", "PUT" ]
+      "UpstreamHttpMethod": ["POST", "PUT"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/costofijo/export/list/{search}",
@@ -180,7 +180,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/costofijo/export/list/{search}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/costofijo/export/form/{id}",
@@ -192,7 +192,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/costofijo/export/form/{id}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     //Bank
     {
@@ -205,7 +205,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/bank/all/{search}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/bank/active",
@@ -217,7 +217,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/bank/active",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/bank/{id}",
@@ -229,7 +229,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/bank/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/bank",
@@ -241,7 +241,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/bank",
-      "UpstreamHttpMethod": [ "POST", "PUT" ]
+      "UpstreamHttpMethod": ["POST", "PUT"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/bank/export/list/{search}",
@@ -253,7 +253,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/bank/export/list/{search}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/bank/export/form/{id}",
@@ -265,7 +265,80 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/bank/export/form/{id}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
+    },
+    //InvoiceConcepts
+    {
+      "DownstreamPathTemplate": "/api/catalog/invoiceconcepts/all/{search}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/invoiceconcepts/all/{search}",
+      "UpstreamHttpMethod": ["GET"]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/invoiceconcepts/active",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/invoiceconcepts/active",
+      "UpstreamHttpMethod": ["GET"]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/invoiceconcepts/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/invoiceconcepts/{id}",
+      "UpstreamHttpMethod": ["GET"]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/invoiceconcepts",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/invoiceconcepts",
+      "UpstreamHttpMethod": ["POST", "PUT"]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/invoiceconcepts/export/list/{search}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/invoiceconcepts/export/list/{search}",
+      "UpstreamHttpMethod": ["POST"]
+    },
+    {
+      "DownstreamPathTemplate": "/api/catalog/invoiceconcepts/export/form/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/invoiceconcepts/export/form/{id}",
+      "UpstreamHttpMethod": ["POST"]
     },
     //Clinic
     {
@@ -278,7 +351,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/clinic/all/{search}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/clinic/active",
@@ -290,7 +363,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/clinic/active",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/clinic/{id}",
@@ -302,7 +375,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/clinic/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/clinic",
@@ -314,7 +387,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/clinic",
-      "UpstreamHttpMethod": [ "POST", "PUT" ]
+      "UpstreamHttpMethod": ["POST", "PUT"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/clinic/export/list/{search}",
@@ -326,7 +399,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/clinic/export/list/{search}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/clinic/export/form/{id}",
@@ -338,7 +411,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/clinic/export/form/{id}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     //Delivery
     {
@@ -351,7 +424,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/delivery/all/{search}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/delivery/active",
@@ -363,7 +436,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/delivery/active",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/delivery/{id}",
@@ -375,7 +448,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/delivery/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/delivery",
@@ -387,7 +460,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/delivery",
-      "UpstreamHttpMethod": [ "POST", "PUT" ]
+      "UpstreamHttpMethod": ["POST", "PUT"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/delivery/export/list/{search}",
@@ -399,7 +472,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/delivery/export/list/{search}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/delivery/export/form/{id}",
@@ -411,7 +484,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/delivery/export/form/{id}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     //Department
     {
@@ -424,7 +497,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/department/all/{search}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/department/active",
@@ -436,7 +509,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/department/active",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/department/{id}",
@@ -448,7 +521,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/department/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/department",
@@ -460,7 +533,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/department",
-      "UpstreamHttpMethod": [ "POST", "PUT" ]
+      "UpstreamHttpMethod": ["POST", "PUT"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/department/export/list/{search}",
@@ -472,7 +545,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/department/export/list/{search}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/department/export/form/{id}",
@@ -484,7 +557,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/department/export/form/{id}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     //Dimension
     {
@@ -497,7 +570,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/dimension/all/{search}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/dimension/active",
@@ -509,7 +582,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/dimension/active",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/dimension/{id}",
@@ -521,7 +594,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/dimension/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/dimension",
@@ -533,7 +606,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/dimension",
-      "UpstreamHttpMethod": [ "POST", "PUT" ]
+      "UpstreamHttpMethod": ["POST", "PUT"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/dimension/export/list/{search}",
@@ -545,7 +618,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/dimension/export/list/{search}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/dimension/export/form/{id}",
@@ -557,7 +630,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/dimension/export/form/{id}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     //Field
     {
@@ -570,7 +643,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/field/all/{search}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/field/active",
@@ -582,7 +655,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/field/active",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/equipo/active",
@@ -594,7 +667,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/equipo  /active",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/field/{id}",
@@ -606,7 +679,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/field/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/field",
@@ -618,7 +691,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/field",
-      "UpstreamHttpMethod": [ "POST", "PUT" ]
+      "UpstreamHttpMethod": ["POST", "PUT"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/field/export/list/{search}",
@@ -630,7 +703,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/field/export/list/{search}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/field/export/form/{id}",
@@ -642,7 +715,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/field/export/form/{id}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     //Indicator
     {
@@ -655,7 +728,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/indicator/all/{search}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/indicator/active",
@@ -667,7 +740,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/indicator/active",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/indicator/{id}",
@@ -679,7 +752,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/indicator/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/indicator",
@@ -691,7 +764,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/indicator",
-      "UpstreamHttpMethod": [ "POST", "PUT" ]
+      "UpstreamHttpMethod": ["POST", "PUT"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/indicator/export/list/{search}",
@@ -703,7 +776,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/indicator/export/list/{search}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/indicator/export/form/{id}",
@@ -715,7 +788,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/indicator/export/form/{id}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     //Method
     {
@@ -728,7 +801,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/method/all/{search}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/method/active",
@@ -740,7 +813,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/method/active",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/method/{id}",
@@ -752,7 +825,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/method/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/method",
@@ -764,7 +837,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/method",
-      "UpstreamHttpMethod": [ "POST", "PUT" ]
+      "UpstreamHttpMethod": ["POST", "PUT"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/method/export/list/{search}",
@@ -776,7 +849,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/method/export/list/{search}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/method/export/form/{id}",
@@ -788,7 +861,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/method/export/form/{id}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     //Payment
     {
@@ -801,7 +874,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/payment/all/{search}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/payment/active",
@@ -813,7 +886,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/payment/active",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/payment/{id}",
@@ -825,7 +898,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/payment/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/payment",
@@ -837,7 +910,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/payment",
-      "UpstreamHttpMethod": [ "POST", "PUT" ]
+      "UpstreamHttpMethod": ["POST", "PUT"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/payment/export/list/{search}",
@@ -849,7 +922,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/payment/export/list/{search}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/payment/export/form/{id}",
@@ -861,7 +934,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/payment/export/form/{id}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     //PaymentMethod
     {
@@ -874,7 +947,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/paymentMethod/all/{search}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/paymentMethod/active",
@@ -886,7 +959,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/paymentMethod/active",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/paymentMethod/{id}",
@@ -898,7 +971,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/paymentMethod/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/paymentMethod",
@@ -910,7 +983,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/paymentMethod",
-      "UpstreamHttpMethod": [ "POST", "PUT" ]
+      "UpstreamHttpMethod": ["POST", "PUT"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/paymentMethod/export/list/{search}",
@@ -922,7 +995,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/paymentMethod/export/list/{search}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/paymentMethod/export/form/{id}",
@@ -934,7 +1007,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/paymentMethod/export/form/{id}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     //SampleType
     {
@@ -947,7 +1020,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/sampleType/all/{search}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/sampleType/active",
@@ -959,7 +1032,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/sampleType/active",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/sampleType/{id}",
@@ -971,7 +1044,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/sampleType/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/sampleType",
@@ -983,7 +1056,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/sampleType",
-      "UpstreamHttpMethod": [ "POST", "PUT" ]
+      "UpstreamHttpMethod": ["POST", "PUT"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/sampleType/export/list/{search}",
@@ -995,7 +1068,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/sampleType/export/list/{search}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/sampleType/export/form/{id}",
@@ -1007,7 +1080,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/sampleType/export/form/{id}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     //UseOfCFDI
     {
@@ -1020,7 +1093,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/useOfCFDI/all/{search}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/useOfCFDI/active",
@@ -1032,7 +1105,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/useOfCFDI/active",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/useOfCFDI/{id}",
@@ -1044,7 +1117,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/useOfCFDI/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/useOfCFDI",
@@ -1056,7 +1129,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/useOfCFDI",
-      "UpstreamHttpMethod": [ "POST", "PUT" ]
+      "UpstreamHttpMethod": ["POST", "PUT"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/useOfCFDI/export/list/{search}",
@@ -1068,7 +1141,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/useOfCFDI/export/list/{search}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/useOfCFDI/export/form/{id}",
@@ -1080,7 +1153,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/useOfCFDI/export/form/{id}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     //WorkList
     {
@@ -1093,7 +1166,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/workList/all/{search}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/workList/active",
@@ -1105,7 +1178,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/workList/active",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/workList/{id}",
@@ -1117,7 +1190,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/workList/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/workList",
@@ -1129,7 +1202,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/workList",
-      "UpstreamHttpMethod": [ "POST", "PUT" ]
+      "UpstreamHttpMethod": ["POST", "PUT"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/workList/export/list/{search}",
@@ -1141,7 +1214,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/workList/export/list/{search}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/workList/export/form/{id}",
@@ -1153,7 +1226,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/workList/export/form/{id}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     //Format
     {
@@ -1166,7 +1239,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/format/all/{search}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/format/active",
@@ -1178,7 +1251,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/format/active",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/format/{id}",
@@ -1190,7 +1263,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/format/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/format",
@@ -1202,7 +1275,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/format",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/format",
@@ -1214,7 +1287,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/format",
-      "UpstreamHttpMethod": [ "PUT" ]
+      "UpstreamHttpMethod": ["PUT"]
     },
     {
       "DownstreamPathTemplate": "/api/Tapon/all",
@@ -1226,7 +1299,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/Tapon/all",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     //Provenance
     {
@@ -1239,7 +1312,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/provenance/all/{search}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/provenance/active",
@@ -1251,7 +1324,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/provenance/active",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/provenance/{id}",
@@ -1263,7 +1336,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/provenance/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/provenance",
@@ -1275,7 +1348,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/provenance",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST"]
     },
     {
       "DownstreamPathTemplate": "/api/catalog/provenance",
@@ -1287,7 +1360,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/provenance",
-      "UpstreamHttpMethod": [ "PUT" ]
+      "UpstreamHttpMethod": ["PUT"]
     },
     //unidades
     {
@@ -1300,7 +1373,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/catalog/units/active",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET"]
     }
   ]
 }

@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Service.MedicalRecord.Client.IClient;
+using Service.MedicalRecord.Dtos;
 using Service.MedicalRecord.Dtos.Branch;
+using Service.MedicalRecord.Dtos.Company;
 using Service.MedicalRecord.Dtos.Catalogs;
 using Service.MedicalRecord.Dtos.Promotion;
 using Service.MedicalRecord.Dtos.Request;
@@ -70,6 +72,17 @@ namespace Service.MedicalRecord.Client
 
             throw new CustomException(response.StatusCode, response.ReasonPhrase);
         }
+        public async Task<CompanyFormDto> GetCompany(Guid id)
+        {
+            var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/company/{id}");
+
+            if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
+            {
+                return await response.Content.ReadFromJsonAsync<CompanyFormDto>();
+            }
+
+            throw new CustomException(response.StatusCode, response.ReasonPhrase);
+        }
         public async Task<List<BranchCityDto>> GetBranchbycity()
         {
             var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/branch/getSucursalByCity");
@@ -94,21 +107,25 @@ namespace Service.MedicalRecord.Client
             throw new CustomException(response.StatusCode, response.ReasonPhrase);
         }
 
-        public async Task<List<RouteFormDto>> GetRutas(List<Guid> id)
+        public async Task<List<RouteFormDto>> GetRutas(List<string> ids)
+        {
+            var url = $"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/route/multiple";
+            var response = await _client.PostAsJson<List<RouteFormDto>>(url, ids);
+
+            return response;
+        }
+        public async Task<List<NotificationListDto>> GetNotifications(string search)
 
         {
-            var json = JsonConvert.SerializeObject(id);
-            var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/route/multiple", stringContent);
+            var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/notifications/all/notificationJob/{search}");
 
             if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
             {
-                return await response.Content.ReadFromJsonAsync<List<RouteFormDto>>();
+                return await response.Content.ReadFromJsonAsync<List<NotificationListDto>>();
             }
 
             throw new CustomException(response.StatusCode, response.ReasonPhrase);
         }
-
         public async Task<AreaListDto> GetArea(int id)
         {
             var response = await _client.GetAsync($"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/area/{id}");
@@ -229,6 +246,14 @@ namespace Service.MedicalRecord.Client
             var error = await response.Content.ReadFromJsonAsync<ClientException>();
 
             throw new CustomException(HttpStatusCode.BadRequest, error.Errors);
+        }
+
+        public async Task<LoyaltyListDto> GetLoyalty(LoyaltyDto loyalty)
+        {
+            var url = $"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/loyalty/getByPriceList";
+            var response = await _client.PostAsJson<LoyaltyListDto>(url, loyalty);
+
+            return response;
         }
     }
 }

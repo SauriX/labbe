@@ -45,7 +45,11 @@ namespace Service.MedicalRecord.Dtos.Request
         public int? MaquilaId { get; set; }
         public string Maquila { get; set; }
         public string Metodo { get; set; }
+        public int OrdenEstudio { get; set; }
         public string Tipo { get; set; }
+        public string Destino { get; set; }
+        public Guid? DestinoId { get; set; }
+        public byte DestinoTipo { get; set; }
         public List<PriceListInfoPromoDto> Promociones { get; set; }
         public List<ParameterListDto> Parametros { get; set; }
         public List<IndicationListDto> Indicaciones { get; set; }

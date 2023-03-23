@@ -2,6 +2,7 @@
 using Service.Catalog.Domain.Series;
 using Service.Catalog.Dto.Series;
 using Service.Catalog.Dtos.Series;
+using Shared.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,7 +46,6 @@ namespace Service.Catalog.Mapper
                 Descripcion = dto.Factura.Observaciones,
                 SucursalKey = dto.Factura.SucursalKey,
                 Clave = dto.Factura.Clave,
-                EmisorId = Guid.Parse("698E416E-E5CB-4E7A-90ED-74448D408F20"),
                 UsuarioCreoId = dto.UsuarioId,
                 SucursalId = Guid.Parse(dto.Expedicion.SucursalId),
                 FechaCreo = dto.Factura.Año,
@@ -89,14 +89,13 @@ namespace Service.Catalog.Mapper
             {
                 Id = model.Id,
                 Nombre = dto.Factura.Nombre,
-                Contraseña = dto.Factura.Contraseña,
+                Contraseña = dto.Factura?.Contraseña,
                 Activo = dto.Factura.Estatus,
                 CFDI = dto.Factura.CFDI,
-                Descripcion = dto.Factura.Observaciones,
-                SucursalKey = dto.Factura.SucursalKey,
-                Clave = dto.Factura.Clave,
+                Descripcion = dto.Factura?.Observaciones,
+                SucursalKey = dto.Factura?.SucursalKey,
+                Clave = dto.Factura?.Clave,
                 TipoSerie = model.TipoSerie,
-                EmisorId = Guid.Parse("698E416E-E5CB-4E7A-90ED-74448D408F20"),
                 UsuarioCreoId = model.UsuarioCreoId,
                 FechaCreo = dto.Factura.Año,
                 SucursalId = Guid.Parse(dto.Expedicion.SucursalId),
@@ -117,32 +116,11 @@ namespace Service.Catalog.Mapper
                 Clave = model.Clave,
                 Contraseña = model.Contraseña,
                 Nombre = model.Nombre,
-                SucursalKey = model.SucursalKey,
                 Observaciones = model.Descripcion,
             };
         }
 
-        public static OwnerInfoDto ToOwnerInfoDto(this Branch branch)
-        {
-            if (branch == null) return null;
-
-            return new OwnerInfoDto
-            {
-                Nombre = branch.Nombre,
-                Calle = branch.Calle,
-                Colonia = branch.Colonia.Colonia,
-                Ciudad = branch.Ciudad,
-                Estado = branch.Estado,
-                Correo = branch.Correo,
-                NoExterior = branch.NumeroExterior,
-                NoInterior = branch.NumeroInterior,
-                Telefono = branch.Telefono,
-                CodigoPostal = branch.Codigopostal,
-                
-            };
-        }
-
-        public static ExpeditionPlaceDto ToExpeditionPlaceDto(this Branch branch)
+        public static ExpeditionPlaceDto ToExpeditionPlaceDto(this Branch branch, string key)
         {
             if (branch == null) return null;
 
@@ -156,7 +134,9 @@ namespace Service.Catalog.Mapper
                 NoInterior = branch.NumeroInterior,
                 Telefono = branch.Telefono,
                 CodigoPostal = branch.Codigopostal,
-                SucursalId = branch.Id.ToString()
+                SucursalId = branch.Id.ToString(),
+                Correo = branch.Correo,
+                SucursalKey = Crypto.DecryptString(branch.SucursalKey ?? "", key)
             };
         }
     }

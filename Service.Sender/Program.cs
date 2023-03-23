@@ -9,6 +9,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
+
 namespace Service.Sender
 {
     public class Program
@@ -54,6 +55,7 @@ namespace Service.Sender
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+
                 .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

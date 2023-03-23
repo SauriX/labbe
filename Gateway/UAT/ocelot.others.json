@@ -245,6 +245,73 @@
       "UpstreamPathTemplate": "/api/catalog/bank/export/form/{id}",
       "UpstreamHttpMethod": [ "POST" ]
     },
+    //InvoiceConcepts
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/catalog/invoiceconcepts/all/{search}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/invoiceconcepts/all/{search}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/catalog/invoiceconcepts/active",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/invoiceconcepts/active",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/catalog/invoiceconcepts/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/invoiceconcepts/{id}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/catalog/invoiceconcepts",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/invoiceconcepts",
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/catalog/invoiceconcepts/export/list/{search}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/invoiceconcepts/export/list/{search}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/catalog/invoiceconcepts/export/form/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/invoiceconcepts/export/form/{id}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
     //Clinic
     {
       "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/catalog/clinic/all/{search}",

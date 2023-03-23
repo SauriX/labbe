@@ -54,6 +54,10 @@ namespace Service.Billing.Application
 
             return invoices.ToInvoiceDto();
         }
+        public async Task<string> GetNextInvoiceSeriesNumber(string serie)
+        {
+            return await GetNextSeriesNumber(serie); ;
+        }
 
         public async Task<InvoiceDto> Create(InvoiceDto invoiceDto)
         {
@@ -97,7 +101,8 @@ namespace Service.Billing.Application
             try
             {
                 var invoice = invoiceDto.ToModelCompany();
-
+                var seriesNo = await GetNextSeriesNumber(invoiceDto.Serie);
+                invoice.SerieNumero = seriesNo;
 
                 var facturapiInvoice = invoiceDto.ToFacturapiDto();
                 facturapiInvoice.ClaveExterna = invoice.Id.ToString();

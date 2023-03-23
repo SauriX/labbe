@@ -2,6 +2,7 @@
 using ClosedXML.Report;
 using EventBus.Messages.Catalog;
 using MassTransit;
+using Microsoft.Extensions.Configuration;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Dictionary;
 using Service.Catalog.Domain.Branch;
@@ -24,13 +25,15 @@ namespace Service.Catalog.Application
 {
     public class BranchApplication : IBranchApplication
     {
+        private readonly string key;
         private readonly IPublishEndpoint _publishEndpoint;
         private readonly IBranchRepository _repository;
         private readonly ILocationRepository _locationRepository;
         private readonly ISeriesRepository _seriesRepository;
 
-        public BranchApplication(IPublishEndpoint publishEndpoint, IBranchRepository repository, ILocationRepository locationRepository, ISeriesRepository seriesRepository)
+        public BranchApplication(IPublishEndpoint publishEndpoint, IBranchRepository repository, ILocationRepository locationRepository, ISeriesRepository seriesRepository, IConfiguration configuration)
         {
+            key = configuration.GetValue<string>("KeySettings:AvailableKey");
             _publishEndpoint = publishEndpoint;
             _repository = repository;
             _locationRepository = locationRepository;
@@ -48,7 +51,7 @@ namespace Service.Catalog.Application
 
             var series = await _seriesRepository.GetByIds(seriesIds);
 
-            var newBranch = branch.ToModel(series);
+            var newBranch = branch.ToModel(key, series);
 
             var (isDuplicate, code) = await _repository.IsDuplicate(newBranch);
 
@@ -127,7 +130,7 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
 
-            var branchForm = branch.ToBranchFormDto();
+            var branchForm = branch.ToBranchFormDto(key);
 
             return branchForm;
         }
@@ -141,7 +144,7 @@ namespace Service.Catalog.Application
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
 
-            return branch.ToBranchFormDto();
+            return branch.ToBranchFormDto(key);
         }
 
         public async Task<string> GetCodeRange(Guid id)
@@ -162,7 +165,7 @@ namespace Service.Catalog.Application
 
             var series = await _seriesRepository.GetByBranch(Guid.Parse(branch.IdSucursal));
 
-            var updatedBranch = branch.ToModel(existing, series);
+            var updatedBranch = branch.ToModel(existing, key, series);
 
             var (isDuplicate, code) = await _repository.IsDuplicate(updatedBranch);
 

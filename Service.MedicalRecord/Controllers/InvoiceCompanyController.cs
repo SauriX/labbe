@@ -28,6 +28,12 @@ namespace Service.MedicalRecord.Controllers
         public async Task<InvoiceCompanyInfoDto> GetByFilter(InvoiceCompanyFilterDto filter)
         {
             return await _service.GetByFilter(filter);
+        } 
+        [HttpPost("filter/free")]
+        [Authorize(Policies.Access)]
+        public async Task<List<InvoiceFreeDataDto>> GetByFilterFree(InvoiceFreeFilterDto filter)
+        {
+            return await _service.GetByFilterFree(filter);
         }
 
         [HttpGet("getConsecutiveBySerie/{serie}")]
@@ -49,12 +55,21 @@ namespace Service.MedicalRecord.Controllers
         {
             return await _service.CheckInPayment(invoice);
         }
+
         [HttpPost("checkin/company")]
         [Authorize(Policies.Access)]
         public async Task<InvoiceDto> CheckInPaymentCompany(InvoiceCompanyDto invoice)
         {
             return await _service.CheckInPaymentCompany(invoice);
         }
+
+        [HttpPost("chekin/global")]
+        [Authorize(Policies.Access)]
+        public async Task<InvoiceGlobalResponseDto> CheckInPaymentGlobal(InvoiceGlobalInfoDto global)
+        {
+            return await _service.CheckInInvoiceGlobal(global);
+        }
+
         [HttpPost("download/pdf/{facturapiId}")]
         [Authorize(Policies.Access)]
         public async Task<IActionResult> DownloadPDF(Guid facturapiId)
@@ -71,6 +86,15 @@ namespace Service.MedicalRecord.Controllers
             var file = await _billingClient.DownloadPDF(facturapiId);
 
             return File(file, MimeType.PDF, "Facturacion compañias.pdf");
+        }
+
+        [HttpPost("print/xml/{facturapiId}")]
+        [Authorize(Policies.Access)]
+        public async Task<IActionResult>  PrintXML(Guid facturapiId)
+        {
+            var file = await _billingClient.DownloadXML(facturapiId);
+
+            return File(file, MimeType.XML, "Facturacion compañias.xml");
         }
         [HttpPost("send")]
         [Authorize(Policies.Access)]

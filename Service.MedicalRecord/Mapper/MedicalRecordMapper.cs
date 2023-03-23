@@ -40,6 +40,7 @@ namespace Service.MedicalRecord.Mapper
                 Edad = x.Edad,
                 FechaNacimiento = x.FechaDeNacimiento.Date.ToString("dd/MM/yyyy"),
                 MonederoElectronico = x.Monedero,
+                SucursalId = x.IdSucursal,
                 Telefono = x.Telefono,
             }).ToList();
         }
@@ -71,6 +72,7 @@ namespace Service.MedicalRecord.Mapper
                 Celular = model.Celular,
                 Calle = model.Calle,
                 Colonia = model.ColoniaId,
+                Observaciones = model.Observaciones,
                 TaxData = data == null ? Enumerable.Empty<TaxDataDto>(): data,
                 sucursal = model.IdSucursal.ToString(),
                 HasWallet = model.MonederoActivo,
@@ -95,6 +97,7 @@ namespace Service.MedicalRecord.Mapper
                 Calle = x.Calle,
                 Colonia = x.ColoniaId,
                 Correo = x.Correo,
+                IsDefaultTaxData = x.isDefaultTaxData,
             }).ToList();
         }
 
@@ -257,6 +260,7 @@ namespace Service.MedicalRecord.Mapper
                 Celular = dto.Celular,
                 Calle = dto.Calle,
                 ColoniaId = dto.Colonia,
+                Observaciones = dto.Observaciones,
                 UsuarioModId = dto.UsuarioId,
                 FechaMod = DateTime.Now,
                 FechaCreo = model.FechaCreo,

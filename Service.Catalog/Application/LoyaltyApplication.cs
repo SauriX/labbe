@@ -53,6 +53,18 @@ namespace Service.Catalog.Application
             return loyalty.ToLoyaltyDto();
         }
 
+        public async Task<LoyaltyListDto> GetByPriceListDate(LoyaltyClientDto loyaltyClient)
+        {
+            var loyalty = await _repository.GetByPriceListDate(loyaltyClient.Fecha, loyaltyClient.ListaPrecioId);
+
+            if (loyalty == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
+            }
+
+            return loyalty.ToLoyaltyDto();
+        }
+
         public async Task<LoyaltyFormDto> GetById(Guid Id)
         {
             var loyalty = await _repository.GetById(Id);

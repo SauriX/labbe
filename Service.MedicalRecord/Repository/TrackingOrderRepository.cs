@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Service.MedicalRecord.Context;
 using Service.MedicalRecord.Dictionary;
+using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Domain.TrackingOrder;
 using Service.MedicalRecord.Dtos.TrackingOrder;
 using Service.MedicalRecord.Repository.IRepository;
@@ -105,6 +106,16 @@ namespace Service.MedicalRecord.Repository
             return listaEstudio.ToList()    ;
             
         }
+
+        public async Task<TrackingOrder>FindOrderByRequestId(Guid Solicitud)
+        {
+            var listaEstudio = _context.CAT_Seguimiento_Ruta.Include(x=>x.Estudios).AsQueryable();
+
+            var orden = await  listaEstudio.FirstOrDefaultAsync(x => x.Estudios.Any(y=> y.SolicitudId == Solicitud));
+            return  orden;
+
+        }
+
         public async Task<List<Domain.Request.RequestStudy>> FindEstudios(List<int> estudios)
         {
             var listaEstudio = _context.Relacion_Solicitud_Estudio
@@ -117,7 +128,7 @@ namespace Service.MedicalRecord.Repository
 
             foreach (var estudio in listaEstudio)
             {
-                if (!ordenes.Any(x => x.Estudios.Any(y => y.EstudioId == estudio.EstudioId && y.SolicitudId == estudio.SolicitudId)))
+                if (!ordenes.Any(x => x.Estudios.Any(y => y.EtiquetaId == estudio.EstudioId && y.SolicitudId == estudio.SolicitudId)))
                 {
 
                     newlistestudios.Add(estudio);
@@ -143,7 +154,7 @@ namespace Service.MedicalRecord.Repository
 
             foreach (var estudio in listaEstudio)
             {
-                if (!ordenes.Any(x => x.Estudios.Any(y => y.EstudioId == estudio.EstudioId && y.SolicitudId == estudio.SolicitudId)))
+                if (!ordenes.Any(x => x.Estudios.Any(y => y.EtiquetaId == estudio.EstudioId && y.SolicitudId == estudio.SolicitudId)))
                 {
 
                     newlistestudios.Add(estudio);
@@ -165,7 +176,7 @@ namespace Service.MedicalRecord.Repository
 
                 var listaEstudio = requesty.Solicitud.Estudios.AsQueryable();
 
-                listaEstudio = listaEstudio.Where(x => lstSolicitudes.Any(y => y.EstudioId == x.EstudioId && y.SolicitudId== requesty.SolicitudId));
+                listaEstudio = listaEstudio.Where(x => lstSolicitudes.Any(y => y.EtiquetaId == x.EstudioId && y.SolicitudId== requesty.SolicitudId));
 
                 var estudiosEncontrados = listaEstudio.ToList();
 
@@ -179,10 +190,6 @@ namespace Service.MedicalRecord.Repository
 
 
             }
-            
-
-
-
             return true;
         }
         public async Task<string> GetLastCode(Guid branchId, string date)
@@ -204,7 +211,7 @@ namespace Service.MedicalRecord.Repository
 
                 var listaEstudio = requesty.Solicitud.Estudios.AsQueryable();
 
-                listaEstudio = listaEstudio.Where(x => lstSolicitudes.Any(y => y.EstudioId == x.EstudioId && y.SolicitudId == requesty.SolicitudId));
+                listaEstudio = listaEstudio.Where(x => lstSolicitudes.Any(y => y.EtiquetaId == x.EstudioId && y.SolicitudId == requesty.SolicitudId));
 
                 var estudiosEncontrados = listaEstudio.ToList();
 
@@ -218,10 +225,6 @@ namespace Service.MedicalRecord.Repository
 
 
             }
-
-
-
-
             return true;
         }
 
@@ -229,13 +232,12 @@ namespace Service.MedicalRecord.Repository
         {
             return await _context.CAT_Seguimiento_Ruta
                 .Where(x => x.Id == orderId)
-                .Include(x => x.Estudios)
-                .ThenInclude(x => x.SolicitudEstudio.Tapon)
+                .Include(x => x.Etiquetas)
+                .ThenInclude(x => x.Estudios)
                 .Include(x => x.Estudios)
                 .ThenInclude(x=>x.Solicitud.Expediente)
                 .FirstOrDefaultAsync();
         }
-
 
     }
 }

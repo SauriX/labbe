@@ -19,5 +19,6 @@ namespace Service.MedicalRecord.Domain.TaxData
         public DateTime FechaCreo { get; set; }
         public Guid? UsuarioModId { get; set; }
         public DateTime? FechaMod { get; set; }
+        public bool isDefaultTaxData { get; set; }
     }
 }

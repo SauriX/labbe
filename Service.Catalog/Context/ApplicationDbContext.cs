@@ -21,6 +21,7 @@ using Service.Catalog.Domain.Equipment;
 using System.Reflection;
 using Service.Catalog.Domain.EquipmentMantain;
 using Service.Catalog.Domain.Series;
+using Service.Catalog.Domain.Notifications;
 
 namespace Service.Catalog.Context
 {
@@ -31,6 +32,7 @@ namespace Service.Catalog.Context
         public DbSet<Configuration> CAT_Configuracion { get; set; }
         public DbSet<TaxConfiguration> CAT_Configuracion_Fiscal { get; set; }
         public DbSet<Area> CAT_Area { get; set; }
+        public DbSet<InvoiceConcepts> CAT_Conceptos_Factura { get; set; }
         public DbSet<Budget> CAT_Presupuestos { get; set; }
         public DbSet<BudgetBranch> Relacion_Presupuesto_Sucursal { get; set; }
         public DbSet<Bank> CAT_Banco { get; set; }
@@ -85,8 +87,9 @@ namespace Service.Catalog.Context
         public DbSet<PromotionBranch> Relacion_Promocion_Sucursal { get; set; }
         public DbSet<PromotionStudy> Relacion_Promocion_Estudio { get; set; }
         public DbSet<PromotionPack> Relacion_Promocion_Paquete { get; set; }
-        public DbSet<PromotionMedics> Relacion_Promocion_medicos { get; set; }
+        public DbSet<PromotionMedic> Relacion_Promocion_medicos { get; set; }
         public DbSet<Route> CAT_Rutas { get; set; }
+        public DbSet<Route_Study> Relacion_Ruta_Estudio { get; set; }
         public DbSet<Units> CAT_Units { get; set; }
         public DbSet<BranchFolioConfig> CAT_Sucursal_Folio { get; set; }
         public DbSet<Equipos> CAT_Equipos { get; set; }
@@ -94,7 +97,7 @@ namespace Service.Catalog.Context
         public DbSet<Mantain> CAT_Mantenimiento_Equipo { get; set; }
         public DbSet<MantainImages> CAT_Mantenimiento_Equipo_Images { get; set; }
         public DbSet<Serie> CAT_Serie { get; internal set; }
-
+        public DbSet<Notifications> Cat_notificaciones { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

@@ -36,8 +36,9 @@ namespace Service.MedicalRecord.Controllers
         [Authorize(Policies.Download)]
         public async Task<IActionResult> ExportPdf(RequestFilterDto filter)
         {
-            filter.SucursalesId = (List<Guid>)HttpContext.Items["sucursales"];
 
+            filter.SucursalesId = (List<Guid>)HttpContext.Items["sucursales"];
+     
             var file = await _service.ExportRequest(filter);
 
             return File(file, MimeType.PDF, "Pendientes a recibir.pdf");

@@ -16,18 +16,24 @@ using SharedResponses = Shared.Dictionary.Responses;
 using RecordResponses = Service.MedicalRecord.Dictionary.Response;
 using Service.MedicalRecord.Domain.Request;
 using MoreLinq;
+using MassTransit;
+using Service.MedicalRecord.Client.IClient;
+using EventBus.Messages.Common;
+using ZXing;
 
 namespace Service.MedicalRecord.Application
 {
-    public class SamplingAplication:ISamplingApplication
+    public class SamplingAplication : ISamplingApplication
     {
         public readonly ISamplingRepository _repository;
-
-        public SamplingAplication(ISamplingRepository repository, IInvoiceCatalogRepository invoiceRepository)
+        private readonly IPublishEndpoint _publishEndpoint;
+        private readonly ICatalogClient _catalogClient;
+        public SamplingAplication(ISamplingRepository repository, IPublishEndpoint publishEndpoint, ICatalogClient catalogClient)
         {
 
             _repository = repository;
-
+            _publishEndpoint = publishEndpoint;
+            _catalogClient = catalogClient;
         }
 
         public async Task<(byte[] file, string fileName)> ExportList(RequestedStudySearchDto search)
@@ -93,20 +99,9 @@ namespace Service.MedicalRecord.Application
           
             var requestedStudy = await _repository.GetAll(search);
 
+            if (requestedStudy == null) return null;
 
-
-
-
-            if (requestedStudy != null)
-            {
-
-                return requestedStudy.ToSamplingListDto(search);
-
-            }
-            else
-            {
-                return null;
-            }
+            return requestedStudy.ToSamplingListDto(search);
         }
 
         public async Task<int> UpdateStatus(List<RequestedStudyUpdateDto> requestDto)
@@ -139,10 +134,27 @@ namespace Service.MedicalRecord.Application
                     {
                         study.EstatusId = Status.RequestStudy.Pendiente;
                     }
+
                 }
                 studyCount += studies.Count;
 
                 await _repository.BulkUpdateStudies(item.SolicitudId, studies);
+                if (request.Urgencia != 1)
+                {
+                    var notifications = await _catalogClient.GetNotifications("Toma de muestra");
+                    var createnotification = notifications.FirstOrDefault(x => x.Tipo == "Urgent");
+
+                    if (createnotification.Activo)
+                    {
+
+                            var mensaje = createnotification.Contenido.Replace("[Nsolicitud]", request.Clave);
+                            var contract = new NotificationContract(mensaje, false);
+                            await _publishEndpoint.Publish(contract);
+                        
+                    }
+
+
+                }
 
             }
 

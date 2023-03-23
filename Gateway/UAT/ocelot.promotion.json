@@ -12,6 +12,17 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/promotion/active",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/promotion/active",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/promo/{id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -23,15 +34,15 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/promotion/active",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/promo/studies/{initial}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/promotion/active",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamPathTemplate": "/api/promotion/studies/{initial}",
+      "UpstreamHttpMethod": [ "POST" ]
     },
     {
       "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/promo",

@@ -35,6 +35,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 using System.Text;
+using Quartz;
+using Service.Catalog.Jobs;
 
 namespace Service.Catalog
 {
@@ -50,6 +52,29 @@ namespace Service.Catalog
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddQuartz(q =>
+            {
+                // base Quartz scheduler, job and trigger configuration
+                q.UseMicrosoftDependencyInjectionScopedJobFactory();
+                // Just use the name of your job that you created in the Jobs folder.
+                var jobKey = new JobKey("Notification");
+                q.AddJob<NotificationJob>(opts => opts.WithIdentity(jobKey));
+
+                q.AddTrigger(opts => opts
+                    .ForJob(jobKey)
+                    .WithIdentity("Notification")
+                     //This Cron interval can be described as "run every day at 7:00" (when second is zero)
+                     .WithCronSchedule("0 30 7 1/1 * ? *")
+                );
+            });
+
+            // ASP.NET Core hosting
+            services.AddQuartzServer(options =>
+            {
+                // when shutting down we want jobs to complete gracefully
+                options.WaitForJobsToComplete = true;
+            });
+
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
@@ -64,6 +89,7 @@ namespace Service.Catalog
 
             services.AddScoped<IIdentityClient, IdentityClient>();
             services.AddScoped<IPdfClient, PdfClient>();
+            services.AddScoped<ISenderClient, SenderClient>();
             services.AddHttpClient<IIdentityClient, IdentityClient>(client =>
             {
                 var token = new HttpContextAccessor().HttpContext.Request.Headers["Authorization"].ToString();
@@ -82,6 +108,19 @@ namespace Service.Catalog
                 var token = new HttpContextAccessor().HttpContext.Request.Headers["Authorization"].ToString();
 
                 client.BaseAddress = new Uri(Configuration["ClientUrls:Pdf"]);
+
+                if (!string.IsNullOrWhiteSpace(token))
+                {
+                    client.DefaultRequestHeaders.Add("Authorization", token);
+                }
+
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            });
+            services.AddHttpClient<ISenderClient, SenderClient>(client =>
+            {
+                var token = new HttpContextAccessor().HttpContext.Request.Headers["Authorization"].ToString();
+
+                client.BaseAddress = new Uri(Configuration["ClientUrls:Sender"]);
 
                 if (!string.IsNullOrWhiteSpace(token))
                 {
@@ -226,6 +265,7 @@ namespace Service.Catalog
             services.AddScoped<ICatalogApplication<Units>, CatalogApplication<Units>>();
             services.AddScoped<ICatalogApplication<WorkList>, CatalogApplication<WorkList>>();
             services.AddScoped<ICatalogApplication<Equipos>, CatalogApplication<Equipos>>();
+            services.AddScoped<ICatalogDescriptionApplication<InvoiceConcepts>, CatalogDescriptionApplication<InvoiceConcepts>>();
             services.AddScoped<ICatalogDescriptionApplication<UseOfCFDI>, CatalogDescriptionApplication<UseOfCFDI>>();
             services.AddScoped<ICatalogDescriptionApplication<Payment>, CatalogDescriptionApplication<Payment>>();
             services.AddScoped<ICatalogDescriptionApplication<Indicator>, CatalogDescriptionApplication<Indicator>>();
@@ -252,9 +292,11 @@ namespace Service.Catalog
             services.AddScoped<IRouteApplication, RouteApplication>();
             services.AddScoped<IBudgetApplication, BudgetApplication>();
             services.AddScoped<ISeriesApplication, SeriesApplication>();
+            services.AddScoped<INotificationsApplication, NotificationsApplication>();
 
             services.AddScoped<ICatalogRepository<Delivery>, CatalogRepository<Delivery>>();
             services.AddScoped<ICatalogRepository<Area>, CatalogRepository<Area>>();
+            services.AddScoped<ICatalogRepository<InvoiceConcepts>, CatalogRepository<InvoiceConcepts>>();
             services.AddScoped<ICatalogRepository<Bank>, CatalogRepository<Bank>>();
             services.AddScoped<ICatalogRepository<Provenance>, CatalogRepository<Provenance>>();
             services.AddScoped<ICatalogRepository<Format>, CatalogRepository<Format>>();
@@ -293,7 +335,7 @@ namespace Service.Catalog
             services.AddScoped<IEquipmentApplication, EquipmentApplication>();
             services.AddScoped<IBudgetRepository, BudgetRepository>();
             services.AddScoped<ISeriesRepository, SeriesRepository>();
-
+            services.AddScoped<INotificationsRepository, NotificationsRepository>();
 
         }
 

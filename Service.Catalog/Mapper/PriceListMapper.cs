@@ -1,4 +1,6 @@
 ﻿using Service.Catalog.Domain.Price;
+using Service.Catalog.Domain.Route;
+using Service.Catalog.Dtos.Common;
 using Service.Catalog.Dtos.Pack;
 using Service.Catalog.Dtos.PriceList;
 using System;
@@ -156,6 +158,19 @@ namespace Service.Catalog.Mapper
                 })?.ToList(),
             });
         }
+
+        public static IEnumerable<OptionsDto> ToOptionsDto(this List<PriceList> model)
+        {
+            if (model == null) return new List<OptionsDto>();
+
+            return model.Select(x => new OptionsDto
+            {
+                Key = x.Id,
+                Value = x.Id,
+                Label = x.Nombre
+            });
+        }
+
         public static List<PriceListStudyDto> ToPriceListStudyDto(this List<PriceList_Study> model, PriceListStudiesPaginateDto filter)
         {
             return model.Skip(filter.skip).Take(filter.take).Select(x => new PriceListStudyDto
@@ -188,12 +203,12 @@ namespace Service.Catalog.Mapper
                     Id = x.EstudioId,
                     Clave = x.Estudio.Clave.Trim(),
                     Nombre = x.Estudio.Nombre.Trim(),
-                    Area = x.Estudio.Area?.Nombre??"",
+                    Area = x.Estudio.Area?.Nombre ?? "",
                     Departamento = x.Estudio.Area?.Departamento?.Nombre,
                     Precio = x.Precio,
                     Activo = x.Activo,
                 })?.ToList(),
-                Paquete = model.Paquete?.Select(x => new PriceListStudyDto
+                Paquete = model.Paquetes?.Select(x => new PriceListStudyDto
                 {
                     Id = x.PaqueteId,
                     Clave = x.Paquete.Clave.Trim(),
@@ -244,12 +259,15 @@ namespace Service.Catalog.Mapper
             };
         }
 
-        public static PriceListInfoStudyDto ToPriceListInfoStudyDto(this PriceList_Study model)
+        public static PriceListInfoStudyDto ToPriceListInfoStudyDto(this PriceList_Study model, Route_Study studyRoute = null)
         {
             if (model == null) return null;
 
             return new PriceListInfoStudyDto
             {
+                Destino = studyRoute?.Ruta.Nombre,
+                DestinoId = studyRoute?.RouteId,
+                DestinoTipo = 1,
                 ListaPrecioId = model.PrecioListaId,
                 ListaPrecio = model.PrecioLista.Nombre,
                 EstudioId = model.EstudioId,
@@ -331,7 +349,7 @@ namespace Service.Catalog.Mapper
                     Precio = x.Precio,
                     Activo = true,
                 })?.ToList(),
-                Paquete = dto.Paquete?.Select(x => new PriceList_Packet
+                Paquetes = dto.Paquete?.Select(x => new PriceList_Packet
                 {
                     PaqueteId = x.Id,
                     Precio = x.Precio,
@@ -385,7 +403,7 @@ namespace Service.Catalog.Mapper
                     Precio = x.Precio,
                     Activo = x.Activo,
                 })?.ToList(),
-                Paquete = dto.Paquete?.Select(x => new PriceList_Packet
+                Paquetes = dto.Paquete?.Select(x => new PriceList_Packet
                 {
                     PrecioListaId = model.Id,
                     PaqueteId = x.Id,

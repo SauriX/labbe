@@ -22,6 +22,7 @@ namespace Service.MedicalRecord.Domain.Request
         public string Promocion { get; set; }
         public int? DepartamentoId { get; set; }
         public int? AreaId { get; set; }
+        public Guid? DestinoId { get; set; }
         public byte EstatusId { get; set; }
         public virtual StatusRequestStudy Estatus { get; set; }
         public decimal Dias { get; set; }
@@ -38,6 +39,7 @@ namespace Service.MedicalRecord.Domain.Request
         public string MedioSolicitado { get; set; }
         public string Observacion { get; set; }
         public string Metodo { get; set; }
+        public int OrdenEstudio { get; set; }
         public virtual RequestStudyWee EstudioWeeClinic { get; set; }
         // Fechas Actualizacion
         public DateTime? FechaPendiente { get; set; }
