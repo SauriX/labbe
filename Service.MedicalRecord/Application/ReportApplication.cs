@@ -38,5 +38,14 @@ namespace Service.MedicalRecord.Application
 
             return data.RequestStudies();
         }
+
+        public async Task<IEnumerable<RequestPaymentStatsDto>> GetPaymentsByFilter(ReportFilterDto filter, string user)
+        {
+            var data = await _repository.GetByPayment(filter);
+
+            var payment = data.RequestPayment(user);
+
+            return payment;
+        }
     }
 }

@@ -7,6 +7,7 @@ using Service.Report.Dtos;
 using Service.Report.Dtos.BudgetStats;
 using Service.Report.Dtos.MedicalRecord;
 using Shared.Error;
+using Shared.Extensions;
 using Shared.Helpers;
 using System;
 using System.Collections.Generic;
@@ -135,6 +136,14 @@ namespace Service.Report.Client
             {
                 throw;
             }
+        }
+
+        public async Task<List<RequestRegister>> GetRequestPaymentByFilter(ReportFilterDto filter)
+        {
+            var url = $"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/reportdata/payment/filter";
+            var response = await _client.PostAsJson<List<RequestRegister>>(url, filter);
+
+            return response;
         }
     }
 }

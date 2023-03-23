@@ -1,4 +1,5 @@
-﻿using Service.Report.Domain.Request;
+﻿using Service.Report.Domain.MedicalRecord;
+using Service.Report.Domain.Request;
 using Service.Report.Dtos;
 using Service.Report.Dtos.CashRegister;
 using System;
@@ -10,15 +11,15 @@ namespace Service.Report.Mapper
 {
     public static class CashRegisterMapper
     {
-        public static CashDto ToCashRegisterDto(this IEnumerable<RequestPayment> model)
+        public static CashDto ToCashRegisterDto(this IEnumerable<RequestRegister> model)
         {
             if (model == null) return null;
 
             var filter = new ReportFilterDto();
 
-            var perday = CashGeneric(model.Where(x => x.Fecha.Date == x.Solicitud.Fecha.Date));
-            var canceled = CashGeneric(model.Where(x => x.Estatus == 3 && x.Fecha.Date == x.Solicitud.Fecha.Date));
-            var otherday = CashGeneric(model.Where(x => x.Fecha.Date != x.Solicitud.Fecha.Date));
+            var perday = CashGeneric(model.Where(x => x.FechaPago.Date == x.FechaSolicitud.Date));
+            var canceled = CashGeneric(model.Where(x => x.EstatusId == 3 && x.FechaPago.Date == x.FechaSolicitud.Date));
+            var otherday = CashGeneric(model.Where(x => x.FechaPago.Date != x.FechaSolicitud.Date));
 
             var totals = new CashInvoiceDto
             {
@@ -28,6 +29,7 @@ namespace Service.Report.Mapper
                 SumaCheque = perday.Select(x => x.Cheque).LastOrDefault() - canceled.Select(x => x.Cheque).LastOrDefault() + otherday.Select(x => x.Cheque).LastOrDefault(),
                 SumaTDD = perday.Select(x => x.TDD).LastOrDefault() - canceled.Select(x => x.TDD).LastOrDefault() + otherday.Select(x => x.TDD).LastOrDefault(),
                 SumaPP = perday.Select(x => x.PP).LastOrDefault() - canceled.Select(x => x.PP).LastOrDefault() + otherday.Select(x => x.PP).LastOrDefault(),
+                SumaOtroMetodo = perday.Select(x => x.OtroMetodo).LastOrDefault() - canceled.Select(x => x.OtroMetodo).LastOrDefault() + otherday.Select(x => x.OtroMetodo).LastOrDefault(),
             };
 
             var data = new CashDto
@@ -42,29 +44,30 @@ namespace Service.Report.Mapper
         }
 
 
-        public static List<CashRegisterDto> CashGeneric(IEnumerable<RequestPayment> model)
+        public static List<CashRegisterDto> CashGeneric(IEnumerable<RequestRegister> model)
         {
             var results = model.Select(request =>
             {
                 return new CashRegisterDto
                 {
                     Id = Guid.NewGuid(),
-                    Solicitud = request.Solicitud.Clave,
-                    Paciente = request.Solicitud.Expediente.Nombre,
-                    Factura = request.Factura,
+                    Solicitud = request.Solicitud,
+                    Paciente = request.NombreCompleto,
+                    Factura = request.Factura ?? "",
                     Total = request.Total,
-                    ACuenta = request.ACuenta,
+                    ACuenta = request.Factura != null ? request.Cantidad : 0m,
                     Efectivo = request.Efectivo,
                     TDC = request.TDC,
-                    Transferencia = request.Transferecia,
+                    Transferencia = request.Transferencia,
                     Cheque = request.Cheque,
                     TDD = request.TDD,
                     PP = request.PP,
-                    Fecha = request.Fecha.ToString("HH:mm"),
-                    UsuarioModifico = request.UsuarioModifico,
+                    OtroMetodo = request.OtroMetodo,
+                    Fecha = request.FechaPago.ToString("g"),
+                    UsuarioRegistra = request.UsuarioRegistra,
                     Saldo = request.Saldo,
-                    Empresa = request.Empresa.NombreEmpresa,
-                    Estatus = request.Estatus
+                    Empresa = request.Compañia,
+                    Estatus = request.EstatusId
                 };
             }).ToList();
 
@@ -82,8 +85,9 @@ namespace Service.Report.Mapper
                 Cheque = results.Sum(x => x.Cheque),
                 TDD = results.Sum(x => x.TDD),
                 PP = results.Sum(x => x.PP),
+                OtroMetodo = results.Sum(x => x.OtroMetodo),
                 Fecha = " ",
-                UsuarioModifico = " ",
+                UsuarioRegistra = " ",
                 Saldo = results.Sum(x => x.Saldo),
                 Empresa = " ",
                 Estatus = 0,
