@@ -5,6 +5,7 @@ using Service.MedicalRecord.Domain;
 using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Dtos;
 using Service.MedicalRecord.Dtos.ClinicResults;
+using Service.MedicalRecord.Dtos.General;
 using Service.MedicalRecord.Dtos.MassSearch;
 using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.RequestedStudy;
@@ -28,18 +29,18 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("getList")]
         [Authorize(Policies.Access)]
-        public async Task<List<ClinicResultsDto>> GetAll(ClinicResultSearchDto search)
+        public async Task<List<ClinicResultsDto>> GetAll(GeneralFilterDto search)
         {
-            search.SucursalesId = (List<Guid>)HttpContext.Items["sucursales"];
+            search.SucursalesId = (List<Guid?>)HttpContext.Items["sucursales"];
             var clinicResults = await _service.GetAll(search);
             return clinicResults;
         }
 
         [HttpPost("export/list")]
         [Authorize(Policies.Download)]
-        public async Task<IActionResult> ExportClinicsExcel(ClinicResultSearchDto search)
+        public async Task<IActionResult> ExportClinicsExcel(GeneralFilterDto search)
         {
-            search.SucursalesId = (List<Guid>)HttpContext.Items["sucursales"];
+            search.SucursalesId = (List<Guid?>)HttpContext.Items["sucursales"];
             var (file, fileName) = await _service.ExportList(search);
             return File(file, MimeType.XLSX, fileName);
         }
@@ -73,7 +74,6 @@ namespace Service.MedicalRecord.Controllers
         {
             results.First().UsuarioId = (Guid)HttpContext.Items["userId"];
             results.First().Usuario = HttpContext.Items["userName"].ToString();
-           /* results.First().UsuarioClave = HttpContext.Items["userName"].ToString();*/
             await _service.UpdateLabResults(results, EnvioManual);
         }
 

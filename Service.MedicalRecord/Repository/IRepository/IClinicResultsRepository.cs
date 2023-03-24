@@ -1,6 +1,7 @@
 ﻿using Service.MedicalRecord.Domain;
 using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Dtos.ClinicResults;
+using Service.MedicalRecord.Dtos.General;
 using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.RequestedStudy;
 using System;
@@ -22,7 +23,7 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task<List<ClinicResults>> GetResultsById(Guid id);
         Task<List<Request>> GetSecondLastRequest(Guid recordId);
         Task<RequestStudy> GetRequestStudyById(int RequestStudyId);
-        Task<List<Request>> GetAll(ClinicResultSearchDto search);
+        Task<List<Request>> GetAll(GeneralFilterDto search);
         Task<ClinicResults> GetById(Guid id);
         Task<List<ClinicResults>> GetByRequest(Guid requestId);
         Task<Request> FindAsync(Guid id);

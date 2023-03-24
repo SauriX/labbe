@@ -11,6 +11,7 @@ using EFCore.BulkExtensions;
 using Service.MedicalRecord.Domain;
 using Service.MedicalRecord.Dtos.ClinicResults;
 using Service.MedicalRecord.Dictionary;
+using Service.MedicalRecord.Dtos.General;
 
 namespace Service.MedicalRecord.Repository
 {
@@ -55,7 +56,7 @@ namespace Service.MedicalRecord.Repository
             return request;
         }
 
-        public async Task<List<Request>> GetAll(ClinicResultSearchDto search)
+        public async Task<List<Request>> GetAll(GeneralFilterDto search)
         {
             var report = _context.CAT_Solicitud.Where(x => x.Medico != null)
                 .Where(x => x.Estudios != null)
@@ -68,7 +69,7 @@ namespace Service.MedicalRecord.Repository
 
             if ((string.IsNullOrWhiteSpace(search.Buscar)) && (search.SucursalId == null || !search.SucursalId.Any()))
             {
-                report = report.Where(x => search.SucursalesId.Contains(x.SucursalId));
+                report = report.Where(x => search.SucursalId.Contains(x.SucursalId));
             }
 
             if (!string.IsNullOrWhiteSpace(search.Buscar))
@@ -85,7 +86,7 @@ namespace Service.MedicalRecord.Repository
 
             if (search.SucursalId != null && search.SucursalId.Count > 0)
             {
-                report = report.Where(x => search.SucursalId.Contains(x.SucursalId));
+                report = report.Where(x => search.SucursalesId.Contains(x.SucursalId));
             }
 
             if (search.MedicoId != null && search.MedicoId.Count > 0)
