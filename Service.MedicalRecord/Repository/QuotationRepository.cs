@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MoreLinq;
 using Service.MedicalRecord.Context;
 using Service.MedicalRecord.Domain.Quotation;
+using Service.MedicalRecord.Dtos.General;
 using Service.MedicalRecord.Dtos.Quotation;
 using Service.MedicalRecord.Repository.IRepository;
 using System;
@@ -28,7 +29,7 @@ namespace Service.MedicalRecord.Repository
             return quotation;
         }
 
-        public async Task<List<Quotation>> GetByFilter(QuotationFilterDto filter)
+        public async Task<List<Quotation>> GetByFilter(GeneralFilterDto filter)
         {
             var quotations = _context.CAT_Cotizacion
                 .Include(x => x.Expediente)
@@ -48,9 +49,9 @@ namespace Service.MedicalRecord.Repository
                 quotations = quotations.Where(x => x.Sucursal != null &&  filter.Ciudad.Contains(x.Sucursal.Ciudad));
             }
 
-            if (filter.Sucursales != null && filter.Sucursales.Count > 0)
+            if (filter.SucursalId != null && filter.SucursalId.Count > 0)
             {
-                quotations = quotations.Where(x => x.Sucursal != null && filter.Sucursales.Contains(x.SucursalId));
+                quotations = quotations.Where(x => x.Sucursal != null && filter.SucursalId.Contains(x.SucursalId));
             }
 
             if (filter.FechaNInicial != null)

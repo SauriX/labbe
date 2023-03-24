@@ -91,11 +91,11 @@ namespace Service.MedicalRecord.Repository
 
             if (search.MedicoId != null && search.MedicoId.Count > 0)
             {
-                report = report.Where(x => search.MedicoId.Contains(x.MedicoId.ToString()));
+                report = report.Where(x => search.MedicoId.Contains(x.MedicoId));
             }
             if (search.CompañiaId != null && search.CompañiaId.Count > 0)
             {
-                report = report.Where(x => search.CompañiaId.Contains(x.CompañiaId.ToString()));
+                report = report.Where(x => search.CompañiaId.Contains(x.CompañiaId));
             }
             if (search.Estatus != null && search.Estatus.Count > 0)
             {

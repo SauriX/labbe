@@ -1,4 +1,5 @@
 ﻿using Service.MedicalRecord.Domain.Quotation;
+using Service.MedicalRecord.Dtos.General;
 using Service.MedicalRecord.Dtos.Quotation;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace Service.MedicalRecord.Repository.IRepository
     public interface IQuotationRepository
     {
         Task<Quotation> FindAsync(Guid id);
-        Task<List<Quotation>> GetByFilter(QuotationFilterDto filter);
+        Task<List<Quotation>> GetByFilter(GeneralFilterDto filter);
         Task<List<Quotation>> GetActive();
         Task<Quotation> GetById(Guid id);
         Task<string> GetLastCode(Guid branchId, string date);

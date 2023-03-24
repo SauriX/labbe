@@ -9,10 +9,10 @@ namespace Service.MedicalRecord.Dtos.General
     {
         private string buscar;
 
-        public List<Guid?> SucursalId { get; set; }
-        public List<Guid?> SucursalesId { get; set; }
-        public List<string> MedicoId { get; set; }
-        public List<string> CompañiaId { get; set; }
+        public List<Guid> SucursalId { get; set; }
+        public List<Guid> SucursalesId { get; set; }
+        public List<Guid?> MedicoId { get; set; }
+        public List<Guid?> CompañiaId { get; set; }
         public List<DateTime> Fecha { get; set; }
         public string Buscar { get => buscar; set => buscar = value?.ToLower(); }
         public List<int?> Departamento { get; set; }
@@ -27,8 +27,8 @@ namespace Service.MedicalRecord.Dtos.General
         public string Expediente { get; set; }
         public string Telefono { get; set; }
         public string Correo { get; set; }
-        public DateTime? FechaNacimiento { get; set; }
-        public List<DateTime?> FechaAlta { get; set; }
+        public DateTime FechaNacimiento { get; set; }
+        public List<DateTime> FechaAlta { get; set; }
         public DateTime? FechaAInicial { get; set; }
         public DateTime? FechaAFinal { get; set; }
         public DateTime? FechaNInicial { get; set; }

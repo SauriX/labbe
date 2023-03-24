@@ -31,7 +31,7 @@ namespace Service.MedicalRecord.Repository
             return requests;
         }
 
-        public async Task<List<Request>> GetMassiveWorkList(int areaId, List<Guid> branchesId, List<DateTime> date)
+        public async Task<List<Request>> GetMassiveWorkList(int? areaId, List<Guid> branchesId, List<DateTime> date)
         {
             var requests = _context.CAT_Solicitud
                 .Include(x => x.Expediente)

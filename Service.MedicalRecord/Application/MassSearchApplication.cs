@@ -17,6 +17,7 @@ using Service.MedicalRecord.Dtos.WorkList;
 using Shared.Dictionary;
 using Shared.Error;
 using System.Net;
+using Service.MedicalRecord.Dtos.General;
 
 namespace Service.MedicalRecord.Application
 {
@@ -37,7 +38,7 @@ namespace Service.MedicalRecord.Application
             _branchRepository = branchRepository;
         }
 
-        public async Task<(byte[] file, string fileName)> ExportList(DeliverResultsFilterDto search)
+        public async Task<(byte[] file, string fileName)> ExportList(GeneralFilterDto search)
         {
             var studies = await GetAllCaptureResults(search);
 
@@ -62,8 +63,8 @@ namespace Service.MedicalRecord.Application
             template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
             template.AddVariable("Titulo", "Captura de resultados (Clínicos)");
-            template.AddVariable("FechaInicio", search.FechaInicial.ToString("dd/MM/yyyy"));
-            template.AddVariable("FechaFinal", search.FechaFinal.ToString("dd/MM/yyyy"));
+            template.AddVariable("FechaInicio", search.FechaInicial?.ToString("dd/MM/yyyy"));
+            template.AddVariable("FechaFinal", search.FechaFinal?.ToString("dd/MM/yyyy"));
             template.AddVariable("Expedientes", studies);
 
             template.Generate();
@@ -101,33 +102,33 @@ namespace Service.MedicalRecord.Application
             return (template.ToByteArray(), $"Busqueda y envío de captura de resultados.xlsx");
         }
 
-        public async Task<byte[]> DownloadResultsPdf(MassSearchFilterDto filter)
+        public async Task<byte[]> DownloadResultsPdf(GeneralFilterDto filter)
         {
             var studies = await GetByFilter(filter);
             var results = studies.Results.SelectMany(x => x.Parameters).ToList();
             var requestResults = studies.Results.Select(x => x.Id).ToList();
 
-            if (filter.Area == 0 && filter.Sucursales == null)
+            if (filter.Area[0] == 0 && filter.SucursalId == null)
             {
                 throw new CustomException(HttpStatusCode.Conflict, Responses.MissingFilters("El parámetro área y sucursales"));
             }
-            else if(filter.Area == 0 && filter.Sucursales.Count == 0)
+            else if (filter.Area[0] == 0 && filter.SucursalId.Count == 0)
             {
                 throw new CustomException(HttpStatusCode.Conflict, Responses.MissingFilters("El parámetro área y sucursales"));
             }
 
-            var requests = await _workListRepository.GetMassiveWorkList(filter.Area, filter.Sucursales, filter.Fechas);
+            var requests = await _workListRepository.GetMassiveWorkList(filter.Area[0], filter.SucursalId, filter.Fecha);
 
             var studiesIds = requests.SelectMany(x => x.Estudios).Select(x => x.EstudioId).ToList();
             var studyParams = await _catalogClient.GetStudies(studiesIds);
 
             var data = requests.ToWorkListDto();
-            var branches = await _branchRepository.Get(x => filter.Sucursales.Contains(x.Id));
+            var branches = await _branchRepository.Get(x => filter.SucursalId.Contains(x.Id));
 
             data.Solicitudes = data.Solicitudes.Where(x => requestResults.Contains(x.Id)).ToList();
             data.HojaTrabajo = filter.NombreArea;
             data.Sucursal = string.Join(", ", branches.Select(x => x.Nombre));
-            data.Fechas = new List<string> { filter.Fechas.First().ToString("dd/MM/yyyy"), filter.Fechas.Last().ToString("dd/MM/yyyy") };
+            data.Fechas = new List<string> { filter.Fecha.First().ToString("dd/MM/yyyy"), filter.Fecha.Last().ToString("dd/MM/yyyy") };
             data.MostrarResultado = true;
 
             foreach (var request in data.Solicitudes)
@@ -162,7 +163,7 @@ namespace Service.MedicalRecord.Application
             return file;
         }
 
-        public async Task<List<RequestsInfoDto>> GetAllCaptureResults(DeliverResultsFilterDto search)
+        public async Task<List<RequestsInfoDto>> GetAllCaptureResults(GeneralFilterDto search)
         {
 
             var requests = await _repository.GetAllCaptureResults(search);
@@ -170,7 +171,7 @@ namespace Service.MedicalRecord.Application
             return requests.ToDeliverResultInfoDto();
         }
 
-        public async Task<MassSearchInfoDto> GetByFilter(MassSearchFilterDto filter)
+        public async Task<MassSearchInfoDto> GetByFilter(GeneralFilterDto filter)
         {
             var request = await _repository.GetByFilter(filter);
 

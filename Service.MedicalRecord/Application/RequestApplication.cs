@@ -36,6 +36,7 @@ using Service.MedicalRecord.Dtos.Quotation;
 using System.Text.Json;
 using Service.MedicalRecord.Dtos.Catalogs;
 using static Shared.Dictionary.Catalogs;
+using Service.MedicalRecord.Dtos.General;
 
 namespace Service.MedicalRecord.Application
 {
@@ -87,7 +88,7 @@ namespace Service.MedicalRecord.Application
             _medicalRecordRepository = medicalRecord;
         }
 
-        public async Task<IEnumerable<RequestInfoDto>> GetByFilter(RequestFilterDto filter)
+        public async Task<IEnumerable<RequestInfoDto>> GetByFilter(GeneralFilterDto filter)
         {
             var request = await _repository.GetByFilter(filter);
 

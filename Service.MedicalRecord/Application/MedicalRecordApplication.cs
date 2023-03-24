@@ -6,6 +6,7 @@ using Service.MedicalRecord.Dictionary;
 using Service.MedicalRecord.Domain.Catalogs;
 using Service.MedicalRecord.Domain.MedicalRecord;
 using Service.MedicalRecord.Dtos;
+using Service.MedicalRecord.Dtos.General;
 using Service.MedicalRecord.Dtos.MedicalRecords;
 using Service.MedicalRecord.Dtos.Quotation;
 using Service.MedicalRecord.Dtos.Reports;
@@ -46,21 +47,19 @@ namespace Service.MedicalRecord.Application
             return expedientes.ToMedicalRecordsListDto();
         }
 
-        public async Task<List<MedicalRecordsListDto>> GetNow(MedicalRecordSearch search)
+        public async Task<List<MedicalRecordsListDto>> GetNow(GeneralFilterDto search)
         {
             var expedientes = await _repository.GetNow(search);
             var expedientesListDto = expedientes.AsQueryable();
 
             var sucursales = await _catalogClient.GetBranchbycity();
 
-            if (search.ciudad != null)
+            if (search.Ciudad != null && search.Ciudad.Count > 0)
             {
-                if (search.ciudad.Length > 0)
-                {
-                    var ciudad = sucursales.FindAll(x => search.ciudad.Contains(x.Ciudad));
+                var ciudad = sucursales.FindAll(x => search.Ciudad.Contains(x.Ciudad));
 
-                    expedientesListDto = expedientesListDto.Where(x => ciudad.Any(y => y.Sucursales.Any(z => Guid.Parse(z.IdSucursal) == x.IdSucursal)));
-                }
+                expedientesListDto = expedientesListDto.Where(x => ciudad.Any(y => y.Sucursales.Any(z => Guid.Parse(z.IdSucursal) == x.IdSucursal)));
+
             }
 
             expedientes = expedientesListDto.ToList();
@@ -224,7 +223,7 @@ namespace Service.MedicalRecord.Application
             await _repository.UpdateTaxData(updatedTaxData);
         }
 
-        public async Task<(byte[] file, string fileName)> ExportList(MedicalRecordSearch search)
+        public async Task<(byte[] file, string fileName)> ExportList(GeneralFilterDto search)
         {
             var studies = await GetNow(search);
 
@@ -235,10 +234,10 @@ namespace Service.MedicalRecord.Application
             template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
             template.AddVariable("Titulo", "Expedientes");
-            if (search.fechaAlta != null)
+            if (search.FechaAlta != null)
             {
-                template.AddVariable("FechaInicial", search.fechaAlta[0].ToString("dd/MM/yyyy"));
-                template.AddVariable("FechaFinal", search.fechaAlta[1].ToString("dd/MM/yyyy"));
+                template.AddVariable("FechaInicial", search.FechaAlta[0].ToString("dd/MM/yyyy"));
+                template.AddVariable("FechaFinal", search.FechaAlta[1].ToString("dd/MM/yyyy"));
             }
             else
             {

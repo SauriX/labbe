@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.MedicalRecord.Application.IApplication;
+using Service.MedicalRecord.Dtos.General;
 using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.WeeClinic;
 using Shared.Dictionary;
@@ -27,7 +28,7 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("filter")]
         [Authorize(Policies.Access)]
-        public async Task<IEnumerable<RequestInfoDto>> GetByFilter(RequestFilterDto filter)
+        public async Task<IEnumerable<RequestInfoDto>> GetByFilter(GeneralFilterDto filter)
         {
             filter.SucursalesId = (List<Guid>)HttpContext.Items["sucursales"];
             return await _service.GetByFilter(filter);
