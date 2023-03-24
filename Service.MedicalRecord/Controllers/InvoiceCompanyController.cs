@@ -65,9 +65,9 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("chekin/global")]
         [Authorize(Policies.Access)]
-        public async Task CheckInPaymentGlobal(List<Guid> requests)
+        public async Task<InvoiceGlobalResponseDto> CheckInPaymentGlobal(InvoiceGlobalInfoDto global)
         {
-            await _service.CheckInInvoiceGlobal(requests);
+            return await _service.CheckInInvoiceGlobal(global);
         }
 
         [HttpPost("download/pdf/{facturapiId}")]

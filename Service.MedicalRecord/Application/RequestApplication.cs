@@ -36,6 +36,7 @@ using Service.MedicalRecord.Dtos.Quotation;
 using System.Text.Json;
 using Service.MedicalRecord.Dtos.Catalogs;
 using static Shared.Dictionary.Catalogs;
+using MassTransit.Transports;
 using Service.MedicalRecord.Dtos.General;
 
 namespace Service.MedicalRecord.Application
@@ -55,6 +56,7 @@ namespace Service.MedicalRecord.Application
         private readonly IBillingClient _billingClient;
         private readonly ITrackingOrderRepository _trackingOrderRepository;
         private readonly IMedicalRecordRepository _medicalRecordRepository;
+        private readonly IPublishEndpoint _publishEndpoint;
         private const byte URGENCIA_CARGO = 3;
 
         public RequestApplication(
@@ -70,7 +72,8 @@ namespace Service.MedicalRecord.Application
             IMedicalRecordRepository recordRepository,
             IBillingClient billingClient,
             ITrackingOrderRepository trackingOrder,
-            IMedicalRecordRepository medicalRecord
+            IMedicalRecordRepository medicalRecord,
+            IPublishEndpoint publishEndpoint
             )
         {
             _transaction = transaction;
@@ -86,6 +89,7 @@ namespace Service.MedicalRecord.Application
             _billingClient = billingClient;
             _trackingOrderRepository = trackingOrder;
             _medicalRecordRepository = medicalRecord;
+            _publishEndpoint = publishEndpoint;
         }
 
         public async Task<IEnumerable<RequestInfoDto>> GetByFilter(GeneralFilterDto filter)
@@ -284,7 +288,19 @@ namespace Service.MedicalRecord.Application
             }
 
             await _repository.Create(newRequest);
+            if (newRequest.Urgencia != 1)
+            {
+                var notifications = await _catalogClient.GetNotifications("Toma de muestra");
+                var createnotification = notifications.FirstOrDefault(x => x.Tipo == "Urgent");
+                if (createnotification.Activo)
+                {
 
+                    var mensaje = createnotification.Contenido.Replace("[Nlista]", newRequest.Clave);
+                    var contract = new NotificationContract(mensaje, false);
+                    await _publishEndpoint.Publish(contract);
+
+                }
+            }
             return newRequest.Id.ToString();
         }
 
@@ -447,7 +463,7 @@ namespace Service.MedicalRecord.Application
                 }
                 else
                 {
-                    throw new CustomException(HttpStatusCode.NotFound, "No existe una lealtad que coincida con la lista de precio o fecha actual");
+                    sucess = false;
                 }
 
             }
@@ -651,6 +667,19 @@ namespace Service.MedicalRecord.Application
             if (requestDto.CompañiaId != prevCompany)
             {
                 await UpdateStudies(new RequestStudyUpdateDto(requestDto.ExpedienteId, requestDto.SolicitudId, requestDto.UsuarioId), isDeleting: true);
+            }
+            if (request.Urgencia != 1)
+            {
+                var notifications = await _catalogClient.GetNotifications("Toma de muestra");
+                var createnotification = notifications.FirstOrDefault(x => x.Tipo == "Urgent");
+                if (createnotification.Activo)
+                {
+
+                    var mensaje = createnotification.Contenido.Replace("Solicitar estudios", request.Clave);
+                    var contract = new NotificationContract(mensaje, false);
+                    await _publishEndpoint.Publish(contract);
+
+                }
             }
         }
 
@@ -1374,7 +1403,7 @@ namespace Service.MedicalRecord.Application
         {
             var allStudies = await _repository.GetAllStudies(request.Id);
 
-            var isCitologic = allStudies.Any(x => x.AreaId == AREAS.CITOLOGIA_NASAL && x.EstatusId != Status.RequestStudy.Cancelado);
+            var isCitologic = allStudies.Any(x => x.AreaId == AREAS.CITOLOGIA && x.EstatusId != Status.RequestStudy.Cancelado);
             var isPathologic = allStudies.Any(x => x.AreaId == AREAS.HISTOPATOLOGIA && x.EstatusId != Status.RequestStudy.Cancelado);
 
             string citCode = null;

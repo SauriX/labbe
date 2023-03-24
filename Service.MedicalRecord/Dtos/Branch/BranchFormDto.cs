@@ -24,6 +24,14 @@ namespace Service.MedicalRecord.Dtos.Branch
         public string colonia { get; set; }
         public Guid UsuarioId { get; set; }
         public bool Matriz { get; set; }
+        public string SucursalKey { get; set; }
+        public List<SerieInvoiceDto> Series { get; set; }
         public IEnumerable<BranchDepartamentDto> departamentos { get; set; }
+    }
+    public class SerieInvoiceDto
+    {
+        public string Clave { get; set; }
+        public string TipoSerie { get; set; }
+        public bool Activo { get; set; }
     }
 }

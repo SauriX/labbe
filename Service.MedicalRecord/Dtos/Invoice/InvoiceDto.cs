@@ -8,6 +8,7 @@ namespace Service.MedicalRecord.Dtos.Invoice
     public class InvoiceDto
     {
         public Guid Id { get; set; }
+        public string FacturaApiKey { get; set; }
         public string Serie { get; set; }
         public string SerieNumero { get; set; }
         public string FacturapiId { get; set; }

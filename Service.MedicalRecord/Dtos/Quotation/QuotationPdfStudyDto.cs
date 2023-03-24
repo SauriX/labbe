@@ -5,9 +5,8 @@ using System.Web;
 
 namespace Service.MedicalRecord.Dtos.Quotation
 {
-    public class StudyQuoteDto
+    public class QuotationPdfStudyDto
     {
-        public int StudyId { get; set; }
         public string Clave { get; set; }
         public string Nombre { get; set; }
         public string Precio { get; set; }
@@ -17,6 +16,5 @@ namespace Service.MedicalRecord.Dtos.Quotation
         public string TiempoEntrega { get; set; }
         public string TipoMuestra { get; set; }
         public string PreparacionPaciente { get; set; }
-
     }
 }

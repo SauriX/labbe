@@ -722,17 +722,14 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
 
-                    b.Property<decimal>("Cargo")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<byte>("CargoTipo")
-                        .HasColumnType("tinyint");
-
                     b.Property<string>("Clave")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("CompañiaId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Descuento")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("EnvioCorreo")
                         .HasColumnType("nvarchar(max)");
@@ -805,9 +802,6 @@ namespace Service.MedicalRecord.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("AplicaCargo")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Clave")
                         .HasColumnType("nvarchar(max)");
 
@@ -875,9 +869,6 @@ namespace Service.MedicalRecord.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("AplicaCargo")
-                        .HasColumnType("bit");
 
                     b.Property<Guid?>("AppointmentDomId")
                         .HasColumnType("uniqueidentifier");

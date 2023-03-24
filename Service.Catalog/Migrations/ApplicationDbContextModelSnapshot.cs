@@ -1600,6 +1600,125 @@ namespace Service.Catalog.Migrations
                     b.ToTable("CAT_Medico");
                 });
 
+            modelBuilder.Entity("Service.Catalog.Domain.Notifications.Notification_Branch", b =>
+                {
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("NotificacionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaMod")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("UsuarioCreoId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("UsuarioModId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("BranchId", "NotificacionId");
+
+                    b.HasIndex("NotificacionId");
+
+                    b.ToTable("Relacion_Notificacion_Sucursal");
+                });
+
+            modelBuilder.Entity("Service.Catalog.Domain.Notifications.Notification_Role", b =>
+                {
+                    b.Property<Guid>("RolId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("NotificacionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaMod")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("UsuarioCreoId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("UsuarioModId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("RolId", "NotificacionId");
+
+                    b.HasIndex("NotificacionId");
+
+                    b.ToTable("Relacion_Notificacion_Rol");
+                });
+
+            modelBuilder.Entity("Service.Catalog.Domain.Notifications.Notifications", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Contenido")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Domingo")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("FechaCreo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaFinal")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaInicial")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaModifico")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsNotifi")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Jueves")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Lunes")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Martes")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Miercoles")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Sabado")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Tipo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Titulo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UsuarioCreoId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UsuarioModificoId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Viernes")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cat_notificaciones");
+                });
+
             modelBuilder.Entity("Service.Catalog.Domain.Packet.Packet", b =>
                 {
                     b.Property<int>("Id")
@@ -3261,6 +3380,36 @@ namespace Service.Catalog.Migrations
                     b.Navigation("Especialidad");
                 });
 
+            modelBuilder.Entity("Service.Catalog.Domain.Notifications.Notification_Branch", b =>
+                {
+                    b.HasOne("Service.Catalog.Domain.Branch.Branch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Service.Catalog.Domain.Notifications.Notifications", "Notificacion")
+                        .WithMany("Sucursales")
+                        .HasForeignKey("NotificacionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
+
+                    b.Navigation("Notificacion");
+                });
+
+            modelBuilder.Entity("Service.Catalog.Domain.Notifications.Notification_Role", b =>
+                {
+                    b.HasOne("Service.Catalog.Domain.Notifications.Notifications", "Notificacion")
+                        .WithMany("Roles")
+                        .HasForeignKey("NotificacionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Notificacion");
+                });
+
             modelBuilder.Entity("Service.Catalog.Domain.Packet.Packet", b =>
                 {
                     b.HasOne("Service.Catalog.Domain.Catalog.Area", "Area")
@@ -3763,6 +3912,13 @@ namespace Service.Catalog.Migrations
             modelBuilder.Entity("Service.Catalog.Domain.Medics.Medics", b =>
                 {
                     b.Navigation("Clinicas");
+                });
+
+            modelBuilder.Entity("Service.Catalog.Domain.Notifications.Notifications", b =>
+                {
+                    b.Navigation("Roles");
+
+                    b.Navigation("Sucursales");
                 });
 
             modelBuilder.Entity("Service.Catalog.Domain.Packet.Packet", b =>

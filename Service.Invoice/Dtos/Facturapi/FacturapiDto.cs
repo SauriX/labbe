@@ -8,6 +8,7 @@ namespace Service.Billing.Dtos.Facturapi
     public class FacturapiDto
     {
         public string FacturapiId { get; set; }
+        public string FacturaApiKey { get; set; }
         public string Tipo { get; set; }
         public string FormaPago { get; set; }
         public string MetodoPago => "PUE";

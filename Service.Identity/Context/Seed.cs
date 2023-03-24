@@ -127,6 +127,7 @@ namespace Service.Identity.Context
         {
             var menus = new List<Menu>
             {
+                // Last id 46 next id 47
                 // Configuracion de Catalogos -> Orden 1000
                 new Menu(1, null, "Configuración", "cat", "", 1000),
                 new Menu(2, 1, "Roles", "role", "roles", 1010),
@@ -149,6 +150,7 @@ namespace Service.Identity.Context
                 new Menu(28, 1, "Admin. Equipos", "equipment", "equipment", 1180),
                 new Menu(29, 1, "Mantenimiento", "mantain","equipmentMantain", 1190),
                 new Menu(41, 1, "Series de facturas y recibos", "series", "series", 1200),
+                new Menu(46, 1, "Catalogos de Notificaciones y Avisos", "notifications", "notifications", 1210),
 
                 // Parametros de sistema -> Orden 5000
                 new Menu(20, null, "Parámetros de sistema", "configuration", "configuration", 5000),
@@ -182,7 +184,8 @@ namespace Service.Identity.Context
                 new Menu(39, 38, "Facturación por companía", "invoiceCompany", "invoice/company", 6010),
                 new Menu(42, 38, "Facturación por solicitud", "invoiceCompany", "invoice/request", 6011),
                 new Menu(44, 38, "Facturación libre", "invoiceCompany", "invoice/free", 6012),
-                new Menu(40, 38, "Catalogo de facturas y recibos", "InvoiceCatalog", "invoiceCatalog", 6013),
+                new Menu(45, 38, "Facturación global", "invoiceCompany", "invoice/global", 6013),
+                new Menu(40, 38, "Catalogo de facturas y recibos", "InvoiceCatalog", "invoiceCatalog", 6014),
             };
 
             return menus;

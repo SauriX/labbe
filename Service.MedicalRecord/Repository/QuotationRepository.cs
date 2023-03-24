@@ -46,7 +46,7 @@ namespace Service.MedicalRecord.Repository
 
             if (filter.Ciudad != null)
             {
-                quotations = quotations.Where(x => x.Sucursal != null &&  filter.Ciudad.Contains(x.Sucursal.Ciudad));
+                quotations = quotations.Where(x => x.Sucursal != null && filter.Ciudad.Contains(x.Sucursal.Ciudad));
             }
 
             if (filter.SucursalId != null && filter.SucursalId.Count > 0)
@@ -98,6 +98,7 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Expediente)
                 .Include(x => x.Estudios)
                 .Include(x => x.Paquetes)
+                .AsSplitQuery()
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             return quotation;
@@ -153,8 +154,8 @@ namespace Service.MedicalRecord.Repository
             _context.CAT_Cotizacion.Update(quotation);
 
             await _context.SaveChangesAsync();
-        }     
-        
+        }
+
         public async Task Delete(Quotation quotation)
         {
             _context.CAT_Cotizacion.Remove(quotation);

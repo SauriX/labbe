@@ -17,7 +17,6 @@ namespace Service.MedicalRecord.Domain.Quotation
         public string Promocion { get; set; }
         public decimal Dias { get; set; }
         public int Horas { get; set; }
-        public bool AplicaCargo { get; set; }
         public decimal Precio { get; set; }
         public decimal Descuento { get; set; }
         public decimal DescuentoPorcentaje { get; set; }

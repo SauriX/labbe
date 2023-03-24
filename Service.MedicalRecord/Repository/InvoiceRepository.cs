@@ -129,6 +129,8 @@ namespace Service.MedicalRecord.Repository
                 invoices = invoices.Where(x => filter.Tipo.Contains(x.TipoFactura));
             }
 
+            invoices = invoices.OrderByDescending(x => x.FechaCreo);
+
             return invoices.ToListAsync();
         }
         public async Task CreateInvoiceCompanyData(InvoiceCompany invoiceCompnay, List<RequestInvoiceCompany> requestInvoiceCompany)
