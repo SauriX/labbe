@@ -59,7 +59,7 @@ namespace Service.Catalog.Application
 
             if (loyalty == null)
             {
-                throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
+                return null;
             }
 
             return loyalty.ToLoyaltyDto();

@@ -59,6 +59,18 @@
       ],
       "UpstreamPathTemplate": "/api/notifications",
       "UpstreamHttpMethod": [ "POST", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/notifications/status/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+
+        }
+      ],
+      "UpstreamPathTemplate": "/api/notifications/status/{id}",
+      "UpstreamHttpMethod": [ "PUT" ]
     }
 
   ]

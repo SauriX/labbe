@@ -294,7 +294,7 @@ namespace Service.MedicalRecord.Application
                 if (createnotification.Activo)
                 {
 
-                    var mensaje = createnotification.Contenido.Replace("Nlista", newRequest.Clave);
+                    var mensaje = createnotification.Contenido.Replace("[Nlista]", newRequest.Clave);
                     var contract = new NotificationContract(mensaje, false);
                     await _publishEndpoint.Publish(contract);
 
@@ -462,7 +462,7 @@ namespace Service.MedicalRecord.Application
                 }
                 else
                 {
-                    throw new CustomException(HttpStatusCode.NotFound, "No existe una lealtad que coincida con la lista de precio o fecha actual");
+                    sucess = false;
                 }
 
             }

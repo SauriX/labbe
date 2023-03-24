@@ -14,5 +14,6 @@ namespace Service.Report.Client.IClient
         Task<List<Quotation>> GetQuotationByFilter(ReportFilterDto search);
         Task<List<RequestInfo>> GetRequestByFilter(ReportFilterDto search);
         Task<List<RequestStudies>> GetStudiesByFilter(ReportFilterDto search);
+        Task<List<RequestRegister>> GetRequestPaymentByFilter(ReportFilterDto filter);
     }
 }

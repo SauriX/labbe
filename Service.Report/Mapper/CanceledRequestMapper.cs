@@ -47,7 +47,7 @@ namespace Service.Report.Mapper
         {
             if (model == null) return null;
 
-            var results = (from c in model.Where(x => x.EstatusId == 10)
+            var results = (from c in model.Where(x => x.EstatusId == 3)
                            group c by new { c.SucursalId, c.Sucursal } into grupo
                            select new CanceledRequestChartDto
                            {
@@ -62,7 +62,7 @@ namespace Service.Report.Mapper
 
         public static List<CanceledRequestDto> CanceledGeneric(IEnumerable<RequestInfo> model)
         {
-            return model.Where(x => x.EstatusId == 10).Select(request =>
+            return model.Where(x => x.EstatusId == 3).Select(request =>
             {
                 var studies = request.Estudios;
 
