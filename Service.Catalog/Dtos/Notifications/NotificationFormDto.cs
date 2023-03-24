@@ -2,6 +2,7 @@
 using System;
 using Service.Catalog.Dtos.Promotion;
 using Service.Catalog.Domain.Notifications;
+using Service.Catalog.Dtos.Common;
 
 namespace Service.Catalog.Dtos.Notifications
 {
@@ -16,6 +17,6 @@ namespace Service.Catalog.Dtos.Notifications
         public Guid UsuarioId { get; set; }
         public List<Guid> Sucursales { get; set; }
         public List<Guid> Roles { get; set; }
-        public IEnumerable<DiasDto> Dias { get; set; }
+        public IEnumerable<DayDto> Dias { get; set; }
     }
 }

@@ -697,38 +697,45 @@ namespace Service.MedicalRecord.Application
                     }
                 }
 
-                var notifications = await _catalogClient.GetNotifications("Captura de resultados");
-                var createnotification = notifications.FirstOrDefault(x => x.Tipo == "Procesing");
-                
-                if (createnotification.Activo)
+
+            }
+            var notifications = await _catalogClient.GetNotifications("Captura de resultados");
+            var createnotification = notifications.FirstOrDefault(x => x.Tipo == "Procesing");
+
+            if (createnotification.Activo)
+            {
+                foreach (var estudio in results)
                 {
-                    foreach (var estudio in results) {
 
-                        var mensaje = createnotification.Contenido.Replace("[Nestudio]", estudio.Estudio);
-                        mensaje = mensaje.Replace("[Nsolicitud]", existingRequest.Clave);
-                        mensaje = mensaje.Replace("[Nsucursal]", existingRequest.Sucursal.Nombre);
-                        var contract = new NotificationContract(mensaje, false);
-                        await _publishEndpoint.Publish(contract);
-
-
-                    }
-  
-
-                }
-                createnotification = notifications.FirstOrDefault(x => x.Tipo == "Critic");
-                if (createnotification.Activo)
-                {
-                    var critico = results.Any(x=> x.CriticoMinimo< Decimal.Parse(x.ValorInicial) || x.CriticoMaximo > Decimal.Parse(x.ValorFinal));
-
-                        var mensaje = createnotification.Contenido.Replace("[Nsolicitud]", existingRequest.Clave);
-                        var contract = new NotificationContract(mensaje, false);
-                        await _publishEndpoint.Publish(contract);
-
-
-                    
+                    var mensaje = createnotification.Contenido.Replace("[Nestudio]", estudio.Estudio);
+                    mensaje = mensaje.Replace("[Nsolicitud]", existingRequest.Clave);
+                    mensaje = mensaje.Replace("[Nsucursal]", existingRequest.Sucursal.Nombre);
+                    var contract = new NotificationContract(mensaje, false);
+                    await _publishEndpoint.Publish(contract);
 
 
                 }
+
+
+            }
+            createnotification = notifications.FirstOrDefault(x => x.Tipo == "Critic");
+            if (createnotification.Activo)
+            {
+                var critico = results.Any(x => x.CriticoMinimo < Decimal.Parse(x.ValorInicial) || x.CriticoMaximo > Decimal.Parse(x.ValorFinal));
+                var estudios = results.FindAll(y=>y.CriticoMinimo < Decimal.Parse(y.ValorInicial) || y.CriticoMaximo > Decimal.Parse(y.ValorFinal));
+                foreach (var estudio in estudios) {
+                    var mensaje = createnotification.Contenido.Replace("[Nsolicitud]", existingRequest.Clave);
+                    mensaje = mensaje.Replace("[Nestudio]", estudio.Clave);
+                    var contract = new NotificationContract(mensaje, false);
+                    await _publishEndpoint.Publish(contract);
+
+                }
+
+
+
+
+
+
             }
         }
 

@@ -15,6 +15,7 @@ namespace Service.Catalog.Repository
     public class PriceListRepository : IPriceListRepository
     {
         private readonly ApplicationDbContext _context;
+        private const int COMPAÑIA = 1;
 
         public PriceListRepository(ApplicationDbContext context)
         {
@@ -205,7 +206,7 @@ namespace Service.Catalog.Repository
         public async Task<List<Price_Company>> GetAllCompany(Guid companyId)
         {
             var asignado = await
-                (from company in _context.CAT_Compañia
+                (from company in _context.CAT_Compañia.Where(x => x.ProcedenciaId != COMPAÑIA)
                  join priceList in _context.CAT_ListaP_Compañia.Include(x => x.PrecioLista) on company.Id equals priceList.CompañiaId into ljPriceList
                  from pList in ljPriceList.DefaultIfEmpty()
                  select new { company, pList })

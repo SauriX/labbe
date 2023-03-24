@@ -184,7 +184,7 @@ namespace Service.Report.Mapper
             }
 
             servicesName.Add("");
-            servicesName.Add("Total mesual");
+            servicesName.Add("Total mensual");
             servicesName.Add("Total semanal");
             servicesName.Add("Total diario");
 
