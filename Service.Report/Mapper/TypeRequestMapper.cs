@@ -129,7 +129,7 @@ namespace Service.Report.Mapper
 
         public static List<TypeRequestDto> ChargeGeneric(IEnumerable<RequestInfo> model)
         {
-            return model.Where(x => x.Cargo != 0).Select(request =>
+            return model.Where(x => x.Urgencia == 3).Select(request =>
             {
                 var studies = request.Estudios;
 
@@ -142,7 +142,6 @@ namespace Service.Report.Mapper
                     Empresa = request.Compañia,
                     Estudio = studies.GenericStudies(),
                     Cargo = request.Cargo,
-                    CargoPorcentual = request.CargoPorcentual,
                     Promocion = request.Promocion,
                 };
             }).ToList();

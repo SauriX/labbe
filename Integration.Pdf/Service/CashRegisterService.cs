@@ -70,9 +70,9 @@ namespace Integration.Pdf.Service
         }
         static void Format(Section section, List<Col> columns, List<Dictionary<string, object>> data, List<Dictionary<string, object>> perDay, List<Dictionary<string, object>> canceled, List<Dictionary<string, object>> otherDay, InvoiceData invoice, List<Col> totalColumns, Dictionary<string, object> totales, HeaderData Header, string user)
         {
-            var fontTitle = new Font("calibri", 18) { Bold = true };
-            var fontSubtitle = new Font("calibri", 14);
-            var fontText = new Font("calibri", 11);
+            var fontTitle = new Font("calibri", 16) { Bold = true };
+            var fontSubtitle = new Font("calibri", 12);
+            var fontText = new Font("calibri", 8);
             var fontDisclaimer = new Font("calibri", 11) { Italic = true };
             var fontTitleChart = new Font("calibri", 11) { Bold = true };
 
@@ -157,6 +157,7 @@ namespace Integration.Pdf.Service
                     row.Format.Font.Color = Colors.White;
 
                     Cell cell = row.Cells[i];
+                    cell.Format.Font.Size = 9;
                     cell.Borders.Left.Visible = false;
                     cell.Borders.Right.Visible = false;
                     cell.Borders.Bottom.Visible = false;
@@ -175,6 +176,7 @@ namespace Integration.Pdf.Service
                             if (item.ContainsKey(key))
                             {
                                 Cell cell = row.Cells[i];
+                                cell.Format.Font.Size = 8;
                                 cell.Borders.Left.Visible = false;
                                 cell.Borders.Right.Visible = false;
 
@@ -183,7 +185,7 @@ namespace Integration.Pdf.Service
 
                                 if (!string.IsNullOrWhiteSpace(format))
                                 {
-                                    if (cellData[0] == '[' && cellData[cellData.Length - 1] == ']')
+                                    if (!string.IsNullOrWhiteSpace(cellData) && cellData[0] == '[' && cellData[cellData.Length - 1] == ']')
                                     {
                                         var datalist = JsonConvert.DeserializeObject<List<string>>(cellData);
                                         datalist.Where(x => x != null).ToList().ForEach(x => cell.AddParagraph(x));
@@ -195,7 +197,7 @@ namespace Integration.Pdf.Service
                                 }
                                 else
                                 {
-                                    if (cellData[0] == '[' && cellData[cellData.Length - 1] == ']')
+                                    if (!string.IsNullOrWhiteSpace(cellData) && cellData[0] == '[' && cellData[cellData.Length - 1] == ']')
                                     {
                                         var datalist = JsonConvert.DeserializeObject<List<string>>(cellData);
                                         datalist.Where(x => x != null).ToList().ForEach(x => cell.AddParagraph(x));

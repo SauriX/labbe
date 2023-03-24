@@ -12,5 +12,6 @@ namespace Service.MedicalRecord.Repository.IRepository
         //Task<List<RequestPayment>> GetPaymentByFilter(ReportFilterDto search);
         Task<List<RequestStudy>> GetByStudies(ReportFilterDto search);
         Task<List<Quotation>> GetByQuotation(ReportFilterDto search);
+        Task<List<RequestPayment>> GetByPayment(ReportFilterDto search);
     }
 }

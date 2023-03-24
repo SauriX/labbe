@@ -11,5 +11,6 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<IEnumerable<BudgetStatsDto>> GetQuotationByFilter(ReportFilterDto search);
         Task<IEnumerable<ReportInfoDto>> GetRequestByFilter(ReportFilterDto search);
         Task<IEnumerable<StudiesDto>> GetStudiesByFilter(ReportFilterDto search);
+        Task<IEnumerable<RequestPaymentStatsDto>> GetPaymentsByFilter(ReportFilterDto search, string user);
     }
 }

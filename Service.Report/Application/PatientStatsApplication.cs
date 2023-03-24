@@ -63,7 +63,9 @@ namespace Service.Report.Application
                 ["Nombre de Paciente"] = x.Paciente,
                 ["Solicitudes"] = x.NoSolicitudes,
                 ["Total"] = x.Total,
-                ["Iniciales Paciente"] = string.Join(" ", x.Paciente.Split(" ").Select(x => x[0]))
+                ["Iniciales Paciente"] = string.Join(" ", x.Paciente.Split(" ")
+                                          .Where(y => !string.IsNullOrWhiteSpace(y))
+                                          .Select(y => y[0]))
             }).ToList();
 
             var headerData = new HeaderData()
