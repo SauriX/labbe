@@ -13,7 +13,6 @@ namespace Service.Catalog.Dtos.Loyalty
         public string Fecha { get; set; }
         public List<Guid> PrecioListaId { get; set; }
         public List<string> PrecioLista { get; set; }
-        public string ListaPrecio => string.Join(", ", PrecioLista);
         public bool Activo { get; set; }
     }
 
