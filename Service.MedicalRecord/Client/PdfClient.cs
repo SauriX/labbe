@@ -249,7 +249,8 @@ namespace Service.MedicalRecord.Client
                 throw;
             }
         }
-        public async Task<byte[]> PriceQuoteReport(PriceQuoteDto priceQuote)
+
+        public async Task<byte[]> PriceQuoteReport(QuotationPdfDto priceQuote)
         {
             try
             {
@@ -275,6 +276,7 @@ namespace Service.MedicalRecord.Client
                 throw;
             }
         }
+
         public async Task<byte[]> GeneratePathologicalResults(ClinicResultPathologicalPdfDto order)
         {
             try

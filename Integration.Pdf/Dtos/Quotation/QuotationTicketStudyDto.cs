@@ -5,9 +5,8 @@ using System.Web;
 
 namespace Integration.Pdf.Dtos.PriceQuote
 {
-    public class StudyQuoteDto
+    public class QuotationTicketStudyDto
     {
-
         public string Clave { get; set; }
         public string Nombre { get; set; }
         public string Precio { get; set; }
@@ -17,6 +16,5 @@ namespace Integration.Pdf.Dtos.PriceQuote
         public string TiempoEntrega { get; set; }
         public string TipoMuestra { get; set; }
         public string PreparacionPaciente { get; set; }
-
     }
 }

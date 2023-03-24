@@ -74,7 +74,7 @@ namespace Service.MedicalRecord.Mapper
                 CompañiaId = model.CompañiaId,
                 MedicoId = model.MedicoId,
                 Correo = model.EnvioCorreo,
-                WhatsApp = model.EnvioWhatsApp,
+                Whatsapp = model.EnvioWhatsApp,
                 Observaciones = model.Observaciones
             };
         }
@@ -86,8 +86,7 @@ namespace Service.MedicalRecord.Mapper
             return new QuotationTotalDto
             {
                 TotalEstudios = model.TotalEstudios,
-                Cargo = model.Cargo,
-                CargoTipo = model.CargoTipo,
+                Descuento = model.Descuento,
                 Total = model.Total
             };
         }
@@ -142,9 +141,10 @@ namespace Service.MedicalRecord.Mapper
                 Nombre = x.Nombre,
                 ListaPrecioId = x.ListaPrecioId,
                 ListaPrecio = x.ListaPrecio,
+                PromocionId = x.PromocionId,
+                Promocion = x.Promocion,
                 Dias = x.Dias,
                 Horas = x.Horas,
-                AplicaCargo = x.AplicaCargo,
                 Precio = x.Precio,
                 Descuento = x.Descuento,
                 DescuentoPorcentaje = x.DescuentoPorcentaje,
@@ -167,9 +167,10 @@ namespace Service.MedicalRecord.Mapper
                 PaqueteId = x.PaqueteId,
                 ListaPrecioId = x.ListaPrecioId,
                 ListaPrecio = x.ListaPrecio,
+                PromocionId = x.PromocionId,
+                Promocion = x.Promocion,
                 Dias = x.Dias,
                 Horas = x.Horas,
-                AplicaCargo = x.AplicaCargo,
                 Precio = x.Precio,
                 Descuento = x.Descuento,
                 DescuentoPorcentaje = x.DescuentoPorcentaje,
@@ -278,7 +279,8 @@ namespace Service.MedicalRecord.Mapper
                     Nombre = x.Nombre,
                     ListaPrecioId = x.ListaPrecioId,
                     ListaPrecio = x.ListaPrecio,
-                    AplicaCargo = x.AplicaCargo,
+                    PromocionId = x.PromocionId,
+                    Promocion = x.Promocion,
                     Dias = x.Dias,
                     Horas = x.Horas,
                     Precio = x.Precio,
@@ -311,7 +313,8 @@ namespace Service.MedicalRecord.Mapper
                     PaqueteId = x.PaqueteId,
                     ListaPrecioId = x.ListaPrecioId,
                     ListaPrecio = x.ListaPrecio,
-                    AplicaCargo = x.AplicaCargo,
+                    PromocionId = x.PromocionId,
+                    Promocion = x.Promocion,
                     Dias = x.Dias,
                     Horas = x.Horas,
                     Precio = x.Precio,
@@ -326,42 +329,48 @@ namespace Service.MedicalRecord.Mapper
             }).ToList();
         }
 
-        public static List<StudyQuoteDto> ToStudyQuotePdf(this IEnumerable<QuotationStudyDto> dto)
+        public static QuotationPdfDto ToQuotationPdfDto(this Quotation model, QuotationStudyUpdateDto studyUpdate)
         {
-            if (dto == null) return new List<StudyQuoteDto>();
-
-            return dto.Select(x =>
+            return new QuotationPdfDto
             {
+                Fecha = model.FechaCreo.ToShortDateString(),
+                FechaImpresion = DateTime.Now.ToShortDateString(),
+                Total = $"{model.TotalEstudios - (model.TotalEstudios * .16m):C2}",
+                Descuento = $"{model.Descuento:C2}",
+                Iva = $"{model.TotalEstudios * .16m:C2}",
+                TotalPago = $"{model.Total:C2}",
+                Estudios = studyUpdate.ToQuotationPdfStudyDto()
+            };
+        }
 
-                return new StudyQuoteDto
+        public static List<QuotationPdfStudyDto> ToQuotationPdfStudyDto(this QuotationStudyUpdateDto dto)
+        {
+            if (dto == null) return new List<QuotationPdfStudyDto>();
+
+            return dto.Estudios.Select(x => new QuotationPdfStudyDto
+            {
+                Clave = x.Clave,
+                Nombre = x.Nombre,
+                Precio = $"{x.Precio - (x.Precio * .16m):C2}",
+                IVA = $"{x.Precio * .16m:C2}",
+                Descuento = x.Descuento.ToString("C2"),
+                PrecioFinal = x.PrecioFinal.ToString("C2"),
+                TiempoEntrega = $"{x.Dias:0.##} días",
+                TipoMuestra = "---------------------------",
+                PreparacionPaciente = string.Join(", ", x.Indicaciones.Select(i => i.Descripcion)),
+            }).Concat(
+                dto.Paquetes.Select(x => new QuotationPdfStudyDto
                 {
-                    StudyId= x.EstudioId,
                     Clave = x.Clave,
                     Nombre = x.Nombre,
-                    Precio = $"{Decimal.ToDouble(x.Precio)- (Decimal.ToDouble(x.Precio) * .16)}",
-                    Descuento = x.Descuento.ToString(),
-                    IVA = new StringBuilder().Append("$ ").Append(Decimal.ToDouble(x.Precio) * .16).ToString(),
-                    PrecioFinal = new StringBuilder().Append("$ ").Append(x.Precio-x.Descuento).ToString(),
-                    TiempoEntrega = $"{x.Dias.ToString("0.##")} Dias",
+                    Precio = $"{x.Precio - (x.Precio * .16m):C2}",
+                    IVA = $"{x.Precio * .16m:C2}",
+                    Descuento = x.Descuento.ToString("C2"),
+                    PrecioFinal = x.PrecioFinal.ToString("C2"),
+                    TiempoEntrega = $"{x.Dias:0.##} días",
                     TipoMuestra = "---------------------------",
-                    PreparacionPaciente =  String.Join(", ", x.Indicaciones!=null?x.Indicaciones:new List<IndicationListDto>() ),
-                };
-            }).ToList();
-        }
-        public static PriceQuoteDto toPriceQuotePdf(this QuotationDto data, List<QuotationStudy> model, decimal cargo) {
-
-            var estudios = model.ToQuotationStudyDto().ToStudyQuotePdf();
-
-            return new PriceQuoteDto
-            {
-                Fecha = data.Registro,
-                FechaImpresion = System.DateTime.Now.ToShortDateString(),
-                StudyQuotes = estudios,
-                Total = $"$ {Decimal.ToDouble(model.Sum(x => x.Precio)) - ((Decimal.ToDouble(model.Sum(x => x.Precio)) + Decimal.ToDouble(cargo)) * .16)}",
-                Descuento = $"$ {model.Sum(x => x.Descuento)}",
-                Iva = $"$ { Decimal.ToDouble(model.Sum(x =>  x.Precio) + cargo) * .16}",
-                Totalpagar =$"$ {model.Sum(x =>x.Precio) - model.Sum(x => x.Descuento) + cargo}"
-            };
+                    PreparacionPaciente = string.Join("\n", x.Estudios.Select(i => i.Clave + ": " + string.Join(", ", i.Indicaciones.Select(i => i.Descripcion)))),
+                })).ToList();
         }
     }
 }

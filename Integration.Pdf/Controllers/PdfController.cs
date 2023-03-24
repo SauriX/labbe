@@ -60,29 +60,6 @@ namespace Integration.Pdf.Controllers
             return result;
         }
 
-        [HttpGet]
-        [Route("quotation")]
-        public HttpResponseMessage Quotation()
-        {
-            var file = QuotationService.Generate();
-
-            var result = new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new ByteArrayContent(file)
-            };
-
-            result.Content.Headers.ContentDisposition =
-                new ContentDispositionHeaderValue("attachment")
-                {
-                    FileName = "quotation.pdf"
-                };
-
-            result.Content.Headers.ContentType =
-                new MediaTypeHeaderValue("application/pdf");
-
-            return result;
-        }
-
         [HttpPost]
         [Route("order")]
         public HttpResponseMessage Order(RequestOrderDto order)
@@ -320,11 +297,9 @@ namespace Integration.Pdf.Controllers
 
         [HttpPost]
         [Route("quotes")]
-        public HttpResponseMessage priceQuote(PriceQuoteDto PriceQuote)
+        public HttpResponseMessage priceQuote(QuotationTicketDto PriceQuote)
         {
-
-      
-            var file = PriceQuoteService.Generate(PriceQuote);
+            var file = QuotationService.Generate(PriceQuote);
 
             var result = new HttpResponseMessage(HttpStatusCode.OK)
             {

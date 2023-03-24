@@ -25,8 +25,7 @@ namespace Service.MedicalRecord.Domain.Quotation
         public string Observaciones { get; set; }
         public bool Activo { get; set; }
         public decimal TotalEstudios { get; set; }
-        public decimal Cargo { get; set; }
-        public byte CargoTipo { get; set; }
+        public decimal Descuento { get; set; }
         public decimal Total { get; set; }
         public string UsuarioCreo { get; set; }
 
