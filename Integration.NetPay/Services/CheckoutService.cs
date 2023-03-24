@@ -11,18 +11,19 @@ namespace Integration.NetPay.Services
 {
     public class SaleService : ISaleService
     {
-        public string token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsib2F1dGgyX2lkIl0sInVzZXJfbmFtZSI6ImludGVncmFjaW9uZXNAbmV0cGF5LmNvbS5teCIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdLCJleHAiOjE2NzY1MjQxNzEsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdLCJqdGkiOiI1NDUwMTdlYy1jNmJlLTQ0ZWUtYTg1YS03NGEzMzM1MWFlN2UiLCJjbGllbnRfaWQiOiJ0cnVzdGVkLWFwcCJ9.B8qXorlpryLoISalD-TmKOg8xJdzY6ZvOfYGyKIB0bNgP9jDGaQ7JWdyyPc1xOuc4idcTujhCvGRQrzbagbjcKT1DEPAb8E5NNjUYJvXCP8g0ZCzKuAo6K6nufKMOyuExhvvE-ujsmsZfMiy70vDbagDiTFmaSczZLnf1T-BagBGOx1FlOQLQ7syLQEYC7n0Zg8qn_z__Y-tusTbHFHVaOi41KivMpmXCPr1E4bKVJEGv0Kg6lWj_KjPTDNBwmAxrqs1WRZlFS1gWitDvHoUHojgUQoFdHM-_fQURVLHXiHD3zEBp7fU5nrcSUYF2sh1rNWXoCRtbtIyPKvUjh6ZYA";
+        public string token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsib2F1dGgyX2lkIl0sInVzZXJfbmFtZSI6ImludGVncmFjaW9uZXNAbmV0cGF5LmNvbS5teCIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdLCJleHAiOjE2NzkxMTQ3ODIsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdLCJqdGkiOiIyZWMxOTJjZi0yOTlhLTQ4NjMtYTEwNC03NmUxYWU4NTQ3YTUiLCJjbGllbnRfaWQiOiJ0cnVzdGVkLWFwcCJ9.JRmjNisoy91miVWUYag7PHlMZfOImGbcxSv7GueAP6MtEdiEJOj54RkGy3nlmANoVhpMr14Eu20rxgL7XO5TT8YZFx3_chdV_9a6oLtz4KXkpIDgMcqAbzrN0Si8oC6S3KDpwaoGoNm1eAz0p1ZMnM0grHHfvCrC8SjkQXAuY8rQ2Orv5EHSGbg8HbFyZ3bEu7o9w4dszUUI8k6V6A698azEz4feMEPbDCtGxRB9bHT6XARhl35jBC2ZzpAux6IHGXdGgiCFnHUIoWPPhY5PF2H9Yp6pTgVsJ2KVjNgi4OWG9hHcMmbvmm4Mq6BWeWmmPW1HO7HwDQyTA-7k3tTp0g";
         private readonly HttpClient _httpClient;
+        private readonly IAuthService _authService;
 
-        public SaleService(HttpClient httpClient)
+        public SaleService(HttpClient httpClient, IAuthService authService)
         {
             _httpClient = httpClient;
+            _authService = authService;
         }
 
         public async Task<string> PaymentCharge(object payment)
         {
             var url = "integration-service/transactions/sale";
-
 
             var json = JsonConvert.SerializeObject(new
             {

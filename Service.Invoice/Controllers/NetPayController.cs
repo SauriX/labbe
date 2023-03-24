@@ -162,7 +162,7 @@ namespace Service.Billing.Controllers
         //public async Task<object> GetData(NetPayResponse test)
         public async Task<object> TerminalResponse(NetPayResponse response)
         {
-            var res = await _netPayService.ProcessResponse(response);
+            //var res = await _netPayService.ProcessResponse(response);
 
             return new { Code = "00", Message = "Recibido" };
         }

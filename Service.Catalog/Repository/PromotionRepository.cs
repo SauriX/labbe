@@ -58,6 +58,7 @@ namespace Service.Catalog.Repository
             var priceList = await _context.CAT_Promocion
                 .Include(x => x.Estudios)
                 .Include(x => x.Paquetes)
+                .AsSplitQuery()
                 .FirstOrDefaultAsync(x => x.Id == promotionId);
 
             return priceList;

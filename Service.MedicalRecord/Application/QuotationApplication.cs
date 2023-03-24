@@ -192,7 +192,6 @@ namespace Service.MedicalRecord.Application
             var newQuotation = quotationDto.ToModel();
             newQuotation.MedicoId = MEDICS.A_QUIEN_CORRESPONDA;
             newQuotation.CompañiaId = COMPANIES.PARTICULARES;
-            newQuotation.CargoTipo = CANTIDAD;
             newQuotation.UsuarioCreoId = quotationDto.UsuarioId;
             newQuotation.UsuarioCreo = quotationDto.Usuario;
             newQuotation.ExpedienteId = quotationDto.ExpedienteId;
@@ -231,7 +230,7 @@ namespace Service.MedicalRecord.Application
             quotation.CompañiaId = quotationDto.CompañiaId;
             quotation.MedicoId = quotationDto.MedicoId;
             quotation.EnvioCorreo = quotationDto.Correo;
-            quotation.EnvioWhatsApp = quotationDto.WhatsApp;
+            quotation.EnvioWhatsApp = quotationDto.Whatsapp;
             quotation.Observaciones = quotationDto.Observaciones;
             quotation.UsuarioModificoId = quotationDto.UsuarioId;
             quotation.FechaModifico = DateTime.Now;
@@ -258,10 +257,11 @@ namespace Service.MedicalRecord.Application
             var title = QuotationTemplates.Titles.QuotationCode(quotation.Clave);
             var message = QuotationTemplates.Messages.TestMessage;
 
-            var emailToSend = new EmailContract(quotationDto.Correo, subject, title, message)
+            var emailToSend = new EmailContract(quotationDto.Correos, subject, title, message)
             {
                 Notificar = true,
-                RemitenteId = quotationDto.UsuarioId.ToString()
+                RemitenteId = quotationDto.UsuarioId.ToString(),
+                CorreoIndividual = true
             };
 
             var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(string.Concat(_rabbitMQSettings.Host, "/", _queueNames.Email)));
@@ -275,9 +275,13 @@ namespace Service.MedicalRecord.Application
 
             var message = QuotationTemplates.Messages.TestMessage;
 
-            var phone = quotationDto.Telefono.Replace("-", "");
-            phone = phone.Length == 10 ? "52" + phone : phone;
-            var emailToSend = new WhatsappContract(phone, message)
+            var phones = quotationDto.Telefonos.Select(x =>
+            {
+                x = ("52" + x.Replace("-", ""))[^12..];
+                return x;
+            }).ToList();
+
+            var emailToSend = new WhatsappContract(phones, message)
             {
                 Notificar = true,
                 RemitenteId = quotationDto.UsuarioId.ToString()
@@ -344,14 +348,7 @@ namespace Service.MedicalRecord.Application
 
                 await _repository.BulkUpdateDeleteStudies(quotationDto.CotizacionId, studies);
 
-                quotation.TotalEstudios = quotationDto.Total.TotalEstudios;
-                quotation.Cargo = quotationDto.Total.Cargo;
-                quotation.CargoTipo = quotationDto.Total.CargoTipo;
-                quotation.Total = quotationDto.Total.Total;
-                quotation.UsuarioModificoId = quotationDto.UsuarioId;
-                quotation.FechaModifico = DateTime.Now;
-
-                await _repository.Update(quotation);
+                await UpdateTotals(quotation.Id, quotationDto.UsuarioId);
 
                 _transaction.CommitTransaction();
 
@@ -454,43 +451,19 @@ namespace Service.MedicalRecord.Application
             return new byte[0x00];
         }
 
-        public async Task<byte[]> ExportQuote(Guid id)
+        public async Task<byte[]> ExportQuote(Guid quotationId)
         {
-            var quotation = await _repository.GetById(id);
-            var quotationStudies = await GetStudies(id);
+            var quotation = await _repository.GetById(quotationId);
+            var studies = await GetStudies(quotationId);
+
             if (quotation == null)
             {
                 throw new CustomException(HttpStatusCode.NotFound);
             }
-            var quote = quotation.ToQuotationDto();
 
-            List<int> estudisid = new List<int>();
+            var quotationDto = quotation.ToQuotationPdfDto(studies);
 
-            foreach (var estudys in quotation.Estudios)
-            {
-                estudisid.Add(estudys.EstudioId);
-
-            }
-            var estudios = await _catalogClient.GetStudies(estudisid);
-            var quotepdf = quote.toPriceQuotePdf(quotation.Estudios.ToList(), quotationStudies.Total.Cargo);
-            var newestudis = new List<StudyQuoteDto>();
-            foreach (var estudy in estudios)
-            {
-                var actualstudy = quotepdf.StudyQuotes.FirstOrDefault(x => x.StudyId == estudy.Id);
-                actualstudy.PreparacionPaciente = String.Join(", ", estudy.Indicaciones != null ? estudy.Indicaciones.Select(x => x.Descripcion).ToArray() : new string[] { "" });
-                if (estudy.Tipo != null)
-                {
-                    actualstudy.TipoMuestra = estudy.Tipo;
-                }
-
-
-                newestudis.Add(actualstudy);
-            }
-
-
-            quotepdf.StudyQuotes = newestudis;
-
-            return await _pdfClient.PriceQuoteReport(quotepdf);
+            return await _pdfClient.PriceQuoteReport(quotationDto);
         }
 
         //public async Task<(byte[] file, string fileName)> ExportList(QuotationFilterDto search)
@@ -537,6 +510,32 @@ namespace Service.MedicalRecord.Application
 
         //    return (template.ToByteArray(), $"Catálogo de Cotizacion ({study.nomprePaciente}).xlsx");
         //}
+
+        private async Task UpdateTotals(Guid quotationId, Guid userId)
+        {
+            var quotation = await GetExistingQuotation(quotationId);
+
+            var studies = await _repository.GetStudiesByQuotation(quotationId);
+            var packs = await _repository.GetPacksByQuotation(quotationId);
+
+            var studyAndPack = studies.Select(x => new { x.Descuento, x.Precio, x.PrecioFinal })
+                .Concat(packs.Select(x => new { x.Descuento, x.Precio, x.PrecioFinal }));
+
+            var totalStudies = studyAndPack.Sum(x => x.Precio);
+
+            var discount = totalStudies == 0 ? 0 : studyAndPack.Sum(x => x.Descuento);
+
+            var finalTotal = totalStudies - discount;
+            var balance = finalTotal;
+
+            quotation.TotalEstudios = totalStudies;
+            quotation.Descuento = discount;
+            quotation.Total = finalTotal;
+            quotation.UsuarioModificoId = userId;
+            quotation.FechaModifico = DateTime.Now;
+
+            await _repository.Update(quotation);
+        }
 
         private async Task<Quotation> GetExistingQuotation(Guid id)
         {

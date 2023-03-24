@@ -56,26 +56,26 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/records/api/quotation/email/{quotationId}/{email}",
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/quotation/email/{quotationId}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/quotation/email/{quotationId}/{email}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamPathTemplate": "/api/quotation/email/{quotationId}",
+      "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/records/api/quotation/whatsapp/{quotationId}/{phone}",
+      "DownstreamPathTemplate": "/LabRamos/services/records/api/quotation/whatsapp/{quotationId}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/quotation/whatsapp/{quotationId}/{phone}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamPathTemplate": "/api/quotation/whatsapp/{quotationId}",
+      "UpstreamHttpMethod": [ "POST" ]
     },
     {
       "DownstreamPathTemplate": "/LabRamos/services/records/api/quotation",
