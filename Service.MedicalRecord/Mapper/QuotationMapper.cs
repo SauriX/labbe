@@ -16,9 +16,6 @@ namespace Service.MedicalRecord.Mapper
     {
         private const byte VIGENTE = 1;
         private const byte PARTICULAR = 2;
-        private const byte URGENCIA_NORMAL = 1;
-        //private const byte DESCUENTO_PORCENTAJE = 1;
-        private const byte DESCUENTO_DINERO = 2;
 
         public static QuotationDto ToQuotationDto(this Quotation model)
         {
