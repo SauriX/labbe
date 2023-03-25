@@ -127,7 +127,7 @@ namespace Service.Identity.Context
         {
             var menus = new List<Menu>
             {
-                //last id 46 next id 47
+                // Last id 46 next id 47
                 // Configuracion de Catalogos -> Orden 1000
                 new Menu(1, null, "Configuración", "cat", "", 1000),
                 new Menu(2, 1, "Roles", "role", "roles", 1010),

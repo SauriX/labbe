@@ -17,10 +17,6 @@ namespace Service.MedicalRecord.Controllers
     {
         private readonly IQuotationApplication _service;
 
-        public const string ENVIAR_CODIGO_NUEVO = "1";
-        public const string COMPARAR_CODIGO = "2";
-        public const string REENVIAR_CODIGO_VIGENTE = "3";
-
         public QuotationController(IQuotationApplication service)
         {
             _service = service;
@@ -60,28 +56,28 @@ namespace Service.MedicalRecord.Controllers
             return await _service.GetStudies(quotationId);
         }
 
-        [HttpGet("email/{quotationId}/{email}")]
+        [HttpPost("email/{quotationId}")]
         [Authorize(Policies.Mail)]
-        public async Task SendTestEmail(Guid quotationId, string email)
+        public async Task SendTestEmail(Guid quotationId, [FromBody] List<string> emails)
         {
             var quotationDto = new QuotationSendDto
             {
                 CotizacionId = quotationId,
-                Correo = email,
+                Correos = emails,
                 UsuarioId = (Guid)HttpContext.Items["userId"]
             };
 
             await _service.SendTestEmail(quotationDto);
         }
 
-        [HttpGet("whatsapp/{quotationId}/{phone}")]
+        [HttpPost("whatsapp/{quotationId}")]
         [Authorize(Policies.Wapp)]
-        public async Task SendTestWhatsapp(Guid quotationId, string phone)
+        public async Task SendTestWhatsapp(Guid quotationId, [FromBody] List<string> phones)
         {
             var quotationDto = new QuotationSendDto
             {
                 CotizacionId = quotationId,
-                Telefono = phone,
+                Telefonos = phones,
                 UsuarioId = (Guid)HttpContext.Items["userId"]
             };
 

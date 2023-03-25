@@ -19,7 +19,6 @@ namespace Service.MedicalRecord.Dtos.Quotation
         public string ListaPrecio { get; set; }
         public int? PromocionId { get; set; }
         public string Promocion { get; set; }
-        public bool AplicaCargo { get; set; }
         public decimal Dias { get; set; }
         public int Horas { get; set; }
         public decimal Precio { get; set; }

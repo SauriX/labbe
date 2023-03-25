@@ -227,5 +227,62 @@ namespace Service.MedicalRecord.Repository
 
             return await report.ToListAsync();
         }
+
+        public async Task<List<RequestPayment>> GetByPayment(ReportFilterDto search)
+        {
+            var report = _context.Relacion_Solicitud_Pago
+                .Include(x => x.Solicitud)
+                .ThenInclude(x => x.Expediente)
+                .Include(x => x.Solicitud)
+                .ThenInclude(x => x.Sucursal)
+                .Include(x => x.Solicitud)
+                .ThenInclude(x => x.Compañia)
+                .Include(x => x.Estatus)
+                .AsQueryable();
+
+            if (search.Ciudad != null && search.Ciudad.Count > 0)
+            {
+                report = report.Where(x => search.Ciudad.Contains(x.Solicitud.Sucursal.Ciudad));
+            }
+
+            if (search.SucursalId != null && search.SucursalId.Count > 0)
+            {
+                report = report.Where(x => search.SucursalId.Contains(x.Solicitud.SucursalId));
+            }
+
+            if (search.TipoCompañia != null && search.TipoCompañia.Count == 1)
+            {
+                if (search.TipoCompañia.Contains(Convenio))
+                {
+                    report = report.Where(x => x.Solicitud.Procedencia == 1);
+                }
+
+                else if (search.TipoCompañia.Contains(Todas))
+                {
+                    report = report.Where(x => x.Solicitud.Procedencia == 2);
+                }
+            }
+
+            if (search.TipoCompañia != null && search.TipoCompañia.Count == 2)
+            {
+                if (search.TipoCompañia.Contains(Convenio) && search.TipoCompañia.Contains(Todas))
+                {
+                    report = report.Where(x => x.Solicitud.Procedencia == 1 || x.Solicitud.Procedencia == 2);
+                }
+            }
+
+            if (search.FechaIndividual != DateTime.MinValue)
+            {
+                report = report.Where(x => x.FechaPago.Date == search.FechaIndividual.Date);
+            }
+
+            if (search.Hora != null)
+            {
+                report = report.
+                    Where(x => x.FechaPago.TimeOfDay >= search.Hora.First().TimeOfDay && x.FechaPago.TimeOfDay <= search.Hora.Last().TimeOfDay);
+            }
+
+            return await report.ToListAsync();
+        }
     }
 }

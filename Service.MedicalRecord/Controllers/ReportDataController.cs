@@ -5,6 +5,7 @@ using Service.MedicalRecord.Dtos.Quotation;
 using Service.MedicalRecord.Dtos.Reports;
 using Service.MedicalRecord.Dtos.Reports.BudgetStats;
 using Service.MedicalRecord.Dtos.Reports.StudyStats;
+using Service.MedicalRecord.Dtos.Request;
 using Shared.Dictionary;
 using System;
 using System.Collections.Generic;
@@ -41,6 +42,15 @@ namespace Service.MedicalRecord.Controllers
         public async Task<IEnumerable<StudiesDto>> GetRequestStudiesNow(ReportFilterDto search)
         {
             return await _service.GetStudiesByFilter(search);
+        }
+
+        [HttpPost("payment/filter")]
+        [Authorize(Policies.Access)]
+        public async Task<IEnumerable<RequestPaymentStatsDto>> GetPayments(ReportFilterDto search)
+        {
+            var user = HttpContext.Items["userName"].ToString();
+
+            return await _service.GetPaymentsByFilter(search, user);
         }
     }
 }

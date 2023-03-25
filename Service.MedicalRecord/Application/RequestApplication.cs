@@ -462,7 +462,7 @@ namespace Service.MedicalRecord.Application
                 }
                 else
                 {
-                    throw new CustomException(HttpStatusCode.NotFound, "No existe una lealtad que coincida con la lista de precio o fecha actual");
+                    sucess = false;
                 }
 
             }
@@ -1402,7 +1402,7 @@ namespace Service.MedicalRecord.Application
         {
             var allStudies = await _repository.GetAllStudies(request.Id);
 
-            var isCitologic = allStudies.Any(x => x.AreaId == AREAS.CITOLOGIA_NASAL && x.EstatusId != Status.RequestStudy.Cancelado);
+            var isCitologic = allStudies.Any(x => x.AreaId == AREAS.CITOLOGIA && x.EstatusId != Status.RequestStudy.Cancelado);
             var isPathologic = allStudies.Any(x => x.AreaId == AREAS.HISTOPATOLOGIA && x.EstatusId != Status.RequestStudy.Cancelado);
 
             string citCode = null;

@@ -9,9 +9,6 @@ namespace Service.Report.Repository.IRepository
 {
     public interface IReportRepository
     {
-        Task<List<Request>> GetByFilter(ReportFilterDto search);
-        Task<List<RequestPayment>> GetPaymentByFilter(ReportFilterDto search);
-        Task<List<RequestStudy>> GetByStudies(ReportFilterDto search);
         Task<List<Indicators>> GetBudgetByDate(DateTime startDate, DateTime endDate);
         Task<List<SamplesCosts>> GetSamplesByDate(DateTime startDate, DateTime endDate);
         Task<List<SamplesCosts>> GetSamplesCostsByFilter(ReportModalFilterDto search);
