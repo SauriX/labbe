@@ -234,10 +234,10 @@ namespace Service.MedicalRecord.Application
             template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
             template.AddVariable("Titulo", "Expedientes");
-            if (search.FechaAlta != null)
+            if (search.Fecha != null)
             {
-                template.AddVariable("FechaInicial", search.FechaAlta[0].ToString("dd/MM/yyyy"));
-                template.AddVariable("FechaFinal", search.FechaAlta[1].ToString("dd/MM/yyyy"));
+                template.AddVariable("FechaInicial", search.Fecha.First().ToString("dd/MM/yyyy"));
+                template.AddVariable("FechaFinal", search.Fecha.Last().ToString("dd/MM/yyyy"));
             }
             else
             {

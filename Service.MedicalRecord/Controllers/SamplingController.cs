@@ -1,6 +1,7 @@
 ﻿    using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.MedicalRecord.Application.IApplication;
+using Service.MedicalRecord.Dtos.General;
 using Service.MedicalRecord.Dtos.RequestedStudy;
 using Service.MedicalRecord.Dtos.Sampling;
 using Shared.Dictionary;
@@ -25,7 +26,7 @@ namespace Service.MedicalRecord.Controllers
         }
         [HttpPost("getList")]
         [Authorize(Policies.Access)]
-        public async Task<List<SamplingListDto>> GetAll(RequestedStudySearchDto search)
+        public async Task<List<SamplingListDto>> GetAll(GeneralFilterDto search)
         {
             search.SucursalesId = (List<Guid>)HttpContext.Items["sucursales"];
             var requestedStudy = await _service.GetAll(search);
@@ -53,7 +54,7 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("export/getList")]
         [Authorize(Policies.Download)]
-        public async Task<IActionResult> ExportStudyExcel(RequestedStudySearchDto search)
+        public async Task<IActionResult> ExportStudyExcel(GeneralFilterDto search)
         {
             search.SucursalesId = (List<Guid>)HttpContext.Items["sucursales"];
             var (file, fileName) = await _service.ExportList(search);

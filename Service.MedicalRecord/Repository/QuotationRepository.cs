@@ -38,10 +38,10 @@ namespace Service.MedicalRecord.Repository
                 .OrderBy(x => x.FechaCreo)
                 .AsQueryable();
 
-            if (string.IsNullOrWhiteSpace(filter.Expediente) && filter.FechaAInicial != null && filter.FechaAFinal != null)
+            if (string.IsNullOrWhiteSpace(filter.Expediente) && filter.Fecha != null)
             {
-                quotations = quotations.Where(x => x.FechaCreo.Date >= ((DateTime)filter.FechaAInicial).Date
-                && x.FechaCreo.Date <= ((DateTime)filter.FechaAFinal).Date);
+                quotations = quotations.Where(x => x.FechaCreo.Date >= filter.Fecha.First().Date
+                && x.FechaCreo.Date <= filter.Fecha.Last().Date);
             }
 
             if (filter.Ciudad != null)
@@ -51,13 +51,13 @@ namespace Service.MedicalRecord.Repository
 
             if (filter.SucursalId != null && filter.SucursalId.Count > 0)
             {
-                quotations = quotations.Where(x => x.Sucursal != null && filter.SucursalId.Contains(x.SucursalId));
+                quotations = quotations.Where(x => filter.SucursalId.Contains(x.SucursalId));
             }
 
-            if (filter.FechaNInicial != null)
+            if (filter.FechaNacimiento != DateTime.MinValue)
             {
                 quotations = quotations.Where(x => x.Expediente != null
-                && x.Expediente.FechaDeNacimiento.Date == ((DateTime)filter.FechaNInicial).Date);
+                && x.Expediente.FechaDeNacimiento.Date == filter.FechaNacimiento.Date);
             }
 
             if (!string.IsNullOrWhiteSpace(filter.Correo))

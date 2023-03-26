@@ -34,6 +34,7 @@ namespace Service.MedicalRecord.Controllers
         //[Authorize(Policies.Access)]
         public async Task<List<MedicalRecordsListDto>> GetNow(GeneralFilterDto search = null)
         {
+            search.SucursalesId = (List<Guid>)HttpContext.Items["sucursales"];
             return await _service.GetNow(search);
         }
 

@@ -36,8 +36,10 @@ namespace Service.MedicalRecord.Repository
         {
             var records = _context.CAT_Expedientes.AsQueryable();
 
-
-
+            if ((!string.IsNullOrWhiteSpace(search.Expediente)) && (search.SucursalId != null || search.SucursalId.Count() >= 0))
+            {
+                records = records.Where(x => search.SucursalId.Contains(x.IdSucursal));
+            }
 
             if (!string.IsNullOrEmpty(search.Expediente))
             {
@@ -51,13 +53,12 @@ namespace Service.MedicalRecord.Repository
             }
 
             if (search.FechaNacimiento.Date == DateTime.MinValue.Date && string.IsNullOrEmpty(search.Telefono) && string.IsNullOrWhiteSpace(search.Expediente) &&
-                search.FechaAlta != null && search.FechaAlta.Count > 1 &&
-                search.FechaAlta[0].Date != DateTime.MinValue.Date && search.FechaAlta[1].Date != DateTime.MinValue.Date)
+                search.Fecha != null)
             {
-                records = records.Where(x => x.FechaCreo.Date >= search.FechaAlta[0].Date && x.FechaCreo.Date <= search.FechaAlta[1].Date);
+                records = records.Where(x => x.FechaCreo.Date >= search.Fecha.First().Date && x.FechaCreo.Date <= search.Fecha.Last().Date);
             }
 
-            if (search.SucursalId != null && search.SucursalId.Count() > 0)
+            if (search.SucursalId != null && search.SucursalId.Count > 0)
             {
                 records = records.Where(x => search.SucursalId.Contains(x.IdSucursal));
             }
@@ -91,7 +92,7 @@ namespace Service.MedicalRecord.Repository
 
             return taxData;
         }
-        
+
 
 
         public async Task<Domain.MedicalRecord.MedicalRecord> Find(Guid id)
@@ -193,7 +194,7 @@ namespace Service.MedicalRecord.Repository
             _context.CAT_Expedientes.Update(expediente);
             await _context.SaveChangesAsync();
 
-        } 
+        }
         public async Task UpdateObservation(Domain.MedicalRecord.MedicalRecord expediente)
         {
             _context.CAT_Expedientes.Update(expediente);

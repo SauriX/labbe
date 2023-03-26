@@ -163,8 +163,8 @@ namespace Service.MedicalRecord.Application
             template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
             template.AddVariable("Titulo", "Toma de Muestra de Estudio");
-            template.AddVariable("FechaInicio", search.FechaInicial?.ToString("dd/MM/yyyy"));
-            template.AddVariable("FechaFinal", search.FechaFinal?.ToString("dd/MM/yyyy"));
+            template.AddVariable("FechaInicio", search.Fecha.First().ToString("dd/MM/yyyy"));
+            template.AddVariable("FechaFinal", search.Fecha.Last().ToString("dd/MM/yyyy"));
 
 
 

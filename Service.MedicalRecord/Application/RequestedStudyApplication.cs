@@ -17,6 +17,7 @@ using ClosedXML.Report;
 using ClosedXML.Excel;
 using Shared.Extensions;
 using MoreLinq;
+using Service.MedicalRecord.Dtos.General;
 
 namespace Service.MedicalRecord.Application
 {
@@ -30,7 +31,7 @@ namespace Service.MedicalRecord.Application
 
         }
 
-        public async Task<(byte[] file, string fileName)> ExportList(RequestedStudySearchDto search)
+        public async Task<(byte[] file, string fileName)> ExportList(GeneralFilterDto search)
         {
             var studies = await GetAll(search);
 
@@ -88,7 +89,7 @@ namespace Service.MedicalRecord.Application
             return (template.ToByteArray(), $"Informe Solicitud de Estudio.xlsx");
         }
 
-        public async Task<List<SamplingListDto>> GetAll(RequestedStudySearchDto search)
+        public async Task<List<SamplingListDto>> GetAll(GeneralFilterDto search)
         {
             var requestedStudy = await _repository.GetAll(search);
 

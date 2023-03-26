@@ -20,7 +20,6 @@ namespace Service.MedicalRecord.Dtos.General
         public List<string> Ciudad { get; set; }
         public List<byte?> TipoSolicitud { get; set; }
         public List<int?> Procedencia { get; set; }
-
         public List<byte?> Estatus { get; set; }
         public List<int?> Estudio { get; set; }
         public List<Guid?> SolicitudId { get; set; }
@@ -28,14 +27,7 @@ namespace Service.MedicalRecord.Dtos.General
         public string Telefono { get; set; }
         public string Correo { get; set; }
         public DateTime FechaNacimiento { get; set; }
-        public List<DateTime> FechaAlta { get; set; }
-        public DateTime? FechaAInicial { get; set; }
-        public DateTime? FechaAFinal { get; set; }
-        public DateTime? FechaNInicial { get; set; }
-        public DateTime? FechaNFinal { get; set; }
         public byte? TipoFecha { get; set; }
-        public DateTime? FechaInicial { get; set; }
-        public DateTime? FechaFinal { get; set; }
         public string NombreArea { get; set; }
         public List<string> MediosEntrega { get; set; }
     }

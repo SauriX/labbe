@@ -36,13 +36,13 @@ namespace Service.MedicalRecord.Repository
                 requests = requests.Where(x => filter.SucursalesId.Contains(x.SucursalId));
             }
 
-            if (string.IsNullOrWhiteSpace(filter.Buscar) && filter.TipoFecha != null && filter.TipoFecha == 1 && filter.FechaInicial != null && filter.FechaFinal != null)
+            if (string.IsNullOrWhiteSpace(filter.Buscar) && filter.TipoFecha != null && filter.TipoFecha == 1 && filter.Fecha != null)
             {
-                requests = requests.Where(x => ((DateTime)filter.FechaInicial).Date <= x.FechaCreo.Date && ((DateTime)filter.FechaFinal).Date >= x.FechaCreo.Date);
+                requests = requests.Where(x => filter.Fecha.First().Date <= x.FechaCreo.Date && filter.Fecha.Last().Date >= x.FechaCreo.Date);
             }
-            if (string.IsNullOrWhiteSpace(filter.Buscar) && filter.TipoFecha != null && filter.TipoFecha == 2 && filter.FechaInicial != null && filter.FechaFinal != null)
+            if (string.IsNullOrWhiteSpace(filter.Buscar) && filter.TipoFecha != null && filter.TipoFecha == 2 && filter.Fecha != null)
             {
-                requests = requests.Where(x => x.Estudios.Any(x => ((DateTime)filter.FechaInicial).Date <= x.FechaEntrega && ((DateTime)filter.FechaFinal).Date >= x.FechaEntrega));
+                requests = requests.Where(x => x.Estudios.Any(x => filter.Fecha.First().Date <= x.FechaCreo.Date && filter.Fecha.Last().Date >= x.FechaCreo.Date));
             }
 
             if (!string.IsNullOrWhiteSpace(filter.Buscar))
@@ -134,7 +134,7 @@ namespace Service.MedicalRecord.Repository
                 requests = requests.Where(x => filter.SucursalId.Contains(x.SucursalId));
             }
 
-            if (filter.Area[0] > 0)
+            if (filter.Area != null && filter.Area[0] > 0)
             {
                 requests = requests.Where(x => x.Estudios.Any(y => y.AreaId == filter.Area[0]));
             }

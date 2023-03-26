@@ -20,6 +20,7 @@ using MassTransit;
 using Service.MedicalRecord.Client.IClient;
 using EventBus.Messages.Common;
 using ZXing;
+using Service.MedicalRecord.Dtos.General;
 
 namespace Service.MedicalRecord.Application
 {
@@ -36,7 +37,7 @@ namespace Service.MedicalRecord.Application
             _catalogClient = catalogClient;
         }
 
-        public async Task<(byte[] file, string fileName)> ExportList(RequestedStudySearchDto search)
+        public async Task<(byte[] file, string fileName)> ExportList(GeneralFilterDto search)
         {
             var studies = await GetAll(search);
 
@@ -94,7 +95,7 @@ namespace Service.MedicalRecord.Application
             return (template.ToByteArray(), $"Informe Toma de Muestra de Estudio.xlsx");
         }
 
-        public async Task<List<SamplingListDto>> GetAll(RequestedStudySearchDto search)
+        public async Task<List<SamplingListDto>> GetAll(GeneralFilterDto search)
         {
           
             var requestedStudy = await _repository.GetAll(search);
