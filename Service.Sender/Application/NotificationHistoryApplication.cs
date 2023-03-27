@@ -22,11 +22,11 @@ namespace Service.Sender.Application
 
         public async Task<List<NotificationContract>> getByFilter(NotificationFilterDto filter) { 
         var notifications = await _repository.getByFilter(filter);
-            if (!notifications.Any()) {
-                throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
+            if (notifications.Any()) {
+                return notifications.toNotificationDto();
             }
-            return notifications.toNotificationDto();
-        
+
+            return null;
         }
     }
 }
