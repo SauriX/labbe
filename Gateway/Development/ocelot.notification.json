@@ -1,0 +1,17 @@
+﻿{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/notification",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 36093
+        }
+      ],
+      "UpstreamPathTemplate": "/api/notification",
+      "UpstreamHttpMethod": [ "POST" ]
+    }
+
+  ]
+}

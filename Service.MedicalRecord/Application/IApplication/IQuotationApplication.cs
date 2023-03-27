@@ -1,4 +1,5 @@
-﻿using Service.MedicalRecord.Dtos.MedicalRecords;
+﻿using Service.MedicalRecord.Dtos.General;
+using Service.MedicalRecord.Dtos.MedicalRecords;
 using Service.MedicalRecord.Dtos.Quotation;
 using Service.MedicalRecord.Dtos.WeeClinic;
 using System;
@@ -9,7 +10,7 @@ namespace Service.MedicalRecord.Application.IApplication
 {
     public interface IQuotationApplication
     {
-        Task<IEnumerable<QuotationInfoDto>> GetByFilter(QuotationFilterDto filter);
+        Task<IEnumerable<QuotationInfoDto>> GetByFilter(GeneralFilterDto filter);
         Task<IEnumerable<QuotationInfoDto>> GetActive();
         Task<QuotationDto> GetById(Guid quotationId);
         Task<QuotationGeneralDto> GetGeneral(Guid quotationId);

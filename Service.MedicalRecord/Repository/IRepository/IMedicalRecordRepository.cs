@@ -1,6 +1,7 @@
 ﻿using Service.MedicalRecord.Domain.MedicalRecord;
 using Service.MedicalRecord.Domain.TaxData;
 using Service.MedicalRecord.Dtos;
+using Service.MedicalRecord.Dtos.General;
 using Service.MedicalRecord.Dtos.MedicalRecords;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace Service.MedicalRecord.Repository.IRepository
     public interface IMedicalRecordRepository
     {
         Task<List<Domain.MedicalRecord.MedicalRecord>> GetAll();
-        Task<List<Domain.MedicalRecord.MedicalRecord>> GetNow(MedicalRecordSearch search);
+        Task<List<Domain.MedicalRecord.MedicalRecord>> GetNow(GeneralFilterDto search);
         Task<List<Domain.MedicalRecord.MedicalRecord>> GetActive();
         Task<List<TaxData>> GetTaxData(Guid recordId);
         Task<Domain.MedicalRecord.MedicalRecord> Find(Guid id);

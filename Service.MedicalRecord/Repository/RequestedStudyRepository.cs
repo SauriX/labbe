@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Service.MedicalRecord.Dictionary;
+using Service.MedicalRecord.Dtos.General;
 
 namespace Service.MedicalRecord.Repository
 {
@@ -30,7 +31,7 @@ namespace Service.MedicalRecord.Repository
             return request;
         }
 
-        public async Task<List<Request>> GetAll(RequestedStudySearchDto search)
+        public async Task<List<Request>> GetAll(GeneralFilterDto search)
         {
             var report = _context.CAT_Solicitud
                 .Include(x => x.Expediente)
@@ -60,11 +61,11 @@ namespace Service.MedicalRecord.Repository
             }
             if (search.MedicoId != null && search.MedicoId.Count > 0)
             {
-                report = report.Where(x => search.MedicoId.Contains(x.MedicoId.ToString()));
+                report = report.Where(x => search.MedicoId.Contains(x.MedicoId));
             }
             if (search.CompañiaId != null && search.CompañiaId.Count > 0)
             {
-                report = report.Where(x => search.CompañiaId.Contains(x.CompañiaId.ToString()));
+                report = report.Where(x => search.CompañiaId.Contains(x.CompañiaId));
             }
             if (search.Estatus != null && search.Estatus.Count > 0)
             {

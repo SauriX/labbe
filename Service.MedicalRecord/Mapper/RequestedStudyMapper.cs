@@ -4,12 +4,13 @@ using Service.MedicalRecord.Dtos.Sampling;
 using System.Collections.Generic;
 using Service.MedicalRecord.Dictionary;
 using System.Linq;
+using Service.MedicalRecord.Dtos.General;
 
 namespace Service.MedicalRecord.Mapper
 {
     public static class RequestedStudyMapper
     {
-        public static List<SamplingListDto> ToRequestedStudyDto(this List<Request> model, RequestedStudySearchDto search)
+        public static List<SamplingListDto> ToRequestedStudyDto(this List<Request> model, GeneralFilterDto search)
         {
             if (model == null) return null;
 

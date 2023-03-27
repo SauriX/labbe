@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.MedicalRecord.Application.IApplication;
+using Service.MedicalRecord.Dtos.General;
 using Service.MedicalRecord.Dtos.Quotation;
 using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.WeeClinic;
@@ -24,7 +25,7 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("filter")]
         [Authorize(Policies.Access)]
-        public async Task<IEnumerable<QuotationInfoDto>> GetByFilter(QuotationFilterDto filter)
+        public async Task<IEnumerable<QuotationInfoDto>> GetByFilter(GeneralFilterDto filter)
         {
             return await _service.GetByFilter(filter);
         }

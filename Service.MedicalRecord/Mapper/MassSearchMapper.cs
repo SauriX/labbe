@@ -4,6 +4,7 @@ using System.Linq;
 
 using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Dictionary;
+using Service.MedicalRecord.Dtos.General;
 
 namespace Service.MedicalRecord.Mapper
 
@@ -12,15 +13,15 @@ namespace Service.MedicalRecord.Mapper
     {
         private const string ETIQUETA = "9";
         private const byte PARTICULARES = 2;
-        public static MassSearchInfoDto ToMassSearchInfoDto(this List<Request> model, MassSearchFilterDto filter)
+        public static MassSearchInfoDto ToMassSearchInfoDto(this List<Request> model, GeneralFilterDto filter)
         {
             List<int?> filterAreas = new List<int?>() { 5, 34, 23, 44, 28, 17, 41, 9, 20 };
 
             var parameters = model.SelectMany(x => x.Estudios);
 
-            if (filter.Estudios != null && filter.Estudios.Count > 0)
+            if (filter.Estudio != null && filter.Estudio.Count > 0)
             {
-                parameters = parameters.Where(x => filter.Estudios.Contains(x.EstudioId));
+                parameters = parameters.Where(x => filter.Estudio.Contains(x.EstudioId));
 
             }
             var resultsStudy = parameters
@@ -37,9 +38,9 @@ namespace Service.MedicalRecord.Mapper
                 var solicitud = model[i];
                 var estudios = solicitud.Estudios.ToList();
 
-                if (filter.Estudios != null && filter.Estudios.Count > 0)
+                if (filter.Estudio != null && filter.Estudio.Count > 0)
                 {
-                    estudios = estudios.Where(x => filter.Estudios.Contains(x.EstudioId)).ToList();
+                    estudios = estudios.Where(x => filter.Estudio.Contains(x.EstudioId)).ToList();
 
                 }
                     

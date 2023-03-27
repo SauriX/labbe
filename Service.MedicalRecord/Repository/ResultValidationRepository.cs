@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Service.MedicalRecord.Context;
 using Service.MedicalRecord.Dictionary;
 using Service.MedicalRecord.Domain.Request;
+using Service.MedicalRecord.Dtos.General;
 using Service.MedicalRecord.Dtos.RequestedStudy;
 using Service.MedicalRecord.Dtos.ResultValidation;
 using Service.MedicalRecord.Repository.IRepository;
@@ -30,7 +31,7 @@ namespace Service.MedicalRecord.Repository
             return request;
         }
 
-        public async Task<List<Request>> GetAll(SearchValidation search)
+        public async Task<List<Request>> GetAll(GeneralFilterDto search)
             {
             var report = _context.CAT_Solicitud.Where(x => x.Estudios.Any(y => y.EstatusId == Status.RequestStudy.Capturado || y.EstatusId == Status.RequestStudy.Validado))
                 .Include(x => x.Expediente)
@@ -40,26 +41,31 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Compañia)
                 .AsQueryable();
 
-            if (!string.IsNullOrEmpty(search.Search))
+            if ((!string.IsNullOrWhiteSpace(search.Buscar)) && (search.SucursalId != null || search.SucursalId.Count() >= 0))
             {
-                report = report.Where(x => x.Clave.Contains(search.Search)
-                || (x.Expediente.NombrePaciente + " " + x.Expediente.PrimerApellido + " " + x.Expediente.SegundoApellido).ToLower().Contains(search.Search.ToLower()));
+                report = report.Where(x => search.SucursalesId.Contains(x.SucursalId));
+            }
+
+            if (!string.IsNullOrEmpty(search.Buscar))
+            {
+                report = report.Where(x => x.Clave.Contains(search.Buscar)
+                || (x.Expediente.NombrePaciente + " " + x.Expediente.PrimerApellido + " " + x.Expediente.SegundoApellido).ToLower().Contains(search.Buscar.ToLower()));
             }
             if (search.Ciudad != null && search.Ciudad.Count > 0)
             {
                 report = report.Where(x => search.Ciudad.Contains(x.Sucursal.Ciudad));
             }
-            if (search.Sucursal != null && search.Sucursal.Count > 0)
+            if (search.SucursalId != null && search.SucursalId.Count > 0)
             {
-                report = report.Where(x => search.Sucursal.Contains(x.SucursalId.ToString()));
+                report = report.Where(x => search.SucursalId.Contains(x.SucursalId));
             }
-            if (search.Medico != null && search.Medico.Count > 0)
+            if (search.MedicoId != null && search.MedicoId.Count > 0)
             {
-                report = report.Where(x => search.Medico.Contains(x.MedicoId.ToString()));
+                report = report.Where(x => search.MedicoId.Contains(x.MedicoId));
             }
-            if (search.Compañia != null && search.Compañia.Count > 0)
+            if (search.CompañiaId != null && search.CompañiaId.Count > 0)
             {
-                report = report.Where(x => search.Compañia.Contains(x.CompañiaId.ToString()));
+                report = report.Where(x => search.CompañiaId.Contains(x.CompañiaId));
 
             }
             if (search.Fecha != null)
@@ -88,16 +94,19 @@ namespace Service.MedicalRecord.Repository
             }
 
 
-            if (search.TipoSoli != null && search.TipoSoli.Count > 0)
+            if (search.TipoSolicitud != null && search.TipoSolicitud.Count > 0)
             {
-                report = report.Where(x => search.TipoSoli.Contains(x.Urgencia));
+                report = report.Where(x => search.TipoSolicitud.Contains(x.Urgencia));
             }
-           /* if (search.Departament != null && search.Departament>0) {
-                report = report.Where(x => x.Estudios.Any(y => search.Departament == y.DepartamentoId));
-            }*/
-            if (search.Area != null && search.Area > 0)
+
+            if (search.Departamento != null && search.Departamento.Count > 0)
             {
-                report = report.Where(x => x.Estudios.Any(y => search.Area == y.AreaId));
+                report = report.Where(x => x.Estudios.Any(y => search.Departamento.Contains(y.DepartamentoId)));
+            }
+
+            if (search.Area != null && search.Area[0] > 0)
+            {
+                report = report.Where(x => x.Estudios.Any(y => search.Area[0] == y.AreaId));
             }
 
             return report.ToList();

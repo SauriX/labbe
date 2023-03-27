@@ -3,6 +3,7 @@ using MoreLinq;
 using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Client.IClient;
 using Service.MedicalRecord.Dictionary;
+using Service.MedicalRecord.Dtos.General;
 using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.RportStudy;
 using Service.MedicalRecord.Mapper;
@@ -17,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace Service.MedicalRecord.Application
 {
-    public class ReportStudyApplication: IReportStudyApplication
+    public class ReportStudyApplication : IReportStudyApplication
     {
 
         private readonly IRequestRepository _repository;
@@ -32,14 +33,14 @@ namespace Service.MedicalRecord.Application
             ICatalogClient catalogClient,
             IPdfClient pdfClient)
         {
-    
+
             _repository = repository;
             _catalogClient = catalogClient;
             _pdfClient = pdfClient;
 
         }
 
-        public async Task<List<ReportRequestListDto>> GetByFilter(RequestFilterDto filter)
+        public async Task<List<ReportRequestListDto>> GetByFilter(GeneralFilterDto filter)
         {
             var request = await _repository.GetByFilter(filter);
 
@@ -47,12 +48,12 @@ namespace Service.MedicalRecord.Application
             {
                 throw new CustomException(HttpStatusCode.NotFound);
             }
-                var test = request.toRequestList().ToList();
+            var test = request.toRequestList().ToList();
             return request.toRequestList().ToList();
         }
 
 
-        public async Task<byte[]> ExportRequest(RequestFilterDto filter)
+        public async Task<byte[]> ExportRequest(GeneralFilterDto filter)
         {
             var request = await GetByFilter(filter);
             if (request == null)
@@ -66,18 +67,18 @@ namespace Service.MedicalRecord.Application
         }
 
 
-        public async Task<(byte[] file, string fileName)> ExportList(RequestFilterDto search)
+        public async Task<(byte[] file, string fileName)> ExportList(GeneralFilterDto search)
         {
             var studies = await GetByFilter(search);
-        
+
             foreach (var request in studies)
             {
                 if (studies.Count > 0)
                 {
-                    request.Estudios.Insert(0, new ReportStudyListDto { Clave = "Clave", Nombre = "Nombre Estudio",Regitro="Fecha de Registro" ,Fecha= "Fecha de entrega",  Estatus = "Estatus" });
+                    request.Estudios.Insert(0, new ReportStudyListDto { Clave = "Clave", Nombre = "Nombre Estudio", Regitro = "Fecha de Registro", Fecha = "Fecha de entrega", Estatus = "Estatus" });
                 }
             }
-            studies = studies.OrderBy(x=>x.Sucursal).ToList();
+            studies = studies.OrderBy(x => x.Sucursal).ToList();
             List<ReportList> list = new List<ReportList>();
             var pivote = studies.First().Sucursal.ToString().Trim();
             var testeadi = new List<ReportRequestListDto>();
@@ -91,13 +92,12 @@ namespace Service.MedicalRecord.Application
                 Compañia = "Compañia",
                 Entrega = "Entrega",
                 Estudios = new List<ReportStudyListDto>()
-
-
             });
-          
 
-          
-            foreach (var study in studies) {
+
+
+            foreach (var study in studies)
+            {
                 if (!list.Any(x => x.SucursalRaw == pivote))
                 {
                     var sucursali = Regex.Replace(study.Sucursal, @"[^\w]", "");
@@ -121,14 +121,14 @@ namespace Service.MedicalRecord.Application
                         {
                             Sucursal = sucursali,
                             Tipo = "Laboratorio",
-                            Requests = studies.FindAll(y => !y.isPatologia  && y.Sucursal == pivote),
+                            Requests = studies.FindAll(y => !y.isPatologia && y.Sucursal == pivote),
                             SucursalRaw = pivote
 
                         };
                         list.Add(Lab);
                     }
 
-                    
+
 
 
                 }
@@ -136,24 +136,25 @@ namespace Service.MedicalRecord.Application
 
 
             }
-              foreach (var request in list)
-              {
-                  if (request.Requests.Count > 0)
-                  {
-                      request.Requests.Insert(0, new ReportRequestListDto {
-                          Solicitud = "Solicitud",
-                          Paciente = "Nombre",
-                          Edad = "Edad",
-                          Sexo= "Sexo",
-                          Sucursal="Sucursal",
-                          Compañia = "Compañia",
-                          Entrega = "Entrega",
-                          Estudios = new List<ReportStudyListDto>()
+            foreach (var request in list)
+            {
+                if (request.Requests.Count > 0)
+                {
+                    request.Requests.Insert(0, new ReportRequestListDto
+                    {
+                        Solicitud = "Solicitud",
+                        Paciente = "Nombre",
+                        Edad = "Edad",
+                        Sexo = "Sexo",
+                        Sucursal = "Sucursal",
+                        Compañia = "Compañia",
+                        Entrega = "Entrega",
+                        Estudios = new List<ReportStudyListDto>()
 
-                      });
-                  }
-              }
-            
+                    });
+                }
+            }
+
             var path = Assets.InformeDia;
 
             var template = new XLTemplate(path);
@@ -162,59 +163,25 @@ namespace Service.MedicalRecord.Application
             template.AddVariable("Direccion", "Avenida Humberto Lobo #555");
             template.AddVariable("Sucursal", "San Pedro Garza García, Nuevo León");
             template.AddVariable("Titulo", "Toma de Muestra de Estudio");
-            template.AddVariable("FechaInicio", search.FechaInicial?.ToString("dd/MM/yyyy"));
-            template.AddVariable("FechaFinal", search.FechaFinal?.ToString("dd/MM/yyyy"));
+            template.AddVariable("FechaInicio", search.Fecha.First().ToString("dd/MM/yyyy"));
+            template.AddVariable("FechaFinal", search.Fecha.Last().ToString("dd/MM/yyyy"));
 
-            
+
 
             var test = list.GroupBy(x => x.Sucursal);
 
-            foreach (var item in test) {
-           
-
-                    template.Workbook.Worksheet("Solicitudes").CopyTo(item.Key);
-                    template.Workbook.Worksheet(item.Key).Range("$A$2:$G$7").AddToNamed($"Solicitudes{item.Key}");
-                    template.Workbook.Worksheet(item.Key).Range("$A$3:$G$6").AddToNamed($"Solicitudes{item.Key}_Requests");
-                    template.Workbook.Worksheet(item.Key).Range("$A$4:$G$5").AddToNamed($"Solicitudes{item.Key}_Requests_Estudios");
-                    template.AddVariable($"Solicitudes{item.Key}", item.ToList());
-
-
+            foreach (var item in test)
+            {
+                template.Workbook.Worksheet("Solicitudes").CopyTo(item.Key);
+                template.Workbook.Worksheet(item.Key).Range("$A$2:$G$7").AddToNamed($"Solicitudes{item.Key}");
+                template.Workbook.Worksheet(item.Key).Range("$A$3:$G$6").AddToNamed($"Solicitudes{item.Key}_Requests");
+                template.Workbook.Worksheet(item.Key).Range("$A$4:$G$5").AddToNamed($"Solicitudes{item.Key}_Requests_Estudios");
+                template.AddVariable($"Solicitudes{item.Key}", item.ToList());
             }
 
             template.Workbook.Worksheet("Solicitudes").Delete();
             template.Generate();
 
-
-          /* template.Workbook.Worksheets.ToList().ForEach(x =>
-            {
-                var cuenta = 0;
-                int[] posiciones = { 0, 0 };
-                x.Worksheet.Rows().ForEach(y =>
-                {
-                    var descripcion = template.Workbook.Worksheets.FirstOrDefault().Cell(y.RowNumber(), "B").Value.ToString();
-                    var next = template.Workbook.Worksheets.FirstOrDefault().Cell(y.RowNumber() + 2, "B").Value.ToString();
-                    var plusOne = template.Workbook.Worksheets.FirstOrDefault().Cell(y.RowNumber() + 1, "B").Value.ToString();
-                    if (descripcion == "Clave" && cuenta == 0)
-                    {
-                        posiciones[0] = y.RowNumber();
-                        cuenta++;
-                    }
-                    if ((next == "Clave" || (next == "" && plusOne == "")) && cuenta == 1)
-                    {
-                        posiciones[1] = y.RowNumber();
-                        cuenta++;
-                    }
-                    if (cuenta == 2)
-                    {
-                        x.Rows(posiciones[0], posiciones[1]).Group();
-                        x.Rows(posiciones[0], posiciones[1]).Collapse();
-                        cuenta = 0;
-                        posiciones.ForEach(z => z = 0);
-                    }
-                });
-                
-            });*/
-        
             template.Format();
 
             return (template.ToByteArray(), $"Informe Del Día.xlsx");

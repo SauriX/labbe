@@ -71,8 +71,8 @@ namespace Service.Report.Mapper
                                    Pacientes = grupo.Count(),
                                    SucursalId = grupo.Key.SucursalId,
                                    Sucursal = grupo.Key.Sucursal,
-                                   Ingresos = grupo.Sum(x => x.TotalEstudios),
-                                   Expedientes = grupo.GroupBy(x => x.Expediente).Count(),
+                                   Ingresos = grupo.Sum(x => x.Total),
+                                   Expedientes = grupo.GroupBy(x => x.Solicitud).Count(),
                                };
                            }
                            );
@@ -228,7 +228,7 @@ namespace Service.Report.Mapper
             return results;
         }
         
-        public static InvoiceServicesDto ToServiceCostGroupDto(this IEnumerable<ServiceUpdateDto> model)
+        public static InvoiceServicesDto ToServiceCostGroupDto(this IEnumerable<ServiceUpdateDto> model, DateTime month)
         {
             if (model == null) return null;
 
@@ -237,6 +237,7 @@ namespace Service.Report.Mapper
             var totals = new InvoiceServicesDto
             {
                 Servicios = services,
+                Fecha = month,
                 TotalMensual = services.Sum(x => x.TotalSucursales),
             };
 

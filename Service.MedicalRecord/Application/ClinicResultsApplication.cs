@@ -36,6 +36,7 @@ using ClosedXML.Report.Utils;
 using Service.MedicalRecord.Dtos.WeeClinic;
 using Service.MedicalRecord.Dtos.Appointment;
 using System.Text.Json;
+using Service.MedicalRecord.Dtos.General;
 using MassTransit.Transports;
 
 namespace Service.MedicalRecord.Application
@@ -81,7 +82,7 @@ namespace Service.MedicalRecord.Application
             _publishEndpoint = publishEndpoint;
         }
 
-        public async Task<(byte[] file, string fileName)> ExportList(ClinicResultSearchDto search)
+        public async Task<(byte[] file, string fileName)> ExportList(GeneralFilterDto search)
         {
             var studies = await GetAll(search);
 
@@ -241,7 +242,7 @@ namespace Service.MedicalRecord.Application
             return (template.ToByteArray(), $"Gráfica Curva de Tolerancia a Glucosa.xlsx");
         }
 
-        public async Task<List<ClinicResultsDto>> GetAll(ClinicResultSearchDto search)
+        public async Task<List<ClinicResultsDto>> GetAll(GeneralFilterDto search)
         {
             var clinicResults = await _repository.GetAll(search);
             if (clinicResults != null)
