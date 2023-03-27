@@ -1,0 +1,17 @@
+﻿{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/LabRamos/services/sender/api/notification",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+
+        }
+      ],
+      "UpstreamPathTemplate": "/api/notification",
+      "UpstreamHttpMethod": [ "POST" ]
+    }
+
+  ]
+}
