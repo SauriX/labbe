@@ -68,7 +68,7 @@ namespace Service.Report.Mapper
                     Solicitud = request.Solicitud,
                     Paciente = request.NombreCompleto,
                     Medico = request.Medico,
-                    ClaveMedico = request.Medico,
+                    ClaveMedico = request.ClaveMedico,
                     Empresa = request.Compañia,
                     Estudio = studies.GenericStudies(),
                     PrecioEstudios = request.PrecioEstudios,

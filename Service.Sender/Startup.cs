@@ -12,6 +12,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Service.Sender.Application;
+using Service.Sender.Application.IApplication;
 using Service.Sender.Consumers;
 using Service.Sender.Consumers.Error;
 using Service.Sender.Context;
@@ -200,7 +202,9 @@ namespace Service.Sender
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IWhatsappService, WhatsappService>();
             services.AddScoped<IEmailConfigurationService, EmailConfigurationService>();
+            services.AddScoped<INotificationHistoryApplication, NotificationHistoryApplication>();
 
+            services.AddScoped<INotificationStoryRepository,NotificationStoryRepository>();
             services.AddScoped<IEmailConfigurationRepository, EmailConfigurationRepository>();
         }
 

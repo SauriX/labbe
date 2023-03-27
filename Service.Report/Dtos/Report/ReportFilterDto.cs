@@ -20,6 +20,7 @@ namespace Service.Report.Dtos
         public string User { get; set; }
         public List<int> Servicios { get; set; }
         public List<string> Ciudad { get; set; }
+        public string TipoFecha { get; set; }
     }
 
     public class ReportModalFilterDto
@@ -28,5 +29,6 @@ namespace Service.Report.Dtos
         public List<string> Ciudad { get; set; }
         public List<Guid> SucursalId { get; set; }
         public List<DateTime> Fecha { get; set; }
+        public DateTime Mensual { get; set; }
     }
 }
