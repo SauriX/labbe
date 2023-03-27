@@ -32,6 +32,7 @@ using VT = Shared.Dictionary.Catalogs.ValueType;
 using Service.MedicalRecord.Dtos.Catalogs;
 using COMPANIES = Shared.Dictionary.Catalogs.Company;
 using MEDICS = Shared.Dictionary.Catalogs.Medic;
+using Service.MedicalRecord.Dtos.General;
 
 namespace Service.MedicalRecord.Application
 {
@@ -72,7 +73,7 @@ namespace Service.MedicalRecord.Application
             _requestApplication = requestApplication;
         }
 
-        public async Task<IEnumerable<QuotationInfoDto>> GetByFilter(QuotationFilterDto filter)
+        public async Task<IEnumerable<QuotationInfoDto>> GetByFilter(GeneralFilterDto filter)
         {
             var quotations = await _repository.GetByFilter(filter);
 

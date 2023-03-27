@@ -4,6 +4,7 @@ using Service.MedicalRecord.Context;
 using Service.MedicalRecord.Domain.MedicalRecord;
 using Service.MedicalRecord.Domain.TaxData;
 using Service.MedicalRecord.Dtos;
+using Service.MedicalRecord.Dtos.General;
 using Service.MedicalRecord.Dtos.MedicalRecords;
 using Service.MedicalRecord.Mapper;
 using Service.MedicalRecord.Repository.IRepository;
@@ -30,44 +31,45 @@ namespace Service.MedicalRecord.Repository
             return await expedientes.ToListAsync();
         }
 
-        public async Task<List<Domain.MedicalRecord.MedicalRecord>> GetNow(MedicalRecordSearch search)
+        public async Task<List<Domain.MedicalRecord.MedicalRecord>> GetNow(GeneralFilterDto search)
 
         {
             var records = _context.CAT_Expedientes.AsQueryable();
 
-
-
-
-            if (!string.IsNullOrEmpty(search.expediente))
+            if ((!string.IsNullOrWhiteSpace(search.Expediente)) && (search.SucursalId != null || search.SucursalId.Count() >= 0))
             {
-                records = records.Where(x => x.Expediente.Contains(search.expediente) ||
-                (x.NombrePaciente + " " + x.PrimerApellido + " " + x.SegundoApellido).ToLower().Contains(search.expediente.ToLower()));
+                records = records.Where(x => search.SucursalId.Contains(x.IdSucursal));
             }
 
-            if (search.fechaNacimiento.Date != DateTime.MinValue.Date)
+            if (!string.IsNullOrEmpty(search.Expediente))
             {
-                records = records.Where(x => x.FechaDeNacimiento.Date == search.fechaNacimiento.Date);
+                records = records.Where(x => x.Expediente.Contains(search.Expediente) ||
+                (x.NombrePaciente + " " + x.PrimerApellido + " " + x.SegundoApellido).ToLower().Contains(search.Expediente.ToLower()));
             }
 
-            if (search.fechaNacimiento.Date == DateTime.MinValue.Date && string.IsNullOrEmpty(search.telefono) && string.IsNullOrWhiteSpace(search.expediente) &&
-                search.fechaAlta != null && search.fechaAlta.Length > 1 &&
-                search.fechaAlta[0].Date != DateTime.MinValue.Date && search.fechaAlta[1].Date != DateTime.MinValue.Date)
+            if (search.FechaNacimiento.Date != DateTime.MinValue.Date)
             {
-                records = records.Where(x => x.FechaCreo.Date >= search.fechaAlta[0].Date && x.FechaCreo.Date <= search.fechaAlta[1].Date);
+                records = records.Where(x => x.FechaDeNacimiento.Date == search.FechaNacimiento.Date);
             }
 
-            if (search.sucursal != null && search.sucursal.Count() > 0)
+            if (search.FechaNacimiento.Date == DateTime.MinValue.Date && string.IsNullOrEmpty(search.Telefono) && string.IsNullOrWhiteSpace(search.Expediente) &&
+                search.Fecha != null)
             {
-                records = records.Where(x => search.sucursal.Contains(x.IdSucursal.ToString()));
+                records = records.Where(x => x.FechaCreo.Date >= search.Fecha.First().Date && x.FechaCreo.Date <= search.Fecha.Last().Date);
+            }
+
+            if (search.SucursalId != null && search.SucursalId.Count > 0)
+            {
+                records = records.Where(x => search.SucursalId.Contains(x.IdSucursal));
             }
             if (!string.IsNullOrEmpty(search.Correo))
             {
                 records = records.Where(x => x.Correo == search.Correo);
             }
 
-            if (!string.IsNullOrEmpty(search.telefono))
+            if (!string.IsNullOrEmpty(search.Telefono))
             {
-                records = records.Where(x => x.Telefono == search.telefono);
+                records = records.Where(x => x.Telefono == search.Telefono);
             }
 
             return records.ToList();
@@ -90,7 +92,7 @@ namespace Service.MedicalRecord.Repository
 
             return taxData;
         }
-        
+
 
 
         public async Task<Domain.MedicalRecord.MedicalRecord> Find(Guid id)
@@ -192,7 +194,7 @@ namespace Service.MedicalRecord.Repository
             _context.CAT_Expedientes.Update(expediente);
             await _context.SaveChangesAsync();
 
-        } 
+        }
         public async Task UpdateObservation(Domain.MedicalRecord.MedicalRecord expediente)
         {
             _context.CAT_Expedientes.Update(expediente);

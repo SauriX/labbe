@@ -6,12 +6,13 @@ using Service.MedicalRecord.Dictionary;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using Service.MedicalRecord.Dtos.General;
 
 namespace Service.MedicalRecord.Mapper
 {
     public static class SamplingMapper
     {
-        public static List<SamplingListDto> ToSamplingListDto(this List<Request> model, RequestedStudySearchDto search)
+        public static List<SamplingListDto> ToSamplingListDto(this List<Request> model, GeneralFilterDto search)
         {
             if (model == null) return null;
 

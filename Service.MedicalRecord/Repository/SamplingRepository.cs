@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Service.MedicalRecord.Context;
 using Service.MedicalRecord.Dictionary;
 using Service.MedicalRecord.Domain.Request;
+using Service.MedicalRecord.Dtos.General;
 using Service.MedicalRecord.Dtos.RequestedStudy;
 using Service.MedicalRecord.Repository.IRepository;
 using System;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Service.MedicalRecord.Repository
 {
-    public class SamplingRepository:ISamplingRepository
+    public class SamplingRepository : ISamplingRepository
     {
         private readonly ApplicationDbContext _context;
 
@@ -29,7 +30,7 @@ namespace Service.MedicalRecord.Repository
             return request;
         }
 
-        public async Task<List<Request>> GetAll(RequestedStudySearchDto search)
+        public async Task<List<Request>> GetAll(GeneralFilterDto search)
         {
             var report = _context.CAT_Solicitud.Where(x => x.Estudios.Count > 0)
                 .Include(x => x.Expediente)
@@ -39,7 +40,7 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Compañia)
                 .AsQueryable();
 
-            if ((string.IsNullOrWhiteSpace(search.Buscar) && (search.SucursalId == null || !search.SucursalId.Any()))&& search.SucursalesId.Any() )
+            if ((string.IsNullOrWhiteSpace(search.Buscar) && (search.SucursalId == null || !search.SucursalId.Any())) && search.SucursalesId.Any())
             {
                 report = report.Where(x => search.SucursalesId.Contains(x.SucursalId));
             }
@@ -57,13 +58,13 @@ namespace Service.MedicalRecord.Repository
             {
                 report = report.Where(x => search.SucursalId.Contains(x.SucursalId));
             }
-            if (search.Medico != null && search.Medico.Count > 0)
+            if (search.MedicoId != null && search.MedicoId.Count > 0)
             {
-                report = report.Where(x => search.Medico.Contains(x.MedicoId.ToString()));
+                report = report.Where(x => search.MedicoId.Contains(x.MedicoId));
             }
-            if (search.Compañia != null && search.Compañia.Count > 0)
+            if (search.CompañiaId != null && search.CompañiaId.Count > 0)
             {
-                report = report.Where(x => search.Compañia.Contains(x.CompañiaId.ToString()));
+                report = report.Where(x => search.CompañiaId.Contains(x.CompañiaId));
             }
             if (search.Estatus != null && search.Estatus.Count > 0)
             {

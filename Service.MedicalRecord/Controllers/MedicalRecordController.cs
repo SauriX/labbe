@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Dtos;
+using Service.MedicalRecord.Dtos.General;
 using Service.MedicalRecord.Dtos.MedicalRecords;
 using Service.MedicalRecord.Dtos.Reports;
 using Shared.Dictionary;
@@ -31,8 +32,9 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("now")]
         //[Authorize(Policies.Access)]
-        public async Task<List<MedicalRecordsListDto>> GetNow(MedicalRecordSearch search = null)
+        public async Task<List<MedicalRecordsListDto>> GetNow(GeneralFilterDto search = null)
         {
+            search.SucursalesId = (List<Guid>)HttpContext.Items["sucursales"];
             return await _service.GetNow(search);
         }
 
@@ -123,7 +125,7 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("export/list")]
         [Authorize(Policies.Download)]
-        public async Task<IActionResult> ExportListPriceList(MedicalRecordSearch search = null)
+        public async Task<IActionResult> ExportListPriceList(GeneralFilterDto search = null)
         {
             var (file, fileName) = await _service.ExportList(search);
             return File(file, MimeType.XLSX, fileName);

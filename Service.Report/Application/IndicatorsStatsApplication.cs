@@ -257,7 +257,7 @@ namespace Service.Report.Application
 
                 if (sampleBudget != null)
                 {
-                    item.CostoTomaCalculado = item.Expedientes * sampleBudget.CostoToma;
+                    item.CostoTomaCalculado = data.Count() * sampleBudget.CostoToma;
                 }
                 else
                 {
@@ -294,7 +294,7 @@ namespace Service.Report.Application
 
                     if (sampleBudget != null)
                     {
-                        item.CostoTomaCalculado = item.Expedientes * sampleBudget.CostoToma;
+                        item.CostoTomaCalculado = data.Count() * sampleBudget.CostoToma;
                     }
                 }
             }

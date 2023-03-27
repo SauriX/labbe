@@ -1,4 +1,5 @@
 ﻿using Integration.WeeClinic.Dtos;
+using Service.MedicalRecord.Dtos.General;
 using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.WeeClinic;
 using System;
@@ -9,7 +10,7 @@ namespace Service.MedicalRecord.Application.IApplication
 {
     public interface IRequestApplication
     {
-        Task<IEnumerable<RequestInfoDto>> GetByFilter(RequestFilterDto filter);
+        Task<IEnumerable<RequestInfoDto>> GetByFilter(GeneralFilterDto filter);
         Task<RequestDto> GetById(Guid recordId, Guid requestId);
         Task<RequestGeneralDto> GetGeneral(Guid recordId, Guid requestId);
         Task<RequestStudyUpdateDto> GetStudies(Guid recordId, Guid requestId);

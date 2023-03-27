@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.MedicalRecord.Application.IApplication;
+using Service.MedicalRecord.Dtos.General;
 using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.RportStudy;
 using Shared.Dictionary;
@@ -26,7 +27,7 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("filter")]
         [Authorize(Policies.Access)]
-        public async Task<List<ReportRequestListDto>> GetByFilter(RequestFilterDto filter)
+        public async Task<List<ReportRequestListDto>> GetByFilter(GeneralFilterDto filter)
         {
             filter.SucursalesId = (List<Guid>)HttpContext.Items["sucursales"];
             return await _service.GetByFilter(filter);
@@ -34,7 +35,7 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("report")]
         [Authorize(Policies.Download)]
-        public async Task<IActionResult> ExportPdf(RequestFilterDto filter)
+        public async Task<IActionResult> ExportPdf(GeneralFilterDto filter)
         {
 
             filter.SucursalesId = (List<Guid>)HttpContext.Items["sucursales"];
@@ -47,7 +48,7 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("export/getList")]
         [Authorize(Policies.Download)]
-        public async Task<IActionResult> ExportStudyExcel(RequestFilterDto search)
+        public async Task<IActionResult> ExportStudyExcel(GeneralFilterDto search)
         {
             search.SucursalesId = (List<Guid>)HttpContext.Items["sucursales"];
             var (file, fileName) = await _service.ExportList(search);
