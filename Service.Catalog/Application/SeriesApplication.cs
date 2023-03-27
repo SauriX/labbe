@@ -224,7 +224,7 @@ namespace Service.Catalog.Application
             var branch = await _branchRepository.GetById(serie.Expedicion.SucursalId);
             var sameBranch = data.SucursalId.ToString() == serie.Expedicion.SucursalId;
 
-            if (branch != null)
+            if (branch == null)
             {
                 throw new CustomException(HttpStatusCode.BadRequest, "Debe asignar una sucursal");
             }
