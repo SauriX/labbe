@@ -24,7 +24,7 @@ namespace Service.Catalog.Repository
 
         public async Task<List<PriceList>> GetAll(string search)
         {
-            var prices = _context.CAT_ListaPrecio.AsQueryable();
+            var prices = _context.CAT_ListaPrecio.Include(x => x.Compañia).ThenInclude(x => x.Compañia).AsQueryable();
 
             search = search.Trim().ToLower();
 
@@ -125,7 +125,13 @@ namespace Service.Catalog.Repository
 
         public async Task<List<PriceList>> GetOptions()
         {
-            var prices = await _context.CAT_ListaPrecio.Where(x => x.Activo).OrderBy(x => x.Nombre).ToListAsync();
+            var prices = await _context.CAT_ListaPrecio
+                .Include(x => x.Compañia).ThenInclude(x => x.Compañia)
+                .Where(x => x.Compañia.Any(y => y.Compañia.ProcedenciaId != COMPAÑIA))
+                .Where(x => x.Activo)
+                .OrderBy(x => x.Nombre)
+                .ToListAsync();
+
 
             return prices;
         }
@@ -206,7 +212,7 @@ namespace Service.Catalog.Repository
         public async Task<List<Price_Company>> GetAllCompany(Guid companyId)
         {
             var asignado = await
-                (from company in _context.CAT_Compañia.Where(x => x.ProcedenciaId != COMPAÑIA)
+                (from company in _context.CAT_Compañia
                  join priceList in _context.CAT_ListaP_Compañia.Include(x => x.PrecioLista) on company.Id equals priceList.CompañiaId into ljPriceList
                  from pList in ljPriceList.DefaultIfEmpty()
                  select new { company, pList })
