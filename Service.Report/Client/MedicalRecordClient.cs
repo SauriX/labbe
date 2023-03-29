@@ -86,29 +86,10 @@ namespace Service.Report.Client
 
         public async Task<List<RequestInfo>> GetRequestByFilter(ReportFilterDto search)
         {
-            try
-            {
-                var json = JsonConvert.SerializeObject(search);
+            var url = $"{_configuration.GetValue<string>("ClientRoutes:MedicalRecord")}/api/reportdata/solicitudes/filter";
+            var response = await _client.PostAsJson<List<RequestInfo>>(url, search);
 
-                var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
-
-                var response = await _client.PostAsync($"{_configuration.GetValue<string>("ClientRoutes:MedicalRecord")}/api/reportdata/solicitudes/filter", stringContent);
-
-                if (response.IsSuccessStatusCode && response.StatusCode == HttpStatusCode.OK)
-                {
-                    return await response.Content.ReadFromJsonAsync<List<RequestInfo>>();
-                }
-
-                var error = await response.Content.ReadFromJsonAsync<ClientException>();
-
-                var ex = Exceptions.GetException(error);
-
-                throw ex;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            return response;
         }
 
         public async Task<List<RequestStudies>> GetStudiesByFilter(ReportFilterDto search)
