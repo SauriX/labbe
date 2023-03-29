@@ -59,6 +59,7 @@ namespace Service.MedicalRecord.Repository
         public async Task<List<Request>> GetAll(GeneralFilterDto search)
         {
             var report = _context.CAT_Solicitud.Where(x => x.Medico != null)
+                .OrderBy(x => x.FechaCreo)
                 .Where(x => x.Estudios != null)
                 .Include(x => x.Expediente)
                 .Include(x => x.Medico)
