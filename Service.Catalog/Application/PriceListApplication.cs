@@ -47,7 +47,7 @@ namespace Service.Catalog.Application
         {
             var prices = await _repository.GetAll(search);
 
-            return prices.ToPriceListListDto();
+            return prices.ToPriceListListDto(); ;
         }
 
         public async Task<IEnumerable<PriceListListDto>> GetActive()

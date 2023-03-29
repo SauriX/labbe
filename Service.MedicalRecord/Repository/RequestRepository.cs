@@ -45,9 +45,9 @@ namespace Service.MedicalRecord.Repository
                 .OrderBy(x => x.FechaCreo)
                 .AsQueryable();
 
-            if ((string.IsNullOrWhiteSpace(filter.Buscar)) && (filter.SucursalId == null || !filter.SucursalId.Any()))
+            if (!string.IsNullOrWhiteSpace(filter.Buscar) && filter.SucursalId != null && filter.SucursalId.Count > 0)
             {
-                requests = requests.Where(x => filter.SucursalesId.Contains(x.SucursalId));
+                requests = requests.Where(x => filter.SucursalId.Contains(x.SucursalId));
             }
 
             if (string.IsNullOrWhiteSpace(filter.Buscar) && filter.TipoFecha != null && filter.TipoFecha == 1 && filter.Fecha != null)

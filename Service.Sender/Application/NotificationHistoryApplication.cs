@@ -13,20 +13,23 @@ using System.Threading.Tasks;
 
 namespace Service.Sender.Application
 {
-    public class NotificationHistoryApplication: INotificationHistoryApplication
+    public class NotificationHistoryApplication : INotificationHistoryApplication
     {
         private readonly INotificationStoryRepository _repository;
-        public NotificationHistoryApplication(INotificationStoryRepository notificationStory) { 
+        public NotificationHistoryApplication(INotificationStoryRepository notificationStory)
+        {
             _repository = notificationStory;
         }
 
-        public async Task<List<NotificationContract>> getByFilter(NotificationFilterDto filter) { 
-        var notifications = await _repository.getByFilter(filter);
-            if (!notifications.Any()) {
-                throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
+        public async Task<List<NotificationContract>> getByFilter(NotificationFilterDto filter)
+        {
+            var notifications = await _repository.getByFilter(filter);
+            if (notifications.Any())
+            {
+                return notifications.toNotificationDto();
             }
-            return notifications.toNotificationDto();
-        
+
+            return null;
         }
     }
 }
