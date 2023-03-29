@@ -2,11 +2,13 @@
 {
     public class StudyTecDto
     {
-        public string? Instrucciones { get; set; }
-        public string? TipoMuestra { get; set; }
-        public int? DiasEstabilidad { get; set; }
-        public int? DiasRefrigeracion { get; set; }
-        public int? DiasEntrega { get; set; }
-        public string? Tapon { get; set; }
+        public string Clave { get; set; }
+        public string Nombre { get; set; }
+        public string Instrucciones { get; set; }
+        public string TipoMuestra { get; set; }
+        public string DiasEstabilidad { get; set; }
+        public string DiasRefrigeracion { get; set; }
+        public string DiasEntrega { get; set; }
+        public string Tapon { get; set; }
     }
 }

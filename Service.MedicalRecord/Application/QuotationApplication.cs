@@ -48,9 +48,6 @@ namespace Service.MedicalRecord.Application
         private readonly IRepository<Branch> _branchRepository;
         private readonly IRequestApplication _requestApplication;
 
-        private const byte PORCENTAJE = 1;
-        private const byte CANTIDAD = 2;
-
         public QuotationApplication(
             ITransactionProvider transaction,
             IQuotationRepository repository,
@@ -215,6 +212,9 @@ namespace Service.MedicalRecord.Application
             {
                 throw new CustomException(HttpStatusCode.BadRequest, "La cotización debe tener un expediente asignado");
             }
+
+            var filter = new PriceListInfoFilterDto { };
+            //var studies = await _catalogClient.GetStudiesInfo();
 
             var requestInfo = quotation.ToRequestConvertDto(userId, userName);
 
