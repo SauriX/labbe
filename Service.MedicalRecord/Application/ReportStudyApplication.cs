@@ -48,7 +48,7 @@ namespace Service.MedicalRecord.Application
             {
                 throw new CustomException(HttpStatusCode.NotFound);
             }
-            var test = request.toRequestList().ToList();
+
             return request.toRequestList().ToList();
         }
 
