@@ -81,5 +81,16 @@ namespace Service.Catalog.Repository
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task DeleteImage(Guid id,string clave) {
+            var image = await _context.CAT_Mantenimiento_Equipo_Images.FirstOrDefaultAsync(x => x.MantainId == id && x.Clave == clave);
+
+            if (image != null)
+            {
+                _context.CAT_Mantenimiento_Equipo_Images.Remove(image);
+
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }
