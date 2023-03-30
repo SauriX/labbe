@@ -73,6 +73,17 @@
       "UpstreamPathTemplate": "/api/mantain/order/{Id}",
       "UpstreamHttpMethod": [ "POST" ]
     },
-
+    {
+      "DownstreamPathTemplate": "/api/mantain/image/{Id}/{code}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/mantain/image/{Id}/{code}",
+      "UpstreamHttpMethod": [ "DELETE" ]
+    }
   ]
 }
