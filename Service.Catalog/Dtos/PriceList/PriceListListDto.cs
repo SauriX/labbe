@@ -11,6 +11,7 @@ namespace Service.Catalog.Dtos.PriceList
         public string Nombre { get; set; }
         public bool? Visibilidad { get; set; }
         public bool Activo { get; set; }
+        public string NombreCompañia { get; set; }
         public virtual ICollection<Price_Promotion> Promocion { get; set; }
         public virtual ICollection<PriceListCompanyDto> Compañia { get; set; }
         public virtual ICollection<PriceListBranchDto> Sucursales { get; set; }

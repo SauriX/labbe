@@ -36,7 +36,7 @@ namespace Service.MedicalRecord.Repository
         {
             var records = _context.CAT_Expedientes.AsQueryable();
 
-            if ((!string.IsNullOrWhiteSpace(search.Expediente)) && (search.SucursalId != null || search.SucursalId.Count() >= 0))
+            if (!string.IsNullOrWhiteSpace(search.Expediente) && search.SucursalId != null && search.SucursalId.Count > 0)
             {
                 records = records.Where(x => search.SucursalId.Contains(x.IdSucursal));
             }
