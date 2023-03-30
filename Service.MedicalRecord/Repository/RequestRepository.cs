@@ -107,7 +107,7 @@ namespace Service.MedicalRecord.Repository
                 requests = requests.Where(x => x.Estudios.Any(y => filter.Departamento.Contains(y.DepartamentoId)));
             }
 
-            if (filter.Expediente != null)
+            if (!string.IsNullOrWhiteSpace(filter.Expediente))
             {
                 requests = requests.Where(x => x.Expediente.Expediente == filter.Expediente);
             }
