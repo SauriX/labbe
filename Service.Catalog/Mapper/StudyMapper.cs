@@ -55,6 +55,7 @@ namespace Service.Catalog.Mapper
                 Metodo = x.Metodo?.Nombre,
                 Orden = x.Orden,
                 Clave = x.Clave,
+                Nombre = x.Nombre,
                 Tipo = x.SampleType?.Nombre
             });
         }
