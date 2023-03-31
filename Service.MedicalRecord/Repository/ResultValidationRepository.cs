@@ -34,6 +34,7 @@ namespace Service.MedicalRecord.Repository
         public async Task<List<Request>> GetAll(GeneralFilterDto search)
             {
             var report = _context.CAT_Solicitud.Where(x => x.Estudios.Any(y => y.EstatusId == Status.RequestStudy.Capturado || y.EstatusId == Status.RequestStudy.Validado))
+                .OrderBy(x => x.FechaCreo)
                 .Include(x => x.Expediente)
                 .Include(x => x.Medico)
                 .Include(x => x.Estudios).ThenInclude(x => x.Estatus)
@@ -43,7 +44,7 @@ namespace Service.MedicalRecord.Repository
 
             if ((!string.IsNullOrWhiteSpace(search.Buscar)) && (search.SucursalId != null || search.SucursalId.Count() >= 0))
             {
-                report = report.Where(x => search.SucursalesId.Contains(x.SucursalId));
+                report = report.Where(x => search.SucursalId.Contains(x.SucursalId));
             }
 
             if (!string.IsNullOrEmpty(search.Buscar))
@@ -104,7 +105,7 @@ namespace Service.MedicalRecord.Repository
                 report = report.Where(x => x.Estudios.Any(y => search.Departamento.Contains(y.DepartamentoId)));
             }
 
-            if (search.Area != null && search.Area[0] > 0)
+            if (search.Area != null && search.Area.Count > 0)
             {
                 report = report.Where(x => x.Estudios.Any(y => search.Area[0] == y.AreaId));
             }
