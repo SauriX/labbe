@@ -85,7 +85,9 @@ namespace Service.MedicalRecord.Mapper
                FechaCreacion = x.FechaCreo.ToString("dd/MM/yyyy"),
                Documento = $"{x.Serie}-{x.Consecutivo}",
                Monto = x.CantidadTotal,
-               Cliente = ""
+               Cliente = "",
+               FacturapiId = x.FacturapiId,
+               Tipo = x.TipoFactura
             }).ToList();
         }
 
@@ -163,7 +165,7 @@ namespace Service.MedicalRecord.Mapper
                 IVA = IVA,
                 FechaCreo = DateTime.Now,
                 Nombre = request.Expediente.NombreCompleto,
-                Consecutivo = 0,
+                Consecutivo = Convert.ToInt32(model.SerieNumero),
                 //BancoId = model.BancoId,
                 ClaveExterna = "PARTICULARES",
                 //DiasCredito = model.DiasCredito,

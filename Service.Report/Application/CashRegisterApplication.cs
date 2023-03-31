@@ -17,17 +17,19 @@ namespace Service.Report.Application
     public class CashRegisterApplication : BaseApplication, ICashRegisterApplication
     {
         public readonly IReportRepository _repository;
+        private readonly IMedicalRecordClient _medicalRecordService;
         private readonly IPdfClient _pdfClient;
 
-        public CashRegisterApplication(IReportRepository repository, IPdfClient pdfClient, IRepository<Branch> branchRepository) : base(branchRepository)
+        public CashRegisterApplication(IReportRepository repository, IMedicalRecordClient medicalRecordService, IPdfClient pdfClient, IRepository<Branch> branchRepository) : base(branchRepository)
         {
+            _medicalRecordService = medicalRecordService;
             _repository = repository;
             _pdfClient = pdfClient;
         }
 
         public async Task<CashDto> GetByFilter(ReportFilterDto filter)
         {
-            var data = await _repository.GetPaymentByFilter(filter);
+            var data = await _medicalRecordService.GetRequestPaymentByFilter(filter);
             var results = data.ToCashRegisterDto();
 
             return results;
@@ -46,11 +48,12 @@ namespace Service.Report.Application
                 new Col("A cuenta", ParagraphAlignment.Right, "C"),
                 new Col("Efectivo", ParagraphAlignment.Right),
                 new Col("TDC", ParagraphAlignment.Right, "C"),
-                new Col("Tranf. E", ParagraphAlignment.Right, "C"),
+                new Col("Transf. E", ParagraphAlignment.Right, "C"),
                 new Col("Cheque", ParagraphAlignment.Right, "C"),
                 new Col("TDD", ParagraphAlignment.Right, "C"),
                 new Col("PP", ParagraphAlignment.Right),
-                new Col("Hora", ParagraphAlignment.Left),
+                new Col("Otro método", ParagraphAlignment.Right, "C"),
+                new Col("Fecha", ParagraphAlignment.Left),
                 new Col("Usuario", ParagraphAlignment.Left),
                 new Col("Saldo", ParagraphAlignment.Right, "C"),
                 new Col("Compañía", ParagraphAlignment.Left),
@@ -65,12 +68,13 @@ namespace Service.Report.Application
                 { "A cuenta", x.ACuenta },
                 { "Efectivo", x.Efectivo },
                 { "TDC", x.TDC },
-                { "Tranf. E", x.Transferencia },
+                { "Transf. E", x.Transferencia },
                 { "Cheque", x.Cheque },
                 { "TDD", x.TDD },
                 { "PP", x.PP },
-                { "Hora", x.Fecha},
-                { "Usuario", x.UsuarioModifico},
+                { "Otro método", x.OtroMetodo },
+                { "Fecha", x.Fecha},
+                { "Usuario", x.UsuarioRegistra},
                 { "Saldo", x.Saldo},
                 { "Compañía", x.Empresa},
             }).ToList();
@@ -84,12 +88,13 @@ namespace Service.Report.Application
                 { "A cuenta", x.ACuenta },
                 { "Efectivo", x.Efectivo },
                 { "TDC", x.TDC },
-                { "Tranf. E", x.Transferencia },
+                { "Transf. E", x.Transferencia },
                 { "Cheque", x.Cheque },
                 { "TDD", x.TDD },
                 { "PP", x.PP },
-                { "Hora", x.Fecha},
-                { "Usuario", x.UsuarioModifico},
+                { "Otro método", x.OtroMetodo },
+                { "Fecha", x.Fecha},
+                { "Usuario", x.UsuarioRegistra},
                 { "Saldo", x.Saldo},
                 { "Compañía", x.Empresa},
             }).ToList();
@@ -103,12 +108,13 @@ namespace Service.Report.Application
                 { "A cuenta", x.ACuenta },
                 { "Efectivo", x.Efectivo },
                 { "TDC", x.TDC },
-                { "Tranf. E", x.Transferencia },
+                { "Transf. E", x.Transferencia },
                 { "Cheque", x.Cheque },
                 { "TDD", x.TDD },
                 { "PP", x.PP },
-                { "Hora", x.Fecha},
-                { "Usuario", x.UsuarioModifico},
+                { "Otro método", x.OtroMetodo },
+                { "Fecha", x.Fecha},
+                { "Usuario", x.UsuarioRegistra},
                 { "Saldo", x.Saldo},
                 { "Compañía", x.Empresa},
             }).ToList();
@@ -120,6 +126,7 @@ namespace Service.Report.Application
                 new Col("Transf. E", ParagraphAlignment.Center, "C"),
                 new Col("Cheque", ParagraphAlignment.Center, "C"),
                 new Col("TDD", ParagraphAlignment.Center, "C"),
+                new Col("Otro método", ParagraphAlignment.Center, "C"),
                 new Col("Subtotal", ParagraphAlignment.Center, "C"),
                 new Col("PP", ParagraphAlignment.Center),
             };
@@ -131,6 +138,7 @@ namespace Service.Report.Application
                 { "Transf. E", requestData.CashTotal.SumaTransferencia},
                 { "Cheque", requestData.CashTotal.SumaCheque},
                 { "TDD", requestData.CashTotal.SumaTDD},
+                { "Otro método", requestData.CashTotal.SumaOtroMetodo},
                 { "Subtotal", requestData.CashTotal.Subtotal},
                 { "PP", requestData.CashTotal.SumaPP}
             };

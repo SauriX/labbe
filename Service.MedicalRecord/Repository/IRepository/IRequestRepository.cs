@@ -1,5 +1,6 @@
 ﻿using Service.MedicalRecord.Domain.Invoice;
 using Service.MedicalRecord.Domain.Request;
+using Service.MedicalRecord.Dtos.General;
 using Service.MedicalRecord.Dtos.InvoiceCompany;
 using Service.MedicalRecord.Dtos.Request;
 using System;
@@ -11,7 +12,7 @@ namespace Service.MedicalRecord.Repository.IRepository
     public interface IRequestRepository
     {
         Task<Request> FindAsync(Guid id);
-        Task<List<Request>> GetByFilter(RequestFilterDto filter);
+        Task<List<Request>> GetByFilter(GeneralFilterDto filter);
         Task<Request> GetById(Guid id);
         Task<string> GetLastCode(Guid branchId, string date);
         Task<string> GetLastTagCode(string date);

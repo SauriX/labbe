@@ -61,7 +61,7 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/quotation/email/{quotationId}/{email}",
+      "DownstreamPathTemplate": "/api/quotation/email/{quotationId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -69,11 +69,11 @@
           "Port": 24048
         }
       ],
-      "UpstreamPathTemplate": "/api/quotation/email/{quotationId}/{email}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamPathTemplate": "/api/quotation/email/{quotationId}",
+      "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/quotation/whatsapp/{quotationId}/{phone}",
+      "DownstreamPathTemplate": "/api/quotation/whatsapp/{quotationId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -81,8 +81,8 @@
           "Port": 24048
         }
       ],
-      "UpstreamPathTemplate": "/api/quotation/whatsapp/{quotationId}/{phone}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamPathTemplate": "/api/quotation/whatsapp/{quotationId}",
+      "UpstreamHttpMethod": [ "POST" ]
     },
     {
       "DownstreamPathTemplate": "/api/quotation",

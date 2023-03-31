@@ -12,6 +12,13 @@ namespace Service.MedicalRecord.Mapper
 {
     public static class ReportMapper
     {
+        private const int EFECTIVO = 1;
+        private const int CHEQUE = 2;
+        private const int TRANSF = 3;
+        private const int TDC = 4;
+        private const int PP = 5;
+        private const int TDD = 18;
+
         public static IEnumerable<BudgetStatsDto> ToQuotationReportDto(this IEnumerable<Quotation> model)
         {
             if (model == null) return null;
@@ -88,12 +95,9 @@ namespace Service.MedicalRecord.Mapper
                 var pack = request.Paquetes;
 
                 var priceStudies = studies.Sum(x => x.Precio - (x.Precio * x.Paquete?.DescuentoPorcentaje ?? 0) - (x.Descuento == 0 ? 0 : x.Descuento));
-                var descount = studies.Sum(x => x.Descuento);
                 var promotion = studies.Sum(x => x.Descuento) + pack.Sum(x => x.Descuento);
-                var porcentualDescount = (descount * 100) / priceStudies;
-                var descRequest = descount / 100;
                 var charge = request.Cargo;
-                var porcentualCharge = (charge * 100) / priceStudies;
+                var porcentualCharge = request.TotalEstudios != 0 ? (charge * 100) / request.TotalEstudios : 0;
 
                 return new ReportInfoDto
                 {
@@ -122,12 +126,12 @@ namespace Service.MedicalRecord.Mapper
                     Parcialidad = request.Parcialidad,
                     TotalEstudios = request.TotalEstudios,
                     Descuento = request.Descuento,
-                    DescuentoPorcentual = porcentualDescount,
+                    DescuentoPorcentual = 0m,
                     Promocion = promotion,
                     Cargo = request.Cargo,
                     CargoPorcentual = porcentualCharge,
                     Copago = request.Copago,
-                    PrecioEstudios = priceStudies,
+                    PrecioEstudios = request.TotalEstudios,
                     Total = request.Total,
                     Fecha = request.FechaCreo,
                     Estudios = studies.RequestStudies(),
@@ -167,6 +171,53 @@ namespace Service.MedicalRecord.Mapper
                     Fecha = x.Solicitud.FechaCreo,
                 },
             }).ToList();
+        }
+
+        public static List<RequestPaymentStatsDto> RequestPayment(this IEnumerable<RequestPayment> payments, string user)
+        {
+
+            var paymentStats = payments
+            .GroupBy(p => p.SolicitudId)
+            .Select(g => new RequestPaymentStatsDto
+            {
+                SolicitudId = g.Key,
+                Efectivo = g.Where(x => x.FormaPagoId == EFECTIVO).Sum(x => x.Cantidad),
+                Cheque = g.Where(x => x.FormaPagoId == CHEQUE).Sum(x => x.Cantidad),
+                Transferencia = g.Where(x => x.FormaPagoId == TRANSF).Sum(x => x.Cantidad),
+                TDC = g.Where(x => x.FormaPagoId == TDC).Sum(x => x.Cantidad),
+                PP = g.Where(x => x.FormaPagoId == PP).Sum(x => x.Cantidad),
+                TDD = g.Where(x => x.FormaPagoId == TDD).Sum(x => x.Cantidad),
+                OtroMetodo = g.Where(x => x.FormaPagoId != EFECTIVO && x.FormaPagoId != CHEQUE && x.FormaPagoId != TRANSF && x.FormaPagoId != TDC && x.FormaPagoId != PP && x.FormaPagoId != TDD).Sum(x => x.Cantidad)
+            })
+            .ToList();
+
+            paymentStats.ForEach(ps =>
+            {
+                var solicitud = payments.LastOrDefault(p => p.SolicitudId == ps.SolicitudId)?.Solicitud;
+                var date = payments.LastOrDefault().FechaPago;
+
+                if (solicitud != null)
+                {
+                    ps.Solicitud = solicitud.Clave;
+                    ps.FechaSolicitud = solicitud.FechaCreo;
+                    ps.NombreCompleto = solicitud.Expediente?.NombreCompleto;
+                    ps.Saldo = solicitud.Saldo;
+                    ps.FormaPagoId = ps.FormaPagoId;
+                    ps.FormaPago = ps.FormaPago;
+                    ps.FechaPago = ps.FechaPago;
+                    ps.EstatusId = ps.EstatusId;
+                    ps.FacturaId = ps.FacturaId;
+                    ps.FechaPago = date;
+                    ps.Factura = ps.Factura;
+                    ps.Estatus = solicitud.Estatus?.Nombre;
+                    ps.CompañiaId = (Guid)solicitud.CompañiaId;
+                    ps.Compañia = solicitud.Compañia?.Nombre;
+                    ps.Total = solicitud.Total;
+                    ps.UsuarioRegistra = user;
+                }
+            });
+
+            return paymentStats;
         }
     }
 }

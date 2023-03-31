@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.MedicalRecord.Application.IApplication;
+using Service.MedicalRecord.Dtos.General;
 using Service.MedicalRecord.Dtos.MassSearch;
 using Shared.Dictionary;
 using System;
@@ -23,7 +24,7 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("GetByFilter")]
         [Authorize(Policies.Access)]
-        public async Task<MassSearchInfoDto> GetByFilter(MassSearchFilterDto filter)
+        public async Task<MassSearchInfoDto> GetByFilter(GeneralFilterDto filter)
         {
             filter.SucursalesId = (List<Guid>)HttpContext.Items["sucursales"];
             return await _service.GetByFilter(filter);
@@ -31,7 +32,7 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("GetAllCaptureResults")]
         [Authorize(Policies.Access)]
-        public async Task<List<RequestsInfoDto>> GetAllCaptureResults(DeliverResultsFilterDto search)
+        public async Task<List<RequestsInfoDto>> GetAllCaptureResults(GeneralFilterDto search)
         {
             search.SucursalesId = (List<Guid>)HttpContext.Items["sucursales"];
             var clinicResults = await _service.GetAllCaptureResults(search);
@@ -39,7 +40,7 @@ namespace Service.MedicalRecord.Controllers
         }
         [HttpPost("list")]
         [Authorize(Policies.Download)]
-        public async Task<IActionResult> ExportResultsExcel(DeliverResultsFilterDto search)
+        public async Task<IActionResult> ExportResultsExcel(GeneralFilterDto search)
         {
             search.SucursalesId = (List<Guid>)HttpContext.Items["sucursales"];
             var (file, fileName) = await _service.ExportList(search);
@@ -48,7 +49,7 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("download/pdf")]
         [Authorize(Policies.Download)]
-        public async Task<IActionResult> ExportResultsPdf(MassSearchFilterDto filter)
+        public async Task<IActionResult> ExportResultsPdf(GeneralFilterDto filter)
         {
             filter.SucursalesId = (List<Guid>)HttpContext.Items["sucursales"];
             var file = await _service.DownloadResultsPdf(filter);

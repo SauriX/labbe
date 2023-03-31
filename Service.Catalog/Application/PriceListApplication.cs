@@ -1,7 +1,11 @@
 ﻿using ClosedXML.Excel;
 using ClosedXML.Report;
+using EventBus.Messages.Common;
+using MassTransit;
 using Service.Catalog.Application.IApplication;
+using Service.Catalog.Client.IClient;
 using Service.Catalog.Dictionary;
+using Service.Catalog.Dtos.Notifications;
 using Service.Catalog.Dtos.Common;
 using Service.Catalog.Dtos.PriceList;
 using Service.Catalog.Mapper;
@@ -24,21 +28,26 @@ namespace Service.Catalog.Application
         private readonly IPriceListRepository _repository;
         private readonly IPromotionRepository _promotionRepository;
         private readonly IStudyRepository _studyRepository;
+        private readonly IPublishEndpoint _publishEndpoint;
+        private readonly INotificationsRepository _notificationsRepository;
+        private object notification;
         const int PATOLOGIA = 3;
         const int IMAGENOLOGIA = 2;
 
-        public PriceListApplication(IPriceListRepository repository, IPromotionRepository promotionRepository, IStudyRepository studyRepository)
+        public PriceListApplication(IPriceListRepository repository, IPromotionRepository promotionRepository, IStudyRepository studyRepository, IPublishEndpoint publishEndpoint, INotificationsRepository notifications )
         {
             _repository = repository;
             _promotionRepository = promotionRepository;
             _studyRepository = studyRepository;
+            _publishEndpoint = publishEndpoint;
+            _notificationsRepository = notifications;
         }
 
         public async Task<IEnumerable<PriceListListDto>> GetAll(string search)
         {
             var prices = await _repository.GetAll(search);
 
-            return prices.ToPriceListListDto();
+            return prices.ToPriceListListDto(); ;
         }
 
         public async Task<IEnumerable<PriceListListDto>> GetActive()
@@ -123,10 +132,10 @@ namespace Service.Catalog.Application
 
             if (promos != null && promos.Count > 0)
             {
-                priceDto.PromocionId = promos[0].PromocionId;
-                priceDto.Promocion = promos[0].Promocion.Nombre;
-                priceDto.Descuento = promos[0].DescuentoCantidad;
-                priceDto.DescuentoPorcentaje = promos[0].DescuentoPorcentaje;
+                //priceDto.PromocionId = promos[0].PromocionId;
+                //priceDto.Promocion = promos[0].Promocion.Nombre;
+                //priceDto.Descuento = promos[0].DescuentoCantidad;
+                //priceDto.DescuentoPorcentaje = promos[0].DescuentoPorcentaje;
 
                 foreach (var promo in promos)
                 {
@@ -240,12 +249,19 @@ namespace Service.Catalog.Application
             await CheckDuplicate(newprice);
 
             await _repository.Create(newprice);
-
             newprice = await _repository.GetById(newprice.Id);
-
+            var notifications = await _notificationsRepository.GetAll("Lista de precios",true);
+            var createnotification = notifications.FirstOrDefault(x=>x.Tipo == "Create");
+            if (createnotification.Activo) { 
+                var mensaje = createnotification.Contenido.Replace("[Nlista]",newprice.Clave);
+                mensaje = mensaje.Replace("[Lsucursal]", string.Join(",", newprice.Sucursales.Select(y => y.Sucursal.Nombre)));
+                var contract = new NotificationContract(mensaje, false);
+                await _publishEndpoint.Publish(contract);
+                
+            }
             return newprice.ToPriceListListDto();
         }
-
+                                                                                                                                                                                                                                                                                                                                                                                 
 
         public async Task<PriceListListDto> Update(PriceListFormDto price)
         {
@@ -265,6 +281,41 @@ namespace Service.Catalog.Application
             await _repository.Update(updatedprice);
 
             updatedprice = await _repository.GetById(updatedprice.Id);
+
+            var notifications = await _notificationsRepository.GetAll("Lista de precios", true);
+            var createnotification = notifications.FirstOrDefault(x => x.Tipo == "Update");
+            var mensaje = createnotification.Contenido.Replace("[Nlista]", existing.Clave);
+            mensaje = mensaje.Replace("fecha", DateTime.Now.ToShortDateString());
+            if (createnotification.Activo)
+            {
+    
+                var contract = new NotificationContract(mensaje, false);
+                await _publishEndpoint.Publish(contract);
+
+            }
+
+            if (existing.Activo != price.Activo && price.Activo)
+            {
+                createnotification = notifications.FirstOrDefault(x => x.Tipo == "Active");
+                var mensajeActive = createnotification.Contenido.Replace("[Nlista]", existing.Clave);
+                mensaje = mensaje.Replace("fecha", DateTime.Now.ToShortDateString());
+                if (createnotification.Activo)
+                {
+                    var contractActive = new NotificationContract(mensaje, false);
+                    await _publishEndpoint.Publish(contractActive);
+                }
+            }
+            if (existing.Activo != price.Activo && !price.Activo)
+            {
+                createnotification = notifications.FirstOrDefault(x => x.Tipo == "Disabled");
+                var mensajeActive = createnotification.Contenido.Replace("[Nlista]", existing.Clave);
+                mensaje = mensaje.Replace("fecha", DateTime.Now.ToShortDateString());
+                if (createnotification.Activo)
+                {
+                    var contractActive = new NotificationContract(mensaje, false);
+                    await _publishEndpoint.Publish(contractActive);
+                }
+            }
 
             return updatedprice.ToPriceListListDto();
         }

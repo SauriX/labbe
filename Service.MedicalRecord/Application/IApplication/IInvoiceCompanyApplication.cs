@@ -13,7 +13,7 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<string> GetNextPaymentNumber(string serie);
         Task<InvoiceDto> CheckInPayment(InvoiceCompanyDto invoice);
         Task<InvoiceDto> CheckInPaymentCompany(InvoiceCompanyDto invoice);
-        Task CheckInInvoiceGlobal(List<Guid> requests);
+        Task<InvoiceGlobalResponseDto> CheckInInvoiceGlobal(InvoiceGlobalInfoDto global);
         Task<bool> EnvioFactura(InvoiceCompanyDeliverDto envio);
         Task<string> Cancel(InvoiceCancelation invoiceDto);
         Task<byte[]> PrintTicket(ReceiptCompanyDto receipt);

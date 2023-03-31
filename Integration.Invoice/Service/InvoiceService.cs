@@ -14,7 +14,7 @@ namespace Integration.Invoice.Service
 
         public static async Task<FacturapiDto> Create(FacturapiDto data)
         {
-            var facturapi = new FacturapiClient(API_KEY);
+            var facturapi = new FacturapiClient(string.IsNullOrEmpty(data.FacturaApiKey) ? API_KEY : data.FacturaApiKey);
 
             var client = data.Cliente;
             var products = data.Productos;

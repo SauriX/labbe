@@ -1,0 +1,77 @@
+﻿{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/LabRamos/services/catalogo/api/notifications/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+
+        }
+      ],
+      "UpstreamPathTemplate": "/api/notifications/{id}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/LabRamos/services/catalogo/api/notifications/all/notification/{search}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+
+        }
+      ],
+      "UpstreamPathTemplate": "/api/notifications/all/notification/{search}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/LabRamos/services/catalogo/api/notifications/all/notificationJob/{search}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+
+        }
+      ],
+      "UpstreamPathTemplate": "/api/notifications/all/notificationJob/{search}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/LabRamos/services/catalogo/api/notifications/all/avisos/{search}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+
+        }
+      ],
+      "UpstreamPathTemplate": "/api/notifications/all/avisos/{search}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/LabRamos/services/catalogo/api/notifications",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+
+        }
+      ],
+      "UpstreamPathTemplate": "/api/notifications",
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/notifications/status/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axsishost.online"
+
+        }
+      ],
+      "UpstreamPathTemplate": "/api/notifications/status/{id}",
+      "UpstreamHttpMethod": [ "PUT" ]
+    }
+
+  ]
+}

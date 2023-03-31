@@ -215,8 +215,6 @@ namespace Integration.Pdf.Service
                         childrenTable.Borders.Visible = false;
                         childrenTable.Borders.Width = 0;
 
-                        cell.Borders.Visible = false;
-
                         var childrenData = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(item["Children"].ToString());
 
                         var noCol = childrenData.Max(x => x.Count);
@@ -224,10 +222,23 @@ namespace Integration.Pdf.Service
 
                         for (int i = 0; i < noCol; i++)
                         {
-                            Column column = childrenTable.AddColumn(contentWidth / noCol + 1);
+                            Column column = childrenTable.AddColumn(cellSize + 1);
                         }
 
-                        Dictionary<string, object> titles = new Dictionary<string, object>
+                        Dictionary<string, object> titles = new Dictionary<string, object>();
+
+                        if (noCol == 3)
+                        {
+                            titles = new Dictionary<string, object>
+                            {
+                                {"Clave", "Clave"},
+                                {"Estudio", "Estudio"},
+                                {"Estatus", "Estatus"},
+                            };
+                        } 
+                        else
+                        {
+                            titles = new Dictionary<string, object>
                         {
                             {"Clave", "Clave"},
                             {"Estudio", "Estudio"},
@@ -236,6 +247,7 @@ namespace Integration.Pdf.Service
                             {"Paquete", "Paquete"},
                             {"Promoción", "Promoción"},
                         };
+                        }
 
                         childrenData.Insert(0, titles);
 
@@ -253,22 +265,21 @@ namespace Integration.Pdf.Service
 
                             var values = childrenData[i].Values.ToList();
 
-                            for (int j = 0; j < values.Count; j++)
+                            for (int j = 0; j < noCol; j++)
                             {
-                                Cell childrenCell = childrenRow.Cells[j];
-                                childrenCell.Borders.Visible = false;
-
-                                childrenCell.AddParagraph(values[j].ToString());
-
-
+                                if (j < values.Count)
+                                {
+                                    Cell childrenCell = childrenRow.Cells[j];
+                                    childrenCell.Borders.Visible = false;
+                                    childrenCell.AddParagraph(values[j].ToString());
+                                }
                             }
                         }
 
                         cell.Elements.Add(childrenTable);
+
                     }
                 }
-
-
 
                 table.Rows.Alignment = RowAlignment.Center;
             }

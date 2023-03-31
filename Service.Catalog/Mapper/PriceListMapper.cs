@@ -110,9 +110,17 @@ namespace Service.Catalog.Mapper
                 Nombre = x.Nombre,
                 Visibilidad = x.Visibilidad,
                 Activo = x.Activo,
-
+                Compañia = x.Compañia?.Select(y => new PriceListCompanyDto
+                {
+                    Id = y.CompañiaId,
+                    Clave = y.Compañia.Clave,
+                    Nombre = y.Compañia.NombreComercial,
+                    ListaPrecio = x.Nombre
+                })?.ToList(),
+                NombreCompañia = string.Join(", ", x.Compañia?.Select(y => y.Compañia?.NombreComercial))
             });
         }
+
         public static IEnumerable<PriceListListDto> ToPriceListListActiveDto(this List<PriceList> model)
         {
             if (model == null) return null;

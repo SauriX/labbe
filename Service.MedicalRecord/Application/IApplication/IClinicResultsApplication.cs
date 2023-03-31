@@ -3,6 +3,7 @@ using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Dtos;
 using Service.MedicalRecord.Dtos.Catalogs;
 using Service.MedicalRecord.Dtos.ClinicResults;
+using Service.MedicalRecord.Dtos.General;
 using Service.MedicalRecord.Dtos.MassSearch;
 using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.RequestedStudy;
@@ -15,8 +16,8 @@ namespace Service.MedicalRecord.Application.IApplication
 {
     public interface IClinicResultsApplication
     {
-        Task<List<ClinicResultsDto>> GetAll(ClinicResultSearchDto search);
-        Task<(byte[] file, string fileName)> ExportList(ClinicResultSearchDto search);
+        Task<List<ClinicResultsDto>> GetAll(GeneralFilterDto search);
+        Task<(byte[] file, string fileName)> ExportList(GeneralFilterDto search);
         Task<(byte[] file, string fileName)> ExportGlucoseChart(ClinicResultsFormDto result);
         Task SaveLabResults(List<ClinicResultsFormDto> results);
         Task UpdateLabResults(List<ClinicResultsFormDto> results, bool EnvioManual);
@@ -25,7 +26,6 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<bool> SendResultFile(DeliverResultsStudiesDto estudios);
         Task UpdateStatusStudy(int RequestStudyId, byte status, string idUsuario);
         Task<ClinicResultsPathologicalInfoDto> GetResultPathological(int RequestStudyId);
-        /*Task<ClinicResults> GetLaboratoryResults(int RequestStudyId);*/
         Task<List<ClinicResultsFormDto>> GetLabResultsById(string id);
         Task<RequestStudy> GetRequestStudyById(int RequestStudyId);
         Task<RequestStudyUpdateDto> GetStudies(Guid recordId, Guid requestId);

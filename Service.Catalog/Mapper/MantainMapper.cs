@@ -17,7 +17,7 @@ namespace Service.Catalog.Mapper
             {
                 Id = model.Id,
                 Clave = model.clave,
-                Fecha = model.Fecha_Prog,
+                Fecha = model.Fecha_Prog.ToShortDateString(),
                 activo = model.Activo
             };
         }
@@ -30,7 +30,7 @@ namespace Service.Catalog.Mapper
             {
                 Id = x.Id,
                 Clave = x.clave,
-                Fecha = x.Fecha_Prog,
+                Fecha = x.Fecha_Prog.ToShortDateString(),
                 activo = x.Activo
             }).ToList();
         }
@@ -38,12 +38,17 @@ namespace Service.Catalog.Mapper
         public static MantainFormDto ToMaquilaFormDto(this Mantain model)
          {
             if (model == null) return null;
-            List<string> images = new List<string>();
+            List<MantainImageDto> images = new List<MantainImageDto>();
             if (model.images != null)
             {
                 foreach (var imagen in model.images)
                 {
-                    var image = imagen.Ruta.Replace("wwwroot/images/mantain", "");
+                     imagen.Ruta = imagen.Ruta.Replace("wwwroot/images/mantain", "");
+                    var image = new MantainImageDto
+                    {
+                        Clave = imagen.Clave,
+                        ImagenUrl = imagen.Ruta
+                    };
                     images.Add(image);
                 }
             }

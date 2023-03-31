@@ -17,5 +17,6 @@ namespace Service.Catalog.Repository.IRepository
 
         Task<MantainImages> GetImage(Guid requestId, string code);
         Task UpdateImage(MantainImages requestImage);
+        Task DeleteImage(Guid id, string clave);
     }
 }

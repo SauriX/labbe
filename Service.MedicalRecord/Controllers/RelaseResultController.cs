@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.MedicalRecord.Application.IApplication;
+using Service.MedicalRecord.Dtos.General;
 using Service.MedicalRecord.Dtos.MassSearch;
 using Service.MedicalRecord.Dtos.RelaseResult;
 using Service.MedicalRecord.Dtos.RequestedStudy;
@@ -28,7 +29,7 @@ namespace Service.MedicalRecord.Controllers
         }
         [HttpPost("release/getList")]
         [Authorize(Policies.Access)]
-        public async Task<List<RelaceList>> GetAll(SearchRelase search)
+        public async Task<List<RelaceList>> GetAll(GeneralFilterDto search)
         {
             search.SucursalesId = (List<Guid>)HttpContext.Items["sucursales"];
             var requestedStudy = await _service.GetAll(search);
@@ -54,7 +55,7 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("release/export/list")]
         [Authorize(Policies.Download)]
-        public async Task<IActionResult> ExportStudyExcel(SearchRelase search)
+        public async Task<IActionResult> ExportStudyExcel(GeneralFilterDto search)
         {
             search.SucursalesId = (List<Guid>)HttpContext.Items["sucursales"];
             var (file, fileName) = await _service.ExportList(search);

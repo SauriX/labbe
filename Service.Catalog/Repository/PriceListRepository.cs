@@ -15,6 +15,7 @@ namespace Service.Catalog.Repository
     public class PriceListRepository : IPriceListRepository
     {
         private readonly ApplicationDbContext _context;
+        private const int COMPAÑIA = 1;
 
         public PriceListRepository(ApplicationDbContext context)
         {
@@ -23,7 +24,7 @@ namespace Service.Catalog.Repository
 
         public async Task<List<PriceList>> GetAll(string search)
         {
-            var prices = _context.CAT_ListaPrecio.AsQueryable();
+            var prices = _context.CAT_ListaPrecio.Include(x => x.Compañia).ThenInclude(x => x.Compañia).AsQueryable();
 
             search = search.Trim().ToLower();
 
@@ -124,7 +125,13 @@ namespace Service.Catalog.Repository
 
         public async Task<List<PriceList>> GetOptions()
         {
-            var prices = await _context.CAT_ListaPrecio.Where(x => x.Activo).OrderBy(x => x.Nombre).ToListAsync();
+            var prices = await _context.CAT_ListaPrecio
+                .Include(x => x.Compañia).ThenInclude(x => x.Compañia)
+                .Where(x => x.Compañia.Any(y => y.Compañia.ProcedenciaId != COMPAÑIA))
+                .Where(x => x.Activo)
+                .OrderBy(x => x.Nombre)
+                .ToListAsync();
+
 
             return prices;
         }

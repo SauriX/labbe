@@ -112,7 +112,7 @@ namespace Integration.Pdf.Service
                 { "Nombre del medico", x.Medico },
                 { "Fecha de entrega", x.Entrega },
                 { "Children",  JsonConvert.SerializeObject( x.Estudios.Select(y => new Dictionary<string, object> {
-                        { "Clave", y.Clave},{"Estudio",y.Nombre},{"Estatus",y.Estatus}, {"Fecha de entrega",y.Fecha }
+                        { "Clave", y.Clave},{"Estudio",y.Nombre},{"Estatus",y.Estatus}, {"Fecha de entrega",y.Fecha },{"Sucursal",x.Sucursal }
                     }))
       
                 },
@@ -230,6 +230,7 @@ namespace Integration.Pdf.Service
                             {"Estudio", "Estudio"},
                             {"Estatus", "Estatus"},
                             {"Fecha de entrega", "Fecha de entrega"},
+                            {"Sucursal", "Sucursal"},
                         };
 
                         childrenData.Insert(0, titles);

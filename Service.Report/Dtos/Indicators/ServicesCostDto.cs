@@ -66,8 +66,9 @@ namespace Service.Report.Dtos.Indicators
     public class InvoiceServicesDto
     {
         public List<ServiceUpdateDto> Servicios { get; set; }
+        public DateTime Fecha { get; set; }
         public decimal TotalMensual { get; set; }
-        public decimal TotalSemanal => TotalMensual / 6;
-        public decimal TotalDiario => TotalMensual / 24;
+        public decimal TotalSemanal => TotalMensual / 7;
+        public decimal TotalDiario => TotalMensual / DateTime.DaysInMonth(Fecha.Year, Fecha.Month);
     }
 }

@@ -31,12 +31,23 @@ namespace Service.MedicalRecord.Application
 
             return data.ToReportRequestDto();
         }
+
+        //public async Task<IEnumerable<>>
         
         public async Task<IEnumerable<StudiesDto>> GetStudiesByFilter(ReportFilterDto filter)
         {
             var data = await _repository.GetByStudies(filter);
 
             return data.RequestStudies();
+        }
+
+        public async Task<IEnumerable<RequestPaymentStatsDto>> GetPaymentsByFilter(ReportFilterDto filter, string user)
+        {
+            var data = await _repository.GetByPayment(filter);
+
+            var payment = data.RequestPayment(user);
+
+            return payment;
         }
     }
 }

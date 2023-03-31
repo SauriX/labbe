@@ -23,7 +23,7 @@ namespace Service.MedicalRecord.Client.IClient
         Task<byte[]> GenerateWorkList(WorkListDto workList);
         Task<byte[]> MergeResults(ClinicResultPathologicalPdfDto order, ClinicResultsPdfDto labOrder);
         Task<byte[]> DeliverForm(DeliverOrderdDto order);
-        Task<byte[]> PriceQuoteReport(PriceQuoteDto priceQuote);
+        Task<byte[]> PriceQuoteReport(QuotationPdfDto priceQuote);
         Task<byte[]> RequestDayForm(List<ReportRequestListDto> request);
     }
 }

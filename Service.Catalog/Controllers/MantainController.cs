@@ -81,6 +81,10 @@ namespace Service.Catalog.Controllers
 
             return File(file, MimeType.PDF, "order.pdf");
         }
-
+        [HttpDelete("image/{Id}/{code}")]
+        public async Task DeleteImage(Guid Id, string code)
+        {
+            await _service.DeleteImage(Id, code);
+        }
     }
 }

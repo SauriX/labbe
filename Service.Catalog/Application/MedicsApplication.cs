@@ -61,7 +61,7 @@ namespace Service.Catalog.Application
 
             await _repository.Create(newMedics);
 
-            var contract = new MedicContract(newMedics.IdMedico, newMedics.Clave, newMedics.Nombre);
+            var contract = new MedicContract(newMedics.IdMedico, newMedics.Clave, $"{newMedics.Nombre} {newMedics.PrimerApellido} {newMedics.SegundoApellido}");
 
             await _publishEndpoint.Publish(contract);
 
@@ -90,7 +90,7 @@ namespace Service.Catalog.Application
 
             await _repository.Update(updatedAgent);
 
-            var contract = new MedicContract(updatedAgent.IdMedico, updatedAgent.Clave, updatedAgent.Nombre);
+            var contract = new MedicContract(updatedAgent.IdMedico, updatedAgent.Clave, $"{updatedAgent.Nombre} {updatedAgent.PrimerApellido} {updatedAgent.SegundoApellido}");
 
             await _publishEndpoint.Publish(contract);
 
