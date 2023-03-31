@@ -26,6 +26,9 @@ namespace Service.MedicalRecord.Mapper
         }
 
         public static List<ReportRequestListDto> toRequestList(this List<Service.MedicalRecord.Domain.Request.Request> request ) { 
+
+
+
             return request.Select(x => new ReportRequestListDto {
 
             ExpedienteId = x.ExpedienteId.ToString(),
@@ -38,7 +41,7 @@ namespace Service.MedicalRecord.Mapper
             Medico = x.Medico.Nombre,
             Tipo = x.Urgencia ==1 ? "Normal":"Urgente",
             Compañia = x.Compañia.Nombre,
-            Entrega = x.Estudios.Count() >1 ? $"{x.Estudios.Select(y=>y.FechaEntrega).Min().ToShortDateString()}-{x.Estudios.Select(y => y.FechaEntrega).Max().ToShortDateString()}" : x.Estudios.First().FechaEntrega.ToShortDateString(),
+            Entrega = !x.Estudios.Any()?"": x.Estudios.Count() >1 ? $"{x.Estudios.Select(y=>y.FechaEntrega).Min().ToShortDateString()}-{x.Estudios.Select(y => y.FechaEntrega).Max().ToShortDateString()}" : x.Estudios!.FirstOrDefault()!.FechaEntrega!.ToShortDateString(),
             Estudios= x.Estudios.ToList().toStudyList(),
             Estatus = x.Estudios.Any(y => y.DepartamentoId == Catalogs.Department.PATOLOGIA) ? x.Urgencia == 1 ?  x.ClavePatologica: $"{x.ClavePatologica}-Urgente" : x.Urgencia== 1?  x.Estudios.Any(y => y.EstatusId == Status.RequestStudy.EnRuta) ? $"{x.ClavePatologica}-Ruta" : x.Estudios.Any(y => y.DepartamentoId == Catalogs.Department.PATOLOGIA) ? x.ClavePatologica:  "Normal" : "Urgente", 
             isPatologia = x.Estudios.Any(y=>y.DepartamentoId == Catalogs.Department.PATOLOGIA )
