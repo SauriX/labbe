@@ -96,6 +96,8 @@ namespace Service.Catalog.Mapper
                 SucursalKey = dto.Factura?.SucursalKey,
                 Clave = dto.Factura?.Clave,
                 TipoSerie = model.TipoSerie,
+                ArchivoCer = model.ArchivoCer,
+                ArchivoKey = model.ArchivoKey,
                 UsuarioCreoId = model.UsuarioCreoId,
                 FechaCreo = dto.Factura.Año,
                 SucursalId = Guid.Parse(dto.Expedicion.SucursalId),

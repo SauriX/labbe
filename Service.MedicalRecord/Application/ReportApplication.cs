@@ -31,6 +31,8 @@ namespace Service.MedicalRecord.Application
 
             return data.ToReportRequestDto();
         }
+
+        //public async Task<IEnumerable<>>
         
         public async Task<IEnumerable<StudiesDto>> GetStudiesByFilter(ReportFilterDto filter)
         {

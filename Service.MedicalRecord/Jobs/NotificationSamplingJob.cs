@@ -2,6 +2,7 @@
 using MassTransit;
 using Quartz;
 using Service.MedicalRecord.Client.IClient;
+using Service.MedicalRecord.Dtos.General;
 using Service.MedicalRecord.Dtos.RequestedStudy;
 using Service.MedicalRecord.Repository.IRepository;
 using System;
@@ -24,7 +25,7 @@ namespace Service.MedicalRecord.Jobs
         }
         public async  Task Execute(IJobExecutionContext context)
         {
-            var search = new RequestedStudySearchDto
+            var search = new GeneralFilterDto
             {
                 Fecha = new List<DateTime> { DateTime.Now, DateTime.Now },
             };

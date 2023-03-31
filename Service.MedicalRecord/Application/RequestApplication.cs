@@ -37,6 +37,7 @@ using System.Text.Json;
 using Service.MedicalRecord.Dtos.Catalogs;
 using static Shared.Dictionary.Catalogs;
 using MassTransit.Transports;
+using Service.MedicalRecord.Dtos.General;
 
 namespace Service.MedicalRecord.Application
 {
@@ -91,7 +92,7 @@ namespace Service.MedicalRecord.Application
             _publishEndpoint = publishEndpoint;
         }
 
-        public async Task<IEnumerable<RequestInfoDto>> GetByFilter(RequestFilterDto filter)
+        public async Task<IEnumerable<RequestInfoDto>> GetByFilter(GeneralFilterDto filter)
         {
             var request = await _repository.GetByFilter(filter);
 

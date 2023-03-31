@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.MedicalRecord.Application.IApplication;
+using Service.MedicalRecord.Dtos.General;
 using Service.MedicalRecord.Dtos.MassSearch;
 using Service.MedicalRecord.Dtos.RequestedStudy;
 using Service.MedicalRecord.Dtos.ResultValidation;
@@ -17,7 +18,7 @@ namespace Service.MedicalRecord.Controllers
     {
         [HttpPost("validation/getList")]
         [Authorize(Policies.Access)]
-        public async Task<List<ValidationListDto>> GetAllValidation(SearchValidation search)
+        public async Task<List<ValidationListDto>> GetAllValidation(GeneralFilterDto search)
         {
             var requestedStudy = await _validationService.GetAll(search);
             return requestedStudy;
@@ -44,7 +45,7 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("validation/export/list")]
         //  [Authorize(Policies.Download)]
-        public async Task<IActionResult> ExportStudyValidationExcel(SearchValidation search)
+        public async Task<IActionResult> ExportStudyValidationExcel(GeneralFilterDto search)
         {
             var (file, fileName) = await _validationService.ExportList(search);
             return File(file, MimeType.XLSX, fileName);

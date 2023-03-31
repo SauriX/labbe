@@ -20,6 +20,7 @@ using Shared.Dictionary;
 using Service.MedicalRecord.Domain;
 using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Application.IApplication;
+using Service.MedicalRecord.Dtos.General;
 
 namespace Service.MedicalRecord.Application
 {
@@ -42,7 +43,7 @@ namespace Service.MedicalRecord.Application
  
         }
 
-        public async Task<(byte[] file, string fileName)> ExportList(SearchRelase search)
+        public async Task<(byte[] file, string fileName)> ExportList(GeneralFilterDto search)
         {
             var studies = await GetAll(search);
             foreach (var request in studies)
@@ -103,7 +104,7 @@ namespace Service.MedicalRecord.Application
         }
 
 
-        public async Task<List<RelaceList>> GetAll(SearchRelase search)
+        public async Task<List<RelaceList>> GetAll(GeneralFilterDto search)
         {
             var requestedStudy = await _repository.GetAll(search);
             if (requestedStudy != null)

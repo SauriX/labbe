@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MoreLinq;
 using Service.MedicalRecord.Context;
 using Service.MedicalRecord.Domain.Quotation;
+using Service.MedicalRecord.Dtos.General;
 using Service.MedicalRecord.Dtos.Quotation;
 using Service.MedicalRecord.Repository.IRepository;
 using System;
@@ -28,7 +29,7 @@ namespace Service.MedicalRecord.Repository
             return quotation;
         }
 
-        public async Task<List<Quotation>> GetByFilter(QuotationFilterDto filter)
+        public async Task<List<Quotation>> GetByFilter(GeneralFilterDto filter)
         {
             var quotations = _context.CAT_Cotizacion
                 .Include(x => x.Expediente)
@@ -37,26 +38,45 @@ namespace Service.MedicalRecord.Repository
                 .OrderBy(x => x.FechaCreo)
                 .AsQueryable();
 
-            if (string.IsNullOrWhiteSpace(filter.Expediente) && filter.FechaAInicial != null && filter.FechaAFinal != null)
+            if (!string.IsNullOrWhiteSpace(filter.Expediente) && filter.SucursalId != null && filter.SucursalId.Count > 0)
             {
-                quotations = quotations.Where(x => x.FechaCreo.Date >= ((DateTime)filter.FechaAInicial).Date
-                && x.FechaCreo.Date <= ((DateTime)filter.FechaAFinal).Date);
+                quotations = quotations.Where(x => filter.SucursalId.Contains(x.SucursalId));
             }
 
-            if (filter.Ciudad != null)
+            if (string.IsNullOrWhiteSpace(filter.Expediente) && filter.Fecha != null)
+            {
+                quotations = quotations.Where(x => x.FechaCreo.Date >= filter.Fecha.First().Date
+                && x.FechaCreo.Date <= filter.Fecha.Last().Date);
+            }
+
+            if (!string.IsNullOrWhiteSpace(filter.Expediente))
+            {
+                quotations = quotations
+                    .Where(x => x.Expediente != null
+                    && ((x.Expediente.NombrePaciente + " " + x.Expediente.PrimerApellido + " " + x.Expediente.SegundoApellido).ToLower().Contains(filter.Expediente.ToLower())
+                    || x.Clave == filter.Expediente) || x.Expediente.Expediente == filter.Expediente);
+            }
+
+            if (filter.Ciudad != null && filter.Ciudad.Count > 0)
             {
                 quotations = quotations.Where(x => x.Sucursal != null && filter.Ciudad.Contains(x.Sucursal.Ciudad));
             }
 
-            if (filter.Sucursales != null && filter.Sucursales.Count > 0)
+            if (filter.SucursalId != null && filter.SucursalId.Count > 0)
             {
-                quotations = quotations.Where(x => x.Sucursal != null && filter.Sucursales.Contains(x.SucursalId));
+                quotations = quotations.Where(x => filter.SucursalId.Contains(x.SucursalId));
             }
 
-            if (filter.FechaNInicial != null)
+            if (filter.Fecha != null && string.IsNullOrWhiteSpace(filter.Expediente))
+            {
+                quotations = quotations.
+                    Where(x => x.FechaCreo.Date >= filter.Fecha.First().Date && x.FechaCreo.Date <= filter.Fecha.Last().Date);
+            }
+
+            if (filter.FechaNacimiento != DateTime.MinValue)
             {
                 quotations = quotations.Where(x => x.Expediente != null
-                && x.Expediente.FechaDeNacimiento.Date == ((DateTime)filter.FechaNInicial).Date);
+                && x.Expediente.FechaDeNacimiento.Date == filter.FechaNacimiento.Date);
             }
 
             if (!string.IsNullOrWhiteSpace(filter.Correo))
@@ -71,14 +91,6 @@ namespace Service.MedicalRecord.Repository
                     && (x.Expediente.Telefono.ToLower().Contains(filter.Telefono.ToLower())
                     || x.Expediente.Celular.ToLower().Contains(filter.Telefono.ToLower())))
                 || (x.EnvioWhatsApp != null && x.EnvioWhatsApp.ToLower().Contains(filter.Telefono)));
-            }
-
-            if (!string.IsNullOrWhiteSpace(filter.Expediente))
-            {
-                quotations = quotations
-                    .Where(x => x.Expediente != null
-                    && ((x.Expediente.NombrePaciente + " " + x.Expediente.PrimerApellido + " " + x.Expediente.SegundoApellido).ToLower().Contains(filter.Expediente.ToLower())
-                    || x.Clave == filter.Expediente));
             }
 
             return await quotations.ToListAsync();

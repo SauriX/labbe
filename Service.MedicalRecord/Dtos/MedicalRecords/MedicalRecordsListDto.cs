@@ -6,7 +6,7 @@ namespace Service.MedicalRecord.Dtos.MedicalRecords
     {
         public Guid Id { get; set; }
         public string Expediente { get; set; }
-        public string NomprePaciente { get; set; }
+        public string NombrePaciente { get; set; }
         public string Genero { get; set; }
         public int Edad { get; set; }
         public string FechaNacimiento { get; set; }

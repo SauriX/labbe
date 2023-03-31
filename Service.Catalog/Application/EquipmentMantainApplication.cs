@@ -97,7 +97,7 @@ namespace Service.Catalog.Application
             return await _pdfClient.GenerateOrder(mantain);
         }
         public async Task<string> SaveImage(MantainImageDto requestDto)
-        {
+            {
     
                 var request = await GetById(requestDto.ExpedienteId);
 
@@ -149,6 +149,13 @@ namespace Service.Catalog.Application
             }
 
             return null;
+        }
+
+        public async Task DeleteImage(Guid Id, string code)
+        {
+            
+
+            await _service.DeleteImage(Id, code);
         }
 
     }
