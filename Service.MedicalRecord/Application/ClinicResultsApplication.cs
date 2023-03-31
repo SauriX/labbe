@@ -16,6 +16,7 @@ using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.ClinicResults;
 using System.Net;
 using SharedResponses = Shared.Dictionary.Responses;
+using TypeValues = Shared.Dictionary.Catalogs.ValueType;
 using Shared.Error;
 using Shared.Dictionary;
 using Service.MedicalRecord.Client.IClient;
@@ -442,7 +443,7 @@ namespace Service.MedicalRecord.Application
                             }
                             break;
                         case "3":
-                            foreach(var tipoValor in param.TipoValores)
+                            foreach (var tipoValor in param.TipoValores)
                             {
 
                             }
@@ -691,7 +692,7 @@ namespace Service.MedicalRecord.Application
                     {
                         //if (canSendResultBalance(request.Solicitud) || EnvioManual)
                         //{
-                        
+
 
                         await SendResultsFiles(request.SolicitudId, userId, user, existingRequest.Estudios.ToList());
                         //}
@@ -701,14 +702,14 @@ namespace Service.MedicalRecord.Application
 
             }
             var notifications = await _catalogClient.GetNotifications("Captura de resultados");
-            var createnotification = notifications.FirstOrDefault(x => x.Tipo == "Procesing");
+            var createNotification = notifications.FirstOrDefault(x => x.Tipo == "Procesing");
 
-            if (createnotification.Activo)
+            if (createNotification.Activo)
             {
                 foreach (var estudio in results)
                 {
 
-                    var mensaje = createnotification.Contenido.Replace("[Nestudio]", estudio.Estudio);
+                    var mensaje = createNotification.Contenido.Replace("[Nestudio]", estudio.Estudio);
                     mensaje = mensaje.Replace("[Nsolicitud]", existingRequest.Clave);
                     mensaje = mensaje.Replace("[Nsucursal]", existingRequest.Sucursal.Nombre);
                     var contract = new NotificationContract(mensaje, false);
@@ -716,27 +717,20 @@ namespace Service.MedicalRecord.Application
 
 
                 }
-
-
             }
-            createnotification = notifications.FirstOrDefault(x => x.Tipo == "Critic");
-            if (createnotification.Activo)
+            createNotification = notifications.FirstOrDefault(x => x.Tipo == "Critic");
+            var numericResults = results.Where(x => x.TipoValorId == TypeValues.Numerico || x.TipoValorId == TypeValues.NumericoPorSexo || x.TipoValorId == TypeValues.NumericoPorEdad || x.TipoValorId == TypeValues.NumericoPorEdadSexo).ToList();
+            if (createNotification.Activo)
             {
-                var critico = results.Any(x => x.CriticoMinimo < Decimal.Parse(x.ValorInicial) || x.CriticoMaximo > Decimal.Parse(x.ValorFinal));
-                var estudios = results.FindAll(y=>y.CriticoMinimo < Decimal.Parse(y.ValorInicial) || y.CriticoMaximo > Decimal.Parse(y.ValorFinal));
-                foreach (var estudio in estudios) {
-                    var mensaje = createnotification.Contenido.Replace("[Nsolicitud]", existingRequest.Clave);
+                var estudios = numericResults.FindAll(y => y.CriticoMinimo < Decimal.Parse(y.ValorInicial) || y.CriticoMaximo > Decimal.Parse(y.ValorFinal));
+                foreach (var estudio in estudios)
+                {
+                    var mensaje = createNotification.Contenido.Replace("[Nsolicitud]", existingRequest.Clave);
                     mensaje = mensaje.Replace("[Nestudio]", estudio.Clave);
                     var contract = new NotificationContract(mensaje, false);
                     await _publishEndpoint.Publish(contract);
 
                 }
-
-
-
-
-
-
             }
         }
 
@@ -1056,10 +1050,10 @@ namespace Service.MedicalRecord.Application
 
                     files.Add(new SenderFiles(new Uri(pathName), namePdf));
                 }
-                var notifications = await _catalogClient.GetNotifications("Envio de resultados"); 
+                var notifications = await _catalogClient.GetNotifications("Envio de resultados");
                 var createnotification = notifications.FirstOrDefault(x => x.Tipo == "Send");
                 var mensaje = createnotification.Contenido.Replace("[Nsolicitud]", existingRequest.Clave);
-                
+
                 if (createnotification.Activo)
                 {
 
@@ -1100,11 +1094,12 @@ namespace Service.MedicalRecord.Application
                     }
 
                 }
-                catch (Exception ex) { 
-               
-                     createnotification = notifications.FirstOrDefault(x => x.Tipo == "Fail");
+                catch (Exception ex)
+                {
+
+                    createnotification = notifications.FirstOrDefault(x => x.Tipo == "Fail");
                     mensaje = createnotification.Contenido.Replace("[Nsolicitud]", existingRequest.Clave);
-                    
+
                     if (createnotification.Activo)
                     {
 
@@ -1316,7 +1311,7 @@ namespace Service.MedicalRecord.Application
                 {
                     medios.Add("WhatsApp ");
                 }
-                
+
                 if (!string.IsNullOrEmpty(correo))
                 {
                     medios.Add("Correo");
@@ -1378,7 +1373,7 @@ namespace Service.MedicalRecord.Application
                 Correo = x.Correo,
                 Usuario = x.UsuarioNombre,
                 Descripcion = x.Descripcion
-                
+
             }).ToList();
 
         }
