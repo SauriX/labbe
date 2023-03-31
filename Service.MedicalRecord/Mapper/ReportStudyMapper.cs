@@ -43,7 +43,7 @@ namespace Service.MedicalRecord.Mapper
                 Medico = x.Medico.Nombre,
                 Tipo = x.Urgencia == 1 ? "Normal" : "Urgente",
                 Compañia = x.Compañia.Nombre,
-                Entrega = x.Estudios.Count() > 1 ? $"{x.Estudios.Select(y => y.FechaEntrega).Min().ToShortDateString()}-{x.Estudios.Select(y => y.FechaEntrega).Max().ToShortDateString()}" : x.Estudios.Any() ? x.Estudios.First().FechaEntrega.ToShortDateString() : "",
+                Entrega = !x.Estudios.Any() ? "" : x.Estudios.Count() > 1 ? $"{x.Estudios.Select(y => y.FechaEntrega).Min().ToShortDateString()}-{x.Estudios.Select(y => y.FechaEntrega).Max().ToShortDateString()}" : x.Estudios!.FirstOrDefault()!.FechaEntrega!.ToShortDateString(),
                 Estudios = x.Estudios.ToReporteRequestStudyDto(),
                 Estatus = GetEstatus(x),
                 isPatologia = x.Estudios.Any(y => y.DepartamentoId == Catalogs.Department.PATOLOGIA)
