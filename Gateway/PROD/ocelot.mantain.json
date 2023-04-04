@@ -67,6 +67,16 @@
       "UpstreamPathTemplate": "/api/mantain/order/{Id}",
       "UpstreamHttpMethod": [ "POST" ]
     },
-
+    {
+      "DownstreamPathTemplate": "/services/catalogo/api/mantain/image/{Id}/{code}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/mantain/image/{Id}/{code}",
+      "UpstreamHttpMethod": [ "DELETE" ]
+    }
   ]
 }
