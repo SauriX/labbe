@@ -9,8 +9,6 @@ namespace Service.MedicalRecord.Dtos.RequestedStudy
         public List<int> EstudioId { get; set; }
         public Guid SolicitudId { get; set; }
         public string Usuario { get; set; }
-        public List<SamplingCommentDto> Observacion { get; set; }
-
         public Guid RuteOrder { get; set; }
     }
 }

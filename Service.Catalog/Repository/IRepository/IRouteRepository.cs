@@ -10,6 +10,7 @@ namespace Service.Catalog.Repository.IRepository
         Task<List<Route>> GetAll(string search);
         Task<List<Route>> GetActive();
         Task<Route> GetById(Guid id);
+        Task<List<Route>> GetyByIds(List<string> ids);
         Task<bool> IsDuplicate(Route routes);
         Task<bool> IsDestinoIgualAlOrigen(Route routes);
         Task<bool> IsDestinoVacio(Route routes);

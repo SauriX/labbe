@@ -43,53 +43,62 @@ namespace Service.Catalog.Mapper
                 Activo = x.Activo,
             });
         }
-        public static IEnumerable<RouteFormDto> ToRouteFoundDto(this List<Route> model)
+
+        public static List<RouteFormDto> ToRouteFoundDto(this List<Route> model)
         {
             if (model == null) return null;
 
-            return model.Select(x => new RouteFormDto
+            return model.Select(x =>
             {
+                var dias = new List<DayDto>();
+                if (x.Lunes) dias.Add(new DayDto { Id = 1, Dia = "L" });
+                if (x.Martes) dias.Add(new DayDto { Id = 2, Dia = "M" });
+                if (x.Miercoles) dias.Add(new DayDto { Id = 3, Dia = "M" });
+                if (x.Jueves) dias.Add(new DayDto { Id = 4, Dia = "J" });
+                if (x.Viernes) dias.Add(new DayDto { Id = 5, Dia = "V" });
+                if (x.Sabado) dias.Add(new DayDto { Id = 6, Dia = "S" });
+                if (x.Domingo) dias.Add(new DayDto { Id = 7, Dia = "D" });
 
-                Id = x.Id.ToString(),
-                Clave = x.Clave,
-                Nombre = x.Nombre,
-                OrigenId = x?.OrigenId,
-                DestinoId = x?.DestinoId,
-                MaquiladorId = x?.MaquiladorId,
-                Origen = x?.Origen?.Nombre,
-                Destino = x?.Destino?.Nombre + " " + x?.Maquilador?.Nombre,
-                PaqueteriaId = x.PaqueteriaId,
-                Activo = x.Activo,
-                Comentarios = x.Comentarios,
-                HoraDeRecoleccion = x.HoraDeRecoleccion,
-                TiempoDeEntrega = x.TiempoDeEntrega,
-                Estudio = x?.Estudios?.Select(y => new Route_StudyListDto
+                return new RouteFormDto
                 {
-                    Id = y.EstudioId,
-                    Clave = y.Estudio.Clave,
-                    Nombre = y.Estudio.Nombre,
-                    Area = y.Estudio.Area.Nombre,
-                    Departamento = y.Estudio.Area.Departamento.Nombre,
-                })?.ToList(),
-            });
+
+                    Id = x.Id.ToString(),
+                    Clave = x.Clave,
+                    Nombre = x.Nombre,
+                    OrigenId = x?.OrigenId,
+                    DestinoId = x?.DestinoId,
+                    MaquiladorId = x?.MaquiladorId,
+                    Origen = x?.Origen?.Nombre,
+                    Destino = x?.Destino?.Nombre + " " + x?.Maquilador?.Nombre,
+                    PaqueteriaId = x.PaqueteriaId,
+                    Activo = x.Activo,
+                    Comentarios = x.Comentarios,
+                    HoraDeRecoleccion = x.HoraDeRecoleccion,
+                    TiempoDeEntrega = x.TiempoDeEntrega,
+                    Estudio = x?.Estudios?.Select(y => new Route_StudyListDto
+                    {
+                        Id = y.EstudioId,
+                        Clave = y.Estudio.Clave,
+                        Nombre = y.Estudio.Nombre,
+                        Area = y.Estudio.Area.Nombre,
+                        Departamento = y.Estudio.Area.Departamento.Nombre,
+                    })?.ToList(),
+                    Dias = dias
+                };
+            }).ToList();
         }
 
         public static RouteFormDto ToRouteFormDto(this Route model)
         {
             if (model == null) return null;
+
             var dias = new List<DayDto>();
             if (model.Lunes) dias.Add(new DayDto { Id = 1, Dia = "L" });
-
             if (model.Martes) dias.Add(new DayDto { Id = 2, Dia = "M" });
-
             if (model.Miercoles) dias.Add(new DayDto { Id = 3, Dia = "M" });
-
             if (model.Jueves) dias.Add(new DayDto { Id = 4, Dia = "J" });
-
             if (model.Viernes) dias.Add(new DayDto { Id = 5, Dia = "V" });
-
             if (model.Sabado) dias.Add(new DayDto { Id = 6, Dia = "S" });
-
             if (model.Domingo) dias.Add(new DayDto { Id = 7, Dia = "D" });
 
             return new RouteFormDto
@@ -136,11 +145,14 @@ namespace Service.Catalog.Mapper
                 Comentarios = dto.Comentarios.ToString(),
                 HoraDeRecoleccion = dto.HoraDeRecoleccion,
                 TiempoDeEntrega = dto.TiempoDeEntrega,
+                TipoTiempo = dto.TipoTiempo,
+                UsuarioCreoId = dto.UsuarioId.ToString(),
+                FechaCreo = DateTime.Now,
                 Estudios = dto?.Estudio?.Select(x => new Route_Study
                 {
                     EstudioId = x.Id,
                     FechaCreo = DateTime.Now,
-                    FechaMod = DateTime.Now,
+                    UsuarioCreoId = dto.UsuarioId.ToString()
                 })?.ToList(),
                 Lunes = dto.Dias.Any(x => x.Id == 1),
                 Martes = dto.Dias.Any(x => x.Id == 2),
@@ -164,19 +176,24 @@ namespace Service.Catalog.Mapper
                 OrigenId = dto?.OrigenId,
                 DestinoId = dto?.DestinoId,
                 MaquiladorId = dto?.MaquiladorId,
-                PaqueteriaId = dto.PaqueteriaId,
+                PaqueteriaId = dto?.PaqueteriaId,
                 Activo = dto.Activo,
                 Comentarios = dto?.Comentarios,
-                HoraDeRecoleccion = model.HoraDeRecoleccion,
+                HoraDeRecoleccion = dto.HoraDeRecoleccion,
                 TiempoDeEntrega = dto.TiempoDeEntrega,
-                UsuarioCreoId = dto.UsuarioId.ToString(),
-                FechaCreo = DateTime.Now,
+                TipoTiempo = dto.TipoTiempo,
+                UsuarioCreoId = model.UsuarioCreoId,
+                FechaCreo = model.FechaCreo,
+                UsuarioModificoId = dto.UsuarioId.ToString(),
+                FechaModifico = DateTime.Now,
                 Estudios = dto?.Estudio?.Select(x => new Route_Study
                 {
                     RouteId = model.Id,
                     EstudioId = x.Id,
-                    FechaCreo = DateTime.Now,
+                    FechaCreo = (DateTime)model.FechaCreo,
+                    UsuarioCreoId = model.UsuarioCreoId,
                     FechaMod = DateTime.Now,
+                    UsuarioModId = dto.UsuarioId.ToString()
                 })?.ToList(),
                 Lunes = dto.Dias.Any(x => x.Id == 1),
                 Martes = dto.Dias.Any(x => x.Id == 2),

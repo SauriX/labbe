@@ -41,29 +41,26 @@ namespace Service.MedicalRecord.Repository
             config.SetSynchronizeFilter<RequestStudy>(x => x.SolicitudId == requestId);
             await _context.BulkUpdateAsync(studies, config);
         }
+
         public async Task<List<TrackingOrder>> GetAll(RouteTrackingSearchDto search)
         {
             var routeTrackingList = _context.CAT_Seguimiento_Ruta.Where(x => x.Estudios.Any(y => y.Solicitud.Estudios.Any(m => m.EstatusId == Status.RequestStudy.TomaDeMuestra || m.EstatusId == Status.RequestStudy.EnRuta)))
-                .Include(x => x.Estudios)
-                .ThenInclude(x => x.Solicitud.Sucursal)
-                .Include(x => x.Estudios)
-                .ThenInclude(x => x.Solicitud.Estudios)
-                .ThenInclude(x => x.Estatus)
-                .Include(x => x.Etiquetas)
-                .ThenInclude(x => x.Estudios)
+                .Include(x => x.Estudios).ThenInclude(x => x.Solicitud.Sucursal)
+                .Include(x => x.Estudios).ThenInclude(x => x.Solicitud.Estudios).ThenInclude(x => x.Estatus)
+                .Include(x => x.Etiquetas).ThenInclude(x => x.Estudios)
             .AsQueryable();
 
-            if (search.Fechas != null && search.Fechas.Length != 0)
+            if (search.Fecha != null && string.IsNullOrWhiteSpace(search.Buscar))
             {
                 routeTrackingList = routeTrackingList.
-                    Where(x => x.FechaCreo.Date >= search.Fechas.First().Date && x.FechaCreo.Date <= search.Fechas.Last().Date);
+                     Where(x => x.FechaCreo.Date >= search.Fecha.First().Date && x.FechaCreo.Date <= search.Fecha.Last().Date);
             }
 
             if (!string.IsNullOrEmpty(search.Origen))
             {
-                routeTrackingList = routeTrackingList.Where(x => search.Destino.Contains(x.OrigenId));
+                routeTrackingList = routeTrackingList.Where(x => search.Origen.Contains(x.OrigenId));
             }
-            
+
             if (!string.IsNullOrEmpty(search.Destino))
             {
                 routeTrackingList = routeTrackingList.Where(x => search.Destino.Contains(x.DestinoId));
@@ -90,15 +87,42 @@ namespace Service.MedicalRecord.Repository
 
         public async Task<TrackingOrder> GetById(Guid Id)
         {
-            var route = await _context.CAT_Seguimiento_Ruta.Include(x => x.Estudios)
-                .ThenInclude(x => x.Solicitud.Sucursal)
+            var route = await _context.CAT_Seguimiento_Ruta
                 .Include(x => x.Estudios)
-                .ThenInclude(x => x.Solicitud.Estatus)
-                .Include(x => x.Estudios).ThenInclude(x => x.Solicitud.Estudios)
-                .ThenInclude(x => x.Estatus)
-                .Include(x => x.Estudios)
-                .ThenInclude(x => x.Solicitud.Expediente).AsQueryable().FirstOrDefaultAsync(x => x.Id == Id);
+                .ThenInclude(x => x.Solicitud)
+                .Include(x => x.Etiquetas)
+                .AsQueryable().FirstOrDefaultAsync(x => x.Id == Id);
             return route;
+        }
+
+        public async Task CreateOrder(TrackingOrder order)
+        {
+            using var transaction = _context.Database.BeginTransaction();
+
+            try
+            {
+                var tags = order.Estudios.ToList();
+
+                order.Estudios = null;
+
+                _context.CAT_Seguimiento_Ruta.Add(order);
+
+                await _context.SaveChangesAsync();
+
+                tags.ForEach(x => x.SeguimientoId = order.Id);
+
+                var config = new BulkConfig();
+                config.SetSynchronizeFilter<TrackingOrderDetail>(x => x.SeguimientoId == order.Id);
+
+                await _context.BulkInsertOrUpdateAsync(tags, config);
+
+                transaction.Commit();
+            }
+            catch (Exception)
+            {
+                transaction.Rollback();
+                throw;
+            }
         }
 
         public async Task Update(RouteTracking route)
@@ -106,14 +130,15 @@ namespace Service.MedicalRecord.Repository
             _context.Update(route);
             await _context.SaveChangesAsync();
         }
+
         public async Task Create(RouteTracking route)
         {
             await _context.AddAsync(route);
             await _context.SaveChangesAsync();
         }
+
         public async Task<List<TrackingOrder>> GetAllRecive(PendingSearchDto search)
         {
-
             var routeTrackingList = _context.CAT_Seguimiento_Ruta.Include(x => x.Estudios)
                 .ThenInclude(x => x.Solicitud.Sucursal)
                 .Include(x => x.Estudios)
@@ -126,17 +151,25 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Etiquetas)
                 .ThenInclude(x => x.Estudios)
                 .AsQueryable();
+
             if (search.Sucursal != null && search.Sucursal.Count > 0)
             {
                 routeTrackingList = routeTrackingList.Where(x => search.Sucursal.Contains(x.OrigenId));
             }
-            if (!string.IsNullOrEmpty(search.Busqueda))
+
+            if (!string.IsNullOrWhiteSpace(search.Busqueda))
             {
                 routeTrackingList = routeTrackingList.Where(x => search.Busqueda.Contains(x.Clave));
             }
-            routeTrackingList = routeTrackingList.Where(x => x.DestinoId == search.Sucursaldest);
+
+            if (!string.IsNullOrWhiteSpace(search.Sucursaldest))
+            {
+                routeTrackingList = routeTrackingList.Where(x => x.DestinoId == search.Sucursaldest);
+            }
+
             return await routeTrackingList.ToListAsync();
         }
+
         public async Task<RouteTracking> GetTracking(Guid Id)
         {
             var routeTracking = _context.Cat_PendientesDeEnviar.Include(x => x.Solicitud.Sucursal).FirstOrDefault(x => x.SegumientoId == Id);
@@ -146,28 +179,58 @@ namespace Service.MedicalRecord.Repository
         public async Task<IEnumerable<RequestTag>> GetAllTags(string search)
         {
             var tags = _context.Relacion_Solicitud_Etiquetas
+                .Include(x => x.Solicitud)
                 .Include(x => x.Estudios)
                 .AsQueryable();
 
-            search = search.Trim().ToLower();
-
             if (!string.IsNullOrWhiteSpace(search) && search != "all")
             {
-                tags = tags.Where(x => x.ClaveEtiqueta.ToLower().Contains(search));
+                tags = tags.Where(x => x.ClaveEtiqueta.ToLower().Contains(search) || x.Solicitud.Clave.Contains(search));
             }
 
             return await tags.ToListAsync();
 
         }
 
-        public async Task<IEnumerable<RequestTag>> FindTags(string routeId)
+        public async Task<IEnumerable<RequestTag>> FindTags(string search)
         {
-            var tags = await _context.Relacion_Solicitud_Etiquetas
-                .Where(x => x.Destino == routeId)
+            var tags = _context.Relacion_Solicitud_Etiquetas
                 .Include(x => x.Estudios)
+                .Include(x => x.Solicitud)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search) && search != "all")
+            {
+                tags = tags.Where(x => x.Destino == search || x.Solicitud.Clave == search);
+            }
+
+            return await tags.ToListAsync();
+        }
+
+        public async Task<IEnumerable<RequestStudy>> FindStudies(List<int> tagsId, Guid requestId)
+        {
+            var studyTags = await _context.Relacion_Etiqueta_Estudio
+                .Where(x => tagsId.Contains(x.SolicitudEtiquetaId))
+                .Include(x => x.SolicitudEtiqueta)
+                .Select(x => x.EstudioId)
                 .ToListAsync();
 
-            return tags;
+            var studies = await _context.Relacion_Solicitud_Estudio
+                .Where(x => studyTags.Contains(x.EstudioId) && x.SolicitudId == requestId)
+                .Where(x => x.EstatusId == Status.RequestStudy.TomaDeMuestra || x.EstatusId == Status.RequestStudy.EnRuta)
+                .ToListAsync();
+
+            return studies;
+        }
+
+        public async Task<string> GetLastCode(string date)
+        {
+            var lastOrder = await _context.Relacion_Seguimiento_Solicitud
+                .Include(x => x.Solicitud)
+                .Include(x => x.Etiqueta)
+                .FirstOrDefaultAsync();
+
+            return lastOrder?.Clave;
         }
     }
 }

@@ -123,14 +123,14 @@ namespace Service.MedicalRecord.Application
             }
             var order2 = order.toTrackingOrderFormDtos();
             var exisiting = await _catalogClient.GetStudies(EstudioIds);
-            foreach (var estudio in order2.Estudios) {
-                if (exisiting.Any(x=>x.Id== estudio.EstudioId)) {
-                    var data = exisiting.FirstOrDefault(x=>x.Id== estudio.EstudioId);
+            //foreach (var estudio in order2.Estudios) {
+            //    if (exisiting.Any(x=>x.Id== estudio.EstudioId)) {
+            //        var data = exisiting.FirstOrDefault(x=>x.Id== estudio.EstudioId);
 
-                    estudio.Clave = data.Clave;
-                    Estudios.Add(estudio);
-                }
-            }
+            //        estudio.Clave = data.Clave;
+            //        Estudios.Add(estudio);
+            //    }
+            //}
             order2.Estudios = Estudios.ToArray();
             return order2;
 

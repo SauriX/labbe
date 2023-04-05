@@ -61,6 +61,20 @@ namespace Service.Catalog.Repository
             return routes;
         }
 
+        public async Task<List<Route>> GetyByIds(List<string> ids)
+        {
+            var routes = await _context.CAT_Rutas
+                .Include(x => x.Estudios).ThenInclude(x => x.Estudio).ThenInclude(x => x.Area).ThenInclude(x => x.Departamento)
+                .Include(x => x.Origen)
+                .Include(x => x.Destino)
+                .Include(x => x.Paqueteria)
+                .Include(x => x.Maquilador)
+                .Where(x => ids.Contains(x.Id.ToString()) || ids.Contains(x.MaquiladorId.ToString()) || ids.Contains(x.DestinoId.ToString()))
+                .ToListAsync();
+
+            return routes;
+        }
+
         public async Task<bool> IsDuplicate(Route routes)
         {
             var isDuplicate = await _context.CAT_Rutas.AnyAsync(x => x.Id != routes.Id && (x.Clave == routes.Clave || x.Nombre == routes.Nombre));
@@ -121,7 +135,7 @@ namespace Service.Catalog.Repository
 
         public async Task<List<Route>> FindRoute(Route route)
         {
-            
+
             var routes = _context.CAT_Rutas
                  .Include(x => x.Estudios)
                  .ThenInclude(x => x.Estudio)

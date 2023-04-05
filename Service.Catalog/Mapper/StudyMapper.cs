@@ -68,11 +68,9 @@ namespace Service.Catalog.Mapper
                 EstudioId = model.Id,
                 Nombre = model.Nombre,
                 Area = model.Area?.Nombre,
-                Departamento = model.Area?.Departamento?.Nombre,
                 Activo = false,
                 Precio = 0,
                 Clave = model.Clave,
-
             });
         }
 

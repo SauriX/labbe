@@ -23,6 +23,7 @@ namespace Service.MedicalRecord.Controllers
             _service = service;
            
         }
+
         [HttpPost("all")]
         [Authorize(Policies.Access)]
         public async Task<List<RouteTrackingListDto>> GetAll(RouteTrackingSearchDto search)
@@ -31,12 +32,24 @@ namespace Service.MedicalRecord.Controllers
             return requestedStudy;
         }
 
-        [HttpPut]
-        [Authorize(Policies.Update)]
-        public async Task UpdateStatus(List<RequestedStudyUpdateDto> requestDto)
+        [HttpGet("findTags/{search}")]
+        [Authorize(Policies.Access)]
+        public async Task<List<TagTrackingOrderDto>> FindTags(string search)
         {
-            await _service.UpdateStatus(requestDto);
+            var requestTags = await _service.FindTags(search);
+
+            return requestTags;
         }
+
+        [HttpGet("tags/all/{search}")]
+        [Authorize(Policies.Access)]
+        public async Task<List<TagTrackingOrderDto>> GetAllTags(string search)
+        {
+            var requestTags = await _service.GetAllTags(search);
+
+            return requestTags;
+        }
+
         [HttpPost("export/form/{order}")]
         //[Authorize(Policies.Download)]
         public async Task<IActionResult> ExportFormTrackingOrder(Guid order)

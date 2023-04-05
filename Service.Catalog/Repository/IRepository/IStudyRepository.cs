@@ -7,6 +7,7 @@ namespace Service.Catalog.Repository.IRepository
     public interface IStudyRepository
     {
         Task<List<Study>> GetAll(string search);
+        Task<List<Study>> GetStudyList(string search);
         Task<List<Study>> GetActive();
         Task<Study> GetById(int id);
         Task<int> GetIdByCode(string code);

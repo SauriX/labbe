@@ -49,6 +49,19 @@ namespace Service.Catalog.Repository
             return await Packs.ToListAsync();
         }
 
+        public async Task<List<Packet>> GetPackList(string search)
+        {
+            var Packs = _context.CAT_Paquete.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search) && search != "all")
+            {
+                search = search.Trim().ToLower();
+                Packs = Packs.Where(x => x.Clave.ToLower().Contains(search) || x.Nombre.ToLower().Contains(search));
+            }
+
+            return await Packs.ToListAsync();
+        }
+
         public async Task<List<Packet>> GetActive()
         {
             var Packs = _context.CAT_Paquete

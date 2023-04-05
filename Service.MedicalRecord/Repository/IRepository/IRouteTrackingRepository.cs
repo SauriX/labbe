@@ -17,11 +17,14 @@ namespace Service.MedicalRecord.Repository.IRepository
         Task<List<TrackingOrder>> GetAll(RouteTrackingSearchDto search);
         Task<List<RequestTag>> GetTagsByOrigin();
         Task<TrackingOrder> GetById(Guid Id);
+        Task CreateOrder(TrackingOrder order);
         Task Update(RouteTracking route);
         Task Create(RouteTracking route);
         Task<List<TrackingOrder>> GetAllRecive(PendingSearchDto search);
         Task<RouteTracking> GetTracking(Guid Id);
         Task<IEnumerable<RequestTag>> GetAllTags(string search);
-        Task<IEnumerable<RequestTag>> FindTags(string routeId);
+        Task<IEnumerable<RequestTag>> FindTags(string search);
+        Task<IEnumerable<RequestStudy>> FindStudies(List<int> tagsId, Guid requestId);
+        Task<string> GetLastCode(string date);
     }
 }

@@ -12,6 +12,17 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
+      "DownstreamPathTemplate": "/services/catalogo/api/pack/packList/{search}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/pack/packList/{search}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/services/catalogo/api/pack/{id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
