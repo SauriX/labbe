@@ -90,7 +90,7 @@ namespace Service.Catalog.Controllers
         [HttpPut("status/{id}")]
         [Authorize(Policies.Create)]
         public async Task<MantainListDto> Update(Guid id)
-        {
+            {
 
             return await _service.UpdateStatus(id);
         }
