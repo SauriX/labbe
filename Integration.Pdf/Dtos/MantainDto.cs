@@ -15,9 +15,6 @@ namespace Integration.Pdf.Dtos
         public string Clave { get; set; }
         public string No_serie { get; set; }
         public bool Ativo { get; set; }
-     
-        public List<string> imagenUrl { get; set; }
-
- 
+        public List<MantainImageDto> imagenUrl { get; set; }
     }
 }

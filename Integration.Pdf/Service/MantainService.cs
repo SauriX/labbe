@@ -100,7 +100,7 @@ namespace Integration.Pdf.Service
 
             if (order.imagenUrl.Count()>0) {
                 foreach (var image in order.imagenUrl) {
-                    var img = $"wwwroot/images/mantain{image}";
+                    var img = $"wwwroot/images/mantain{image.ImagenUrl}";
                     var path = AppDomain.CurrentDomain.BaseDirectory;
                     path = path.ToString().Replace("\\Integration.Pdf\\", "\\Service.Catalog\\");
                     var logo = $"{path}{img}";
