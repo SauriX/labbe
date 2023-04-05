@@ -95,12 +95,9 @@ namespace Service.MedicalRecord.Mapper
                 var pack = request.Paquetes;
 
                 var priceStudies = studies.Sum(x => x.Precio - (x.Precio * x.Paquete?.DescuentoPorcentaje ?? 0) - (x.Descuento == 0 ? 0 : x.Descuento));
-                var descount = studies.Sum(x => x.Descuento);
                 var promotion = studies.Sum(x => x.Descuento) + pack.Sum(x => x.Descuento);
-                var porcentualDescount = (descount * 100) / priceStudies;
-                var descRequest = descount / 100;
                 var charge = request.Cargo;
-                var porcentualCharge = (charge * 100) / priceStudies;
+                var porcentualCharge = request.TotalEstudios != 0 ? (charge * 100) / request.TotalEstudios : 0;
 
                 return new ReportInfoDto
                 {
@@ -129,12 +126,12 @@ namespace Service.MedicalRecord.Mapper
                     Parcialidad = request.Parcialidad,
                     TotalEstudios = request.TotalEstudios,
                     Descuento = request.Descuento,
-                    DescuentoPorcentual = porcentualDescount,
+                    DescuentoPorcentual = 0m,
                     Promocion = promotion,
                     Cargo = request.Cargo,
                     CargoPorcentual = porcentualCharge,
                     Copago = request.Copago,
-                    PrecioEstudios = priceStudies,
+                    PrecioEstudios = request.TotalEstudios,
                     Total = request.Total,
                     Fecha = request.FechaCreo,
                     Estudios = studies.RequestStudies(),

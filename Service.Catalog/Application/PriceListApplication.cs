@@ -132,10 +132,10 @@ namespace Service.Catalog.Application
 
             if (promos != null && promos.Count > 0)
             {
-                priceDto.PromocionId = promos[0].PromocionId;
-                priceDto.Promocion = promos[0].Promocion.Nombre;
-                priceDto.Descuento = promos[0].DescuentoCantidad;
-                priceDto.DescuentoPorcentaje = promos[0].DescuentoPorcentaje;
+                //priceDto.PromocionId = promos[0].PromocionId;
+                //priceDto.Promocion = promos[0].Promocion.Nombre;
+                //priceDto.Descuento = promos[0].DescuentoCantidad;
+                //priceDto.DescuentoPorcentaje = promos[0].DescuentoPorcentaje;
 
                 foreach (var promo in promos)
                 {

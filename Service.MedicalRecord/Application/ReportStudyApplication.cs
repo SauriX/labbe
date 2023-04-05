@@ -48,22 +48,21 @@ namespace Service.MedicalRecord.Application
             {
                 throw new CustomException(HttpStatusCode.NotFound);
             }
-            var test = request.toRequestList().ToList();
-            return request.toRequestList().ToList();
+
+            return request.ToReportRequestList();
         }
 
 
         public async Task<byte[]> ExportRequest(GeneralFilterDto filter)
         {
             var request = await GetByFilter(filter);
+
             if (request == null)
             {
                 throw new CustomException(HttpStatusCode.NotFound);
             }
 
-
-
-            return await _pdfClient.RequestDayForm(request);
+            return await _pdfClient.RequestDayForm(request.ToList());
         }
 
 
@@ -127,15 +126,10 @@ namespace Service.MedicalRecord.Application
                         };
                         list.Add(Lab);
                     }
-
-
-
-
                 }
                 pivote = study.Sucursal;
-
-
             }
+
             foreach (var request in list)
             {
                 if (request.Requests.Count > 0)
