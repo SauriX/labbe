@@ -40,6 +40,22 @@ namespace Service.Catalog.Repository
             return await studyes.ToListAsync();
         }
 
+        public async Task<List<Study>> GetStudyList(string search)
+        {
+            var studyes = _context.CAT_Estudio
+                    .Include(x => x.Area)
+                    .ThenInclude(x => x.Departamento)
+                    .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search) && search != "all")
+            {
+                search = search.Trim().ToLower();
+                studyes = studyes.Where(x => x.Clave.ToLower().Contains(search) || x.Nombre.ToLower().Contains(search));
+            }
+
+            return await studyes.ToListAsync();
+        }
+
         public async Task<List<Study>> GetActive()
         {
             var studyes = _context.CAT_Estudio

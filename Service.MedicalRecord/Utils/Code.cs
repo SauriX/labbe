@@ -24,19 +24,19 @@ namespace Service.MedicalRecord.Utils
             return $"{date}{branchCode}{next:D3}";
         }
 
-        public static string GetTagCode(string keyCode, string lastCode, DateTime creationDate)
+        public static string GetTrackingOrderCode(string lastCode, string creationDate)
         {
-            var date = creationDate.ToString("ddMMyy");
+            var date = creationDate;
 
             if(lastCode == null)
             {
-                return $"{keyCode}{date}00001";
+                return $"{date}00001";
             }
 
             var current = lastCode[8..];
             var next = Convert.ToInt32(current) + 1;
 
-            return $"{keyCode}{date}{next:D5}";
+            return $"{date}{next:D5}";
         }
 
         public static int GetCodeLegacy(string codeRange, string lastCode)

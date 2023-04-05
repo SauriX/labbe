@@ -29,6 +29,13 @@ namespace Service.Catalog.Application
 
             return packs.ToPackListDto();
         }
+        
+        public async Task<IEnumerable<PackListDto>> GetPackList(string search)
+        {
+            var packs = await _repository.GetPackList(search);
+
+            return packs.ToPackListDto();
+        }
 
         public async Task<IEnumerable<PackListDto>> GetActive()
         {
