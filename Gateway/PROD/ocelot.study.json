@@ -12,14 +12,14 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/services/catalogo/api/study/allprice/{search}",
+      "DownstreamPathTemplate": "/services/catalogo/api/study/studyList/{search}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "labramos.axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/study/allprice/{search}",
+      "UpstreamPathTemplate": "/api/study/studyList/{search}",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {

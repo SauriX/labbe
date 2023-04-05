@@ -110,10 +110,11 @@ namespace Service.MedicalRecord.Client
         public async Task<List<RouteFormDto>> GetRutas(List<string> ids)
         {
             var url = $"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/route/multiple";
-            var response = await _client.PostAsJson<List<RouteFormDto>>(url, ids);
+            var response = await _client.DeserializePostAsJson<List<RouteFormDto>>(url, ids);
 
             return response;
         }
+
         public async Task<List<NotificationListDto>> GetNotifications(string search)
 
         {

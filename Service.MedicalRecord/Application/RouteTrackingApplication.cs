@@ -41,7 +41,7 @@ namespace Service.MedicalRecord.Application
             var routeTrackingList = await _repository.GetAll(search);
             var studyTags = await _repository.GetTagsByOrigin();
 
-            List<RouteFormDto> tagRoutes = new();
+            List<RouteFormDto> tagRoutes;
 
             var tagDestination = studyTags.Where(x => x.DestinoId != null).Select(y => y.DestinoId).ToList();
             tagRoutes = await _catalogClient.GetRutas(tagDestination);
@@ -65,9 +65,9 @@ namespace Service.MedicalRecord.Application
             return tags.ToTagTrackingOrderDto();
         }
 
-        public async Task<List<TagTrackingOrderDto>> FindTags(string routeId)
+        public async Task<List<TagTrackingOrderDto>> FindTags(string search)
         {
-            var trackingTags = await _repository.FindTags(routeId);
+            var trackingTags = await _repository.FindTags(search);
 
             return trackingTags.ToTagTrackingOrderDto();
         }

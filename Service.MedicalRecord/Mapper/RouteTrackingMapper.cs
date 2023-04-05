@@ -17,7 +17,8 @@ namespace Service.MedicalRecord.Mapper
         public static List<RouteTrackingListDto> ToRouteTrackingDto(this ICollection<TrackingOrder> model, List<RequestTag> tags, List<RouteFormDto> tagRoutes = null)
         {
             if (model == null) return null;
-            List<RouteTrackingListDto> routes = new List<RouteTrackingListDto>();
+
+            var routes = new List<RouteTrackingListDto>();
 
             if (model.Count <= 0)
             {
@@ -32,30 +33,39 @@ namespace Service.MedicalRecord.Mapper
                         Cantidad = tag.Cantidad,
                         Estudios = string.Join(", ", tag.Estudios.Select(x => x.NombreEstudio)),
                         Solicitud = tag.Solicitud.Clave,
-                        Estatus = tag.Solicitud.Estudios.FirstOrDefault().EstatusId,
+                        Estatus = tag.Solicitud.Estudios.FirstOrDefault()?.EstatusId ?? 0,
                         Entrega = "",
-                        Ruta = tagRoutes != null ? string.Join(", ", tagRoutes.Where(x => x.SucursalDestinoId.ToString().Contains(tag.DestinoId)).Select(y => y.Nombre)) : ""
+                        Ruta = tagRoutes?.Where(x => x.SucursalDestinoId.ToString().Contains(tag.DestinoId)).Select(y => y.Nombre).FirstOrDefault() ?? ""
                     });
                 }
             }
             else
             {
+                var tagIds = tags.Select(t => t.Id).ToList();
+                var tagEstudios = tags.ToDictionary(t => t.Id, t => string.Join(", ", t.Estudios.Select(x => x.NombreEstudio)));
+                var tagSolicitudes = tags.ToDictionary(t => t.Id, t => t.Solicitud.Clave);
+
                 foreach (var item in model)
                 {
-                    foreach (var tag in tags)
+                    var entrega = !string.IsNullOrEmpty(item.FechaEntrega.ToString("dd/MM/yyyy")) ? item.FechaEntrega.ToString("dd/MM/yyyy") : "";
+
+                    foreach (var tag in item.Etiquetas.Where(et => tagIds.Contains(et.Id)))
                     {
+                        var estudios = tagEstudios[tag.Id];
+                        var solicitud = tagSolicitudes[tag.Id];
+
                         routes.Add(new RouteTrackingListDto
                         {
-                            Id = item.Etiquetas.Select(x => x.Id).Contains(tag.Id) ? item.Id : Guid.Empty,
+                            Id = item.Id,
                             Seguimiento = !string.IsNullOrEmpty(item.Clave) ? item.Clave : "",
                             ClaveEtiqueta = tag.Clave,
                             Recipiente = tag.ClaveEtiqueta,
                             Cantidad = tag.Cantidad,
-                            Estudios = string.Join(", ", tag.Estudios.Select(x => x.NombreEstudio)),
-                            Solicitud = tag.Solicitud.Clave,
-                            Estatus = tag.Solicitud.Estudios.FirstOrDefault().EstatusId,
-                            Entrega = !string.IsNullOrEmpty(item.FechaEntrega.ToString()) ? item.FechaEntrega.ToString("dd/MM/YYYY") : "",
-                            Ruta = tagRoutes != null ? string.Join(", ", tagRoutes.Select(x => x.Nombre)) : ""
+                            Estudios = estudios,
+                            Solicitud = solicitud,
+                            Estatus = tag.Solicitud.Estudios.FirstOrDefault()?.EstatusId ?? 0,
+                            Entrega = entrega,
+                            Ruta = tagRoutes?.Select(x => x.Nombre).FirstOrDefault() ?? ""
                         });
                     }
                 }
@@ -63,6 +73,7 @@ namespace Service.MedicalRecord.Mapper
 
             return routes;
         }
+
 
         public static RouteTrackingDeliverListDto ToRouteTrackingDtoList(this TrackingOrder x)
         {

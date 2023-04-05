@@ -23,12 +23,31 @@ namespace Service.MedicalRecord.Controllers
             _service = service;
            
         }
+
         [HttpPost("all")]
         [Authorize(Policies.Access)]
         public async Task<List<RouteTrackingListDto>> GetAll(RouteTrackingSearchDto search)
         {
             var requestedStudy = await _service.GetAll(search);
             return requestedStudy;
+        }
+
+        [HttpGet("findTags/{search}")]
+        [Authorize(Policies.Access)]
+        public async Task<List<TagTrackingOrderDto>> FindTags(string search)
+        {
+            var requestTags = await _service.FindTags(search);
+
+            return requestTags;
+        }
+
+        [HttpGet("tags/all/{search}")]
+        [Authorize(Policies.Access)]
+        public async Task<List<TagTrackingOrderDto>> GetAllTags(string search)
+        {
+            var requestTags = await _service.GetAllTags(search);
+
+            return requestTags;
         }
 
         [HttpPost("export/form/{order}")]

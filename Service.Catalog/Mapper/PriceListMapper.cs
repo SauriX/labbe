@@ -227,7 +227,7 @@ namespace Service.Catalog.Mapper
                     Activo = x.Activo,
                     DescuenNum = x.DescuenNum,
                     Descuento = x.Descuento,
-                    PrecioFinal = x.PrecioFinal,
+                    PrecioFinal = x.Precio - x.DescuenNum,
                     Pack = x.Paquete.Estudios.Select(x => new PackStudyDto
                     {
                         Id = x.EstudioId,

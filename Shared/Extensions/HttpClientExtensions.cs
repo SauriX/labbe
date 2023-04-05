@@ -78,6 +78,26 @@ namespace Shared.Extensions
             return await ReadContentAs<TResponse>(response);
         }
 
+        public static async Task<TResponse> DeserializePostAsJson<TResponse>(this HttpClient httpClient, string url, object data)
+        {
+            var dataAsString = JsonSerializer.Serialize(data);
+
+            var content = new StringContent(dataAsString, Encoding.UTF8, "application/json");
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            var response = await httpClient.PostAsync(url, content);
+
+            if (response.Content.Headers.ContentType.MediaType == "application/json")
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<TResponse>(responseContent);
+            }
+            else
+            {
+                throw new Exception("Invalid response content type.");
+            }
+        }
+
         public static async Task<TResponse> PutAsJson<TResponse>(this HttpClient httpClient, string url, object data)
         {
             var dataAsString = JsonSerializer.Serialize(data);
