@@ -70,18 +70,33 @@ namespace Integration.Pdf.Service
 
         static void Format(Section section, MantainDto order)
         {
-            var title = new Col("Laboratorio Alfonso Ramos S.A. de C.V. (HERMOSILLO)", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Right);
-            section.AddText(title);
+            var logo = File.ReadAllBytes(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets\\LabRamosLogo.png"));
+            var labramoslogo = new Col(logo, 6, ParagraphAlignment.Center)
+            {
+                ImagenTamaño = Unit.FromCentimeter(6)
+            };
+
+            section.AddText(labramoslogo);
 
             section.AddSpace();
 
-             
+            var title = new Col($"Laboratorio Alfonso Ramos S.A. de C.V.", new Font("Calibri", 13) { Bold = true }, ParagraphAlignment.Center);
+            section.AddText(title);
+
+            section.AddSpace();
+            var titledoc = new Col($"Formato Mantenimiento", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Center);
+            section.AddText(titledoc);
+
+            section.AddSpace();
+
+
+
             var line1 = new Col[]
             {
                 new Col("Clave:", 3, ParagraphAlignment.Left),
                 new Col($": {order.Clave}", 8, Col.FONT_BOLD, ParagraphAlignment.Left),
                 new Col("", 1),
-                new Col("Nombre:", 3, ParagraphAlignment.Left),
+                new Col("Fecha:", 3, ParagraphAlignment.Left),
                 new Col($": {order.Fecha}", 4, Col.FONT_BOLD, ParagraphAlignment.Left),
                 new Col("", 1),
                 new Col("Serie:", 1, ParagraphAlignment.Left),
@@ -91,7 +106,7 @@ namespace Integration.Pdf.Service
             section.AddBorderedText(line1, right: true, left: true);
             var observationTitle = new Col("Observaciones", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Center);
             section.AddText(observationTitle);
-            var observation = new Col(order.Descripcion, new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Center);
+            var observation = new Col(order.Descripcion, new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Left);
             section.AddText(observation);
             var images = new Col("Imagenes", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Center);
             section.AddText(observation);
@@ -103,10 +118,10 @@ namespace Integration.Pdf.Service
                     var img = $"wwwroot/images/mantain{image.ImagenUrl}";
                     var path = AppDomain.CurrentDomain.BaseDirectory;
                     path = path.ToString().Replace("\\Integration.Pdf\\", "\\Service.Catalog\\");
-                    var logo = $"{path}{img}";
+                    var imageData = $"{path}{img}";
 
                     var webClient = new WebClient();
-                    byte[] imageBytes = webClient.DownloadData(logo);
+                    byte[] imageBytes = webClient.DownloadData(imageData);
 
                     /* System.Drawing.ImageConverter converter = new System.Drawing.ImageConverter();
                      var image = (byte[])converter.ConvertTo(new System.Drawing.Bitmap(imageBytes), typeof(byte[]));*/
