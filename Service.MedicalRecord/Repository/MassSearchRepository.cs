@@ -42,7 +42,7 @@ namespace Service.MedicalRecord.Repository
             }
             if (string.IsNullOrWhiteSpace(filter.Buscar) && filter.TipoFecha != null && filter.TipoFecha == 2 && filter.Fecha != null)
             {
-                requests = requests.Where(x => x.Estudios.Any(x => filter.Fecha.First().Date <= x.FechaCreo.Date && filter.Fecha.Last().Date >= x.FechaCreo.Date));
+                requests = requests.Where(x => x.Estudios.Any(x => filter.Fecha.First().Date <= x.FechaEntrega.Date && filter.Fecha.Last().Date >= x.FechaEntrega.Date));
             }
 
             if (!string.IsNullOrWhiteSpace(filter.Buscar))
