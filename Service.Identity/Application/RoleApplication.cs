@@ -117,12 +117,12 @@ namespace Service.Identity.Application
 
             var updatedRole = role.ToModel(existing);
 
-            var isDuplicate = await _repository.IsDuplicate(updatedRole);
+            //var isDuplicate = await _repository.IsDuplicate(updatedRole);
 
-            if (isDuplicate)
-            {
-                throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("El nombre"));
-            }
+            //if (isDuplicate)
+            //{
+            //    throw new CustomException(HttpStatusCode.Conflict, Responses.Duplicated("El nombre"));
+            //}
 
             await _repository.Update(updatedRole);
 
