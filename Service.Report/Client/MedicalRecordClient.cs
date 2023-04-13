@@ -121,7 +121,7 @@ namespace Service.Report.Client
 
         public async Task<List<RequestRegister>> GetRequestPaymentByFilter(ReportFilterDto filter)
         {
-            var url = $"{_configuration.GetValue<string>("ClientRoutes:Catalog")}/api/reportdata/payment/filter";
+            var url = $"{_configuration.GetValue<string>("ClientRoutes:MedicalRecord")}/api/reportdata/payment/filter";
             var response = await _client.PostAsJson<List<RequestRegister>>(url, filter);
 
             return response;
