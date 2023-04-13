@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Service.Report.Controllers.Report
 {
@@ -16,6 +17,7 @@ namespace Service.Report.Controllers.Report
         [Authorize(Policies.Access)]
         public async Task<CashDto> GetCashRegistertNow(ReportFilterDto search)
         {
+            _logger.LogError("IN CONTROLLER CASH/FILTER");
             return await _cashregisterService.GetByFilter(search);
         }
 
