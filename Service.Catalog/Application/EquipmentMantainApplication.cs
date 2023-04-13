@@ -158,5 +158,12 @@ namespace Service.Catalog.Application
             await _service.DeleteImage(Id, code);
         }
 
+        public async Task<MantainListDto> UpdateStatus(Guid id) {
+            var mantain = await _service.GetById(id);
+            mantain.Activo = !mantain.Activo;
+            await _service.Update(mantain);
+            return mantain.ToMantainListDto();
+        }
+
     }
 }

@@ -86,5 +86,13 @@ namespace Service.Catalog.Controllers
         {
             await _service.DeleteImage(Id, code);
         }
+
+        [HttpPut("status/{id}")]
+        [Authorize(Policies.Create)]
+        public async Task<MantainListDto> Update(Guid id)
+            {
+
+            return await _service.UpdateStatus(id);
+        }
     }
 }

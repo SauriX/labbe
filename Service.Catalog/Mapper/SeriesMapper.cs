@@ -62,7 +62,9 @@ namespace Service.Catalog.Mapper
                 Nombre = dto.Nombre,
                 Clave = dto.Clave,
                 TipoSerie = dto.TipoSerie,
-                FechaCreo = DateTime.Now
+                SucursalId = Guid.Parse(dto.Expedicion.SucursalId),
+                FechaCreo = DateTime.Now,
+                Relacion = true,
             };
         }
 
@@ -78,6 +80,7 @@ namespace Service.Catalog.Mapper
                 TipoSerie = model.TipoSerie,
                 FechaCreo = model.FechaCreo,
                 FechaModifico = DateTime.Now,
+                Relacion = true,
             };
         }
 

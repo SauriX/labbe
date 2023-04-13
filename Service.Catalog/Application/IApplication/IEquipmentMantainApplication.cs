@@ -16,5 +16,6 @@ namespace Service.Catalog.Application.IApplication
         Task<byte[]> Print(Guid Id);
         Task<EquimentDetailDto> Getequip(int Id);
         Task DeleteImage(Guid Id, string code);
+        Task<MantainListDto> UpdateStatus(Guid id);
     }
 }

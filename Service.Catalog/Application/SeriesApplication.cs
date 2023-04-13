@@ -79,13 +79,14 @@ namespace Service.Catalog.Application
 
             var invoiceData = serie.ToInvoiceSerieDto();
 
+            if (serie.SucursalId != Guid.Empty)
+            {
+                var defaultBranch = await _branchRepository.GetById(serie.SucursalId.ToString());
+                expeditionData = defaultBranch.ToExpeditionPlaceDto(key);
+            }
+
             if (tipo == TIPO_FACTURA)
             {
-                if (serie.SucursalId != Guid.Empty)
-                {
-                    var defaultBranch = await _branchRepository.GetById(serie.SucursalId.ToString());
-                    expeditionData = defaultBranch.ToExpeditionPlaceDto(key);
-                }
 
                 invoiceData.Id = id;
 
@@ -113,7 +114,7 @@ namespace Service.Catalog.Application
                 {
                     Id = id,
                     Factura = invoiceData,
-                    Expedicion = new ExpeditionPlaceDto(),
+                    Expedicion = expeditionData,
                     UsuarioId = serie.UsuarioCreoId
                 };
             }
@@ -190,6 +191,17 @@ namespace Service.Catalog.Application
             var data = ticket.ToTicketCreate();
 
             await CheckDuplicate(data);
+
+            var branch = await _branchRepository.GetById(ticket.Expedicion.SucursalId);
+
+            if (branch != null)
+            {
+                data.Ciudad = branch.Ciudad;
+            }
+            else
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "Debe asignar una sucursal");
+            }
 
             await _repository.Create(data);
         }
