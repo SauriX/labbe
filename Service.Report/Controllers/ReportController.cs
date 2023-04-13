@@ -1,5 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Service.Report.Application.IApplication;
+
+using Microsoft.AspNetCore.Http;
+using Shared.Error;
+using Shared.Helpers;
+using System;
+using System.IO;
+using System.Net;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Service.Report.Controllers.Report
 {
@@ -23,6 +33,7 @@ namespace Service.Report.Controllers.Report
         private readonly IMaquilaExternApplication _maquilaexternService;
         private readonly IBudgetStatsApplication _budgetStatsService;
         private readonly IIndicatorsStatsApplication _indicatorsStatsService;
+        private readonly ILogger<ReportController> _logger;
 
         public ReportController(
             IPatientStatsApplication patientStatsService,
@@ -40,7 +51,8 @@ namespace Service.Report.Controllers.Report
             IMaquilaInternApplication maquilaInternService,
             IMaquilaExternApplication maquilaExternService,
             IBudgetStatsApplication budgetStatsService,
-            IIndicatorsStatsApplication indicatorsStatsService)
+            IIndicatorsStatsApplication indicatorsStatsService,
+            ILogger<ReportController> logger)
         {
             _patientstatsService = patientStatsService;
             _requestService = requestService;
@@ -58,6 +70,7 @@ namespace Service.Report.Controllers.Report
             _maquilaexternService = maquilaExternService;
             _budgetStatsService = budgetStatsService;
             _indicatorsStatsService = indicatorsStatsService;
+            _logger = logger;
         }
     }
 }
