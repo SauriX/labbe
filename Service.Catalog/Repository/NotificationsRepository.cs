@@ -48,8 +48,11 @@ namespace Service.Catalog.Repository
             {
                 notification = notification.Where(x => x.Titulo.ToLower().Contains(search));
             }
-            notification = notification.Where(x => x.FechaInicial.Date >= fecha.Date && fecha.Date <= x.FechaFinal.Date);
             notification = notification.Where(x => x.IsNotifi == isNotification);
+            var test = notification.First();
+            
+            notification = notification.Where(x => x.FechaInicial.Date <= fecha.Date && fecha.Date <= x.FechaFinal.Date);
+            
             return await notification.ToListAsync();
         }
         public async Task<Notifications> GetById(Guid id)

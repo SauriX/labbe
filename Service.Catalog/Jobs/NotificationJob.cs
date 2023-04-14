@@ -18,7 +18,7 @@ namespace Service.Catalog.Jobs
             _repository = repository;
         }
         public async Task Execute(IJobExecutionContext context)
-        {
+            {
             var notifications = await _repository.GetAllComplete("all", false,DateTime.Now);
             var filternotifications = notifications.Any(x => x.Activo);
             if (filternotifications)
@@ -64,20 +64,16 @@ namespace Service.Catalog.Jobs
                     }
                     var dia = (int)DateTime.Now.DayOfWeek;
                     if (dias.Any(x => x == dia)) {
-                        if (notification.Sucursales.Any()) {
+                        if (notification.Sucursales.Any()&& notification.Roles.Any()) {
                             foreach (var sucursal in notification.Sucursales) {
-                                var contract = new NotificationContract(notification.Contenido, false,sucursal.Branch.Id.ToString());
-                                await _endpoint.Publish(contract);
+                                foreach (var rol in notification.Roles)
+                                {
+                                    var contract = new NotificationContract(notification.Contenido, false, DateTime.Now, $"{rol.RolId.ToString()}-{sucursal.Branch.Id.ToString()}");
+                                    await _endpoint.Publish(contract);
+                                }
                             }
                         }
-                        if (notification.Roles.Any()) {
 
-                            foreach (var rol in notification.Roles)
-                            {
-                                var contract = new NotificationContract(notification.Contenido, false, rol.RolId.ToString());
-                                await _endpoint.Publish(contract);
-                            }
-                        }
                     }
 
                 }

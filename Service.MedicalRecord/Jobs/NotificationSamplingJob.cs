@@ -43,7 +43,7 @@ namespace Service.MedicalRecord.Jobs
             var notifications = await _catalogClient.GetNotifications("Captura de resultados");
             var createnotification = notifications.FirstOrDefault(x => x.Tipo == "Pending");
             var mensaje = createnotification.Contenido.Replace("Lsolicitud", string.Join(",", requests));
-            var contract = new NotificationContract(mensaje, false);
+            var contract = new NotificationContract(mensaje, false, DateTime.Now);
             await _publishEndpoint.Publish(contract);
             _ = Task.FromResult(true);
         }

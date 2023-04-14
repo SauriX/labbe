@@ -290,13 +290,13 @@ namespace Service.MedicalRecord.Application
             await _repository.Create(newRequest);
             if (newRequest.Urgencia != 1)
             {
-                var notifications = await _catalogClient.GetNotifications("Toma de muestra");
+                var notifications = await _catalogClient.GetNotifications("Solicitar estudios");
                 var createnotification = notifications.FirstOrDefault(x => x.Tipo == "Urgent");
                 if (createnotification.Activo)
                 {
 
-                    var mensaje = createnotification.Contenido.Replace("[Nlista]", newRequest.Clave);
-                    var contract = new NotificationContract(mensaje, false);
+                    var mensaje = createnotification.Contenido.Replace("Nsolicitud", newRequest.Clave);
+                    var contract = new NotificationContract(mensaje, false, DateTime.Now);
                     await _publishEndpoint.Publish(contract);
 
                 }
@@ -676,7 +676,7 @@ namespace Service.MedicalRecord.Application
                 {
 
                     var mensaje = createnotification.Contenido.Replace("Solicitar estudios", request.Clave);
-                    var contract = new NotificationContract(mensaje, false);
+                    var contract = new NotificationContract(mensaje, false, DateTime.Now);
                     await _publishEndpoint.Publish(contract);
 
                 }

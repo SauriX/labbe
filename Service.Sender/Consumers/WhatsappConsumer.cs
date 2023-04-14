@@ -52,16 +52,16 @@ namespace Service.Sender.Consumers
 
                         if (message.Notificar)
                         {
-                            var notification = new NotificationContract($"Whatsapp enviado correctamente al número {item}", true);
+                            var notification = new NotificationContract($"Whatsapp enviado correctamente al número {item}", true, DateTime.Now);
 
                             await _hubContext.Clients.Group(message.RemitenteId).SendAsync("Notify", notification);
                         }
                     }
                     catch (Exception e)
                     {
-                        var notification = new NotificationContract($"Hubo un error al enviar el whatsapp al número {item}: {e.Message}", true);
+                        var notification = new NotificationContract($"Hubo un error al enviar el whatsapp al número {item}: {e.Message}", true, DateTime.Now);
 
-                        await _hubContext.Clients.Group(message.RemitenteId).SendAsync("Notify", notification);
+                        await _hubContext.Clients.Group(message.RemitenteId).SendAsync("Notify", notification, DateTime.Now);
                         continue;
                     }
                 }

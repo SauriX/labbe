@@ -23,7 +23,7 @@ namespace Service.MedicalRecord.Controllers
         public ReportDataController(IReportApplication service, ILogger<ReportDataController> logger) 
         {
             _service = service;
-            _logger = logger
+            _logger = logger;
         }
 
         [HttpPost("cotizaciones/filter")]

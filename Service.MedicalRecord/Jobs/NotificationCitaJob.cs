@@ -41,7 +41,7 @@ namespace Service.MedicalRecord.Jobs
                 foreach (var cita in citas) {
                     var mensaje = createnotification.Contenido.Replace("[Ndispositivo]","536");
                     mensaje = mensaje.Replace("[Ncita]", cita.Cita);
-                    var contract = new NotificationContract(mensaje, false);
+                    var contract = new NotificationContract(mensaje, false, DateTime.Now);
                     await _publishEndpoint.Publish(contract);
                 }
 

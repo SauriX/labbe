@@ -149,7 +149,7 @@ namespace Service.MedicalRecord.Application
                     {
 
                             var mensaje = createnotification.Contenido.Replace("[Nsolicitud]", request.Clave);
-                            var contract = new NotificationContract(mensaje, false);
+                            var contract = new NotificationContract(mensaje, false, DateTime.Now);
                             await _publishEndpoint.Publish(contract);
                         
                     }
