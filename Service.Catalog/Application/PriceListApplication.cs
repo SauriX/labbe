@@ -255,7 +255,7 @@ namespace Service.Catalog.Application
             if (createnotification.Activo) { 
                 var mensaje = createnotification.Contenido.Replace("[Nlista]",newprice.Clave);
                 mensaje = mensaje.Replace("[Lsucursal]", string.Join(",", newprice.Sucursales.Select(y => y.Sucursal.Nombre)));
-                var contract = new NotificationContract(mensaje, false);
+                var contract = new NotificationContract(mensaje, false, DateTime.Now);
                 await _publishEndpoint.Publish(contract);
                 
             }
@@ -289,7 +289,7 @@ namespace Service.Catalog.Application
             if (createnotification.Activo)
             {
     
-                var contract = new NotificationContract(mensaje, false);
+                var contract = new NotificationContract(mensaje, false, DateTime.Now);
                 await _publishEndpoint.Publish(contract);
 
             }
@@ -298,10 +298,10 @@ namespace Service.Catalog.Application
             {
                 createnotification = notifications.FirstOrDefault(x => x.Tipo == "Active");
                 var mensajeActive = createnotification.Contenido.Replace("[Nlista]", existing.Clave);
-                mensaje = mensaje.Replace("fecha", DateTime.Now.ToShortDateString());
+                mensaje = mensajeActive.Replace("fecha", DateTime.Now.ToShortDateString());
                 if (createnotification.Activo)
                 {
-                    var contractActive = new NotificationContract(mensaje, false);
+                    var contractActive = new NotificationContract(mensaje, false, DateTime.Now);
                     await _publishEndpoint.Publish(contractActive);
                 }
             }
@@ -309,10 +309,10 @@ namespace Service.Catalog.Application
             {
                 createnotification = notifications.FirstOrDefault(x => x.Tipo == "Disabled");
                 var mensajeActive = createnotification.Contenido.Replace("[Nlista]", existing.Clave);
-                mensaje = mensaje.Replace("fecha", DateTime.Now.ToShortDateString());
+                mensaje = mensajeActive.Replace("fecha", DateTime.Now.ToShortDateString());
                 if (createnotification.Activo)
                 {
-                    var contractActive = new NotificationContract(mensaje, false);
+                    var contractActive = new NotificationContract(mensaje, false, DateTime.Now);
                     await _publishEndpoint.Publish(contractActive);
                 }
             }

@@ -74,7 +74,7 @@ namespace Service.Catalog.Mapper
 
             List<DateTime> fechas = new List<DateTime>();
             fechas.Add(model.FechaInicial);
-            fechas.Add(model.FechaInicial);
+            fechas.Add(model.FechaFinal);
             return new NotificationFormDto
             {
                 Id = model.Id,
