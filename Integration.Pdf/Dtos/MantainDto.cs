@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Integration.Pdf.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -16,5 +17,6 @@ namespace Integration.Pdf.Dtos
         public string No_serie { get; set; }
         public bool Ativo { get; set; }
         public List<MantainImageDto> imagenUrl { get; set; }
+        public HeaderData Header { get; set; }
     }
 }

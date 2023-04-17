@@ -44,7 +44,6 @@
       "UpstreamPathTemplate": "/api/mantain",
       "UpstreamHttpMethod": [ "POST", "PUT" ]
     },
-
     {
       "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/mantain/images",
       "DownstreamScheme": "https",
@@ -57,14 +56,14 @@
       "UpstreamHttpMethod": [ "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/mantain/order/{Id}",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/mantain/order/{Id}/{sucursal}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/mantain/order/{Id}",
+      "UpstreamPathTemplate": "/api/mantain/order/{Id}/{sucursal}",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
@@ -78,8 +77,9 @@
       "UpstreamPathTemplate": "/api/mantain/image/{Id}/{code}",
       "UpstreamHttpMethod": [ "DELETE" ]
     },
+
     {
-      "DownstreamPathTemplate": "/LabRamos/services/mantain/api/notifications/status/{id}",
+      "DownstreamPathTemplate": "/LabRamos/services/catalogo/api/notifications/status/{id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {

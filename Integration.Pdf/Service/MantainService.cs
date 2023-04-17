@@ -2,6 +2,7 @@
 using Integration.Pdf.Extensions;
 using Integration.Pdf.Models;
 using MigraDoc.DocumentObjectModel;
+using MigraDoc.DocumentObjectModel.Tables;
 using MigraDoc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -63,29 +64,61 @@ namespace Integration.Pdf.Service
             section.PageSetup.LeftMargin = Unit.FromCentimeter(1);
             section.PageSetup.RightMargin = Unit.FromCentimeter(1);
 
-            Format(section, order);
+            Format(section, order,order.Header);
 
             return document;
         }
 
-        static void Format(Section section, MantainDto order)
+        static void Format(Section section, MantainDto order, HeaderData Header)
         {
-            var logo = File.ReadAllBytes(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets\\LabRamosLogo.png"));
-            var labramoslogo = new Col(logo, 6, ParagraphAlignment.Center)
+ var fontTitle = new Font("calibri", 14);
+            var fontSubtitle = new Font("calibri", 12);
+            var fontTitleChart = new Font("calibri", 11) { Bold = true };
+            var fontText = new Font("calibri", 10);
+
+            var contentWidth = section.PageSetup.PageHeight - section.PageSetup.LeftMargin - section.PageSetup.RightMargin;
+
+            var title = "Formato Mantenimiento";
+            var branchType = "Sucursal " + Header.Sucursal;
+            
+
+            if (Header.Sucursal == string.Empty || Header.Sucursal == "string")
             {
-                ImagenTamaño = Unit.FromCentimeter(6)
+                branchType = Header.Sucursal = "Todas las Sucursales";
+            }
+
+            var printDate = "Fecha de impresión: " + DateTime.Now.ToString("dd/MM/yyyy");
+            var logo = File.ReadAllBytes(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets\\LabRamosLogo.png"));
+
+            Table headerTable = new Table();
+
+            Column headerColumn = headerTable.AddColumn();
+            headerColumn.Width = contentWidth / 7 * 2;
+            headerColumn.Format.Alignment = ParagraphAlignment.Center;
+
+            Row headerRow = headerTable.AddRow();
+            Paragraph headerParagraph = headerRow.Cells[0].AddParagraph();
+            headerParagraph.AddFormattedText(title + "\n", fontTitle);
+            headerParagraph.AddFormattedText(branchType + "\n", fontSubtitle);
+            if (!string.IsNullOrWhiteSpace(Header.Extra))
+            {
+                headerParagraph.AddFormattedText(Header.Extra + "\n", fontSubtitle);
+            }
+            headerParagraph.AddFormattedText(printDate, fontText);
+
+            var headerInfo = new Col[]
+            {
+                new Col(logo, 3, ParagraphAlignment.Left)
+                {
+                    ImagenTamaño = Unit.FromCentimeter(5)
+                },
+                new Col("", 5, ParagraphAlignment.Right)
+                {
+                    Tabla = headerTable
+                }
             };
 
-            section.AddText(labramoslogo);
-
-            section.AddSpace();
-
-            var title = new Col($"Laboratorio Alfonso Ramos S.A. de C.V.", new Font("Calibri", 13) { Bold = true }, ParagraphAlignment.Center);
-            section.AddText(title);
-
-            section.AddSpace();
-            var titledoc = new Col($"Formato Mantenimiento", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Center);
-            section.AddText(titledoc);
+            section.AddText(headerInfo);
 
             section.AddSpace();
 
@@ -106,7 +139,7 @@ namespace Integration.Pdf.Service
             section.AddBorderedText(line1, right: true, left: true);
             var observationTitle = new Col("Observaciones", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Center);
             section.AddText(observationTitle);
-            var observation = new Col(order.Descripcion, new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Left);
+            var observation = new Col(order.Descripcion, new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Justify);
             section.AddText(observation);
             var images = new Col("Imagenes", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Center);
             section.AddText(observation);
