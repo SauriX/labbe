@@ -15,5 +15,6 @@ namespace Service.MedicalRecord.Dtos.MedicalRecords
         public Guid SucursalId { get; set; }
         public string Sucursal { get; set; }
         public string Telefono { get; set; }
+        public string FechaAlta { get; set; }
     }
 }
