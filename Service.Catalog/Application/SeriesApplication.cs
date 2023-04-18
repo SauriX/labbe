@@ -50,6 +50,13 @@ namespace Service.Catalog.Application
             return series.ToSeriesListDto();
         }
 
+        public async Task<IEnumerable<SeriesListDto>> GetAll()
+        {
+            var series = await _repository.GetAll();
+
+            return series.ToSeriesListDto();
+        }
+
         public async Task<IEnumerable<SeriesListDto>> GetByFilter(SeriesFilterDto filter)
         {
             var series = await _repository.GetByFilter(filter);
@@ -216,6 +223,15 @@ namespace Service.Catalog.Application
             }
 
             var data = ticket.ToTicketUpdate(existingSerie);
+
+            var branch = await _branchRepository.GetById(ticket.Expedicion.SucursalId);
+
+            if (branch == null)
+            {
+                throw new CustomException(HttpStatusCode.BadRequest, "Debe asignar una sucursal");
+            }
+
+            data.Ciudad = branch.Ciudad;
 
             await CheckDuplicate(data);
 

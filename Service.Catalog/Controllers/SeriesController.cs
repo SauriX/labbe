@@ -32,6 +32,15 @@ namespace Service.Catalog.Controllers
             return series;
         }
 
+        [HttpGet("all")]
+        [Authorize(Policies.Access)]
+        public async Task<IEnumerable<SeriesListDto>> GetAll()
+        {
+            var series = await _seriesApplication.GetAll();
+
+            return series;
+        }
+
         [HttpPost("filter")]
         [Authorize(Policies.Access)]
         public async Task<IEnumerable<SeriesListDto>> GetByFilter(SeriesFilterDto filter)

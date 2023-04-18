@@ -17,6 +17,7 @@ namespace Service.Catalog.Dto.Series
         public string Clave { get; set; }
         public string Nombre { get; set; }
         public byte TipoSerie => 2;
+        public bool Estatus { get; set; }
         public Guid UsuarioId { get; set; }
         public ExpeditionPlaceDto Expedicion { get; set; }
     }
