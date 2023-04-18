@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Service.MedicalRecord.Dtos.Reports.StudyStats;
 using Service.MedicalRecord.Mapper;
 using Service.MedicalRecord.Dtos.Reports.BudgetStats;
+using Service.MedicalRecord.Dtos.Reports.CashRegister;
 
 namespace Service.MedicalRecord.Application
 {
@@ -41,11 +42,11 @@ namespace Service.MedicalRecord.Application
             return data.RequestStudies();
         }
 
-        public async Task<IEnumerable<RequestPaymentStatsDto>> GetPaymentsByFilter(ReportFilterDto filter, string user)
+        public async Task<CashDto> GetPaymentsByFilter(ReportFilterDto filter)
         {
             var data = await _repository.GetByPayment(filter);
 
-            var payment = data.RequestPayment(user);
+            var payment = data.RequestPayment();
 
             return payment;
         }

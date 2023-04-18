@@ -5,6 +5,7 @@ using Service.Report.Client.IClient;
 using Service.Report.Domain.MedicalRecord;
 using Service.Report.Dtos;
 using Service.Report.Dtos.BudgetStats;
+using Service.Report.Dtos.CashRegister;
 using Service.Report.Dtos.MedicalRecord;
 using Shared.Error;
 using Shared.Extensions;
@@ -119,10 +120,10 @@ namespace Service.Report.Client
             }
         }
 
-        public async Task<List<RequestRegister>> GetRequestPaymentByFilter(ReportFilterDto filter)
+        public async Task<CashDto> GetRequestPaymentByFilter(ReportFilterDto filter)
         {
             var url = $"{_configuration.GetValue<string>("ClientRoutes:MedicalRecord")}/api/reportdata/payment/filter";
-            var response = await _client.PostAsJson<List<RequestRegister>>(url, filter);
+            var response = await _client.PostAsJson<CashDto>(url, filter);
 
             return response;
         }
