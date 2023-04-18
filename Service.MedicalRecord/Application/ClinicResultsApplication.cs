@@ -1469,7 +1469,7 @@ namespace Service.MedicalRecord.Application
                 existingStudy.FechaLiberado = DateTime.Now;
                 existingStudy.UsuarioLiberado = usuario.ToString();
             }
-            if (Status.RequestStudy.Enviado == status)
+            if (Status.RequestStudy.Enviado == status && existingStudy.EstatusId == Status.RequestStudy.Liberado)
             {
                 existingStudy.FechaEnviado = DateTime.Now;
                 existingStudy.UsuarioEnviado = usuario.ToString();

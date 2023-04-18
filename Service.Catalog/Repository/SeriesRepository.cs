@@ -23,6 +23,11 @@ namespace Service.Catalog.Repository
             _context = context;
         }
 
+        public async Task<List<Serie>> GetAll()
+        {
+            return await _context.CAT_Serie.Include(x => x.Sucursal).ToListAsync();
+        }
+
         public async Task<List<Serie>> GetByFilter(SeriesFilterDto filter)
         {
             var series = _context.CAT_Serie.Include(x => x.Sucursal).AsQueryable();
