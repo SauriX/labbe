@@ -1457,22 +1457,22 @@ namespace Service.MedicalRecord.Application
             if (Status.RequestStudy.Capturado == status && existingStudy.EstatusId == Status.RequestStudy.Solicitado)
             {
                 existingStudy.FechaCaptura = DateTime.Now;
-                existingStudy.UsuarioCaptura = usuario.ToString();
+                existingStudy.UsuarioCaptura = usuario;
             }
             if (Status.RequestStudy.Validado == status && existingStudy.EstatusId == Status.RequestStudy.Capturado)
             {
                 existingStudy.FechaValidacion = DateTime.Now;
-                existingStudy.UsuarioValidacion = usuario.ToString();
+                existingStudy.UsuarioValidacion = usuario;
             }
             if (Status.RequestStudy.Liberado == status && existingStudy.EstatusId == Status.RequestStudy.Validado)
             {
                 existingStudy.FechaLiberado = DateTime.Now;
-                existingStudy.UsuarioLiberado = usuario.ToString();
+                existingStudy.UsuarioLiberado = usuario;
             }
-            if (Status.RequestStudy.Enviado == status && existingStudy.EstatusId == Status.RequestStudy.Liberado)
+            if (Status.RequestStudy.Enviado == status)
             {
                 existingStudy.FechaEnviado = DateTime.Now;
-                existingStudy.UsuarioEnviado = usuario.ToString();
+                existingStudy.UsuarioEnviado = usuario;
             }
 
 
