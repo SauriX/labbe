@@ -5,6 +5,7 @@ using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Dtos.Quotation;
 using Service.MedicalRecord.Dtos.Reports;
 using Service.MedicalRecord.Dtos.Reports.BudgetStats;
+using Service.MedicalRecord.Dtos.Reports.CashRegister;
 using Service.MedicalRecord.Dtos.Reports.StudyStats;
 using Service.MedicalRecord.Dtos.Request;
 using Shared.Dictionary;
@@ -49,12 +50,9 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("payment/filter")]
         [Authorize(Policies.Access)]
-        public async Task<IEnumerable<RequestPaymentStatsDto>> GetPayments(ReportFilterDto search)
+        public async Task<CashDto> GetPayments(ReportFilterDto search)
         {
-            _logger.LogError("IN CONTROLLER REPORTDATA payment/filter");
-            var user = HttpContext.Items["userName"].ToString();
-
-            return await _service.GetPaymentsByFilter(search, user);
+            return await _service.GetPaymentsByFilter(search);
         }
     }
 }

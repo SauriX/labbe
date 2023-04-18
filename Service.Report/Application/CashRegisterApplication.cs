@@ -30,9 +30,8 @@ namespace Service.Report.Application
         public async Task<CashDto> GetByFilter(ReportFilterDto filter)
         {
             var data = await _medicalRecordService.GetRequestPaymentByFilter(filter);
-            var results = data.ToCashRegisterDto();
 
-            return results;
+            return data;
         }
 
         public async Task<byte[]> DownloadReportPdf(ReportFilterDto filter)

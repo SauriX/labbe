@@ -7,6 +7,7 @@ using System;
 using Service.MedicalRecord.Domain.Request;
 using Service.MedicalRecord.Dtos.Request;
 using Service.MedicalRecord.Dtos.Reports;
+using Service.MedicalRecord.Dtos.Reports.CashRegister;
 
 namespace Service.MedicalRecord.Mapper
 {
@@ -173,51 +174,90 @@ namespace Service.MedicalRecord.Mapper
             }).ToList();
         }
 
-        public static List<RequestPaymentStatsDto> RequestPayment(this IEnumerable<RequestPayment> payments, string user)
+        public static CashDto RequestPayment(this IEnumerable<RequestPayment> model)
         {
 
-            var paymentStats = payments
-            .GroupBy(p => p.SolicitudId)
-            .Select(g => new RequestPaymentStatsDto
-            {
-                SolicitudId = g.Key,
-                Efectivo = g.Where(x => x.FormaPagoId == EFECTIVO).Sum(x => x.Cantidad),
-                Cheque = g.Where(x => x.FormaPagoId == CHEQUE).Sum(x => x.Cantidad),
-                Transferencia = g.Where(x => x.FormaPagoId == TRANSF).Sum(x => x.Cantidad),
-                TDC = g.Where(x => x.FormaPagoId == TDC).Sum(x => x.Cantidad),
-                PP = g.Where(x => x.FormaPagoId == PP).Sum(x => x.Cantidad),
-                TDD = g.Where(x => x.FormaPagoId == TDD).Sum(x => x.Cantidad),
-                OtroMetodo = g.Where(x => x.FormaPagoId != EFECTIVO && x.FormaPagoId != CHEQUE && x.FormaPagoId != TRANSF && x.FormaPagoId != TDC && x.FormaPagoId != PP && x.FormaPagoId != TDD).Sum(x => x.Cantidad)
-            })
-            .ToList();
+            if (model == null) return null;
 
-            paymentStats.ForEach(ps =>
-            {
-                var solicitud = payments.LastOrDefault(p => p.SolicitudId == ps.SolicitudId)?.Solicitud;
-                var date = payments.LastOrDefault().FechaPago;
+            List<CashRegisterDto> perday = CashGeneric(model.Where(x => x.EstatusId != 3 && x.FechaPago.Date == x.Solicitud.FechaCreo.Date));
+            List<CashRegisterDto> canceled = CashGeneric(model.Where(x => x.EstatusId == 3));
+            List<CashRegisterDto> otherday = CashGeneric(model.Where(x => x.EstatusId != 3 && x.FechaPago.Date != x.Solicitud.FechaCreo.Date));
 
-                if (solicitud != null)
+            var totals = new CashInvoiceDto
+            {
+                SumaEfectivo = perday.Select(x => x.Efectivo).LastOrDefault() - canceled.Select(x => x.Efectivo).LastOrDefault() + otherday.Select(x => x.Efectivo).LastOrDefault(),
+                SumaTDC = perday.Select(x => x.TDC).LastOrDefault() - canceled.Select(x => x.TDC).LastOrDefault() + otherday.Select(x => x.TDC).LastOrDefault(),
+                SumaTransferencia = perday.Select(x => x.Transferencia).LastOrDefault() - canceled.Select(x => x.Transferencia).LastOrDefault() + otherday.Select(x => x.Transferencia).LastOrDefault(),
+                SumaCheque = perday.Select(x => x.Cheque).LastOrDefault() - canceled.Select(x => x.Cheque).LastOrDefault() + otherday.Select(x => x.Cheque).LastOrDefault(),
+                SumaTDD = perday.Select(x => x.TDD).LastOrDefault() - canceled.Select(x => x.TDD).LastOrDefault() + otherday.Select(x => x.TDD).LastOrDefault(),
+                SumaPP = perday.Select(x => x.PP).LastOrDefault() - canceled.Select(x => x.PP).LastOrDefault() + otherday.Select(x => x.PP).LastOrDefault(),
+                SumaOtroMetodo = perday.Select(x => x.OtroMetodo).LastOrDefault() - canceled.Select(x => x.OtroMetodo).LastOrDefault() + otherday.Select(x => x.OtroMetodo).LastOrDefault(),
+            };
+
+            var data = new CashDto
+            {
+                PerDay = perday,
+                Canceled = canceled,
+                OtherDay = otherday,
+                CashTotal = totals,
+            };
+
+            return data;
+        }
+
+        public static List<CashRegisterDto> CashGeneric(IEnumerable<RequestPayment> model)
+        {
+            var results = model.Select(request =>
+            {
+                var otherMetod = request.FormaPagoId != EFECTIVO && request.FormaPagoId != TDC && request.FormaPagoId != TDD && request.FormaPagoId != CHEQUE && request.FormaPagoId != PP;
+
+                return new CashRegisterDto
                 {
-                    ps.Solicitud = solicitud.Clave;
-                    ps.FechaSolicitud = solicitud.FechaCreo;
-                    ps.NombreCompleto = solicitud.Expediente?.NombreCompleto;
-                    ps.Saldo = solicitud.Saldo;
-                    ps.FormaPagoId = ps.FormaPagoId;
-                    ps.FormaPago = ps.FormaPago;
-                    ps.FechaPago = ps.FechaPago;
-                    ps.EstatusId = ps.EstatusId;
-                    ps.FacturaId = ps.FacturaId;
-                    ps.FechaPago = date;
-                    ps.Factura = ps.Factura;
-                    ps.Estatus = solicitud.Estatus?.Nombre;
-                    ps.CompañiaId = (Guid)solicitud.CompañiaId;
-                    ps.Compañia = solicitud.Compañia?.Nombre;
-                    ps.Total = solicitud.Total;
-                    ps.UsuarioRegistra = user;
-                }
+                    Id = Guid.NewGuid(),
+                    Solicitud = request.Solicitud.Clave,
+                    Paciente = request.Solicitud.Expediente?.NombreCompleto,
+                    Factura = request.Serie ?? "",
+                    Total = request.Solicitud.Total,
+                    ACuenta = request.Serie != null ? request.Cantidad : 0m,
+                    Efectivo = request.FormaPagoId == EFECTIVO ? request.Cantidad : 0m,
+                    TDC = request.FormaPagoId == TDC ? request.Cantidad : 0m,
+                    Transferencia = request.FormaPagoId == TRANSF ? request.Cantidad : 0m,
+                    Cheque = request.FormaPagoId == CHEQUE ? request.Cantidad : 0m,
+                    TDD = request.FormaPagoId == TDD ? request.Cantidad : 0m,
+                    PP = request.FormaPagoId == PP ? request.Cantidad : 0m,
+                    OtroMetodo = otherMetod ? request.Cantidad : 0m,
+                    Fecha = request.FechaPago.ToString("g"),
+                    UsuarioRegistra = request.UsuarioRegistra,
+                    Saldo = request.Solicitud.Saldo,
+                    Empresa = request.Solicitud.Compañia?.Nombre,
+                    Estatus = request.EstatusId,
+                    
+                };
+            }).ToList();
+
+            results.Add(new CashRegisterDto
+            {
+                Id = Guid.NewGuid(),
+                Solicitud = " ",
+                Paciente = " ",
+                Factura = "Total",
+                Total = results.Sum(x => x.Total),
+                ACuenta = results.Sum(x => x.ACuenta),
+                Efectivo = results.Sum(x => x.Efectivo),
+                TDC = results.Sum(x => x.TDC),
+                Transferencia = results.Sum(x => x.Transferencia),
+                Cheque = results.Sum(x => x.Cheque),
+                TDD = results.Sum(x => x.TDD),
+                PP = results.Sum(x => x.PP),
+                OtroMetodo = results.Sum(x => x.OtroMetodo),
+                Fecha = " ",
+                UsuarioRegistra = " ",
+                Saldo = results.Sum(x => x.Saldo),
+                Empresa = " ",
+                Estatus = 0,
             });
 
-            return paymentStats;
+            return results;
         }
     }
 }
