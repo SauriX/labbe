@@ -16,5 +16,8 @@ namespace Service.Catalog.Dtos.Equipmentmantain
         public bool Ativo { get; set; }
         public List<MantainImageDto> imagenUrl { get; set; }
         public int ide { get; set; }
+        public HeaderData Header { get; set; }
     }
+
+
 }

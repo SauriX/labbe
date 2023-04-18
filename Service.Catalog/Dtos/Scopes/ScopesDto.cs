@@ -1,4 +1,7 @@
-﻿namespace Service.Catalog.Dtos.Scopes
+﻿using System.Collections.Generic;
+using System;
+
+namespace Service.Catalog.Dtos.Scopes
 {
     public class ScopesDto
     {

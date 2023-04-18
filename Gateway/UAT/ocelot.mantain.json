@@ -57,14 +57,14 @@
       "UpstreamHttpMethod": [ "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/mantain/order/{Id}",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/mantain/order/{Id}/{sucursal}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/mantain/order/{Id}",
+      "UpstreamPathTemplate": "/api/mantain/order/{Id}/{sucursal}",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
@@ -79,7 +79,7 @@
       "UpstreamHttpMethod": [ "DELETE" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos-uat/services/mantain/api/notifications/status/{id}",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/notifications/status/{id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {

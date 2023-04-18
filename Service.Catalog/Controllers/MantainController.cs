@@ -73,13 +73,13 @@ namespace Service.Catalog.Controllers
 
             return await _service.SaveImage(requestDto);
         }
-        [HttpPost("order/{Id}")]
+        [HttpPost("order/{Id}/{sucursal}")]
         //[Authorize(Policies.Print)]
-        public async Task<IActionResult> PrintOrder(Guid Id)
+        public async Task<IActionResult> PrintOrder(Guid Id,string sucursal)
         {
-            var file = await _service.Print(Id);
+            var file = await _service.Print(Id,sucursal);
 
-            return File(file, MimeType.PDF, "order.pdf");
+            return File(file, MimeType.PDF, "OrdenDeMantenimiento.pdf");
         }
         [HttpDelete("image/{Id}/{code}")]
         public async Task DeleteImage(Guid Id, string code)
