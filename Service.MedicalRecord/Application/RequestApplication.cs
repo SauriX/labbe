@@ -1147,7 +1147,7 @@ namespace Service.MedicalRecord.Application
                 throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
             }
 
-            var studies = request.Estudios.Concat(request.Paquetes.SelectMany(x => x.Estudios));
+            var studies = request.Estudios.Concat(request.Paquetes.SelectMany(x => x.Estudios)).Where(x => x.EstatusId != Status.RequestStudy.Cancelado);
 
             var ids = studies.Select(x => x.EstudioId).ToList();
             var studiesParams = await _catalogClient.GetStudies(ids);
@@ -1162,7 +1162,9 @@ namespace Service.MedicalRecord.Application
                 {
                     Estudio = x.Nombre,
                     Indicaciones = string.Join(Environment.NewLine, x.Indicaciones.Select(i => i.Descripcion))
-                }).ToList()
+                })
+                .Where(x => !string.IsNullOrEmpty(x.Indicaciones))
+                .ToList()
             };
 
             var document = DocumentFactory.Create(path, data);
