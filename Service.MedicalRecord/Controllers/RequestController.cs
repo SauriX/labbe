@@ -297,6 +297,15 @@ namespace Service.MedicalRecord.Controllers
             var file = await _service.PrintTags(recordId, requestId, tags);
 
             return File(file, MimeType.PDF, "tags.pdf");
+        }    
+        
+        [HttpPost("print/indications/{recordId}/{requestId}")]
+        [Authorize(Policies.Download)]
+        public async Task<IActionResult> PrintIndications(Guid recordId, Guid requestId)
+        {
+            var file = await _service.PrintIndications(recordId, requestId);
+
+            return File(file, MimeType.DOCX, "indications.docx");
         }
 
         [HttpPut("images")]

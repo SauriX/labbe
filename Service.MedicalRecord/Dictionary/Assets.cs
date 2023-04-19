@@ -18,6 +18,7 @@
         public const string TrackingForm = "wwwroot/layout/excel/FormatoEnvioMuestras/FormatoEnvioMuestras.xlsx";
         public const string InvoiceList = "wwwroot/layout/excel/Invoice/InvoiceListado.xlsx";
         public const string InformeDia = "wwwroot/layout/excel/ReporteDia/InformeDia.xlsx";
+        public const string Indicaciones = "wwwroot/layout/word/Indicaciones.docx";
 
     }
 }

@@ -55,6 +55,7 @@ namespace Service.Catalog.Mapper
                 Metodo = x.Metodo?.Nombre,
                 Orden = x.Orden,
                 Clave = x.Clave,
+                Nombre = x.Nombre,
                 Tipo = x.SampleType?.Nombre
             });
         }
@@ -92,22 +93,22 @@ namespace Service.Catalog.Mapper
                 NombreEstudio = x.Nombre ?? x.Estudio?.Clave ?? "Sin estudio"
             }).ToList();
         }
-        public static StudyTecDto ToTecStudyDto(this Study model) {
 
+        public static StudyTecDto ToTecStudyDto(this Study model)
+        {
             return new StudyTecDto
             {
-
-
-
+                Clave = model.Clave,
+                Nombre = model.Nombre,
                 Instrucciones = model.Instrucciones,
                 TipoMuestra = model.SampleType?.Nombre,
-                DiasEstabilidad = model.DiasEstabilidad,
-                DiasRefrigeracion = model.DiasRefrigeracion,
-                DiasEntrega = model.Dias,
-                Tapon = string.Join(",", model.Etiquetas.Select(y=>y.Etiqueta.Clave)) ,
+                DiasEstabilidad = model.DiasEstabilidad.ToString(),
+                DiasRefrigeracion = model.DiasRefrigeracion.ToString(),
+                DiasEntrega = model.Dias == 0 ? "" : model.Dias.ToString(),
+                Tapon = string.Join(",", model.Etiquetas.Select(y => y.Etiqueta.Clave)),
             };
-        
         }
+
         public static StudyFormDto ToStudyFormDto(this Study model)
         {
             if (model == null) return null;
@@ -145,7 +146,7 @@ namespace Service.Catalog.Mapper
                 SampleType = model.SampleType,
                 Tapa = model.Tapon,
                 Instrucciones = model.Instrucciones,
-                DiasEstabilidad = model.DiasEstabilidad ,
+                DiasEstabilidad = model.DiasEstabilidad,
                 DiasRefrigeracion = model.DiasRefrigeracion
             };
         }

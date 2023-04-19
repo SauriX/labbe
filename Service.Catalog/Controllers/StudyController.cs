@@ -27,11 +27,13 @@ namespace Service.Catalog.Controllers
         {
             return await _Service.GetById(id);
         }
+
         [HttpGet("tecinfo/{id}")]
         public async Task<StudyTecDto> GetTecInfo(int id)
         {
             return await _Service.GetTecInfo(id);
         }
+
         [HttpPost("multiple")]
         public async Task<IEnumerable<StudyListDto>> GetByIds(List<int> ids)
         {

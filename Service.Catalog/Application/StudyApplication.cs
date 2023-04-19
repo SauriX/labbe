@@ -31,15 +31,19 @@ namespace Service.Catalog.Application
             }
             return estudio.ToStudyFormDto();
         }
+
         public async Task<StudyTecDto> GetTecInfo(int Id)
         {
-            var estudio = await _repository.FindAsync(Id);
-            if (estudio == null)
+            var study = await _repository.FindAsync(Id);
+
+            if (study == null)
             {
                 throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
             }
-            return estudio.ToTecStudyDto();
+
+            return study.ToTecStudyDto();
         }
+
         public async Task<IEnumerable<StudyListDto>> GetByIds(List<int> ids)
         {
             var studies = await _repository.GetByIds(ids);

@@ -40,6 +40,7 @@ namespace Service.MedicalRecord.Application.IApplication
         Task<byte[]> PrintTicket(Guid recordId, Guid requestId, string userName);
         Task<byte[]> PrintOrder(Guid recordId, Guid requestId, string userName);
         Task<byte[]> PrintTags(Guid recordId, Guid requestId, List<RequestTagDto> tags);
+        Task<byte[]> PrintIndications(Guid recordId, Guid requestId);
         Task<string> SaveImage(RequestImageDto requestDto);
         Task DeleteImage(Guid recordId, Guid requestId, string code);
         Task<WeeTokenValidationDto> SendCompareToken(RequestTokenDto requestDto, string actionCode);

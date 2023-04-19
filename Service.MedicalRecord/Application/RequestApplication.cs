@@ -38,6 +38,8 @@ using Service.MedicalRecord.Dtos.Catalogs;
 using static Shared.Dictionary.Catalogs;
 using MassTransit.Transports;
 using Service.MedicalRecord.Dtos.General;
+using DocumentFormat.OpenXml.EMMA;
+using SharpDocx;
 
 namespace Service.MedicalRecord.Application
 {
@@ -783,6 +785,8 @@ namespace Service.MedicalRecord.Application
                 var pathologicalCode = await GeneratePathologicalCode(request);
                 request.ClavePatologica = pathologicalCode;
 
+                request.Estudios = null;
+                request.Paquetes = null;
                 await _repository.Update(request);
 
                 await UpdateTotals(request.ExpedienteId, request.Id, requestDto.UsuarioId);
@@ -1134,6 +1138,41 @@ namespace Service.MedicalRecord.Application
             return await _pdfClient.GenerateTags(printTags);
         }
 
+        public async Task<byte[]> PrintIndications(Guid recordId, Guid requestId)
+        {
+            var request = await _repository.GetById(requestId);
+
+            if (request == null || request.ExpedienteId != recordId)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
+            }
+
+            var studies = request.Estudios.Concat(request.Paquetes.SelectMany(x => x.Estudios)).Where(x => x.EstatusId != Status.RequestStudy.Cancelado);
+
+            var ids = studies.Select(x => x.EstudioId).ToList();
+            var studiesParams = await _catalogClient.GetStudies(ids);
+
+            var path = Assets.Indicaciones;
+            var data = new ModelDoc
+            {
+                Expediente = request.Expediente.Expediente,
+                Solicitud = request.Clave,
+                Serie = request.Serie + " " + request.SerieNumero,
+                Indicaciones = studiesParams.Select(x => new ModelInd
+                {
+                    Estudio = x.Nombre,
+                    Indicaciones = string.Join(Environment.NewLine, x.Indicaciones.Select(i => i.Descripcion))
+                })
+                .Where(x => !string.IsNullOrEmpty(x.Indicaciones))
+                .ToList()
+            };
+
+            var document = DocumentFactory.Create(path, data);
+            var ms = document.Generate();
+
+            return ms.ToArray();
+        }
+
         public async Task<string> SaveImage(RequestImageDto requestDto)
         {
             var request = await GetExistingRequest(requestDto.ExpedienteId, requestDto.SolicitudId);
@@ -1442,5 +1481,19 @@ namespace Service.MedicalRecord.Application
                 patCode == null && citCode != null ? citCode :
                 $"{patCode}, {citCode}";
         }
+    }
+
+    public class ModelDoc
+    {
+        public string Expediente { get; set; }
+        public string Solicitud { get; set; }
+        public string Serie { get; set; }
+        public List<ModelInd> Indicaciones { get; set; }
+    }
+
+    public class ModelInd
+    {
+        public string Estudio { get; set; }
+        public string Indicaciones { get; set; }
     }
 }

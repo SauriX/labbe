@@ -124,6 +124,7 @@ namespace Service.MedicalRecord.Repository
                 .Include(x => x.Medico)
                 .Include(x => x.Estudios.Where(x => x.PaqueteId == null))
                 .Include(x => x.Paquetes).ThenInclude(x => x.Estudios)
+                .AsSplitQuery()
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             return request;
