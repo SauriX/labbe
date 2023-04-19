@@ -712,7 +712,7 @@ namespace Service.MedicalRecord.Application
                     var mensaje = createNotification.Contenido.Replace("[Nestudio]", estudio.Estudio);
                     mensaje = mensaje.Replace("[Nsolicitud]", existingRequest.Clave);
                     mensaje = mensaje.Replace("[Nsucursal]", existingRequest.Sucursal.Nombre);
-                    var contract = new NotificationContract(mensaje, false);
+                    var contract = new NotificationContract(mensaje, false, DateTime.Now);
                     await _publishEndpoint.Publish(contract);
 
 
@@ -726,8 +726,8 @@ namespace Service.MedicalRecord.Application
                 foreach (var estudio in estudios)
                 {
                     var mensaje = createNotification.Contenido.Replace("[Nsolicitud]", existingRequest.Clave);
-                    mensaje = mensaje.Replace("[Nestudio]", estudio.Clave);
-                    var contract = new NotificationContract(mensaje, false);
+                    mensaje = mensaje.Replace("[Nestudio]", estudio.Estudio);
+                    var contract = new NotificationContract(mensaje, false, DateTime.Now);
                     await _publishEndpoint.Publish(contract);
 
                 }
@@ -1057,7 +1057,7 @@ namespace Service.MedicalRecord.Application
                 if (createnotification.Activo)
                 {
 
-                    var contract = new NotificationContract(mensaje, false);
+                    var contract = new NotificationContract(mensaje, false, DateTime.Now);
                     await _publishEndpoint.Publish(contract);
 
                 }
@@ -1103,7 +1103,7 @@ namespace Service.MedicalRecord.Application
                     if (createnotification.Activo)
                     {
 
-                        var contract = new NotificationContract(mensaje, false);
+                        var contract = new NotificationContract(mensaje, false, DateTime.Now);
                         await _publishEndpoint.Publish(contract);
 
                     }
@@ -1457,22 +1457,22 @@ namespace Service.MedicalRecord.Application
             if (Status.RequestStudy.Capturado == status && existingStudy.EstatusId == Status.RequestStudy.Solicitado)
             {
                 existingStudy.FechaCaptura = DateTime.Now;
-                existingStudy.UsuarioCaptura = usuario.ToString();
+                existingStudy.UsuarioCaptura = usuario;
             }
             if (Status.RequestStudy.Validado == status && existingStudy.EstatusId == Status.RequestStudy.Capturado)
             {
                 existingStudy.FechaValidacion = DateTime.Now;
-                existingStudy.UsuarioValidacion = usuario.ToString();
+                existingStudy.UsuarioValidacion = usuario;
             }
             if (Status.RequestStudy.Liberado == status && existingStudy.EstatusId == Status.RequestStudy.Validado)
             {
                 existingStudy.FechaLiberado = DateTime.Now;
-                existingStudy.UsuarioLiberado = usuario.ToString();
+                existingStudy.UsuarioLiberado = usuario;
             }
             if (Status.RequestStudy.Enviado == status)
             {
                 existingStudy.FechaEnviado = DateTime.Now;
-                existingStudy.UsuarioEnviado = usuario.ToString();
+                existingStudy.UsuarioEnviado = usuario;
             }
 
 

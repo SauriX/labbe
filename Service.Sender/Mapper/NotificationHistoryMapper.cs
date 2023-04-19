@@ -16,6 +16,7 @@ namespace Service.Sender.Mapper
                 Para = x.Para,
                 Mensaje = x.Mensaje,
                 EsAlerta = x.EsAlerta,
+                Fecha=x.FechaCreacion
             }).ToList();
 
         }

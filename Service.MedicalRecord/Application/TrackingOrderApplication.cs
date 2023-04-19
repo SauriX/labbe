@@ -63,6 +63,8 @@ namespace Service.MedicalRecord.Application.IApplication
             newOrder.Id = Guid.NewGuid();
             newOrder.Estudios = trackingOrderDetails;
             await _repository.Create(newOrder);
+
+            //Enviar
             var seguimientoId = newOrder.Id;
             var shipment = await _Shipmentrepository.GetRouteTracking(seguimientoId);
             if (shipment == null)
@@ -92,6 +94,7 @@ namespace Service.MedicalRecord.Application.IApplication
             }
                 return newOrder.ToTrackingOrderFormDto();
         }
+
         public async Task<TrackingOrder> GetExistingOrder(Guid orderId)
         {
             var order = await _repository.FindAsync(orderId);
@@ -202,6 +205,77 @@ namespace Service.MedicalRecord.Application.IApplication
 
         }
 
-        
+
+
+        //public async Task<int> UpdateStatus(List<RequestedStudyUpdateDto> requestDto)
+        //{
+        //    try
+        //    {
+
+        //        foreach (var item in requestDto)
+        //        {
+        //            var ruteOrder = await _repository.GetById(item.RuteOrder);
+        //            var list = ruteOrder.ToRouteTrackingDtoList();
+        //            List<string> IdRoutes = new();
+        //            IdRoutes.Add(list.rutaId.ToString());
+        //            var routes = await _catalogClient.GetRutas(IdRoutes);
+        //            var route = routes.FirstOrDefault(x => Guid.Parse(x.Id) == list.rutaId);
+        //            DateTime oDate = Convert.ToDateTime(list.Fecha);
+        //            list.Fecha = oDate.AddDays(route.TiempoDeEntrega).ToString();
+        //            var routeT = new RouteTracking
+        //            {
+        //                Id = Guid.NewGuid(),
+        //                SegumientoId = Guid.Parse(ruteOrder.Estudios.FirstOrDefault().SeguimientoId.ToString()),
+        //                //RutaId = Guid.Parse(ruteOrder.RutaId),
+        //                SucursalId = Guid.Parse(ruteOrder.DestinoId),
+        //                FechaDeEntregaEstimada = DateTime.Parse(list.Fecha),
+        //                SolicitudId = ruteOrder.Estudios.FirstOrDefault().SolicitudId,
+        //                HoraDeRecoleccion = ruteOrder.FechaCreo,
+        //                UsuarioCreoId = ruteOrder.UsuarioCreoId,
+        //                FechaCreo = DateTime.Now,
+
+        //            };
+        //            await _repository.Create(routeT);
+        //        }
+        //        int studyCount = 0;
+        //        foreach (var item in requestDto)
+        //        {
+        //            var ruteOrder = await _repository.GetById(item.RuteOrder);
+        //            var solicitudId = ruteOrder.Estudios.FirstOrDefault().SolicitudId;
+
+        //            var request = await GetExistingRequest(solicitudId);
+
+        //            var studiesIds = item.EstudioId;
+        //            var studies = await _repository.GetStudyById(solicitudId, studiesIds);
+
+        //            studies = studies.Where(x => x.EstatusId == Status.RequestStudy.TomaDeMuestra || x.EstatusId == Status.RequestStudy.EnRuta).ToList();
+
+        //            if (studies == null || studies.Count == 0)
+        //            {
+        //                throw new CustomException(HttpStatusCode.BadRequest);
+        //            }
+
+        //            foreach (var study in studies)
+        //            {
+        //                if (study.EstatusId == Status.RequestStudy.TomaDeMuestra)
+        //                {
+        //                    study.EstatusId = Status.RequestStudy.EnRuta;
+        //                }
+        //                else
+        //                {
+        //                    study.EstatusId = Status.RequestStudy.TomaDeMuestra;
+        //                }
+        //            }
+        //            studyCount += studies.Count;
+        //            await _repository.BulkUpdateStudies(solicitudId, studies);
+
+        //        }
+        //        return studyCount;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
     }
 }

@@ -97,6 +97,7 @@ namespace Service.Catalog.Repository
                 .Include(x => x.Medicos).ThenInclude(x => x.Medico)
                 .Include(x => x.Paquetes).ThenInclude(x => x.Paquete.Estudios).ThenInclude(x => x.Estudio.Area.Departamento)
                 .Include(x => x.Paquetes).ThenInclude(x => x.Paquete.Area.Departamento)
+                .AsSplitQuery()
                 .FirstOrDefaultAsync(x => x.Id == Id);
 
             return indication;

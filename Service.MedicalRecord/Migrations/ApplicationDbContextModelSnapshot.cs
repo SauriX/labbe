@@ -1574,7 +1574,7 @@ namespace Service.MedicalRecord.Migrations
 
                     b.HasIndex("SolicitudEtiquetaId");
 
-                    b.ToTable("RequestTagStudy");
+                    b.ToTable("Relacion_Etiqueta_Estudio");
                 });
 
             modelBuilder.Entity("Service.MedicalRecord.Domain.RouteTracking.RouteTracking", b =>
@@ -1814,26 +1814,23 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<decimal>("Cantidad")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("Clave")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("Escaneado")
                         .HasColumnType("bit");
 
                     b.Property<int>("EtiquetaId")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("ExpedienteId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<bool>("Extra")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("FechaCreo")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FechaMod")
+                    b.Property<DateTime?>("FechaMod")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsExtra")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("NombrePaciente")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("SeguimientoId")
                         .HasColumnType("uniqueidentifier");
@@ -1844,7 +1841,7 @@ namespace Service.MedicalRecord.Migrations
                     b.Property<Guid>("UsuarioCreoId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UsuarioModId")
+                    b.Property<Guid?>("UsuarioModId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");

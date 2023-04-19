@@ -10,6 +10,7 @@ namespace Service.Catalog.Application.IApplication
         Task<IEnumerable<RouteListDto>> GetAll(string search);
         Task<IEnumerable<RouteListDto>> GetActive();
         Task<RouteFormDto> GetById(string id);
+        Task<List<RouteFormDto>> GetByIds(List<string> ids);
         Task<RouteListDto> Create(RouteFormDto routes);
         Task<RouteListDto> Update(RouteFormDto routes);
         Task<(byte[] file, string fileName)> ExportList(string search);

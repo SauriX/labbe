@@ -53,7 +53,7 @@ namespace Service.Sender.Consumers
 
                 if (message.Notificar)
                 {
-                    var notification = new NotificationContract("Correo enviado correctamente", true);
+                    var notification = new NotificationContract("Correo enviado correctamente", true,DateTime.Now);
 
                     await _hubContext.Clients.Group(message.RemitenteId).SendAsync("Notify", notification);
                 }

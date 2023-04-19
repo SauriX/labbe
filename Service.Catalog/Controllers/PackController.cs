@@ -33,6 +33,13 @@ namespace Service.Catalog.Controllers
         {
             return await _Service.GetAll(search);
         }
+        
+        [HttpGet("packList/{search?}")]
+        [Authorize(Policies.Access)]
+        public async Task<IEnumerable<PackListDto>> GetPackList(string search = null)
+        {
+            return await _Service.GetPackList(search);
+        }
 
         [HttpGet("active")]
         [Authorize(Policies.Access)]

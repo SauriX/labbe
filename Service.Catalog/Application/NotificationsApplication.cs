@@ -77,7 +77,7 @@ namespace Service.Catalog.Application
             if (existing.Activo && !existing.IsNotifi)
             {
 
-                var contract = new NotificationContract(existing.Contenido, false);
+                var contract = new NotificationContract(existing.Contenido, false, DateTime.Now);
                 await _publishEndpoint.Publish(contract);
 
             }

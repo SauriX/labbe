@@ -77,11 +77,13 @@ namespace Service.Catalog.Application
             var estudios = await _repository.GetAll(search);
             return estudios.ToStudyListDto();
         }
+
         public async Task<IEnumerable<PriceStudyList>> GetAllPriceStudy(string search = null)
         {
-            var estudios = await _repository.GetAll(search);
+            var estudios = await _repository.GetStudyList(search);
             return estudios.toPriceStudyList();
         }
+
         public async Task<IEnumerable<StudyListDto>> GetActive()
         {
             var studies = await _repository.GetActive();

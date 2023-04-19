@@ -9,6 +9,7 @@ namespace Service.Catalog.Application.IApplication
     public interface ISeriesApplication
     {
         Task<IEnumerable<SeriesListDto>> GetByBranch(Guid branchId, byte type);
+        Task<IEnumerable<SeriesListDto>> GetAll();
         Task<IEnumerable<SeriesListDto>> GetByFilter(SeriesFilterDto filter);
         Task<SeriesDto> GetByNewForm(SeriesNewDto newSerie);
         Task<SeriesDto> GetById(int id, byte tipo);

@@ -9,6 +9,7 @@ namespace Service.Catalog.Repository.IRepository
 {
     public interface ISeriesRepository
     {
+        Task<List<Serie>> GetAll();
         Task<List<Serie>> GetByFilter(SeriesFilterDto filter);
         Task<Serie> GetById(int id, byte tipo);
         Task<List<Serie>> GetByIds(List<int> ids);

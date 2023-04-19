@@ -24,12 +24,14 @@ namespace Service.Catalog.Repository
         public async Task<List<Mantain>> GetAll(MantainSearchDto search) {
             var equipos = _context.CAT_Mantenimiento_Equipo.Include(x => x.Equipo.Equipment).AsQueryable();
             equipos = equipos.Where(x=>x.EquipoId==search.IdEquipo); 
-            if (search.Fecha.Length > 0 && search.Fecha[0].Date != DateTime.Now.Date && search.Fecha[1].Date != DateTime.Now.Date) {
-                equipos = equipos.Where(x=> x.Fecha_Prog >= search.Fecha[0] && x.Fecha_Prog <= search.Fecha[1]);
+            if (search.Fecha != null ) {
+                if (search.Fecha.Any()&&search.Fecha[0].Date != DateTime.Now.Date && search.Fecha[1].Date != DateTime.Now.Date) {
+                    equipos = equipos.Where(x => x.Fecha_Prog >= search.Fecha[0] && x.Fecha_Prog <= search.Fecha[1]);
+                }
             }
 
-            if (string.IsNullOrEmpty(search.Clave)) {
-                equipos = equipos.Where(x=>x.clave.Contains(search.Clave));
+            if (!string.IsNullOrEmpty(search.Clave)) {
+                equipos = equipos.Where(x=>x.clave.Contains(search.Clave)); 
             }
             return equipos.ToList();
         }

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Service.Sender.SignalR;
 using Shared.Dictionary;
 using Shared.Utils;
+using System;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -30,7 +31,7 @@ namespace Service.Sender.Consumers.Error
 
             if (message.Notificar)
             {
-                var notification = new NotificationContract("Hubo un error al enviar el whatsapp, intenta más tarde", true);
+                var notification = new NotificationContract("Hubo un error al enviar el whatsapp, intenta más tarde", true, DateTime.Now);
 
                 await _hubContext.Clients.Group(message.RemitenteId).SendAsync("Notify", notification);
             }

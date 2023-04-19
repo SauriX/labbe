@@ -62,7 +62,7 @@
       "UpstreamHttpMethod": [ "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/api/mantain/order/{Id}",
+      "DownstreamPathTemplate": "/api/mantain/order/{Id}/{sucursal}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -70,7 +70,7 @@
           "Port": 20347
         }
       ],
-      "UpstreamPathTemplate": "/api/mantain/order/{Id}",
+      "UpstreamPathTemplate": "/api/mantain/order/{Id}/{sucursal}",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
@@ -84,6 +84,18 @@
       ],
       "UpstreamPathTemplate": "/api/mantain/image/{Id}/{code}",
       "UpstreamHttpMethod": [ "DELETE" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/mantain/status/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 20347
+        }
+      ],
+      "UpstreamPathTemplate": "/api/mantain/status/{id}",
+      "UpstreamHttpMethod": [ "PUT" ]
     }
   ]
 }

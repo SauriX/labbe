@@ -42,6 +42,7 @@ namespace Service.MedicalRecord.Mapper
                 MonederoElectronico = x.Monedero,
                 SucursalId = x.IdSucursal,
                 Telefono = x.Telefono,
+                FechaAlta = x.FechaCreo.ToString("d")
             }).ToList();
         }
 

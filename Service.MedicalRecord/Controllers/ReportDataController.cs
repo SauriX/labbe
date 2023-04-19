@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Service.MedicalRecord.Application.IApplication;
 using Service.MedicalRecord.Dtos.Quotation;
 using Service.MedicalRecord.Dtos.Reports;
 using Service.MedicalRecord.Dtos.Reports.BudgetStats;
+using Service.MedicalRecord.Dtos.Reports.CashRegister;
 using Service.MedicalRecord.Dtos.Reports.StudyStats;
 using Service.MedicalRecord.Dtos.Request;
 using Shared.Dictionary;
@@ -18,9 +20,11 @@ namespace Service.MedicalRecord.Controllers
     public class ReportDataController : ControllerBase
     {
         private readonly IReportApplication _service;
-        public ReportDataController(IReportApplication service) 
+        private readonly ILogger<ReportDataController> _logger;
+        public ReportDataController(IReportApplication service, ILogger<ReportDataController> logger) 
         {
             _service = service;
+            _logger = logger;
         }
 
         [HttpPost("cotizaciones/filter")]
@@ -46,11 +50,9 @@ namespace Service.MedicalRecord.Controllers
 
         [HttpPost("payment/filter")]
         [Authorize(Policies.Access)]
-        public async Task<IEnumerable<RequestPaymentStatsDto>> GetPayments(ReportFilterDto search)
+        public async Task<CashDto> GetPayments(ReportFilterDto search)
         {
-            var user = HttpContext.Items["userName"].ToString();
-
-            return await _service.GetPaymentsByFilter(search, user);
+            return await _service.GetPaymentsByFilter(search);
         }
     }
 }

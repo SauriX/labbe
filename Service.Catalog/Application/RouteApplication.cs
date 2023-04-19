@@ -54,6 +54,18 @@ namespace Service.Catalog.Application
             return routes.ToRouteFormDto();
         }
 
+        public async Task<List<RouteFormDto>> GetByIds(List<string> ids)
+        {
+            var routes = await _repository.GetyByIds(ids);
+
+            if (routes == null)
+            {
+                throw new CustomException(HttpStatusCode.NotFound, Responses.NotFound);
+            }
+
+            return routes.ToRouteFoundDto();
+        }
+
         public async Task<RouteListDto> Create(RouteFormDto routes)
         {
             if (!string.IsNullOrEmpty(routes.Id))

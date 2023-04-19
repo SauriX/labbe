@@ -57,14 +57,14 @@
       "UpstreamHttpMethod": [ "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/services/catalogo/api/mantain/order/{Id}",
+      "DownstreamPathTemplate": "/services/catalogo/api/mantain/order/{Id}/{sucursal}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "labramos.axsishost.online"
         }
       ],
-      "UpstreamPathTemplate": "/api/mantain/order/{Id}",
+      "UpstreamPathTemplate": "/api/mantain/order/{Id}/{sucursal}",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
@@ -77,6 +77,18 @@
       ],
       "UpstreamPathTemplate": "/api/mantain/image/{Id}/{code}",
       "UpstreamHttpMethod": [ "DELETE" ]
+    },
+    {
+      "DownstreamPathTemplate": "/services/catalogo/api/mantain/status/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "labramos.axsishost.online"
+
+        }
+      ],
+      "UpstreamPathTemplate": "/api/mantain/status/{id}",
+      "UpstreamHttpMethod": [ "PUT" ]
     }
   ]
 }

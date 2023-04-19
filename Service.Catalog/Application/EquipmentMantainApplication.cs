@@ -22,10 +22,12 @@ namespace Service.Catalog.Application
     {
         private readonly IEquipmentMantainRepository _service;
         private readonly IPdfClient _pdfClient;
-        public EquipmentMantainApplication( IPdfClient pdfClient, IEquipmentMantainRepository service)
+        private readonly IBranchApplication _branchApplication;
+        public EquipmentMantainApplication( IPdfClient pdfClient, IEquipmentMantainRepository service, IBranchApplication branchApplication)
         {
             _service = service;
             _pdfClient = pdfClient;
+            _branchApplication = branchApplication; 
         }
 
         public async Task<List<MantainListDto>> GetAll(MantainSearchDto search)
@@ -83,17 +85,23 @@ namespace Service.Catalog.Application
 
             return updatedParameter.ToMantainListDto();
         }
-        public async Task<byte[]> Print(Guid Id)
+        public async Task<byte[]> Print(Guid Id, string sucursal)
         {
             var request = await _service.GetById(Id);
+            var branch = await _branchApplication.GetById(sucursal);
 
             if (request == null || request.Id != Id)
             {
                 throw new CustomException(HttpStatusCode.NotFound, SharedResponses.NotFound);
             }
+            var headerData = new HeaderData()
+            {
+                NombreReporte = "Formato de Mantenimiento",
+                Sucursal = branch.Nombre,
+            };
 
-
-           var mantain= request.ToMaquilaFormDto();
+            var mantain= request.ToMaquilaFormDto();
+            mantain.Header = headerData;
             return await _pdfClient.GenerateOrder(mantain);
         }
         public async Task<string> SaveImage(MantainImageDto requestDto)
@@ -156,6 +164,13 @@ namespace Service.Catalog.Application
             
 
             await _service.DeleteImage(Id, code);
+        }
+
+        public async Task<MantainListDto> UpdateStatus(Guid id) {
+            var mantain = await _service.GetById(id);
+            mantain.Activo = !mantain.Activo;
+            await _service.Update(mantain);
+            return mantain.ToMantainListDto();
         }
 
     }

@@ -2785,8 +2785,8 @@ namespace Service.Catalog.Migrations
                     b.Property<DateTime?>("FechaMod")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("UsuarioCreoId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("UsuarioCreoId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UsuarioModId")
                         .HasColumnType("nvarchar(max)");
@@ -3508,7 +3508,7 @@ namespace Service.Catalog.Migrations
                         .IsRequired();
 
                     b.HasOne("Service.Catalog.Domain.Price.PriceList", "PrecioLista")
-                        .WithMany("Paquete")
+                        .WithMany("Paquetes")
                         .HasForeignKey("PrecioListaId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -3943,7 +3943,7 @@ namespace Service.Catalog.Migrations
 
                     b.Navigation("Medicos");
 
-                    b.Navigation("Paquete");
+                    b.Navigation("Paquetes");
 
                     b.Navigation("Promocion");
 

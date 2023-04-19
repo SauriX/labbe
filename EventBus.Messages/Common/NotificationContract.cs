@@ -1,4 +1,6 @@
-﻿namespace EventBus.Messages.Common
+﻿using System;
+
+namespace EventBus.Messages.Common
 {
     public class NotificationContract
     {
@@ -6,11 +8,13 @@
         {
         }
 
-        public NotificationContract(string mensaje, bool esAlerta,string para = "all")
+
+        public NotificationContract(string mensaje, bool esAlerta, DateTime fecha, string para = "all")
         {
             Para = para;
             Mensaje = mensaje;
             EsAlerta = esAlerta;
+            Fecha = fecha;
         }
 
         public NotificationContract(string para, string asunto, string mensaje, string @params)
@@ -26,5 +30,6 @@
         public string Mensaje { get; set; }
         public string Params { get; set; }
         public bool EsAlerta { get; set; }
+        public DateTime Fecha { get; set; }
     }
 }
