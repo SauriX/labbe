@@ -30,6 +30,7 @@ namespace Service.MedicalRecord.Dtos.Request
         public decimal Descuento { get; set; }
         public decimal DescuentoPorcentaje { get; set; }
         public decimal PrecioFinal { get; set; }
+        public bool Asignado { get; set; }
         public List<PriceListInfoPromoDto> Promociones { get; set; }
         public List<RequestStudyDto> Estudios { get; set; } = new List<RequestStudyDto>();
     }
