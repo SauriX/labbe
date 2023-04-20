@@ -126,17 +126,13 @@ namespace Integration.Pdf.Service
 
             var line1 = new Col[]
             {
-                new Col("Clave:", 3, ParagraphAlignment.Left),
-                new Col($": {order.Clave}", 8, Col.FONT_BOLD, ParagraphAlignment.Left),
+                new Col($"Clave: {order.Clave}", 3, ParagraphAlignment.Left),
                 new Col("", 1),
-                new Col("Fecha:", 3, ParagraphAlignment.Left),
-                new Col($": {order.Fecha}", 4, Col.FONT_BOLD, ParagraphAlignment.Left),
-                new Col("", 1),
-                new Col("Serie:", 1, ParagraphAlignment.Left),
-                new Col($": {order.No_serie}", 3, Col.FONT_BOLD, ParagraphAlignment.Left)
+                new Col($"Fecha:{order.Fecha}", 3, ParagraphAlignment.Left),
+                new Col($"Serie:{order.No_serie}", 1, ParagraphAlignment.Left),
             };
+            section.AddText(line1);
             section.AddSpace();
-            section.AddBorderedText(line1, right: true, left: true);
             var observationTitle = new Col("Observaciones", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Center);
             section.AddText(observationTitle);
             var observation = new Col(order.Descripcion, new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Justify);
@@ -148,13 +144,10 @@ namespace Integration.Pdf.Service
 
             if (order.imagenUrl.Count()>0) {
                 foreach (var image in order.imagenUrl) {
-                    var img = $"wwwroot/images/mantain{image.ImagenUrl}";
-                    var path = AppDomain.CurrentDomain.BaseDirectory;
-                    path = path.ToString().Replace("\\Integration.Pdf\\", "\\Service.Catalog\\");
-                    var imageData = $"{path}{img}";
+
 
                     var webClient = new WebClient();
-                    byte[] imageBytes = webClient.DownloadData(imageData);
+                    byte[] imageBytes = webClient.DownloadData(image.ImagenUrl);
 
                     /* System.Drawing.ImageConverter converter = new System.Drawing.ImageConverter();
                      var image = (byte[])converter.ConvertTo(new System.Drawing.Bitmap(imageBytes), typeof(byte[]));*/

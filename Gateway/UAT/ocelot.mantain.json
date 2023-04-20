@@ -79,7 +79,7 @@
       "UpstreamHttpMethod": [ "DELETE" ]
     },
     {
-      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/notifications/status/{id}",
+      "DownstreamPathTemplate": "/LabRamos-uat/services/catalogo/api/mantain/status/{id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {

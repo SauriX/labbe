@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Report.Utils;
+using Microsoft.Extensions.Configuration;
 using Service.Catalog.Application.IApplication;
 using Service.Catalog.Domain.EquipmentMantain;
 using Service.Catalog.Dtos.Equipmentmantain;
@@ -23,11 +24,13 @@ namespace Service.Catalog.Application
         private readonly IEquipmentMantainRepository _service;
         private readonly IPdfClient _pdfClient;
         private readonly IBranchApplication _branchApplication;
-        public EquipmentMantainApplication( IPdfClient pdfClient, IEquipmentMantainRepository service, IBranchApplication branchApplication)
+        private readonly string CatalogPath;
+        public EquipmentMantainApplication( IPdfClient pdfClient, IEquipmentMantainRepository service, IBranchApplication branchApplication, IConfiguration configuration)
         {
             _service = service;
             _pdfClient = pdfClient;
-            _branchApplication = branchApplication; 
+            _branchApplication = branchApplication;
+            CatalogPath = configuration.GetValue<string>("ClientUrls:Catalog") + configuration.GetValue<string>("ClientRoutes:Catalog");
         }
 
         public async Task<List<MantainListDto>> GetAll(MantainSearchDto search)
@@ -102,6 +105,14 @@ namespace Service.Catalog.Application
 
             var mantain= request.ToMaquilaFormDto();
             mantain.Header = headerData;
+            List<MantainImageDto> list = new List<MantainImageDto>();
+            foreach (var imagen in mantain.imagenUrl) {
+                var img = $"wwwroot/images/mantain{imagen.ImagenUrl}";
+                var pathName = Path.Combine(CatalogPath,img.Replace("wwwroot/", "")).Replace("\\", "/");
+                imagen.ImagenUrl = pathName;
+                list.Add(imagen);
+            }
+            mantain.imagenUrl=list;
             return await _pdfClient.GenerateOrder(mantain);
         }
         public async Task<string> SaveImage(MantainImageDto requestDto)
