@@ -53,8 +53,6 @@ namespace Service.Catalog.Domain.Study
         public virtual Method Metodo { get; set; }
         public int? SampleTypeId { get; set; }
         public virtual SampleType SampleType { get; set; }
-        public int? TaponId { get; set; }
-        public virtual Domain.Tapon.Tag Tapon { get; set; }
         public int Cantidad { get; set; }
         public bool Prioridad { get; set; }
         public bool Urgencia { get; set; }

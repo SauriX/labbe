@@ -750,26 +750,33 @@ namespace Service.MedicalRecord.Application
                     throw new CustomException(HttpStatusCode.BadRequest, "Debe agregar por lo menos un estudio o paquete");
                 }
 
-                var studiesDto = requestDto.Estudios ?? new List<RequestStudyDto>();
+                var studiesDto = new List<RequestStudyDto>(requestDto.Estudios ?? new List<RequestStudyDto>());
                 var packStudiesDto = new List<RequestStudyDto>();
 
-                if (requestDto.Paquetes != null && requestDto.Paquetes.Any())
+                if (requestDto.Paquetes != null && request.Paquetes.Any(x => x.Estudios == null || x.Estudios.Count == 0))
                 {
-                    if (requestDto.Paquetes.Any(x => x.Estudios == null || x.Estudios.Count == 0))
-                    {
-                        throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.PackWithoutStudies);
-                    }
-
-                    packStudiesDto = requestDto.Paquetes.SelectMany(x =>
-                    {
-                        foreach (var item in x.Estudios)
-                        {
-                            item.PaqueteId = x.PaqueteId;
-                        }
-
-                        return x.Estudios;
-                    }).ToList();
+                    throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.PackWithoutStudies);
                 }
+
+                //if (requestDto.Paquetes != null && requestDto.Paquetes.Any())
+                //{
+                //    if (requestDto.Paquetes.Any(x => x.Estudios == null || x.Estudios.Count == 0))
+                //    {
+                //        throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.PackWithoutStudies);
+                //    }
+
+                //    packStudiesDto = requestDto.Paquetes.SelectMany(x =>
+                //    {
+                //        foreach (var item in x.Estudios)
+                //        {
+                //            item.PaqueteId = x.PaqueteId;
+                //        }
+
+                //        return x.Estudios;
+                //    }).ToList();
+                //}
+
+                //var newPacks =requestDto.
 
                 studiesDto.AddRange(packStudiesDto);
 
@@ -814,7 +821,7 @@ namespace Service.MedicalRecord.Application
 
                 foreach (var study in pack.Estudios)
                 {
-                    var newStudy = studies.FirstOrDefault(x => x.EstudioId == study.EstudioId && x.PaqueteId == pack.Id);
+                    var newStudy = studies.FirstOrDefault(x => x.EstudioId == study.EstudioId && x.PaqueteId == pack.PaqueteId);
                     study.Id = newStudy.Id;
                     studies.Remove(newStudy);
                 }

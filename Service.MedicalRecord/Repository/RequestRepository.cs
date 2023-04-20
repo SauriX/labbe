@@ -325,6 +325,13 @@ namespace Service.MedicalRecord.Repository
             await _context.SaveChangesAsync();
         }
 
+        public async Task InsertPacks(List<RequestPack> packs)
+        {
+            _context.Relacion_Solicitud_Paquete.AddRange(packs);
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task BulkInsertUpdatePacks(Guid requestId, List<RequestPack> packs)
         {
             var config = new BulkConfig();

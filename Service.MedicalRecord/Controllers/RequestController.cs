@@ -51,15 +51,16 @@ namespace Service.MedicalRecord.Controllers
         [HttpGet("studies/{recordId}/{requestId}")]
         public async Task<RequestStudyUpdateDto> GetStudies(Guid recordId, Guid requestId)
         {
-            return await _service.GetStudies(recordId, requestId);
+            var data = await _service.GetStudies(recordId, requestId);
+            return data;
         }
 
         [HttpGet("payments/{recordId}/{requestId}")]
         public async Task<IEnumerable<RequestPaymentDto>> GetPayments(Guid recordId, Guid requestId)
         {
             return await _service.GetPayments(recordId, requestId);
-        }      
-        
+        }
+
         [HttpGet("tags/{recordId}/{requestId}")]
         public async Task<IEnumerable<RequestTagDto>> GetTags(Guid recordId, Guid requestId)
         {
@@ -297,8 +298,8 @@ namespace Service.MedicalRecord.Controllers
             var file = await _service.PrintTags(recordId, requestId, tags);
 
             return File(file, MimeType.PDF, "tags.pdf");
-        }    
-        
+        }
+
         [HttpPost("print/indications/{recordId}/{requestId}")]
         [Authorize(Policies.Download)]
         public async Task<IActionResult> PrintIndications(Guid recordId, Guid requestId)
