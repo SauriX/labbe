@@ -80,7 +80,6 @@ namespace Service.Catalog.Repository
                 .Include(x => x.Reagents).ThenInclude(x => x.Reagent)
                 .Include(x => x.Packets).ThenInclude(x => x.Packet)
                 .Include(x => x.Area).ThenInclude(x => x.Departamento)
-                .Include(x => x.Tapon)
                 .Include(x => x.Maquilador)
                 .Include(x => x.SampleType)
                 .Include(x => x.Metodo)

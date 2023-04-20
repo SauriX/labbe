@@ -18,9 +18,6 @@ namespace Service.Catalog.Dtos.PriceList
         public int EstudioId { get; set; }
         public string Clave { get; set; }
         public string Nombre { get; set; }
-        public int? TaponId { get; set; }
-        public string TaponColor { get; set; }
-        public string TaponClave { get; set; }
         public int? DepartamentoId { get; set; }
         public int? AreaId { get; set; }
         public int Dias { get; set; }

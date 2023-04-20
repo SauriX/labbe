@@ -19,6 +19,10 @@ namespace Service.MedicalRecord.Domain.Request
         public int AreaId { get; set; }
         public decimal Dias { get; set; }
         public int Horas { get; set; }
+        public DateTime FechaEntrega { get; set; }
+        public decimal PrecioEstudios { get; set; }
+        public decimal PaqueteDescuento { get; set; }
+        public decimal PaqueteDescuentoProcentaje { get; set; }
         public decimal Precio { get; set; }
         public decimal Descuento { get; set; }
         public decimal DescuentoPorcentaje { get; set; }

@@ -230,7 +230,10 @@ namespace Service.MedicalRecord
                 {
                     config.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
                     config.ValidatorOptions.LanguageManager.Culture = new CultureInfo("es");
-                }).AddJsonOptions(config => config.JsonSerializerOptions.MaxDepth = 8);
+                }).AddJsonOptions(config =>
+                {
+                    config.JsonSerializerOptions.MaxDepth = 12;
+                });
 
             services.AddAuthorization(opt =>
             {

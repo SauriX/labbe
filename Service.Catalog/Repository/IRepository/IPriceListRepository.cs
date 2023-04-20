@@ -26,6 +26,7 @@ namespace Service.Catalog.Repository.IRepository
         Task<List<Price_Company>> GetAllCompany(Guid companyId);
         Task<List<Price_Medics>> GetAllMedics(Guid medicsId);
         Task<Route_Study> GetStudyRoute(int id);
+        Task<List<Route_Study>> GetStudyRoute(IEnumerable<int> id);
         Task<bool> DuplicateSMC(PriceList price);
     }
 }

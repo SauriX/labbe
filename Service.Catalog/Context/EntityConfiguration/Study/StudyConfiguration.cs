@@ -91,10 +91,6 @@ namespace Service.Catalog.Context.EntityConfiguration.Study
                .HasMany(x => x.Packets)
                .WithOne(x => x.Estudio)
                .OnDelete(DeleteBehavior.Restrict);
-
-            builder
-                .HasOne(x => x.Tapon)
-                .WithMany();
         }
     }
 }

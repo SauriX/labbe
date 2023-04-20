@@ -20,6 +20,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using VT = Shared.Dictionary.Catalogs.ValueType;
+using Service.Catalog.Domain.Study;
 
 namespace Service.Catalog.Application
 {
@@ -34,7 +35,7 @@ namespace Service.Catalog.Application
         const int PATOLOGIA = 3;
         const int IMAGENOLOGIA = 2;
 
-        public PriceListApplication(IPriceListRepository repository, IPromotionRepository promotionRepository, IStudyRepository studyRepository, IPublishEndpoint publishEndpoint, INotificationsRepository notifications )
+        public PriceListApplication(IPriceListRepository repository, IPromotionRepository promotionRepository, IStudyRepository studyRepository, IPublishEndpoint publishEndpoint, INotificationsRepository notifications)
         {
             _repository = repository;
             _promotionRepository = promotionRepository;
@@ -62,8 +63,8 @@ namespace Service.Catalog.Application
             var prices = await _repository.GetOptions();
 
             return prices.ToOptionsDto();
-        }     
-        
+        }
+
         public async Task<IEnumerable<OptionsDto>> GetBranchesOptionsByPriceListId(Guid id)
         {
             var branches = await _repository.GetBranchesByPriceListId(id);
@@ -132,11 +133,6 @@ namespace Service.Catalog.Application
 
             if (promos != null && promos.Count > 0)
             {
-                //priceDto.PromocionId = promos[0].PromocionId;
-                //priceDto.Promocion = promos[0].Promocion.Nombre;
-                //priceDto.Descuento = promos[0].DescuentoCantidad;
-                //priceDto.DescuentoPorcentaje = promos[0].DescuentoPorcentaje;
-
                 foreach (var promo in promos)
                 {
                     priceDto.Promociones.Add(new PriceListInfoPromoDto
@@ -183,7 +179,7 @@ namespace Service.Catalog.Application
 
             var price = await _repository.GetPricePackById((int)filterDto.PaqueteId, filterDto.SucursalId, filterDto.CompañiaId);
 
-            if (price == null || price.Precio <= 0)
+            if (price == null || price.PrecioFinal <= 0)
             {
                 throw new CustomException(HttpStatusCode.NotFound, "Lista de precios no configurada");
             }
@@ -199,23 +195,26 @@ namespace Service.Catalog.Application
             }
 
             var priceDto = price.ToPriceListInfoPackDto();
+            priceDto.Identificador = Helpers.GenerateRandomHex(6);
 
             var studies = await _repository.GetPriceStudyById(price.PrecioListaId, priceDto.Estudios.Select(x => x.EstudioId));
 
+            var studyRoutes = await _repository.GetStudyRoute(studies.Select(x => x.EstudioId));
+
             foreach (var study in priceDto.Estudios)
             {
-                var studyPrice = studies.FirstOrDefault(x => x.EstudioId == study.EstudioId)?.Precio;
+                var studyPrice = studies.FirstOrDefault(x => x.EstudioId == study.EstudioId)?.Precio ?? 0;
 
-                if (studyPrice == null || studyPrice <= 0)
-                {
-                    throw new CustomException(HttpStatusCode.NotFound, $"Estudio ${study.Clave} no tiene precio configurado");
-                }
+                var studyRoute = studyRoutes.FirstOrDefault(x => x.EstudioId == study.EstudioId);
 
                 study.Parametros = study.Parametros
                     .Where(x => !x.TipoValor.In(VT.Observacion, VT.Etiqueta, VT.SinValor, VT.Texto, VT.Parrafo))
                     .ToList();
 
                 study.Precio = (decimal)studyPrice;
+                study.Destino = studyRoute?.Ruta?.Nombre;
+                study.DestinoId = studyRoute?.RouteId;
+                study.DestinoTipo = 1;
             }
 
             var promos = await _promotionRepository.GetPackPromos(price.PrecioListaId, filterDto.SucursalId, filterDto.MedicoId, (int)filterDto.PaqueteId);
@@ -250,18 +249,19 @@ namespace Service.Catalog.Application
 
             await _repository.Create(newprice);
             newprice = await _repository.GetById(newprice.Id);
-            var notifications = await _notificationsRepository.GetAll("Lista de precios",true);
-            var createnotification = notifications.FirstOrDefault(x=>x.Tipo == "Create");
-            if (createnotification.Activo) { 
-                var mensaje = createnotification.Contenido.Replace("[Nlista]",newprice.Clave);
+            var notifications = await _notificationsRepository.GetAll("Lista de precios", true);
+            var createnotification = notifications.FirstOrDefault(x => x.Tipo == "Create");
+            if (createnotification.Activo)
+            {
+                var mensaje = createnotification.Contenido.Replace("[Nlista]", newprice.Clave);
                 mensaje = mensaje.Replace("[Lsucursal]", string.Join(",", newprice.Sucursales.Select(y => y.Sucursal.Nombre)));
                 var contract = new NotificationContract(mensaje, false, DateTime.Now);
                 await _publishEndpoint.Publish(contract);
-                
+
             }
             return newprice.ToPriceListListDto();
         }
-                                                                                                                                                                                                                                                                                                                                                                                 
+
 
         public async Task<PriceListListDto> Update(PriceListFormDto price)
         {
@@ -288,7 +288,7 @@ namespace Service.Catalog.Application
             mensaje = mensaje.Replace("fecha", DateTime.Now.ToShortDateString());
             if (createnotification.Activo)
             {
-    
+
                 var contract = new NotificationContract(mensaje, false, DateTime.Now);
                 await _publishEndpoint.Publish(contract);
 

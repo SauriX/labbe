@@ -273,7 +273,7 @@ namespace Service.Catalog.Mapper
 
             return new PriceListInfoStudyDto
             {
-                Destino = studyRoute?.Ruta.Nombre,
+                Destino = studyRoute?.Ruta?.Nombre,
                 DestinoId = studyRoute?.RouteId,
                 DestinoTipo = 1,
                 ListaPrecioId = model.PrecioListaId,
@@ -281,9 +281,6 @@ namespace Service.Catalog.Mapper
                 EstudioId = model.EstudioId,
                 Nombre = model.Estudio.Nombre,
                 Clave = model.Estudio.Clave,
-                TaponId = model.Estudio.TaponId,
-                TaponColor = model.Estudio.Tapon?.Color,
-                TaponClave = model.Estudio.Tapon?.Clave,
                 DepartamentoId = model.Estudio.DepartamentoId,
                 AreaId = model.Estudio.AreaId,
                 Dias = Convert.ToInt32(Math.Ceiling(model.Estudio.DiasResultado)),
@@ -311,10 +308,10 @@ namespace Service.Catalog.Mapper
                 Clave = model.Paquete.Clave,
                 DepartamentoId = model.Paquete.DepartamentoId,
                 AreaId = model.Paquete.AreaId,
-                Precio = model.Precio,
-                Descuento = model.DescuenNum,
-                DescuentoPorcentaje = model.Descuento,
-                PrecioFinal = model.PrecioFinal,
+                PrecioEstudios = model.Precio,
+                PaqueteDescuento = model.DescuenNum,
+                PaqueteDescuentoProcentaje = model.Descuento,
+                Precio = model.PrecioFinal,
                 Promociones = new List<PriceListInfoPromoDto>(),
                 Estudios = model.Paquete.Estudios?.Select(x => new PriceListInfoStudyDto
                 {
@@ -323,16 +320,16 @@ namespace Service.Catalog.Mapper
                     EstudioId = x.EstudioId,
                     Nombre = x.Estudio.Nombre,
                     Clave = x.Estudio.Clave,
-                    Orden = x.Estudio.Orden,
-                    TaponId = x.Estudio.TaponId,
-                    TaponColor = x.Estudio.Tapon.Color,
-                    TaponClave = x.Estudio.Tapon.Clave,
                     DepartamentoId = x.Estudio.DepartamentoId,
                     AreaId = x.Estudio.AreaId,
                     Dias = Convert.ToInt32(Math.Ceiling(x.Estudio.DiasResultado)),
                     Horas = x.Estudio.TiempoResultado,
                     Parametros = x.Estudio.Parameters.Select(x => x.Parametro).ToParameterListDto(),
                     Indicaciones = x.Estudio.Indications.Select(x => x.Indicacion).ToIndicationListDto(),
+                    Etiquetas = x.Estudio.Etiquetas.ToStudyTagDto(),
+                    Promociones = new List<PriceListInfoPromoDto>(),
+                    Maquila = x.Estudio.Maquilador?.Nombre,
+                    MaquilaId = x.Estudio.MaquiladorId,
                 }).ToList(),
             };
         }

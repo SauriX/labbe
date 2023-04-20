@@ -318,7 +318,8 @@ namespace Service.MedicalRecord.Mapper
                 Descuento = x.Descuento,
                 DescuentoPorcentaje = x.DescuentoPorcentaje,
                 PrecioFinal = x.PrecioFinal,
-                Estudios = x.Estudios.ToRequestStudyDto()
+                Asignado = true,
+                Estudios = x.Estudios.ToRequestStudyDto(),
             }).ToList();
         }
 
@@ -488,6 +489,42 @@ namespace Service.MedicalRecord.Mapper
             };
         }
 
+        public static List<RequestPack> ToModel(this IEnumerable<RequestPackDto> dto, Guid requestId, Guid userId)
+        {
+            if (dto == null) return new List<RequestPack>();
+
+            return dto.Select(x =>
+            {
+                return new RequestPack
+                {
+                    Id = x.Id,
+                    SolicitudId = requestId,
+                    PaqueteId = x.PaqueteId,
+                    Clave = x.Clave,
+                    Nombre = x.Nombre,
+                    ListaPrecioId = x.ListaPrecioId,
+                    ListaPrecio = x.ListaPrecio,
+                    PromocionId = x.PromocionId,
+                    Promocion = x.Promocion,
+                    DepartamentoId = x.DepartamentoId,
+                    AreaId = x.AreaId,
+                    Dias = x.Dias,
+                    Horas = x.Horas,
+                    FechaEntrega = x.FechaEntrega,
+                    PrecioEstudios = x.PrecioEstudios,
+                    PaqueteDescuento = x.PaqueteDescuento,
+                    PaqueteDescuentoProcentaje = x.PaqueteDescuentoProcentaje,
+                    Precio = x.Precio,
+                    Descuento = x.Descuento,
+                    DescuentoPorcentaje = x.DescuentoPorcentaje,
+                    PrecioFinal = x.PrecioFinal,
+                    UsuarioCreoId = userId,
+                    FechaCreo = DateTime.Now,
+                    Estudios = x.Estudios.ToModel(requestId, new List<RequestStudy>(), userId)
+                };
+            }).ToList();
+        }
+
         public static List<RequestPack> ToModel(this IEnumerable<RequestPackDto> dto, Guid requestId, IEnumerable<RequestPack> packs, Guid userId)
         {
             if (dto == null) return new List<RequestPack>();
@@ -511,6 +548,10 @@ namespace Service.MedicalRecord.Mapper
                     AreaId = x.AreaId,
                     Dias = x.Dias,
                     Horas = x.Horas,
+                    FechaEntrega = x.FechaEntrega,
+                    PrecioEstudios = x.PrecioEstudios,
+                    PaqueteDescuento = x.PaqueteDescuento,
+                    PaqueteDescuentoProcentaje = x.PaqueteDescuentoProcentaje,
                     Precio = x.Precio,
                     Descuento = x.Descuento,
                     DescuentoPorcentaje = x.DescuentoPorcentaje,

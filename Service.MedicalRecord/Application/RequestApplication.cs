@@ -750,36 +750,30 @@ namespace Service.MedicalRecord.Application
                     throw new CustomException(HttpStatusCode.BadRequest, "Debe agregar por lo menos un estudio o paquete");
                 }
 
-                var studiesDto = requestDto.Estudios ?? new List<RequestStudyDto>();
-                var packStudiesDto = new List<RequestStudyDto>();
-
-                if (requestDto.Paquetes != null && requestDto.Paquetes.Any())
+                if (requestDto.Paquetes != null && requestDto.Paquetes.Any(x => x.Estudios == null || x.Estudios.Count == 0))
                 {
-                    if (requestDto.Paquetes.Any(x => x.Estudios == null || x.Estudios.Count == 0))
-                    {
-                        throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.PackWithoutStudies);
-                    }
-
-                    packStudiesDto = requestDto.Paquetes.SelectMany(x =>
-                    {
-                        foreach (var item in x.Estudios)
-                        {
-                            item.PaqueteId = x.PaqueteId;
-                        }
-
-                        return x.Estudios;
-                    }).ToList();
+                    throw new CustomException(HttpStatusCode.BadRequest, RecordResponses.Request.PackWithoutStudies);
                 }
 
+                var newPacks = requestDto.Paquetes.Where(x => x.Id == 0);
+                var existingPacks = requestDto.Paquetes.Where(x => x.Id != 0);
+
+                var studiesDto = new List<RequestStudyDto>(requestDto.Estudios ?? new List<RequestStudyDto>());
+                var packStudiesDto = existingPacks.SelectMany(x => x.Estudios);
                 studiesDto.AddRange(packStudiesDto);
 
                 var currentPacks = await _repository.GetPacksByRequest(requestDto.SolicitudId);
                 var currentSudies = await _repository.GetStudiesByRequest(requestDto.SolicitudId);
 
-                var packs = requestDto.Paquetes.ToModel(requestDto.SolicitudId, currentPacks, requestDto.UsuarioId);
-                await _repository.BulkUpdateDeletePacks(requestDto.SolicitudId, packs);
+                var packsToInsert = newPacks.ToModel(requestDto.SolicitudId, requestDto.UsuarioId);
+                await _repository.InsertPacks(packsToInsert);
+
+                var packsToUpdate = existingPacks.ToModel(requestDto.SolicitudId, currentPacks, requestDto.UsuarioId);
+                packsToUpdate.AddRange(packsToInsert);
+                await _repository.BulkUpdateDeletePacks(requestDto.SolicitudId, packsToUpdate);
 
                 var studies = studiesDto.ToModel(requestDto.SolicitudId, currentSudies, requestDto.UsuarioId);
+                studies.AddRange(packsToInsert.SelectMany(x => x.Estudios));
                 await _repository.BulkUpdateDeleteStudies(requestDto.SolicitudId, studies);
 
                 var pathologicalCode = await GeneratePathologicalCode(request);
@@ -793,6 +787,7 @@ namespace Service.MedicalRecord.Application
 
                 _transaction.CommitTransaction();
 
+                var packs = packsToInsert.Concat(packsToUpdate).ToList();
                 AssignStudiesIds(requestDto, packs, studies);
 
                 return requestDto;

@@ -74,6 +74,7 @@ namespace Service.Catalog.Repository
                 .Include(x => x.Paquete.Estudios).ThenInclude(x => x.Estudio.Etiquetas).ThenInclude(x => x.Etiqueta)
                 .Include(x => x.Paquete.Estudios).ThenInclude(x => x.Estudio.Parameters).ThenInclude(x => x.Parametro.Area.Departamento)
                 .Include(x => x.Paquete.Estudios).ThenInclude(x => x.Estudio.Indications).ThenInclude(x => x.Indicacion)
+                .Include(x => x.Paquete.Estudios).ThenInclude(x => x.Estudio.Maquilador)
                 .Include(x => x.PrecioLista)
                 .Where(x => x.PaqueteId == packId);
 
@@ -250,6 +251,17 @@ namespace Service.Catalog.Repository
                 .Include(x => x.Ruta)
                 .Include(x => x.Estudio)
                 .FirstOrDefaultAsync(x => id == x.EstudioId);
+
+            return studyRoute;
+        }
+
+        public async Task<List<Route_Study>> GetStudyRoute(IEnumerable<int> id)
+        {
+            var studyRoute = await _context.Relacion_Ruta_Estudio
+                .Include(x => x.Ruta)
+                .Include(x => x.Estudio)
+                .Where(x => id.Contains(x.EstudioId))
+                .ToListAsync();
 
             return studyRoute;
         }
