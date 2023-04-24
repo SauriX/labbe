@@ -118,16 +118,7 @@ namespace Service.Catalog.Mapper
                 FechaCreo = model.FechaCreo,
                 UsuarioModificoId = dto.UsuarioId,
                 FechaModifico = DateTime.Now,
-                Valores = dto.valores.Select(x => new EquipmentBranch
-                {
-                    //EquipmentBranchId = x.EquipmentBranchId,
-                    BranchId = x.BranchId,
-                    EquipmentId = dto.Id,
-                    UsuarioCreoId = model.UsuarioCreoId,
-                    FechaCreo = DateTime.Now,
-                    Num_Serie = x.Num_serie,
-
-                }).ToList(),
+                Valores = model.Valores,
 
                 //falta numero de serie
             };

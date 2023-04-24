@@ -14,7 +14,7 @@ using System.Web;
 using ZXing;
 
 namespace Integration.Pdf.Service
-{ 
+{
     public class MantainService
     {
         public static byte[] Generate(MantainDto order)
@@ -64,14 +64,14 @@ namespace Integration.Pdf.Service
             section.PageSetup.LeftMargin = Unit.FromCentimeter(1);
             section.PageSetup.RightMargin = Unit.FromCentimeter(1);
 
-            Format(section, order,order.Header);
+            Format(section, order, order.Header);
 
             return document;
         }
 
         static void Format(Section section, MantainDto order, HeaderData Header)
         {
- var fontTitle = new Font("calibri", 14);
+            var fontTitle = new Font("calibri", 14);
             var fontSubtitle = new Font("calibri", 12);
             var fontTitleChart = new Font("calibri", 11) { Bold = true };
             var fontText = new Font("calibri", 10);
@@ -80,7 +80,7 @@ namespace Integration.Pdf.Service
 
             var title = "Formato Mantenimiento";
             var branchType = "Sucursal " + Header.Sucursal;
-            
+
 
             if (Header.Sucursal == string.Empty || Header.Sucursal == "string")
             {
@@ -137,13 +137,16 @@ namespace Integration.Pdf.Service
             section.AddText(observationTitle);
             var observation = new Col(order.Descripcion, new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Justify);
             section.AddText(observation);
-            var images = new Col("Imagenes", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Center);
-            section.AddText(observation);
 
 
+            
 
-            if (order.imagenUrl.Count()>0) {
-                foreach (var image in order.imagenUrl) {
+            section.AddSpace();
+
+            if (order.imagenUrl.Count() > 0)
+            {
+                foreach (var image in order.imagenUrl)
+                {
 
 
                     var webClient = new WebClient();
@@ -153,17 +156,25 @@ namespace Integration.Pdf.Service
                      var image = (byte[])converter.ConvertTo(new System.Drawing.Bitmap(imageBytes), typeof(byte[]));*/
 
                     string imageFilename = MigraDocFilenameFromByteArray(imageBytes);
-
+                   var imagew= new Col(imageFilename, 3, ParagraphAlignment.Left)
+                    {
+                        ImagenTamaño = Unit.FromCentimeter(5)
+                    };
                     var imgPar = section.AddParagraph();
                     imgPar.Format.Alignment = ParagraphAlignment.Center;
-                    imgPar.AddImage(imageFilename);
+           
+                   var imagen= imgPar.AddImage(imageFilename);
+                     imagen.Width = (Unit)contentWidth / 7 * 2; ;
+                    imagen.LockAspectRatio = true;
+                    section.AddSpace();
+
                 }
 
             }
 
-           
 
-          //  section.AddImage(imageFilename);
+
+            //  section.AddImage(imageFilename);
 
 
 

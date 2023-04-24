@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Integration.Pdf.Dtos
 {
@@ -17,5 +18,6 @@ namespace Integration.Pdf.Dtos
         public string Entrega { get; set; }
         public List<ReportStudyListDto> Estudios { get; set; }
         public string Estatus { get; set; }
+        public List<DateTime> Fechas { get; set; }
     }
 }

@@ -84,13 +84,14 @@ namespace Integration.Pdf.Service
             section.AddText(title);
 
             section.AddSpace();
-            var titledoc = new Col($"Formato orden de entrega", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Center);
+            var titledoc = new Col($"Listado de  Solicitudes del día", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Center);
             section.AddText(titledoc);
 
             section.AddSpace();
 
-            var titledestin = new Col($"DESTINATARIO", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Center);
-            section.AddText(titledestin);
+            var titlefecha = new Col($"DEL {order.First().Fechas.First().Date} AL {order.First().Fechas.Last().Date}", new Font("Calibri", 11) { Bold = true }, ParagraphAlignment.Center);
+            section.AddText(titlefecha);
+
 
             section.AddSpace();
 

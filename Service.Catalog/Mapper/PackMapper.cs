@@ -47,7 +47,30 @@ namespace Service.Catalog.Mapper
 
             });
         }
+        public static IEnumerable<PackListDto> ToPackListPDto(this List<Packet> model)
+        {
+            if (model == null) return null;
 
+            return model.Select(x => new PackListDto
+            {
+                Id = x.Id,
+                Clave = x.Clave,
+                Nombre = x.Nombre,
+                NombreLargo = x.NombreLargo,
+                Pack = x.Estudios.Select(x => new PackStudyDto
+                {
+                    Id = x.EstudioId,
+                    Clave = x.Estudio.Clave,
+                    Nombre = x.Estudio.Nombre,
+                    Area = x.Estudio.Area?.Nombre,
+                    Activo = true,
+                }),
+                Activo = x.Activo,
+                Departamento = x.Area?.Departamento?.Nombre,
+                Area = x.Area?.Nombre
+
+            });
+        }
         public static PackFormDto ToPackFormDto(this Packet model)
         {
             if (model == null) return null;

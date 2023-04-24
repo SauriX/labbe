@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Service.MedicalRecord.Dtos.RportStudy
 {
@@ -18,5 +19,6 @@ namespace Service.MedicalRecord.Dtos.RportStudy
         public List<ReportStudyListDto> Estudios { get; set; }
         public string Estatus { get; set; }
         public bool isPatologia { get; set; }
+        public List<DateTime> Fechas { get; set; }
     }
 }

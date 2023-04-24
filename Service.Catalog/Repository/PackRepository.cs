@@ -31,14 +31,7 @@ namespace Service.Catalog.Repository
         }
         public async Task<List<Packet>> GetAll(string search)
         {
-            var Packs = _context.CAT_Paquete
-                    .Include(x => x.Area)
-                    .ThenInclude(x => x.Departamento)
-                    .Include(x => x.Estudios)
-                    .ThenInclude(x => x.Estudio)
-                    .ThenInclude(x => x.Area)
-                    .ThenInclude(x => x.Departamento)
-                    .AsQueryable();
+            var Packs = _context.CAT_Paquete.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(search) && search != "all")
             {
@@ -51,7 +44,11 @@ namespace Service.Catalog.Repository
 
         public async Task<List<Packet>> GetPackList(string search)
         {
-            var Packs = _context.CAT_Paquete.AsQueryable();
+            var Packs = _context.CAT_Paquete.Include(x => x.Area)
+                    .ThenInclude(x => x.Departamento)
+                    .Include(x => x.Estudios)
+                    .ThenInclude(x => x.Estudio)
+                    .ThenInclude(x => x.Area).AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(search) && search != "all")
             {

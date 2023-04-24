@@ -34,7 +34,7 @@ namespace Service.Catalog.Application
         {
             var packs = await _repository.GetPackList(search);
 
-            return packs.ToPackListDto();
+            return packs.ToPackListPDto();
         }
 
         public async Task<IEnumerable<PackListDto>> GetActive()

@@ -56,7 +56,10 @@ namespace Service.MedicalRecord.Application
         public async Task<byte[]> ExportRequest(GeneralFilterDto filter)
         {
             var request = await GetByFilter(filter);
-
+            foreach (var solicitud in request) {
+                solicitud.Fechas = filter.Fecha;
+            
+            }
             if (request == null)
             {
                 throw new CustomException(HttpStatusCode.NotFound);

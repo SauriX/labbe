@@ -44,7 +44,7 @@ namespace Service.MedicalRecord.Mapper
                 ExpedienteId = x.ExpedienteId.ToString(),
                 ClavePatologica = x.ClavePatologica,
                 Observacion = x.Observaciones,
-                Expediente = x.Expediente.Expediente
+                Expediente = x.Expediente.Expediente    
             }).ToList();
         }
 
