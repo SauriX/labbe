@@ -119,32 +119,11 @@ namespace Service.Catalog.Repository
 
         public async Task Update(Equipos equipment)
         {
-            using var transaction = _context.Database.BeginTransaction();
-            try
-            {
-                var values = equipment.Valores.ToList();
-
-                equipment.Valores = null;
 
                 _context.CAT_Equipos.Update(equipment);
-
-                await _context.SaveChangesAsync();
-
-                values.ForEach(valor => { valor.EquipmentBranchId = Guid.NewGuid(); });
-
-                var config = new BulkConfig();
-
-                config.SetSynchronizeFilter<EquipmentBranch>(x => x.EquipmentId == equipment.Id);
-
-                await _context.BulkInsertOrUpdateOrDeleteAsync(values, config);
-
-                transaction.Commit();
-            }
-            catch (System.Exception)
-            {
-                transaction.Rollback();
-                throw;
-            }
+ 
         }
+
+        
     }
-}
+}   
